@@ -29,9 +29,6 @@
 
 </script>
 <style scoped>
-    html, body {
-        
-    }
     .container{
       text-align: center;
       padding: 5rem 1rem 0;
