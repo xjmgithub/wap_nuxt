@@ -29,7 +29,7 @@
         <div class="country-choose-dialog" v-show="countryDialogStatus">
             <div class="dialog-title">Country List</div>
             <ul>
-                <li v-for="(item,index) in countrys" :key="index">
+                <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
                     <img :src="item.nationalFlag" />
                     <span>{{item.name}}</span>
                 </li>
@@ -70,6 +70,13 @@
         methods:{
             changetype(type){
                 this.type = type
+            },
+            chooseCountry(country){
+                this.country = {
+                    id:country.id,
+                    short:country.country
+                }
+                this.countryDialogStatus = false
             }
         },
         components:{
