@@ -2,7 +2,7 @@
   <div class="container">
     <p class="amount">Payments to Xender</p> 
     <PayNumber :signature="signature" :placeholder="placeholder" @changeNumber="changeNumber"></PayNumber>
-    <span class="balance">eWallet Balance: ￠ 1235.12</span>
+    <p :class="{balance:true,notenough:isNotEnough}">eWallet Balance:￠<span>{{balance}}</span></p>
     <Buttons :buttonList="buttonList"></Buttons>
   </div>
 
@@ -20,7 +20,9 @@
                
                 signature:"Ksh",
                 placeholder:"Payment amount",
-                number:''
+                number:'',
+                isNotEnough:false,
+                balance:1235.12
             }
         },
         layout: 'base',
@@ -35,13 +37,14 @@
         watch:{
             number(val, oldVal){
                 if(val  > 0){
-                    this.buttonList = [
-                    { buttonValue:"NEXT",buttonStyle:"color:#FFF; background:#0087EB"},
-                    ]
+                    if(val < this.balance){
+                        this.buttonList = [{ buttonValue:"NEXT",buttonStyle:"color:#FFF; background:#0087EB"}]
+                    }else{
+                        this.buttonList = [{ buttonValue:"RECHARGE",buttonStyle:"color:#AAA; background:#ddd"}]
+                        this.isNotEnough = true
+                    }
                 }else{
-                     this.buttonList = [
-                    { buttonValue:"NEXT",buttonStyle:"color:#AAA; background:#ddd"},
-                ]
+                     this.buttonList = [{ buttonValue:"NEXT",buttonStyle:"color:#AAA; background:#ddd"}]
                 }
                 
             }
@@ -60,9 +63,12 @@
        padding-bottom:3.2rem;
        font-weight: bold;
     }
-    .container span.balance{
+    .container p.balance{
         font-size: .8rem;
         color:#333;
         margin-left:3rem;
+    }
+    .container p.balance.notenough{
+       color:red;
     }
 </style>

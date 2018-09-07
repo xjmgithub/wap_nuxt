@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Password :pwdType="pwdType" ></Password>
+    <Password :pwdType="pwdType" @setPassword="setPassword"></Password>
     <div class="forgot-pwd">
         <a href="#" >Forgot payment password?</a>
     </div>
@@ -18,13 +18,33 @@
                 buttonList:[
                     { buttonValue:"PAY NOW",buttonStyle:"color:#AAA; background:#ddd"},
                 ],
-                pwdType:"Enter Payment Password"
+                pwdType:"Enter Payment Password",
+                password:''
             }
         },
         layout: 'base',
         components: {
             Buttons,Password
         },
+        methods:{
+            setPassword(data){
+                this.password = data
+            }
+        },
+        watch:{
+            password(val, oldVal){
+                if(val.length >= 6){
+                    this.buttonList = [
+                    { buttonValue:"PAY NOW",buttonStyle:"color:#FFF; background:#0087EB"},
+                    ]
+                }else{
+                     this.buttonList = [
+                    { buttonValue:"PAY NOW",buttonStyle:"color:#AAA; background:#ddd"},
+                ]
+                }
+                
+            }
+        }
     }
 
 </script>

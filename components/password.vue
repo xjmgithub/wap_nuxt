@@ -19,9 +19,7 @@
                 N3:"",
                 N4:"",
                 N5:"",
-                N6:"",
-                password:""
-
+                N6:""
             }
         },
         methods:{
@@ -45,12 +43,20 @@
                 if (this.$refs.T5.value =='')  this.$refs.T4.focus();
             },
             T6_onkeyup(){
-                if (this.$refs.T6.value !='')  this.$refs.T6.blur();
+                if (this.$refs.T6.value !='')  {
+                    this.$refs.T6.blur();
+                    this.enterPwd()
+                }
                 if (this.$refs.T6.value =='')  this.$refs.T5.focus();
             },
+            enterPwd(){
+                this.$emit("setPassword",this.password)
+            }
         },
         computed:{
-            
+            password () {
+                return this.N1 + this.N2 + this.N3 + this.N4 + this.N5 + this.N6
+            },
         }
     }
 </script>
