@@ -20,8 +20,8 @@
                     { buttonValue:"CANCEL",buttonStyle:"color:#AAA; background:#fff;border:1px solid #AAA"}
                 ],
                 radioList:[
-                    {value:"Glo",checked:false},
-                    {value:"Airtel",checked:true}
+                    {value:"Glo",imgUrl:'',checked:false},
+                    {value:"Airtel",imgUrl:'',checked:true}
                 ],
                 signature:"+234",
                 placeholder:"Phone Number",
