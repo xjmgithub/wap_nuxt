@@ -169,5 +169,5 @@
   }
 </script>
 <style lang="less">
-  @import '../../assets/less/faq/index.less';
+  @import '~assets/less/faq/index.less';
 </style>
