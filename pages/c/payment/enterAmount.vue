@@ -17,7 +17,6 @@
                 buttonList:[
                     { buttonValue:"NEXT",buttonStyle:"color:#AAA; background:#ddd"},
                 ],
-               
                 signature:"Ksh",
                 placeholder:"Payment amount",
                 number:'',

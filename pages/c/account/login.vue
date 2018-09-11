@@ -3,23 +3,30 @@
         <img class="st_logo" src="~/assets/img/logo01.png" />
         <img class="third_login facebook" @click="byfacebook" src="~/assets/img/users/btn_facebook_def.png" />
         <img class="third_login twitter" @click="bytwitter" src="~/assets/img/users/btn_twitter_def.png" />
-        <img class="third_login google g-signin2"  src="~/assets/img/users/btn_google_def.png" />
+        <img class="third_login google g-signin2" @click="bygoogle" src="~/assets/img/users/btn_google_def.png" />
         <div class="login_btn"> SIGN IN </div>
         <div class="regtext">
             Don't have an account?
-            <a href="/register">Register</a>
+            <nuxt-link to="/c/account/register">Register</nuxt-link>
         </div>
     </div>
 </template>
 <script>
     export default {
         layout: 'base',
+        data(){
+            return {
+                pre: this.$route.query.pre
+            }
+        },
         mounted() {
+            // twitter登录
             hello.init({
                 twitter: 'ECicswlypoOTdXm0NuWmzCZQe',
             }, {
                     oauth_proxy: 'https://auth-server.herokuapp.com/proxy'
                 })
+            // facebooke登录初始化
             FB.init({
                 appId: '159785064477978',
                 xfbml: true,
@@ -60,6 +67,12 @@
                     .then(res => {
                         if (res.data.code == 0) {
                             //TODO 登录成功
+                            console.log(this.pre)
+                            if(this.pre){
+                                this.$router.push(encodeURIComponent(this.pre))
+                            }else{
+                                this.$router.push('/c/payment/ayBywallet')
+                            }
                         } else {
                             // _this.$toast('mesth')
                             // TODO components toast
@@ -97,42 +110,42 @@
     }
 </script>
 <style lang="less" scoped>
-    #wrapper {
-        font-family: 'Roboto';
+#wrapper {
+    font-family: 'Roboto';
 
-        img {
-            display: block;
-            height: 2.3rem;
-            width: 18rem;
-            margin: 0 auto;
-            margin-top: 1.2rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .st_logo {
-            height: 2.5rem;
-            width: 10rem;
-            margin-bottom: 3.5rem;
-            margin-top: 6rem;
-        }
-
-        .login_btn {
-            width: 18rem;
-            height: 2.3rem;
-            line-height: 2.3rem;
-            color: #0084E5;
-            border: #0084E5 solid 1px;
-            border-radius: 2px;
-            margin: 0 auto;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        .regtext {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #424242;
-            margin-top: 2.5rem;
-        }
+    img {
+        display: block;
+        height: 2.3rem;
+        width: 18rem;
+        margin: 0 auto;
+        margin-top: 1.2rem;
+        margin-bottom: 1.2rem;
     }
+
+    .st_logo {
+        height: 2.5rem;
+        width: 10rem;
+        margin-bottom: 3.5rem;
+        margin-top: 6rem;
+    }
+
+    .login_btn {
+        width: 18rem;
+        height: 2.3rem;
+        line-height: 2.3rem;
+        color: #0084e5;
+        border: #0084e5 solid 1px;
+        border-radius: 2px;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+    .regtext {
+        text-align: center;
+        font-size: 0.8rem;
+        color: #424242;
+        margin-top: 2.5rem;
+    }
+}
 </style>
