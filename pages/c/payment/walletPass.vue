@@ -12,7 +12,7 @@
 </template>
 <script>
     import Button from '~/components/button'
-    import Password from '~/components/password_test'
+    import Password from '~/components/password'
     export default {
         data() {
             return {
