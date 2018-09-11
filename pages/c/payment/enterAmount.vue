@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <p class="amount">Payments to Xender</p> 
-    <PayNumber :signature="signature" :placeholder="placeholder" @changeNumber="changeNumber"></PayNumber>
+    <PayNumber :signature="signature" :placeholder="placeholder" @changeNumber="changeNumber" class="payNumber"></PayNumber>
     <p :class="{balance:true,notenough:isNotEnough}">eWallet Balance:￠<span>{{balance}}</span></p>
     <Buttons :buttonList="buttonList"></Buttons>
   </div>
@@ -54,7 +54,7 @@
 </script>
 <style scoped>
    .container{
-      padding: 6rem 0 0 3rem;
+      padding-top:6rem;
     }
    .container .amount{
        color: #333333;
@@ -62,6 +62,7 @@
        line-height:1.4rem;
        padding-bottom:3.2rem;
        font-weight: bold;
+       text-align: center;
     }
     .container p.balance{
         font-size: .8rem;
@@ -71,4 +72,7 @@
     .container p.balance.notenough{
        color:red;
     }
+   .container .payNumber{
+       padding-left:3rem;
+   }
 </style>

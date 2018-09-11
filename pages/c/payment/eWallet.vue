@@ -22,8 +22,8 @@
              return {
                  buttonList:[{ buttonValue:"NEXT",buttonStyle:"color:#fff; background:#0087EB"}],
                  radioList:[
-                    {value:"Glo",imgUrl:require('../../assets/img/pay/MTN.png'),checked:false},
-                    {value:"Airtel",imgUrl:require('../../assets/img/pay/Glo.png'),checked:true}
+                    {value:"Glo",imgUrl:require('../../../assets/img/pay/MTN.png'),checked:false},
+                    {value:"Airtel",imgUrl:require('../../../assets/img/pay/Glo.png'),checked:true}
                  ]
              }
          },
