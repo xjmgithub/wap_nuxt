@@ -32,6 +32,8 @@
                 xfbml: true,
                 version: 'v3.0'
             })
+
+            this.$alert('You have an order that meets the payment requirements. Will you make the payment?')
         },
         methods: {
             byfacebook() {
@@ -65,9 +67,17 @@
                     "thirdPartyToken": 'THIRD#' + userkey
                 })
                     .then(res => {
+
+                        
                         if (res.data.code == 0) {
-                            //TODO 登录成功
-                            console.log(this.pre)
+
+                            this.$store.commit('SET_USER',res.data.data.userId)
+                            this.$store.commit('SET_TOKEN',res.data.data.token)
+                            this.$store.commit('SET_COUNTRY',{
+                                id:res.data.data.countryId,
+                                short:res.data.data.country
+                            })
+
                             if(this.pre){
                                 this.$router.push(encodeURIComponent(this.pre))
                             }else{
