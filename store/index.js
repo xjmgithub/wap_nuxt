@@ -53,8 +53,7 @@ export const actions = {
                 _COOKIE[parts[0].trim()] = (parts[1] || '').trim()
             })
 
-        let language =
-            req.headers['http_lncode'] || req.headers['accept-language']
+        let language = req.headers['http_lncode'] || req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
             commit('SET_LANG', LANG.fy)
         } else if (language.indexOf('sw') >= 0) {
@@ -88,7 +87,6 @@ export const actions = {
             commit('SET_TOKEN', req.headers['http_token'])
         } else {
             if (_COOKIE['token']) {
-                console.log(_COOKIE['token'])
                 commit('SET_TOKEN', _COOKIE['token'])
                 commit('SET_COUNTRY', {
                     id: _COOKIE['countryId'],
@@ -132,14 +130,8 @@ export const actions = {
         if (req.headers['http_versionname']) {
             commit('SET_APP_VERSION', req.headers['http_versionname'])
         } else {
-            if (
-                req.headers['http_versioncode'] &&
-                versionMap[req.headers['http_versioncode']]
-            ) {
-                commit(
-                    'SET_APP_VERSION',
-                    versionMap[req.headers['http_versioncode']]
-                )
+            if (req.headers['http_versioncode'] && versionMap[req.headers['http_versioncode']]) {
+                commit('SET_APP_VERSION', versionMap[req.headers['http_versioncode']])
             }
         }
     }

@@ -4,7 +4,7 @@
         <img class="third_login facebook" @click="byfacebook" src="~/assets/img/users/btn_facebook_def.png" />
         <img class="third_login twitter" @click="bytwitter" src="~/assets/img/users/btn_twitter_def.png" />
         <img id="google-btn" class="third_login google" src="~/assets/img/users/btn_google_def.png" />
-        <div class="login_btn"> SIGN IN </div>
+        <nuxt-link to="/c/account/signin"><div class="login_btn"> SIGN IN </div></nuxt-link>
         <div class="regtext">
             Don't have an account?
             <nuxt-link to="/c/account/register">Register</nuxt-link>
@@ -39,24 +39,27 @@ export default {
         })
 
         var googleUser = {}
-        var auth2 = gapi.auth2.init({
-            client_id: '152211292692-l849uvbt5jfmghi40e05o2jhuf8n3epj.apps.googleusercontent.com',
-            cookiepolicy: 'single_host_origin'
+        gapi.load('auth2', function() {
+            var auth2 = gapi.auth2.init({
+                client_id:
+                    '152211292692-l849uvbt5jfmghi40e05o2jhuf8n3epj.apps.googleusercontent.com',
+                cookiepolicy: 'single_host_origin'
+            })
+            auth2.attachClickHandler(
+                document.getElementById('google-btn'),
+                {},
+                function(googleUser) {
+                    _this.loginByThird(googleUser.getBasicProfile().getId())
+                    // console.log('ID: ' + profile.getId()) // Do not send to your backend! Use an ID token instead.
+                    // console.log('Name: ' + profile.getName())
+                    // console.log('Image URL: ' + profile.getImageUrl())
+                    // console.log('Email: ' + profile.getEmail()) // This is null if the 'email' scope is not present.
+                },
+                function(error) {
+                    console.log(JSON.stringify(error, undefined, 2))
+                }
+            )
         })
-        auth2.attachClickHandler(
-            document.getElementById('google-btn'),
-            {},
-            function(googleUser) {
-                _this.loginByThird(googleUser.getBasicProfile().getId())
-                // console.log('ID: ' + profile.getId()) // Do not send to your backend! Use an ID token instead.
-                // console.log('Name: ' + profile.getName())
-                // console.log('Image URL: ' + profile.getImageUrl())
-                // console.log('Email: ' + profile.getEmail()) // This is null if the 'email' scope is not present.
-            },
-            function(error) {
-                console.log(JSON.stringify(error, undefined, 2))
-            }
-        )
     },
     methods: {
         byfacebook() {
@@ -93,6 +96,11 @@ export default {
                         setCookie('token', res.data.data.token)
                         setCookie('countryId', res.data.data.countryId)
                         setCookie('country', res.data.data.country)
+                        this.$store.commit('SET_TOKEN', res.data.data.token)
+                        this.$store.commit('SET_COUNTRY', {
+                            id: res.data.data.countryId,
+                            short: res.data.data.country
+                        })
 
                         if (this.pre) {
                             this.$router.push(encodeURIComponent(this.pre))
@@ -107,22 +115,7 @@ export default {
     },
     head() {
         return {
-            title: 'Login',
-            meta: [
-                { name: 'format-detection', content: 'email=no' },
-                { name: 'format-detection', content: 'telephone=no' }
-            ],
-            script: [
-                {
-                    src: 'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
-                },
-                {
-                    src: 'https://connect.facebook.net/en_US/sdk.js'
-                },
-                {
-                    src: 'https://apis.google.com/js/api:client.js'
-                }
-            ]
+            title: 'Login'
         }
     }
 }

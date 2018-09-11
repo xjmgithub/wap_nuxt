@@ -49,101 +49,101 @@
 	</div>
 </template>
 <script>
-	import shadowLayer from "~/components/shadow-layer";
-	export default {
-		layout: "base",
-		async asyncData({ app, store, redirect }) {
-			app.$axios.setHeader("token", store.state.token);
-			let res = await app.$axios.get("/cms/vup/v2/areas?versionCode=5300");
-			let countrys = {};
-			res.data.forEach((item, index) => {
-				countrys[item.id] = item;
-			});
-			return {
-				countrys: countrys
-			};
-		},
-		data() {
-			return {
-				type: 0,  // 0 tel 1 email
-                country: this.$store.state.country,
-                countryDialogStatus: false,
-				phoneNum: "",
-				password: "",
-				email: ""
-			};
-		},
-		computed: {
-			areaInfo() {
-				return this.countrys[this.country.id];
-			}
-		},
-		methods: {
-			changetype(type) {
-				this.type = type;
-				this.password = "";
-			},
-			chooseCountry(country) {
-				this.country = {
-					id: country.id,
-					short: country.country
-				};
-				this.countryDialogStatus = false;
-			},
-			login(){
-				let params = {}
-				if(this.type==1){
-					params = {
-						"applicationId": 1,
-						"deviceId": "A0004",
-						"type": 0,
-						"email": this.email,
-						"pwd": this.password
-					}
-				}else{
-					params = {
-						"applicationId": 1,
-						"phoneCc": 234,
-						"phone": "7017201878",
-						"pwd": "shang123	",
-						"deviceId": "586c5f5220cf94f7f5599cc8ecea305f_android",
-						"type": 10
-					}
-				}
-				this.$axios.setHeader('token', this.$store.state.token)
-				this.$axios.post('/ums/v1/user/login', params)
-                .then(res => {
-                    if (res.data.code == 0) {
-                        setCookie('userId', res.data.data.userId)
-                        setCookie('token', res.data.data.token)
-                        setCookie('countryId', res.data.data.countryId)
-                        setCookie('country', res.data.data.country)
-
-                        if (this.pre) {
-                            this.$router.push(encodeURIComponent(this.pre))
-                        } else {
-                            this.$router.push('/c/payment/walletPay')
-                        }
+import shadowLayer from '~/components/shadow-layer'
+import { setCookie } from '~/functions/utils'
+export default {
+    layout: 'base',
+    async asyncData({ app, store, redirect }) {
+        app.$axios.setHeader('token', store.state.token)
+        let res = await app.$axios.get('/cms/vup/v2/areas?versionCode=5300')
+        let countrys = {}
+        res.data.forEach((item, index) => {
+            countrys[item.id] = item
+        })
+        return {
+            countrys: countrys
+        }
+    },
+    data() {
+        return {
+            type: 0, // 0 tel 1 email
+            country: this.$store.state.country,
+            countryDialogStatus: false,
+            phoneNum: '',
+            password: '',
+            email: ''
+        }
+    },
+    computed: {
+        areaInfo() {
+            return this.countrys[this.country.id]
+        }
+    },
+    methods: {
+        changetype(type) {
+            this.type = type
+            this.password = ''
+        },
+        chooseCountry(country) {
+            this.country = {
+                id: country.id,
+                short: country.country
+            }
+            this.countryDialogStatus = false
+        },
+        login() {
+            let params = {}
+            if (this.type == 1) {
+                params = {
+                    applicationId: 1,
+                    deviceId: 'A0004',
+                    type: 0,
+                    email: this.email,
+                    pwd: this.password
+                }
+            } else {
+                let tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
+                params = {
+                    applicationId: 1,
+                    phoneCc: this.areaInfo['phonePrefix'],
+                    phone: tel,
+                    pwd: this.password,
+                    deviceId: this.$store.state.deviceId,
+                    type: 10
+                }
+            }
+            this.$axios.setHeader('token', this.$store.state.token)
+            this.$axios.post('/ums/v1/user/login', params).then(res => {
+                if (res.data.code == 0) {
+                    setCookie('userId', res.data.data.userId)
+                    setCookie('token', res.data.data.token)
+                    setCookie('countryId', res.data.data.countryId)
+                    setCookie('country', res.data.data.country)
+                    this.$store.commit('SET_TOKEN', res.data.data.token)
+                    this.$store.commit('SET_COUNTRY', {
+                        id: res.data.data.countryId,
+                        short: res.data.data.country
+                    })
+                    if (this.pre) {
+                        this.$router.push(encodeURIComponent(this.pre))
                     } else {
-                        _this.$alert(res.datea.message)
+                        this.$router.push('/c/payment/walletPay')
                     }
-                })
-
-			}
-		},
-		components: {
-			shadowLayer
-		},
-		head() {
-			return {
-				title: "Sign In",
-				meta: [
-					{ name: "format-detection", content: "email=no" },
-					{ name: "format-detection", content: "telephone=no" }
-				]
-			};
-		}
-	};
+                } else {
+                    this.$alert(res.data.message)
+                }
+            })
+        }
+    },
+    components: {
+        shadowLayer
+    },
+    head() {
+        return {
+            title: 'Sign In'
+        }
+    }
+}
 </script>
 <style lang="less" scoped>
 #wrapper {

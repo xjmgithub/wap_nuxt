@@ -12,9 +12,22 @@ module.exports = {
                 hid: 'description',
                 name: 'description',
                 content: 'Nuxt.js project'
-            }
+            },
+            { name: 'format-detection', content: 'email=no' },
+            { name: 'format-detection', content: 'telephone=no' }
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        script: [
+            {
+                src: 'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
+            },
+            {
+                src: 'https://connect.facebook.net/en_US/sdk.js'
+            },
+            {
+                src: 'https://apis.google.com/js/api:client.js'
+            }
+        ]
     },
     /*
   ** Customize the progress bar color
@@ -52,5 +65,5 @@ module.exports = {
         '/ocs/': env.ms_host,
         '/mobilewallet/': env.ms_host
     },
-    plugins: [{ src: '~plugins/analysis.js', ssr: false }]
+    plugins: [{ src: '~plugins/analysis.js', ssr: false }, { src: '~plugins/auth.js', ssr: false }]
 }

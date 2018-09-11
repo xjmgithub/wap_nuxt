@@ -86,11 +86,7 @@
         },
         head() {
             return {
-                title: 'Register',
-                meta: [
-                    { name: 'format-detection', content: 'email=no' },
-                    { name: 'format-detection', content: 'telephone=no' },
-                ]
+                title: 'Register'
             }
         }
     }
