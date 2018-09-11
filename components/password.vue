@@ -1,14 +1,17 @@
 <template>
     <div class="password-box">
         <p class="pwd-type">{{placeholder}}</p>
+        <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="toggleView&&isCiphertext==1" alt="" @click="isCiphertext=2">
+        <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="toggleView&&isCiphertext==2" alt="" @click="isCiphertext=1">
         <div class="pwd-input">
-            <input type="password" maxlength="1" v-model="N1" ref="T1"  @keydown="T1_onkeyup()" />
-            <input type="password" maxlength="1" v-model="N2" ref="T2"  @keydown="T2_onkeyup()" />
-            <input type="password" maxlength="1" v-model="N3" ref="T3"   @keydown="T3_onkeyup()" />
-            <input type="password" maxlength="1" v-model="N4" ref="T4"  @keydown="T4_onkeyup()" />
-            <input type="password" maxlength="1" v-model="N5" ref="T5" @keydown="T5_onkeyup()" />
-            <input type="password" maxlength="1" v-model="N6" ref="T6"   @keydown="T6_onkeyup()" />
+            <input :type="pwdType" v-model="N1" disabled/>
+            <input :type="pwdType" v-model="N2" disabled/>
+            <input :type="pwdType" v-model="N3" disabled/>
+            <input :type="pwdType" v-model="N4" disabled/>
+            <input :type="pwdType" v-model="N5" disabled/>
+            <input :type="pwdType" v-model="N6" disabled/>
         </div>
+        <input type="tel" maxlength="6" v-model="password" class="hidden-pwd">
     </div>
 </template>
 <script>
@@ -25,74 +28,86 @@
         },
         data() {
             return {
-                N1: "",
-                N2: "",
-                N3: "",
-                N4: "",
-                N5: "",
-                N6: ""
+              password:'',
+              isCiphertext:1
             }
         },
         methods: {
-            T1_onkeyup() {
-                if (this.$refs.T1.value != '') this.$refs.T2.focus();
-            },
-            T2_onkeyup() {
-                if (this.$refs.T2.value != '') this.$refs.T3.focus();
-                if (this.$refs.T2.value == '') this.$refs.T1.focus();
-            },
-            T3_onkeyup() {
-                if (this.$refs.T3.value != '') this.$refs.T4.focus();
-                if (this.$refs.T3.value == '') this.$refs.T2.focus();
-            },
-            T4_onkeyup() {
-                if (this.$refs.T4.value != '') this.$refs.T5.focus();
-                if (this.$refs.T4.value == '') this.$refs.T3.focus();
-            },
-            T5_onkeyup() {
-                if (this.$refs.T5.value != '') this.$refs.T6.focus();
-                if (this.$refs.T5.value == '') this.$refs.T4.focus();
-            },
-            T6_onkeyup() {
-                if (this.$refs.T6.value != '') {
-                    this.$refs.T6.blur();
-                    this.enterPwd()
-                }
-                if (this.$refs.T6.value == '') this.$refs.T5.focus();
-            },
             enterPwd() {
                 this.$emit("setPassword", this.password)
             }
         },
         computed: {
-            password() {
-                return '' + this.N1 + this.N2 + this.N3 + this.N4 + this.N5 + this.N6
+            pwdType(){
+                return this.isCiphertext==1?'password':'text'
             },
+            N1(){
+                return this.password.substr(0,1) || ''
+            },
+            N2(){
+                return this.password.substr(1,1) || ''
+            },
+            N3(){
+                return this.password.substr(2,1) || ''
+            }, 
+            N4(){
+                return this.password.substr(3,1) || ''
+            }, 
+            N5(){
+                return this.password.substr(4,1) || ''
+            },
+            N6(){
+                return this.password.substr(5,1) || ''
+            }
+        },
+        watch:{
+            password(val,oldVal){
+                if(val.length >= 6){
+                    this.enterPwd()
+                }
+            }
         }
     }
 </script>
 <style lang="less" scoped>
-.password-box .pwd-type {
-    color: #212121;
-    font-size: 1rem;
-    line-height: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.pwd-input {
+.password-box {
+    position: relative;
+    .pwd-type {
+        color: #212121;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+    .open-close{
+        width:1.5rem;
+        height:1.5rem;
+        float: right;
+    }
+    .pwd-input {
     width: 100%;
-    input {
-        width: 13%;
-        display: block;
-        border: none;
-        border-bottom: 1px solid #ddd;
-        outline: none;
-        text-align: center;
-        margin-right: 4.4%;
-        float: left;
-        &:last-child {
-            margin-right: 0;
+        input {
+            width: 13%;
+            display: block;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            outline: none;
+            text-align: center;
+            margin-right: 4.4%;
+            background: #fff;
+            float: left;
+            &:last-child {
+                margin-right: 0;
+            }
         }
     }
+    .hidden-pwd{
+        width:100%;
+        position: absolute;
+        top: 2.2rem;
+        left: 0;
+        opacity: 0;
+    }
 }
+
 </style>
