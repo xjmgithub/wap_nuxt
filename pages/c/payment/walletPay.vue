@@ -43,8 +43,10 @@
                 if (res.data) {
                     _this.signature = res.data.currency
                     _this.balance = res.data.amount
-                    _this.accountNo = res.data.accountNo
-                    _this.balance = 100
+                    sessionStorage.setItem('wallet_account',res.data.accountNo)
+                    sessionStorage.setItem('wallet_left',res.data.amount)
+                    sessionStorage.setItem('currency',res.data.currencySymbol)
+                    _this.balance = 1
                 }
             })
         },
@@ -55,19 +57,8 @@
                     this.$router.push('/c/payment/walletPass')
                 }else{
                     // TODO 充值流程
-                }
-            }
-        },
-        watch: {
-            amount(val, oldVal) {
-                if (val >= 0) { // TODO 0元支付
-                    if (val < this.balance) {
-                        this.canNext = true
-                    } else {
-                        this.canNext = false
-                    }
-                } else {
-                    this.canNext = false
+                    this.$router.push('/c/payment/eWallet')
+
                 }
             }
         }

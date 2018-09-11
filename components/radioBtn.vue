@@ -4,10 +4,10 @@
       <label class="radio">
         <input type="radio" name="pay-options" value="item.value" checked="item.checked"/>
         <i></i>
-        <div class="img-box" v-show="item.value!=''">
+        <div class="img-box" v-show="item.imgUrl">
           <img :src="item.imgUrl" alt=""> 
         </div>
-        <span :class="{ml15:item.value!=''}">{{item.value}}</span>
+        <span :class="{ml15:item.imgUrl!=''}">{{item.value}}</span>
       </label>
     </div>
   </div>
