@@ -17,12 +17,14 @@
                 <img :src="areaInfo.nationalFlag" />
                 <span>{{areaInfo.name}}</span>
             </div>
-            <verify-tel :prefix="areaInfo.phonePrefix"></verify-tel>
+            <verify-tel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verify-tel>
         </div>
         <div v-show="type==1" class="by_email">
-            <verify-email></verify-email>
+            <verify-email ref="emailpicker"></verify-email>
         </div>
-        <div class="next-btn">NEXT</div>
+        <div style="width:80%;margin:0 auto;">
+            <Button :disabled="!canNext" :text="'NEXT'" @click="nextStep"></Button>
+        </div>
         <div class="terms">
             <a href="Todo">Terms of Service</a>
         </div>
@@ -39,57 +41,83 @@
     </div>
 </template>
 <script>
-    import verifyTel from '~/components/form/verify_tel'
-    import verifyEmail from '~/components/form/verify_email'
-    import shadowLayer from '~/components/shadow-layer'
-    export default {
-        layout: 'base',
-        async asyncData({ app, store, redirect }) {
-            app.$axios.setHeader('token', store.state.token)
-            let res = await app.$axios.get('/cms/vup/v2/areas?versionCode=5300')
-            let countrys = {}
-            res.data.forEach((item,index)=>{
-                countrys[item.id] = item
-            })
-            return {
-                countrys:countrys
-            }
+import verifyTel from '~/components/form/verify_tel'
+import verifyEmail from '~/components/form/verify_email'
+import shadowLayer from '~/components/shadow-layer'
+import Button from '~/components/button'
+export default {
+    layout: 'base',
+    async asyncData({ app, store, redirect }) {
+        app.$axios.setHeader('token', store.state.token)
+        let res = await app.$axios.get('/cms/vup/v2/areas?versionCode=5300')
+        let countrys = {}
+        res.data.forEach((item, index) => {
+            countrys[item.id] = item
+        })
+        return {
+            countrys: countrys
+        }
+    },
+    data() {
+        return {
+            type: 0,
+            country: this.$store.state.country,
+            countryDialogStatus: false,
+            phoneCanNext: false,
+            emailCanNext: false
+        }
+    },
+    computed: {
+        areaInfo() {
+            return this.countrys[this.country.id]
         },
-        data(){
-            return {
-                type:0,
-                country:this.$store.state.country,
-                countryDialogStatus: false
-            }
-        },
-        computed:{
-            areaInfo(){
-                return this.countrys[this.country.id]
-            }
-        },
-        methods:{
-            changetype(type){
-                this.type = type
-            },
-            chooseCountry(country){
-                this.country = {
-                    id:country.id,
-                    short:country.country
-                }
-                this.countryDialogStatus = false
-            }
-        },
-        components:{
-            verifyTel,
-            verifyEmail,
-            shadowLayer
-        },
-        head() {
-            return {
-                title: 'Register'
+        canNext() {
+            if (this.type == 1) {
+                return this.emailCanNext
+            } else {
+                return this.phoneCanNext
             }
         }
+    },
+    methods: {
+        changetype(type) {
+            this.type = type
+        },
+        chooseCountry(country) {
+            this.country = {
+                id: country.id,
+                short: country.country
+            }
+            this.countryDialogStatus = false
+        },
+        nextStep() {
+            if (type == 1) {
+                let email = this.$refs.emailpicker.email
+                let code = this.$refs.emailpicker.vscode
+                this.$router.push(`/c/account/setpass?email=${email}&code=${code}`)
+            } else {
+                let phone = this.$refs.telpicker.tel
+                let code = this.$refs.telpicker.vscode
+                let phoneCc = this.areaInfo.phonePrefix
+                let countryId = this.country.id
+                this.$router.push(
+                    `/c/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
+                )
+            }
+        }
+    },
+    components: {
+        verifyTel,
+        verifyEmail,
+        shadowLayer,
+        Button
+    },
+    head() {
+        return {
+            title: 'Register'
+        }
     }
+}
 </script>
 <style lang="less" scoped>
 #wrapper {

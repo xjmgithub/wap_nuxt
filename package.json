@@ -23,7 +23,8 @@
         "less": "^3.8.1",
         "less-loader": "^4.1.0",
         "maxmind": "^2.7.0",
-        "nuxt": "^1.0.0"
+        "nuxt": "^1.0.0",
+        "qs": "^6.5.2"
     },
     "devDependencies": {
         "babel-eslint": "^8.2.1",

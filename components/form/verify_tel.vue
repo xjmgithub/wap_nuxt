@@ -15,76 +15,82 @@
     </div>
 </template>
 <script>
-    export default {
-        props:{
-            prefix:{
-                required:true
-            }
-        },
-        watch:{
-            tel(nv,ov){
-                this.error_tel = ''
-            },
-            vscode(nv,ov){
-                this.error_code = ''
-                if(nv.length>=4){
-                    this.$axios.setHeader('token', this.$store.state.token)
-                    this.$axios.post(`/ums/v1/register/code/sms`,{
-                        phonecc:this.prefix,
-                        phone:this.tel,
-                        code:nv
-                    })
-                    .then(res => {
-                        if (res.data.code == 0) {
-                            this.emmit('pass')
-                        } else {
-                            this.error_code= 'This code you entered is incorrect. Please try again.'
-                        }
-                    })
-                }
-            }
-        },
-        mounted(){
-            let _this = this
-            this.timer = setInterval(() => {
-                _this.codeDuring --
-            }, 1000)
-        },
-        data(){
-            return {
-                tel:'',
-                vscode:'',
-                focus_tel:false,
-                error_tel:'',
-                focus_code:false,
-                error_code:'',
-                codeDuring:0
-            }
-        },
-        computed:{
-            canGetCode(){
-                return this.tel.length>=6&&this.codeDuring<=0
-            }
-        },
-        methods:{
-            getCode(){
-                if(!this.canGetCode) return false
-                
-                this.$axios.setHeader('token', this.$store.state.token)
-                this.$axios.get(`/ums/v1/register/code/sms?phone=${this.tel}&phoneCc=${this.prefix}`)
-                    .then(res => {
-                        if (res.data.code == 0) {
-                            this.codeDuring = 60
-                        } else {
-                            this.error_tel = 'Please confirm you have entered the right number.'
-                        }
-                    })
-            }
-        },
-        beforeDestroy () {
-            clearInterval(this.timer)
+import qs from 'qs'
+export default {
+    props: {
+        prefix: {
+            required: true
         }
+    },
+    watch: {
+        tel(nv, ov) {
+            this.error_tel = ''
+        },
+        vscode(nv, ov) {
+            this.error_code = ''
+            if (nv.length >= 4) {
+                this.$axios.setHeader('token', this.$store.state.token)
+                this.$axios({
+                    method: 'POST',
+                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                    data: qs.stringify({
+                        phoneCc: this.prefix,
+                        phone: this.tel,
+                        code: nv
+                    }),
+                    url: '/ums/v1/register/code/sms'
+                }).then(res => {
+                    if (res.data.code == 0) {
+                        this.emmit('pass')
+                    } else {
+                        this.error_code = 'This code you entered is incorrect. Please try again.'
+                    }
+                })
+            }
+        }
+    },
+    mounted() {
+        let _this = this
+        this.timer = setInterval(() => {
+            _this.codeDuring--
+        }, 1000)
+    },
+    data() {
+        return {
+            tel: '',
+            vscode: '',
+            focus_tel: false,
+            error_tel: '',
+            focus_code: false,
+            error_code: '',
+            codeDuring: 0
+        }
+    },
+    computed: {
+        canGetCode() {
+            return this.tel.length >= 6 && this.codeDuring <= 0
+        }
+    },
+    methods: {
+        getCode() {
+            if (!this.canGetCode) return false
+
+            this.$axios.setHeader('token', this.$store.state.token)
+            this.$axios
+                .get(`/ums/v1/register/code/sms?phone=${this.tel}&phoneCc=${this.prefix}`)
+                .then(res => {
+                    if (res.data.code == 0) {
+                        this.codeDuring = 60
+                    } else {
+                        this.error_tel = 'Please confirm you have entered the right number.'
+                    }
+                })
+        }
+    },
+    beforeDestroy() {
+        clearInterval(this.timer)
     }
+}
 </script>
 <style lang="less" scoped>
 .input-tel {
