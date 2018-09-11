@@ -39,8 +39,11 @@ export const mutations = {
     SET_APP_VERSION: function(state, v) {
         state.appVersion = v
     },
-    SHOW_SHADOW_LAYER: function(state, st) {
-        state.shadowStatus = st
+    SHOW_SHADOW_LAYER: function(state) {
+        state.shadowStatus = true
+    },
+    HIDE_SHADOW_LAYER: function(state) {
+        state.shadowStatus = false
     }
 }
 
