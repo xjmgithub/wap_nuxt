@@ -9,15 +9,11 @@ export const state = () => ({
     appVersion: '-1',
     country: {},
     gaClientId: '',
-    authUser: null,
     lang: {},
     shadowStatus: false
 })
 
 export const mutations = {
-    SET_USER: function(state, user) {
-        state.authUser = user
-    },
     SET_LANG: function(state, lang) {
         state.lang = lang
     },
@@ -92,7 +88,12 @@ export const actions = {
             commit('SET_TOKEN', req.headers['http_token'])
         } else {
             if (_COOKIE['token']) {
+                console.log(_COOKIE['token'])
                 commit('SET_TOKEN', _COOKIE['token'])
+                commit('SET_COUNTRY', {
+                    id: _COOKIE['countryid'],
+                    short: _COOKIE['country']
+                })
             } else {
                 let res = await this.$axios.post('/ums/v1/user/login', {
                     // TODO mock ip

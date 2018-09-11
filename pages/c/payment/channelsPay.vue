@@ -11,7 +11,7 @@
 
 </template>
 <script>
-    import Buttons from '~/components/buttons'
+    import Buttons from '~/components/button'
     export default {
         data(){
             return {

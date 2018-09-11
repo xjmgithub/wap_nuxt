@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-    import Buttons from '~/components/buttons'
+    import Buttons from '~/components/button'
     import RadioBtn from '~/components/radioBtn'
 
     export default {

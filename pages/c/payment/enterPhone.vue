@@ -2,15 +2,15 @@
   <div class="container">
     <p class="network">Network</p>
     <RadioBtn :radioList="radioList" class="radioBtn"></RadioBtn>    
-    <PayNumber :signature="signature" :placeholder="placeholder" @changeNumber="changeNumber"></PayNumber>
+    <!-- <PayNumber :signature="signature" :placeholder="placeholder" @changeNumber="changeNumber"></PayNumber> -->
     <Buttons :buttonList="buttonList"></Buttons>
   </div>
 
 </template>
 <script>
-    import Buttons from '~/components/buttons'
+    import Buttons from '~/components/button'
     import RadioBtn from '~/components/radioBtn'
-    import PayNumber from '~/components/payNumber'
+    // import PayNumber from '~/components/payNumber'
 
     export default {
         data(){
@@ -30,7 +30,7 @@
         },
         layout: 'base',
         components: {
-            Buttons,RadioBtn,PayNumber
+            Buttons,RadioBtn
         },
         methods:{
             changeNumber(data){

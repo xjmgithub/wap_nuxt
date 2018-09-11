@@ -12,6 +12,7 @@
     </div>
 </template>
 <script>
+import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -74,22 +75,19 @@ export default {
                 })
                 .then(res => {
                     if (res.data.code == 0) {
-                        this.$store.commit('SET_USER', res.data.data.userId)
-                        this.$store.commit('SET_TOKEN', res.data.data.token)
-                        this.$store.commit('SET_COUNTRY', {
-                            id: res.data.data.countryId,
-                            short: res.data.data.country
-                        })
+                        setCookie('userId', res.data.data.userId)
+                        setCookie('token', res.data.data.token)
+                        setCookie('countryId', res.data.data.countryId)
+                        setCookie('country', res.data.data.country)
 
                         if (this.pre) {
                             this.$router.push(encodeURIComponent(this.pre))
                         } else {
-                            this.$router.push('/c/payment/ayBywallet')
+                            this.$router.push('/c/payment/walletPay')
                         }
                     } else {
                         _this.$alert(res.datea.message)
                     }
-
                 })
         }
     },
