@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Password :placeholder="pwdType" @setPassword="setPassword"></Password>
+        <Password :placeholder="pwdType" :toggleView="true" @setPassword="setPassword" ></Password>
         <div class="forgot-pwd">
             <a href="#">Forgot payment password?</a>
         </div>
@@ -12,8 +12,7 @@
 </template>
 <script>
     import Button from '~/components/button'
-    import Password from '~/components/password'
-
+    import Password from '~/components/password_test'
     export default {
         data() {
             return {
