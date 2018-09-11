@@ -15,39 +15,48 @@
     </div>
 </template>
 <script>
-    import Button from '~/components/button'
-    import RadioBtn from '~/components/radioBtn'
+import Button from '~/components/button'
+import RadioBtn from '~/components/radioBtn'
 
-    export default {
-         layout: 'base',
-         data(){
-             return {
-                 walletAccount:'',
-                 walletLeft:0,
-                 currency:'',
-                 radioList:[
-                    {value:"Glo",imgUrl:require('../../../assets/img/pay/MTN.png'),checked:false},
-                    {value:"Airtel",imgUrl:require('../../../assets/img/pay/Glo.png'),checked:true}
-                 ]
-             }
-         },
-         mounted(){
-            this.walletAccount = window.sessionStorage.getItem('wallet_account')
-            this.walletLeft = window.sessionStorage.getItem('wallet_left')
-            this.currency = window.sessionStorage.getItem('currency')
-         },
-        components: {
-            Button,RadioBtn
-        },
-        filters:{
-            // TODO FILTERS
-        },
-        methods:{
-            nextStep(){
-                // TODO 
-            }
+export default {
+    layout: 'base',
+    data() {
+        return {
+            walletAccount: '',
+            walletLeft: 0,
+            currency: '',
+            radioList: [
+                {
+                    value: 'Glo',
+                    imgUrl: require('../../../assets/img/pay/MTN.png'),
+                    checked: false
+                },
+                {
+                    value: 'Airtel',
+                    imgUrl: require('../../../assets/img/pay/Glo.png'),
+                    checked: true
+                }
+            ]
+        }
+    },
+    mounted() {
+        this.walletAccount = window.sessionStorage.getItem('wallet_account')
+        this.walletLeft = window.sessionStorage.getItem('wallet_left')
+        this.currency = window.sessionStorage.getItem('currency')
+    },
+    components: {
+        Button,
+        RadioBtn
+    },
+    filters: {
+        // TODO FILTERS
+    },
+    methods: {
+        nextStep() {
+            // TODO
         }
     }
+}
 </script>
 <style>
 .eWallet {

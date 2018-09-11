@@ -11,30 +11,26 @@
 
 </template>
 <script>
-    import Buttons from '~/components/button'
-    export default {
-        data(){
-            return {
-                buttonList:[
-                    { buttonValue:"PAY",buttonStyle:"color:#fff; background:#0087EB"}
-                ]
-            }
-        },
-        layout: 'base',
-        components: {
-            Buttons
-        },
+import Buttons from '~/components/button'
+export default {
+    data() {
+        return {
+            buttonList: [{ buttonValue: 'PAY', buttonStyle: 'color:#fff; background:#0087EB' }]
+        }
+    },
+    layout: 'base',
+    components: {
+        Buttons
     }
-
+}
 </script>
 <style scoped>
-    .container{
-        padding: 5rem 1rem 0;
-        font-size: .9rem;
-    }
-    .container p{
-       color:#666;
-       line-height:1.5rem;
-    }
-
+.container {
+    padding: 5rem 1rem 0;
+    font-size: 0.9rem;
+}
+.container p {
+    color: #666;
+    line-height: 1.5rem;
+}
 </style>

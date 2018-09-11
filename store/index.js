@@ -91,7 +91,7 @@ export const actions = {
                 console.log(_COOKIE['token'])
                 commit('SET_TOKEN', _COOKIE['token'])
                 commit('SET_COUNTRY', {
-                    id: _COOKIE['countryid'],
+                    id: _COOKIE['countryId'],
                     short: _COOKIE['country']
                 })
             } else {

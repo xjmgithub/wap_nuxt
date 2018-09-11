@@ -3,7 +3,7 @@
         <img class="st_logo" src="~/assets/img/logo01.png" />
         <img class="third_login facebook" @click="byfacebook" src="~/assets/img/users/btn_facebook_def.png" />
         <img class="third_login twitter" @click="bytwitter" src="~/assets/img/users/btn_twitter_def.png" />
-        <img class="third_login google g-signin2" @click="bygoogle" src="~/assets/img/users/btn_google_def.png" />
+        <img id="google-btn" class="third_login google" src="~/assets/img/users/btn_google_def.png" />
         <div class="login_btn"> SIGN IN </div>
         <div class="regtext">
             Don't have an account?
@@ -21,6 +21,7 @@ export default {
         }
     },
     mounted() {
+        let _this = this
         // twitter登录
         hello.init(
             {
@@ -36,6 +37,26 @@ export default {
             xfbml: true,
             version: 'v3.0'
         })
+
+        var googleUser = {}
+        var auth2 = gapi.auth2.init({
+            client_id: '152211292692-l849uvbt5jfmghi40e05o2jhuf8n3epj.apps.googleusercontent.com',
+            cookiepolicy: 'single_host_origin'
+        })
+        auth2.attachClickHandler(
+            document.getElementById('google-btn'),
+            {},
+            function(googleUser) {
+                _this.loginByThird(googleUser.getBasicProfile().getId())
+                // console.log('ID: ' + profile.getId()) // Do not send to your backend! Use an ID token instead.
+                // console.log('Name: ' + profile.getName())
+                // console.log('Image URL: ' + profile.getImageUrl())
+                // console.log('Email: ' + profile.getEmail()) // This is null if the 'email' scope is not present.
+            },
+            function(error) {
+                console.log(JSON.stringify(error, undefined, 2))
+            }
+        )
     },
     methods: {
         byfacebook() {
@@ -54,13 +75,6 @@ export default {
                     _this.loginByThird(res.authResponse.user_id)
                 }
             )
-        },
-        bygoogle() {
-            var profile = googleUser.getBasicProfile()
-            console.log('ID: ' + profile.getId()) // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName())
-            console.log('Image URL: ' + profile.getImageUrl())
-            console.log('Email: ' + profile.getEmail()) // This is null if the 'email' scope is not present.
         },
         loginByThird(userkey) {
             var _this = this
@@ -96,23 +110,17 @@ export default {
             title: 'Login',
             meta: [
                 { name: 'format-detection', content: 'email=no' },
-                { name: 'format-detection', content: 'telephone=no' },
-                {
-                    name: 'google-signin-client_id',
-                    content:
-                        '152211292692-l849uvbt5jfmghi40e05o2jhuf8n3epj.apps.googleusercontent.com'
-                }
+                { name: 'format-detection', content: 'telephone=no' }
             ],
             script: [
                 {
-                    src:
-                        'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
+                    src: 'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
                 },
                 {
                     src: 'https://connect.facebook.net/en_US/sdk.js'
                 },
                 {
-                    src: 'https://apis.google.com/js/platform.js'
+                    src: 'https://apis.google.com/js/api:client.js'
                 }
             ]
         }
