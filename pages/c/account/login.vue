@@ -12,112 +12,114 @@
     </div>
 </template>
 <script>
-    export default {
-        layout: 'base',
-        data(){
-            return {
-                pre: this.$route.query.pre
+export default {
+    layout: 'base',
+    data() {
+        return {
+            pre: this.$route.query.pre
+        }
+    },
+    mounted() {
+        // twitter登录
+        hello.init(
+            {
+                twitter: 'ECicswlypoOTdXm0NuWmzCZQe'
+            },
+            {
+                oauth_proxy: 'https://auth-server.herokuapp.com/proxy'
             }
-        },
-        mounted() {
-            // twitter登录
-            hello.init({
-                twitter: 'ECicswlypoOTdXm0NuWmzCZQe',
-            }, {
-                    oauth_proxy: 'https://auth-server.herokuapp.com/proxy'
-                })
-            // facebooke登录初始化
-            FB.init({
-                appId: '159785064477978',
-                xfbml: true,
-                version: 'v3.0'
+        )
+        // facebooke登录初始化
+        FB.init({
+            appId: '159785064477978',
+            xfbml: true,
+            version: 'v3.0'
+        })
+    },
+    methods: {
+        byfacebook() {
+            let _this = this
+            FB.login(function(res) {
+                _this.loginByThird(res.authResponse.userID)
             })
-
-            this.$alert('You have an order that meets the payment requirements. Will you make the payment?')
         },
-        methods: {
-            byfacebook() {
-                let _this = this
-                FB.login(function (res) {
-                    _this.loginByThird(res.authResponse.userID)
-                })
-            },
-            bytwitter() {
-                hello.login('twitter', {
+        bytwitter() {
+            hello.login(
+                'twitter',
+                {
                     response_type: 'code'
-                }, function (res) {
+                },
+                function(res) {
                     _this.loginByThird(res.authResponse.user_id)
-                })
-            },
-            bygoogle() {
-                var profile = googleUser.getBasicProfile();
-                console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-                console.log('Name: ' + profile.getName());
-                console.log('Image URL: ' + profile.getImageUrl());
-                console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-            },
-            loginByThird(userkey) {
-                var _this = this
-                this.$axios.setHeader('token', this.$store.state.token)
-                this.$axios.post('/ums/v1/user/login', {
-                    "applicationId": 2,
-                    "deviceId": this.$store.state.deviceId,
-                    "timeZoneId": "Asia/Shanghai",
-                    "type": 1,
-                    "thirdPartyToken": 'THIRD#' + userkey
-                })
-                    .then(res => {
-
-                        
-                        if (res.data.code == 0) {
-
-                            this.$store.commit('SET_USER',res.data.data.userId)
-                            this.$store.commit('SET_TOKEN',res.data.data.token)
-                            this.$store.commit('SET_COUNTRY',{
-                                id:res.data.data.countryId,
-                                short:res.data.data.country
-                            })
-
-                            if(this.pre){
-                                this.$router.push(encodeURIComponent(this.pre))
-                            }else{
-                                this.$router.push('/c/payment/ayBywallet')
-                            }
-                        } else {
-                            // _this.$toast('mesth')
-                            // TODO components toast
-                        }
-
-                        let user = res.data
-                        this.userHead = user.head || '~/assets/img/faq/1-02.png'
-                        this.userName = user.nickName
-                        this.userId = user.head
-                        this.loginStatus = user.type
-                    })
-            }
+                }
+            )
         },
-        head() {
-            return {
-                title: 'Login',
-                meta: [
-                    { name: 'format-detection', content: 'email=no' },
-                    { name: 'format-detection', content: 'telephone=no' },
-                    { name: 'google-signin-client_id', content: '152211292692-l849uvbt5jfmghi40e05o2jhuf8n3epj.apps.googleusercontent.com' }
-                ],
-                script: [
-                    {
-                        src: 'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
-                    },
-                    {
-                        src: 'https://connect.facebook.net/en_US/sdk.js'
-                    },
-                    {
-                        src: 'https://apis.google.com/js/platform.js'
+        bygoogle() {
+            var profile = googleUser.getBasicProfile()
+            console.log('ID: ' + profile.getId()) // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName())
+            console.log('Image URL: ' + profile.getImageUrl())
+            console.log('Email: ' + profile.getEmail()) // This is null if the 'email' scope is not present.
+        },
+        loginByThird(userkey) {
+            var _this = this
+            this.$axios.setHeader('token', this.$store.state.token)
+            this.$axios
+                .post('/ums/v1/user/login', {
+                    applicationId: 2,
+                    deviceId: this.$store.state.deviceId,
+                    timeZoneId: 'Asia/Shanghai',
+                    type: 1,
+                    thirdPartyToken: 'THIRD#' + userkey
+                })
+                .then(res => {
+                    if (res.data.code == 0) {
+                        this.$store.commit('SET_USER', res.data.data.userId)
+                        this.$store.commit('SET_TOKEN', res.data.data.token)
+                        this.$store.commit('SET_COUNTRY', {
+                            id: res.data.data.countryId,
+                            short: res.data.data.country
+                        })
+
+                        if (this.pre) {
+                            this.$router.push(encodeURIComponent(this.pre))
+                        } else {
+                            this.$router.push('/c/payment/ayBywallet')
+                        }
+                    } else {
+                        _this.$alert(res.datea.message)
                     }
-                ]
-            }
+
+                })
+        }
+    },
+    head() {
+        return {
+            title: 'Login',
+            meta: [
+                { name: 'format-detection', content: 'email=no' },
+                { name: 'format-detection', content: 'telephone=no' },
+                {
+                    name: 'google-signin-client_id',
+                    content:
+                        '152211292692-l849uvbt5jfmghi40e05o2jhuf8n3epj.apps.googleusercontent.com'
+                }
+            ],
+            script: [
+                {
+                    src:
+                        'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
+                },
+                {
+                    src: 'https://connect.facebook.net/en_US/sdk.js'
+                },
+                {
+                    src: 'https://apis.google.com/js/platform.js'
+                }
+            ]
         }
     }
+}
 </script>
 <style lang="less" scoped>
 #wrapper {

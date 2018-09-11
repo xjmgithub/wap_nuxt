@@ -8,7 +8,8 @@
             </div>
         </div>
         <div class="dialog-footer">
-            <div class="btn" @click="sure">OK</div>
+            <div class="btn" @click="sure">YES</div>
+            <div class="btn" @click="close">NO</div>
         </div>
     </div>
 </template>
@@ -24,10 +25,15 @@ export default {
         }
     },
     methods: {
-        sure() {
+        close() {
             this.style = 'none'
             this.$store.commit('HIDE_SHADOW_LAYER')
-            if (this.callback) this.callback()
+        },
+        sure() {
+            this.close()
+            if (this.callback) {
+                this.callback()
+            }
         },
         show(msg, callback) {
             let _this = this
