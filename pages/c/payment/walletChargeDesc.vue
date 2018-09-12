@@ -6,7 +6,7 @@
             {{desc}}
         </div>
         <div class="footer">
-            <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="type!=4" text="NEXT" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
@@ -17,7 +17,8 @@ export default {
         return {
             name: '',
             desc: '',
-            code: ''
+            code: '',
+            type: ''  // 1 boss 充值 2 copon 充值 3 第三方支付充值  4 充值卡充值
         }
     },
     layout: 'base',
@@ -31,13 +32,24 @@ export default {
         this.name = channelInfo.value
         this.desc = channelInfo.desc
         this.code = channelInfo.code
+        this.type = channelInfo.channelType
     },
     // beforeDestroy() {
     //     window.sessionStorage.removeItem('wallet_charge_channel')
     // },
     methods: {
         nextStep() {
-            console.log(123)
+            if (this.type == 1) {
+                return false // bosse 充值
+            } else if (this.type == 2) {
+                return false // coupon 充值
+            } else if (this.type == 3) {
+                return false // 第三方支付充值，app暂时没做
+            } else if (this.type == 4) {
+                this.$router.push('/c/payment/walletChargeByCard')
+            } else {
+                return false
+            }
         }
     }
 }
@@ -73,8 +85,8 @@ export default {
     color: #333;
     font-weight: 600;
 }
-.desc{
-    padding:1rem;
+.desc {
+    padding: 1rem;
 }
 .footer {
     position: fixed;
@@ -84,5 +96,4 @@ export default {
     left: 0;
     right: 0;
 }
-
 </style>
