@@ -11,7 +11,7 @@
 			</div>
 		</div>
 		<div v-show="type==0" class="by_tel">
-			<div class="country_choose" @click="countryDialogStatus=true">
+			<div class="country_choose" v-if="areaInfo" @click="countryDialogStatus=true">
 				<img :src="areaInfo.nationalFlag" />
 				<span>{{areaInfo.name}}</span>
 			</div>
@@ -71,7 +71,8 @@ export default {
             countryDialogStatus: false,
             phoneNum: '',
             password: '',
-            email: ''
+            email: '',
+            countrys:[]
         }
     },
     computed: {
