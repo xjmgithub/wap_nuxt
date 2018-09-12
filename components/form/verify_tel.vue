@@ -41,7 +41,7 @@ export default {
                     url: '/ums/v1/register/code/sms'
                 }).then(res => {
                     if (res.data.code == 0) {
-                        this.emmit('pass')
+                        this.$emit('pass')
                     } else {
                         this.error_code = 'This code you entered is incorrect. Please try again.'
                     }

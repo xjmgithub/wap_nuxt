@@ -20,10 +20,10 @@
             <verify-tel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verify-tel>
         </div>
         <div v-show="type==1" class="by_email">
-            <verify-email ref="emailpicker"></verify-email>
+            <verify-email ref="emailpicker"  @pass="emailCanNext=true"></verify-email>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <Button :disabled="!canNext" :text="'NEXT'" @click="nextStep"></Button>
+            <Button :disabled="!canNext" :text="'NEXT'" @click="nextStep" ></Button>
         </div>
         <div class="terms">
             <a href="Todo">Terms of Service</a>
@@ -91,7 +91,7 @@ export default {
             this.countryDialogStatus = false
         },
         nextStep() {
-            if (type == 1) {
+            if (this.type == 1) {
                 let email = this.$refs.emailpicker.email
                 let code = this.$refs.emailpicker.vscode
                 this.$router.push(`/c/account/setpass?email=${email}&code=${code}`)

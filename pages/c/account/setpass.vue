@@ -19,15 +19,16 @@
 </template>
 <script>
 import Button from '~/components/button'
+import qs from 'qs'
 export default {
     layout: 'base',
     data() {
         return {
-            countryId: this.$router.query.countryId || '',
-            phone: this.$router.query.phone || '',
-            phoneCc: this.$router.query.phoneCc || '',
-            verifyCode: this.$router.query.code || '',
-            email: this.$router.query.email || '',
+            countryId: this.$route.query.countryId || '',
+            phone: this.$route.query.phone || '',
+            phoneCc: this.$route.query.phoneCc || '',
+            verifyCode: this.$route.query.code || '',
+            email: this.$route.query.email || '',
             pass: '',
             repass: '',
             inviteCode: ''
@@ -49,22 +50,23 @@ export default {
                 options.phoneCc = this.phoneCc
                 options.phone = this.phone
                 options.countryId = this.countryId
+                options.type = 10
             } else {
                 options.email = this.email
+                options.type = 0
             }
+
             this.$axios.setHeader('token', this.$store.state.token)
-            this.$axios({
-                method: 'POST',
-                headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                data: qs.stringify(options),
-                url: '/ums/v1/register'
-            }).then(res => {
-                if (res.data.code == 0) {
-                    // TODO  注册成功
-                } else {
-                    this.error_code = 'This code you entered is incorrect. Please try again.'
-                }
-            })
+            this.$axios
+                .post('/ums/v1/register', options)
+                .then(res => {
+                    if (res.data.code == 0) {
+                       this.$router.push('/c/account/login')
+                    } else {
+                        this.error_code = 'This code you entered is incorrect. Please try again.'
+                    }
+                })
+            
         }
     },
     components: {

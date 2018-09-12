@@ -14,6 +14,7 @@
     </div>
 </template>
 <script>
+    import qs from 'qs'
     export default {
         watch:{
             email(nv,ov){
@@ -23,15 +24,19 @@
                 this.error_code = ''
                 if(nv.length>=4){
                     this.$axios.setHeader('token', this.$store.state.token)
-                    this.$axios.post(`/ums/v1/register/code/verify`,{
-                        email:this.email,
+                    this.$axios({
+                        method: 'POST',
+                        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                        data: qs.stringify({
+                            email:this.email,
                         code:nv
-                    })
-                    .then(res => {
+                        }),
+                        url: '/ums/v1/register/code/verify'
+                    }).then(res => {
                         if (res.data.code == 0) {
-                            this.emmit('pass')
+                            this.$emit('pass')
                         } else {
-                            this.error_code= 'This code you entered is incorrect. Please try again.'
+                            this.error_code = 'This code you entered is incorrect. Please try again.'
                         }
                     })
                 }
