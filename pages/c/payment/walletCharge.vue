@@ -10,7 +10,7 @@
         </div>
         <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
         <div class="footer">
-            <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="false" text="NEXT" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
@@ -56,7 +56,8 @@ export default {
                         value: item.name,
                         imgUrl: item.logoUrl || '',
                         desc: item.description,
-                        checked: index ? false : true
+                        checked: index ? false : true,
+                        channelType: item.channelType
                     })
                 })
 
@@ -74,8 +75,10 @@ export default {
     },
     methods: {
         nextStep() {
-            console.log(this.selectedChannel)
-            window.sessionStorage.setItem('wallet_charge_channel',JSON.stringify(this.selectedChannel))
+            window.sessionStorage.setItem(
+                'wallet_charge_channel',
+                JSON.stringify(this.selectedChannel)
+            )
             this.$router.push('/c/payment/walletChargeDesc')
         },
         changeItem(code) {
@@ -132,5 +135,4 @@ export default {
     left: 0;
     right: 0;
 }
-
 </style>

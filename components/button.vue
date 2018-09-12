@@ -31,6 +31,7 @@ button {
     margin: 0 auto;
     margin-top: 0.7rem;
     background: #0087eb;
+    font-size:1rem;
     color: white;
     &.disabled {
         background: #dddddd;
