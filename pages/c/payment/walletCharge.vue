@@ -12,12 +12,24 @@
         <div class="footer">
             <Button :disabled="false" :text="'NEXT'" @click="nextStep"></Button>
         </div>
+        <div class="container">
+            <h3>Recharge by mpesa</h3>
+            <h4 class="description">Description</h4>
+            <ul>
+                <li>1. Select "Lipa na M-PESA".</li>
+                <li>2. Go to "Pay Bill" option.</li>
+                <li>3. Enter Account <span>No.91000023658</span></li>
+                <li>4. Enter Amount and Continue.</li>
+                <li>5. Confirm your payment information.</li>
+                <li>6. Enter M-PESA PIN and Send.</li>
+            </ul> 
+        <Buttons :buttonList="buttonList"></Buttons>
+        </div>
     </div>
 </template>
 <script>
 import Button from '~/components/button'
 import RadioBtn from '~/components/radioBtn'
-
 export default {
     layout: 'base',
     data() {
@@ -25,24 +37,28 @@ export default {
             walletAccount: '',
             walletLeft: 0,
             currency: '',
-            radioList: [
-                {
-                    value: 'Glo',
-                    imgUrl: require('../../../assets/img/pay/MTN.png'),
-                    checked: false
-                },
-                {
-                    value: 'Airtel',
-                    imgUrl: require('../../../assets/img/pay/Glo.png'),
-                    checked: true
-                }
-            ]
+            radioList: []
         }
     },
     mounted() {
         this.walletAccount = window.sessionStorage.getItem('wallet_account')
         this.walletLeft = window.sessionStorage.getItem('wallet_left')
         this.currency = window.sessionStorage.getItem('currency')
+        this.$axios.setHeader('token', this.$store.state.token)
+        this.$axios.get('/mobilewallet/v1/recharge-channels').then(res => {
+            let list = []
+            if(res.data&&res.data.length>0){
+                res.data.forEach((item,index)=>{
+                    list.push({
+                        code:item.id,
+                        value:item.name,
+                        imgUrl:item.logoUrl||'',
+                        checked:index ? false : true
+                    })
+                })
+                this.radioList = list
+            }
+        })
     },
     components: {
         Button,

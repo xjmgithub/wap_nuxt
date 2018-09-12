@@ -46,7 +46,7 @@
                     sessionStorage.setItem('wallet_account',res.data.accountNo)
                     sessionStorage.setItem('wallet_left',res.data.amount)
                     sessionStorage.setItem('currency',res.data.currencySymbol)
-                    _this.balance = 1
+                    _this.balance = 1 // TODO remove demo
                 }
             })
         },
@@ -57,7 +57,7 @@
                     this.$router.push('/c/payment/walletPass')
                 }else{
                     // TODO 充值流程
-                    this.$router.push('/c/payment/eWallet')
+                    this.$router.push('/c/payment/walletCharge')
 
                 }
             }
