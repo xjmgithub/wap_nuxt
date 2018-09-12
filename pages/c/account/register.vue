@@ -17,13 +17,13 @@
                 <img :src="areaInfo.nationalFlag" />
                 <span>{{areaInfo.name}}</span>
             </div>
-            <verify-tel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verify-tel>
+            <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verifyTel>
         </div>
         <div v-show="type==1" class="by_email">
-            <verify-email ref="emailpicker"  @pass="emailCanNext=true"></verify-email>
+            <verifyEmail ref="emailpicker"  @pass="emailCanNext=true"></verifyEmail>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <Button :disabled="!canNext" :text="'NEXT'" @click="nextStep" ></Button>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" ></mButton>
         </div>
         <div class="terms">
             <a href="Todo">Terms of Service</a>
@@ -37,14 +37,14 @@
                 </li>
             </ul>
         </div>
-        <shadow-layer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadow-layer>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
     </div>
 </template>
 <script>
 import verifyTel from '~/components/form/verify_tel'
 import verifyEmail from '~/components/form/verify_email'
 import shadowLayer from '~/components/shadow-layer'
-import Button from '~/components/button'
+import mButton from '~/components/button'
 export default {
     layout: 'base',
     async asyncData({ app, store, redirect }) {
@@ -110,7 +110,7 @@ export default {
         verifyTel,
         verifyEmail,
         shadowLayer,
-        Button
+        mButton
     },
     head() {
         return {

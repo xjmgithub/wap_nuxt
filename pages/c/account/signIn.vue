@@ -45,7 +45,7 @@
 				</li>
 			</ul>
 		</div>
-		<shadow-layer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadow-layer>
+		<shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
 	</div>
 </template>
 <script>

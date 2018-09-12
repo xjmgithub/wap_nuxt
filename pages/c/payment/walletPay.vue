@@ -11,12 +11,12 @@
             </div>
         </div>
         <div class="footer">
-            <Button :disabled="false" :text="enough?'NEXT':'RECHARGE'" @click="nextStep"></Button>
+            <mButton :disabled="false" :text="enough?'NEXT':'RECHARGE'" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
 <script>
-    import Button from '~/components/button'
+    import mButton from '~/components/button'
     export default {
         data() {
             return {
@@ -34,7 +34,7 @@
         },
         layout: 'base',
         components: {
-            Button
+            mButton
         },
         created() {
             let _this = this

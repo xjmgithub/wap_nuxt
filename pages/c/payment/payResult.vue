@@ -1,58 +1,58 @@
 <template>
-  <div class="container">
-    <loading v-show="loadStatus"></loading>
-    <template v-if="result=='succss'&&!loadStatus">
-        <img src="~assets/img/pay/pic_done_b.png" alt="">
-        <p class="success">
-            Payment Successful
-        </p> 
-        <p class="money">
-            50.00 <span>Ksh</span>
-        </p> 
-        <p class="msg">
-            Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
-        </p> 
-    </template>
-    <template v-if="result=='fail'&&!loadStatus">
-        <img src="~assets/img/pay/img_failed_def_b.png" alt="">
-        <p class="fail">
-            Payment Failed
-        </p> 
-        <p class="msg">
-            Thanks for your payment. But You have insufficent funds.
-        </p> 
-    </template>
-    <div class="footer" v-show="!loadStatus">
-        <Button :disabled="false" :text="'OK'" @click="back"></Button>
+    <div class="container">
+        <loading v-show="loadStatus"></loading>
+        <template v-if="result=='succss'&&!loadStatus">
+            <img src="~assets/img/pay/pic_done_b.png" alt="">
+            <p class="success">
+                Payment Successful
+            </p>
+            <p class="money">
+                50.00
+                <span>Ksh</span>
+            </p>
+            <p class="msg">
+                Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
+            </p>
+        </template>
+        <template v-if="result=='fail'&&!loadStatus">
+            <img src="~assets/img/pay/img_failed_def_b.png" alt="">
+            <p class="fail">
+                Payment Failed
+            </p>
+            <p class="msg">
+                Thanks for your payment. But You have insufficent funds.
+            </p>
+        </template>
+        <div class="footer" v-show="!loadStatus">
+            <mButton :disabled="false" :text="'OK'" @click="back"></mButton>
+        </div>
     </div>
-  </div>
 
 </template>
 <script>
-    import Button from '~/components/button'
-    import loading from '~/components/loading'
-    export default {
-        data(){
-            return {
-                result:'',
-                loadStatus: true
-            }
-        },
-        layout: 'base',
-        components: {
-            Button,
-            loading
-        },
-        created(){
-            // TODO 检查支付状态
-        },
-        methods:{
-            back(){
-                // TODO 退回商户
-            }
+import mButton from '~/components/button'
+import loading from '~/components/loading'
+export default {
+    data() {
+        return {
+            result: '',
+            loadStatus: true
+        }
+    },
+    layout: 'base',
+    components: {
+        mButton,
+        loading
+    },
+    created() {
+        // TODO 检查支付状态
+    },
+    methods: {
+        back() {
+            // TODO 退回商户
         }
     }
-
+}
 </script>
 <style scoped>
 .container {

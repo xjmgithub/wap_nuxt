@@ -2,7 +2,7 @@
   <div class="radio-box">
     <div v-for="(item,i) in radioList" :key="i">
       <label class="radio">
-        <input type="radio" name="pay-options" value="item.code" :checked="item.checked?true:false"/>
+        <input type="radio" name="pay-options" value="item.code" @click="checkThis(item.code)" :checked="item.checked?true:false"/>
         <i></i>
         <div class="img-box" v-show="item.imgUrl">
           <img :src="item.imgUrl" alt=""> 
@@ -14,7 +14,12 @@
 </template>
 <script>
 export default {
-  props: ["radioList"]
+  props: ["radioList"],
+  methods:{
+      checkThis(code){
+          this.$emit('pick',code)
+      }
+  }
 }
 </script>
 <style scoped>

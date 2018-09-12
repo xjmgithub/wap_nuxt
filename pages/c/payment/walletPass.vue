@@ -5,13 +5,13 @@
             <a href="#">Forgot payment password?</a>
         </div>
         <div class="footer">
-        <Button :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"></Button>
+        <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"></mButton>
         </div>
     </div>
 
 </template>
 <script>
-    import Button from '~/components/button'
+    import mButton from '~/components/button'
     import Password from '~/components/password'
     export default {
         data() {
@@ -23,7 +23,7 @@
         },
         layout: 'base',
         components: {
-            Button, 
+            mButton, 
             Password
         },
         methods: {

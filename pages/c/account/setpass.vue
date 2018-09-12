@@ -19,12 +19,12 @@
             <input type="text" v-model="inviteCode" @blur="checkpass" />
         </div>
         <div class="footer">
-            <Button :disabled="false" :text="'NEXT'" @click="nextStep"></Button>
+            <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
 <script>
-import Button from '~/components/button'
+import mButton from '~/components/button'
 import qs from 'qs'
 export default {
     layout: 'base',
@@ -78,7 +78,7 @@ export default {
         }
     },
     components: {
-        Button
+        mButton
     },
      computed: {
         pwdType(){

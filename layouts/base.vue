@@ -3,7 +3,7 @@
     <nuxt/>
     <alert ref="alert"></alert>
     <confirm ref="confirm"></confirm>
-    <shadow-layer v-show="layer"></shadow-layer>
+    <shadowLayer v-show="layer"></shadowLayer>
 </div>
 </template>
 <script>
