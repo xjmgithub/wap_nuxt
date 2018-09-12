@@ -1,12 +1,18 @@
 <template>
     <div class="wrapper">
         <div class="input-item">
-            <div class="label">Create a Password</div>
-            <input type="text" v-model="pass" @blur="checkpass" />
+            <div class="label">Create a Password
+                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext==1" alt="" @click="isCiphertext=2">
+                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext==2" alt="" @click="isCiphertext=1">
+            </div>
+            <input  :type="pwdType" v-model="pass" @blur="checkpass" />
         </div>
         <div  class="input-item">
-            <div class="label">Confirm New Password</div>
-            <input type="text" v-model="repass" @blur="checkpass" />
+            <div class="label">Confirm New Password
+                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
+                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
+            </div>
+            <input  :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
         </div>
         <div class="input-item invite">
             <div class="label">Invitation Code(Optional)</div>
@@ -31,7 +37,9 @@ export default {
             email: this.$route.query.email || '',
             pass: '',
             repass: '',
-            inviteCode: ''
+            inviteCode: '',
+            isCiphertext:1,
+            isCiphertext_confirm:1
         }
     },
     methods: {
@@ -71,7 +79,15 @@ export default {
     },
     components: {
         Button
-    }
+    },
+     computed: {
+        pwdType(){
+            return this.isCiphertext==1?'password':'text'
+        },
+        pwdType_confirm(){
+            return this.isCiphertext_confirm==1?'password':'text'
+        }
+     }
 }
 </script>
 <style scoped>
@@ -91,6 +107,11 @@ input {
 }
 .label {
     font-size: 0.8rem;
+}
+.open-close{
+    width:1.5rem;
+    height:1.5rem;
+    float: right;
 }
 .footer {
     position: fixed;
