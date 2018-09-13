@@ -19,7 +19,8 @@ module.exports = {
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         script: [
             {
-                src: 'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
+                src:
+                    'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
             },
             {
                 src: 'https://connect.facebook.net/en_US/sdk.js'
@@ -63,7 +64,13 @@ module.exports = {
         '/ums/': env.ms_host,
         '/cms/': env.ms_host,
         '/ocs/': env.ms_host,
-        '/mobilewallet/': env.ms_host
+        '/mobilewallet/': env.ms_host,
+        '/membership/': env.ms_host,
+        '/payment/': env.ms_host,
+        // '/payment/': 'http://localhost:9001',
     },
-    plugins: [{ src: '~plugins/analysis.js', ssr: false }, { src: '~plugins/auth.js', ssr: false }]
+    plugins: [
+        { src: '~plugins/analysis.js', ssr: false },
+        { src: '~plugins/auth.js', ssr: false }
+    ]
 }
