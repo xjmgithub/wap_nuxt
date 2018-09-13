@@ -1,28 +1,26 @@
 <template>
-    <div class="container">
+    <div id="pay-form" class="container">
         <template v-for="(item,index) in configs">
             <div class="form-item" :key="index" v-if="item.displayState!=2">
-                <!-- 1 永久可见，2 永不可见，3 条件可见 -->
-                <div v-if="item.formType=='select'||item.formType=='radio'">
-                    <!-- TODO v-show="condition" -->
+                <div v-if="item.formType=='select'||item.formType=='radio'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType">
                     <p class="network">{{item.name}}</p>
                     <div class="radio-box">
                         <div v-for="(radio,i) in item.optionArr" :key="i">
                             <label class="radio">
-                                <input type="radio" name="pay-options" value="radio" @click="checkThis(radio)" :checked="radio==item.defaultValue?true:false" />
+                                <input type="radio" :name="item.name" :value="radio" :checked="radio == item.defaultValue ? true : false" />
                                 <i></i>
                                 <span>{{radio}}</span>
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="form-item input-tel" v-if="item.formType=='tel'" :class="{focus:focus_tel,error:error_tel}">
+                <div class="form-item input-tel" v-if="item.formType=='tel'"  :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern">
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
                         <input type="tel" :placeholder="item.placeholder" />
                     </div>
                 </div>
-                <div class="form-item input-tel" v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'" :class="{focus:focus_tel,error:error_tel}">
+                <div class="form-item input-tel" v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern">
                     <div class="number">
                         <input :type="item.formType" :placeholder="item.placeholder" />
                     </div>
@@ -33,34 +31,24 @@
             </div>
         </template>
         <div class="footer">
-            <mButton :disabled="false" text="OK"></mButton>
+            <mButton class="next" :disabled="false" text="OK"></mButton>
+            <mButton class="cancel" :disabled="false" text="CANCEL"></mButton>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
+import $ from 'jquery'
 export default {
     layout: 'base',
     data() {
         return {
             payChannelId: this.$route.query.payChannelId,
-            configs: [],
-            radioList: [
-                { value: 'Glo', imgUrl: '', checked: false },
-                { value: 'Airtel', imgUrl: '', checked: true }
-            ],
-            signature: '+234',
-            placeholder: 'Phone Number',
-            number: ''
+            configs: []
         }
     },
     components: {
         mButton
-    },
-    methods: {
-        changeNumber(data) {
-            this.number = data
-        }
     },
     mounted() {
         this.$axios.setHeader('token', this.$store.state.token)
@@ -80,12 +68,134 @@ export default {
                     this.configs = configs
                 }
             })
-    },
-    watch: {
-        number(val, oldVal) {
-            if (val.length >= 11) {
-            } else {
+
+        $('#pay-form')
+            .on('change', 'input[type="radio"]', function() {
+                ifShow()
+            })
+            .on('change', 'input[type="checkbox"]', function() {
+                ifShow()
+            })
+            .on(
+                'blur',
+                'input[type="text"],input[type="password"],input[type="tel"],input[type="email"]',
+                function() {
+                    ifShow()
+                }
+            )
+            .on('click', '.mint-button.cancel', function() {
+                this.$router.go(-1)
+            })
+            .on('click', '.mint-button.next', function() {
+                var items = $('[data-id]').filter(':visible')
+                var optarr = []
+                for (var i = 0; i < items.length; i++) {
+                    var item = $(items[i])
+                    var id = item.data('id')
+                    var name = item.data('name')
+                    var type = item.data('type')
+                    var value = getItemVal(id)
+
+                    if (
+                        type == 'text' ||
+                        type == 'password' ||
+                        type == 'tel' ||
+                        type == 'email'
+                    ) {
+                        if (!value) {
+                            item
+                                .addClass('error')
+                                .find('.mint-cell-right')
+                                .text('Please enter the complete information.')
+                            return false
+                        } else {
+                            var reg = new RegExp(item.data('reg'))
+                            if (!reg.test(value)) {
+                                item
+                                    .addClass('error')
+                                    .find('.mint-cell-right')
+                                    .text(
+                                        'Please enter the correct ' + name + '.'
+                                    )
+                                return false
+                            } else {
+                                item.removeClass('error')
+                            }
+                        }
+                    }
+
+                    if (type == 'tel') {
+                        if (!value) {
+                            item
+                                .addClass('error')
+                                .find('.mint-cell-right')
+                                .text('Please enter the complete information.')
+                            return false
+                        } else {
+                            var reg = new RegExp(item.data('reg'))
+                            if (!reg.test(value)) {
+                                item
+                                    .addClass('error')
+                                    .find('.mint-cell-right')
+                                    .text(
+                                        'Please enter the correct ' + name + '.'
+                                    )
+                                return false
+                            } else {
+                                item.removeClass('error')
+                                var precode = item.data('callcode')
+                                if (precode && value.indexOf(precode) != 0) {
+                                    if (value.indexOf('0') == 0) {
+                                        value = precode + value.substring(1)
+                                    } else {
+                                        value = precode + value
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    optarr.push(id + '=' + value)
+                }
+            })
+
+        function ifShow() {
+            var conditionShow = $('[data-state="3"]')
+            for (var i = 0; i < conditionShow.length; i++) {
+                var item = $(conditionShow[i])
+                var condition = item.data('show').split('=')
+                var key = condition[0]
+                var destValue = condition[1]
+                var realValue = getItemVal(key)
+                if (realValue == destValue) {
+                    item.show()
+                } else {
+                    item.hide()
+                }
             }
+        }
+
+        function getItemVal(key) {
+            var item = $('[data-id="' + key + '"]')
+            var type = item.data('type')
+            var value = ''
+            switch (type) {
+                case 'select':
+                case 'radio':
+                    value = item.find('input:checked').val()
+                    break
+                case 'password':
+                case 'text':
+                case 'tel':
+                case 'email':
+                case 'hidden':
+                    value = item.find('input').val()
+                    break
+                default:
+                    return ''
+                    break
+            }
+            return value
         }
     }
 }
