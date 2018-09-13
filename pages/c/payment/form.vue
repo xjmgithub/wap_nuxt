@@ -14,13 +14,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-item input-tel" v-if="item.formType=='tel'"  :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern">
+                <div class="form-item input-tel" v-if="item.formType=='tel'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern" :data-precode="item.countryCallingCode" :data-name="item.name">
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
                         <input type="tel" :placeholder="item.placeholder" />
                     </div>
                 </div>
-                <div class="form-item input-tel" v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern">
+                <div class="form-item input-tel" v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern" :data-name="item.name">
                     <div class="number">
                         <input :type="item.formType" :placeholder="item.placeholder" />
                     </div>
@@ -83,12 +83,12 @@ export default {
                     ifShow()
                 }
             )
-            .on('click', '.mint-button.cancel', function() {
+            .on('click', '.cancel', function() {
                 this.$router.go(-1)
             })
-            .on('click', '.mint-button.next', function() {
+            .on('click', '.next', function() {
                 var items = $('[data-id]').filter(':visible')
-                var optarr = []
+                var optarr = {}
                 for (var i = 0; i < items.length; i++) {
                     var item = $(items[i])
                     var id = item.data('id')
@@ -103,60 +103,79 @@ export default {
                         type == 'email'
                     ) {
                         if (!value) {
-                            item
-                                .addClass('error')
-                                .find('.mint-cell-right')
-                                .text('Please enter the complete information.')
+                            item.append(
+                                '<div class="error" style="position: absolute;bottom: -1.4rem;font-size: 0.5rem;color: red;">Please enter the complete information.</div>'
+                            )
+                            item.css({
+                                "border-bottom": "#dddddd solid 1px"
+                            })
                             return false
                         } else {
                             var reg = new RegExp(item.data('reg'))
                             if (!reg.test(value)) {
-                                item
-                                    .addClass('error')
-                                    .find('.mint-cell-right')
-                                    .text(
-                                        'Please enter the correct ' + name + '.'
-                                    )
+                                item.append(
+                                    '<div class="error" style="position: absolute;bottom: -1.4rem;font-size: 0.5rem;color: red;">Please enter the correct ' +
+                                        name +
+                                        '.</div>'
+                                )
+                                item.css({
+                                    "border-bottom": "#red solid 1px"
+                                })
                                 return false
                             } else {
-                                item.removeClass('error')
-                            }
-                        }
-                    }
-
-                    if (type == 'tel') {
-                        if (!value) {
-                            item
-                                .addClass('error')
-                                .find('.mint-cell-right')
-                                .text('Please enter the complete information.')
-                            return false
-                        } else {
-                            var reg = new RegExp(item.data('reg'))
-                            if (!reg.test(value)) {
-                                item
-                                    .addClass('error')
-                                    .find('.mint-cell-right')
-                                    .text(
-                                        'Please enter the correct ' + name + '.'
-                                    )
-                                return false
-                            } else {
-                                item.removeClass('error')
-                                var precode = item.data('callcode')
-                                if (precode && value.indexOf(precode) != 0) {
-                                    if (value.indexOf('0') == 0) {
-                                        value = precode + value.substring(1)
-                                    } else {
-                                        value = precode + value
+                                item.css({
+                                    "border-bottom": "#dddddd solid 1px"
+                                })
+                                item.find('.error').remove()
+                                if (type == 'tel') {
+                                    var precode = item.data('precode')
+                                    if (
+                                        precode &&
+                                        value.indexOf(precode) != 0
+                                    ) {
+                                        if (value.indexOf('0') == 0) {
+                                            value = precode + value.substring(1)
+                                        } else {
+                                            value = precode + value
+                                        }
                                     }
                                 }
                             }
                         }
                     }
 
-                    optarr.push(id + '=' + value)
+                    optarr[id] = value
                 }
+                
+                this.$axios.setHeader('token', this.$store.state.token)
+                this.$axios
+                    .post('/payment/api/v2/invoke-payment', {
+                        payToken: this.payToken,
+                        payChannelId: this.payChannel,
+                        tradeType: 'JSAPI',
+                        signType: 'MD5',
+                        extendInfo: optarr
+                    })
+                    .then(res => {
+                        if (res.data && res.data.resultCode == 0) {
+                            if (_this.paymethod.appInterfaceMode == 2) {
+                                window.location.href = data.data.redirectUrl
+                            } else if (_this.paymethod.appInterfaceMode == 3) {
+                                // TODO 查询支付结果
+                                // window.location.href = 'payment_process.php?orderId=' + _this.orderId  // 等待支付结果
+                            } else {
+                                // SDK 和 其他 不支持,
+                                // payType 1 钱包支付
+                                _this.$alert(
+                                    'The payment method is not supported for the time being'
+                                )
+                            }
+                        } else {
+                            // TODO PAY FAIL
+                        }
+                    })
+                
+
             })
 
         function ifShow() {
