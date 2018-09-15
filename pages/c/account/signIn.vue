@@ -1,52 +1,54 @@
 <template>
-	<div id="wrapper">
-		<div class="tab">
-			<div v-show="type==1" @click="changetype(0)">
-				<img class="gray" src="~/assets/img/users/ic_telephone_def_g.png" />
-				<a href="#" class="sign-way">Use phone number sign in</a>
-			</div>
-			<div v-show="type==0" @click="changetype(1)">
-				<img class="gray" src="~/assets/img/users/ic_email_def_gray.png" />
-				<a href="#" class="sign-way">Use Email sign in</a>
-			</div>
-		</div>
-		<div v-show="type==0" class="by_tel">
-			<div class="country_choose" v-if="areaInfo" @click="countryDialogStatus=true">
-				<img :src="areaInfo.nationalFlag" />
-				<span>{{areaInfo.name}}</span>
-			</div>
-			<div class="img-box">
-				<img src="~/assets/img/users/ic_user_def_w.png" alt="">
-				<input type="tel" v-model="phoneNum" placeholder="Phone Number" />
-			</div>
-			<div class="img-box">
-				<img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
-				<input type="password" v-model="password" placeholder="Password" />
-			</div>
-		</div>
-		<div v-show="type==1" class="by_email">
-			<div class="img-box">
-				<img src="~/assets/img/users/ic_user_def_w.png" alt="">
-				<input type="email" v-model="email" placeholder="E-mail" />
-			</div>
-			<div class="img-box">
-				<img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
-				<input type="password" v-model="password" placeholder="Password" />
-			</div>
-		</div>
-		<div class="next-btn" @click="login">SIGN IN</div>
-		<div class="forgot-pwd"><nuxt-link to="/c/account/resetpass">Forgot password?</nuxt-link></div>
-		<div class="country-choose-dialog" v-show="countryDialogStatus">
-			<div class="dialog-title">Country List</div>
-			<ul>
-				<li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-					<img :src="item.nationalFlag" />
-					<span>{{item.name}}</span>
-				</li>
-			</ul>
-		</div>
-		<shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
-	</div>
+    <div id="wrapper">
+        <div class="tab">
+            <div v-show="type==1" @click="changetype(0)">
+                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.png" />
+                <a href="#" class="sign-way">Use phone number sign in</a>
+            </div>
+            <div v-show="type==0" @click="changetype(1)">
+                <img class="gray" src="~/assets/img/users/ic_email_def_gray.png" />
+                <a href="#" class="sign-way">Use Email sign in</a>
+            </div>
+        </div>
+        <div v-show="type==0" class="by_tel">
+            <div class="country_choose" v-if="areaInfo" @click="countryDialogStatus=true">
+                <img :src="areaInfo.nationalFlag" />
+                <span>{{areaInfo.name}}</span>
+            </div>
+            <div class="img-box">
+                <img src="~/assets/img/users/ic_user_def_w.png" alt="">
+                <input type="tel" v-model="phoneNum" placeholder="Phone Number" />
+            </div>
+            <div class="img-box">
+                <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
+                <input type="password" v-model="password" placeholder="Password" />
+            </div>
+        </div>
+        <div v-show="type==1" class="by_email">
+            <div class="img-box">
+                <img src="~/assets/img/users/ic_user_def_w.png" alt="">
+                <input type="email" v-model="email" placeholder="E-mail" />
+            </div>
+            <div class="img-box">
+                <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
+                <input type="password" v-model="password" placeholder="Password" />
+            </div>
+        </div>
+        <div class="next-btn" @click="login">SIGN IN</div>
+        <div class="forgot-pwd">
+            <nuxt-link to="/c/account/resetpass">Forgot password?</nuxt-link>
+        </div>
+        <div class="country-choose-dialog" v-show="countryDialogStatus">
+            <div class="dialog-title">Country List</div>
+            <ul>
+                <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
+                    <img :src="item.nationalFlag" />
+                    <span>{{item.name}}</span>
+                </li>
+            </ul>
+        </div>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
+    </div>
 </template>
 <script>
 import shadowLayer from '~/components/shadow-layer'
@@ -72,7 +74,7 @@ export default {
             phoneNum: '',
             password: '',
             email: '',
-            countrys:[]
+            countrys: []
         }
     },
     computed: {
@@ -103,7 +105,10 @@ export default {
                     pwd: this.password
                 }
             } else {
-                let tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
+                let tel =
+                    this.phoneNum.length > 10
+                        ? this.phoneNum.substr(3)
+                        : this.phoneNum
                 params = {
                     applicationId: 1,
                     phoneCc: this.areaInfo['phonePrefix'],
@@ -113,7 +118,6 @@ export default {
                     type: 10
                 }
             }
-            this.$axios.setHeader('token', this.$store.state.token)
             this.$axios.post('/ums/v1/user/login', params).then(res => {
                 if (res.data.code == 0) {
                     setCookie('userId', res.data.data.userId)
@@ -125,10 +129,12 @@ export default {
                         id: res.data.data.countryId,
                         short: res.data.data.country
                     })
+
+                    // 为了重置应用状态，需要触发浏览器刷新
                     if (this.pre) {
-                        this.$router.push(encodeURIComponent(this.pre))
+                        window.location.href = encodeURIComponent(this.pre)
                     } else {
-                        this.$router.push('/c/payment/walletPay')
+                        window.location.href = '../payment/walletPay'
                     }
                 } else {
                     this.$alert(res.data.message)

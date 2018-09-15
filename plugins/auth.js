@@ -19,7 +19,6 @@ function inIgnore(url) {
 export default ({ app: { router }, store }) => {
     var loginUser = getCookie('userId')
     router.beforeEach((to, from, next) => {
-        
         if (!inIgnore(to.path)) {
             if (loginUser) {
                 next()
