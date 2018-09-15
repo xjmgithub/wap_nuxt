@@ -4,13 +4,14 @@
             {{desc}}
         </p>
         <div class="footer">
-            <mButton :disabled="false" :text="'OK'" @click="nextStep"></mButton>
+            <mButton :disabled="false" text="OK" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 export default {
+    layout: 'base',
     data() {
         return {
             payToken: this.$route.query.payToken,
@@ -21,8 +22,8 @@ export default {
             payType: null
         }
     },
-    layout: 'base',
     mounted() {
+        this.$alert(123)
         this.$axios.setHeader('token', this.$store.state.token)
         this.$axios
             .get('/payment/api/v2/get-pre-payment', {
