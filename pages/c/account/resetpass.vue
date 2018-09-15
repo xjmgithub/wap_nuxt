@@ -20,10 +20,15 @@
             <verifyTel ref="telpicker" type="1" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verifyTel>
         </div>
         <div v-show="type==1" class="by_email">
-            <verifyEmail ref="emailpicker"  @pass="emailCanNext=true"></verifyEmail>
+            <div class="input-email" :class="{focus:focus_email,error:error_email}">
+                <div class="number">
+                    <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email address" />
+                </div>
+                <div class="error" v-show="error_email">{{error_email}}</div>
+            </div>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" ></mButton>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"></mButton>
         </div>
         <div class="country-choose-dialog" v-show="countryDialogStatus">
             <div class="dialog-title">Country List</div>
@@ -39,7 +44,6 @@
 </template>
 <script>
 import verifyTel from '~/components/form/verify_tel'
-import verifyEmail from '~/components/form/verify_email'
 import shadowLayer from '~/components/shadow-layer'
 import mButton from '~/components/button'
 export default {
@@ -61,7 +65,9 @@ export default {
             country: this.$store.state.country,
             countryDialogStatus: false,
             phoneCanNext: false,
-            emailCanNext: false
+            email: '',
+            focus_email: false,
+            error_email: ''
         }
     },
     computed: {
@@ -74,6 +80,15 @@ export default {
             } else {
                 return this.phoneCanNext
             }
+        },
+        emailCanNext() {
+            let reg_email = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
+            return reg_email.test(this.email)
+        }
+    },
+    watch: {
+        email(nv, ov) {
+            this.error_email = ''
         }
     },
     methods: {
@@ -88,10 +103,23 @@ export default {
             this.countryDialogStatus = false
         },
         nextStep() {
+            // TODO 防止多次点击
             if (this.type == 1) {
-                let email = this.$refs.emailpicker.email
-                let code = this.$refs.emailpicker.vscode
-                this.$router.push(`/c/account/resetpassConfirm?email=${email}&code=${code}`)
+                this.$axios
+                    .get(`/ums/v1/register/password/change?email=${this.email}`)
+                    .then(res => {
+                        if (res.data.code == 0) {
+                            this.$alert(
+                                'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
+                                () => {
+                                    this.$router.replace('/c/account/login')
+                                }
+                            )
+                        } else {
+                            this.error_email =
+                                'Please confirm you have entered the right email.'
+                        }
+                    })
             } else {
                 let phone = this.$refs.telpicker.tel
                 let code = this.$refs.telpicker.vscode
@@ -105,7 +133,6 @@ export default {
     },
     components: {
         verifyTel,
-        verifyEmail,
         shadowLayer,
         mButton
     },
@@ -252,6 +279,58 @@ export default {
                     font-size: 0.8rem;
                 }
             }
+        }
+    }
+    .email-cont {
+        padding-top: 2.5rem;
+    }
+    .input-email {
+        border-bottom: #dddddd solid 1px;
+        display: -webkit-box;
+        display: flex;
+        padding-bottom: 5px;
+        margin: 1rem 0 2rem;
+        position: relative;
+        &.focus {
+            border-bottom: #0087eb solid 1px;
+        }
+        &.error {
+            border-bottom: red solid 1px;
+        }
+        &:after {
+            content: '0';
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+        .prefix {
+            max-width: 3.5rem;
+            border-right: #dddddd solid 1px;
+            line-height: 1.2rem;
+            height: 1.2rem;
+            float: left;
+            -webkit-box-flex: 1;
+            flex: 1;
+        }
+        .number {
+            -webkit-box-flex: 11;
+            flex: 5;
+            input {
+                width: 100%;
+                border: none;
+                display: block;
+                outline: none;
+                &::-webkit-input-placeholder {
+                    font-size: 0.5rem;
+                }
+            }
+        }
+        .error {
+            position: absolute;
+            bottom: -1.4rem;
+            font-size: 0.5rem;
+            color: red;
         }
     }
 }

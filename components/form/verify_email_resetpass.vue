@@ -7,9 +7,7 @@
             <div class="error" v-show="error_email">{{error_email}}</div>
         </div>
         <div class="get-code">
-            <input type="text" maxlength="4" :class="{focus:focus_code,error:error_code}" v-model="vscode" @focus="focus_code=true" @blur="focus_code=false" placeholder="Click to get verification code" />
             <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
-            <div class="error_code" v-show="error_code">{{error_code}}</div>
         </div>
     </div>
 </template>
@@ -21,35 +19,17 @@ export default {
             default: 0
         }
     },
+    data() {
+        return {
+            email: '',
+            focus_email: false,
+            error_email: '',
+            codeDuring: 0
+        }
+    },
     watch: {
         email(nv, ov) {
             this.error_email = ''
-        },
-        vscode(nv, ov) {
-            this.error_code = ''
-            if (nv.length >= 4) {
-                this.$axios.setHeader('token', this.$store.state.token)
-                this.$axios({
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    data: qs.stringify({
-                        email: this.email,
-                        code: nv
-                    }),
-                    url: this.type
-                        ? '/ums/v1/user/code/verify'
-                        : '/ums/v1/register/code/verify'
-                }).then(res => {
-                    if (res.data.code == 0) {
-                        this.$emit('pass')
-                    } else {
-                        this.error_code =
-                            'This code you entered is incorrect. Please try again.'
-                    }
-                })
-            }
         }
     },
     mounted() {
@@ -57,17 +37,6 @@ export default {
         this.timer = setInterval(() => {
             _this.codeDuring--
         }, 1000)
-    },
-    data() {
-        return {
-            email: '',
-            vscode: '',
-            focus_email: false,
-            error_email: '',
-            focus_code: false,
-            error_code: '',
-            codeDuring: 0
-        }
     },
     computed: {
         canGetCode() {
@@ -78,12 +47,8 @@ export default {
     methods: {
         getCode() {
             if (!this.canGetCode) return false
-            let url = this.type
-                ? '/ums/v1/register/password/change'
-                : '/ums/v1/register/code/email'
-            this.$axios.setHeader('token', this.$store.state.token)
             this.$axios
-                .get(`${url}?email=${this.email}`)
+                .get(`/ums/v1/register/password/change?email=${this.email}`)
                 .then(res => {
                     if (res.data.code == 0) {
                         this.codeDuring = 60
