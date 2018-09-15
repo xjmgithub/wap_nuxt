@@ -105,7 +105,7 @@ export default {
                         if (this.pre) {
                             this.$router.push(encodeURIComponent(this.pre))
                         } else {
-                            this.$router.push('/c/payment/walletPay')
+                            this.$router.push('/c/payment/wallet/payto')
                         }
                     } else {
                         _this.$alert(res.datea.message)

@@ -134,7 +134,7 @@ export default {
                     if (this.pre) {
                         window.location.href = encodeURIComponent(this.pre)
                     } else {
-                        window.location.href = '../payment/walletPay'
+                        window.location.href = '../payment/wallet/payto'
                     }
                 } else {
                     this.$alert(res.data.message)

@@ -5,8 +5,10 @@ module.exports = {
     paySubject: '',
     payNote: '',
     country: '',
-    totalAmount: '',
-    currency: '',
+    totalAmount: '10',
+    currency: 'Ksh',
+    mercahntAppName: '', // 另加
+    mercahntName: 'startimes',
     payChannels: [
         {
             appInterfaceMode: 1,

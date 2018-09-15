@@ -5,7 +5,7 @@
             <div>
                 <span class="balance">Balance：</span>
                 <span class="currency">{{currency}}</span>
-                <span class="money">{{walletLeft}}</span>
+                <span class="money">{{walletLeft | fixAmount}}</span>
             </div>
         </div>
         <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
@@ -22,7 +22,7 @@ export default {
     data() {
         return {
             walletAccount: '',
-            walletLeft: 0,
+            walletLeft: '',
             currency: '',
             radioList: [],
             selected: null,
@@ -42,11 +42,10 @@ export default {
         }
     },
     mounted() {
-        let _this = this
         this.walletAccount = window.sessionStorage.getItem('wallet_account')
         this.walletLeft = window.sessionStorage.getItem('wallet_left')
         this.currency = window.sessionStorage.getItem('currency')
-        this.$axios.setHeader('token', this.$store.state.token)
+
         this.$axios.get('/mobilewallet/v1/recharge-channels').then(res => {
             let list = []
             if (res.data && res.data.length > 0) {
@@ -57,7 +56,8 @@ export default {
                         imgUrl: item.logoUrl || '',
                         desc: item.description,
                         checked: index ? false : true,
-                        channelType: item.channelType
+                        channelType: item.channelType,
+                        ussd: item.shortUssdCode
                     })
                 })
 
@@ -71,7 +71,9 @@ export default {
         RadioBtn
     },
     filters: {
-        // TODO FILTERS
+        fixAmount(val) {
+            return Number(val).toFixed(2)
+        }
     },
     methods: {
         nextStep() {
@@ -79,7 +81,7 @@ export default {
                 'wallet_charge_channel',
                 JSON.stringify(this.selectedChannel)
             )
-            this.$router.push('/c/payment/walletChargeDesc')
+            this.$router.push('/c/payment/wallet/rechargeChannelDesc')
         },
         changeItem(code) {
             this.selected = code

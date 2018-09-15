@@ -4,24 +4,27 @@
         <h4 class="description">Description</h4>
         <div class="desc">
             {{desc}}
+            <div id="copy-button" :data-clipboard-text="ussd" v-if="ussd">click to copy {{ussd}}</div>
         </div>
         <div class="footer">
-            <mButton :disabled="type!=4" text="NEXT" @click="nextStep"></mButton>
+            <mButton :disabled="type!=4&&type!=1" text="NEXT" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
+import clipboard from 'clipboard'
 export default {
+    layout: 'base',
     data() {
         return {
             name: '',
             desc: '',
             code: '',
-            type: ''  // 1 boss 充值 2 copon 充值 3 第三方支付充值  4 充值卡充值
+            type: '', // 1 boss 充值 2 copon 充值 3 第三方支付充值  4 充值卡充值,
+            ussd: ''
         }
     },
-    layout: 'base',
     components: {
         mButton
     },
@@ -33,20 +36,22 @@ export default {
         this.desc = channelInfo.desc
         this.code = channelInfo.code
         this.type = channelInfo.channelType
+        this.ussd = channelInfo.ussd
+
+        new clipboard('#copy-button')
     },
-    // beforeDestroy() {
-    //     window.sessionStorage.removeItem('wallet_charge_channel')
-    // },
     methods: {
+        copyCode(ussd) {},
         nextStep() {
             if (this.type == 1) {
-                return false // bosse 充值
+                window.open(`tel://${this.ussd}`)
+                this.$router.push('/c/payment/wallet/lastcharge')
             } else if (this.type == 2) {
                 return false // coupon 充值
             } else if (this.type == 3) {
                 return false // 第三方支付充值，app暂时没做
             } else if (this.type == 4) {
-                this.$router.push('/c/payment/walletChargeByCard')
+                this.$router.push('/c/payment/wallet/rechargeByCard')
             } else {
                 return false
             }
@@ -95,5 +100,10 @@ export default {
     margin: 0 auto;
     left: 0;
     right: 0;
+}
+#copy-button{
+    margin-top:1rem;
+    font-weight:bold;
+    color:blue;
 }
 </style>

@@ -5,7 +5,7 @@
             <div>
                 <span class="balance">Balance：</span>
                 <span class="currency">{{currency}}</span>
-                <span class="money">{{walletLeft}}</span>
+                <span class="money">{{walletLeft | fixAmount}}</span>
             </div>
         </div>
         <div class="rechargePin">
@@ -19,7 +19,7 @@
             </p>
         </div>
         <div class="footer">
-            <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="false" text="NEXT" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
@@ -44,7 +44,6 @@ export default {
         }
     },
     mounted() {
-        let _this = this
         this.walletAccount = window.sessionStorage.getItem('wallet_account')
         this.walletLeft = window.sessionStorage.getItem('wallet_left')
         this.currency = window.sessionStorage.getItem('currency')
@@ -53,22 +52,47 @@ export default {
         mButton
     },
     filters: {
-        // TODO FILTERS
+        fixAmount(val) {
+            return Number(val).toFixed(2)
+        }
     },
     methods: {
         nextStep() {
-            // TODO result
-            this.$axios.setHeader('token', this.$store.state.token)
-            this.$axios
-                .post(`/mobilewallet/v2/accounts/${this.walletAccount}/recharge-by-rc`,{
-                        rechargeCardPin: _this.rechargePin
-                }).then(res => {
-                    if (res.data && res.data.code == 0) {
-                        this.$router.push('/c/payment/walletRechargeResult?result=0')  // success
-                    } else {
-                        this.$router.push('/c/payment/walletRechargeResult?result=1')  // fail
-                    }
-                })
+            this.$confirm(
+                `<div style="font-size:1.2rem;">Please Check</div>
+                <br />
+                <div>eWallet No.${this.walletAccount}</div>
+                <div>Recharge Pin: ${this.rechargePin}</div>
+                <br />
+                <div>The Voucher Card will be charged into this ewallet No.</div>
+                <br />
+            `,
+                () => {
+                    this.$axios
+                        .post(
+                            `/mobilewallet/v2/accounts/${
+                                this.walletAccount
+                            }/recharge-by-rc?rechargeCardPin=${this.oriPinNum}`,
+                            {
+                                rechargeCardPin: this.oriPinNum
+                            }
+                        )
+                        .then(res => {
+                            if (res.data && res.data.code == 0) {
+                                this.$router.push(
+                                    '/c/payment/wallet/rechargeResult?result=0'
+                                )
+                            } else {
+                                // TODO 充值结果页面未使用
+                                this.$router.push(
+                                    '/c/payment/wallet/rechargeResult?result=1'
+                                )
+                            }
+                        })
+                },
+                'CONFIRM',
+                'CANCEL'
+            )
         },
         formatCard(str) {
             return str.replace(/(^\d{4}\B|\d{4}\B)/g, '$1-')

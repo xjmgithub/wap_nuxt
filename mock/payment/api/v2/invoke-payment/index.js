@@ -6,7 +6,7 @@ module.exports = {
     payNote: '',
     country: '',
     totalAmount: '',
-    currency: '',
+    currency: 'ksh',
     tppResultCode: '',
     tppRedirectUrl: 'http://www.baidu.com',
     merchantPayRedirectUrl: 'http://www.baidu.com',

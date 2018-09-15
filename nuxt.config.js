@@ -64,9 +64,10 @@ module.exports = {
         '/ums/': env.ms_host,
         '/cms/': env.ms_host,
         '/ocs/': env.ms_host,
-        '/mobilewallet/': env.ms_host,
         '/membership/': env.ms_host,
+        '/mobilewallet/': env.ms_host,
         // '/payment/': env.ms_host,
+        // '/mobilewallet/': 'http://localhost:9001',
         '/payment/': 'http://localhost:9001',
     },
     plugins: [

@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <loading v-show="loadStatus"></loading>
-        <template v-if="result=='1'&&!loadStatus">
+        <template v-if="result=='succss'&&!loadStatus">
             <img src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
                 Payment Successful
@@ -14,57 +14,60 @@
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
             </p>
         </template>
-        <template v-if="result=='2'&&!loadStatus">
+        <template v-if="result=='fail'&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt="">
             <p class="fail">
                 Payment Failed
             </p>
             <p class="msg">
-                {{fail_message}}
+                Thanks for your payment. But You have insufficent funds.
             </p>
         </template>
         <div class="footer" v-show="!loadStatus">
-            <mButton :disabled="false" text="OK" @click="back"></mButton>
+            <mButton :disabled="false" text="REFRESH" @click="refresh"></mButton>
         </div>
     </div>
+
 </template>
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
 export default {
-    layout: 'base',
     data() {
         return {
-            result: 0, // 0 支付查询中， 1 支付成功，2 支付失败
-            loadStatus: true,
-            fail_message:'',
-            payToken:this.$route.query.payToken,
-            redirect:this.$route.query.redirect
+            result: '',
+            loadStatus: true
         }
     },
+    layout: 'base',
     components: {
         mButton,
         loading
     },
     mounted() {
-        if (!this.payToken) {
-            this.$alert('Query payToken needed! please check request')
-            return false
-        }
-
-        this.$axios
-            .get('/payment/api/v2/get-pre-payment', {
-                payToken: this.payToken
-            })
-            .then(res => {
-                let data = res.data
-                // TODO 支付结果
-            })
+        this.refresh()
     },
     methods: {
-        back() {
-            // 退回商户
-            window.location.href = this.redirect
+        refresh() {
+            this.loadStatus = true
+            let walletAccount = window.sessionStorage.getItem('wallet_account')
+            this.$axios
+                .get(
+                    `/mobilewallet/v1/accounts/${walletAccount
+                    }/sub-account-seqs/latest?seqType=1`
+                )
+                .then(res => {
+                    this.loadStatus = false
+                    if (res.data) {
+                        _this.balance = res.data.amount
+                        sessionStorage.setItem(
+                            'wallet_account',
+                            res.data.accountNo
+                        )
+                        sessionStorage.setItem('wallet_left', res.data.amount)
+                        _this.balance = 1 // TODO remove demo
+                    }
+                })
         }
     }
 }
