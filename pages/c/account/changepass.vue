@@ -4,7 +4,7 @@
             <div class="label">Create a Password</div>
             <input type="text" v-model="pass" @blur="checkpass" />
         </div>
-        <div  class="input-item">
+        <div class="input-item">
             <div class="label">Confirm New Password</div>
             <input type="text" v-model="repass" @blur="checkpass" />
         </div>
@@ -56,16 +56,14 @@ export default {
                 options.type = 0
             }
 
-            this.$axios
-                .post('/ums/v1/register', options)
-                .then(res => {
-                    if (res.data.code == 0) {
-                       this.$router.push('/c/account/login')
-                    } else {
-                        this.error_code = 'This code you entered is incorrect. Please try again.'
-                    }
-                })
-            
+            this.$axios.post('/ums/v1/register', options).then(res => {
+                if (res.data.code == 0) {
+                    this.$router.push('/c/account/login')
+                } else {
+                    this.error_code =
+                        'This code you entered is incorrect. Please try again.'
+                }
+            })
         }
     },
     components: {

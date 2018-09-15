@@ -1,52 +1,55 @@
 <template>
     <div class="container">
-        <Password :placeholder="pwdType" :toggleView="false" @setPassword="setPassword" ></Password>
+        <Password :placeholder="pwdType" :toggleView="false" @setPassword="setPassword"></Password>
         <div class="forgot-pwd">
             <a href="#">Forgot payment password?</a>
         </div>
         <div class="footer">
-        <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"></mButton>
+            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"></mButton>
         </div>
     </div>
 
 </template>
 <script>
-    import mButton from '~/components/button'
-    import Password from '~/components/password'
-    export default {
-        data() {
-            return {
-                pwdType: "Enter Payment Password",
-                password: '',
-                canPay:false
-            }
+import mButton from '~/components/button'
+import Password from '~/components/password'
+export default {
+    data() {
+        return {
+            pwdType: 'Enter Payment Password',
+            password: '',
+            canPay: false
+        }
+    },
+    layout: 'base',
+    components: {
+        mButton,
+        Password
+    },
+    methods: {
+        setPassword(data) {
+            this.password = data
         },
-        layout: 'base',
-        components: {
-            mButton, 
-            Password
-        },
-        methods: {
-            setPassword(data) {
-                this.password = data
-            },
-            nextStep(){
-                this.$axios.setHeader('token', this.$store.state.token)
-                this.$axios.post('/mobilewallet/v1/balance-payments&noquery=1',{  // TODO 钱包支付的参数
-                    "amount": _this.payRecord.amount,
-                    "currency": _this.payRecord.currency,
-                    "extensionInfo": _this.payRecord.extendInfo,
-                    "note": _this.payRecord.payNote,
-                    "orderId": _this.payRecord.orderId,
-                    "payeeAccountNo": channelId,
-                    "payerAccountNo": this.ewalletNo,
-                    "payerPayPassword": this.password,
-                    "signature": _this.payRecord.signature,
-                    "subject": _this.payRecord.paySubject,
-                    "extensionInfo": {
-                        "paySeqNo": _this.payRecord.seqNo
+        nextStep() {
+            this.$axios.setHeader('token', this.$store.state.token)
+            this.$axios
+                .post('/mobilewallet/v1/balance-payments&noquery=1', {
+                    // TODO 钱包支付的参数
+                    amount: _this.payRecord.amount,
+                    currency: _this.payRecord.currency,
+                    extensionInfo: _this.payRecord.extendInfo,
+                    note: _this.payRecord.payNote,
+                    orderId: _this.payRecord.orderId,
+                    payeeAccountNo: channelId,
+                    payerAccountNo: this.ewalletNo,
+                    payerPayPassword: this.password,
+                    signature: _this.payRecord.signature,
+                    subject: _this.payRecord.paySubject,
+                    extensionInfo: {
+                        paySeqNo: _this.payRecord.seqNo
                     }
-                }).then(res => {
+                })
+                .then(res => {
                     if (res.data) {
                         _this.signature = res.data.currency
                         _this.balance = res.data.amount
@@ -54,20 +57,18 @@
                         _this.balance = 100
                     }
                 })
-            }
-        },
-        watch: {
-            password(val, oldVal) {
-                if (val.length >= 6) {
-                    this.canPay = true
-                } else {
-                    this.canPay = false
-                }
-
+        }
+    },
+    watch: {
+        password(val, oldVal) {
+            if (val.length >= 6) {
+                this.canPay = true
+            } else {
+                this.canPay = false
             }
         }
     }
-
+}
 </script>
 <style scoped>
 .container {

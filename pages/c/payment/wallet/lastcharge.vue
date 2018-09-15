@@ -53,8 +53,7 @@ export default {
             let walletAccount = window.sessionStorage.getItem('wallet_account')
             this.$axios
                 .get(
-                    `/mobilewallet/v1/accounts/${walletAccount
-                    }/sub-account-seqs/latest?seqType=1`
+                    `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`
                 )
                 .then(res => {
                     this.loadStatus = false

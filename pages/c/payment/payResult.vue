@@ -37,9 +37,9 @@ export default {
         return {
             result: 0, // 0 支付查询中， 1 支付成功，2 支付失败
             loadStatus: true,
-            fail_message:'',
-            payToken:this.$route.query.payToken,
-            redirect:this.$route.query.redirect
+            fail_message: '',
+            payToken: this.$route.query.payToken,
+            redirect: this.$route.query.redirect
         }
     },
     components: {

@@ -107,7 +107,7 @@ export default {
                                 '<div class="error" style="position: absolute;bottom: -1.4rem;font-size: 0.5rem;color: red;">Please enter the complete information.</div>'
                             )
                             item.css({
-                                "border-bottom": "#dddddd solid 1px"
+                                'border-bottom': '#dddddd solid 1px'
                             })
                             return false
                         } else {
@@ -119,12 +119,12 @@ export default {
                                         '.</div>'
                                 )
                                 item.css({
-                                    "border-bottom": "#red solid 1px"
+                                    'border-bottom': '#red solid 1px'
                                 })
                                 return false
                             } else {
                                 item.css({
-                                    "border-bottom": "#dddddd solid 1px"
+                                    'border-bottom': '#dddddd solid 1px'
                                 })
                                 item.find('.error').remove()
                                 if (type == 'tel') {
@@ -146,7 +146,7 @@ export default {
 
                     optarr[id] = value
                 }
-                
+
                 this.$axios.setHeader('token', this.$store.state.token)
                 this.$axios
                     .post('/payment/api/v2/invoke-payment', {
@@ -174,8 +174,6 @@ export default {
                             // TODO PAY FAIL
                         }
                     })
-                
-
             })
 
         function ifShow() {

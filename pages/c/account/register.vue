@@ -20,10 +20,10 @@
             <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verifyTel>
         </div>
         <div v-show="type==1" class="by_email">
-            <verifyEmail ref="emailpicker"  @pass="emailCanNext=true"></verifyEmail>
+            <verifyEmail ref="emailpicker" @pass="emailCanNext=true"></verifyEmail>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" ></mButton>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"></mButton>
         </div>
         <div class="terms">
             <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
@@ -94,7 +94,9 @@ export default {
             if (this.type == 1) {
                 let email = this.$refs.emailpicker.email
                 let code = this.$refs.emailpicker.vscode
-                this.$router.push(`/c/account/setpass?email=${email}&code=${code}`)
+                this.$router.push(
+                    `/c/account/setpass?email=${email}&code=${code}`
+                )
             } else {
                 let phone = this.$refs.telpicker.tel
                 let code = this.$refs.telpicker.vscode

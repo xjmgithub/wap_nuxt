@@ -4,7 +4,9 @@
         <img class="third_login facebook" @click="byfacebook" src="~/assets/img/users/btn_facebook_def.png" />
         <img class="third_login twitter" @click="bytwitter" src="~/assets/img/users/btn_twitter_def.png" />
         <img id="google-btn" class="third_login google" src="~/assets/img/users/btn_google_def.png" />
-        <nuxt-link :to="pre?('/c/account/signin?pre='+ pre):'/c/account/signin'"><div class="login_btn"> SIGN IN </div></nuxt-link>
+        <nuxt-link :to="pre?('/c/account/signin?pre='+ pre):'/c/account/signin'">
+            <div class="login_btn"> SIGN IN </div>
+        </nuxt-link>
         <div class="regtext">
             Don't have an account?
             <nuxt-link to="/c/account/register">Register</nuxt-link>
