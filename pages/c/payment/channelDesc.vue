@@ -4,7 +4,7 @@
             {{desc}}
         </p>
         <div class="footer">
-            <mButton :disabled="false" text="OK" @click="nextStep"></mButton>
+            <mButton :disabled="false" text="PAY NOW" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
@@ -19,37 +19,100 @@ export default {
             desc: '',
             form_exit: false,
             appInterfaceMode: null,
-            payType: null
+            payType: null,
+            redirectUrl: '',
+            merchantRedirectUrl: ''
         }
     },
     mounted() {
-        this.$alert(123)
-        this.$axios.setHeader('token', this.$store.state.token)
+        if (!this.payToken) {
+            this.$alert('Query payToken needed! please check request')
+            return false
+        }
+
+        if (!this.payChannel) {
+            this.$alert('Query payChannel needed! please check request')
+            return false
+        }
+
         this.$axios
             .get('/payment/api/v2/get-pre-payment', {
                 payToken: this.payToken
             })
             .then(res => {
-                if (res.data) {
+                let data = res.data
+                if (data && data.payChannels && data.payChannels.length > 0) {
                     let payChannels = {}
-                    if (res.data.payChannels.length > 0) {
-                        res.data.payChannels.forEach((item, index) => {
-                            payChannels[item.id] = item
-                        })
+                    data.payChannels.forEach((item, index) => {
+                        payChannels[item.id] = item
+                    })
+                    if (payChannels[this.payChannel]) {
+                        this.desc = payChannels[this.payChannel].description
+                        this.form_exit =
+                            payChannels[this.payChannel].form_config_exist
+                        this.appInterfaceMode =
+                            payChannels[this.payChannel].appInterfaceMode
+                        this.payType = payChannels[this.payChannel].payType
+
+                        // 请求支付
+                        this.invokePay()
+                    } else {
+                        this.$alert(
+                            'payToken and payChannel Mismatch! please check request'
+                        )
                     }
-                    this.desc = payChannels[this.payChannel].description
-                    this.form_exit =
-                        payChannels[this.payChannel].form_config_exist
-                    this.appInterfaceMode =
-                        payChannels[this.payChannel].appInterfaceMode
-                    this.payType = payChannels[this.payChannel].payType
-                    if (!this.desc) {
-                        this.nextStep()
-                    }
+                } else {
+                    this.$alert(
+                        'The merchant has not yet opened a supportable payment channel.'
+                    )
                 }
             })
     },
     methods: {
+        invokePay() {
+            if (!this.form_exit) {
+                if (
+                    this.payType != 3 &&
+                    [2, 3].indexOf(this.appInterfaceMode) < 0
+                ) {
+                    /* payType 取值
+                    1、钱包余额
+                    2、现金
+                    3、第三方在线支付
+                    4、订阅
+                    99、其他 */
+
+                    /* appInterfaceMode
+                    1、SDK
+                    2、Web，访问Web页面
+                    3、Wait，等待支付结果
+                    */
+                    this.$alert(
+                        'The payment method you selected is temporarily not supported by this platform. Please contact appservice@startimes.com.cn'
+                    )
+                    return false
+                }
+
+                this.$axios
+                    .post('/payment/api/v2/invoke-payment', {
+                        payToken: this.payToken,
+                        payChannelId: this.payChannel,
+                        tradeType: 'JSAPI',
+                        deviceInfo: window.navigator.userAgent,
+                        extendInfo: {} // 没有动态表单收集信息的传空对象
+                    })
+                    .then(res => {
+                        let data = res.data
+                        if (data && data.resultCode == 0) {
+                            if (this.appInterfaceMode == 2) {
+                                this.redirectUrl = data.tppRedirectUrl
+                            }
+                            this.merchantRedirectUrl =
+                                data.merchantPayRedirectUrl
+                        }
+                    })
+            }
+        },
         nextStep() {
             if (this.form_exit) {
                 this.$router.push(
@@ -58,40 +121,22 @@ export default {
                     }&appInterfaceMode=${this.appInterfaceMode}`
                 )
             } else {
-                if (
-                    _this.paymethod.payType != 1 &&
-                    !$.inArray(_this.paymethod.appInterfaceMode, [2, 3])
-                ) {
-                    return false
+                if (this.appInterfaceMode == 2) {
+                    window.open(this.redirectUrl)
+                    // this.$confirm(
+                    //     'If payment has been completed,please click done.If you encounter problems,please try again or contact appservice@startimes.com.cn',
+                    //     () => {
+                    //         // 跳转商户页
+                    //     },
+                    //     'Completed',
+                    //     'Try again'
+                    // )
                 }
-
-                this.$axios.setHeader('token', this.$store.state.token)
-                this.$axios
-                    .post('/payment/api/v2/invoke-payment', {
-                        payToken: this.payToken,
-                        payChannelId: this.payChannel,
-                        tradeType: 'JSAPI',
-                        signType: 'MD5',
-                        extendInfo: {}
-                    })
-                    .then(res => {
-                        if (res.data && res.data.resultCode == 0) {
-                            if (_this.paymethod.appInterfaceMode == 2) {
-                                window.location.href = data.data.redirectUrl
-                            } else if (_this.paymethod.appInterfaceMode == 3) {
-                                // TODO 查询支付结果
-                                // window.location.href = 'payment_process.php?orderId=' + _this.orderId  // 等待支付结果
-                            } else {
-                                // SDK 和 其他 不支持,
-                                // payType 1 钱包支付
-                                _this.$alert(
-                                    'The payment method is not supported for the time being'
-                                )
-                            }
-                        } else {
-                            // TODO PAY FAIL
-                        }
-                    })
+                this.$router.push(
+                    `/c/payment/payResult?payToken=${this.payToken}&redirect=${
+                        this.merchantRedirectUrl
+                    }`
+                )
             }
         }
     },

@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <loading v-show="loadStatus"></loading>
-        <template v-if="result=='succss'&&!loadStatus">
+        <template v-if="result=='1'&&!loadStatus">
             <img src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
                 Payment Successful
@@ -14,42 +14,57 @@
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
             </p>
         </template>
-        <template v-if="result=='fail'&&!loadStatus">
+        <template v-if="result=='2'&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt="">
             <p class="fail">
                 Payment Failed
             </p>
             <p class="msg">
-                Thanks for your payment. But You have insufficent funds.
+                {{fail_message}}
             </p>
         </template>
         <div class="footer" v-show="!loadStatus">
             <mButton :disabled="false" :text="'OK'" @click="back"></mButton>
         </div>
     </div>
-
 </template>
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
 export default {
+    layout: 'base',
     data() {
         return {
-            result: '',
-            loadStatus: true
+            result: 0, // 0 支付查询中， 1 支付成功，2 支付失败
+            loadStatus: true,
+            fail_message:'',
+            payToken:this.$route.query.payToken,
+            redirect:this.$route.query.redirect
         }
     },
-    layout: 'base',
     components: {
         mButton,
         loading
     },
-    created() {
-        // TODO 检查支付状态
+    mounted() {
+        if (!this.payToken) {
+            this.$alert('Query payToken needed! please check request')
+            return false
+        }
+
+        this.$axios
+            .get('/payment/api/v2/get-pre-payment', {
+                payToken: this.payToken
+            })
+            .then(res => {
+                let data = res.data
+                // TODO 支付结果
+            })
     },
     methods: {
         back() {
-            // TODO 退回商户
+            // 退回商户
+            window.location.href = this.redirect
         }
     }
 }

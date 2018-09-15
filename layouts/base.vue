@@ -1,10 +1,10 @@
 <template>
-<div>
-    <nuxt/>
-    <alert ref="alert"></alert>
-    <confirm ref="confirm"></confirm>
-    <shadowLayer v-show="layer"></shadowLayer>
-</div>
+    <div>
+        <nuxt/>
+        <alert ref="alert"></alert>
+        <confirm ref="confirm"></confirm>
+        <shadowLayer v-show="layer"></shadowLayer>
+    </div>
 </template>
 <script>
 import Vue from 'vue'
@@ -27,9 +27,11 @@ export default {
         Vue.prototype.$alert = (msg, callback) => {
             _this.$refs.alert.show(msg, callback)
         }
-        Vue.prototype.$confirm = (msg, callback) => {
-            _this.$refs.confirm.show(msg, callback)
+        Vue.prototype.$confirm = (msg, callback, yes, no) => {
+            _this.$refs.confirm.show(msg, callback, yes, no)
         }
+
+        this.$axios.setHeader('token', this.$store.state.token)
     }
 }
 </script>

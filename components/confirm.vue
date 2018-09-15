@@ -8,8 +8,8 @@
             </div>
         </div>
         <div class="dialog-footer">
-            <div class="btn" @click="sure">YES</div>
-            <div class="btn" @click="close">NO</div>
+            <div class="btn" @click="sure">{{yes}}</div>
+            <div class="btn" @click="close">{{no}}</div>
         </div>
     </div>
 </template>
@@ -18,6 +18,8 @@ export default {
     data() {
         return {
             msg: '',
+            yes: 'YES',
+            no: 'NO',
             style: 'none',
             callback: '',
             offsetLeft: 0,
@@ -35,8 +37,10 @@ export default {
                 this.callback()
             }
         },
-        show(msg, callback) {
+        show(msg, callback, yes, no) {
             let _this = this
+            if (yes) this.yes = yes
+            if (no) this.no = no
             this.msg = msg
             this.style = 'block'
             this.$store.commit('SHOW_SHADOW_LAYER')
@@ -73,11 +77,12 @@ export default {
         line-height: 1.4rem;
     }
     .dialog-footer .btn {
-        width: 3rem;
+        width: auto;
         float: right;
         color: #0087eb;
         font-size: 0.9rem;
         font-weight: bold;
+        margin-left: 0.5rem;
     }
 }
 </style>
