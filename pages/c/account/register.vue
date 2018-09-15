@@ -26,7 +26,7 @@
             <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" ></mButton>
         </div>
         <div class="terms">
-            <a href="Todo">Terms of Service</a>
+            <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
         </div>
         <div class="country-choose-dialog" v-show="countryDialogStatus">
             <div class="dialog-title">Country List</div>
