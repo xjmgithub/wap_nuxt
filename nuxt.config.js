@@ -62,6 +62,7 @@ module.exports = {
     },
     proxy: {
         '/ums/': env.ms_host,
+        '/vup/': env.ms_host,
         '/cms/': env.ms_host,
         '/ocs/': env.ms_host,
         '/membership/': env.ms_host,

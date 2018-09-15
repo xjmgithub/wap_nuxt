@@ -40,22 +40,22 @@ export default {
         mButton,
         loading
     },
-    created() {
-        let _this = this
-        this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
-            if (res.data) {
-                _this.balance = res.data.amount
-                sessionStorage.setItem('wallet_account', res.data.accountNo)
-                sessionStorage.setItem('wallet_left', res.data.amount)
-                _this.balance = 1 // TODO remove demo
-            }
-        })
-    },
     mounted() {
         if (!this.payToken) {
             this.$alert('Query payToken needed! please check request')
             return false
         }
+
+        this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
+            if (res.data) {
+                this.balance = res.data.amount
+                sessionStorage.setItem('wallet_account', res.data.accountNo)
+                sessionStorage.setItem('wallet_left', res.data.amount)
+                this.balance = 100 // TODO remove demo
+
+                this.getSetConfig(res.data.accountNo) //钱包配置
+            }
+        })
 
         this.$axios
             .get('/payment/api/v2/get-pre-payment', {
@@ -73,14 +73,35 @@ export default {
                     this.$alert(data.resultMessage)
                 }
             })
-
-        // 是否设置了支付密码
     },
     methods: {
+        getSetConfig(account) {
+            this.$axios
+                .get(`/mobilewallet/v1/accounts/${account}/prop-details`, {})
+                .then(res => {
+                    window.sessionStorage.setItem(
+                        'wallet_password',
+                        res.data.payPassword
+                    )
+                    window.sessionStorage.setItem(
+                        'wallet_phone',
+                        res.data.phone
+                    )
+                    window.sessionStorage.setItem(
+                        'wallet_email',
+                        res.data.email
+                    )
+                })
+        },
         nextStep() {
             if (this.enough) {
-                // TODO 支付流程
-                this.$router.push('/c/payment/walletPass')
+                // 支付流程
+                let passIsSet = window.sessionStorage.getItem('wallet_password')
+                if (passIsSet) {
+                    this.$router.push('/c/payment/wallet/paybyPass')
+                } else {
+                    this.$router.push('/c/payment/wallet/setPassword')
+                }
             } else {
                 // 充值流程
                 this.$router.push('/c/payment/wallet/rechargeChannel')
