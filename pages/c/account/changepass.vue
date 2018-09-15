@@ -56,7 +56,6 @@ export default {
                 options.type = 0
             }
 
-            this.$axios.setHeader('token', this.$store.state.token)
             this.$axios
                 .post('/ums/v1/register', options)
                 .then(res => {

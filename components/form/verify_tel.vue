@@ -20,6 +20,9 @@ export default {
     props: {
         prefix: {
             required: true
+        },
+        type: {
+            default: 0
         }
     },
     watch: {
@@ -29,21 +32,25 @@ export default {
         vscode(nv, ov) {
             this.error_code = ''
             if (nv.length >= 4) {
-                this.$axios.setHeader('token', this.$store.state.token)
                 this.$axios({
                     method: 'POST',
-                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded'
+                    },
                     data: qs.stringify({
                         phoneCc: this.prefix,
                         phone: this.tel,
                         code: nv
                     }),
-                    url: '/ums/v1/register/code/sms'
+                    url: this.type
+                        ? '/ums/v1/user/code/sms'
+                        : '/ums/v1/register/code/sms'
                 }).then(res => {
                     if (res.data.code == 0) {
                         this.$emit('pass')
                     } else {
-                        this.error_code = 'This code you entered is incorrect. Please try again.'
+                        this.error_code =
+                            'This code you entered is incorrect. Please try again.'
                     }
                 })
             }
@@ -73,16 +80,19 @@ export default {
     },
     methods: {
         getCode() {
+            // TODO 防止多次点击
             if (!this.canGetCode) return false
-
-            this.$axios.setHeader('token', this.$store.state.token)
+            let url = this.type
+                ? '/ums/v1/user/code/sms'
+                : '/ums/v1/register/code/sms'
             this.$axios
-                .get(`/ums/v1/register/code/sms?phone=${this.tel}&phoneCc=${this.prefix}`)
+                .get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}`)
                 .then(res => {
                     if (res.data.code == 0) {
                         this.codeDuring = 60
                     } else {
-                        this.error_tel = 'Please confirm you have entered the right number.'
+                        this.error_tel =
+                            'Please confirm you have entered the right number.'
                     }
                 })
         }

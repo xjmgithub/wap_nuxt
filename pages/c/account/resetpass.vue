@@ -17,7 +17,7 @@
                 <img :src="areaInfo.nationalFlag" />
                 <span>{{areaInfo.name}}</span>
             </div>
-            <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verifyTel>
+            <verifyTel ref="telpicker" type="1" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verifyTel>
         </div>
         <div v-show="type==1" class="by_email">
             <verifyEmail ref="emailpicker"  @pass="emailCanNext=true"></verifyEmail>
@@ -28,7 +28,7 @@
         <div class="country-choose-dialog" v-show="countryDialogStatus">
             <div class="dialog-title">Country List</div>
             <ul>
-                <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
+                <li v-for="(item,index) in countrys" :key="index" @click="chooseeCountry(item)">
                     <img :src="item.nationalFlag" />
                     <span>{{item.name}}</span>
                 </li>
@@ -91,14 +91,14 @@ export default {
             if (this.type == 1) {
                 let email = this.$refs.emailpicker.email
                 let code = this.$refs.emailpicker.vscode
-                this.$router.push(`/c/account/setpass?email=${email}&code=${code}`)
+                this.$router.push(`/c/account/resetpassConfirm?email=${email}&code=${code}`)
             } else {
                 let phone = this.$refs.telpicker.tel
                 let code = this.$refs.telpicker.vscode
                 let phoneCc = this.areaInfo.phonePrefix
                 let countryId = this.country.id
                 this.$router.push(
-                    `/c/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
+                    `/c/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
                 )
             }
         }

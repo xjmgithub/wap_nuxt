@@ -4,6 +4,7 @@ let auth_ignore = [
     /^\/c\/account\/signin/,
     /^\/c\/account\/register/,
     /^\/c\/account\/setpass/,
+    /^\/c\/account\/resetpass/,
     /^\/c\/payment\/channelDesc/,
     /^\/c\/payment\/payResult/
 ]
