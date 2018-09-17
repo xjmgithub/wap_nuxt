@@ -10,7 +10,8 @@ export const state = () => ({
     country: {},
     gaClientId: '',
     lang: {},
-    shadowStatus: false
+    shadowStatus: false,
+    payToken:''
 })
 
 export const mutations = {
@@ -40,6 +41,9 @@ export const mutations = {
     },
     HIDE_SHADOW_LAYER: function(state) {
         state.shadowStatus = false
+    },
+    SET_PAYTOKEN: function(state,token){
+        state.payToken = token
     }
 }
 
