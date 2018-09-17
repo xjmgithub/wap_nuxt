@@ -71,14 +71,15 @@ export default {
             type: 0, // 0 tel 1 email
             country: this.$store.state.country,
             countryDialogStatus: false,
-            phoneNum: '',
-            password: '',
+            phoneNum: '7017201879',
+            password: 'shang123',
             email: '',
             countrys: []
         }
     },
     computed: {
         areaInfo() {
+            console.log(this.country.id)
             return this.countrys[this.country.id]
         }
     },
