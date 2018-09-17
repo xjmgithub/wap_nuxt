@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="title">Enter cellphone number</div>
+        <div class="title">{{title}}</div>
         <div class="input-tel">
             <div class="prefix">+{{prefix}}</div>
             <div class="number">
@@ -22,6 +22,9 @@ export default {
         },
         type: {
             default: 0
+        },
+        title:{
+            default:'Enter cellphone number'
         }
     },
     watch: {
@@ -106,6 +109,8 @@ export default {
 .title {
     line-height: 2rem;
     height: 2rem;
+    font-size:0.9rem;
+    font-weight:bold;
 }
 .input-tel {
     display: -webkit-box;

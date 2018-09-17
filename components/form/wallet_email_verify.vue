@@ -105,7 +105,7 @@ export default {
     display: -webkit-box;
     display: flex;
     padding-bottom: 5px;
-    margin: 1rem 0 2rem;
+    margin: 0rem ;
     position: relative;
     &.focus {
         border-bottom: #0087eb solid 1px;
