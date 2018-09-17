@@ -6,7 +6,8 @@ let auth_ignore = [
     /^\/c\/account\/setpass/,
     /^\/c\/account\/resetpass/,
     /^\/c\/payment\/channelDesc/,
-    /^\/c\/payment\/payResult/
+    /^\/c\/payment\/payResult/,
+    /^\/c\/payment\/test/,
 ]
 function inIgnore(url) {
     let result = false
