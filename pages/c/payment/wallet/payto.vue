@@ -84,7 +84,7 @@ export default {
             if (this.enough) {
                 // 支付流程
                 let passIsSet = JSON.parse(window.localStorage.getItem('wallet_config')).payPassword
-                if (passIsSet) {
+                if (passIsSet=='true') {
                     this.$router.push('/c/payment/wallet/paybyPass')
                 } else {
                     this.$router.push('/c/payment/wallet/setPassword')

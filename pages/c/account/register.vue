@@ -98,7 +98,7 @@ export default {
                 let phone = this.$refs.telpicker.tel
                 let code = this.$refs.telpicker.vscode
                 let phoneCc = this.areaInfo.phonePrefix
-                let countryId = this.country.id
+                let countryId = this.country
                 this.$router.push(
                     `/c/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
                 )

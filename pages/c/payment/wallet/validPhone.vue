@@ -9,13 +9,13 @@
             <nuxt-link to="/c/payment/wallet/validEmail?reset=1">RESET IT BY EMAIL</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
+            <passInput length="4" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)"></mButton>
             </div>
         </div>
         <div class="step2 step3" v-show="step==3">
-            <passInput placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
+            <passInput length="4" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
             <div class="footer">
                 <mButton :disabled="!canStep3" text="OK"></mButton>
             </div>

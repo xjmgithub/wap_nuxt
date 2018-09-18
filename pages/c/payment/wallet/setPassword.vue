@@ -13,8 +13,9 @@ export default {
         }
     },
     mounted() {
-        let phoneIsSet = window.sessionStorage.getItem('wallet_phone')
-        let emailIsSet = window.sessionStorage.getItem('wallet_email')
+        let config = JSON.parse(window.localStorage.getItem('wallet_config'))
+        let phoneIsSet = config.phone
+        let emailIsSet = config.email
         this.$axios.setHeader('clientType', 'android')
         this.$axios.setHeader('versionCode', '5300')
         this.$axios.get('/vup/v1/ums/user/area', {}).then(res => {
@@ -31,11 +32,11 @@ export default {
             })
 
             if (type == true) {
-                if (!phoneIsSet) {
-                    this.$router.replace('/c/payment/wallet/valid_phone_s1')
+                if (phoneIsSet == 'false') {
+                    this.$router.replace('/c/payment/wallet/validPhone')
                 }
             } else {
-                if (!emailIsSet) {
+                if (emailIsSet == 'false') {
                     this.$router.replace('/c/payment/wallet/valid_email')
                 }
             }

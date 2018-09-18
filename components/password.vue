@@ -4,19 +4,24 @@
         <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="toggleView&&isCiphertext==1" alt="" @click="isCiphertext=2">
         <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="toggleView&&isCiphertext==2" alt="" @click="isCiphertext=1">
         <div class="pwd-input">
-            <input :type="pwdType" v-model="N1" disabled/>
-            <input :type="pwdType" v-model="N2" disabled/>
-            <input :type="pwdType" v-model="N3" disabled/>
-            <input :type="pwdType" v-model="N4" disabled/>
-            <input :type="pwdType" v-model="N5" disabled/>
-            <input :type="pwdType" v-model="N6" disabled/>
+            <!-- TODO 支持自定义化数量 -->
+            <div class="input-item" v-html="N1"></div>
+            <div class="input-item" v-show="length>=2" v-html="N2"></div>
+            <div class="input-item" v-show="length>=3" v-html="N3"></div>
+            <div class="input-item" v-show="length>=4" v-html="N4"></div>
+            <div class="input-item" v-show="length>=5" v-html="N5"></div>
+            <div class="input-item" v-show="length>=6" v-html="N6"></div>
         </div>
-        <input type="tel" maxlength="6" v-model="password" class="hidden-pwd">
+        <input type="tel" :maxlength="length" v-model="password" class="hidden-pwd">
     </div>
 </template>
 <script>
 export default {
     props: {
+        length: {
+            type: String, // max length 6
+            default: '6'
+        },
         placeholder: {
             type: String,
             required: true
@@ -37,27 +42,52 @@ export default {
             return this.isCiphertext == 1 ? 'password' : 'text'
         },
         N1() {
-            return this.password.substr(0, 1) || ''
+            if (this.isCiphertext == 1) {
+                return this.password.substr(0, 1) ? '&bull;' : ''
+            } else {
+                return this.password.substr(0, 1) || ''
+            }
         },
         N2() {
+            if (this.isCiphertext == 1) {
+                return this.password.substr(1, 1) ? '&bull;' : ''
+            } else {
+                return this.password.substr(1, 1) || ''
+            }
             return this.password.substr(1, 1) || ''
         },
         N3() {
-            return this.password.substr(2, 1) || ''
+            if (this.isCiphertext == 1) {
+                return this.password.substr(2, 1) ? '&bull;' : ''
+            } else {
+                return this.password.substr(2, 1) || ''
+            }
         },
         N4() {
-            return this.password.substr(3, 1) || ''
+            if (this.isCiphertext == 1) {
+                return this.password.substr(3, 1) ? '&bull;' : ''
+            } else {
+                return this.password.substr(3, 1) || ''
+            }
         },
         N5() {
-            return this.password.substr(4, 1) || ''
+            if (this.isCiphertext == 1) {
+                return this.password.substr(4, 1) ? '&bull;' : ''
+            } else {
+                return this.password.substr(4, 1) || ''
+            }
         },
         N6() {
-            return this.password.substr(5, 1) || ''
+            if (this.isCiphertext == 1) {
+                return this.password.substr(5, 1) ? '&bull;' : ''
+            } else {
+                return this.password.substr(5, 1) || ''
+            }
         }
     },
     watch: {
         password(val, oldVal) {
-            if (val.length >= 6) {
+            if (val.length >= this.length) {
                 this.$emit('endinput', true)
             } else {
                 this.$emit('endinput', false)
@@ -83,16 +113,14 @@ export default {
     }
     .pwd-input {
         width: 100%;
-        input {
-            width: 13%;
-            display: block;
-            border: none;
+        display: flex;
+        .input-item {
+            flex: 1;
+            margin-right: 0.5rem;
             border-bottom: 1px solid #ddd;
-            outline: none;
-            text-align: center;
-            margin-right: 4.4%;
+            height: 1.5rem;
             background: #fff;
-            float: left;
+            text-align: center;
             &:last-child {
                 margin-right: 0;
             }
