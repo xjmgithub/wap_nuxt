@@ -14,7 +14,7 @@
     </div>
 </template>
 <script>
-import { setCookie } from '~/functions/utils'
+import { setCookie, initUser } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -23,7 +23,6 @@ export default {
         }
     },
     mounted() {
-        let _this = this
         // twitter登录
         hello.init(
             {
@@ -41,6 +40,7 @@ export default {
         })
 
         var googleUser = {}
+        let _this = this
         gapi.load('auth2', function() {
             var auth2 = gapi.auth2.init({
                 client_id:
@@ -52,10 +52,6 @@ export default {
                 {},
                 function(googleUser) {
                     _this.loginByThird(googleUser.getBasicProfile().getId())
-                    // console.log('ID: ' + profile.getId()) // Do not send to your backend! Use an ID token instead.
-                    // console.log('Name: ' + profile.getName())
-                    // console.log('Image URL: ' + profile.getImageUrl())
-                    // console.log('Email: ' + profile.getEmail()) // This is null if the 'email' scope is not present.
                 },
                 function(error) {
                     console.log(JSON.stringify(error, undefined, 2))
@@ -71,6 +67,7 @@ export default {
             })
         },
         bytwitter() {
+            let _this = this
             hello.login(
                 'twitter',
                 {
@@ -82,8 +79,6 @@ export default {
             )
         },
         loginByThird(userkey) {
-            var _this = this
-            this.$axios.setHeader('token', this.$store.state.token)
             this.$axios
                 .post('/ums/v1/user/login', {
                     applicationId: 2,
@@ -94,23 +89,19 @@ export default {
                 })
                 .then(res => {
                     if (res.data.code == 0) {
-                        setCookie('userId', res.data.data.userId)
-                        setCookie('token', res.data.data.token)
-                        setCookie('countryId', res.data.data.countryId)
-                        setCookie('country', res.data.data.country)
-                        this.$store.commit('SET_TOKEN', res.data.data.token)
-                        this.$store.commit('SET_COUNTRY', {
-                            id: res.data.data.countryId,
-                            short: res.data.data.country
-                        })
-
+                        initUser(
+                            res.data.data.token,
+                            res.data.data.userId,
+                            res.data.data
+                        )
                         if (this.pre) {
+                            window.location.href = this.pre
                             this.$router.push(encodeURIComponent(this.pre))
                         } else {
-                            this.$router.push('/c/payment/wallet/payto')
+                            window.location.href = '/c/payment/wallet/payto'
                         }
                     } else {
-                        _this.$alert(res.datea.message)
+                        this.$alert(res.datea.message)
                     }
                 })
         }

@@ -61,7 +61,7 @@ export default {
     data() {
         return {
             type: 0,
-            country: this.$store.state.country,
+            country: this.$store.state.user.areaID,
             countryDialogStatus: false,
             phoneCanNext: false,
             emailCanNext: false
@@ -69,7 +69,7 @@ export default {
     },
     computed: {
         areaInfo() {
-            return this.countrys[this.country.id]
+            return this.countrys[this.country]
         },
         canNext() {
             if (this.type == 1) {
@@ -84,10 +84,7 @@ export default {
             this.type = type
         },
         chooseCountry(country) {
-            this.country = {
-                id: country.id,
-                short: country.country
-            }
+            this.country = country.id
             this.countryDialogStatus = false
         },
         nextStep() {

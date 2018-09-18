@@ -15,59 +15,56 @@
     </div>
 </template>
 <script>
-    export default {
-        props: {
-            placeholder: {
-                type: String,
-                required: true
-            },
-            toggleView:{
-                type:Boolean,
-                default:false
-            }
+export default {
+    props: {
+        placeholder: {
+            type: String,
+            required: true
         },
-        data() {
-            return {
-              password:'',
-              isCiphertext:1
-            }
+        toggleView: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data() {
+        return {
+            password: '',
+            isCiphertext: 1
+        }
+    },
+    computed: {
+        pwdType() {
+            return this.isCiphertext == 1 ? 'password' : 'text'
         },
-        methods: {
-            enterPwd() {
-                this.$emit("setPassword", this.password)
-            }
+        N1() {
+            return this.password.substr(0, 1) || ''
         },
-        computed: {
-            pwdType(){
-                return this.isCiphertext==1?'password':'text'
-            },
-            N1(){
-                return this.password.substr(0,1) || ''
-            },
-            N2(){
-                return this.password.substr(1,1) || ''
-            },
-            N3(){
-                return this.password.substr(2,1) || ''
-            }, 
-            N4(){
-                return this.password.substr(3,1) || ''
-            }, 
-            N5(){
-                return this.password.substr(4,1) || ''
-            },
-            N6(){
-                return this.password.substr(5,1) || ''
-            }
+        N2() {
+            return this.password.substr(1, 1) || ''
         },
-        watch:{
-            password(val,oldVal){
-                if(val.length >= 6){
-                    this.enterPwd()
-                }
+        N3() {
+            return this.password.substr(2, 1) || ''
+        },
+        N4() {
+            return this.password.substr(3, 1) || ''
+        },
+        N5() {
+            return this.password.substr(4, 1) || ''
+        },
+        N6() {
+            return this.password.substr(5, 1) || ''
+        }
+    },
+    watch: {
+        password(val, oldVal) {
+            if (val.length >= 6) {
+                this.$emit('endinput', true)
+            } else {
+                this.$emit('endinput', false)
             }
         }
     }
+}
 </script>
 <style lang="less" scoped>
 .password-box {
@@ -79,13 +76,13 @@
         margin-bottom: 1rem;
         display: inline-block;
     }
-    .open-close{
-        width:1.5rem;
-        height:1.5rem;
+    .open-close {
+        width: 1.5rem;
+        height: 1.5rem;
         float: right;
     }
     .pwd-input {
-    width: 100%;
+        width: 100%;
         input {
             width: 13%;
             display: block;
@@ -101,13 +98,12 @@
             }
         }
     }
-    .hidden-pwd{
-        width:100%;
+    .hidden-pwd {
+        width: 100%;
         position: absolute;
         top: 2.2rem;
         left: 0;
         opacity: 0;
     }
 }
-
 </style>

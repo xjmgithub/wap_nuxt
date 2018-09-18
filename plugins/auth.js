@@ -7,7 +7,7 @@ let auth_ignore = [
     /^\/c\/account\/resetpass/,
     /^\/c\/payment\/channelDesc/,
     /^\/c\/payment\/payResult/,
-    /^\/c\/payment\/test/,
+    /^\/c\/payment\/test/
 ]
 function inIgnore(url) {
     let result = false
@@ -19,7 +19,7 @@ function inIgnore(url) {
     return result
 }
 export default ({ app: { router }, store }) => {
-    var loginUser = getCookie('userId')
+    var loginUser = getCookie('userid')
     router.beforeEach((to, from, next) => {
         if (!inIgnore(to.path)) {
             if (loginUser) {

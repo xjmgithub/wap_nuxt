@@ -52,7 +52,7 @@
 </template>
 <script>
 import shadowLayer from '~/components/shadow-layer'
-import { setCookie } from '~/functions/utils'
+import { setCookie, initUser } from '~/functions/utils'
 export default {
     layout: 'base',
     async asyncData({ app, store, redirect }) {
@@ -69,7 +69,7 @@ export default {
     data() {
         return {
             type: 0, // 0 tel 1 email
-            country: this.$store.state.country,
+            country: this.$store.state.user.areaID,
             countryDialogStatus: false,
             phoneNum: '7017201879',
             password: 'shang123',
@@ -79,8 +79,7 @@ export default {
     },
     computed: {
         areaInfo() {
-            console.log(this.country.id)
-            return this.countrys[this.country.id]
+            return this.countrys[this.country]
         }
     },
     methods: {
@@ -89,10 +88,7 @@ export default {
             this.password = ''
         },
         chooseCountry(country) {
-            this.country = {
-                id: country.id,
-                short: country.country
-            }
+            this.country = country.id
             this.countryDialogStatus = false
         },
         login() {
@@ -100,7 +96,7 @@ export default {
             if (this.type == 1) {
                 params = {
                     applicationId: 1,
-                    deviceId: 'A0004',
+                    deviceId: this.$store.state.deviceId,
                     type: 0,
                     email: this.email,
                     pwd: this.password
@@ -121,19 +117,13 @@ export default {
             }
             this.$axios.post('/ums/v1/user/login', params).then(res => {
                 if (res.data.code == 0) {
-                    setCookie('userId', res.data.data.userId)
-                    setCookie('token', res.data.data.token)
-                    setCookie('countryId', res.data.data.countryId)
-                    setCookie('country', res.data.data.country)
-                    this.$store.commit('SET_TOKEN', res.data.data.token)
-                    this.$store.commit('SET_COUNTRY', {
-                        id: res.data.data.countryId,
-                        short: res.data.data.country
-                    })
-
-                    // 为了重置应用状态，需要触发浏览器刷新
+                    initUser(
+                        res.data.data.token,
+                        res.data.data.userId,
+                        res.data.data
+                    )
                     if (this.pre) {
-                        window.location.href = encodeURIComponent(this.pre)
+                        window.location.href = this.pre
                     } else {
                         window.location.href = '../payment/wallet/payto'
                     }

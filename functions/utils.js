@@ -2,29 +2,50 @@ export const setCookie = (name, value, end, path, domain, secure) => {
     if (!name) {
         return false
     }
-    let expires = ""
+    let expires = ''
     if (end) {
         switch (end.constructor) {
             case Number:
-                expires = end === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + end
+                expires =
+                    end === Infinity
+                        ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT'
+                        : '; max-age=' + end
                 break
             case String:
-                expires = "; expires=" + end
+                expires = '; expires=' + end
                 break
             case Date:
-                expires = "; expires=" + end.toUTCString()
+                expires = '; expires=' + end.toUTCString()
                 break
         }
     }
-    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value)
-        + expires
-        + (domain ? "; domain=" + domain : "")
-        + (path ? "; path=" + path : ";path=/")
-        + (secure ? "; secure" : "")
+    document.cookie =
+        encodeURIComponent(name) +
+        '=' +
+        encodeURIComponent(value) +
+        expires +
+        (domain ? '; domain=' + domain : '') +
+        (path ? '; path=' + path : ';path=/') +
+        (secure ? '; secure' : '')
     return true
 }
 
-export const getCookie = (name) => {
-    let value = document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")
+export const getCookie = name => {
+    let value = document.cookie.replace(
+        new RegExp(
+            '(?:(?:^|.*;)\\s*' +
+                encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') +
+                '\\s*\\=\\s*([^;]*).*$)|^.*$'
+        ),
+        '$1'
+    )
     return decodeURIComponent(value) || null
+}
+
+export const initUser = (token, id, obj) => {
+    // browser surport server unsurport
+    if (!token || !id || !obj) return false
+    setCookie('token', token)
+    setCookie('userid', id)
+    window.localStorage.setItem('user', JSON.stringify(obj))
 }

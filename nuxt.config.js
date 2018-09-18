@@ -67,12 +67,13 @@ module.exports = {
         '/ocs/': env.ms_host,
         '/membership/': env.ms_host,
         '/mobilewallet/': env.ms_host,
-        '/payment/': env.ms_host,
+        '/payment/': env.ms_host
         // '/mobilewallet/': 'http://localhost:9001',
         // '/payment/': 'http://localhost:9001',
     },
     plugins: [
         { src: '~plugins/analysis.js', ssr: false },
-        { src: '~plugins/auth.js', ssr: false }
+        { src: '~plugins/auth.js', ssr: false },
+        { src: '~plugins/deviceid.js', ssr: false },
     ]
 }

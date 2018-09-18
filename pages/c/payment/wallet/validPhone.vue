@@ -1,25 +1,23 @@
 <template>
     <div class="container">
-        <verifyTel :title="title" prefix="234"></verifyTel>
+        <verifyTel :title="title" prefix="234" @canNext="canStep1=true"></verifyTel>
         <div class="change-phone-link">
             <nuxt-link to="/c/payment/wallet/changephone">Change cellphone number</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="back"></mButton>
+            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
             <nuxt-link to="/c/payment/wallet/validEmail?reset=1">RESET IT BY EMAIL</nuxt-link>
         </div>
-        <div class="step2">
-            <div class="title">Enter SMS verification code</div>
-            <passInput></passInput>
+        <div class="step2" v-show="step==2">
+            <passInput placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
             <div class="footer">
-                <mButton :disabled="false" text="NEXT" @click="back"></mButton>
+                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)"></mButton>
             </div>
         </div>
-        <div class="step2 step3">
-            <div class="title">Confirm Password</div>
-            <passInput></passInput>
+        <div class="step2 step3" v-show="step==3">
+            <passInput placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
             <div class="footer">
-                <mButton :disabled="false" text="OK" @click="back"></mButton>
+                <mButton :disabled="!canStep3" text="OK"></mButton>
             </div>
         </div>
     </div>
@@ -32,7 +30,11 @@ export default {
     layout: 'base',
     data() {
         return {
-            reset: this.$route.query.reset || false
+            reset: this.$route.query.reset || false,
+            canStep1: false,
+            canStep2: false,
+            canStep3: false,
+            step: 1
         }
     },
     computed: {
@@ -42,7 +44,22 @@ export default {
                 : 'Enter cellphone number'
         }
     },
+    methods: {
+        goStep(num) {
+            this.step = num
+        },
+        codeEnd(bool) {
+            this.canStep2 = bool
+        },
+        confirmEnd(bool) {
+            this.canStep3 = bool
+        }
+    },
     mounted() {
+        // 获取当前国家的 phonefix
+        // 获取是否已经设置了password
+        // 是否需要验证手机
+
         if (this.reset) {
             // TODO 获取手机号码
         }
@@ -58,7 +75,6 @@ export default {
 .container {
     padding: 3rem 1rem;
     .step2 {
-        display: none;
         width: 100%;
         height: 100%;
         position: absolute;

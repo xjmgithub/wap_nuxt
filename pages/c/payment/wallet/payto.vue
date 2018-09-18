@@ -45,22 +45,20 @@ export default {
             this.$alert('Query payToken needed! please check request')
             return false
         }
-
         this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
             if (res.data) {
+                window.localStorage.setItem(
+                    'wallet_account',
+                    JSON.stringify(res.data)
+                )
                 this.balance = res.data.amount
-                sessionStorage.setItem('wallet_account', res.data.accountNo)
-                sessionStorage.setItem('wallet_left', res.data.amount)
                 this.balance = 100 // TODO remove demo
-
-                this.getSetConfig(res.data.accountNo) //钱包配置
+                this.getSetConfig(res.data.accountNo) // 钱包配置
             }
         })
 
         this.$axios
-            .get('/payment/api/v2/get-pre-payment', {
-                payToken: this.payToken
-            })
+            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
                 if (data && data.resultCode == '0') {
@@ -77,26 +75,15 @@ export default {
     methods: {
         getSetConfig(account) {
             this.$axios
-                .get(`/mobilewallet/v1/accounts/${account}/prop-details`, {})
+                .get(`/mobilewallet/v1/accounts/${account}/prop-details`)
                 .then(res => {
-                    window.sessionStorage.setItem(
-                        'wallet_password',
-                        res.data.payPassword
-                    )
-                    window.sessionStorage.setItem(
-                        'wallet_phone',
-                        res.data.phone
-                    )
-                    window.sessionStorage.setItem(
-                        'wallet_email',
-                        res.data.email
-                    )
+                    window.localStorage.setItem('wallet_config', JSON.stringify(res.data))
                 })
         },
         nextStep() {
             if (this.enough) {
                 // 支付流程
-                let passIsSet = window.sessionStorage.getItem('wallet_password')
+                let passIsSet = JSON.parse(window.localStorage.getItem('wallet_config')).payPassword
                 if (passIsSet) {
                     this.$router.push('/c/payment/wallet/paybyPass')
                 } else {

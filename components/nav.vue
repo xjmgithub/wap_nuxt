@@ -14,13 +14,13 @@ export default {
     },
     created(){
         let _this = this
-        let areaId = this.$store.state.country.id
-        this.$axios.get(`http://pc.startimestv.com/home/home/recommendNavigationBar?areaID=${areaId}`)
-        .then(res=>{
-            if(res.status == 200){
-                _this.list = res.data
-            }
-        })
+        // let areaId = this.$store.state.country.id
+        // this.$axios.get(`http://pc.startimestv.com/home/home/recommendNavigationBar?areaID=${areaId}`)
+        // .then(res=>{
+        //     if(res.status == 200){
+        //         _this.list = res.data
+        //     }
+        // })
     }
 }
 </script>
