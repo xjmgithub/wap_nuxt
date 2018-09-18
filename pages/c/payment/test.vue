@@ -121,14 +121,12 @@ export default {
             )
             return { payToken: res2.data.payToken }
         } else {
-            window.alert('获取access_token 失败')
+            console.log('获取access_token 失败')
         }
     },
     mounted() {
         this.$axios
-            .get('/payment/api/v2/get-pre-payment', {
-                payToken: this.payToken
-            })
+            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
@@ -143,7 +141,6 @@ export default {
                         this.appInterfaceMode =
                             payChannels[this.payChannel].appInterfaceMode
                         this.payType = payChannels[this.payChannel].payType
-
                     } else {
                         this.$alert(
                             'payToken and payChannel Mismatch! please check request'
