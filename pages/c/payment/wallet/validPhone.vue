@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <verifyTel :title="title" prefix="234" @canNext="canStep1=true"></verifyTel>
+        <verifyTel ref="phone" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
         <div class="change-phone-link">
             <nuxt-link to="/c/payment/wallet/changephone">Change cellphone number</nuxt-link>
         </div>
@@ -9,15 +9,21 @@
             <nuxt-link to="/c/payment/wallet/validEmail?reset=1">RESET IT BY EMAIL</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput length="4" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
+            <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)"></mButton>
             </div>
         </div>
         <div class="step2 step3" v-show="step==3">
-            <passInput length="4" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
+            <passInput length="6" ref="newpass" :toggleView="true" placeholder="Set payment password" @endinput="inputPass"></passInput>
             <div class="footer">
-                <mButton :disabled="!canStep3" text="OK"></mButton>
+                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"></mButton>
+            </div>
+        </div>
+        <div class="step2 step4" v-show="step==4">
+            <passInput length="6" ref="confirmpass" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
+            <div class="footer">
+                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"></mButton>
             </div>
         </div>
     </div>
@@ -34,7 +40,10 @@ export default {
             canStep1: false,
             canStep2: false,
             canStep3: false,
-            step: 1
+            canStep4: false,
+            step: 1,
+            accountNo: '',
+            prefix: '234'
         }
     },
     computed: {
@@ -44,26 +53,74 @@ export default {
                 : 'Enter cellphone number'
         }
     },
-    methods: {
-        goStep(num) {
-            this.step = num
-        },
-        codeEnd(bool) {
-            this.canStep2 = bool
-        },
-        confirmEnd(bool) {
-            this.canStep3 = bool
-        }
-    },
     mounted() {
         // 获取当前国家的 phonefix
-        // 获取是否已经设置了password
-        // 是否需要验证手机
-
+        let walletAccount = JSON.parse(
+            window.localStorage.getItem('wallet_account')
+        )
+        this.accountNo = walletAccount.accountNo
         if (this.reset) {
             // TODO 获取手机号码
         }
     },
+    methods: {
+        goStep(num) {
+            let vscode = this.$refs.vscode.password
+            switch (num) {
+                case 2:
+                case 4:
+                    this.step = num
+                    break
+                case 3:
+                    let tel = this.$refs.phone.tel
+                    this.$axios
+                        .get(
+                            `/mobilewallet/uc/v2/accounts/${
+                                this.accountNo
+                            }/verify-code?phone=${this.prefix +
+                                tel}&verifyCode=${vscode}`
+                        )
+                        .then(res => {
+                            let data = res.data
+                            if (data && data.code == '0') {
+                                this.step = 3
+                            }else{
+                                this.$alert(data.message)
+                            }
+                        })
+                    break
+                case 5:
+                    let newpass = this.$refs.newpass.password
+                    this.$axios
+                        .put(
+                            `/mobilewallet/uc/v2/accounts/${
+                                this.accountNo
+                            }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`
+                        )
+                        .then(res => {
+                            let data = res.data
+                            if (data && data.code == '0') {
+                                this.$alert(data.message,()=>{
+                                    window.location.href = './payto'
+                                })
+                            }
+                        })
+                    break
+                default:
+                    break
+            }
+        },
+        codeEnd(bool) {
+            this.canStep2 = bool
+        },
+        inputPass(bool) {
+            this.canStep3 = bool
+        },
+        confirmEnd(bool) {
+            this.canStep4 = bool
+        }
+    },
+
     components: {
         verifyTel,
         mButton,
