@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     ga_wap_key: 'UA-55969660-4',
     ga_android_key: 'UA-55969660-7',
     ga_ios_key: 'UA-55969660-5',
