@@ -1,25 +1,29 @@
 <template>
     <div class="container">
-        <verifyEmail></verifyEmail>
+        <verifyEmail ref="emailCont"></verifyEmail>
         <div class="change-phone-link">
             <nuxt-link to="/c/payment/wallet/changephone">Change email</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="back"></mButton>
+            <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
             <nuxt-link to="/c/payment/wallet/validPhone?reset=1">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
-        <div class="step2">
-            <div class="title">Enter SMS verification code</div>
-            <passInput></passInput>
+        <div class="step2" v-show="step==2">
+            <passInput placeholder="Enter SMS verification code"></passInput>
             <div class="footer">
-                <mButton :disabled="false" text="NEXT" @click="back"></mButton>
+                <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
             </div>
         </div>
-        <div class="step2 step3">
-            <div class="title">Confirm Password</div>
-            <passInput></passInput>
+        <div class="step2 step3" v-show="step==3">
+            <passInput ref="newpass" :toggleView="true" placeholder="Set payment password" @endinput="inputPass"></passInput>
             <div class="footer">
-                <mButton :disabled="false" text="OK" @click="back"></mButton>
+                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"></mButton>
+            </div>
+        </div>
+        <div class="step2 step4" v-show="step==4">
+            <passInput ref="confirmpass" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
+            <div class="footer">
+                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"></mButton>
             </div>
         </div>
     </div>
@@ -30,10 +34,35 @@ import mButton from '~/components/button'
 import passInput from '~/components/password'
 export default {
     layout: 'base',
+    data() {
+        return {
+            reset: this.$route.query.reset || false,
+            canStep1: false,
+            canStep2: false,
+            canStep3: false,
+            canStep4: false,
+            step: 1,
+            accountNo: ''
+        }
+    },
     components: {
         verifyEmail,
         mButton,
         passInput
+    },
+    methods: {
+        goStep(num) {
+            this.step = num
+        },
+        codeEnd(bool) {
+            this.canStep2 = bool
+        },
+        inputPass(bool) {
+            this.canStep3 = bool
+        },
+        confirmEnd(bool) {
+            this.canStep4 = bool
+        }
     }
 }
 </script>
@@ -41,7 +70,6 @@ export default {
 .container {
     padding: 3rem 1rem;
     .step2 {
-        display:none;
         width: 100%;
         height: 100%;
         position: absolute;

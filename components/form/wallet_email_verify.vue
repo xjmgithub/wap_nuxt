@@ -12,39 +12,9 @@
 <script>
 import qs from 'qs'
 export default {
-    props: {
-        type: {
-            default: 0
-        }
-    },
     watch: {
         email(nv, ov) {
             this.error_email = ''
-        },
-        vscode(nv, ov) {
-            this.error_code = ''
-            if (nv.length >= 4) {
-                this.$axios({
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    data: qs.stringify({
-                        email: this.email,
-                        code: nv
-                    }),
-                    url: this.type
-                        ? '/ums/v1/user/code/verify'
-                        : '/ums/v1/register/code/verify'
-                }).then(res => {
-                    if (res.data.code == 0) {
-                        this.$emit('pass')
-                    } else {
-                        this.error_code =
-                            'This code you entered is incorrect. Please try again.'
-                    }
-                })
-            }
         }
     },
     mounted() {
@@ -55,12 +25,9 @@ export default {
     },
     data() {
         return {
-            email: '',
-            vscode: '',
+            email: '323234@qq.com',
             focus_email: false,
             error_email: '',
-            focus_code: false,
-            error_code: '',
             codeDuring: 0
         }
     },
@@ -149,48 +116,5 @@ export default {
         color: red;
     }
 }
-.get-code {
-    display: flex;
-    margin: 1.5rem 0;
-    position: relative;
-    input {
-        display: block;
-        flex: 2.6;
-        border: none;
-        border-bottom: #dddddd solid 1px;
-        &.focus {
-            border-bottom: #0087eb solid 1px;
-        }
-        &.error {
-            border-bottom: red solid 1px;
-        }
-        &::-webkit-input-placeholder {
-            font-size: 0.5rem;
-        }
-        outline: none;
-        margin-right: 0.5rem;
-    }
 
-    .btn {
-        flex: 1;
-        max-width: 10rem;
-        background: #0087eb;
-        color: white;
-        font-size: 0.8rem;
-        text-align: center;
-        height: 2rem;
-        line-height: 2rem;
-        cursor: pointer;
-        &.disabled {
-            background: #dddddd;
-            color: #aaaaaa;
-        }
-    }
-    .error_code {
-        position: absolute;
-        bottom: -1.4rem;
-        font-size: 0.5rem;
-        color: red;
-    }
-}
 </style>

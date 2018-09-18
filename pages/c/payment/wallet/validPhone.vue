@@ -54,7 +54,7 @@ export default {
         }
     },
     mounted() {
-        // 获取当前国家的 phonefix
+        // TODO 获取当前国家的 phonefix
         let walletAccount = JSON.parse(
             window.localStorage.getItem('wallet_account')
         )
@@ -84,12 +84,13 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = 3
-                            }else{
+                            } else {
                                 this.$alert(data.message)
                             }
                         })
                     break
                 case 5:
+                    // TODO 新旧密码的对比
                     let newpass = this.$refs.newpass.password
                     this.$axios
                         .put(
@@ -100,7 +101,7 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.$alert(data.message,()=>{
+                                this.$alert(data.message, () => {
                                     window.location.href = './payto'
                                 })
                             }
