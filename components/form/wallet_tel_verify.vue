@@ -4,7 +4,7 @@
         <div class="input-tel">
             <div class="prefix">+{{prefix}}</div>
             <div class="number">
-                <input type="tel" :class="{focus:focus_tel,'input-error':error_tel}" v-model="tel" @focus="focus_tel=true" @blur="focus_tel=false" placeholder="Cellphone number" />
+                <input type="tel" :disabled="disabled" :class="{focus:focus_tel,'input-error':error_tel}" v-model="tel" @focus="focus_tel=true" @blur="focus_tel=false" placeholder="Cellphone number" />
             </div>
             <div class="get-code">
                 <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
@@ -22,6 +22,9 @@ export default {
         },
         title: {
             default: 'Enter cellphone number'
+        },
+        disabled:{
+            default:false
         }
     },
     watch: {
@@ -49,6 +52,9 @@ export default {
         }
     },
     methods: {
+        setTel(tel){
+            this.tel = tel
+        },
         getCode() {
             // TODO 防止多次点击
             if (!this.canGetCode) return false

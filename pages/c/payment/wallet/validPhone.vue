@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <verifyTel ref="phone" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
+        <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
         <div class="change-phone-link">
             <nuxt-link to="/c/payment/wallet/changephone">Change cellphone number</nuxt-link>
         </div>
@@ -43,7 +43,7 @@ export default {
             canStep4: false,
             step: 1,
             accountNo: '',
-            prefix: '234'
+            prefix:''
         }
     },
     computed: {
@@ -51,16 +51,16 @@ export default {
             return this.reset
                 ? 'Confirm your cellphone number'
                 : 'Enter cellphone number'
-        }
+        },
     },
     mounted() {
-        // TODO 获取当前国家的 phonefix
         let walletAccount = JSON.parse(
             window.localStorage.getItem('wallet_account')
         )
         this.accountNo = walletAccount.accountNo
+        this.prefix = walletAccount.phone.substr(0,3)
         if (this.reset) {
-            // TODO 获取手机号码
+            this.$refs.phone.setTel(walletAccount.phone.substr(3))
         }
     },
     methods: {
