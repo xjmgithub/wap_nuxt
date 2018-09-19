@@ -9,7 +9,7 @@
             <nuxt-link to="/c/payment/wallet/validPhone?reset=1">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput placeholder="Enter SMS verification code"></passInput>
+            <passInput length="4" placeholder="Enter SMS verification code"></passInput>
             <div class="footer">
                 <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
             </div>
@@ -53,6 +53,38 @@ export default {
     methods: {
         goStep(num) {
             this.step = num
+            if (num == 2) {
+                let accountNo = window.sessionStorage.getItem('wallet_account')
+                let email = this.$refs.emailCont.email
+                this.$axios
+                    .post(
+                        `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail?email=${email}`
+                    )
+                    .then(res => {
+                        if (res.data.code == 0) {
+                            this.step = num
+                        }
+                    })
+            } else if (num == 5) {
+                let vscode = this.$refs.vscode.password
+                let newpass = this.$refs.newpass.password
+                this.$axios
+                    .put(
+                        `/mobilewallet/uc/v2/accounts/${
+                            this.accountNo
+                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`
+                    )
+                    .then(res => {
+                        let data = res.data
+                        if (data && data.code == '0') {
+                            this.$alert(data.message, () => {
+                                window.location.href = './payto'
+                            })
+                        }
+                    })
+            } else {
+                this.step = num
+            }
         },
         codeEnd(bool) {
             this.canStep2 = bool

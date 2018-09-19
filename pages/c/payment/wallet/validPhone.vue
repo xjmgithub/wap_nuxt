@@ -65,50 +65,25 @@ export default {
     },
     methods: {
         goStep(num) {
-            let vscode = this.$refs.vscode.password
-            switch (num) {
-                case 2:
-                case 4:
-                    this.step = num
-                    break
-                case 3:
-                    let tel = this.$refs.phone.tel
-                    this.$axios
-                        .get(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`
-                        )
-                        .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
-                                this.step = 3
-                            } else {
-                                this.$alert(data.message)
-                            }
-                        })
-                    break
-                case 5:
-                    // TODO 新旧密码的对比
-                    let newpass = this.$refs.newpass.password
-                    this.$axios
-                        .put(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`
-                        )
-                        .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
-                                this.$alert(data.message, () => {
-                                    window.location.href = './payto'
-                                })
-                            }
-                        })
-                    break
-                default:
-                    break
+            if (num == 5) {
+                let vscode = this.$refs.vscode.password
+                let newpass = this.$refs.newpass.password
+                this.$axios
+                    .put(
+                        `/mobilewallet/uc/v2/accounts/${
+                            this.accountNo
+                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`
+                    )
+                    .then(res => {
+                        let data = res.data
+                        if (data && data.code == '0') {
+                            this.$alert(data.message, () => {
+                                window.location.href = './payto'
+                            })
+                        }
+                    })
+            } else {
+                this.step = num
             }
         },
         codeEnd(bool) {

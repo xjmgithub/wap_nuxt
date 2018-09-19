@@ -37,7 +37,7 @@ export default {
                 }
             } else {
                 if (emailIsSet == 'false') {
-                    this.$router.replace('/c/payment/wallet/valid_email')
+                    this.$router.replace('/c/payment/wallet/validEmail')
                 }
             }
         })
