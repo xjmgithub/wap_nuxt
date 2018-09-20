@@ -1,29 +1,13 @@
 <template>
     <div class="container">
-        <verifyTel ref="phone" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
-        <div class="change-phone-link">
-            <nuxt-link to="/c/payment/wallet/changephone">Change cellphone number</nuxt-link>
-        </div>
+        <verifyTel ref="phone" :disabled="!nocheck" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
         <div class="footer">
             <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
-            <nuxt-link to="/c/payment/wallet/validEmail?reset=1">RESET IT BY EMAIL</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
             <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)"></mButton>
-            </div>
-        </div>
-        <div class="step2 step3" v-show="step==3">
-            <passInput length="6" ref="newpass" :toggleView="true" placeholder="Set payment password" @endinput="inputPass"></passInput>
-            <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"></mButton>
-            </div>
-        </div>
-        <div class="step2 step4" v-show="step==4">
-            <passInput length="6" ref="confirmpass" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
-            <div class="footer">
-                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"></mButton>
             </div>
         </div>
     </div>
@@ -36,43 +20,47 @@ export default {
     layout: 'base',
     data() {
         return {
-            reset: this.$route.query.reset || false,
             canStep1: false,
             canStep2: false,
-            canStep3: false,
-            canStep4: false,
             step: 1,
+            nocheck: this.$route.query.nocheck || false,
             accountNo: '',
-            prefix: '234'
+            prefix: ''
         }
     },
     computed: {
         title() {
-            return this.reset
+            return this.nocheck
                 ? 'Confirm your cellphone number'
                 : 'Enter cellphone number'
         }
     },
     mounted() {
-        // TODO 获取当前国家的 phonefix
         let walletAccount = JSON.parse(
             window.localStorage.getItem('wallet_account')
         )
         this.accountNo = walletAccount.accountNo
-        if (this.reset) {
-            // TODO 获取手机号码
+        if (!this.nocheck) {
+            if (walletAccount.phone) {
+                this.prefix = walletAccount.phone.substr(0, 3)
+                this.$refs.phone.setTel(walletAccount.phone.substr(3))
+            } else {
+                this.alert('unknown error')
+            }
+        } else {
+            this.$axios.get('/vup/v1/ums/user/area').then(res => {
+                if (res.data && res.data.phonePrefix) {
+                    this.prefix = res.data.phonePrefix
+                }
+            })
         }
     },
     methods: {
         goStep(num) {
-            let vscode = this.$refs.vscode.password
-            switch (num) {
-                case 2:
-                case 4:
-                    this.step = num
-                    break
-                case 3:
-                    let tel = this.$refs.phone.tel
+            if (num == 3) {
+                let vscode = this.$refs.vscode.password
+                let tel = this.$refs.phone.tel
+                if (this.reset) {
                     this.$axios
                         .get(
                             `/mobilewallet/uc/v2/accounts/${
@@ -83,45 +71,32 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.step = 3
-                            } else {
-                                this.$alert(data.message)
+                                this.step = num
                             }
                         })
-                    break
-                case 5:
-                    // TODO 新旧密码的对比
-                    let newpass = this.$refs.newpass.password
+                } else {
                     this.$axios
                         .put(
-                            `/mobilewallet/uc/v2/accounts/${
+                            `/mobilewallet/v1/accounts/${
                                 this.accountNo
-                            }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`
+                            }/phone?phone=${this.prefix +
+                                tel}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.$alert(data.message, () => {
-                                    window.location.href = './payto'
-                                })
+                                this.step = num
                             }
                         })
-                    break
-                default:
-                    break
+                }
+            } else {
+                this.step = num
             }
         },
         codeEnd(bool) {
             this.canStep2 = bool
-        },
-        inputPass(bool) {
-            this.canStep3 = bool
-        },
-        confirmEnd(bool) {
-            this.canStep4 = bool
         }
     },
-
     components: {
         verifyTel,
         mButton,

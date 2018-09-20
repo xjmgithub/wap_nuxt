@@ -2,7 +2,7 @@
     <div class="container">
         <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
         <div class="change-phone-link">
-            <nuxt-link to="/c/payment/wallet/changephone">Change cellphone number</nuxt-link>
+            <nuxt-link to="/c/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
         </div>
         <div class="footer">
             <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
@@ -97,7 +97,8 @@ export default {
                         .put(
                             `/mobilewallet/v1/accounts/${
                                 this.accountNo
-                            }/phone?phone=${this.prefix +tel}&verifyCode=${vscode}`
+                            }/phone?phone=${this.prefix +
+                                tel}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data
