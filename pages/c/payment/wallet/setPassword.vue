@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <loading v-show="loadStatus"></loading>
+        <!-- TODO SETPASSWORD -->
     </div>
 </template>
 <script>
@@ -30,7 +31,6 @@ export default {
                     }
                 }
             })
-
             if (type == true) {
                 if (phoneIsSet == 'false') {
                     this.$router.replace('/c/payment/wallet/validPhone')

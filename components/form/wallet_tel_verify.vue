@@ -62,7 +62,7 @@ export default {
             this.$axios
                 .post(
                     `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code?phone=${this
-                        .prefix + this.tel}`,
+                        .prefix + this.tel}&`,
                     {
                         phone: this.prefix + this.tel
                     }

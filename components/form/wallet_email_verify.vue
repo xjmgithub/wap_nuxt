@@ -25,7 +25,7 @@ export default {
     },
     data() {
         return {
-            email: '323234@qq.com',
+            email: '',
             focus_email: false,
             error_email: '',
             codeDuring: 0
@@ -52,6 +52,9 @@ export default {
                             'Please confirm you have entered the right email.'
                     }
                 })
+        },
+        setEmail(val){
+            this.email = val
         }
     },
     beforeDestroy() {

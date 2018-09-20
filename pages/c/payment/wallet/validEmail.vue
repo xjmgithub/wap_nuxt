@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <verifyEmail ref="emailCont"></verifyEmail>
+        <verifyEmail :disabled="reset" ref="emailCont"></verifyEmail>
         <div class="change-phone-link">
             <nuxt-link to="/c/payment/wallet/changephone">Change email</nuxt-link>
         </div>
@@ -9,7 +9,7 @@
             <nuxt-link to="/c/payment/wallet/validPhone?reset=1">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput length="4" placeholder="Enter SMS verification code"></passInput>
+            <passInput length="4" ref="vscode" placeholder="Enter SMS verification code"></passInput>
             <div class="footer">
                 <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
             </div>
@@ -36,7 +36,7 @@ export default {
     layout: 'base',
     data() {
         return {
-            reset: this.$route.query.reset || false,
+            reset: false,
             canStep1: false,
             canStep2: false,
             canStep3: false,
@@ -50,21 +50,65 @@ export default {
         mButton,
         passInput
     },
+    mounted() {
+        let walletAccount = JSON.parse(
+            window.localStorage.getItem('wallet_account')
+        )
+        this.accountNo = walletAccount.accountNo
+        if (walletAccount.email) {
+            // already set email
+            this.reset = true
+            this.$refs.emailCont.setEmail(walletAccount.email)
+        }
+    },
     methods: {
         goStep(num) {
             this.step = num
             if (num == 2) {
-                let accountNo = window.sessionStorage.getItem('wallet_account')
                 let email = this.$refs.emailCont.email
                 this.$axios
                     .post(
-                        `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail?email=${email}`
+                        `/mobilewallet/uc/v2/accounts/${
+                            this.accountNo
+                        }/verify-code-mail?email=${email}`
                     )
                     .then(res => {
                         if (res.data.code == 0) {
                             this.step = num
                         }
                     })
+            } else if (num == 3) {
+                let vscode = this.$refs.vscode.password
+                let email = this.$refs.emailCont.email
+                if (this.reset) {
+                    // 验证邮箱
+                    this.$axios
+                        .get(
+                            `/mobilewallet/uc/v2/accounts/${
+                                this.accountNo
+                            }/verify-code?phone=${email}&verifyCode=${vscode}`
+                        )
+                        .then(res => {
+                            let data = res.data
+                            if (data && data.code == '0') {
+                                this.step = num
+                            }
+                        })
+                } else {
+                    // 设置邮箱
+                    this.$axios
+                        .put(
+                            `/mobilewallet/uc/v2/accounts/${
+                                this.accountNo
+                            }/setEmail?email=${email}&verifyCode=${vscode}`
+                        )
+                        .then(res => {
+                            let data = res.data
+                            if (data && data.code == '0') {
+                                this.step = num
+                            }
+                        })
+                }
             } else if (num == 5) {
                 let vscode = this.$refs.vscode.password
                 let newpass = this.$refs.newpass.password
