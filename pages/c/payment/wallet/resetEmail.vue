@@ -6,24 +6,11 @@
         </div>
         <div class="footer">
             <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
-            <nuxt-link to="/c/payment/wallet/validPhone?reset=1">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput placeholder="Enter SMS verification code"></passInput>
+            <passInput length="4" ref="vscode" placeholder="Enter SMS verification code"></passInput>
             <div class="footer">
                 <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
-            </div>
-        </div>
-        <div class="step2 step3" v-show="step==3">
-            <passInput ref="newpass" :toggleView="true" placeholder="Set payment password" @endinput="inputPass"></passInput>
-            <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"></mButton>
-            </div>
-        </div>
-        <div class="step2 step4" v-show="step==4">
-            <passInput ref="confirmpass" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
-            <div class="footer">
-                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"></mButton>
             </div>
         </div>
     </div>
@@ -36,11 +23,9 @@ export default {
     layout: 'base',
     data() {
         return {
-            reset: this.$route.query.reset || false,
             canStep1: false,
             canStep2: false,
-            canStep3: false,
-            canStep4: false,
+            nocheck: this.$route.query.nocheck || false,
             step: 1,
             accountNo: ''
         }
@@ -50,18 +35,73 @@ export default {
         mButton,
         passInput
     },
+    mounted() {
+        let walletAccount = JSON.parse(
+            window.localStorage.getItem('wallet_account')
+        )
+        this.accountNo = walletAccount.accountNo
+        if (!this.nocheck) {
+            if (walletAccount.email) {
+                this.$refs.emailCont.setEmail(walletAccount.email)
+            } else {
+                this.$alert('unknown error')
+            }
+        }
+    },
     methods: {
         goStep(num) {
-            this.step = num
+            if (num == 2) {
+                // TODO BUTTON按钮状态
+                let email = this.$refs.emailCont.email
+                this.$axios
+                    .post(
+                        `/mobilewallet/uc/v2/accounts/${
+                            this.accountNo
+                        }/verify-code-mail?email=${email}`
+                    )
+                    .then(res => {
+                        if (res.data.code == 0) {
+                            this.step = num
+                        }
+                    })
+            } else if (num == 3) {
+                let vscode = this.$refs.vscode.password
+                let email = this.$refs.emailCont.email
+                if (this.nocheck) {
+                    this.$axios
+                        .put(
+                            `/mobilewallet/uc/v2/accounts/${
+                                this.accountNo
+                            }/setEmail?email=${email}&verifyCode=${vscode}`
+                        )
+                        .then(res => {
+                            let data = res.data
+                            if (data && data.code == '0') {
+                                window.location.href =
+                                    '/c/payment/wallet/resetEmail?nocheck=1'
+                            } else {
+                                this.$alert(data.message)
+                            }
+                        })
+                } else {
+                    this.$axios
+                        .get(
+                            `/mobilewallet/uc/v2/accounts/${
+                                this.accountNo
+                            }/verify-code?phone=${email}&verifyCode=${vscode}`
+                        )
+                        .then(res => {
+                            let data = res.data
+                            if (data && data.code == '0') {
+                                window.location.href =
+                                    `/c/payment/wallet/resetEmail?nocheck=1`
+                            }
+                        })
+                }
+            }
         },
         codeEnd(bool) {
             this.canStep2 = bool
-        },
-        inputPass(bool) {
-            this.canStep3 = bool
-        },
-        confirmEnd(bool) {
-            this.canStep4 = bool
         }
     }
 }

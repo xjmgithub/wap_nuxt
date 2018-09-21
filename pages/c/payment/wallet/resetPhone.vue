@@ -30,7 +30,7 @@ export default {
     },
     computed: {
         title() {
-            return this.nocheck
+            return !this.nocheck
                 ? 'Confirm your cellphone number'
                 : 'Enter cellphone number'
         }
@@ -60,21 +60,7 @@ export default {
             if (num == 3) {
                 let vscode = this.$refs.vscode.password
                 let tel = this.$refs.phone.tel
-                if (this.reset) {
-                    this.$axios
-                        .get(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`
-                        )
-                        .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
-                                this.step = num
-                            }
-                        })
-                } else {
+                if (this.nocheck) {
                     this.$axios
                         .put(
                             `/mobilewallet/v1/accounts/${
@@ -85,7 +71,25 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.step = num
+                                 // TODO LINK
+                                window.location.href =
+                                    '/c/payment/wallet/resetPhone?nocheck=1'
+                            }
+                        })
+                } else {
+                    this.$axios
+                        .get(
+                            `/mobilewallet/uc/v2/accounts/${
+                                this.accountNo
+                            }/verify-code?phone=${this.prefix +
+                                tel}&verifyCode=${vscode}`
+                        )
+                        .then(res => {
+                            let data = res.data
+                            if (data && data.code == '0') {
+                               
+                                window.location.href =
+                                    '/c/payment/wallet/resetPhone?nocheck=1'
                             }
                         })
                 }
