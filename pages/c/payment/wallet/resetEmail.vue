@@ -27,7 +27,9 @@ export default {
             canStep2: false,
             nocheck: this.$route.query.nocheck || false,
             step: 1,
-            accountNo: ''
+            accountNo: '',
+            oldemail:this.$route.query.oldemail,
+            vscode:this.$route.query.vscode
         }
     },
     components: {
@@ -72,13 +74,13 @@ export default {
                         .put(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/setEmail?email=${email}&verifyCode=${vscode}`
+                            }/setEmail?email=${email}&verifyCode=${vscode}&oldEmail=${this.oldemail}&verifyCode4Old=${this.vscode}`
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 window.location.href =
-                                    '/c/payment/wallet/resetEmail?nocheck=1'
+                                    `/c/payment/wallet/resetEmail?nocheck=1`
                             } else {
                                 this.$alert(data.message)
                             }
@@ -94,7 +96,7 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 window.location.href =
-                                    `/c/payment/wallet/resetEmail?nocheck=1`
+                                    `/c/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
                             }
                         })
                 }
