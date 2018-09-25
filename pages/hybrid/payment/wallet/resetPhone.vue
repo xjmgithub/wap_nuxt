@@ -25,7 +25,9 @@ export default {
             step: 1,
             nocheck: this.$route.query.nocheck || false,
             accountNo: '',
-            prefix: ''
+            prefix: '',
+            oldphone: this.$route.query.oldphone,
+            vscode: this.$route.query.vscode
         }
     },
     computed: {
@@ -66,7 +68,9 @@ export default {
                             `/mobilewallet/v1/accounts/${
                                 this.accountNo
                             }/phone?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`
+                                tel}&verifyCode=${vscode}&oldPhone=${
+                                this.oldphone
+                            }&verifyCode4Old=${this.vscode}`
                         )
                         .then(res => {
                             let data = res.data
@@ -86,8 +90,8 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                window.location.href =
-                                    '/hybrid/payment/wallet/resetPhone?nocheck=1'
+                                window.location.href = `/hybrid/payment/wallet/resetPhone?nocheck=1&oldphone=${this
+                                    .prefix + tel}&vscode=${vscode}`
                             }
                         })
                 }
