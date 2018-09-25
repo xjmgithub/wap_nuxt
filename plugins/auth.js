@@ -1,13 +1,13 @@
 import { getCookie } from '~/functions/utils'
 let auth_ignore = [
-    /^\/c\/account\/login/,
-    /^\/c\/account\/signin/,
-    /^\/c\/account\/register/,
-    /^\/c\/account\/setpass/,
-    /^\/c\/account\/resetpass/,
-    /^\/c\/payment\/channelDesc/,
-    /^\/c\/payment\/payResult/,
-    /^\/c\/payment\/test/
+    /^\/hybrid\/account\/login/,
+    /^\/hybrid\/account\/signin/,
+    /^\/hybrid\/account\/register/,
+    /^\/hybrid\/account\/setpass/,
+    /^\/hybrid\/account\/resetpass/,
+    /^\/hybrid\/payment\/channelDesc/,
+    /^\/hybrid\/payment\/payResult/,
+    /^\/hybrid\/payment\/test/
 ]
 function inIgnore(url) {
     let result = false
