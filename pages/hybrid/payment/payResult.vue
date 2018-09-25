@@ -53,9 +53,7 @@ export default {
         }
 
         this.$axios
-            .get('/payment/api/v2/get-pre-payment', {
-                payToken: this.payToken
-            })
+            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
                 // TODO 支付结果

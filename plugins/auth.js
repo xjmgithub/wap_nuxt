@@ -26,7 +26,7 @@ export default ({ app: { router }, store }) => {
             if (loginUser) {
                 next()
             } else {
-                next('/hybrid/account/login')
+                next('/hybrid/account/login?pre='+ encodeURIComponent(to.fullPath))
             }
         } else {
             next()

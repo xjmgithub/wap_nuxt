@@ -31,11 +31,19 @@ export default {
             this.selected = code
         },
         next() {
-            this.$router.replace(
-                `/hybrid/payment/channelDesc?payToken=${
-                    this.payToken
-                }&payChannel=${this.selected}`
-            )
+            if (this.selected > 9002 && this.selected < 9029) {
+                this.$router.push(
+                    `/hybrid/payment/wallet/payto?payToken=${
+                        this.payToken
+                    }&payChannel=${this.selected}`
+                )
+            } else {
+                this.$router.replace(
+                    `/hybrid/payment/channelDesc?payToken=${
+                        this.payToken
+                    }&payChannel=${this.selected}`
+                )
+            }
         }
     },
     async asyncData({ app, store, redirect }) {
@@ -107,7 +115,7 @@ export default {
                 },
                 {
                     key: 'currency',
-                    value: 'NGN'
+                    value: 'TZS'
                 },
                 {
                     key: 'payChannelCodes',

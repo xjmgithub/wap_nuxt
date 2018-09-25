@@ -43,6 +43,7 @@ export default {
     layout: 'base',
     data() {
         return {
+            payToken:this.$route.query.payToken,
             payChannelId: this.$route.query.payChannelId,
             configs: []
         }
@@ -51,7 +52,6 @@ export default {
         mButton
     },
     mounted() {
-        this.$axios.setHeader('token', this.$store.state.token)
         this.$axios
             .get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`)
             .then(res => {
@@ -68,6 +68,8 @@ export default {
                     this.configs = configs
                 }
             })
+        
+        let _this = this
 
         $('#pay-form')
             .on('change', 'input[type="radio"]', function() {
@@ -147,11 +149,10 @@ export default {
                     optarr[id] = value
                 }
 
-                this.$axios.setHeader('token', this.$store.state.token)
-                this.$axios
+                _this.$axios
                     .post('/payment/api/v2/invoke-payment', {
-                        payToken: this.payToken,
-                        payChannelId: this.paychannelId,
+                        payToken: _this.payToken,
+                        payChannelId: _this.payChannelId,
                         tradeType: 'JSAPI',
                         signType: 'MD5',
                         extendInfo: optarr

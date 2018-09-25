@@ -114,7 +114,7 @@ export default {
         nextStep() {
             if (this.form_exit) {
                 this.$router.push(
-                    `/hybrid/payment/form?payChannelId=${
+                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${
                         this.payChannel
                     }&appInterfaceMode=${this.appInterfaceMode}`
                 )
