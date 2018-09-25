@@ -47,7 +47,7 @@ export default {
                 window.open(`tel://${this.ussd}`)
                 this.$router.push('/hybrid/payment/wallet/lastcharge')
             } else if (this.type == 2) {
-                return false // coupon 充值
+                return false // coupon 充值 // TODO
             } else if (this.type == 3) {
                 return false // 第三方支付充值，app暂时没做
             } else if (this.type == 4) {

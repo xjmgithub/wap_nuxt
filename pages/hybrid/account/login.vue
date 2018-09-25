@@ -32,7 +32,7 @@ export default {
                 oauth_proxy: 'https://auth-server.herokuapp.com/proxy'
             }
         )
-        // facebooke登录初始化
+        // facebook登录初始化
         FB.init({
             appId: '159785064477978',
             xfbml: true,
