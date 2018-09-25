@@ -7,8 +7,8 @@
                 Payment Successful
             </p>
             <p class="money">
-                50.00
-                <span>Ksh</span>
+                {{money}}
+                <span>{{currency}}</span>
             </p>
             <p class="msg">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
@@ -38,6 +38,8 @@ export default {
             result: 0, // 0 支付查询中， 1 支付成功，2 支付失败
             loadStatus: true,
             fail_message: '',
+            money: '',
+            currency: '',
             payToken: this.$route.query.payToken,
             redirect: this.$route.query.redirect
         }
@@ -51,18 +53,44 @@ export default {
             this.$alert('Query payToken needed! please check request')
             return false
         }
-
-        this.$axios
-            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
-            .then(res => {
-                let data = res.data
-                // TODO 支付结果
-            })
+        let _this = this
+        let num = 5
+        let timer = setInterval(() => {
+            num--
+            if (num < 0) {
+                clearInterval(timer)
+                _this.result = 2
+                _this.loadStatus = false
+            }
+            this.$axios
+                .get(
+                    `/payment/api/v2/get-pre-payment?payToken=${this.payToken}`
+                )
+                .then(res => {
+                    if (res.data && res.data.tradeState == 'SUCCESS') {
+                        _this.result = 1
+                        _this.loadStatus = false
+                        _this.money = res.data.totalAmount
+                        _this.currency = res.data.currency
+                        clearInterval(timer)
+                    } else if (
+                        res.data &&
+                        (res.data.tradeState == 'NOTPAY' ||
+                            res.data.tradeState == 'PAYING')
+                    ) {
+                        // 正在支付
+                    } else if (res.data && res.data.tradeState == 'FAIL') {
+                        clearInterval(timer)
+                        _this.result = 2
+                        _this.loadStatus = false
+                    }
+                })
+        }, 4000)
     },
     methods: {
         back() {
             // 退回商户
-            window.location.href = this.redirect
+            // TODO window.location.href = this.redirect
         }
     }
 }
@@ -74,8 +102,8 @@ export default {
     text-align: center;
 }
 .container img {
-    width: 3rem;
-    height: 3rem;
+    width: 12rem;
+    height: 12rem;
 }
 .container .success {
     color: #0087eb;
