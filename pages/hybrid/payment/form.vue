@@ -7,7 +7,7 @@
                     <div class="radio-box">
                         <div v-for="(radio,i) in item.optionArr" :key="i">
                             <label class="radio">
-                                <input type="radio" :name="item.name" :value="radio" :checked="radio == item.defaultValue ? true : false" />
+                                <input type="radio" :name="item.name" :value="radio" :checked="radio == item.defaultValue ? 'checked' : false" />
                                 <i></i>
                                 <span>{{radio}}</span>
                             </label>
@@ -43,7 +43,7 @@ export default {
     layout: 'base',
     data() {
         return {
-            payToken:this.$route.query.payToken,
+            payToken: this.$route.query.payToken,
             payChannelId: this.$route.query.payChannelId,
             configs: []
         }
@@ -66,9 +66,12 @@ export default {
                         }
                     })
                     this.configs = configs
+                    this.$nextTick(function() {
+                        ifShow()
+                    })
                 }
             })
-        
+
         let _this = this
 
         $('#pay-form')
@@ -86,7 +89,7 @@ export default {
                 }
             )
             .on('click', '.cancel', function() {
-                this.$router.go(-1)
+                _this.$router.go(-1)
             })
             .on('click', '.next', function() {
                 var items = $('[data-id]').filter(':visible')
@@ -160,10 +163,20 @@ export default {
                     .then(res => {
                         if (res.data && res.data.resultCode == 0) {
                             if (_this.paymethod.appInterfaceMode == 2) {
-                                window.location.href = data.data.redirectUrl
+                                // open other payment
+                                window.open(res.data.tppRedirectUrl)
+                                _this.$router.push(
+                                    `/hybrid/payment/payResult?payToken=${
+                                        _this.payToken
+                                    }&redirect=${res.data.merchantRedirectUrl}`
+                                )
                             } else if (_this.paymethod.appInterfaceMode == 3) {
-                                // TODO 查询支付结果
-                                // window.location.href = 'payment_process.php?orderId=' + _this.orderId  // 等待支付结果
+                                // processing
+                                _this.$router.push(
+                                    `/hybrid/payment/payResult?payToken=${
+                                        this.payToken
+                                    }&redirect=${res.data.merchantRedirectUrl}`
+                                )
                             } else {
                                 // SDK 和 其他 不支持,
                                 // payType 1 钱包支付
@@ -172,7 +185,12 @@ export default {
                                 )
                             }
                         } else {
-                            // TODO PAY FAIL
+                            // TODO fail
+                            _this.$router.push(
+                                `/hybrid/payment/payResult?payToken=${
+                                    _this.payToken
+                                }`
+                            )
                         }
                     })
             })
