@@ -36,9 +36,7 @@ export default {
         }
 
         this.$axios
-            .get('/payment/api/v2/get-pre-payment', {
-                payToken: this.payToken
-            })
+            .get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
@@ -49,7 +47,7 @@ export default {
                     if (payChannels[this.payChannel]) {
                         this.desc = payChannels[this.payChannel].description
                         this.form_exit =
-                            payChannels[this.payChannel].form_config_exist
+                            payChannels[this.payChannel].formConfigExist
                         this.appInterfaceMode =
                             payChannels[this.payChannel].appInterfaceMode
                         this.payType = payChannels[this.payChannel].payType
@@ -116,7 +114,7 @@ export default {
         nextStep() {
             if (this.form_exit) {
                 this.$router.push(
-                    `/hybrid/payment/form?paychannelId=${
+                    `/hybrid/payment/form?payChannelId=${
                         this.payChannel
                     }&appInterfaceMode=${this.appInterfaceMode}`
                 )

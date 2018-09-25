@@ -5,5 +5,6 @@ module.exports = {
     countly_host: '//collect.startimestv.com',
     countly_appKey: 'cd58cfb3e81658905d802cbe44b04683effbc7ed',
     gtbank_jdk_host: 'https://eu-gateway.mastercard.com',
-    ms_host:'http://staging.upms.startimestv.com/'
+    ms_host:'http://staging.upms.startimestv.com/',
+    mechant_request_url:'http://10.0.63.5:8010/'
 }

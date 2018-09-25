@@ -151,7 +151,7 @@ export default {
                 this.$axios
                     .post('/payment/api/v2/invoke-payment', {
                         payToken: this.payToken,
-                        payChannelId: this.payChannel,
+                        payChannelId: this.paychannelId,
                         tradeType: 'JSAPI',
                         signType: 'MD5',
                         extendInfo: optarr

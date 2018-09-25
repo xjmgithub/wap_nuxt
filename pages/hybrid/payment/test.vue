@@ -2,25 +2,47 @@
     <div>
         <div>{{payToken}}</div>
         <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
+        <div class="footer">
+            <mButton text="OK" @click="next()"></mButton>
+        </div>
     </div>
 </template>
 <script>
 import moment from 'moment'
 import crypto from 'crypto'
+import mButton from '~/components/button'
 import RadioBtn from '~/components/radioBtn'
+import env from '~/env.js'
 export default {
     layout: 'base',
     data() {
         return {
-            payToken: ''
+            payToken: '',
+            radioList: [],
+            selected: null
         }
     },
     components: {
-        RadioBtn
+        RadioBtn,
+        mButton
+    },
+    methods: {
+        changeItem(code) {
+            this.selected = code
+        },
+        next() {
+            this.$router.replace(
+                `/hybrid/payment/channelDesc?payToken=${
+                    this.payToken
+                }&payChannel=${this.selected}`
+            )
+        }
     },
     async asyncData({ app, store, redirect }) {
         let res = await app.$axios.post(
-            'http://10.0.63.7:8010/payment/platform/v1/oauth/token?grant_type=client_credentials',
+            `${
+                env.mechant_request_url
+            }payment/platform/v1/oauth/token?grant_type=client_credentials`,
             {},
             {
                 auth: {
@@ -61,7 +83,7 @@ export default {
                 },
                 {
                     key: 'merchantAppId',
-                    value: '2'
+                    value: '100017'
                 },
                 {
                     key: 'totalAmount',
@@ -78,6 +100,10 @@ export default {
                 {
                     key: 'tradeTimeout',
                     value: '30'
+                },
+                {
+                    key: 'country',
+                    value: 'TZ'
                 },
                 {
                     key: 'currency',
@@ -118,7 +144,7 @@ export default {
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
             let res2 = await app.$axios.post(
-                'http://10.0.63.7:8010/payment/platform/v1/create-payment',
+                `${env.mechant_request_url}payment/platform/v1/create-payment`, // TODO
                 paramObj,
                 {
                     headers: {
@@ -136,23 +162,23 @@ export default {
             .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
+                let list = []
                 if (data && data.payChannels && data.payChannels.length > 0) {
                     let payChannels = {}
+
                     data.payChannels.forEach((item, index) => {
-                        payChannels[item.id] = item
+                        list.push({
+                            code: item.id,
+                            value: item.name,
+                            imgUrl: item.logoUrl || '',
+                            desc: item.description,
+                            checked: index ? false : true,
+                            channelType: item.channelType,
+                            ussd: item.shortUssdCode
+                        })
                     })
-                    if (payChannels[this.payChannel]) {
-                        this.desc = payChannels[this.payChannel].description
-                        this.form_exit =
-                            payChannels[this.payChannel].form_config_exist
-                        this.appInterfaceMode =
-                            payChannels[this.payChannel].appInterfaceMode
-                        this.payType = payChannels[this.payChannel].payType
-                    } else {
-                        this.$alert(
-                            'payToken and payChannel Mismatch! please check request'
-                        )
-                    }
+                    this.radioList = list
+                    this.selected = list[0].code
                 } else {
                     this.$alert(
                         'The merchant has not yet opened a supportable payment channel.'
@@ -162,3 +188,20 @@ export default {
     }
 }
 </script>
+<style lang="less">
+.footer {
+    position: fixed;
+    bottom: 3rem;
+    width: 16rem;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    a {
+        color: #0087eb;
+        text-decoration: underline;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+}
+</style>
