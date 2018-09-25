@@ -44,9 +44,10 @@ export default {
         }
     },
     mounted() {
-        this.walletAccount = window.localStorage.getItem('wallet_account')
-        this.walletLeft = window.localStorage.getItem('wallet_left')
-        this.currency = JSON.parse(window.localStorage.getItem('payObject')).currency
+        let wallet = JSON.parse(localStorage.getItem('wallet_account'))
+        this.walletAccount = wallet.accountNo
+        this.walletLeft = wallet.amount
+        this.currency = JSON.parse(localStorage.getItem('payObject')).currency
     },
     components: {
         mButton
