@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Password :placeholder="pwdType" :toggleView="false" @setPassword="setPassword"></Password>
+        <Password ref="pass" :placeholder="pwdType" :toggleView="false" @endinput="setPassword"></Password>
         <div class="forgot-pwd">
             <a href="#">Forgot payment password?</a>
         </div>
@@ -18,7 +18,7 @@ export default {
         return {
             pwdType: 'Enter Payment Password',
             password: '',
-            canPay: false
+            canPay:false
         }
     },
     layout: 'base',
@@ -28,33 +28,32 @@ export default {
     },
     methods: {
         setPassword(data) {
-            this.password = data
+            this.password = this.$refs.pass.password
         },
         nextStep() {
-            this.$axios.setHeader('token', this.$store.state.token)
             this.$axios
                 .post('/mobilewallet/v1/balance-payments&noquery=1', {
                     // TODO 钱包支付的参数
-                    amount: _this.payRecord.amount,
-                    currency: _this.payRecord.currency,
-                    extensionInfo: _this.payRecord.extendInfo,
-                    note: _this.payRecord.payNote,
-                    orderId: _this.payRecord.orderId,
+                    amount: this.payRecord.amount,
+                    currency: this.payRecord.currency,
+                    extensionInfo: this.payRecord.extendInfo,
+                    note: this.payRecord.payNote,
+                    orderId: this.payRecord.orderId,
                     payeeAccountNo: channelId,
                     payerAccountNo: this.ewalletNo,
                     payerPayPassword: this.password,
-                    signature: _this.payRecord.signature,
-                    subject: _this.payRecord.paySubject,
+                    signature: this.payRecord.signature,
+                    subject: this.payRecord.paySubject,
                     extensionInfo: {
                         paySeqNo: _this.payRecord.seqNo
                     }
                 })
                 .then(res => {
                     if (res.data) {
-                        _this.signature = res.data.currency
-                        _this.balance = res.data.amount
-                        _this.accountNo = res.data.accountNo
-                        _this.balance = 100
+                        this.signature = res.data.currency
+                        this.balance = res.data.amount
+                        this.accountNo = res.data.accountNo
+                        this.balance = 100
                     }
                 })
         }
