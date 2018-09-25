@@ -48,10 +48,15 @@ export default {
                     subject: payObject.paySubject
                 })
                 .then(res => {
-                    if (res.data) {
-                        this.signature = res.data.currency
-                        this.balance = res.data.amount
-                        this.accountNo = res.data.accountNo
+                    if (res.data && res.data.resultCode == 0) {
+                        this.$router.push(
+                            '/hybrid/payment/wallet/payResult?result=1'
+                        )
+                    } else {
+                        this.$router.push(
+                            '/hybrid/payment/wallet/payResult?result=2&resultMsg=' +
+                                res.data.resultMessage
+                        )
                     }
                 })
         }
