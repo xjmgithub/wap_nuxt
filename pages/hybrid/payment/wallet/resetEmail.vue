@@ -1,9 +1,6 @@
 <template>
     <div class="container">
         <verifyEmail ref="emailCont"></verifyEmail>
-        <div class="change-phone-link">
-            <nuxt-link to="/hybrid/payment/wallet/changephone">Change email</nuxt-link>
-        </div>
         <div class="footer">
             <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
         </div>
@@ -28,8 +25,8 @@ export default {
             nocheck: this.$route.query.nocheck || false,
             step: 1,
             accountNo: '',
-            oldemail:this.$route.query.oldemail,
-            vscode:this.$route.query.vscode
+            oldemail: this.$route.query.oldemail,
+            vscode: this.$route.query.vscode
         }
     },
     components: {
@@ -74,13 +71,15 @@ export default {
                         .put(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/setEmail?email=${email}&verifyCode=${vscode}&oldEmail=${this.oldemail}&verifyCode4Old=${this.vscode}`
+                            }/setEmail?email=${email}&verifyCode=${vscode}&oldEmail=${
+                                this.oldemail
+                            }&verifyCode4Old=${this.vscode}`
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 window.location.href =
-                                    `/hybrid/payment/wallet/resetEmail?nocheck=1`
+                                    '/hybrid/payment/wallet/payto'
                             } else {
                                 this.$alert(data.message)
                             }
@@ -95,8 +94,7 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                window.location.href =
-                                    `/hybrid/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
+                                window.location.href = `/hybrid/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
                             }
                         })
                 }
