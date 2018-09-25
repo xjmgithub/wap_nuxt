@@ -17,8 +17,9 @@ export default {
     data() {
         return {
             pwdType: 'Enter Payment Password',
+            payChannelId: this.$route.query.payChannelId,
             password: '',
-            canPay:false
+            canPay: false
         }
     },
     layout: 'base',
@@ -31,29 +32,26 @@ export default {
             this.password = this.$refs.pass.password
         },
         nextStep() {
+            let payObject = JSON.parse(sessionStorage.getItem('payObject'))
+            let ewallet = JSON.parse(sessionStorage.getItem('wallet_account'))
+            let order = sessionStorage.getItem('order')
+
             this.$axios
-                .post('/mobilewallet/v1/balance-payments&noquery=1', {
-                    // TODO 钱包支付的参数
-                    amount: this.payRecord.amount,
-                    currency: this.payRecord.currency,
-                    extensionInfo: this.payRecord.extendInfo,
-                    note: this.payRecord.payNote,
-                    orderId: this.payRecord.orderId,
-                    payeeAccountNo: channelId,
-                    payerAccountNo: this.ewalletNo,
+                .post('/mobilewallet/v1/balance-payments', {
+                    amount: payObject.totalAmount,
+                    currency: payObject.currency,
+                    note: payObject.payNote,
+                    orderId: order,
+                    payeeAccountNo: this.payChannelId,
+                    payerAccountNo: ewallet.accountNo,
                     payerPayPassword: this.password,
-                    signature: this.payRecord.signature,
-                    subject: this.payRecord.paySubject,
-                    extensionInfo: {
-                        paySeqNo: _this.payRecord.seqNo
-                    }
+                    subject: payObject.paySubject
                 })
                 .then(res => {
                     if (res.data) {
                         this.signature = res.data.currency
                         this.balance = res.data.amount
                         this.accountNo = res.data.accountNo
-                        this.balance = 100
                     }
                 })
         }

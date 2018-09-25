@@ -35,7 +35,7 @@ export default {
                 this.$router.push(
                     `/hybrid/payment/wallet/payto?payToken=${
                         this.payToken
-                    }&payChannel=${this.selected}`
+                    }&payChannel=${this.selected}&txNo=${this.txNo}`
                 )
             } else {
                 this.$router.replace(
@@ -160,7 +160,10 @@ export default {
                     }
                 }
             )
-            return { payToken: res2.data.payToken }
+            return {
+                payToken: res2.data.payToken,
+                txNo: res2.data.txNo
+            }
         } else {
             console.log('获取access_token 失败')
         }

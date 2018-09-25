@@ -24,6 +24,8 @@ export default {
     data() {
         return {
             payToken: this.$route.query.payToken,
+            txNo: this.$route.query.txNo,
+            payChannelId:this.$route.query.payChannel,
             amount: 10,
             merchant: '',
             signature: '',
@@ -45,9 +47,14 @@ export default {
             this.$alert('Query payToken needed! please check request')
             return false
         }
+        if (!this.txNo) {
+            this.$alert('txNo can not be null')
+            return false
+        }
+        sessionStorage.setItem('order', this.txNo)
         this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
             if (res.data) {
-                window.localStorage.setItem(
+                sessionStorage.setItem(
                     'wallet_account',
                     JSON.stringify(res.data)
                 )
@@ -65,6 +72,7 @@ export default {
                     this.merchant = data.mercahntName
                     this.signature = data.currency
                     sessionStorage.setItem('currency', data.currency)
+                    sessionStorage.setItem('payObject', JSON.stringify(data))
                     this.loadStatus = false
                 } else {
                     this.$alert(data.resultMessage)
@@ -76,15 +84,20 @@ export default {
             this.$axios
                 .get(`/mobilewallet/v1/accounts/${account}/prop-details`)
                 .then(res => {
-                    window.localStorage.setItem('wallet_config', JSON.stringify(res.data))
+                    window.localStorage.setItem(
+                        'wallet_config',
+                        JSON.stringify(res.data)
+                    )
                 })
         },
         nextStep() {
             if (this.enough) {
                 // 支付流程
-                let passIsSet = JSON.parse(window.localStorage.getItem('wallet_config')).payPassword
-                if (passIsSet=='true') {
-                    this.$router.push('/hybrid/payment/wallet/paybyPass')
+                let passIsSet = JSON.parse(
+                    window.localStorage.getItem('wallet_config')
+                ).payPassword
+                if (passIsSet == 'true') {
+                    this.$router.push(`/hybrid/payment/wallet/paybyPass?payChannelId=${this.payChannelId}`)
                 } else {
                     this.$router.push('/hybrid/payment/wallet/setPassword')
                 }
