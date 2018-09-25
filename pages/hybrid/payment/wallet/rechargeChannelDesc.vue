@@ -30,7 +30,7 @@ export default {
     },
     mounted() {
         let channelInfo = JSON.parse(
-            window.sessionStorage.getItem('wallet_charge_channel')
+            window.localStorage.getItem('wallet_charge_channel')
         )
         this.name = channelInfo.value
         this.desc = channelInfo.desc

@@ -50,7 +50,7 @@ export default {
     methods: {
         refresh() {
             this.loadStatus = true
-            let walletAccount = window.sessionStorage.getItem('wallet_account')
+            let walletAccount = window.localStorage.getItem('wallet_account')
             this.$axios
                 .get(
                     `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`
@@ -59,11 +59,11 @@ export default {
                     this.loadStatus = false
                     if (res.data) {
                         _this.balance = res.data.amount
-                        sessionStorage.setItem(
+                        localStorage.setItem(
                             'wallet_account',
                             res.data.accountNo
                         )
-                        sessionStorage.setItem('wallet_left', res.data.amount)
+                        localStorage.setItem('wallet_left', res.data.amount)
                         _this.balance = 1 // TODO remove demo
                     }
                 })

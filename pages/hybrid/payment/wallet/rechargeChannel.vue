@@ -42,9 +42,9 @@ export default {
         }
     },
     mounted() {
-        this.walletAccount = window.sessionStorage.getItem('wallet_account')
-        this.walletLeft = window.sessionStorage.getItem('wallet_left')
-        this.currency = window.sessionStorage.getItem('currency')
+        this.walletAccount = window.localStorage.getItem('wallet_account')
+        this.walletLeft = window.localStorage.getItem('wallet_left')
+        this.currency = JSON.parse(window.localStorage.getItem('payObject')).currency
 
         this.$axios.get('/mobilewallet/v1/recharge-channels').then(res => {
             let list = []
@@ -77,7 +77,7 @@ export default {
     },
     methods: {
         nextStep() {
-            window.sessionStorage.setItem(
+            window.localStorage.setItem(
                 'wallet_charge_channel',
                 JSON.stringify(this.selectedChannel)
             )

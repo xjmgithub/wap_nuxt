@@ -71,9 +71,8 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                 // TODO LINK
                                 window.location.href =
-                                    '/hybrid/payment/wallet/resetPhone?nocheck=1'
+                                    '/hybrid/payment/wallet/payto'
                             }
                         })
                 } else {
@@ -87,7 +86,6 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                               
                                 window.location.href =
                                     '/hybrid/payment/wallet/resetPhone?nocheck=1'
                             }

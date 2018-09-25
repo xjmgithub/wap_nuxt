@@ -25,8 +25,8 @@ export default {
         return {
             payToken: this.$route.query.payToken,
             txNo: this.$route.query.txNo,
-            payChannelId:this.$route.query.payChannel,
-            amount: 10,
+            payChannelId: this.$route.query.payChannel,
+            amount: '0',
             merchant: '',
             signature: '',
             balance: 0,
@@ -43,21 +43,39 @@ export default {
         loading
     },
     mounted() {
-        if (!this.payToken) {
-            this.$alert('Query payToken needed! please check request')
-            return false
+        if (this.payToken) {
+            localStorage.setItem('payToken', this.payToken)
+        } else {
+            this.payToken = localStorage.getItem('payToken')
+            if (!this.payToken) {
+                this.$alert('Query payToken needed! please check request')
+                return false
+            }
         }
-        if (!this.txNo) {
-            this.$alert('txNo can not be null')
-            return false
+
+        if (this.txNo) {
+            localStorage.setItem('txNo', this.txNo)
+        } else {
+            this.txNo = localStorage.getItem('txNo')
+            if (!this.txNo) {
+                this.$alert('txNo can not be null')
+                return false
+            }
         }
-        sessionStorage.setItem('order', this.txNo)
+
+        if (this.payChannelId) {
+            localStorage.setItem('payChannelId', this.payChannelId)
+        } else {
+            this.payChannelId = localStorage.getItem('payChannelId')
+            if (!this.payChannelId) {
+                this.$alert('payChannel can not be null')
+                return false
+            }
+        }
+
         this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
             if (res.data) {
-                sessionStorage.setItem(
-                    'wallet_account',
-                    JSON.stringify(res.data)
-                )
+                localStorage.setItem('wallet_account', JSON.stringify(res.data))
                 this.balance = res.data.amount
                 this.getSetConfig(res.data.accountNo) // 钱包配置
             }
@@ -68,12 +86,11 @@ export default {
             .then(res => {
                 let data = res.data
                 if (data && data.resultCode == '0') {
+                    this.loadStatus = false
                     this.amount = data.totalAmount
                     this.merchant = data.mercahntName
                     this.signature = data.currency
-                    sessionStorage.setItem('currency', data.currency)
-                    sessionStorage.setItem('payObject', JSON.stringify(data))
-                    this.loadStatus = false
+                    localStorage.setItem('payObject', JSON.stringify(data))
                 } else {
                     this.$alert(data.resultMessage)
                 }
@@ -84,7 +101,7 @@ export default {
             this.$axios
                 .get(`/mobilewallet/v1/accounts/${account}/prop-details`)
                 .then(res => {
-                    window.localStorage.setItem(
+                    localStorage.setItem(
                         'wallet_config',
                         JSON.stringify(res.data)
                     )
@@ -94,10 +111,10 @@ export default {
             if (this.enough) {
                 // 支付流程
                 let passIsSet = JSON.parse(
-                    window.localStorage.getItem('wallet_config')
+                    localStorage.getItem('wallet_config')
                 ).payPassword
                 if (passIsSet == 'true') {
-                    this.$router.push(`/hybrid/payment/wallet/paybyPass?payChannelId=${this.payChannelId}`)
+                    this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                 } else {
                     this.$router.push('/hybrid/payment/wallet/setPassword')
                 }

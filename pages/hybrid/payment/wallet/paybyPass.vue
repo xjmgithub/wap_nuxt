@@ -2,7 +2,7 @@
     <div class="container">
         <Password ref="pass" :placeholder="pwdType" :toggleView="false" @endinput="setPassword"></Password>
         <div class="forgot-pwd">
-            <a href="#">Forgot payment password?</a>
+            <nuxt-link :to="forgetUrl">Forgot payment password?</nuxt-link>
         </div>
         <div class="footer">
             <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"></mButton>
@@ -17,9 +17,10 @@ export default {
     data() {
         return {
             pwdType: 'Enter Payment Password',
-            payChannelId: this.$route.query.payChannelId,
+            payChannelId: '',
             password: '',
-            canPay: false
+            canPay: false,
+            forgetUrl: '/hybrid/payment/wallet/resetPhone'
         }
     },
     layout: 'base',
@@ -27,14 +28,27 @@ export default {
         mButton,
         Password
     },
+    mounted() {
+        let wallet_config = JSON.parse(
+            window.localStorage.getItem('wallet_config')
+        )
+        this.payChannelId = JSON.parse(
+            window.localStorage.getItem('payChannelId')
+        )
+        if (wallet_config.phone) {
+            this.forgetUrl = '/hybrid/payment/wallet/validPhone'
+        } else {
+            this.forgetUrl = '/hybrid/payment/wallet/validEmail'
+        }
+    },
     methods: {
         setPassword(data) {
             this.password = this.$refs.pass.password
         },
         nextStep() {
-            let payObject = JSON.parse(sessionStorage.getItem('payObject'))
-            let ewallet = JSON.parse(sessionStorage.getItem('wallet_account'))
-            let order = sessionStorage.getItem('order')
+            let payObject = JSON.parse(localStorage.getItem('payObject'))
+            let ewallet = JSON.parse(localStorage.getItem('wallet_account'))
+            let order = localStorage.getItem('order')
 
             this.$axios
                 .post('/mobilewallet/v1/balance-payments', {
