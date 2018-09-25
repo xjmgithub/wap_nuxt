@@ -52,7 +52,6 @@ export default {
                     JSON.stringify(res.data)
                 )
                 this.balance = res.data.amount
-                this.balance = 100 // TODO remove demo
                 this.getSetConfig(res.data.accountNo) // 钱包配置
             }
         })
