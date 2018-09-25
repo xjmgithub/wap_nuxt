@@ -18,6 +18,10 @@ export default {
     layout: 'base',
     data() {
         return {
+            client_id: this.$route.query.client_id,
+            app_key: this.$route.query.key,
+            country: 'TZ',
+            currency: 'TZS',
             payToken: '',
             txNo: '',
             radioList: [],
@@ -56,8 +60,8 @@ export default {
                 {},
                 {
                     auth: {
-                        username: 'testapp10',
-                        password: '123456'
+                        username: this.client_id,
+                        password: this.app_key
                     }
                 }
             )
@@ -114,11 +118,11 @@ export default {
                         },
                         {
                             key: 'country',
-                            value: 'TZ'
+                            value: this.country
                         },
                         {
                             key: 'currency',
-                            value: 'TZS'
+                            value: this.currency
                         },
                         {
                             key: 'payChannelCodes',
@@ -149,7 +153,7 @@ export default {
                         }
                         paramObj[item.key] = item.value
                     })
-                    str += '&key=123456'
+                    str += '&key=' + this.app_key
                     let hmac = crypto.createHmac('md5', '123456')
                     let up = hmac.update(str)
                     let result = up.digest('hex')
