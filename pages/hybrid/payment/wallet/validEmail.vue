@@ -1,27 +1,27 @@
 <template>
     <div class="container">
-        <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
+        <verifyEmail :disabled="reset" ref="emailCont"></verifyEmail>
         <div class="change-phone-link">
-            <nuxt-link to="/c/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/changephone">Change email</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
-            <nuxt-link to="/c/payment/wallet/validEmail">RESET IT BY EMAIL</nuxt-link>
+            <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
+            <nuxt-link to="/hybrid/payment/wallet/validPhone?reset=1">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
+            <passInput length="4" ref="vscode" placeholder="Enter SMS verification code"></passInput>
             <div class="footer">
-                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)"></mButton>
+                <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
             </div>
         </div>
         <div class="step2 step3" v-show="step==3">
-            <passInput length="6" ref="newpass" :toggleView="true" placeholder="Set payment password" @endinput="inputPass"></passInput>
+            <passInput ref="newpass" :toggleView="true" placeholder="Set payment password" @endinput="inputPass"></passInput>
             <div class="footer">
                 <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"></mButton>
             </div>
         </div>
         <div class="step2 step4" v-show="step==4">
-            <passInput length="6" ref="confirmpass" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
+            <passInput ref="confirmpass" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
             <div class="footer">
                 <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"></mButton>
             </div>
@@ -29,7 +29,7 @@
     </div>
 </template>
 <script>
-import verifyTel from '~/components/form/wallet_tel_verify'
+import verifyEmail from '~/components/form/wallet_email_verify'
 import mButton from '~/components/button'
 import passInput from '~/components/password'
 export default {
@@ -42,49 +42,50 @@ export default {
             canStep3: false,
             canStep4: false,
             step: 1,
-            accountNo: '',
-            prefix: ''
+            accountNo: ''
         }
     },
-    computed: {
-        title() {
-            return this.reset
-                ? 'Confirm your cellphone number'
-                : 'Enter cellphone number'
-        }
+    components: {
+        verifyEmail,
+        mButton,
+        passInput
     },
     mounted() {
         let walletAccount = JSON.parse(
             window.localStorage.getItem('wallet_account')
         )
         this.accountNo = walletAccount.accountNo
-
-        if (walletAccount.phone) {
-            // already set phone
+        if (walletAccount.email) {
+            // already set email
             this.reset = true
-            this.prefix = walletAccount.phone.substr(0, 3)
-            this.$refs.phone.setTel(walletAccount.phone.substr(3))
-        } else {
-            this.reset = false
-            this.$axios.get('/vup/v1/ums/user/area').then(res => {
-                if (res.data && res.data.phonePrefix) {
-                    this.prefix = res.data.phonePrefix
-                }
-            })
+            this.$refs.emailCont.setEmail(walletAccount.email)
         }
     },
     methods: {
         goStep(num) {
-            if (num == 3) {
+            if (num == 2) {
+                let email = this.$refs.emailCont.email
+                this.$axios
+                    .post(
+                        `/mobilewallet/uc/v2/accounts/${
+                            this.accountNo
+                        }/verify-code-mail?email=${email}`
+                    )
+                    .then(res => {
+                        if (res.data.code == 0) {
+                            this.step = num
+                        }
+                    })
+            } else if (num == 3) {
                 let vscode = this.$refs.vscode.password
-                let tel = this.$refs.phone.tel
+                let email = this.$refs.emailCont.email
                 if (this.reset) {
+                    // 验证邮箱
                     this.$axios
                         .get(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`
+                            }/verify-code?phone=${email}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data
@@ -93,17 +94,19 @@ export default {
                             }
                         })
                 } else {
+                    // 设置邮箱
                     this.$axios
                         .put(
-                            `/mobilewallet/v1/accounts/${
+                            `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/phone?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`
+                            }/setEmail?email=${email}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = num
+                            }else{
+                                this.$alert(data.message)
                             }
                         })
                 }
@@ -137,12 +140,6 @@ export default {
         confirmEnd(bool) {
             this.canStep4 = bool
         }
-    },
-
-    components: {
-        verifyTel,
-        mButton,
-        passInput
     }
 }
 </script>

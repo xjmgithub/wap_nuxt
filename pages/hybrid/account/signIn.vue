@@ -36,7 +36,7 @@
         </div>
         <div class="next-btn" @click="login">SIGN IN</div>
         <div class="forgot-pwd">
-            <nuxt-link to="/c/account/resetpass">Forgot password?</nuxt-link>
+            <nuxt-link to="/hybrid/account/resetpass">Forgot password?</nuxt-link>
         </div>
         <div class="country-choose-dialog" v-show="countryDialogStatus">
             <div class="dialog-title">Country List</div>

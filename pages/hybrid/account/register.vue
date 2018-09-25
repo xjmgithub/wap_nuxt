@@ -92,7 +92,7 @@ export default {
                 let email = this.$refs.emailpicker.email
                 let code = this.$refs.emailpicker.vscode
                 this.$router.push(
-                    `/c/account/setpass?email=${email}&code=${code}`
+                    `/hybrid/account/setpass?email=${email}&code=${code}`
                 )
             } else {
                 let phone = this.$refs.telpicker.tel
@@ -100,7 +100,7 @@ export default {
                 let phoneCc = this.areaInfo.phonePrefix
                 let countryId = this.country
                 this.$router.push(
-                    `/c/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
+                    `/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
                 )
             }
         }

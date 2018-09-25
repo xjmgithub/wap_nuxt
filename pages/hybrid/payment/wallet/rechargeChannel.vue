@@ -81,7 +81,7 @@ export default {
                 'wallet_charge_channel',
                 JSON.stringify(this.selectedChannel)
             )
-            this.$router.push('/c/payment/wallet/rechargeChannelDesc')
+            this.$router.push('/hybrid/payment/wallet/rechargeChannelDesc')
         },
         changeItem(code) {
             this.selected = code

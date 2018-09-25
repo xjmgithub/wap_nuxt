@@ -45,13 +45,13 @@ export default {
         nextStep() {
             if (this.type == 1) {
                 window.open(`tel://${this.ussd}`)
-                this.$router.push('/c/payment/wallet/lastcharge')
+                this.$router.push('/hybrid/payment/wallet/lastcharge')
             } else if (this.type == 2) {
                 return false // coupon 充值
             } else if (this.type == 3) {
                 return false // 第三方支付充值，app暂时没做
             } else if (this.type == 4) {
-                this.$router.push('/c/payment/wallet/rechargeByCard')
+                this.$router.push('/hybrid/payment/wallet/rechargeByCard')
             } else {
                 return false
             }

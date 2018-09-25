@@ -73,7 +73,7 @@ export default {
                             if (data && data.code == '0') {
                                  // TODO LINK
                                 window.location.href =
-                                    '/c/payment/wallet/resetPhone?nocheck=1'
+                                    '/hybrid/payment/wallet/resetPhone?nocheck=1'
                             }
                         })
                 } else {
@@ -89,7 +89,7 @@ export default {
                             if (data && data.code == '0') {
                                
                                 window.location.href =
-                                    '/c/payment/wallet/resetPhone?nocheck=1'
+                                    '/hybrid/payment/wallet/resetPhone?nocheck=1'
                             }
                         })
                 }

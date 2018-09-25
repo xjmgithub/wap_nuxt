@@ -33,11 +33,11 @@ export default {
             })
             if (type == true) {
                 if (phoneIsSet == 'false') {
-                    this.$router.replace('/c/payment/wallet/validPhone')
+                    this.$router.replace('/hybrid/payment/wallet/validPhone')
                 }
             } else {
                 if (emailIsSet == 'false') {
-                    this.$router.replace('/c/payment/wallet/validEmail')
+                    this.$router.replace('/hybrid/payment/wallet/validEmail')
                 }
             }
         })

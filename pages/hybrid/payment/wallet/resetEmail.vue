@@ -2,7 +2,7 @@
     <div class="container">
         <verifyEmail ref="emailCont"></verifyEmail>
         <div class="change-phone-link">
-            <nuxt-link to="/c/payment/wallet/changephone">Change email</nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/changephone">Change email</nuxt-link>
         </div>
         <div class="footer">
             <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
@@ -80,7 +80,7 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 window.location.href =
-                                    `/c/payment/wallet/resetEmail?nocheck=1`
+                                    `/hybrid/payment/wallet/resetEmail?nocheck=1`
                             } else {
                                 this.$alert(data.message)
                             }
@@ -96,7 +96,7 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 window.location.href =
-                                    `/c/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
+                                    `/hybrid/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
                             }
                         })
                 }

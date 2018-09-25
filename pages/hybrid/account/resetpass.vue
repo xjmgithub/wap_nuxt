@@ -112,7 +112,7 @@ export default {
                             this.$alert(
                                 'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
                                 () => {
-                                    this.$router.replace('/c/account/login')
+                                    this.$router.replace('/hybrid/account/login')
                                 }
                             )
                         } else {
@@ -126,7 +126,7 @@ export default {
                 let phoneCc = this.areaInfo.phonePrefix
                 let countryId = this.country.id
                 this.$router.push(
-                    `/c/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
+                    `/hybrid/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
                 )
             }
         }

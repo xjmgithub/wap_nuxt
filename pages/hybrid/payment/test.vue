@@ -1,15 +1,22 @@
 <template>
-    <div>{{payToken}}</div>
+    <div>
+        <div>{{payToken}}</div>
+        <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
+    </div>
 </template>
 <script>
 import moment from 'moment'
 import crypto from 'crypto'
+import RadioBtn from '~/components/radioBtn'
 export default {
     layout: 'base',
     data() {
         return {
             payToken: ''
         }
+    },
+    components: {
+        RadioBtn
     },
     async asyncData({ app, store, redirect }) {
         let res = await app.$axios.post(
@@ -111,7 +118,7 @@ export default {
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
             let res2 = await app.$axios.post(
-                'http://10.0.63.7:8010/payment//platform/v1/create-payment',
+                'http://10.0.63.7:8010/payment/platform/v1/create-payment',
                 paramObj,
                 {
                     headers: {

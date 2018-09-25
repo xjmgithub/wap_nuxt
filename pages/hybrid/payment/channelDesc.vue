@@ -116,7 +116,7 @@ export default {
         nextStep() {
             if (this.form_exit) {
                 this.$router.push(
-                    `/c/payment/form?paychannelId=${
+                    `/hybrid/payment/form?paychannelId=${
                         this.payChannel
                     }&appInterfaceMode=${this.appInterfaceMode}`
                 )
@@ -133,7 +133,7 @@ export default {
                     // )
                 }
                 this.$router.push(
-                    `/c/payment/payResult?payToken=${this.payToken}&redirect=${
+                    `/hybrid/payment/payResult?payToken=${this.payToken}&redirect=${
                         this.merchantRedirectUrl
                     }`
                 )

@@ -25,7 +25,7 @@ export default ({ app: { router }, store }) => {
             if (loginUser) {
                 next()
             } else {
-                next('/c/account/login')
+                next('/hybrid/account/login')
             }
         } else {
             next()

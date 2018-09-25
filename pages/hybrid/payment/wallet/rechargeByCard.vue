@@ -80,12 +80,12 @@ export default {
                         .then(res => {
                             if (res.data && res.data.code == 0) {
                                 this.$router.push(
-                                    '/c/payment/wallet/rechargeResult?result=0'
+                                    '/hybrid/payment/wallet/rechargeResult?result=0'
                                 )
                             } else {
                                 // TODO 充值结果页面未使用
                                 this.$router.push(
-                                    '/c/payment/wallet/rechargeResult?result=1'
+                                    '/hybrid/payment/wallet/rechargeResult?result=1'
                                 )
                             }
                         })
