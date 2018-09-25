@@ -48,7 +48,7 @@ export default {
         nextStep() {
             let payObject = JSON.parse(localStorage.getItem('payObject'))
             let ewallet = JSON.parse(localStorage.getItem('wallet_account'))
-            let order = localStorage.getItem('order')
+            let order = localStorage.getItem('txNo')
 
             this.$axios
                 .post('/mobilewallet/v1/balance-payments', {
