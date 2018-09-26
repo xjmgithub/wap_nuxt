@@ -22,12 +22,12 @@ module.exports = {
             //     src:
             //         'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
             // },
-            // {
-            //     src: 'https://connect.facebook.net/en_US/sdk.js'
-            // },
-            // {
-            //     src: 'https://apis.google.com/js/api:client.js'
-            // }
+            {
+                src: 'https://connect.facebook.net/en_US/sdk.js'
+            },
+            {
+                src: 'https://apis.google.com/js/api:client.js'
+            }
         ]
     },
     /*
