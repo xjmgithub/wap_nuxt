@@ -9,7 +9,7 @@
         </nuxt-link>
         <div class="regtext">
             Don't have an account?
-            <nuxt-link to="/hybrid/account/register">Register</nuxt-link>
+            <nuxt-link :to="pre?('/hybrid/account/register?pre='+encodeURIComponent(pre)):'/hybrid/account/register'">Register</nuxt-link>
         </div>
     </div>
 </template>

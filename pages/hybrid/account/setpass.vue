@@ -5,27 +5,28 @@
                 <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext==1" alt="" @click="isCiphertext=2">
                 <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext==2" alt="" @click="isCiphertext=1">
             </div>
-            <input :type="pwdType" v-model="pass" @blur="checkpass" />
+                <input :type="pwdType" v-model="pass" @blur="checkpass" />
         </div>
-        <div class="input-item">
-            <div class="label">Confirm New Password
-                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
-                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
+                <div class="input-item">
+                    <div class="label">Confirm New Password
+                        <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
+                        <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
             </div>
-            <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
+                        <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
         </div>
-        <div class="input-item invite">
-            <div class="label">Invitation Code(Optional)</div>
-            <input type="text" v-model="inviteCode" @blur="checkpass" />
+                        <div class="input-item invite">
+                            <div class="label">Invitation Code(Optional)</div>
+                            <input type="text" v-model="inviteCode" @blur="checkpass" />
         </div>
-        <div class="footer">
-            <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
-        </div>
-    </div>
+                            <div class="footer">
+                                <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
+                            </div>
+                        </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import qs from 'qs'
+import { setCookie, initUser } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -39,7 +40,8 @@ export default {
             repass: '',
             inviteCode: '',
             isCiphertext: 1,
-            isCiphertext_confirm: 1
+            isCiphertext_confirm: 1,
+            pre: this.$route.query.pre
         }
     },
     methods: {
@@ -66,7 +68,42 @@ export default {
 
             this.$axios.post('/ums/v1/register', options).then(res => {
                 if (res.data.code == 0) {
-                    this.$router.push('/hybrid/account/login')
+                    let params = {}
+                    if (this.phone) {
+                        params = {
+                            applicationId: 1,
+                            phoneCc: this.phoneCC,
+                            phone: this.phone,
+                            pwd: this.pass,
+                            deviceId: this.$store.state.deviceId,
+                            type: 10
+                        }
+                    } else {
+                        params = {
+                            applicationId: 1,
+                            deviceId: this.$store.state.deviceId,
+                            type: 0,
+                            email: this.email,
+                            pwd: this.pass
+                        }
+                    }
+                    
+                    this.$axios.post('/ums/v1/user/login', params).then(res => {
+                        if (res.data.code == 0) {
+                            initUser(
+                                res.data.data.token,
+                                res.data.data.userId,
+                                res.data.data
+                            )
+                            if (this.pre) {
+                                window.location.href = this.pre
+                            } else {
+                                window.location.href = '/hybrid/payment/wallet/payto'
+                            }
+                        } else {
+                            this.$alert(res.data.message)
+                        }
+                    })
                 } else {
                     this.error_code =
                         'This code you entered is incorrect. Please try again.'

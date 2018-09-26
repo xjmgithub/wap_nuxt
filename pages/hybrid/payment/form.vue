@@ -180,14 +180,14 @@ export default {
                                 _this.$router.push(
                                     `/hybrid/payment/payResult?payToken=${
                                         _this.payToken
-                                    }&redirect=${res.data.merchantRedirectUrl}`
+                                    }`
                                 )
                             } else if (_this.paymethod.appInterfaceMode == 3) {
                                 // processing
                                 _this.$router.push(
                                     `/hybrid/payment/payResult?payToken=${
                                         this.payToken
-                                    }&redirect=${res.data.merchantRedirectUrl}`
+                                    }`
                                 )
                             } else {
                                 // SDK 和 其他 不支持,

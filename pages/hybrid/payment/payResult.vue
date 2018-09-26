@@ -24,7 +24,7 @@
             </p>
         </template>
         <div class="footer" v-show="!loadStatus">
-            <mButton :disabled="false" text="OK" @click="back"></mButton>
+            <mButton :disabled="!redirect" text="OK" @click="back"></mButton>
         </div>
     </div>
 </template>
@@ -41,7 +41,7 @@ export default {
             money: '',
             currency: '',
             payToken: this.$route.query.payToken,
-            redirect: this.$route.query.redirect
+            redirect: ''
         }
     },
     components: {
@@ -54,7 +54,7 @@ export default {
             return false
         }
         let _this = this
-        let num = 5
+        let num = 1
         let timer = setInterval(() => {
             num--
             if (num < 0) {
@@ -62,16 +62,17 @@ export default {
                 _this.result = 2
                 _this.loadStatus = false
             }
-            this.$axios
+            _this.$axios
                 .get(
-                    `/payment/api/v2/get-pre-payment?payToken=${this.payToken}`,
+                    `/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`,
                     {
                         headers: {
-                            token: this.$store.state.token
+                            token: _this.$store.state.token
                         }
                     }
                 )
                 .then(res => {
+                    _this.redirect = res.data.merchantPayRedirectUrl
                     if (res.data && res.data.tradeState == 'SUCCESS') {
                         _this.result = 1
                         _this.loadStatus = false
@@ -94,8 +95,7 @@ export default {
     },
     methods: {
         back() {
-            // 退回商户
-            // TODO window.location.href = this.redirect
+            if (this.redirect) window.location.href = this.redirect
         }
     }
 }

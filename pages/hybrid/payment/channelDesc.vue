@@ -145,9 +145,7 @@ export default {
                     // )
                 }
                 this.$router.push(
-                    `/hybrid/payment/payResult?payToken=${
-                        this.payToken
-                    }&redirect=${this.merchantRedirectUrl}`
+                    `/hybrid/payment/payResult?payToken=${this.payToken}`
                 )
             }
         }
