@@ -150,7 +150,7 @@ export default {
                         let data = res.data
                         if (data && data.code == '0') {
                             this.$alert(data.message, () => {
-                                this.$route.replace(
+                                this.$router.replace(
                                     '/hybrid/payment/wallet/paybyPass'
                                 )
                             })

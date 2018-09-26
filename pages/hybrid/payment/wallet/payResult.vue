@@ -8,7 +8,7 @@
             </p>
             <p class="money">
                 {{amount}}
-                <span>{{currency}}}</span>
+                <span>{{currency}}</span>
             </p>
             <p class="msg">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
@@ -49,7 +49,6 @@ export default {
         loading
     },
     mounted() {
-        console.log(this.result)
         if (this.result == 1 || this.result == 2) {
             this.loadStatus = false
         } else {

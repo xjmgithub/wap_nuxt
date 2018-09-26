@@ -32,41 +32,17 @@ export default {
     },
     mounted() {
         let wallet_config = JSON.parse(
-            window.localStorage.getItem('wallet_config')
+            localStorage.getItem('wallet_config')
         )
         this.payChannelId = JSON.parse(
             window.localStorage.getItem('payChannelId')
         )
         this.payToken = localStorage.getItem('payToken')
-        if (wallet_config.phone) {
+        if (wallet_config.phone=='true') {
             this.forgetUrl = '/hybrid/payment/wallet/validPhone'
         } else {
             this.forgetUrl = '/hybrid/payment/wallet/validEmail'
         }
-        this.$axios
-            .post(
-                '/payment/api/v2/invoke-payment',
-                {
-                    payToken: this.payToken,
-                    payChannelId: this.payChannelId,
-                    tradeType: 'JSAPI',
-                    deviceInfo: '',
-                    extendInfo: {} // 没有动态表单收集信息的传空对象
-                },
-                {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                }
-            )
-            .then(res => {
-                let data = res.data
-                if (data && data.resultCode == 0) {
-                    this.signature = data.extendInfo.signature
-                } else {
-                    this.$alert(data.resultMessage)
-                }
-            })
     },
     methods: {
         setPassword(data) {
@@ -79,17 +55,13 @@ export default {
 
             this.$axios
                 .post(
-                    '/mobilewallet/v1/balance-payments',
+                    '/payment/api/v2/invoke-payment',
                     {
-                        amount: payObject.totalAmount,
-                        currency: payObject.currency,
-                        note: payObject.payNote,
-                        orderId: order,
-                        payeeAccountNo: this.payChannelId,
-                        payerAccountNo: ewallet.accountNo,
-                        payerPayPassword: this.password,
-                        subject: payObject.paySubject,
-                        signature: this.signature
+                        payToken: this.payToken,
+                        payChannelId: this.payChannelId,
+                        tradeType: 'JSAPI',
+                        deviceInfo: '',
+                        extendInfo: {} // 没有动态表单收集信息的传空对象
                     },
                     {
                         headers: {
@@ -98,15 +70,46 @@ export default {
                     }
                 )
                 .then(res => {
-                    if (res.data && res.data.resultCode == 0) {
-                        this.$router.push(
-                            '/hybrid/payment/wallet/payResult?result=1'
-                        )
+                    let data = res.data
+                    if (data && data.resultCode == 0) {
+                        this.$axios
+                            .post(
+                                '/mobilewallet/v1/balance-payments',
+                                {
+                                    amount: payObject.totalAmount,
+                                    currency: payObject.currency,
+                                    note: payObject.payNote,
+                                    orderId: order,
+                                    payeeAccountNo: this.payChannelId,
+                                    payerAccountNo: ewallet.accountNo,
+                                    payerPayPassword: this.password,
+                                    subject: payObject.paySubject,
+                                    signature: data.extendInfo.signature
+                                },
+                                {
+                                    headers: {
+                                        token: this.$store.state.token
+                                    }
+                                }
+                            )
+                            .then(res => {
+                                if (res.data && res.data.resultCode == 0) {
+                                    this.$router.push(
+                                        `/hybrid/payment/wallet/payResult?result=1&amount=${
+                                            payObject.totalAmount
+                                        }&currency=${
+                                            payObject.currency
+                                        }&currensySymbol=${payObject.currency}`
+                                    )
+                                } else {
+                                    this.$router.push(
+                                        '/hybrid/payment/wallet/payResult?result=2&message=' +
+                                            res.data.resultMessage
+                                    )
+                                }
+                            })
                     } else {
-                        this.$router.push(
-                            '/hybrid/payment/wallet/payResult?result=2&resultMsg=' +
-                                res.data.resultMessage
-                        )
+                        this.$alert(data.resultMessage)
                     }
                 })
         }
