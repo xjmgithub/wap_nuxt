@@ -57,6 +57,7 @@ export default {
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
                         }/verify-code-mail?email=${email}`,
+                        {},
                         {
                             headers: {
                                 token: this.$store.state.token
@@ -78,11 +79,13 @@ export default {
                                 this.accountNo
                             }/setEmail?email=${email}&verifyCode=${vscode}&oldEmail=${
                                 this.oldemail
-                            }&verifyCode4Old=${this.vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                            }&verifyCode4Old=${this.vscode}`,
+                            {},
+                            {
+                                headers: {
+                                    token: this.$store.state.token
+                                }
+                            }
                         )
                         .then(res => {
                             let data = res.data
@@ -98,16 +101,19 @@ export default {
                         .get(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/verify-code?phone=${email}&verifyCode=${vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                            }/verify-code?phone=${email}&verifyCode=${vscode}`,
+                            {
+                                headers: {
+                                    token: this.$store.state.token
+                                }
+                            }
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 window.location.href = `/hybrid/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
+                            } else {
+                                this.$alert(data.message)
                             }
                         })
                 }
