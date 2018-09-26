@@ -64,7 +64,12 @@ export default {
             }
             this.$axios
                 .get(
-                    `/payment/api/v2/get-pre-payment?payToken=${this.payToken}`
+                    `/payment/api/v2/get-pre-payment?payToken=${this.payToken}`,
+                    {
+                        headers: {
+                            token: this.$store.state.token
+                        }
+                    }
                 )
                 .then(res => {
                     if (res.data && res.data.tradeState == 'SUCCESS') {

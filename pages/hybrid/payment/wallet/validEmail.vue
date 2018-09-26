@@ -69,7 +69,11 @@ export default {
                     .post(
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
-                        }/verify-code-mail?email=${email}`
+                        }/verify-code-mail?email=${email}`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            }
                     )
                     .then(res => {
                         if (res.data.code == 0) {
@@ -85,7 +89,11 @@ export default {
                         .get(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/verify-code?phone=${email}&verifyCode=${vscode}`
+                            }/verify-code?phone=${email}&verifyCode=${vscode}`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            }
                         )
                         .then(res => {
                             let data = res.data
@@ -99,7 +107,11 @@ export default {
                         .put(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/setEmail?email=${email}&verifyCode=${vscode}`
+                            }/setEmail?email=${email}&verifyCode=${vscode}`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            }
                         )
                         .then(res => {
                             let data = res.data
@@ -117,7 +129,11 @@ export default {
                     .put(
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
-                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`
+                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            }
                     )
                     .then(res => {
                         let data = res.data

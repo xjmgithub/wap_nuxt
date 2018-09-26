@@ -17,30 +17,40 @@ export default {
         let config = JSON.parse(window.localStorage.getItem('wallet_config'))
         let phoneIsSet = config.phone
         let emailIsSet = config.email
-        this.$axios.setHeader('clientType', 'android')
-        this.$axios.setHeader('versionCode', '5300')
-        this.$axios.get('/vup/v1/ums/user/area', {}).then(res => {
-            let configs = res.data && res.data.appFBConfigs
-            let type = true
-            configs.forEach(item => {
-                if (item.functionBlockType == 91) {
-                    if (item.validType == 2) {
-                        type = true
-                    } else {
-                        type = false
+        this.$axios
+            .get('/vup/v1/ums/user/area', {
+                headers: {
+                    token: this.$store.state.token,
+                    versionCode: '5300',
+                    clientType: 'android'
+                }
+            })
+            .then(res => {
+                let configs = res.data && res.data.appFBConfigs
+                let type = true
+                configs.forEach(item => {
+                    if (item.functionBlockType == 91) {
+                        if (item.validType == 2) {
+                            type = true
+                        } else {
+                            type = false
+                        }
+                    }
+                })
+                if (type == true) {
+                    if (phoneIsSet == 'false') {
+                        this.$router.replace(
+                            '/hybrid/payment/wallet/validPhone'
+                        )
+                    }
+                } else {
+                    if (emailIsSet == 'false') {
+                        this.$router.replace(
+                            '/hybrid/payment/wallet/validEmail'
+                        )
                     }
                 }
             })
-            if (type == true) {
-                if (phoneIsSet == 'false') {
-                    this.$router.replace('/hybrid/payment/wallet/validPhone')
-                }
-            } else {
-                if (emailIsSet == 'false') {
-                    this.$router.replace('/hybrid/payment/wallet/validEmail')
-                }
-            }
-        })
     },
     components: {
         loading

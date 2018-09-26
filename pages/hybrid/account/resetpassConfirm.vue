@@ -58,7 +58,8 @@ export default {
             this.$axios({
                 method: 'POST',
                 headers: {
-                    'content-type': 'application/x-www-form-urlencoded'
+                    'content-type': 'application/x-www-form-urlencoded',
+                    token: this.$store.state.token
                 },
                 data: qs.stringify(options),
                 url: url

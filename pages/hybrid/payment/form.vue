@@ -19,16 +19,16 @@
                     <div class="number">
                         <input type="tel" :placeholder="item.placeholder" />
                     </div>
-                </div>
-                <div class="form-item input-tel" v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern" :data-name="item.name">
-                    <div class="number">
-                        <input :type="item.formType" :placeholder="item.placeholder" />
                     </div>
+                    <div class="form-item input-tel" v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern" :data-name="item.name">
+                        <div class="number">
+                            <input :type="item.formType" :placeholder="item.placeholder" />
+                    </div>
+                        </div>
+                        <div>
+                            <input :name="item.name" v-model="item.defaultValue" type="hidden">
                 </div>
-                <div>
-                    <input :name="item.name" v-model="item.defaultValue" type="hidden">
-                </div>
-            </div>
+                        </div>
         </template>
         <div class="footer">
             <mButton class="next" :disabled="false" text="OK"></mButton>
@@ -53,7 +53,11 @@ export default {
     },
     mounted() {
         this.$axios
-            .get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`)
+            .get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            })
             .then(res => {
                 let data = res.data
                 if (data && data instanceof Array && data.length > 0) {
@@ -153,13 +157,21 @@ export default {
                 }
 
                 _this.$axios
-                    .post('/payment/api/v2/invoke-payment', {
-                        payToken: _this.payToken,
-                        payChannelId: _this.payChannelId,
-                        tradeType: 'JSAPI',
-                        signType: 'MD5',
-                        extendInfo: optarr
-                    })
+                    .post(
+                        '/payment/api/v2/invoke-payment',
+                        {
+                            payToken: _this.payToken,
+                            payChannelId: _this.payChannelId,
+                            tradeType: 'JSAPI',
+                            signType: 'MD5',
+                            extendInfo: optarr
+                        },
+                        {
+                            headers: {
+                                token: _this.$store.state.token
+                            }
+                        }
+                    )
                     .then(res => {
                         if (res.data && res.data.resultCode == 0) {
                             if (_this.paymethod.appInterfaceMode == 2) {
