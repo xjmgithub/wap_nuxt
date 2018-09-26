@@ -17,6 +17,7 @@ export default {
     data() {
         return {
             pwdType: 'Enter Payment Password',
+            payToken:'',
             payChannelId: '',
             password: '',
             canPay: false,
@@ -35,11 +36,26 @@ export default {
         this.payChannelId = JSON.parse(
             window.localStorage.getItem('payChannelId')
         )
+        this.payToken = localStorage.getItem('payToken')
         if (wallet_config.phone) {
             this.forgetUrl = '/hybrid/payment/wallet/validPhone'
         } else {
             this.forgetUrl = '/hybrid/payment/wallet/validEmail'
         }
+        this.$axios
+            .post('/payment/api/v2/invoke-payment', {
+                payToken: this.payToken,
+                payChannelId: this.payChannel,
+                tradeType: 'JSAPI',
+                deviceInfo: window.navigator.userAgent,
+                extendInfo: {} // 没有动态表单收集信息的传空对象
+            })
+            .then(res => {
+                let data = res.data
+                if (data && data.resultCode == 0) {
+                    console.log(123)
+                }
+            })
     },
     methods: {
         setPassword(data) {
@@ -60,7 +76,7 @@ export default {
                     payerAccountNo: ewallet.accountNo,
                     payerPayPassword: this.password,
                     subject: payObject.paySubject,
-                    signature: '',
+                    signature: ''
                 })
                 .then(res => {
                     if (res.data && res.data.resultCode == 0) {

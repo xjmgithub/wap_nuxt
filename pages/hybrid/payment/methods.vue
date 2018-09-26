@@ -55,6 +55,9 @@ export default {
         }
     },
     async asyncData({ app, store, redirect }) {
+        if (!app.context.isServer) {
+            return false
+        }
         let res = await axios.post(
             `${
                 env.mechant_request_url
