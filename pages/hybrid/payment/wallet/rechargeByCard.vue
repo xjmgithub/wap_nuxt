@@ -19,7 +19,7 @@
                 </p>
             </div>
             <div class="footer">
-                <mButton :disabled="false" text="NEXT" @click="nextStep"></mButton>
+                <mButton :disabled="!canNext" text="NEXT" @click="nextStep"></mButton>
             </div>
         </div>
 </template>
@@ -41,6 +41,9 @@ export default {
             var reg = /^[0-9]*$/
             var tmp = this.rechargePin.replace(/-/g, '')
             return reg.test(tmp) ? tmp : ''
+        },
+        canNext() {
+            return this.oriPinNum.length > 4 && this.oriPinNum.length < 32
         }
     },
     mounted() {
@@ -59,6 +62,7 @@ export default {
     },
     methods: {
         nextStep() {
+            if (!this.canNext) return false
             this.$confirm(
                 `<div style="font-size:1.2rem;">Please Check</div>
                 <br />

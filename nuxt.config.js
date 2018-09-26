@@ -56,7 +56,7 @@ module.exports = {
     modules: ['@nuxtjs/axios'],
 
     axios: {
-        // proxyHeaders: false
+        // proxyHeaders: false,
         proxy: true, // Can be also an object with default options
         retry: { retries: 0 }
     },
