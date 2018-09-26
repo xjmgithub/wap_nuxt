@@ -14,6 +14,7 @@ import crypto from 'crypto'
 import mButton from '~/components/button'
 import RadioBtn from '~/components/radioBtn'
 import env from '~/env.js'
+import axios from 'axios'
 export default {
     layout: 'base',
     data() {
@@ -54,9 +55,10 @@ export default {
         }
     },
     async asyncData({ app, store, redirect }) {
-
-        let res = await app.$axios.post(
-            `${env.mechant_request_url}payment/platform/v1/oauth/token?grant_type=client_credentials`,
+        let res = await axios.post(
+            `${
+                env.mechant_request_url
+            }payment/platform/v1/oauth/token?grant_type=client_credentials`,
             {},
             {
                 auth: {
@@ -153,7 +155,7 @@ export default {
             let up = hmac.update(str)
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
-            let res2 = await app.$axios.post(
+            let res2 = await axios.post(
                 `${env.mechant_request_url}payment/platform/v1/create-payment`,
                 paramObj,
                 {
@@ -162,7 +164,6 @@ export default {
                     }
                 }
             )
-
             store.commit('SET_PAYTOKEN', res2.data.payToken)
             store.commit('SET_TXNO', res2.data.txNo)
         } else {
@@ -172,8 +173,13 @@ export default {
     mounted() {
         this.payToken = this.$store.state.payToken
         this.txNo = this.$store.state.txNo
-        this.$axios
-            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
+        let _this = this
+        axios
+            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`, {
+                headers: {
+                    token: _this.$store.state.token
+                }
+            })
             .then(res => {
                 let data = res.data
                 let list = []
@@ -204,11 +210,11 @@ export default {
                             })
                         }
                     })
-                    this.radioList = list
-                    this.radioList2 = list2
-                    this.selected = list[0].code
+                    _this.radioList = list
+                    _this.radioList2 = list2
+                    _this.selected = list[0].code
                 } else {
-                    this.$alert(
+                    _this.$alert(
                         'The merchant has not yet opened a supportable payment channel.'
                     )
                 }

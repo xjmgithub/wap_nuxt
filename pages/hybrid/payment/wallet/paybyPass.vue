@@ -59,7 +59,8 @@ export default {
                     payeeAccountNo: this.payChannelId,
                     payerAccountNo: ewallet.accountNo,
                     payerPayPassword: this.password,
-                    subject: payObject.paySubject
+                    subject: payObject.paySubject,
+                    signature: '',
                 })
                 .then(res => {
                     if (res.data && res.data.resultCode == 0) {
