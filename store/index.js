@@ -11,7 +11,9 @@ export const state = () => ({
     lang: {},
     shadowStatus: false,
     payToken: '',
-    user: null
+    user: null,
+    payToken: '',
+    txNo:''
 })
 
 export const mutations = {
@@ -44,6 +46,12 @@ export const mutations = {
     },
     SET_USER: function(state, user) {
         state.user = user
+    },
+    SET_PAYTOKEN: function(state, payToken) {
+        state.payToken = payToken
+    },
+    SET_TXNO: function(state, txNo) {
+        state.txNo = txNo
     }
 }
 
