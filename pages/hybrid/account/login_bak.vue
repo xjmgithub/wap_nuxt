@@ -23,6 +23,15 @@ export default {
         }
     },
     mounted() {
+        // twitter登录
+        hello.init(
+            {
+                twitter: 'ECicswlypoOTdXm0NuWmzCZQe'
+            },
+            {
+                oauth_proxy: 'https://auth-server.herokuapp.com/proxy'
+            }
+        )
         // facebook登录初始化
         FB.init({
             appId: '159785064477978',
@@ -58,16 +67,16 @@ export default {
             })
         },
         bytwitter() {
-            // let _this = this
-            // hello.login(
-            //     'twitter',
-            //     {
-            //         response_type: 'code'
-            //     },
-            //     function(res) {
-            //         _this.loginByThird(res.authResponse.user_id)
-            //     }
-            // )
+            let _this = this
+            hello.login(
+                'twitter',
+                {
+                    response_type: 'code'
+                },
+                function(res) {
+                    _this.loginByThird(res.authResponse.user_id)
+                }
+            )
         },
         loginByThird(userkey) {
             this.$axios
