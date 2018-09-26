@@ -1,7 +1,7 @@
 let env = require('./env.js')
 module.exports = {
     head: {
-        title: 'wap_nuxt',
+        title: 'startimes pay',
         meta: [
             { charset: 'utf-8' },
             {
@@ -23,10 +23,10 @@ module.exports = {
             //         'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
             // },
             {
-                src: 'https://connect.facebook.net/en_US/sdk.js'
+                src: '/res_nuxt/sdk.js'
             },
             {
-                src: 'https://apis.google.com/js/api:client.js'
+                src: '/res_nuxt/api_client.js'
             }
         ]
     },
@@ -70,7 +70,6 @@ module.exports = {
         '/payment/api': env.ms_host,
         '/payment/v2': env.ms_host,
         '/payment/platform/v1':'http://10.0.63.5:8010',
-        
         // '/mobilewallet/': 'http://localhost:9001',
         // '/payment/': 'http://localhost:9001',
     },
