@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <loading v-show="loadStatus"></loading>
-        <template v-if="result=='succss'&&!loadStatus">
+        <template v-if="result=='1'&&!loadStatus">
             <img src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
                 Payment Successful
@@ -14,7 +14,7 @@
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
             </p>
         </template>
-        <template v-if="result=='fail'&&!loadStatus">
+        <template v-if="result=='2'&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt="">
             <p class="fail">
                 Payment Failed
@@ -35,7 +35,7 @@ import loading from '~/components/loading'
 export default {
     data() {
         return {
-            result: '',
+            result: 0, 
             loadStatus: true
         }
     },
@@ -50,7 +50,7 @@ export default {
     methods: {
         refresh() {
             this.loadStatus = true
-            let walletAccount = window.localStorage.getItem('wallet_account')
+            let walletAccount = JSON.parse(localStorage.getItem('wallet_account')).accountNo
             this.$axios
                 .get(
                     `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`,
@@ -62,14 +62,11 @@ export default {
                 )
                 .then(res => {
                     this.loadStatus = false
-                    if (res.data) {
+                    if (res.data&&res.data.amount) {
                         _this.balance = res.data.amount
-                        localStorage.setItem(
-                            'wallet_account',
-                            res.data.accountNo
-                        )
-                        localStorage.setItem('wallet_left', res.data.amount)
-                        _this.balance = 1 // TODO remove demo
+                        this.result = 1
+                    }else{
+                        this.result = 2
                     }
                 })
         }
@@ -83,8 +80,8 @@ export default {
     text-align: center;
 }
 .container img {
-    width: 3rem;
-    height: 3rem;
+    width: 12rem;
+    height: 12rem;
 }
 .container .success {
     color: #0087eb;

@@ -90,12 +90,19 @@ export default {
                         .then(res => {
                             if (res.data && res.data.code == 0) {
                                 this.$router.push(
-                                    '/hybrid/payment/wallet/rechargeResult?result=0'
+                                    `/hybrid/payment/wallet/rechargeResult?result=1&amount=${
+                                        res.data.data.amount
+                                    }&currency=${
+                                        res.data.data.currency
+                                    }&currensySymbol=${
+                                        res.data.data.currencySymbol
+                                    }`
                                 )
                             } else {
                                 // TODO 充值结果页面未使用
                                 this.$router.push(
-                                    '/hybrid/payment/wallet/rechargeResult?result=1'
+                                    '/hybrid/payment/wallet/rechargeResult?result=2&message=' +
+                                        res.data.message
                                 )
                             }
                         })

@@ -1,55 +1,61 @@
 <template>
     <div class="container">
         <loading v-show="loadStatus"></loading>
-        <template v-if="result=='succss'&&!loadStatus">
+        <template v-if="result=='1'&&!loadStatus">
             <img src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
-                Payment Successful
+                Recharge Successful
             </p>
             <p class="money">
-                50.00
-                <span>Ksh</span>
+                {{amount}}
+                <span>{{currency}}</span>
             </p>
             <p class="msg">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
             </p>
         </template>
-        <template v-if="result=='fail'&&!loadStatus">
+        <template v-if="result=='2'&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt="">
             <p class="fail">
                 Payment Failed
             </p>
             <p class="msg">
-                Thanks for your payment. But You have insufficent funds.
+                {{fail_message}}
             </p>
         </template>
         <div class="footer" v-show="!loadStatus">
-            <mButton :disabled="false" :text="'OK'" @click="back"></mButton>
+            <mButton :disabled="false" text="OK" @click="back"></mButton>
         </div>
     </div>
-
 </template>
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
 export default {
+    layout: 'base',
     data() {
         return {
-            result: '',
-            loadStatus: true
+            result: this.$route.query.result || 0, // 0 支付查询中， 1 支付成功，2 支付失败
+            loadStatus: true,
+            fail_message: this.$route.query.message || '',
+            payToken: this.$route.query.payToken,
+            amount: this.$route.query.amount || '',
+            currency: this.$route.query.currency || '',
+            currensySymbol: this.$route.query.currensySymbol || ''
         }
     },
-    layout: 'base',
     components: {
         mButton,
         loading
     },
-    created() {
-        // TODO 检查支付状态
+    mounted() {
+        if (this.result == 1 || this.result == 2) {
+            this.loadStatus = false
+        }
     },
     methods: {
         back() {
-            // TODO 退回商户
+            //TODO 获取商户跳转地址 window.location.href = this.redirect
         }
     }
 }
@@ -61,8 +67,8 @@ export default {
     text-align: center;
 }
 .container img {
-    width: 3rem;
-    height: 3rem;
+    width: 12rem;
+    height: 12rem;
 }
 .container .success {
     color: #0087eb;

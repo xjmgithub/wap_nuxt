@@ -7,8 +7,8 @@
                 Payment Successful
             </p>
             <p class="money">
-                50.00
-                <span>Ksh</span>
+                {{amount}}
+                <span>{{currency}}}</span>
             </p>
             <p class="msg">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
@@ -35,15 +35,26 @@ export default {
     layout: 'base',
     data() {
         return {
-            result: this.$route.query.result|| 0, // 0 支付查询中， 1 支付成功，2 支付失败
-            loadStatus: false,
-            fail_message: this.$route.query.resultMsg,
-            payToken: this.$route.query.payToken
+            result: this.$route.query.result || 0, // 0 支付查询中， 1 支付成功，2 支付失败
+            loadStatus: true,
+            fail_message: this.$route.query.message || '',
+            payToken: this.$route.query.payToken,
+            amount: this.$route.query.amount || '',
+            currency: this.$route.query.currency || '',
+            currensySymbol: this.$route.query.currensySymbol || ''
         }
     },
     components: {
         mButton,
         loading
+    },
+    mounted() {
+        console.log(this.result)
+        if (this.result == 1 || this.result == 2) {
+            this.loadStatus = false
+        } else {
+            // 定期查询
+        }
     },
     methods: {
         back() {
