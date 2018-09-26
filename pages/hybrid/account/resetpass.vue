@@ -62,7 +62,7 @@ export default {
     data() {
         return {
             type: 0,
-            country: this.$store.state.country,
+            country: this.$store.state.user.areaID,
             countryDialogStatus: false,
             phoneCanNext: false,
             email: '',
@@ -72,7 +72,7 @@ export default {
     },
     computed: {
         areaInfo() {
-            return this.countrys[this.country.id]
+            return this.countrys[this.country]
         },
         canNext() {
             if (this.type == 1) {
