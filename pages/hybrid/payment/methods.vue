@@ -201,7 +201,7 @@ export default {
                                 value: item.name,
                                 imgUrl: item.logoUrl || '',
                                 desc: item.description,
-                                checked: index ? false : true,
+                                checked: false,
                                 channelType: item.channelType,
                                 ussd: item.shortUssdCode
                             })
@@ -211,12 +211,13 @@ export default {
                                 value: item.name,
                                 imgUrl: item.logoUrl || '',
                                 desc: item.description,
-                                checked: index ? false : true,
+                                checked: false,
                                 channelType: item.channelType,
                                 ussd: item.shortUssdCode
                             })
                         }
                     })
+                    list[0].checked = true
                     _this.radioList = list
                     _this.radioList2 = list2
                     _this.selected = list[0].code
