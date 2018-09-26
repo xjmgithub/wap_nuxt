@@ -69,11 +69,13 @@ export default {
                     .post(
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
-                        }/verify-code-mail?email=${email}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                        }/verify-code-mail?email=${email}`,
+                        {},
+                        {
+                            headers: {
+                                token: this.$store.state.token
+                            }
+                        }
                     )
                     .then(res => {
                         if (res.data.code == 0) {
@@ -89,16 +91,19 @@ export default {
                         .get(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/verify-code?phone=${email}&verifyCode=${vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                            }/verify-code?phone=${email}&verifyCode=${vscode}`,
+                            {
+                                headers: {
+                                    token: this.$store.state.token
+                                }
+                            }
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = num
+                            } else {
+                                this.$alert(data.message)
                             }
                         })
                 } else {
@@ -107,17 +112,19 @@ export default {
                         .put(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/setEmail?email=${email}&verifyCode=${vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                            }/setEmail?email=${email}&verifyCode=${vscode}`,
+                            {},
+                            {
+                                headers: {
+                                    token: this.$store.state.token
+                                }
+                            }
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = num
-                            }else{
+                            } else {
                                 this.$alert(data.message)
                             }
                         })
@@ -125,15 +132,22 @@ export default {
             } else if (num == 5) {
                 let vscode = this.$refs.vscode.password
                 let newpass = this.$refs.newpass.password
+                let confirmpass = this.$refs.confirmpass.password
+                if (newpass != confirmpass) {
+                    this.$alert('Two passwords are different.')
+                    return false
+                }
                 this.$axios
                     .put(
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
-                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`,
+                        {},
+                        {
+                            headers: {
+                                token: this.$store.state.token
+                            }
+                        }
                     )
                     .then(res => {
                         let data = res.data

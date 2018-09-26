@@ -129,7 +129,7 @@ export default {
             } else if (num == 5) {
                 let vscode = this.$refs.vscode.password
                 let newpass = this.$refs.newpass.password
-                let confirmpass = this.$ref.confirmpass.password
+                let confirmpass = this.$refs.confirmpass.password
                 if (newpass != confirmpass) {
                     this.$alert('Two passwords are different.')
                     return false
