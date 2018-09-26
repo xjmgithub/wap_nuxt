@@ -8,7 +8,7 @@
             </div>
             <div class="money">
                 <input type="tel" placeholder="Payment amount" v-model="amount" disabled="disabled" />
-                <div class="balance" :class="{notenough:!enough}">eWallet Balance:￠{{balance}}</div>
+                <div class="balance" :class="{notenough:!enough}">eWallet Balance:{{balanceCurrency}}{{balance}}</div>
             </div>
         </div>
         <div class="footer">
@@ -30,7 +30,8 @@ export default {
             merchant: '',
             signature: '',
             balance: 0,
-            loadStatus: true
+            loadStatus: true,
+            balanceCurrency: ''
         }
     },
     computed: {
@@ -86,6 +87,7 @@ export default {
                         JSON.stringify(res.data)
                     )
                     this.balance = res.data.amount
+                    this.balanceCurrency = res.data.currencySymbol
                     this.getSetConfig(res.data.accountNo) // 钱包配置
                 }
             })
