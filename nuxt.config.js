@@ -68,6 +68,7 @@ module.exports = {
         '/membership/': env.ms_host,
         '/mobilewallet/': env.ms_host,
         '/payment/api': env.ms_host,
+        '/payment/v2': env.ms_host,
         '/payment/platform/v1':'http://10.0.63.5:8010',
         
         // '/mobilewallet/': 'http://localhost:9001',
