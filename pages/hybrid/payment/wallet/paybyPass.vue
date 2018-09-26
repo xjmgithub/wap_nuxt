@@ -17,11 +17,12 @@ export default {
     data() {
         return {
             pwdType: 'Enter Payment Password',
-            payToken:'',
+            payToken: '',
             payChannelId: '',
             password: '',
             canPay: false,
-            forgetUrl: '/hybrid/payment/wallet/resetPhone'
+            forgetUrl: '/hybrid/payment/wallet/resetPhone',
+            signature: ''
         }
     },
     layout: 'base',
@@ -43,17 +44,27 @@ export default {
             this.forgetUrl = '/hybrid/payment/wallet/validEmail'
         }
         this.$axios
-            .post('/payment/api/v2/invoke-payment', {
-                payToken: this.payToken,
-                payChannelId: this.payChannel,
-                tradeType: 'JSAPI',
-                deviceInfo: window.navigator.userAgent,
-                extendInfo: {} // 没有动态表单收集信息的传空对象
-            })
+            .post(
+                '/payment/api/v2/invoke-payment',
+                {
+                    payToken: this.payToken,
+                    payChannelId: this.payChannelId,
+                    tradeType: 'JSAPI',
+                    deviceInfo: '',
+                    extendInfo: {} // 没有动态表单收集信息的传空对象
+                },
+                {
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                }
+            )
             .then(res => {
                 let data = res.data
                 if (data && data.resultCode == 0) {
-                    console.log(123)
+                    this.signature = data.extendInfo.signature
+                } else {
+                    this.$alert(data.resultMessage)
                 }
             })
     },
@@ -67,17 +78,25 @@ export default {
             let order = localStorage.getItem('txNo')
 
             this.$axios
-                .post('/mobilewallet/v1/balance-payments', {
-                    amount: payObject.totalAmount,
-                    currency: payObject.currency,
-                    note: payObject.payNote,
-                    orderId: order,
-                    payeeAccountNo: this.payChannelId,
-                    payerAccountNo: ewallet.accountNo,
-                    payerPayPassword: this.password,
-                    subject: payObject.paySubject,
-                    signature: ''
-                })
+                .post(
+                    '/mobilewallet/v1/balance-payments',
+                    {
+                        amount: payObject.totalAmount,
+                        currency: payObject.currency,
+                        note: payObject.payNote,
+                        orderId: order,
+                        payeeAccountNo: this.payChannelId,
+                        payerAccountNo: ewallet.accountNo,
+                        payerPayPassword: this.password,
+                        subject: payObject.paySubject,
+                        signature: this.signature
+                    },
+                    {
+                        headers: {
+                            token: this.$store.state.token
+                        }
+                    }
+                )
                 .then(res => {
                     if (res.data && res.data.resultCode == 0) {
                         this.$router.push(

@@ -13,7 +13,7 @@ export const state = () => ({
     payToken: '',
     user: null,
     payToken: '',
-    txNo:''
+    txNo: ''
 })
 
 export const mutations = {
@@ -120,8 +120,11 @@ export const actions = {
 
         // 用户信息
 
-        this.$axios.setHeader('token', this.state.token)
-        let user = await this.$axios.get('/cms/users/me')
+        let user = await this.$axios.get('/cms/users/me', {
+            headers: {
+                token: this.state.token
+            }
+        })
         commit('SET_USER', user.data)
 
         // APP TYPE

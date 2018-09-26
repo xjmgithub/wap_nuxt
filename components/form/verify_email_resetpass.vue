@@ -48,7 +48,11 @@ export default {
         getCode() {
             if (!this.canGetCode) return false
             this.$axios
-                .get(`/ums/v1/register/password/change?email=${this.email}`)
+                .get(`/ums/v1/register/password/change?email=${this.email}`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            })
                 .then(res => {
                     if (res.data.code == 0) {
                         this.codeDuring = 60

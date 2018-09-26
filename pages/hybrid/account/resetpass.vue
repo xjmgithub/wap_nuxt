@@ -106,7 +106,11 @@ export default {
             // TODO 防止多次点击
             if (this.type == 1) {
                 this.$axios
-                    .get(`/ums/v1/register/password/change?email=${this.email}`)
+                    .get(`/ums/v1/register/password/change?email=${this.email}`, {
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                })
                     .then(res => {
                         if (res.data.code == 0) {
                             this.$alert(

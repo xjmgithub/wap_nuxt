@@ -21,8 +21,8 @@ export default {
         return {
             client_id: this.$route.query.client_id,
             app_key: this.$route.query.key,
-            country: 'TZ',
-            currency: 'TZS',
+            country: this.$route.query.country || 'TZ',
+            currency: this.$route.query.currency || 'TZS',
             payToken: '',
             txNo: '',
             radioList: [],
@@ -39,7 +39,7 @@ export default {
             this.selected = code
         },
         next() {
-            if (this.selected > 9002 && this.selected < 9029) {
+            if (this.selected > 9001 && this.selected < 9029) {
                 this.$router.push(
                     `/hybrid/payment/wallet/payto?payToken=${
                         this.payToken
@@ -102,11 +102,11 @@ export default {
                 },
                 {
                     key: 'merchantAppId',
-                    value: '2'
+                    value: '100017'
                 },
                 {
                     key: 'totalAmount',
-                    value: '1000'
+                    value: '100'
                 },
                 {
                     key: 'signType',
@@ -121,8 +121,12 @@ export default {
                     value: '30'
                 },
                 {
+                    key: 'country',
+                    value: app.context.route.query.country || 'TZ'
+                },
+                {
                     key: 'currency',
-                    value: 'NGN'
+                    value: app.context.route.query.currency || 'TZS'
                 },
                 {
                     key: 'payChannelCodes',
@@ -191,7 +195,7 @@ export default {
                     let payChannels = {}
 
                     data.payChannels.forEach((item, index) => {
-                        if (item.id > 9002 && item.id < 9029) {
+                        if (item.id > 9001 && item.id < 9029) {
                             list2.push({
                                 code: item.id,
                                 value: item.name,

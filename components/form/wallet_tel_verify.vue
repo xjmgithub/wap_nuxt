@@ -6,12 +6,12 @@
             <div class="number">
                 <input type="tel" :disabled="disabled" :class="{focus:focus_tel,'input-error':error_tel}" v-model="tel" @focus="focus_tel=true" @blur="focus_tel=false" placeholder="Cellphone number" />
             </div>
-            <div class="get-code">
-                <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                <div class="get-code">
+                    <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                </div>
             </div>
+            <div class="error" v-show="error_tel">{{error_tel}}</div>
         </div>
-        <div class="error" v-show="error_tel">{{error_tel}}</div>
-    </div>
 </template>
 <script>
 import qs from 'qs'
@@ -23,8 +23,8 @@ export default {
         title: {
             default: 'Enter cellphone number'
         },
-        disabled:{
-            default:false
+        disabled: {
+            default: false
         }
     },
     watch: {
@@ -52,7 +52,7 @@ export default {
         }
     },
     methods: {
-        setTel(tel){
+        setTel(tel) {
             this.tel = tel
         },
         getCode() {
@@ -64,7 +64,9 @@ export default {
                     `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code?phone=${this
                         .prefix + this.tel}&`,
                     {
-                        phone: this.prefix + this.tel
+                        headers: {
+                            token: this.$store.state.token
+                        }
                     }
                 )
                 .then(res => {

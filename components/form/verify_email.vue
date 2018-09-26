@@ -4,14 +4,14 @@
             <div class="number">
                 <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email address" />
             </div>
-            <div class="error" v-show="error_email">{{error_email}}</div>
+                <div class="error" v-show="error_email">{{error_email}}</div>
+            </div>
+            <div class="get-code">
+                <input type="text" maxlength="4" :class="{focus:focus_code,error:error_code}" v-model="vscode" @focus="focus_code=true" @blur="focus_code=false" placeholder="Click to get verification code" />
+                <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                <div class="error_code" v-show="error_code">{{error_code}}</div>
+            </div>
         </div>
-        <div class="get-code">
-            <input type="text" maxlength="4" :class="{focus:focus_code,error:error_code}" v-model="vscode" @focus="focus_code=true" @blur="focus_code=false" placeholder="Click to get verification code" />
-            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
-            <div class="error_code" v-show="error_code">{{error_code}}</div>
-        </div>
-    </div>
 </template>
 <script>
 import qs from 'qs'
@@ -28,11 +28,11 @@ export default {
         vscode(nv, ov) {
             this.error_code = ''
             if (nv.length >= 4) {
-                this.$axios.setHeader('token', this.$store.state.token)
                 this.$axios({
                     method: 'POST',
                     headers: {
-                        'content-type': 'application/x-www-form-urlencoded'
+                        'content-type': 'application/x-www-form-urlencoded',
+                        token: this.$store.state.token
                     },
                     data: qs.stringify({
                         email: this.email,
@@ -81,9 +81,12 @@ export default {
             let url = this.type
                 ? '/ums/v1/register/password/change'
                 : '/ums/v1/register/code/email'
-            this.$axios.setHeader('token', this.$store.state.token)
             this.$axios
-                .get(`${url}?email=${this.email}`)
+                .get(`${url}?email=${this.email}`, {
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                })
                 .then(res => {
                     if (res.data.code == 0) {
                         this.codeDuring = 60

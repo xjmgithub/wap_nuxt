@@ -43,6 +43,10 @@ export default {
             this.$axios
                 .get(`/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail`,{
                     email:this.email
+                }, {
+                    headers: {
+                        token: this.$store.state.token
+                    }
                 })
                 .then(res => {
                     if (res.data.code == 0) {

@@ -73,16 +73,29 @@ export default {
             }
         }
 
-        this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
-            if (res.data) {
-                localStorage.setItem('wallet_account', JSON.stringify(res.data))
-                this.balance = res.data.amount
-                this.getSetConfig(res.data.accountNo) // 钱包配置
-            }
-        })
+        this.$axios
+            .get('/mobilewallet/v1/accounts/me', {
+                headers: {
+                    token: this.$store.state.token
+                }
+            })
+            .then(res => {
+                if (res.data) {
+                    localStorage.setItem(
+                        'wallet_account',
+                        JSON.stringify(res.data)
+                    )
+                    this.balance = res.data.amount
+                    this.getSetConfig(res.data.accountNo) // 钱包配置
+                }
+            })
 
         this.$axios
-            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
+            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            })
             .then(res => {
                 let data = res.data
                 if (data && data.resultCode == '0') {
@@ -99,7 +112,11 @@ export default {
     methods: {
         getSetConfig(account) {
             this.$axios
-                .get(`/mobilewallet/v1/accounts/${account}/prop-details`)
+                .get(`/mobilewallet/v1/accounts/${account}/prop-details`, {
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                })
                 .then(res => {
                     localStorage.setItem(
                         'wallet_config',

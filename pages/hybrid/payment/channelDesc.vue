@@ -36,7 +36,11 @@ export default {
         }
 
         this.$axios
-            .get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
+            .get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`, {
+                headers: {
+                    token: this.$store.state.token
+                }
+            })
             .then(res => {
                 let data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
@@ -92,13 +96,21 @@ export default {
                 }
 
                 this.$axios
-                    .post('/payment/api/v2/invoke-payment', {
-                        payToken: this.payToken,
-                        payChannelId: this.payChannel,
-                        tradeType: 'JSAPI',
-                        deviceInfo: window.navigator.userAgent,
-                        extendInfo: {} // 没有动态表单收集信息的传空对象
-                    })
+                    .post(
+                        '/payment/api/v2/invoke-payment',
+                        {
+                            payToken: this.payToken,
+                            payChannelId: this.payChannel,
+                            tradeType: 'JSAPI',
+                            deviceInfo: window.navigator.userAgent,
+                            extendInfo: {} // 没有动态表单收集信息的传空对象
+                        },
+                        {
+                            headers: {
+                                token: this.$store.state.token
+                            }
+                        }
+                    )
                     .then(res => {
                         let data = res.data
                         if (data && data.resultCode == 0) {
@@ -114,9 +126,11 @@ export default {
         nextStep() {
             if (this.form_exit) {
                 this.$router.push(
-                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${
-                        this.payChannel
-                    }&appInterfaceMode=${this.appInterfaceMode}`
+                    `/hybrid/payment/form?payToken=${
+                        this.payToken
+                    }&payChannelId=${this.payChannel}&appInterfaceMode=${
+                        this.appInterfaceMode
+                    }`
                 )
             } else {
                 if (this.appInterfaceMode == 2) {
@@ -131,9 +145,9 @@ export default {
                     // )
                 }
                 this.$router.push(
-                    `/hybrid/payment/payResult?payToken=${this.payToken}&redirect=${
-                        this.merchantRedirectUrl
-                    }`
+                    `/hybrid/payment/payResult?payToken=${
+                        this.payToken
+                    }&redirect=${this.merchantRedirectUrl}`
                 )
             }
         }

@@ -35,7 +35,8 @@ export default {
                 this.$axios({
                     method: 'POST',
                     headers: {
-                        'content-type': 'application/x-www-form-urlencoded'
+                        'content-type': 'application/x-www-form-urlencoded',
+                        token: this.$store.state.token
                     },
                     data: qs.stringify({
                         phoneCc: this.prefix,
@@ -86,7 +87,11 @@ export default {
                 ? '/ums/v1/user/code/sms'
                 : '/ums/v1/register/code/sms'
             this.$axios
-                .get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}`)
+                .get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}`, {
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                })
                 .then(res => {
                     if (res.data.code == 0) {
                         this.codeDuring = 60
