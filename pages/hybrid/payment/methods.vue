@@ -56,7 +56,7 @@ export default {
     async asyncData({ app, store, redirect }) {
 
         let res = await app.$axios.post(
-            'http://10.0.63.5:8010/payment/platform/v1/oauth/token?grant_type=client_credentials',
+            `${env.mechant_request_url}payment/platform/v1/oauth/token?grant_type=client_credentials`,
             {},
             {
                 auth: {
@@ -154,7 +154,7 @@ export default {
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
             let res2 = await app.$axios.post(
-                'http://10.0.63.5:8010/payment/platform/v1/create-payment',
+                `${env.mechant_request_url}payment/platform/v1/create-payment`,
                 paramObj,
                 {
                     headers: {
