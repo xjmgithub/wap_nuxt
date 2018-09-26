@@ -58,11 +58,13 @@ export default {
         getCode() {
             // TODO 防止多次点击
             if (!this.canGetCode) return false
-            let accountNo = window.localStorage.getItem('wallet_account')
+            let accountNo = JSON.parse(localStorage.getItem('wallet_account'))
+                .accountNo
             this.$axios
                 .post(
                     `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code?phone=${this
                         .prefix + this.tel}&`,
+                    {},
                     {
                         headers: {
                             token: this.$store.state.token

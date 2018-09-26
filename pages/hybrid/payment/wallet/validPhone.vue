@@ -66,15 +66,17 @@ export default {
             this.$refs.phone.setTel(walletAccount.phone.substr(3))
         } else {
             this.reset = false
-            this.$axios.get('/vup/v1/ums/user/area', {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }).then(res => {
-                if (res.data && res.data.phonePrefix) {
-                    this.prefix = res.data.phonePrefix
-                }
-            })
+            this.$axios
+                .get('/vup/v1/ums/user/area', {
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                })
+                .then(res => {
+                    if (res.data && res.data.phonePrefix) {
+                        this.prefix = res.data.phonePrefix
+                    }
+                })
         }
     },
     methods: {
@@ -88,11 +90,12 @@ export default {
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
                             }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                                tel}&verifyCode=${vscode}`,
+                            {
+                                headers: {
+                                    token: this.$store.state.token
+                                }
+                            }
                         )
                         .then(res => {
                             let data = res.data
@@ -106,37 +109,50 @@ export default {
                             `/mobilewallet/v1/accounts/${
                                 this.accountNo
                             }/phone?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                                tel}&verifyCode=${vscode}`,
+                            {},
+                            {
+                                headers: {
+                                    token: this.$store.state.token
+                                }
+                            }
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = num
+                            } else {
+                                this.$alert(data.message)
                             }
                         })
                 }
             } else if (num == 5) {
                 let vscode = this.$refs.vscode.password
                 let newpass = this.$refs.newpass.password
+                let confirmpass = this.$ref.confirmpass.password
+                if (newpass != confirmpass) {
+                    this.$alert('Two passwords are different.')
+                    return false
+                }
                 this.$axios
                     .put(
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
-                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }
+                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`,
+                        {},
+                        {
+                            headers: {
+                                token: this.$store.state.token
+                            }
+                        }
                     )
                     .then(res => {
                         let data = res.data
                         if (data && data.code == '0') {
                             this.$alert(data.message, () => {
-                                window.location.href = './payto'
+                                this.$route.replace(
+                                    '/hybrid/payment/wallet/paybyPass'
+                                )
                             })
                         }
                     })
