@@ -2,7 +2,7 @@
     <div class="container">
         <verifyEmail :disabled="reset" ref="emailCont"></verifyEmail>
         <div class="change-phone-link">
-            <nuxt-link to="/hybrid/payment/wallet/changephone">Change email</nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/resetEmail">Change email</nuxt-link>
         </div>
         <div class="footer">
             <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
