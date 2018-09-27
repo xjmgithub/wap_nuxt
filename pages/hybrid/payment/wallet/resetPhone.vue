@@ -117,7 +117,13 @@ export default {
                         })
                 }
             } else {
-                this.step = num
+                let tel = this.$refs.phone.tel
+                if (this.oldphone == this.prefix + tel) {
+                    this.$alert('phone is seted')
+                    return false
+                } else {
+                    this.step = num
+                }
             }
         },
         codeEnd(bool) {
