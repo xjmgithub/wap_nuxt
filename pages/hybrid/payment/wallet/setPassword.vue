@@ -40,13 +40,13 @@ export default {
                 if (type == true) {
                     // if (phoneIsSet == 'false') {
                         this.$router.replace(
-                            '/hybrid/payment/wallet/validPhone'
+                            '/hybrid/payment/wallet/validPhone?init=true'
                         )
                     // }
                 } else {
                     // if (emailIsSet == 'false') {
                         this.$router.replace(
-                            '/hybrid/payment/wallet/validEmail'
+                            '/hybrid/payment/wallet/validEmail?init=true'
                         )
                     // }
                 }
