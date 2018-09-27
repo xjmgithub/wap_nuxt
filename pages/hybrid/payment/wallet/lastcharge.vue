@@ -1,20 +1,33 @@
 <template>
     <div class="container">
         <loading v-show="loadStatus"></loading>
-        <template v-if="result=='1'&&!loadStatus">
-            <img src="~assets/img/pay/pic_done_b.png" alt="">
+        <template v-if="result==1&&!loadStatus">
+            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
-                Payment Successful
+                Your lastest Recharge
             </p>
             <p class="money">
-                50.00
-                <span>Ksh</span>
+                {{amount}}
+                <span>{{currencySymbol}}</span>
             </p>
             <p class="msg">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
             </p>
+            <br />
+            <p class="msg des">
+                Recharge No.: {{accountNo}}
+            </p>
+            <p class="msg des">
+                Recharge amount: {{amount}} {{currencySymbol}}
+            </p>
+            <p class="msg des">
+                eWallet balance: {{balance}} {{currencySymbol}}
+            </p>
+            <p class="msg des">
+                recharge time: {{rechargeTime}}
+            </p>
         </template>
-        <template v-if="result=='2'&&!loadStatus">
+        <template v-if="result==2&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt="">
             <p class="fail">
                 Payment Failed
@@ -27,7 +40,6 @@
             <mButton :disabled="false" text="REFRESH" @click="refresh"></mButton>
         </div>
     </div>
-
 </template>
 <script>
 import mButton from '~/components/button'
@@ -35,8 +47,13 @@ import loading from '~/components/loading'
 export default {
     data() {
         return {
-            result: 0, 
-            loadStatus: true
+            result: 0,
+            loadStatus: true,
+            amount: '',
+            accountNo: '',
+            balance: '',
+            currencySymbol: '',
+            rechargeTime: ''
         }
     },
     layout: 'base',
@@ -45,12 +62,16 @@ export default {
         loading
     },
     mounted() {
+        let ewallet = JSON.parse(localStorage.getItem('wallet_account'))
+        this.accountNo = ewallet.accountNo
         this.refresh()
     },
     methods: {
         refresh() {
             this.loadStatus = true
-            let walletAccount = JSON.parse(localStorage.getItem('wallet_account')).accountNo
+            let walletAccount = JSON.parse(
+                localStorage.getItem('wallet_account')
+            ).accountNo
             this.$axios
                 .get(
                     `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`,
@@ -62,10 +83,13 @@ export default {
                 )
                 .then(res => {
                     this.loadStatus = false
-                    if (res.data&&res.data.amount) {
-                        _this.balance = res.data.amount
+                    if (res.data && res.data.amount) {
+                        this.amount = res.data.postAmount
+                        this.balance = res.data.amount
+                        this.currencySymbol = res.data.currencySymbol
+                        this.rechargeTime = res.data.createTime
                         this.result = 1
-                    }else{
+                    } else {
                         this.result = 2
                     }
                 })
@@ -82,6 +106,10 @@ export default {
 .container img {
     width: 12rem;
     height: 12rem;
+}
+.container img.success_img {
+    width: 3rem;
+    height: 3rem;
 }
 .container .success {
     color: #0087eb;
@@ -100,9 +128,12 @@ export default {
 }
 .container .msg {
     color: #666;
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 1.4rem;
     text-align: left;
+}
+.container .des {
+    font-size: 0.85rem;
 }
 .footer {
     position: fixed;

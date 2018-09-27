@@ -106,7 +106,7 @@ export default {
                 },
                 {
                     key: 'totalAmount',
-                    value: '100'
+                    value: '10000'
                 },
                 {
                     key: 'signType',
