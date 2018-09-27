@@ -41,7 +41,8 @@ export default {
             payToken: this.$route.query.payToken,
             amount: this.$route.query.amount || '',
             currency: this.$route.query.currency || '',
-            currensySymbol: this.$route.query.currensySymbol || ''
+            currensySymbol: this.$route.query.currensySymbol || '',
+            redirect: this.$route.query.redirect
         }
     },
     components: {
@@ -51,13 +52,11 @@ export default {
     mounted() {
         if (this.result == 1 || this.result == 2) {
             this.loadStatus = false
-        } else {
-            // 定期查询
         }
     },
     methods: {
         back() {
-            //TODO 获取商户跳转地址 window.location.href = this.redirect
+            window.location.href = this.redirect
         }
     }
 }

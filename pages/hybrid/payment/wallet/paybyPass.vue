@@ -31,14 +31,12 @@ export default {
         Password
     },
     mounted() {
-        let wallet_config = JSON.parse(
-            localStorage.getItem('wallet_config')
-        )
+        let wallet_config = JSON.parse(localStorage.getItem('wallet_config'))
         this.payChannelId = JSON.parse(
             window.localStorage.getItem('payChannelId')
         )
         this.payToken = localStorage.getItem('payToken')
-        if (wallet_config.phone=='true') {
+        if (wallet_config.phone == 'true') {
             this.forgetUrl = '/hybrid/payment/wallet/validPhone'
         } else {
             this.forgetUrl = '/hybrid/payment/wallet/validEmail'
@@ -71,6 +69,7 @@ export default {
                 )
                 .then(res => {
                     let data = res.data
+                    let redirect = res.data.merchantPayRedirectUrl
                     if (data && data.resultCode == 0) {
                         this.$axios
                             .post(
@@ -99,12 +98,15 @@ export default {
                                             payObject.totalAmount
                                         }&currency=${
                                             payObject.currency
-                                        }&currensySymbol=${payObject.currency}`
+                                        }&currensySymbol=${
+                                            payObject.currency
+                                        }&redirect=${redirect}`
                                     )
                                 } else {
                                     this.$router.push(
-                                        '/hybrid/payment/wallet/payResult?result=2&message=' +
+                                        `/hybrid/payment/wallet/payResult?result=2&message=${
                                             res.data.resultMessage
+                                        }&redirect=${redirect}`
                                     )
                                 }
                             })

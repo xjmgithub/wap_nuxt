@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         back() {
-            //TODO 获取商户跳转地址 window.location.href = this.redirect
+            window.location.href = '/hybrid/payment/wallet/payto'
         }
     }
 }
