@@ -19,36 +19,36 @@
                 <img src="~/assets/img/users/ic_user_def_w.png" alt="">
                 <input type="tel" v-model="phoneNum" placeholder="Phone Number" />
             </div>
-            <div class="img-box">
-                <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
-                <input type="password" v-model="password" placeholder="Password" />
+                <div class="img-box">
+                    <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
+                    <input type="password" v-model="password" placeholder="Password" />
             </div>
-        </div>
-        <div v-show="type==1" class="by_email">
-            <div class="img-box">
-                <img src="~/assets/img/users/ic_user_def_w.png" alt="">
-                <input type="email" v-model="email" placeholder="E-mail" />
+                </div>
+                <div v-show="type==1" class="by_email">
+                    <div class="img-box">
+                        <img src="~/assets/img/users/ic_user_def_w.png" alt="">
+                        <input type="email" v-model="email" placeholder="E-mail" />
             </div>
-            <div class="img-box">
-                <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
-                <input type="password" v-model="password" placeholder="Password" />
+                        <div class="img-box">
+                            <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
+                            <input type="password" v-model="password" placeholder="Password" />
             </div>
-        </div>
-        <div class="next-btn" @click="login">SIGN IN</div>
-        <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/account/resetpass">Forgot password?</nuxt-link>
-        </div>
-        <div class="country-choose-dialog" v-show="countryDialogStatus">
-            <div class="dialog-title">Country List</div>
-            <ul>
-                <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag" />
-                    <span>{{item.name}}</span>
-                </li>
-            </ul>
-        </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
-    </div>
+                        </div>
+                        <div class="next-btn" @click="login">SIGN IN</div>
+                        <div class="forgot-pwd">
+                            <nuxt-link to="/hybrid/account/resetpass">Forgot password?</nuxt-link>
+                        </div>
+                        <div class="country-choose-dialog" v-show="countryDialogStatus">
+                            <div class="dialog-title">Country List</div>
+                            <ul>
+                                <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
+                                    <img :src="item.nationalFlag" />
+                                    <span>{{item.name}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
+                    </div>
 </template>
 <script>
 import shadowLayer from '~/components/shadow-layer'
@@ -71,9 +71,11 @@ export default {
             type: 0, // 0 tel 1 email
             country: this.$store.state.user.areaID,
             countryDialogStatus: false,
-            pre:this.$route.query.pre,
-            phoneNum: '7017201879',
-            password: 'shang123',
+            pre: this.$route.query.pre,
+            // phoneNum: '7017201879',
+            // password: 'shang123',
+            phoneNum: '',
+            password: '',
             email: '',
             countrys: []
         }

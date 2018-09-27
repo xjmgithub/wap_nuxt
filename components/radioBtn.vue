@@ -36,13 +36,11 @@ export default {
 }
 .radio-box .img-box {
     display: inline-block;
-    width: 2rem;
     margin-left: 1.5rem;
     vertical-align: middle;
 }
 .radio-box .img-box img {
     height: 1.5rem;
-    width: 100%;
     display: block;
 }
 .radio-box .radio i {
