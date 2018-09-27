@@ -72,7 +72,7 @@ export default {
                     if (this.phone) {
                         params = {
                             applicationId: 1,
-                            phoneCc: this.phoneCC,
+                            phoneCc: this.phoneCc,
                             phone: this.phone,
                             pwd: this.pass,
                             deviceId: this.$store.state.deviceId,
