@@ -38,17 +38,17 @@ export default {
                     }
                 })
                 if (type == true) {
-                    if (phoneIsSet == 'false') {
+                    // if (phoneIsSet == 'false') {
                         this.$router.replace(
                             '/hybrid/payment/wallet/validPhone'
                         )
-                    }
+                    // }
                 } else {
-                    if (emailIsSet == 'false') {
+                    // if (emailIsSet == 'false') {
                         this.$router.replace(
                             '/hybrid/payment/wallet/validEmail'
                         )
-                    }
+                    // }
                 }
             })
     },
