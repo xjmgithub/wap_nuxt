@@ -2,7 +2,7 @@
     <div class="container">
         <loading v-show="loadStatus"></loading>
         <template v-if="result=='1'&&!loadStatus">
-            <img src="~assets/img/pay/pic_done_b.png" alt="">
+            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
                 Payment Successful
             </p>
@@ -109,6 +109,10 @@ export default {
 .container img {
     width: 12rem;
     height: 12rem;
+}
+.container img.success_img {
+    width: 3rem;
+    height: 3rem;
 }
 .container .success {
     color: #0087eb;
