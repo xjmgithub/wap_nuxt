@@ -102,7 +102,7 @@ export default {
                 },
                 {
                     key: 'merchantAppId',
-                    value: '100017'
+                    value: '10017'
                 },
                 {
                     key: 'totalAmount',
