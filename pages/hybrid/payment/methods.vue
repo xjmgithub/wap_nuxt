@@ -157,7 +157,6 @@ export default {
                 }
                 paramObj[item.key] = item.value
             })
-            str += '&key=' + app.context.route.query.key
             let hmac = crypto.createHmac('md5', '123456')
             let up = hmac.update(str)
             let result = up.digest('hex')
