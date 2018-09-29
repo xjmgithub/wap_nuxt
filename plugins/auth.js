@@ -1,6 +1,7 @@
 import { getCookie } from '~/functions/utils'
 let auth_ignore = [
     /^\/hybrid\/account\/login/,
+    /^\/hybrid\/account\/logout/,
     /^\/hybrid\/account\/signin/,
     /^\/hybrid\/account\/register/,
     /^\/hybrid\/account\/setpass/,
