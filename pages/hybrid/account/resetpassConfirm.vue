@@ -15,7 +15,7 @@
             <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
         </div>
         <div class="footer">
-            <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep"></mButton>
         </div>
     </div>
 </template>
@@ -33,7 +33,8 @@ export default {
             pass: '',
             repass: '',
             isCiphertext: 1,
-            isCiphertext_confirm: 1
+            isCiphertext_confirm: 1,
+            disabled:true
         }
     },
     methods: {
@@ -84,6 +85,22 @@ export default {
         pwdType_confirm() {
             return this.isCiphertext_confirm == 1 ? 'password' : 'text'
         }
+    },
+    watch:{
+         pass: function(val,oldVal){
+            if(/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass){
+                this.disabled = false
+            }else{
+                this.disabled = true
+            }
+         },
+         repass: function(val,oldVal){
+            if( /^[a-zA-Z0-9]{6,18}$/.test(val)  && val == this.pass){
+                this.disabled = false
+            }else{
+                this.disabled = true
+            }
+         }
     }
 }
 </script>

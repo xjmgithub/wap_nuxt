@@ -142,7 +142,7 @@ export default {
     },
     head() {
         return {
-            title: 'Register'
+            title: 'Forgot password'
         }
     }
 }

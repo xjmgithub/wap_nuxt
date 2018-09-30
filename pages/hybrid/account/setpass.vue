@@ -7,21 +7,21 @@
             </div>
                 <input :type="pwdType" v-model="pass" @blur="checkpass" />
         </div>
-                <div class="input-item">
-                    <div class="label">Confirm New Password
-                        <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
-                        <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
+        <div class="input-item">
+            <div class="label">Confirm New Password
+                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
+                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
             </div>
-                        <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
+                <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
         </div>
-                        <div class="input-item invite">
-                            <div class="label">Invitation Code(Optional)</div>
-                            <input type="text" v-model="inviteCode" @blur="checkpass" />
+        <div class="input-item invite">
+            <div class="label">Invitation Code(Optional)</div>
+            <input type="text" v-model="inviteCode" @blur="checkpass" />
         </div>
-                            <div class="footer">
-                                <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
-                            </div>
-                        </div>
+        <div class="footer">
+            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep"></mButton>
+        </div>
+    </div>
 </template>
 <script>
 import mButton from '~/components/button'
@@ -41,7 +41,8 @@ export default {
             inviteCode: '',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
-            pre: this.$route.query.pre
+            pre: this.$route.query.pre,
+            disabled:true
         }
     },
     methods: {
@@ -121,6 +122,22 @@ export default {
         pwdType_confirm() {
             return this.isCiphertext_confirm == 1 ? 'password' : 'text'
         }
+    },
+    watch:{
+         pass: function(val,oldVal){
+            if(/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass){
+                this.disabled = false
+            }else{
+                this.disabled = true
+            }
+         },
+         repass: function(val,oldVal){
+            if( /^[a-zA-Z0-9]{6,18}$/.test(val)  && val == this.pass){
+                this.disabled = false
+            }else{
+                this.disabled = true
+            }
+         }
     }
 }
 </script>
