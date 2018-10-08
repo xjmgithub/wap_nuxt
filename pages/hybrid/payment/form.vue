@@ -112,7 +112,7 @@ export default {
                         type == 'email'
                     ) {
                         if (!value) {
-                            item.append(
+                            item.find('.error').remove().end().append(
                                 '<div class="error" style="position: absolute;bottom: -1.4rem;font-size: 0.5rem;color: red;">Please enter the complete information.</div>'
                             )
                             item.css({
@@ -122,7 +122,7 @@ export default {
                         } else {
                             var reg = new RegExp(item.data('reg'))
                             if (!reg.test(value)) {
-                                item.append(
+                                item.find('.error').remove().end().append(
                                     '<div class="error" style="position: absolute;bottom: -1.4rem;font-size: 0.5rem;color: red;">Please enter the correct ' +
                                         name +
                                         '.</div>'
