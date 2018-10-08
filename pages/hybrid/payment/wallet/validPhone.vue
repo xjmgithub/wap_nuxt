@@ -102,6 +102,8 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = num
+                            }else{
+                                this.$alert(data.message)
                             }
                         })
                 } else {
