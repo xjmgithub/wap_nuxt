@@ -27,9 +27,10 @@ export default {
 
         // facebook登录初始化
         FB.init({
-            appId: '159785064477978',
+            appId: '159785064477978', // 和app公用
             xfbml: true,
-            version: 'v3.0'
+            cookie: true,
+            version: 'v3.1'
         })
 
         var googleUser = {}
