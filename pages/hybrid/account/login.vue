@@ -56,6 +56,9 @@ export default {
     methods: {
         byfacebook() {
             let _this = this
+            FB.getLoginStatus(function(response) {
+                console.log(response);
+            })
             FB.login(function(res) {
                 _this.loginByThird(res.authResponse.userID)
             })
@@ -89,6 +92,7 @@ export default {
                             res.data.data
                         )
                         if (this.pre) {
+                            console.log(this.pre)
                             this.$router.push(encodeURIComponent(this.pre))
                         } else {
                             window.location.href =
