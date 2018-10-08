@@ -95,8 +95,7 @@ export default {
                             res.data.data
                         )
                         if (this.pre) {
-                            console.log(this.pre)
-                            this.$router.push(encodeURIComponent(this.pre))
+                            window.location.href = this.pre
                         } else {
                             window.location.href =
                                 '/hybrid/payment/wallet/payto'
