@@ -5,14 +5,14 @@
                 <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext==1" alt="" @click="isCiphertext=2">
                 <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext==2" alt="" @click="isCiphertext=1">
             </div>
-                <input :type="pwdType" v-model="pass" @blur="checkpass" />
+            <input :type="pwdType" v-model="pass" @blur="checkpass" />
         </div>
         <div class="input-item">
             <div class="label">Confirm New Password
                 <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
                 <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
             </div>
-                <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
+            <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
         </div>
         <div class="input-item invite">
             <div class="label">Invitation Code(Optional)</div>
@@ -41,9 +41,12 @@ export default {
             inviteCode: '',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
-            pre: this.$route.query.pre,
-            disabled:true
+            pre: '',
+            disabled: true
         }
+    },
+    mounted() {
+        this.pre = localStorage.getItem('login_prefer')
     },
     methods: {
         checkpass() {
@@ -88,7 +91,7 @@ export default {
                             pwd: this.pass
                         }
                     }
-                    
+
                     this.$axios.post('/ums/v1/user/login', params).then(res => {
                         if (res.data.code == 0) {
                             initUser(
@@ -99,7 +102,8 @@ export default {
                             if (this.pre) {
                                 window.location.href = this.pre
                             } else {
-                                window.location.href = '/hybrid/payment/wallet/payto'
+                                window.location.href =
+                                    '/hybrid/payment/wallet/payto'
                             }
                         } else {
                             this.$alert(res.data.message)
@@ -123,21 +127,21 @@ export default {
             return this.isCiphertext_confirm == 1 ? 'password' : 'text'
         }
     },
-    watch:{
-         pass: function(val,oldVal){
-            if(/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass){
+    watch: {
+        pass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass) {
                 this.disabled = false
-            }else{
+            } else {
                 this.disabled = true
             }
-         },
-         repass: function(val,oldVal){
-            if( /^[a-zA-Z0-9]{6,18}$/.test(val)  && val == this.pass){
+        },
+        repass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.pass) {
                 this.disabled = false
-            }else{
+            } else {
                 this.disabled = true
             }
-         }
+        }
     }
 }
 </script>

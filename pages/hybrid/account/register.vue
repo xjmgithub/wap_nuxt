@@ -67,8 +67,7 @@ export default {
             country: this.$store.state.user.areaID,
             countryDialogStatus: false,
             phoneCanNext: false,
-            emailCanNext: false,
-            pre: this.$route.query.pre
+            emailCanNext: false
         }
     },
     computed: {
@@ -98,15 +97,13 @@ export default {
             this.countryDialogStatus = false
         },
         nextStep() {
-            let pre = ''
-            this.pre ? (pre = `&pre=${this.pre}`) : (pre = '')
-
+            
             if (this.type == 1) {
                 let email = this.$refs.emailpicker.email
                 let code = this.$refs.emailpicker.vscode
 
                 this.$router.push(
-                    `/hybrid/account/setpass?email=${email}&code=${code}${pre}`
+                    `/hybrid/account/setpass?email=${email}&code=${code}`
                 )
             } else {
                 let phone = this.$refs.telpicker.tel
@@ -114,7 +111,7 @@ export default {
                 let phoneCc = this.areaInfo.phonePrefix
                 let countryId = this.country
                 this.$router.push(
-                    `/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}${pre}`
+                    `/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
                 )
             }
         }

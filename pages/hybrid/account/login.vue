@@ -4,12 +4,12 @@
         <img class="third_login facebook" @click="byfacebook" src="~/assets/img/users/btn_facebook_def.png" />
         <img class="third_login twitter" @click="bytwitter" src="~/assets/img/users/btn_twitter_def.png" />
         <img id="google-btn" class="third_login google" src="~/assets/img/users/btn_google_def.png" />
-        <nuxt-link :to="pre?('/hybrid/account/signin?pre='+encodeURIComponent(pre)):'/hybrid/account/signin'">
+        <nuxt-link to="/hybrid/account/signin">
             <div class="login_btn"> SIGN IN </div>
         </nuxt-link>
         <div class="regtext">
             Don't have an account?
-            <nuxt-link :to="pre?('/hybrid/account/register?pre='+encodeURIComponent(pre)):'/hybrid/account/register'">Register</nuxt-link>
+            <nuxt-link to="/hybrid/account/register">Register</nuxt-link>
         </div>
     </div>
 </template>
@@ -23,6 +23,8 @@ export default {
         }
     },
     mounted() {
+        localStorage.setItem('login_prefer', this.pre)
+
         // facebook登录初始化
         FB.init({
             appId: '159785064477978',

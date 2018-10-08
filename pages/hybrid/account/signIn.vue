@@ -71,7 +71,7 @@ export default {
             type: 0, // 0 tel 1 email
             country: this.$store.state.user.areaID,
             countryDialogStatus: false,
-            pre: this.$route.query.pre,
+            pre: '',
             // phoneNum: '7017201879',
             // password: 'shang123',
             phoneNum: '',
@@ -79,6 +79,9 @@ export default {
             email: '',
             countrys: []
         }
+    },
+    mounted(){
+        this.pre = localStorage.getItem('login_prefer')
     },
     computed: {
         areaInfo() {
