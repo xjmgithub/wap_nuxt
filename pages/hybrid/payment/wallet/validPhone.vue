@@ -102,7 +102,7 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = num
-                            }else{
+                            } else {
                                 this.$alert(data.message)
                             }
                         })
@@ -159,6 +159,14 @@ export default {
                             })
                         }
                     })
+            } else if (num == 4) {
+                let newpass = this.$refs.newpass.password
+                let reg = /^[\d]+$/
+                if (!reg.test(newpass)) {
+                    this.$alert('You must enter pure numbers.')
+                    return false
+                }
+                this.step = num
             } else {
                 this.step = num
             }
