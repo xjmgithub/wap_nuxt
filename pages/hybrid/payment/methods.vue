@@ -23,6 +23,7 @@ export default {
             app_key: this.$route.query.key,
             country: this.$route.query.country || 'TZ',
             currency: this.$route.query.currency || 'TZS',
+            amount: this.$route.query.amount || '10',
             payToken: '',
             txNo: '',
             radioList: [],
@@ -106,7 +107,7 @@ export default {
                 },
                 {
                     key: 'totalAmount',
-                    value: '1110'
+                    value: app.context.route.query.amount || 10
                 },
                 {
                     key: 'signType',
