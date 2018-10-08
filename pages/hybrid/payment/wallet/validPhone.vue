@@ -6,7 +6,7 @@
         </div>
         <div class="footer">
             <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
-            <nuxt-link v-if="!init" to="/hybrid/payment/wallet/validEmail">RESET IT BY EMAIL</nuxt-link>
+            <nuxt-link v-if="init" to="/hybrid/payment/wallet/validEmail">RESET IT BY EMAIL</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
             <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
