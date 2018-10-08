@@ -57,10 +57,13 @@ export default {
         byfacebook() {
             let _this = this
             FB.getLoginStatus(function(response) {
-                console.log(response);
-            })
-            FB.login(function(res) {
-                _this.loginByThird(res.authResponse.userID)
+                if (response.status == 'connected') {
+                    _this.loginByThird(response.authResponse.userID)
+                } else {
+                    FB.login(function(res) {
+                        _this.loginByThird(res.authResponse.userID)
+                    })
+                }
             })
         },
         bytwitter() {
