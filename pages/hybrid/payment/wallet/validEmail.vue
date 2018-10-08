@@ -158,6 +158,14 @@ export default {
                             })
                         }
                     })
+            } else if (num == 4) {
+                let newpass = this.$refs.newpass.password
+                let reg = /^[\d]+$/
+                if (!reg.test(newpass)) {
+                    this.$alert('You must enter pure numbers.')
+                    return false
+                }
+                this.step = num
             } else {
                 this.step = num
             }
