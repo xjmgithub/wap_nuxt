@@ -13,6 +13,11 @@
             <p class="msg">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
             </p>
+            <p class="msg">
+                Recharge No.:{{accountNo}} <br />
+                Recharge amount: {{amount}} {{currensySymbol}} <br />
+                eWallet balance: {{balance}} {{balanceCurrency}} <br />
+            </p>
         </template>
         <template v-if="result=='2'&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt="">
@@ -41,7 +46,10 @@ export default {
             payToken: this.$route.query.payToken,
             amount: this.$route.query.amount || '',
             currency: this.$route.query.currency || '',
-            currensySymbol: this.$route.query.currensySymbol || ''
+            currensySymbol: this.$route.query.currensySymbol || '',
+            balance:'',
+            balanceCurrency:'',
+            accountNo:''
         }
     },
     components: {
@@ -51,6 +59,29 @@ export default {
     mounted() {
         if (this.result == 1 || this.result == 2) {
             this.loadStatus = false
+        }
+        if (this.result == 2) {
+            this.loadStatus = false
+        } else {
+            this.loadStatus = true
+            this.$axios
+                .get('/mobilewallet/v1/accounts/me', {
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                })
+                .then(res => {
+                    if (res.data) {
+                        localStorage.setItem(
+                            'wallet_account',
+                            JSON.stringify(res.data)
+                        )
+                        this.accountNo = res.data.accountNo
+                        this.balance = res.data.amount
+                        this.balanceCurrency = res.data.currencySymbol
+                        this.loadStatus = false
+                    }
+                })
         }
     },
     methods: {
@@ -84,7 +115,7 @@ export default {
     color: #212121;
     font-size: 2rem;
     font-weight: bold;
-    margin: 1rem 0 1.5rem;
+    margin: 1rem;
 }
 .container .money span {
     font-size: 1.25rem;
@@ -94,6 +125,7 @@ export default {
     font-size: 1rem;
     line-height: 1.4rem;
     text-align: left;
+    margin-top: 2rem;
 }
 .footer {
     position: fixed;
