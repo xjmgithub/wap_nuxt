@@ -24,6 +24,7 @@ export default {
             country: this.$route.query.country || 'TZ',
             currency: this.$route.query.currency || 'TZS',
             amount: this.$route.query.amount || '10',
+            merchantId:this.$route.query.merchantId || '10017',
             payToken: '',
             txNo: '',
             radioList: [],
@@ -103,7 +104,7 @@ export default {
                 },
                 {
                     key: 'merchantAppId',
-                    value: '10017'
+                    value: app.context.route.query.merchantId || '10017'
                 },
                 {
                     key: 'totalAmount',
