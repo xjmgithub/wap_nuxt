@@ -48,12 +48,15 @@ export default {
                         : '/ums/v1/register/code/sms'
                 }).then(res => {
                     if (res.data.code == 0) {
-                        this.$emit('pass')
+                        this.$emit('pass',true)
                     } else {
+                        this.$emit('pass',false)
                         this.error_code =
                             'This code you entered is incorrect. Please try again.'
                     }
                 })
+            }else{
+                this.$emit('pass',false)
             }
         }
     },
