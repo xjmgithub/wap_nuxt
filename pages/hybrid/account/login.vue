@@ -23,7 +23,9 @@ export default {
         }
     },
     mounted() {
-        localStorage.setItem('login_prefer', this.pre)
+        if (this.pre) {
+            localStorage.setItem('login_prefer', this.pre)
+        }
 
         // facebook登录初始化
         FB.init({
