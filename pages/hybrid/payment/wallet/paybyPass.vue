@@ -36,6 +36,34 @@ export default {
             window.localStorage.getItem('payChannelId')
         )
         this.payToken = localStorage.getItem('payToken')
+
+        this.$axios
+            .get('/vup/v1/ums/user/area', {
+                headers: {
+                    token: this.$store.state.token,
+                    versionCode: '5300',
+                    clientType: 'android'
+                }
+            })
+            .then(res => {
+                let configs = res.data && res.data.appFBConfigs
+                let type = true
+                configs.forEach(item => {
+                    if (item.functionBlockType == 91) {
+                        if (item.validType == 2) {
+                            type = true
+                        } else {
+                            type = false
+                        }
+                    }
+                })
+                if (type == false && wallet_config.email == 'false') {
+                    this.$router.replace(
+                        '/hybrid/payment/wallet/validEmail?init=true'
+                    )
+                }
+            })
+
         if (wallet_config.phone == 'true') {
             this.forgetUrl = '/hybrid/payment/wallet/validPhone'
         } else {
