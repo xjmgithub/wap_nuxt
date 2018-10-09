@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Password ref="pass" :placeholder="pwdType" :toggleView="false" @endinput="setPassword"></Password>
+        <Password ref="pass" :placeholder="pwdType" :toggleView="true" @endinput="setPassword"></Password>
         <div class="forgot-pwd">
             <nuxt-link :to="forgetUrl">Forgot payment password?</nuxt-link>
         </div>
