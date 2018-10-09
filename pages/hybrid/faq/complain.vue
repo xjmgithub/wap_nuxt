@@ -38,7 +38,7 @@
     layout: 'base',
     head() {
       return {
-        title: 'Online Service'
+        title: 'Complain'
       }
     }
   }
