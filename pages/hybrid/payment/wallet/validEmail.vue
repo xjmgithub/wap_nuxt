@@ -6,7 +6,7 @@
         </div>
         <div class="footer">
             <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
-            <nuxt-link  v-if="init" to="/hybrid/payment/wallet/validPhone">RESET IT BY CELLPHONE NUMBER</nuxt-link>
+            <nuxt-link  v-if="!init&&wallet_phone_config" to="/hybrid/payment/wallet/validPhone">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
             <passInput length="4" ref="vscode" placeholder="Enter SMS verification code"></passInput>
@@ -43,7 +43,8 @@ export default {
             canStep4: false,
             step: 1,
             accountNo: '',
-            init: this.$route.query.init || false
+            init: this.$route.query.init || false,
+            wallet_phone_config:false
         }
     },
     components: {
@@ -56,6 +57,10 @@ export default {
             window.localStorage.getItem('wallet_account')
         )
         this.accountNo = walletAccount.accountNo
+
+        if (walletAccount.phone) {
+            this.wallet_phone_config = true
+        }
         if (walletAccount.email) {
             // already set email
             this.reset = true
