@@ -95,11 +95,6 @@ export default {
                     localStorage.getItem('wallet_config')
                 )
 
-                if (wallet_config.payPassword == 'true') {
-                    this.$router.push('/hybridy/payment/wallet/paybyPass')
-                    return false
-                }
-
                 if (this.reset) {
                     // 验证邮箱
                     this.$axios
@@ -116,7 +111,13 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.step = num
+                                if (wallet_config.payPassword == 'true') {
+                                    this.$router.replace(
+                                        '/hybrid/payment/wallet/paybyPass'
+                                    )
+                                } else {
+                                    this.step = num
+                                }
                             } else {
                                 this.$alert(data.message)
                             }

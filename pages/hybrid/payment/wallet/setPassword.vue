@@ -20,7 +20,6 @@ export default {
         this.$axios
             .get('/vup/v1/ums/user/area', {
                 headers: {
-                    token: this.$store.state.token,
                     versionCode: '5300',
                     clientType: 'android'
                 }

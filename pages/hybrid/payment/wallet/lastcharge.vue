@@ -74,12 +74,7 @@ export default {
             ).accountNo
             this.$axios
                 .get(
-                    `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`,
-                    {
-                        headers: {
-                            token: this.$store.state.token
-                        }
-                    }
+                    `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`
                 )
                 .then(res => {
                     this.loadStatus = false

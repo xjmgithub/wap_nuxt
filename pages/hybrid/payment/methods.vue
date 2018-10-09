@@ -24,7 +24,7 @@ export default {
             country: this.$route.query.country || 'TZ',
             currency: this.$route.query.currency || 'TZS',
             amount: this.$route.query.amount || '10',
-            merchantId:this.$route.query.merchantId || '10017',
+            merchantId: this.$route.query.merchantId || '10017',
             payToken: '',
             txNo: '',
             radioList: [],
@@ -182,12 +182,8 @@ export default {
         this.payToken = this.$store.state.payToken
         this.txNo = this.$store.state.txNo
         let _this = this
-        axios
-            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`, {
-                headers: {
-                    token: _this.$store.state.token
-                }
-            })
+        this.$axios
+            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
                 let list = []

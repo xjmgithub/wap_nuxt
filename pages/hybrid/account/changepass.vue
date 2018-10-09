@@ -57,11 +57,7 @@ export default {
             }
 
             this.$axios
-                .post('/ums/v1/register', options, {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                })
+                .post('/ums/v1/register', options)
                 .then(res => {
                     if (res.data.code == 0) {
                         this.$router.push('/hybrid/account/login')

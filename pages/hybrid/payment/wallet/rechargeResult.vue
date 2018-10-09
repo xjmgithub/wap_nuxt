@@ -65,11 +65,7 @@ export default {
         } else {
             this.loadStatus = true
             this.$axios
-                .get('/mobilewallet/v1/accounts/me', {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                })
+                .get('/mobilewallet/v1/accounts/me')
                 .then(res => {
                     if (res.data) {
                         localStorage.setItem(

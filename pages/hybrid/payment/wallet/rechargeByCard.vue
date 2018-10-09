@@ -80,11 +80,6 @@ export default {
                             }/recharge-by-rc?rechargeCardPin=${this.oriPinNum}`,
                             {
                                 rechargeCardPin: this.oriPinNum
-                            },
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
                             }
                         )
                         .then(res => {

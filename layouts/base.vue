@@ -32,6 +32,7 @@ export default {
             _this.$refs.confirm.show(msg, callback,cancel, yes, no)
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
+        this.$axios.setHeader('token', this.$store.state.token)
     }
 }
 </script>

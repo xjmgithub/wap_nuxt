@@ -71,17 +71,11 @@ export default {
             this.$refs.phone.setTel(walletAccount.phone.substr(3))
         } else {
             this.reset = false
-            this.$axios
-                .get('/vup/v1/ums/user/area', {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                })
-                .then(res => {
-                    if (res.data && res.data.phonePrefix) {
-                        this.prefix = res.data.phonePrefix
-                    }
-                })
+            this.$axios.get('/vup/v1/ums/user/area').then(res => {
+                if (res.data && res.data.phonePrefix) {
+                    this.prefix = res.data.phonePrefix
+                }
+            })
         }
     },
     methods: {
@@ -95,12 +89,7 @@ export default {
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
                             }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`,
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                                tel}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data
@@ -117,12 +106,7 @@ export default {
                                 this.accountNo
                             }/phone?phone=${this.prefix +
                                 tel}&verifyCode=${vscode}`,
-                            {},
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                            {}
                         )
                         .then(res => {
                             let data = res.data
@@ -161,12 +145,7 @@ export default {
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
                         }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`,
-                        {},
-                        {
-                            headers: {
-                                token: this.$store.state.token
-                            }
-                        }
+                        {}
                     )
                     .then(res => {
                         let data = res.data
