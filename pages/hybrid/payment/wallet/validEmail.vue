@@ -133,13 +133,15 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                if (wallet_config.payPassword == 'true') {
-                                    this.$router.replace(
-                                        '/hybrid/payment/wallet/paybyPass'
-                                    )
-                                } else {
-                                    this.step = num
-                                }
+                                this.$alert('Set email successfully', () => {
+                                    if (wallet_config.payPassword == 'true') {
+                                        this.$router.replace(
+                                            '/hybrid/payment/wallet/paybyPass'
+                                        )
+                                    } else {
+                                        this.step = num
+                                    }
+                                })
                             } else {
                                 this.$alert(data.message)
                             }

@@ -111,7 +111,9 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.step = num
+                                this.$alert('Set phone successfully', () => {
+                                    this.step = num
+                                })
                             } else {
                                 this.$alert(data.message)
                             }
