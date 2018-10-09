@@ -14,14 +14,14 @@
                 <span :class="{focus:isFocus}">Enter the 4-32 digits on Voucher Card</span>
                 <input type="tel" maxlength="39" @focus="isFocus=true" v-model="rechargePin" @input="changePinNum">
             </div>
-                <p class="msg">
-                    Vocher PIN is on the StarTimes recharge card that you bought from StarTimes business hall or dealer
-                </p>
-            </div>
-            <div class="footer">
-                <mButton :disabled="!canNext" text="NEXT" @click="nextStep"></mButton>
-            </div>
+            <p class="msg">
+                Vocher PIN is on the StarTimes recharge card that you bought from StarTimes business hall or dealer
+            </p>
         </div>
+        <div class="footer">
+            <mButton :disabled="!canNext" text="NEXT" @click="nextStep"></mButton>
+        </div>
+    </div>
 </template>
 <script>
 import mButton from '~/components/button'
@@ -107,6 +107,7 @@ export default {
                             }
                         })
                 },
+                () => {},
                 'CONFIRM',
                 'CANCEL'
             )
