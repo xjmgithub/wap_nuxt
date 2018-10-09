@@ -9,7 +9,7 @@
             <nuxt-link v-if="!init&&wallet_phone_config" to="/hybrid/payment/wallet/validPhone">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput length="4" ref="vscode" placeholder="Enter SMS verification code"></passInput>
+            <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code"></passInput>
             <div class="footer">
                 <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
             </div>
