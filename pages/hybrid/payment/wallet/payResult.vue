@@ -53,6 +53,10 @@ export default {
         if (this.result == 1 || this.result == 2) {
             this.loadStatus = false
         }
+        let _this = this
+        setInterval(function() {
+            window.location.href = _this.redirect
+        }, 5000)
     },
     methods: {
         back() {
