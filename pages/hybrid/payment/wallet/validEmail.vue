@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <verifyEmail :disabled="reset" ref="emailCont"></verifyEmail>
-        <div class="change-phone-link">
+        <div class="change-phone-link" v-if="reset">
             <nuxt-link to="/hybrid/payment/wallet/resetEmail">Change email</nuxt-link>
         </div>
         <div class="footer">
