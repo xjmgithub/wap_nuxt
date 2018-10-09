@@ -56,13 +56,7 @@ export default {
                     .post(
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
-                        }/verify-code-mail?email=${email}`,
-                        {},
-                        {
-                            headers: {
-                                token: this.$store.state.token
-                            }
-                        }
+                        }/verify-code-mail?email=${email}`
                     )
                     .then(res => {
                         if (res.data.code == 0) {
@@ -79,13 +73,7 @@ export default {
                                 this.accountNo
                             }/setEmail?email=${email}&verifyCode=${vscode}&oldEmail=${
                                 this.oldemail
-                            }&verifyCode4Old=${this.vscode}`,
-                            {},
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                            }&verifyCode4Old=${this.vscode}`
                         )
                         .then(res => {
                             let data = res.data
@@ -101,12 +89,7 @@ export default {
                         .get(
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
-                            }/verify-code?phone=${email}&verifyCode=${vscode}`,
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                            }/verify-code?phone=${email}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data

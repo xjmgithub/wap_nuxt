@@ -1,15 +1,15 @@
 <template>
     <div class="container">
         <verifyEmail :disabled="reset" ref="emailCont"></verifyEmail>
-        <div class="change-phone-link">
+        <div class="change-phone-link" v-if="reset">
             <nuxt-link to="/hybrid/payment/wallet/resetEmail">Change email</nuxt-link>
         </div>
         <div class="footer">
             <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
-            <nuxt-link  v-if="init" to="/hybrid/payment/wallet/validPhone">RESET IT BY CELLPHONE NUMBER</nuxt-link>
+            <nuxt-link v-if="!init&&wallet_phone_config" to="/hybrid/payment/wallet/validPhone">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
-            <passInput length="4" ref="vscode" placeholder="Enter SMS verification code"></passInput>
+            <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code"></passInput>
             <div class="footer">
                 <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
             </div>
@@ -43,7 +43,8 @@ export default {
             canStep4: false,
             step: 1,
             accountNo: '',
-            init: this.$route.query.init || false
+            init: this.$route.query.init || false,
+            wallet_phone_config: false
         }
     },
     components: {
@@ -56,6 +57,10 @@ export default {
             window.localStorage.getItem('wallet_account')
         )
         this.accountNo = walletAccount.accountNo
+
+        if (walletAccount.phone) {
+            this.wallet_phone_config = true
+        }
         if (walletAccount.email) {
             // already set email
             this.reset = true
@@ -86,6 +91,10 @@ export default {
             } else if (num == 3) {
                 let vscode = this.$refs.vscode.password
                 let email = this.$refs.emailCont.email
+                let wallet_config = JSON.parse(
+                    localStorage.getItem('wallet_config')
+                )
+
                 if (this.reset) {
                     // 验证邮箱
                     this.$axios
@@ -124,7 +133,13 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.step = num
+                                if (wallet_config.payPassword == 'true') {
+                                    this.$router.replace(
+                                        '/hybrid/payment/wallet/paybyPass'
+                                    )
+                                } else {
+                                    this.step = num
+                                }
                             } else {
                                 this.$alert(data.message)
                             }

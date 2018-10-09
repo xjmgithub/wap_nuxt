@@ -50,17 +50,11 @@ export default {
                 this.$alert('unknown error')
             }
         } else {
-            this.$axios
-                .get('/vup/v1/ums/user/area', {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                })
-                .then(res => {
-                    if (res.data && res.data.phonePrefix) {
-                        this.prefix = res.data.phonePrefix
-                    }
-                })
+            this.$axios.get('/vup/v1/ums/user/area').then(res => {
+                if (res.data && res.data.phonePrefix) {
+                    this.prefix = res.data.phonePrefix
+                }
+            })
         }
     },
     methods: {
@@ -76,13 +70,7 @@ export default {
                             }/phone?phone=${this.prefix +
                                 tel}&verifyCode=${vscode}&oldPhone=${
                                 this.oldphone
-                            }&verifyCode4Old=${this.vscode}`,
-                            {},
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                            }&verifyCode4Old=${this.vscode}`
                         )
                         .then(res => {
                             let data = res.data
@@ -99,12 +87,7 @@ export default {
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
                             }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`,
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                                tel}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data

@@ -47,11 +47,7 @@ export default {
         this.walletLeft = wallet.amount
         this.currency = JSON.parse(localStorage.getItem('payObject')).currency
         
-        this.$axios.get('/mobilewallet/v1/recharge-channels', {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }).then(res => {
+        this.$axios.get('/mobilewallet/v1/recharge-channels').then(res => {
             let list = []
             if (res.data && res.data.length > 0) {
                 res.data.forEach((item, index) => {

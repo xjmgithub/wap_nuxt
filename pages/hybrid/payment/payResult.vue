@@ -64,12 +64,7 @@ export default {
             }
             _this.$axios
                 .get(
-                    `/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`,
-                    {
-                        headers: {
-                            token: _this.$store.state.token
-                        }
-                    }
+                    `/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`
                 )
                 .then(res => {
                     _this.redirect = res.data.merchantPayRedirectUrl
