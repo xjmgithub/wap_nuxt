@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
-        <div class="change-phone-link">
+        <div class="change-phone-link" v-if="reset">
             <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
         </div>
         <div class="footer">
