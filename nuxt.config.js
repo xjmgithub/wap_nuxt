@@ -1,7 +1,7 @@
 let env = require('./env.js')
 module.exports = {
     head: {
-        title: 'startimes pay',
+        title: 'StarTimes pay',
         meta: [
             { charset: 'utf-8' },
             {
