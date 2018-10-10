@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-        <loading v-show="loadStatus"></loading>
+    <div class="container" :class="{'grey-back':result==2}">
+        <loading v-show="loadStatus" ></loading>
         <template v-if="result=='1'&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
@@ -87,19 +87,24 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style scoped lang="less">
 .container {
     font-family: 'Roboto';
     padding: 5rem 1rem 0;
     text-align: center;
+    &.grey-back {
+        height: 100vh;
+        background: #EEEEEE;
+    }
 }
 .container img {
-    width: 12rem;
-    height: 12rem;
+    width: 15rem;
+    height: 13rem;
 }
 .container img.success_img {
     width: 3rem;
     height: 3rem;
+    margin-top:2rem;
 }
 .container .success {
     color: #0087eb;
@@ -107,11 +112,18 @@ export default {
     font-weight: bold;
     margin-top: 0.75rem;
 }
+.container .fail {
+    line-height: 3rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ff6100;
+    margin-top: 1rem;
+}
 .container .money {
     color: #212121;
     font-size: 2rem;
     font-weight: bold;
-    margin: 1rem;
+    margin: 1rem 0 1.5rem;
 }
 .container .money span {
     font-size: 1.25rem;
@@ -120,8 +132,9 @@ export default {
     color: #666;
     font-size: 1rem;
     line-height: 1.4rem;
+}
+.container .msg.lf{
     text-align: left;
-    margin-top: 2rem;
 }
 .footer {
     position: fixed;
