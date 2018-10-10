@@ -75,8 +75,10 @@ export default {
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                window.location.href =
-                                    '/hybrid/payment/wallet/payto'
+                                this.$alert('Set phone successfully.', () => {
+                                    window.location.href =
+                                        '/hybrid/payment/wallet/payto'
+                                })
                             } else {
                                 this.$alert(data.message)
                             }
