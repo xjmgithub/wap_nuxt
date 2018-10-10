@@ -78,6 +78,8 @@ export default {
 .title {
     line-height: 2rem;
     height: 2rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
 }
 .input-email {
     border-bottom: #dddddd solid 1px;
@@ -85,6 +87,7 @@ export default {
     display: flex; */
     margin: 0rem ;
     position: relative;
+    margin-bottom: 0.5rem;
     &.focus {
         border-bottom: #0087eb solid 1px;
     }
@@ -115,9 +118,10 @@ export default {
             border: none;
             display: block;
             outline: none;
-            height:2rem;
+            height:2.5rem;
+            padding-left:0.5rem;
             &::-webkit-input-placeholder {
-                font-size: 0.5rem;
+                font-size: 1rem;
             }
         }
     }

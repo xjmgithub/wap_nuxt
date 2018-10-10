@@ -228,6 +228,7 @@ export default {
         line-height: 2.25rem;
         font-size: 0.9rem;
         margin: 0 auto;
+        border-radius: 2px;
 
         &.disabled {
             background: #dddddd;

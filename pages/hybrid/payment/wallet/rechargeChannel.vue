@@ -3,7 +3,7 @@
         <div class="eWallet">
             <p class="cardNo">eWallet No. {{walletAccount}}</p>
             <div>
-                <span class="balance">Balance：</span>
+                <span class="balance">Balance: </span>
                 <span class="currency">{{currency}}</span>
                 <span class="money">{{walletLeft | fixAmount}}</span>
             </div>

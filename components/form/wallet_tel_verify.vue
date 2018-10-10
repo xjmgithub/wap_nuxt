@@ -91,8 +91,8 @@ export default {
 .title {
     line-height: 2rem;
     height: 2rem;
-    font-size: 0.9rem;
-    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
 }
 .input-tel {
     display: -webkit-box;
@@ -117,6 +117,7 @@ export default {
             height: 2rem;
             line-height: 2rem;
             outline: none;
+            padding-left:0.5rem;
             border-bottom: #dddddd solid 1px;
             &::-webkit-input-placeholder {
                 font-size: 0.9rem;
@@ -146,6 +147,7 @@ export default {
         text-align: center;
         height: 2rem;
         line-height: 2rem;
+        border-radius: 2px;
         cursor: pointer;
         &.disabled {
             background: #eeeeee;

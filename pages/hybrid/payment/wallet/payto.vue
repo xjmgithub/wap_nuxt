@@ -146,7 +146,6 @@ export default {
 .container .pay-number {
     width: 16rem;
     margin: 0 auto;
-    margin-top: 2rem;
     .signature {
         width: 3rem;
         float: left;
@@ -163,7 +162,7 @@ export default {
         }
     }
     .balance {
-        line-height: 1.8rem;
+        line-height: 2.2rem;
         font-size: 0.9rem;
     }
 }

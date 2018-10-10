@@ -5,7 +5,7 @@
             <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
+            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)" style="margin-bottom:0.5rem"></mButton>
             <nuxt-link v-if="!init&&wallet_email_config" to="/hybrid/payment/wallet/validEmail">RESET IT BY EMAIL</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">

@@ -3,7 +3,7 @@
         <h3>Recharge by {{name}}</h3>
         <h4 class="description">Description</h4>
         <div class="desc">
-            {{desc}}
+            <div v-html="desc"></div>
             <div id="copy-button" :data-clipboard-text="ussd" v-if="ussd">click to copy {{ussd}}</div>
         </div>
         <div class="footer">
@@ -91,7 +91,8 @@ export default {
     font-weight: 600;
 }
 .desc {
-    padding: 1rem;
+    padding: 1rem 0;
+    color:#666666;
 }
 .footer {
     position: fixed;

@@ -161,7 +161,7 @@ export default {
     font-weight: bold;
     display: inline-block;
     border-bottom: 1px solid #0087eb;
-    padding-top: 0.3rem;
+    padding-top: 0.5rem;
 }
 .footer {
     position: fixed;
