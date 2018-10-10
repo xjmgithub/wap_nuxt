@@ -1,7 +1,7 @@
 <template>
     <div style="padding:1rem;">
         <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
-        <hr />
+        <div style="height:0;border-bottom:solid 1px #E0E0E0;margin:1rem 0;"></div>
         <RadioBtn :radioList="radioList2" class="radioBtn" @pick="changeItem"></RadioBtn>
         <div class="footer">
             <mButton text="OK" @click="next()"></mButton>
@@ -231,7 +231,7 @@ export default {
 .footer {
     position: fixed;
     bottom: 3rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

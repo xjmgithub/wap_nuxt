@@ -29,6 +29,9 @@ export default {
 .radio-box .radio {
     position: relative;
     cursor: pointer;
+    display: block;
+    line-height:1.65rem;
+    height:1.65rem;
 }
 .radio-box input {
     position: absolute;
@@ -48,10 +51,10 @@ export default {
     position: absolute;
     top: 0.35rem;
     left: 0;
-    width: 0.94rem;
-    height: 0.94rem;
+    width: 1.1rem;
+    height: 1.1rem;
     outline: 0;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     background: #ffffff;
     border-radius: 50%;
 }
@@ -61,8 +64,8 @@ export default {
     content: '';
     top: 0.13rem;
     left: 0.13rem;
-    width: 0.56rem;
-    height: 0.56rem;
+    width: 0.6rem;
+    height: 0.6rem;
     border-radius: 50%;
     background-color: #008be9;
     opacity: 0;
@@ -70,7 +73,7 @@ export default {
     -webkit-transition: opacity 0.1s;
 }
 .radio-box input:checked + i {
-    border: 1px solid #008be9;
+    border: 2px solid #008be9;
 }
 .radio-box input:checked + i:after {
     opacity: 1;
@@ -81,6 +84,6 @@ export default {
     margin-left: 1.5rem;
 }
 .radio-box span.ml15 {
-    margin-left: 0.6rem;
+    margin-left: 0.5rem;
 }
 </style>

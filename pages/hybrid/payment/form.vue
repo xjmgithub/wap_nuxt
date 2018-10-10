@@ -31,8 +31,8 @@
             </div>
         </template>
         <div class="footer">
-            <mButton class="next" :disabled="false" text="OK"></mButton>
-            <mButton class="cancel" :disabled="false" text="CANCEL"></mButton>
+            <mButton class="next" :disabled="false" text="NEXT"></mButton>
+            <!-- <mButton class="cancel" :disabled="false" text="CANCEL"></mButton> -->
         </div>
     </div>
 </template>
@@ -246,11 +246,11 @@ export default {
 .container {
     padding: 3rem 3rem 0;
     .form-item {
-        margin: 2.5rem 0;
+        margin: 2rem 0;
     }
     .network {
         color: #333333;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         line-height: 1.4rem;
         padding-bottom: 0.2rem;
     }
@@ -261,7 +261,7 @@ export default {
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;
@@ -270,7 +270,7 @@ export default {
     border-bottom: #dddddd solid 1px;
     display: -webkit-box;
     display: flex;
-    padding-bottom: 5px;
+    padding-bottom: 0.1rem;
     margin: 1rem 0 2rem;
     position: relative;
     &.focus {
@@ -294,6 +294,7 @@ export default {
         float: left;
         -webkit-box-flex: 1.2;
         flex: 1.2;
+        margin-right:0.5rem;
     }
     .number {
         -webkit-box-flex: 11;
@@ -302,10 +303,9 @@ export default {
             width: 100%;
             border: none;
             display: block;
-            padding: 0 0.5rem;
             outline: none;
             &::-webkit-input-placeholder {
-                font-size: 0.8rem;
+                font-size: 1rem;
             }
         }
     }
@@ -322,6 +322,9 @@ export default {
 .radio-box .radio {
     position: relative;
     cursor: pointer;
+    display: block;
+    line-height:1.65rem;
+    height:1.65rem;
 }
 .radio-box input {
     position: absolute;
@@ -329,13 +332,11 @@ export default {
 }
 .radio-box .img-box {
     display: inline-block;
-    width: 2rem;
     margin-left: 1.5rem;
     vertical-align: middle;
 }
 .radio-box .img-box img {
     height: 1.5rem;
-    width: 100%;
     display: block;
 }
 .radio-box .radio i {
@@ -343,10 +344,10 @@ export default {
     position: absolute;
     top: 0.35rem;
     left: 0;
-    width: 0.94rem;
-    height: 0.94rem;
+    width: 1.1rem;
+    height: 1.1rem;
     outline: 0;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     background: #ffffff;
     border-radius: 50%;
 }
@@ -356,8 +357,8 @@ export default {
     content: '';
     top: 0.13rem;
     left: 0.13rem;
-    width: 0.56rem;
-    height: 0.56rem;
+    width: 0.6rem;
+    height: 0.6rem;
     border-radius: 50%;
     background-color: #008be9;
     opacity: 0;
@@ -365,16 +366,17 @@ export default {
     -webkit-transition: opacity 0.1s;
 }
 .radio-box input:checked + i {
-    border: 1px solid #008be9;
+    border: 2px solid #008be9;
 }
 .radio-box input:checked + i:after {
     opacity: 1;
 }
 .radio-box span {
     font-weight: bold;
+    font-size: 0.9rem;
     margin-left: 1.5rem;
 }
 .radio-box span.ml15 {
-    margin-left: 0.6rem;
+    margin-left: 0.5rem;
 }
 </style>
