@@ -3,7 +3,7 @@
         <div class="title">Enter your email</div>
         <div class="input-email" :class="{focus:focus_email,error:error_email}">
             <div class="number">
-                <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email" />
+                <input type="email" :disabled="disabled" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email" />
             </div>
             <div class="error" v-show="error_email">{{error_email}}</div>
         </div>
@@ -12,6 +12,11 @@
 <script>
 import qs from 'qs'
 export default {
+    props: {
+        disabled: {
+            default: false
+        }
+    },
     watch: {
         email(nv, ov) {
             this.error_email = ''
@@ -76,9 +81,8 @@ export default {
 }
 .input-email {
     border-bottom: #dddddd solid 1px;
-    display: -webkit-box;
-    display: flex;
-    padding-bottom: 5px;
+/*     display: -webkit-box;
+    display: flex; */
     margin: 0rem ;
     position: relative;
     &.focus {
@@ -111,6 +115,7 @@ export default {
             border: none;
             display: block;
             outline: none;
+            height:2rem;
             &::-webkit-input-placeholder {
                 font-size: 0.5rem;
             }
