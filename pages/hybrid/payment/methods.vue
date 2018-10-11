@@ -27,6 +27,7 @@ export default {
             merchantId: this.$route.query.merchantId || '10017',
             payToken: '',
             txNo: '',
+            redirect: this.$route.query.redirectUrl || '',
             radioList: [],
             radioList2: [],
             selected: null
@@ -76,7 +77,9 @@ export default {
             let paramArr = [
                 {
                     key: 'redirectUrl',
-                    value: 'http://www.baidu.com'
+                    value:
+                        app.context.route.query.redirectUrl ||
+                        'https://m.startimestv.com'
                 },
                 {
                     key: 'paySubject',
@@ -116,7 +119,9 @@ export default {
                 },
                 {
                     key: 'notifyUrl',
-                    value: 'http://m.startimestv.com'
+                    value:
+                        app.context.route.query.redirectUrl ||
+                        'https://m.startimestv.com'
                 },
                 {
                     key: 'tradeTimeout',
