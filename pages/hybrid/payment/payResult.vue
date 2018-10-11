@@ -55,7 +55,7 @@ export default {
         }
         let _this = this
         let num = 5
-        
+
         let timer = setInterval(() => {
             num--
             if (num < 0) {
@@ -103,7 +103,7 @@ export default {
     text-align: center;
     &.grey-back {
         height: 100vh;
-        background: #EEEEEE;
+        background: #eeeeee;
     }
 }
 .container img {
@@ -113,7 +113,7 @@ export default {
 .container img.success_img {
     width: 3rem;
     height: 3rem;
-    margin-top:2rem;
+    margin-top: 2rem;
 }
 .container .success {
     color: #0087eb;
@@ -142,7 +142,7 @@ export default {
     font-size: 1rem;
     line-height: 1.4rem;
 }
-.container .msg.lf{
+.container .msg.lf {
     text-align: left;
 }
 .footer {

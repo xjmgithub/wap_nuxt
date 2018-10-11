@@ -42,6 +42,10 @@ export const getCookie = name => {
     return decodeURIComponent(value) || null
 }
 
+export const delCookie = name => {
+    document.cookie = name + '=; Max-Age=-99999999;';
+}
+
 export const initUser = (token, id, obj) => {
     // browser surport server unsurport
     if (!token || !id || !obj) return false
