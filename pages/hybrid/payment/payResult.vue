@@ -54,7 +54,7 @@ export default {
             return false
         }
         let _this = this
-        let num = 1
+        let num = 5
         
         let timer = setInterval(() => {
             num--
