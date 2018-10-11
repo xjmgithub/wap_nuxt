@@ -29,7 +29,7 @@ export default {
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
-            _this.$refs.confirm.show(msg, callback,cancel, yes, no)
+            _this.$refs.confirm.show(msg, callback, cancel, yes, no)
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
         this.$axios.setHeader('token', this.$store.state.token)
@@ -43,5 +43,6 @@ body {
     margin: 0px;
     padding: 0px;
     min-height: 100%;
+    font-family: 'Hiragino Sans GB, Roboto, Arial, Helvetica, Sans-serif';
 }
 </style>
