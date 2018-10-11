@@ -56,10 +56,6 @@ export default {
         let _this = this
         let num = 1
         
-        _this.result = 1
-                        _this.loadStatus = false
-                        return false
-
         let timer = setInterval(() => {
             num--
             if (num < 0) {
