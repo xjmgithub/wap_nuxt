@@ -35,7 +35,7 @@
         <a :class="{on:serviceIndex == 4}" @click="serviceIndex = 4"><img src="~assets/img/faq/ic_categary_copy4.png" alt=""></a>
         <a :class="{on:serviceIndex == 5}" @click="serviceIndex = 5"><img src="~assets/img/faq/ic_tv1.png" alt=""></a>
       </nav>
-      <div class="questions">
+      <div class="questions"  ref="list">
         <ul v-show="serviceIndex == 1">
           <li>Certain channels are not playing but display loading, what do…</li>
           <li>Paid successfully, why I still can not view the premium chann…</li>
@@ -64,167 +64,172 @@
   
 </template>
 <script>
-  export default {
-    layout: 'base',
-    data:function(){
-      return {
-        serviceIndex:1
-      }
-    },
-    head() {
-      return {
-        title: 'Online Service'
-      }
-    }
+export default {
+  layout: "base",
+  data: function() {
+    return {
+      serviceIndex: 1
+    };
+  },
+  head() {
+    return {
+      title: "Online Service"
+    };
   }
+};
 </script>
 <style lang="less">
 body {
-    background: #fff;
+  background: #fff;
 }
 
-#wrapper{
-    padding:0.5rem;
-    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif
+#wrapper {
+  padding: 0.5rem;
+  font-family: "DINPro", Roboto, Arial, Helvetica, Sans-serif;
 }
 .clearfix:after {
-    display: block;
-    visibility: hidden;
-    clear: both;
-    height: 0;
-    content: '';
+  display: block;
+  visibility: hidden;
+  clear: both;
+  height: 0;
+  content: "";
 }
 .clearfix {
-    zoom: 1;
+  zoom: 1;
 }
 
-.order-msg{
-  box-shadow:0px 1px 3px 1px #dddddd;
+.order-msg {
+  box-shadow: 0px 1px 3px 1px #dddddd;
   border-radius: 5px;
-  .top{
-    padding:0 0.5rem;
-     p.time{
-      width:100%;
-      color:#AAAAAA;
-      font-size:.8rem;
-      border-bottom:1px solid #EEEEEE;
-      padding:.2rem 0;
+  .top {
+    padding: 0 0.5rem;
+    p.time {
+      width: 100%;
+      color: #aaaaaa;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #eeeeee;
+      padding: 0.2rem 0;
     }
   }
-  .order-type{
-      padding:.7em 0;
-      img{
-        width:2.5rem;
-        height:2.5rem;
-        float:left;
-      }
-      .right{
-        margin-left: 3rem;
-      }
-      .order-name{
-        span{
-          font-weight:bold;
-          float:right;
-        }
-      }
-      .order-status{
-        font-size:.9rem;
-        color:#999999;
-        span{
-          color:#00CC33;
-          float:right;
-        }
-      }
-  }
-  .gap{
-    background-color: #F2F2F2;
-    height:4px;
-    width:100%;
-  }
-  .bottom{
-    padding:.7rem 0.5rem;
-    p{
-      font-size:.9rem;
-      color:#333333;
-      img{
-        float:right;
-        width:1.5rem;
-        height:1.5rem;
+  .order-type {
+    padding: 0.7em 0;
+    img {
+      width: 2.5rem;
+      height: 2.5rem;
+      float: left;
+    }
+    .right {
+      margin-left: 3rem;
+    }
+    .order-name {
+      span {
+        font-weight: bold;
+        float: right;
       }
     }
-    li{
-      color:#333333;
-      font-size:.8rem;
+    .order-status {
+      font-size: 0.9rem;
+      color: #999999;
+      span {
+        color: #00cc33;
+        float: right;
+      }
+    }
+  }
+  .gap {
+    background-color: #f2f2f2;
+    height: 4px;
+    width: 100%;
+  }
+  .bottom {
+    padding: 0.7rem 0.5rem;
+    p {
+      font-size: 0.9rem;
+      color: #333333;
+      img {
+        float: right;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+    li {
+      color: #333333;
+      font-size: 0.8rem;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap; 
+      white-space: nowrap;
     }
-    .btn{
-      color:#0087EB;
-      font-size:.8rem;
-      margin-top:.7rem;
-      float:right;
-      font-weight:bold;
+    .btn {
+      color: #0087eb;
+      font-size: 0.8rem;
+      margin-top: 0.7rem;
+      float: right;
+      font-weight: bold;
     }
   }
-  .more{
-    color:#0087EB;
-    font-size:.8rem;
-    font-weight:bold;
+  .more {
+    color: #0087eb;
+    font-size: 0.8rem;
+    font-weight: bold;
     text-align: center;
-    padding:.7rem 0;
+    padding: 0.7rem 0;
   }
 }
-.service{
-  margin-top:1rem;
+.service {
+  margin-top: 1rem;
   #nav {
-    width:100%;
-    margin:0 auto;
-    text-align:center;
-    padding-bottom:.7rem;
-    a{
-      border-bottom:3px solid #EEEEEE;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: 0.7rem;
+    a {
+      border-bottom: 3px solid #eeeeee;
       width: 20%;
       display: inline-block;
-      padding-bottom:.7rem;
-      &.on{
-        border-bottom:3px solid #0087EB;
+      padding-bottom: 0.7rem;
+      &.on {
+        border-bottom: 3px solid #0087eb;
       }
-      img{
-      width:1.5rem;
-      height:1.5rem;
+      img {
+        width: 1.5rem;
+        height: 1.5rem;
       }
     }
   }
-  .questions{
-    li{
+  .questions {
+    margin-bottom: 4.5rem;
+    li {
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap; 
-      padding:.5rem 0;
-      color:#333333;
-      font-size: .8rem;
-      &+li{
-        border-top:1px solid #eeeeee;
+      white-space: nowrap;
+      padding: 0.5rem 0;
+      color: #333333;
+      font-size: 0.8rem;
+      & + li {
+        border-top: 1px solid #eeeeee;
       }
     }
   }
 }
-.costomer{
-  width:100%;
+.costomer {
+  width: 100%;
   text-align: center;
-  color:#0087EB;
-  border-top:1px solid #eeeeee;
-  margin-top:1.5rem;
-  padding:1rem 0;
-  button{
-    margin:0 auto;
-    border:1px solid #0087EB;
+  color: #0087eb;
+  border-top: 1px solid #eeeeee;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  background: #fff;
+  height: 4.25rem;
+  button {
+    margin: 0 auto;
+    border: 1px solid #0087eb;
     border-radius: 2px;
-    background: #FFF;
-    padding:.3rem;
-    font-weight:bold;
-    width:60%;
+    background: #fff;
+    padding: 0.3rem;
+    font-weight: bold;
+    width: 60%;
   }
 }
 </style>
