@@ -1,3 +1,7 @@
 let http = require('http')
 let mockserver = require('mockserver')
-http.createServer(mockserver('mock')).listen(9001)
+var server = http.createServer(mockserver('mock')).listen(9001)
+server.listen('9001',function(){
+    console.log('服务器启动')
+})
+ 

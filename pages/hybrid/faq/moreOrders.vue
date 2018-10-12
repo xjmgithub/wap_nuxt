@@ -1,14 +1,15 @@
 <template>
   <div>
     <div id="wrapper">
+      <div v-for="(item,index) in serviceList.order_info" :key="index">
         <div class="order-msg">
             <div class="top">
-                <p class="time">9 Dec 2018 19:34:35</p>
+                <p class="time">{{serviceData.order_info.order_create_time | formatDate }}</p>
                 <div class="order-type clearfix">
-                    <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                    <img src="serviceData.order_info.order_icon" alt="">
                     <div class="right">
-                    <p class="order-name">DVB Recharge<span>￥980 </span></p>
-                    <p class="order-status">Card No. 0213 9030 831<span>Successful</span></p>
+                    <p class="order-name">{{serviceData.order_info.order_type }}<span>{{serviceData.order_info.order_amount }}</span></p>
+                    <p class="order-status">{{serviceData.order_info.card_no }}<span>{{serviceData.order_info.order_status }}
                     </div>
                 </div>
             </div>
@@ -16,14 +17,13 @@
             <div class="bottom clearfix">
                 <p class="clearfix">Questions <img src="~assets/img/faq/ic_categary_copy41.png" alt=""></p>
                 <ul>
-                    <li>1. Paid, But recharge can’t be finished.  </li>
-                    <li>2. I’ve recharged, But I still can’t watch channels on TV.</li>
-                    <li>3. I’ve recharged, But I still can’t watch channels in App.</li>
+                  <li v-for="(item,index) in serviceData.questions" :key="index">item.content</li>
                 </ul>
                 <div class="btn">COMPLAIN</div>
             </div>
         </div>
         <div class="line">&nbsp;</div>
+      </div>
   </div>
   </div>
   
@@ -33,8 +33,24 @@
     layout: 'base',
     data:function(){
       return {
-        serviceIndex:1
+        serviceIndex:1,
+        entranceId: this.$route.query.entrance_id || '',
+        serviceList:[]
+
       }
+    },
+    filters:{
+      formatDate(date){
+        return moment(date).format('D MMM YYYY HH-mm:ss')
+      }
+    },
+    created(){
+      this.$axios.get(`/ocs/v1/service-list?entranceId=${this.entranceId}`,{
+        }).then(res => {
+            if (res.data && res.data.length > 0) {
+              this.serviceList = res.data
+            }
+        })
     },
     head() {
       return {
