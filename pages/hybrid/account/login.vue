@@ -129,10 +129,10 @@ export default {
     }
 
     .st_logo {
-        height: 2.5rem;
-        width: 10rem;
-        margin-bottom: 3.5rem;
-        margin-top: 6rem;
+        height: auto;
+        width: 11rem;
+        margin-bottom: 2.5rem;
+        margin-top: 4.5rem;
     }
 
     .login_btn {
@@ -145,6 +145,7 @@ export default {
         margin: 0 auto;
         text-align: center;
         font-size: 0.9rem;
+        font-weight: bold;
     }
 
     .regtext {

@@ -9,7 +9,7 @@
         </div>
         <div class="get-code">
             <input type="text" maxlength="4" :class="{focus:focus_code,error:error_code}" v-model="vscode" @focus="focus_code=true" @blur="focus_code=false" placeholder="Click to get verification code" />
-            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get code'}}</div>
             <div class="error_code" v-show="error_code">{{error_code}}</div>
         </div>
     </div>
@@ -133,8 +133,8 @@ export default {
     .prefix {
         max-width: 3.5rem;
         border-right: #dddddd solid 1px;
-        line-height: 1.2rem;
-        height: 1.2rem;
+        line-height: 1.5rem;
+        height: 1.5rem;
         float: left;
         -webkit-box-flex: 1;
         flex: 1;
@@ -147,16 +147,18 @@ export default {
             border: none;
             display: block;
             padding: 0 0.5rem;
+            height:1.5rem;
+            line-height:1.5rem;
             outline: none;
             &::-webkit-input-placeholder {
-                font-size: 0.5rem;
+                font-size: 0.9rem;
             }
         }
     }
     .error {
         position: absolute;
         bottom: -1.4rem;
-        font-size: 0.5rem;
+        font-size: 0.8rem;
         color: red;
     }
 }
@@ -176,7 +178,7 @@ export default {
             border-bottom: red solid 1px;
         }
         &::-webkit-input-placeholder {
-            font-size: 0.5rem;
+            font-size: 0.9rem;
         }
         outline: none;
         margin-right: 0.5rem;
@@ -187,10 +189,11 @@ export default {
         max-width: 10rem;
         background: #0087eb;
         color: white;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
+        font-weight:bold;
         text-align: center;
-        height: 2rem;
-        line-height: 2rem;
+        height: 2.3rem;
+        line-height: 2.3rem;
         cursor: pointer;
         &.disabled {
             background: #dddddd;
@@ -200,7 +203,7 @@ export default {
     .error_code {
         position: absolute;
         bottom: -1.4rem;
-        font-size: 0.5rem;
+        font-size: 0.8rem;
         color: red;
     }
 }

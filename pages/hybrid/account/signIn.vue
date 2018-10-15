@@ -2,11 +2,11 @@
     <div id="wrapper">
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
-                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.png" />
+                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.svg" />
                 <a href="#" class="sign-way">Use phone number sign in</a>
             </div>
             <div v-show="type==0" @click="changetype(1)">
-                <img class="gray" src="~/assets/img/users/ic_email_def_gray.png" />
+                <img class="gray" src="~/assets/img/users/ic_email_def_gray.svg" />
                 <a href="#" class="sign-way">Use Email sign in</a>
             </div>
         </div>
@@ -72,8 +72,6 @@ export default {
             country: this.$store.state.user.areaID,
             countryDialogStatus: false,
             pre: '',
-            // phoneNum: '7017201879',
-            // password: 'shang123',
             phoneNum: '',
             password: '',
             email: '',
@@ -160,8 +158,10 @@ export default {
             text-align: right;
 
             img {
-                height: 1.2rem;
+                height: 1.3rem;
+                width:1.3rem;
                 margin-right: 0.5rem;
+                margin-top:-0.3rem;
             }
 
             .sign-way {
@@ -190,7 +190,7 @@ export default {
         .img-box {
             img {
                 width: 1.4rem;
-                height: 1.4rem;
+                height: 1.6rem;
                 margin-right: 0.5rem;
                 vertical-align: middle;
             }
@@ -201,6 +201,8 @@ export default {
         .country_choose {
             line-height: 4rem;
             height: 4rem;
+            margin-top:1rem;
+            margin-bottom:1rem;
 
             img {
                 width: 1.5rem;
@@ -216,7 +218,7 @@ export default {
     }
 
     .by_email {
-        padding-top: 4rem;
+        padding-top: 5rem;
     }
 
     .next-btn {

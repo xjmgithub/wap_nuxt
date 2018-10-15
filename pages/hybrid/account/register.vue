@@ -2,13 +2,13 @@
     <div id="wrapper">
         <div class="tab">
             <div :class="{seled:type==0}" @click="changetype(0)">
-                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.png" />
-                <img class="blue" src="~/assets/img/users/ic_telephone_sl_blue.png" />
+                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.svg" />
+                <img class="blue" src="~/assets/img/users/ic_telephone_sl_blue.svg" />
                 <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
             </div>
             <div :class="{seled:type==1}" @click="changetype(1)">
-                <img class="gray" src="~/assets/img/users/ic_email_def_gray.png" />
-                <img class="blue" src="~/assets/img/users/ic_email_sl_blue.png" />
+                <img class="gray" src="~/assets/img/users/ic_email_def_gray.svg" />
+                <img class="blue" src="~/assets/img/users/ic_email_sl_blue.svg" />
                 <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
             </div>
         </div>
@@ -139,11 +139,12 @@ export default {
             width: 50%;
             float: left;
             padding: 1.2rem;
-            border-bottom: solid #dddddd 2px;
+            border-bottom: solid #dddddd 1px;
             position: relative;
 
             img {
-                height: 1.5rem;
+                width: 2.2rem;
+                height:2.2rem;
                 margin: 0 auto;
                 display: block;
             }
@@ -189,7 +190,8 @@ export default {
     }
     .by_tel {
         .country_choose {
-            line-height: 3rem;
+            line-height: 2rem;
+            padding-top:1rem;
             img {
                 width: 1.5rem;
                 height: 1.5rem;

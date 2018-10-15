@@ -144,14 +144,14 @@ export default {
             display: block;
             outline: none;
             &::-webkit-input-placeholder {
-                font-size: 0.5rem;
+                font-size: 0.9rem;
             }
         }
     }
     .error {
         position: absolute;
         bottom: -1.4rem;
-        font-size: 0.5rem;
+        font-size: 0.8rem;
         color: red;
     }
 }
@@ -171,7 +171,7 @@ export default {
             border-bottom: red solid 1px;
         }
         &::-webkit-input-placeholder {
-            font-size: 0.5rem;
+            font-size: 0.9rem;
         }
         outline: none;
         margin-right: 0.5rem;
@@ -182,10 +182,11 @@ export default {
         max-width: 10rem;
         background: #0087eb;
         color: white;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
+        font-weight: bold;
         text-align: center;
-        height: 2rem;
-        line-height: 2rem;
+        height: 2.3rem;
+        line-height: 2.3rem;
         cursor: pointer;
         &.disabled {
             background: #dddddd;
@@ -195,7 +196,7 @@ export default {
     .error_code {
         position: absolute;
         bottom: -1.4rem;
-        font-size: 0.5rem;
+        font-size: 0.8rem;
         color: red;
     }
 }
