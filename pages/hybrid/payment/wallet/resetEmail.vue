@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <verifyEmail ref="emailCont"></verifyEmail>
+        <verifyEmail ref="emailCont" :disabled="!nocheck"></verifyEmail>
         <div class="footer">
             <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
         </div>

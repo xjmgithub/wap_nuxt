@@ -152,7 +152,22 @@ export default {
                 let newpass = this.$refs.newpass.password
                 let confirmpass = this.$refs.confirmpass.password
                 if (newpass != confirmpass) {
-                    this.$alert('Two passwords are different.')
+                    this.$confirm(
+                        'Password do not match.Please try again.',
+                        () => {
+                            window.location.href =
+                                '/hybrid/payment/wallet/validEmail'
+                        },
+                        () => {
+                            this.$confirm(
+                                'Cancel setting your payment password?',
+                                () => {
+                                    window.location.href =
+                                        '/hybrid/payment/wallet/payto'
+                                }
+                            )
+                        }
+                    )
                     return false
                 }
                 this.$axios
