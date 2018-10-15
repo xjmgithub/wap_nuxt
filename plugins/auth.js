@@ -9,7 +9,8 @@ let auth_ignore = [
     /^\/hybrid\/payment\/channelDesc/,
     /^\/hybrid\/payment\/payResult/,
     /^\/hybrid\/payment\/form/,
-    /^\/hybrid\/payment\/methods/
+    /^\/hybrid\/payment\/methods/,
+    /^\/hybrid\/faq/,
 ]
 function inIgnore(url) {
     let result = false
