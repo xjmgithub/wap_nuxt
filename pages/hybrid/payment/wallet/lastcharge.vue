@@ -74,12 +74,7 @@ export default {
             ).accountNo
             this.$axios
                 .get(
-                    `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`,
-                    {
-                        headers: {
-                            token: this.$store.state.token
-                        }
-                    }
+                    `/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`
                 )
                 .then(res => {
                     this.loadStatus = false
@@ -138,7 +133,7 @@ export default {
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

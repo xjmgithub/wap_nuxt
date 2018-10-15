@@ -1,7 +1,7 @@
 let env = require('./env.js')
 module.exports = {
     head: {
-        title: 'startimes pay',
+        title: 'StarTimes pay',
         meta: [
             { charset: 'utf-8' },
             {
@@ -79,5 +79,6 @@ module.exports = {
         // { src: '~plugins/analysis.js', ssr: false },
         { src: '~plugins/auth.js', ssr: false },
         { src: '~plugins/deviceid.js', ssr: false },
+        { src: '~plugins/axios.js', ssr: false },
     ]
 }

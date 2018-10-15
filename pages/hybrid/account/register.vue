@@ -6,39 +6,39 @@
                 <img class="blue" src="~/assets/img/users/ic_telephone_sl_blue.png" />
                 <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
             </div>
-                <div :class="{seled:type==1}" @click="changetype(1)">
-                    <img class="gray" src="~/assets/img/users/ic_email_def_gray.png" />
-                    <img class="blue" src="~/assets/img/users/ic_email_sl_blue.png" />
-                    <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
+            <div :class="{seled:type==1}" @click="changetype(1)">
+                <img class="gray" src="~/assets/img/users/ic_email_def_gray.png" />
+                <img class="blue" src="~/assets/img/users/ic_email_sl_blue.png" />
+                <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
             </div>
-                </div>
-                <div v-show="type==0" class="by_tel">
-                    <div class="country_choose" @click="countryDialogStatus=true">
-                        <img :src="areaInfo.nationalFlag" />
-                        <span>{{areaInfo.name}}</span>
-                    </div>
-                    <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verifyTel>
-                </div>
-                <div v-show="type==1" class="by_email">
-                    <verifyEmail ref="emailpicker" @pass="emailCanNext=true"></verifyEmail>
-                </div>
-                <div style="width:80%;margin:0 auto;">
-                    <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"></mButton>
-                </div>
-                <div class="terms">
-                    <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
-                </div>
-                <div class="country-choose-dialog" v-show="countryDialogStatus">
-                    <div class="dialog-title">Country List</div>
-                    <ul>
-                        <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                            <img :src="item.nationalFlag" />
-                            <span>{{item.name}}</span>
-                        </li>
-                    </ul>
-                </div>
-                <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
+        </div>
+        <div v-show="type==0" class="by_tel">
+            <div class="country_choose" @click="countryDialogStatus=true">
+                <img :src="areaInfo.nationalFlag" />
+                <span>{{areaInfo.name}}</span>
             </div>
+            <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="changePhoneCanNext"></verifyTel>
+        </div>
+        <div v-show="type==1" class="by_email">
+            <verifyEmail ref="emailpicker" @pass="changeEmailCanNext"></verifyEmail>
+        </div>
+        <div style="width:80%;margin:0 auto;">
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"></mButton>
+        </div>
+        <div class="terms">
+            <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
+        </div>
+        <div class="country-choose-dialog" v-show="countryDialogStatus">
+            <div class="dialog-title">Country List</div>
+            <ul>
+                <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
+                    <img :src="item.nationalFlag" />
+                    <span>{{item.name}}</span>
+                </li>
+            </ul>
+        </div>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
+    </div>
 </template>
 <script>
 import verifyTel from '~/components/form/verify_tel'
@@ -67,8 +67,7 @@ export default {
             country: this.$store.state.user.areaID,
             countryDialogStatus: false,
             phoneCanNext: false,
-            emailCanNext: false,
-            pre: this.$route.query.pre
+            emailCanNext: false
         }
     },
     computed: {
@@ -84,6 +83,12 @@ export default {
         }
     },
     methods: {
+        changePhoneCanNext(bool) {
+            this.phoneCanNext = bool
+        },
+        changeEmailCanNext(bool) {
+            this.emailCanNext = bool
+        },
         changetype(type) {
             this.type = type
         },
@@ -92,15 +97,13 @@ export default {
             this.countryDialogStatus = false
         },
         nextStep() {
-            let pre = ''
-            this.pre ? (pre = `&pre=${this.pre}`) : (pre = '')
-
+            
             if (this.type == 1) {
                 let email = this.$refs.emailpicker.email
                 let code = this.$refs.emailpicker.vscode
 
                 this.$router.push(
-                    `/hybrid/account/setpass?email=${email}&code=${code}${pre}`
+                    `/hybrid/account/setpass?email=${email}&code=${code}`
                 )
             } else {
                 let phone = this.$refs.telpicker.tel
@@ -108,7 +111,7 @@ export default {
                 let phoneCc = this.areaInfo.phonePrefix
                 let countryId = this.country
                 this.$router.push(
-                    `/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}${pre}`
+                    `/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
                 )
             }
         }

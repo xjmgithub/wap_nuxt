@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" :class="{'grey-back':result==2}">
         <loading v-show="loadStatus"></loading>
         <template v-if="result=='1'&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
@@ -53,6 +53,10 @@ export default {
         if (this.result == 1 || this.result == 2) {
             this.loadStatus = false
         }
+        let _this = this
+        setInterval(function() {
+            window.location.href = _this.redirect
+        }, 5000)
     },
     methods: {
         back() {
@@ -61,25 +65,37 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style scoped lang="less">
 .container {
     font-family: 'Roboto';
     padding: 5rem 1rem 0;
     text-align: center;
+    &.grey-back {
+        height: 100vh;
+        background: #EEEEEE;
+    }
 }
 .container img {
-    width: 12rem;
-    height: 12rem;
+    width: 15rem;
+    height: 13rem;
 }
 .container img.success_img {
     width: 3rem;
     height: 3rem;
+    margin-top:2rem;
 }
 .container .success {
     color: #0087eb;
     font-size: 1.1rem;
     font-weight: bold;
     margin-top: 0.75rem;
+}
+.container .fail {
+    line-height: 3rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ff6100;
+    margin-top: 1rem;
 }
 .container .money {
     color: #212121;
@@ -94,12 +110,14 @@ export default {
     color: #666;
     font-size: 1rem;
     line-height: 1.4rem;
+}
+.container .msg.lf{
     text-align: left;
 }
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

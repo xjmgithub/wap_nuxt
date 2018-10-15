@@ -36,11 +36,7 @@ export default {
         }
 
         this.$axios
-            .get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            })
+            .get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
@@ -96,21 +92,13 @@ export default {
                 }
 
                 this.$axios
-                    .post(
-                        '/payment/api/v2/invoke-payment',
-                        {
-                            payToken: this.payToken,
-                            payChannelId: this.payChannel,
-                            tradeType: 'JSAPI',
-                            deviceInfo: window.navigator.userAgent,
-                            extendInfo: {} // 没有动态表单收集信息的传空对象
-                        },
-                        {
-                            headers: {
-                                token: this.$store.state.token
-                            }
-                        }
-                    )
+                    .post('/payment/api/v2/invoke-payment', {
+                        payToken: this.payToken,
+                        payChannelId: this.payChannel,
+                        tradeType: 'JSAPI',
+                        deviceInfo: window.navigator.userAgent,
+                        extendInfo: {} // 没有动态表单收集信息的传空对象
+                    })
                     .then(res => {
                         let data = res.data
                         if (data && data.resultCode == 0) {
@@ -167,7 +155,7 @@ export default {
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

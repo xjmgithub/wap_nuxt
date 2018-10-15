@@ -19,6 +19,7 @@
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
+import { updateWalletAccount, updateWalletConf } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -74,23 +75,11 @@ export default {
             }
         }
 
-        this.$axios
-            .get('/mobilewallet/v1/accounts/me', {
-                headers: {
-                    token: this.$store.state.token
-                }
-            })
-            .then(res => {
-                if (res.data) {
-                    localStorage.setItem(
-                        'wallet_account',
-                        JSON.stringify(res.data)
-                    )
-                    this.balance = res.data.amount
-                    this.balanceCurrency = res.data.currencySymbol
-                    this.getSetConfig(res.data.accountNo) // 钱包配置
-                }
-            })
+        updateWalletAccount(this, account => {
+            this.balance = account.amount
+            this.balanceCurrency = account.currencySymbol
+            updateWalletConf(this, account.accountNo)
+        })
 
         this.$axios
             .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`, {
@@ -112,20 +101,6 @@ export default {
             })
     },
     methods: {
-        getSetConfig(account) {
-            this.$axios
-                .get(`/mobilewallet/v1/accounts/${account}/prop-details`, {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                })
-                .then(res => {
-                    localStorage.setItem(
-                        'wallet_config',
-                        JSON.stringify(res.data)
-                    )
-                })
-        },
         nextStep() {
             if (this.enough) {
                 // 支付流程
@@ -171,7 +146,6 @@ export default {
 .container .pay-number {
     width: 16rem;
     margin: 0 auto;
-    margin-top: 2rem;
     .signature {
         width: 3rem;
         float: left;
@@ -188,14 +162,14 @@ export default {
         }
     }
     .balance {
-        line-height: 1.8rem;
+        line-height: 2.2rem;
         font-size: 0.9rem;
     }
 }
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

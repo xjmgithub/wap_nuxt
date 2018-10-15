@@ -1,7 +1,7 @@
 <template>
     <div style="padding:1rem;">
         <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
-        <hr />
+        <div style="height:0;border-bottom:solid 1px #E0E0E0;margin:1rem 0;"></div>
         <RadioBtn :radioList="radioList2" class="radioBtn" @pick="changeItem"></RadioBtn>
         <div class="footer">
             <mButton text="OK" @click="next()"></mButton>
@@ -23,8 +23,11 @@ export default {
             app_key: this.$route.query.key,
             country: this.$route.query.country || 'TZ',
             currency: this.$route.query.currency || 'TZS',
+            amount: this.$route.query.amount || '10',
+            merchantId: this.$route.query.merchantId || '10017',
             payToken: '',
             txNo: '',
+            redirect: this.$route.query.redirectUrl || '',
             radioList: [],
             radioList2: [],
             selected: null
@@ -74,7 +77,9 @@ export default {
             let paramArr = [
                 {
                     key: 'redirectUrl',
-                    value: 'http://www.baidu.com'
+                    value:
+                        app.context.route.query.redirectUrl ||
+                        'https://m.startimestv.com'
                 },
                 {
                     key: 'paySubject',
@@ -102,11 +107,11 @@ export default {
                 },
                 {
                     key: 'merchantAppId',
-                    value: '10017'
+                    value: app.context.route.query.merchantId || '10017'
                 },
                 {
                     key: 'totalAmount',
-                    value: '10'
+                    value: app.context.route.query.amount || 10
                 },
                 {
                     key: 'signType',
@@ -114,7 +119,9 @@ export default {
                 },
                 {
                     key: 'notifyUrl',
-                    value: 'http://m.startimestv.com'
+                    value:
+                        app.context.route.query.redirectUrl ||
+                        'https://m.startimestv.com'
                 },
                 {
                     key: 'tradeTimeout',
@@ -180,12 +187,8 @@ export default {
         this.payToken = this.$store.state.payToken
         this.txNo = this.$store.state.txNo
         let _this = this
-        axios
-            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`, {
-                headers: {
-                    token: _this.$store.state.token
-                }
-            })
+        this.$axios
+            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
             .then(res => {
                 let data = res.data
                 let list = []
@@ -233,7 +236,7 @@ export default {
 .footer {
     position: fixed;
     bottom: 3rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

@@ -22,6 +22,7 @@ export default {
             no: 'NO',
             style: 'none',
             callback: '',
+            cancel: '',
             offsetLeft: 0,
             offsetTop: 0
         }
@@ -30,14 +31,18 @@ export default {
         close() {
             this.style = 'none'
             this.$store.commit('HIDE_SHADOW_LAYER')
+            if (this.cancel) {
+                this.cancel()
+            }
         },
         sure() {
-            this.close()
+            this.style = 'none'
+            this.$store.commit('HIDE_SHADOW_LAYER')
             if (this.callback) {
                 this.callback()
             }
         },
-        show(msg, callback, yes, no) {
+        show(msg, callback, cancel, yes, no) {
             let _this = this
             if (yes) this.yes = yes
             if (no) this.no = no
@@ -55,6 +60,11 @@ export default {
                 this.callback = callback
             } else {
                 this.callback = ''
+            }
+            if (cancel) {
+                this.cancel = cancel
+            } else {
+                this.cancel = ''
             }
         }
     }

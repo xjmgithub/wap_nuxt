@@ -17,7 +17,7 @@
                 <img :src="areaInfo.nationalFlag" />
                 <span>{{areaInfo.name}}</span>
             </div>
-            <verifyTel ref="telpicker" type="1" :prefix="areaInfo.phonePrefix" @pass="phoneCanNext=true"></verifyTel>
+            <verifyTel ref="telpicker" type="1" :prefix="areaInfo.phonePrefix" @pass="changePhoneCanNext"></verifyTel>
         </div>
         <div v-show="type==1" class="by_email">
             <div class="input-email" :class="{focus:focus_email,error:error_email}">
@@ -92,6 +92,9 @@ export default {
         }
     },
     methods: {
+        changePhoneCanNext(bool) {
+            this.phoneCanNext = bool
+        },
         changetype(type) {
             this.type = type
         },

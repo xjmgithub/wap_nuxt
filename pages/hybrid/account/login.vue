@@ -4,12 +4,12 @@
         <img class="third_login facebook" @click="byfacebook" src="~/assets/img/users/btn_facebook_def.png" />
         <img class="third_login twitter" @click="bytwitter" src="~/assets/img/users/btn_twitter_def.png" />
         <img id="google-btn" class="third_login google" src="~/assets/img/users/btn_google_def.png" />
-        <nuxt-link :to="pre?('/hybrid/account/signin?pre='+encodeURIComponent(pre)):'/hybrid/account/signin'">
+        <nuxt-link to="/hybrid/account/signin">
             <div class="login_btn"> SIGN IN </div>
         </nuxt-link>
         <div class="regtext">
             Don't have an account?
-            <nuxt-link :to="pre?('/hybrid/account/register?pre='+encodeURIComponent(pre)):'/hybrid/account/register'">Register</nuxt-link>
+            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
         </div>
     </div>
 </template>
@@ -23,11 +23,16 @@ export default {
         }
     },
     mounted() {
+        if (this.pre) {
+            localStorage.setItem('login_prefer', this.pre)
+        }
+
         // facebook登录初始化
         FB.init({
-            appId: '159785064477978',
+            appId: '159785064477978', // 和app公用
             xfbml: true,
-            version: 'v3.0'
+            cookie: true,
+            version: 'v3.1'
         })
 
         var googleUser = {}
@@ -53,8 +58,14 @@ export default {
     methods: {
         byfacebook() {
             let _this = this
-            FB.login(function(res) {
-                _this.loginByThird(res.authResponse.userID)
+            FB.getLoginStatus(function(response) {
+                if (response.status == 'connected') {
+                    _this.loginByThird(response.authResponse.userID)
+                } else {
+                    FB.login(function(res) {
+                        _this.loginByThird(res.authResponse.userID)
+                    })
+                }
             })
         },
         bytwitter() {
@@ -86,7 +97,7 @@ export default {
                             res.data.data
                         )
                         if (this.pre) {
-                            this.$router.push(encodeURIComponent(this.pre))
+                            window.location.href = this.pre
                         } else {
                             window.location.href =
                                 '/hybrid/payment/wallet/payto'

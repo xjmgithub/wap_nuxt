@@ -3,7 +3,7 @@
         <div class="title">Enter your email</div>
         <div class="input-email" :class="{focus:focus_email,error:error_email}">
             <div class="number">
-                <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email" />
+                <input type="email" :disabled="disabled" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email" />
             </div>
             <div class="error" v-show="error_email">{{error_email}}</div>
         </div>
@@ -12,6 +12,11 @@
 <script>
 import qs from 'qs'
 export default {
+    props: {
+        disabled: {
+            default: false
+        }
+    },
     watch: {
         email(nv, ov) {
             this.error_email = ''
@@ -28,7 +33,8 @@ export default {
             email: '',
             focus_email: false,
             error_email: '',
-            codeDuring: 0
+            codeDuring: 0,
+            waiting_res: false
         }
     },
     computed: {
@@ -39,16 +45,17 @@ export default {
     },
     methods: {
         getCode() {
-            if (!this.canGetCode) return false
+            if (!this.canGetCode || this.waiting_res) return false
+            this.waiting_res = true
             this.$axios
-                .get(`/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail`,{
-                    email:this.email
-                }, {
-                    headers: {
-                        token: this.$store.state.token
+                .get(
+                    `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail`,
+                    {
+                        email: this.email
                     }
-                })
+                )
                 .then(res => {
+                    this.waiting_res = false
                     if (res.data.code == 0) {
                         this.codeDuring = 60
                     } else {
@@ -57,7 +64,7 @@ export default {
                     }
                 })
         },
-        setEmail(val){
+        setEmail(val) {
             this.email = val
         }
     },
@@ -73,14 +80,16 @@ export default {
 .title {
     line-height: 2rem;
     height: 2rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
 }
 .input-email {
     border-bottom: #dddddd solid 1px;
-    display: -webkit-box;
-    display: flex;
-    padding-bottom: 5px;
-    margin: 0rem ;
+    /*     display: -webkit-box;
+    display: flex; */
+    margin: 0rem;
     position: relative;
+    margin-bottom: 0.5rem;
     &.focus {
         border-bottom: #0087eb solid 1px;
     }
@@ -111,8 +120,10 @@ export default {
             border: none;
             display: block;
             outline: none;
+            height: 2.5rem;
+            padding-left: 0.5rem;
             &::-webkit-input-placeholder {
-                font-size: 0.5rem;
+                font-size: 1rem;
             }
         }
     }
@@ -123,5 +134,4 @@ export default {
         color: red;
     }
 }
-
 </style>
