@@ -1,15 +1,15 @@
 <template>
   <div>
     <div id="wrapper">
-      <div v-for="(item,index) in serviceList.order_info" :key="index">
+      <div v-for="(item,index) in serviceList" :key="index">
         <div class="order-msg">
             <div class="top">
-                <p class="time">{{serviceData.order_info.order_create_time | formatDate }}</p>
+                <p class="time">{{item.order_info.order_create_time | formatDate }}</p>
                 <div class="order-type clearfix">
-                    <img src="serviceData.order_info.order_icon" alt="">
+                    <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
                     <div class="right">
-                    <p class="order-name">{{serviceData.order_info.order_type }}<span>{{serviceData.order_info.order_amount }}</span></p>
-                    <p class="order-status">{{serviceData.order_info.card_no }}<span>{{serviceData.order_info.order_status }}
+                    <p class="order-name">{{item.order_info.order_type }}<span>{{item.order_info.order_amount }}</span></p>
+                    <p class="order-status">{{item.order_info.card_no }}<span>{{item.order_info.order_status }}</span></p>
                     </div>
                 </div>
             </div>
@@ -17,7 +17,7 @@
             <div class="bottom clearfix">
                 <p class="clearfix">Questions <img src="~assets/img/faq/ic_categary_copy41.png" alt=""></p>
                 <ul>
-                  <li v-for="(item,index) in serviceData.questions" :key="index">item.content</li>
+                  <li v-for="(q,index) in item.questions" :key="index">{{q.content}} </li>
                 </ul>
                 <div class="btn">COMPLAIN</div>
             </div>
@@ -29,14 +29,14 @@
   
 </template>
 <script>
+let moment = require("moment/moment.js");
   export default {
     layout: 'base',
     data:function(){
       return {
         serviceIndex:1,
         entranceId: this.$route.query.entrance_id || '',
-        serviceList:[]
-
+        serviceList:[],
       }
     },
     filters:{
@@ -44,11 +44,11 @@
         return moment(date).format('D MMM YYYY HH-mm:ss')
       }
     },
-    created(){
+    mounted(){
       this.$axios.get(`/ocs/v1/service-list?entranceId=${this.entranceId}`,{
         }).then(res => {
-            if (res.data && res.data.length > 0) {
-              this.serviceList = res.data
+            if (res.data) {
+              this.serviceList = res.data.data
             }
         })
     },

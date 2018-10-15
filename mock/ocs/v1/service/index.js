@@ -27,7 +27,7 @@ module.exports ={
       order_type: "DVB Recharge",
       order_type_id: 0,
       order_name: "string",
-      order_icon: "~assets/img/faq/ic_RechargeOrder_def_b.png",
+      order_icon: "",
       card_no: "Card No. 0213 9030 831",
       order_create_time: "2018-10-11T09:25:52.984Z",
       days_remaining: 0,

@@ -2,10 +2,10 @@
   <div>
     <div id="wrapper">
     <div class="order-msg">
-        <div class="top">
+        <div class="top" v-if="serviceData.order_info">
             <p class="time">{{serviceData.order_info.order_create_time | formatDate }}</p>
             <div class="order-type clearfix">
-                <img src="serviceData.order_info.order_icon" alt="">
+                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
                 <div class="right">
                 <p class="order-name">{{serviceData.order_info.order_type }}<span>{{serviceData.order_info.order_amount }}</span></p>
                 <p class="order-status">{{serviceData.order_info.card_no }}<span>{{serviceData.order_info.order_status }}</span></p>
@@ -16,7 +16,7 @@
         <div class="bottom clearfix">
             <p class="clearfix">Questions <img src="~assets/img/faq/ic_categary_copy41.png" alt=""></p>
             <ul>
-                <li v-for="(item,index) in serviceData.questions" :key="index">item.content</li>
+                <li v-for="(item,index) in serviceData.questions" :key="index">{{item.content}}</li>
             </ul>
             <div class="btn">COMPLAIN</div>
         </div>
@@ -77,11 +77,11 @@ export default {
       return moment(date).format('D MMM YYYY HH-mm:ss')
     }
   },
-  created(){
+  mounted(){
     this.$axios.get(`/ocs/v1/service?entranceId=${this.entranceId}`,{
       }).then(res => {
-            if (res.data && res.data.length > 0) {
-              this.serviceData = res.data
+            if (res.data) {
+              this.serviceData = res.data.data
             }
         })
   },
