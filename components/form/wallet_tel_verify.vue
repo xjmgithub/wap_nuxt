@@ -6,12 +6,12 @@
             <div class="number">
                 <input type="tel" :disabled="disabled" :class="{focus:focus_tel,'input-error':error_tel}" v-model="tel" @focus="focus_tel=true" @blur="focus_tel=false" placeholder="Cellphone number" />
             </div>
-                <div class="get-code">
-                    <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
-                </div>
+            <div class="get-code">
+                <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
             </div>
-            <div class="error" v-show="error_tel">{{error_tel}}</div>
         </div>
+        <div class="error" v-show="error_tel">{{error_tel}}</div>
+    </div>
 </template>
 <script>
 import qs from 'qs'
@@ -43,7 +43,8 @@ export default {
             tel: '',
             focus_tel: false,
             error_tel: '',
-            codeDuring: 0
+            codeDuring: 0,
+            waiting_res: false
         }
     },
     computed: {
@@ -56,22 +57,17 @@ export default {
             this.tel = tel
         },
         getCode() {
-            // TODO 防止多次点击
-            if (!this.canGetCode) return false
+            if (!this.canGetCode || this.waiting_res) return false
+            this.waiting_res = true
             let accountNo = JSON.parse(localStorage.getItem('wallet_account'))
                 .accountNo
             this.$axios
                 .post(
                     `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code?phone=${this
-                        .prefix + this.tel}&`,
-                    {},
-                    {
-                        headers: {
-                            token: this.$store.state.token
-                        }
-                    }
+                        .prefix + this.tel}&`
                 )
                 .then(res => {
+                    this.waiting_res = false
                     if (res.data.code == 0) {
                         this.$emit('canNext')
                         this.codeDuring = 60
@@ -91,8 +87,8 @@ export default {
 .title {
     line-height: 2rem;
     height: 2rem;
-    font-size: 0.9rem;
-    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
 }
 .input-tel {
     display: -webkit-box;
@@ -117,6 +113,7 @@ export default {
             height: 2rem;
             line-height: 2rem;
             outline: none;
+            padding-left: 0.5rem;
             border-bottom: #dddddd solid 1px;
             &::-webkit-input-placeholder {
                 font-size: 0.9rem;
@@ -146,6 +143,7 @@ export default {
         text-align: center;
         height: 2rem;
         line-height: 2rem;
+        border-radius: 2px;
         cursor: pointer;
         &.disabled {
             background: #eeeeee;

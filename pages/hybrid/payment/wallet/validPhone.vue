@@ -1,12 +1,12 @@
 <template>
     <div class="container">
         <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
-        <div class="change-phone-link">
+        <div class="change-phone-link" v-if="reset">
             <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
-            <nuxt-link v-if="!init" to="/hybrid/payment/wallet/validEmail">RESET IT BY EMAIL</nuxt-link>
+            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)" style="margin-bottom:0.5rem"></mButton>
+            <nuxt-link v-if="!init&&wallet_email_config" to="/hybrid/payment/wallet/validEmail">RESET IT BY EMAIL</nuxt-link>
         </div>
         <div class="step2" v-show="step==2">
             <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
@@ -44,7 +44,8 @@ export default {
             step: 1,
             accountNo: '',
             prefix: '',
-            init: this.$route.query.init || false
+            init: this.$route.query.init || false,
+            wallet_email_config: false
         }
     },
     computed: {
@@ -59,6 +60,9 @@ export default {
             window.localStorage.getItem('wallet_account')
         )
         this.accountNo = walletAccount.accountNo
+        if (walletAccount.email) {
+            this.wallet_email_config = true
+        }
 
         if (walletAccount.phone) {
             // already set phone
@@ -67,17 +71,11 @@ export default {
             this.$refs.phone.setTel(walletAccount.phone.substr(3))
         } else {
             this.reset = false
-            this.$axios
-                .get('/vup/v1/ums/user/area', {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                })
-                .then(res => {
-                    if (res.data && res.data.phonePrefix) {
-                        this.prefix = res.data.phonePrefix
-                    }
-                })
+            this.$axios.get('/vup/v1/ums/user/area').then(res => {
+                if (res.data && res.data.phonePrefix) {
+                    this.prefix = res.data.phonePrefix
+                }
+            })
         }
     },
     methods: {
@@ -91,17 +89,14 @@ export default {
                             `/mobilewallet/uc/v2/accounts/${
                                 this.accountNo
                             }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`,
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                                tel}&verifyCode=${vscode}`
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.step = num
+                            } else {
+                                this.$alert(data.message)
                             }
                         })
                 } else {
@@ -111,17 +106,14 @@ export default {
                                 this.accountNo
                             }/phone?phone=${this.prefix +
                                 tel}&verifyCode=${vscode}`,
-                            {},
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
-                            }
+                            {}
                         )
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                this.step = num
+                                this.$alert('Set phone successfully', () => {
+                                    this.step = num
+                                })
                             } else {
                                 this.$alert(data.message)
                             }
@@ -132,7 +124,22 @@ export default {
                 let newpass = this.$refs.newpass.password
                 let confirmpass = this.$refs.confirmpass.password
                 if (newpass != confirmpass) {
-                    this.$alert('Two passwords are different.')
+                    this.$confirm(
+                        'Password do not match.Please try again.',
+                        () => {
+                            window.location.href =
+                                '/hybrid/payment/wallet/validPhone'
+                        },
+                        () => {
+                            this.$confirm(
+                                'Cancel setting your payment password?',
+                                () => {
+                                    window.location.href =
+                                        '/hybrid/payment/wallet/payto'
+                                }
+                            )
+                        }
+                    )
                     return false
                 }
                 this.$axios
@@ -140,12 +147,7 @@ export default {
                         `/mobilewallet/uc/v2/accounts/${
                             this.accountNo
                         }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`,
-                        {},
-                        {
-                            headers: {
-                                token: this.$store.state.token
-                            }
-                        }
+                        {}
                     )
                     .then(res => {
                         let data = res.data
@@ -157,6 +159,14 @@ export default {
                             })
                         }
                     })
+            } else if (num == 4) {
+                let newpass = this.$refs.newpass.password
+                let reg = /^[\d]+$/
+                if (!reg.test(newpass)) {
+                    this.$alert('You must enter pure numbers.')
+                    return false
+                }
+                this.step = num
             } else {
                 this.step = num
             }
@@ -208,7 +218,7 @@ export default {
 .footer {
     position: fixed;
     bottom: 3rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

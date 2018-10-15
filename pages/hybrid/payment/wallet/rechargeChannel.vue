@@ -3,7 +3,7 @@
         <div class="eWallet">
             <p class="cardNo">eWallet No. {{walletAccount}}</p>
             <div>
-                <span class="balance">Balance：</span>
+                <span class="balance">Balance: </span>
                 <span class="currency">{{currency}}</span>
                 <span class="money">{{walletLeft | fixAmount}}</span>
             </div>
@@ -47,11 +47,7 @@ export default {
         this.walletLeft = wallet.amount
         this.currency = JSON.parse(localStorage.getItem('payObject')).currency
         
-        this.$axios.get('/mobilewallet/v1/recharge-channels', {
-                headers: {
-                    token: this.$store.state.token
-                }
-            }).then(res => {
+        this.$axios.get('/mobilewallet/v1/recharge-channels').then(res => {
             let list = []
             if (res.data && res.data.length > 0) {
                 res.data.forEach((item, index) => {
@@ -137,7 +133,7 @@ export default {
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Password ref="pass" :placeholder="pwdType" :toggleView="false" @endinput="setPassword"></Password>
+        <Password ref="pass" :placeholder="pwdType" :toggleView="true" @endinput="setPassword"></Password>
         <div class="forgot-pwd">
             <nuxt-link :to="forgetUrl">Forgot payment password?</nuxt-link>
         </div>
@@ -13,6 +13,7 @@
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
+import { updateWalletAccount, updateWalletConf } from '~/functions/utils'
 export default {
     data() {
         return {
@@ -31,16 +32,45 @@ export default {
         Password
     },
     mounted() {
-        let wallet_config = JSON.parse(localStorage.getItem('wallet_config'))
         this.payChannelId = JSON.parse(
             window.localStorage.getItem('payChannelId')
         )
         this.payToken = localStorage.getItem('payToken')
-        if (wallet_config.phone == 'true') {
-            this.forgetUrl = '/hybrid/payment/wallet/validPhone'
-        } else {
-            this.forgetUrl = '/hybrid/payment/wallet/validEmail'
-        }
+        updateWalletAccount(this, account => {
+            updateWalletConf(this, account.accountNo, walletConf => {
+                this.$axios
+                    .get('/vup/v1/ums/user/area', {
+                        headers: {
+                            versionCode: '5300',
+                            clientType: 'android'
+                        }
+                    })
+                    .then(res => {
+                        let configs = res.data && res.data.appFBConfigs
+                        let type = true
+                        configs.forEach(item => {
+                            if (item.functionBlockType == 91) {
+                                if (item.validType == 2) {
+                                    type = true
+                                } else {
+                                    type = false
+                                }
+                            }
+                        })
+                        if (type == false && walletConf.email == 'false') {
+                            this.$router.replace(
+                                '/hybrid/payment/wallet/validEmail?init=true'
+                            )
+                        }
+                    })
+
+                if (walletConf.phone == 'true') {
+                    this.forgetUrl = '/hybrid/payment/wallet/validPhone'
+                } else {
+                    this.forgetUrl = '/hybrid/payment/wallet/validEmail'
+                }
+            })
+        })
     },
     methods: {
         setPassword(data) {
@@ -60,13 +90,7 @@ export default {
                         tradeType: 'JSAPI',
                         deviceInfo: '',
                         extendInfo: {} // 没有动态表单收集信息的传空对象
-                    },
-                    {
-                        headers: {
-                            token: this.$store.state.token
-                        }
-                    }
-                )
+                    })
                 .then(res => {
                     let data = res.data
                     let redirect = res.data.merchantPayRedirectUrl
@@ -84,13 +108,7 @@ export default {
                                     payerPayPassword: this.password,
                                     subject: payObject.paySubject,
                                     signature: data.extendInfo.signature
-                                },
-                                {
-                                    headers: {
-                                        token: this.$store.state.token
-                                    }
-                                }
-                            )
+                                })
                             .then(res => {
                                 if (res.data && res.data.resultCode == 0) {
                                     this.$router.push(
@@ -143,12 +161,12 @@ export default {
     font-weight: bold;
     display: inline-block;
     border-bottom: 1px solid #0087eb;
-    padding-top: 0.3rem;
+    padding-top: 0.5rem;
 }
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

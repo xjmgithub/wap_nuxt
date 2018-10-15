@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-        <loading v-show="loadStatus"></loading>
+    <div class="container" :class="{'grey-back':result==2}">
+        <loading v-show="loadStatus" ></loading>
         <template v-if="result=='1'&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
             <p class="success">
@@ -12,6 +12,11 @@
             </p>
             <p class="msg">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
+            </p>
+            <p class="msg">
+                Recharge No.:{{accountNo}} <br />
+                Recharge amount: {{amount}} {{currensySymbol}} <br />
+                eWallet balance: {{balance}} {{balanceCurrency}} <br />
             </p>
         </template>
         <template v-if="result=='2'&&!loadStatus">
@@ -41,7 +46,10 @@ export default {
             payToken: this.$route.query.payToken,
             amount: this.$route.query.amount || '',
             currency: this.$route.query.currency || '',
-            currensySymbol: this.$route.query.currensySymbol || ''
+            currensySymbol: this.$route.query.currensySymbol || '',
+            balance:'',
+            balanceCurrency:'',
+            accountNo:''
         }
     },
     components: {
@@ -52,6 +60,25 @@ export default {
         if (this.result == 1 || this.result == 2) {
             this.loadStatus = false
         }
+        if (this.result == 2) {
+            this.loadStatus = false
+        } else {
+            this.loadStatus = true
+            this.$axios
+                .get('/mobilewallet/v1/accounts/me')
+                .then(res => {
+                    if (res.data) {
+                        localStorage.setItem(
+                            'wallet_account',
+                            JSON.stringify(res.data)
+                        )
+                        this.accountNo = res.data.accountNo
+                        this.balance = res.data.amount
+                        this.balanceCurrency = res.data.currencySymbol
+                        this.loadStatus = false
+                    }
+                })
+        }
     },
     methods: {
         back() {
@@ -60,25 +87,37 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style scoped lang="less">
 .container {
     font-family: 'Roboto';
     padding: 5rem 1rem 0;
     text-align: center;
+    &.grey-back {
+        height: 100vh;
+        background: #EEEEEE;
+    }
 }
 .container img {
-    width: 12rem;
-    height: 12rem;
+    width: 15rem;
+    height: 13rem;
 }
 .container img.success_img {
     width: 3rem;
     height: 3rem;
+    margin-top:2rem;
 }
 .container .success {
     color: #0087eb;
     font-size: 1.1rem;
     font-weight: bold;
     margin-top: 0.75rem;
+}
+.container .fail {
+    line-height: 3rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ff6100;
+    margin-top: 1rem;
 }
 .container .money {
     color: #212121;
@@ -93,12 +132,14 @@ export default {
     color: #666;
     font-size: 1rem;
     line-height: 1.4rem;
+}
+.container .msg.lf{
     text-align: left;
 }
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

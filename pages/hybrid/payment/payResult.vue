@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" :class="{'grey-back':result==2}">
         <loading v-show="loadStatus"></loading>
         <template v-if="result=='1'&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
@@ -10,7 +10,7 @@
                 {{money}}
                 <span>{{currency}}</span>
             </p>
-            <p class="msg">
+            <p class="msg lf">
                 Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
             </p>
         </template>
@@ -24,7 +24,7 @@
             </p>
         </template>
         <div class="footer" v-show="!loadStatus">
-            <mButton :disabled="!redirect" text="OK" @click="back"></mButton>
+            <mButton text="OK" @click="back"></mButton>
         </div>
     </div>
 </template>
@@ -54,7 +54,8 @@ export default {
             return false
         }
         let _this = this
-        let num = 1
+        let num = 5
+
         let timer = setInterval(() => {
             num--
             if (num < 0) {
@@ -64,12 +65,7 @@ export default {
             }
             _this.$axios
                 .get(
-                    `/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`,
-                    {
-                        headers: {
-                            token: _this.$store.state.token
-                        }
-                    }
+                    `/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`
                 )
                 .then(res => {
                     _this.redirect = res.data.merchantPayRedirectUrl
@@ -100,25 +96,37 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style scoped lang="less">
 .container {
     font-family: 'Roboto';
     padding: 5rem 1rem 0;
     text-align: center;
+    &.grey-back {
+        height: 100vh;
+        background: #eeeeee;
+    }
 }
 .container img {
-    width: 12rem;
-    height: 12rem;
+    width: 15rem;
+    height: 13rem;
 }
 .container img.success_img {
     width: 3rem;
     height: 3rem;
+    margin-top: 2rem;
 }
 .container .success {
     color: #0087eb;
     font-size: 1.1rem;
     font-weight: bold;
     margin-top: 0.75rem;
+}
+.container .fail {
+    line-height: 3rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ff6100;
+    margin-top: 1rem;
 }
 .container .money {
     color: #212121;
@@ -133,12 +141,14 @@ export default {
     color: #666;
     font-size: 1rem;
     line-height: 1.4rem;
+}
+.container .msg.lf {
     text-align: left;
 }
 .footer {
     position: fixed;
     bottom: 2rem;
-    width: 16rem;
+    width: 75%;
     margin: 0 auto;
     left: 0;
     right: 0;

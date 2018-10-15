@@ -114,17 +114,21 @@ export default {
     .pwd-input {
         width: 100%;
         display: flex;
+        height: 2.2rem;
         .input-item {
             flex: 1;
-            margin-right: 0.5rem;
+            margin-right: 0.7rem;
             border-bottom: 1px solid #ddd;
-            height: 1.5rem;
+            height: 2.2rem;
             background: #fff;
             text-align: center;
             &:last-child {
                 margin-right: 0;
             }
         }
+    }
+    input {
+        color: transparent;
     }
     .hidden-pwd {
         width: 100%;
