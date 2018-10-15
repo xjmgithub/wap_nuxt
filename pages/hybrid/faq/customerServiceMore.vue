@@ -1,0 +1,253 @@
+<template>
+    <div id="wrapper">
+        <div class="list_faq_item  clearfix"> 
+            <div class="content_avatar fr"><img src="~assets/img/faq/1-02.png"></div>
+            <div class="content_show fr">
+                <img class="arrow" src="~assets/img/faq/Triangle_right.png">
+                <div class="faq_content">More Questions.</div>
+            </div>
+        </div>
+        <div class="order-msg">
+            <p class="time">{{orderMsg.order_create_time | formatDate}}</p>
+            <div class="order-type clearfix">
+                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                <div class="right">
+                    <p class="order-name">{{orderMsg.order_type}}<span>{{orderMsg.order_amount}}</span></p>
+                    <p class="order-status">{{orderMsg.card_no}}<span>{{orderMsg.order_status}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="list_faq_item clearfix"> 
+            <div class="content_avatar fl"><img src="~assets/img/faq/ic_onlineservice_def_multicolor.png"></div> 
+            <div class ="welcome-wraper ">
+                <img class="arrow" src="~assets/img/faq/Triangle.png"> 
+                <div class="hint">You may ask:</div>
+                <ul class="ques-item-wraper clearfix">
+                    <li v-for="(item,index) in moreFaqsDate" :key="index">
+                        <span class="recommend_q_con">{{item.content}}</span>
+                        <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
+                    </li> 
+                </ul>
+            </div>
+        </div>
+        <div class="live-chat">
+            <button class="btn">
+                LIVE CHAT
+            </button>
+        </div>
+    </div>
+</template>
+<script>
+let moment = require("moment/moment.js");
+export default {
+  layout: "base",
+  data(){
+      return{
+        moreFaqsDate:[],
+        orderMsg:{}
+      }
+  },
+  mounted(){
+    this.orderMsg = JSON.parse(sessionStorage.getItem('orderMsg'))
+    this.$axios.get('/ocs/v1/moreFaqs',{
+      }).then(res => {
+            if (res.data.data.length > 0 ) {
+              this.moreFaqsDate = res.data.data
+            }
+        })
+  },
+   filters:{
+    formatDate(date){
+      return moment(date).format('D MMM YYYY HH-mm:ss')
+    }
+  },
+  head() {
+    return {
+      title: "Customer Service - More",
+    };
+  }
+};
+</script>
+<style lang="less">
+body {
+  background: #eee;
+}
+.wrapper {
+  font-family: "DINPro", Roboto, Arial, Helvetica, Sans-serif;
+}
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+.clearfix:after {
+  display: block;
+  visibility: hidden;
+  clear: both;
+  height: 0;
+  content: "";
+}
+.clearfix {
+  zoom: 1;
+}
+.clear {
+  clear: both;
+}
+.list_faq_item {
+  margin-left: 8px;
+  margin-right: 8px;
+  padding-top: 1rem;
+  .content_avatar {
+    img {
+      width: 36px;
+      height: 36px;
+    }
+  }
+  .welcome-wraper {
+    display: inline-block;
+    width: auto;
+    margin-left: 10px;
+    background: #fff;
+    border-radius: 5px;
+    max-width: 75%;
+    position: relative;
+    padding: 0.6rem 0.8rem;
+    .welcome-item {
+      display: inline-block;
+      margin: 0;
+      height: auto;
+      line-height: 1.2rem;
+      font-size: 0.8rem;
+      color: #333333;
+    }
+    img.arrow {
+      width: 8px;
+      height: 12px;
+      position: absolute;
+      top: 13px;
+      left: -8px;
+    }
+    .hint {
+      font-weight: 600;
+      font-size: 16px;
+      margin-left: 0;
+      padding-bottom: 0.6rem;
+    }
+    span.recommend_q_con {
+      color: #666666;
+      font-size: 0.85rem;
+    }
+    .ques-item-wraper {
+      li {
+        position: relative;
+        border-top: 1px solid #eee;
+        padding:.3rem .94rem .3rem 0;
+        span{
+            display:inline-block;
+            width: 95%;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        img {
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          right: 0;
+          top: 50%;
+          margin-top: -10px;
+        }
+      }
+    }
+  }
+}
+.content_show {
+  display: inline-block;
+  width: auto;
+  margin-right: 10px;
+  background: #0087eb;
+  border-radius: 5px;
+  max-width: 75%;
+  position: relative;
+  .faq_content {
+    display: inline-block;
+    margin: 0;
+    padding: 0.6rem;
+    height: auto;
+    line-height: 1.2rem;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  img {
+    width: 8px;
+    height: 12px;
+    position: absolute;
+    top: 13px;
+    right: -8px;
+  }
+}
+.order-msg {
+  box-shadow: 0px 1px 3px 1px #dddddd;
+  border-radius: 5px;
+  padding: 0.5rem;
+  width: 95%;
+  margin: 1rem 2.5% 0 2.5%;
+  background: #fff;
+  .time {
+    width: 100%;
+    color: #aaaaaa;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #eeeeee;
+    padding: 0.2rem 0;
+  }
+}
+.order-type {
+  padding: 0.7em 0;
+  img {
+    width: 2.5rem;
+    height: 2.5rem;
+    float: left;
+  }
+  .right {
+    margin-left: 3rem;
+  }
+  .order-name {
+    span {
+      font-weight: bold;
+      float: right;
+    }
+  }
+  .order-status {
+    font-size: 0.9rem;
+    color: #999999;
+    span {
+      color: #00cc33;
+      float: right;
+    }
+  }
+}
+
+.live-chat {
+  width: 100%;
+  background: #fff;
+  text-align: center;
+  color: #0087eb;
+  border-top: 1px solid #eeeeee;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  button {
+    margin: 0 auto;
+    border: 1px solid #0087eb;
+    border-radius: 2px;
+    background: #fff;
+    padding: 0.3rem;
+    font-weight: bold;
+    width: 60%;
+  }
+}
+</style>

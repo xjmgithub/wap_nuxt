@@ -1,89 +1,131 @@
 <template>
   <div>
     <div id="wrapper">
-    <div class="order-msg">
-        <div class="top" v-if="serviceData.order_info">
-            <p class="time">{{serviceData.order_info.order_create_time | formatDate }}</p>
-            <div class="order-type clearfix">
-                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                <div class="right">
-                <p class="order-name">{{serviceData.order_info.order_type }}<span>{{serviceData.order_info.order_amount }}</span></p>
-                <p class="order-status">{{serviceData.order_info.card_no }}<span>{{serviceData.order_info.order_status }}</span></p>
-                </div>
-            </div>
+      <div class="order-msg">
+          <div class="top" v-if="serviceData.order_info">
+              <p class="time">{{serviceData.order_info.order_create_time | formatDate }}</p>
+              <div class="order-type clearfix">
+                  <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                  <div class="right">
+                  <p class="order-name">{{serviceData.order_info.order_type }}<span>{{serviceData.order_info.order_amount }}</span></p>
+                  <p class="order-status">{{serviceData.order_info.card_no }}<span>{{serviceData.order_info.order_status }}</span></p>
+                  </div>
+              </div>
+          </div>
+          <div class="gap"></div>
+          <div class="bottom clearfix">
+              <p class="clearfix">Questions 
+                <img src="~assets/img/faq/ic_categary_copy41.png" alt="" @click="moreFaqs">
+              </p>
+              <ul v-if="serviceData.questions">
+                  <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index">{{item.content}}</li>
+              </ul>
+              <div class="btn">COMPLAIN</div>
+          </div>
+          <div class="gap"></div>
+          <div class="more" @click="moreOrders">
+              MORE ORDERS
+          </div>
+      </div>
+      <div class="service">
+        <nav id="nav">
+          <a :class="{on:serviceTag == 'Hot'}" @click="changeServiceTag('Hot')"><img src="~assets/img/faq/ic_categary_copy42.png" alt=""></a>
+          <a :class="{on:serviceTag == 'ON'}" @click="changeServiceTag('ON')"><img src="~assets/img/faq/ic_categary_copy2.png" alt=""></a>
+          <a :class="{on:serviceTag == 'TV' }" @click="changeServiceTag('TV')"><img src="~assets/img/faq/ic_categary_copy21.png" alt=""></a>
+          <a :class="{on:serviceTag == 'Pay'}" @click="changeServiceTag('Pay')"><img src="~assets/img/faq/ic_categary_copy4.png" alt=""></a>
+          <a :class="{on:serviceTag == 'Account'}" @click="changeServiceTag('Account')"><img src="~assets/img/faq/ic_tv1.png" alt=""></a>
+        </nav>
+        <div class="questions" ref="questions">
+          <ul v-show="serviceTag == 'Hot'">
+            <li v-for="(item,index) in faqsByTag" :key="index">{{item.content}}</li>
+          </ul>
+          <div v-show="serviceTag == 'ON'" >2</div>
+          <div v-show="serviceTag == 'TV'" >3</div>
+          <div v-show="serviceTag == 'Pay'" >4</div>
+          <div v-show="serviceTag == 'Account'" >5</div>
         </div>
-        <div class="gap"></div>
-        <div class="bottom clearfix">
-            <p class="clearfix">Questions <img src="~assets/img/faq/ic_categary_copy41.png" alt=""></p>
-            <ul>
-                <li v-for="(item,index) in serviceData.questions" :key="index">{{item.content}}</li>
-            </ul>
-            <div class="btn">COMPLAIN</div>
-        </div>
-        <div class="gap"></div>
-        <div class="more">
-            MORE ORDERS
-        </div>
-    </div>
-    <div class="service">
-      <nav id="nav">
-        <a :class="{on:serviceIndex == 1}" @click="serviceIndex = 1"><img src="~assets/img/faq/ic_categary_copy42.png" alt=""></a>
-        <a :class="{on:serviceIndex == 2}" @click="serviceIndex = 2"><img src="~assets/img/faq/ic_categary_copy2.png" alt=""></a>
-        <a :class="{on:serviceIndex == 3}" @click="serviceIndex = 3"><img src="~assets/img/faq/ic_categary_copy21.png" alt=""></a>
-        <a :class="{on:serviceIndex == 4}" @click="serviceIndex = 4"><img src="~assets/img/faq/ic_categary_copy4.png" alt=""></a>
-        <a :class="{on:serviceIndex == 5}" @click="serviceIndex = 5"><img src="~assets/img/faq/ic_tv1.png" alt=""></a>
-      </nav>
-      <div class="questions"  ref="list">
-        <ul v-show="serviceIndex == 1">
-          <li>Certain channels are not playing but display loading, what do…</li>
-          <li>Paid successfully, why I still can not view the premium chann…</li>
-          <li>How can I link if I am a StarTimes decoder user?</li>
-          <li>What are the accepted payment methods for payment?</li>
-          <li>What are StarTimes App live TV channels?</li>
-          <li>What should I do if the player tells me the video can’t be play…</li>
-          <li>How to subscribe StarTimes ON?</li>
-          <li>Can I download the videos to watch them offline?</li>
-          <li>Who can get the free online video streaming service?</li>
-        </ul>
-        <div v-show="serviceIndex == 2" >2</div>
-        <div v-show="serviceIndex == 3" >3</div>
-        <div v-show="serviceIndex == 4" >4</div>
-        <div v-show="serviceIndex == 5" >5</div>
       </div>
     </div>
-    
-  </div>
     <div class="costomer">
       <button class="btn">
         COSTOMER SERVICE
       </button>
     </div>
   </div>
-  
 </template>
 <script>
 let moment = require("moment/moment.js");
+import BScroll from 'better-scroll'
 export default {
   layout: "base",
   data: function() {
     return {
-      serviceIndex: 1,
-      serviceData:{},
-      entranceId: this.$route.query.entrance_id || '',
+      serviceTag: "Hot",
+      entranceId: this.$route.query.entrance_id || "",
+      serviceData: {},
+      faqTagsData: [],
+      faqsByTag: [],
+      canLoadingMore: true,
+      pageSize: 10,
+      pageNum: 1
     };
   },
-  filters:{
-    formatDate(date){
-      return moment(date).format('D MMM YYYY HH-mm:ss')
+  filters: {
+    formatDate(date) {
+      return moment(date).format("D MMM YYYY HH-mm:ss")
     }
   },
-  mounted(){
-    this.$axios.get(`/ocs/v1/service?entranceId=${this.entranceId}`,{
-      }).then(res => {
-            if (res.data) {
-              this.serviceData = res.data.data
+  mounted() {
+    this.$axios
+      .get(`/ocs/v1/service?entranceId=${this.entranceId}`, {})
+      .then(res => {
+        if (res.data) {
+          this.serviceData = res.data.data
+        }
+      });
+    this.$axios.get("/ocs/v1/faqs/Tags", {}).then(res => {
+      if (res.data) {
+        this.faqTagsData = res.data.data
+      }
+    });
+    this.changeServiceTag(this.serviceTag)
+    this.$nextTick(() => {
+        this.scroll = new BScroll(this.$refs.questions ,{})
+      })
+
+  },
+  methods: {
+    moreFaqs() {
+      let param = {
+        order_create_time: this.serviceData.order_info.order_create_time,
+        order_type: this.serviceData.order_info.order_type,
+        card_no: this.serviceData.order_info.card_no,
+        order_status: this.serviceData.order_info.order_status,
+        order_amount: this.serviceData.order_info.order_amount
+      };
+      sessionStorage.setItem("orderMsg", JSON.stringify(param))
+      this.$router.replace("/hybrid/faq/customerServiceMore")
+    },
+    moreOrders() {
+      this.$router.replace("/hybrid/faq/moreOrders")
+    },
+    changeServiceTag(tag) {
+      this.serviceTag = tag
+      this.$axios
+        .get(
+          `/ocs/v1/faqs/byTag?tagId=${this.serviceTag}&
+                              pageSize=${this.pageSize}&
+                              pageNum=${this.pageNum}`, {}
+        )
+        .then(res => {
+          if (res.data) {
+            this.faqsByTag = res.data.data.rows;
+            if (this.faqsByTag.length <= this.pageSize) {
+              this.canLoadingMore = false
             }
-        })
+          }
+        });
+    }
   },
   head() {
     return {
@@ -212,6 +254,8 @@ body {
   }
   .questions {
     margin-bottom: 4.5rem;
+    height:22rem;
+    overflow: auto;
     li {
       overflow: hidden;
       text-overflow: ellipsis;
