@@ -19,7 +19,9 @@
                 <ul>
                   <li v-for="(q,index) in item.questions" :key="index">{{q.content}} </li>
                 </ul>
-                <div class="btn">COMPLAIN</div>
+                 <div class="btn" v-for="(item,index) in item.service_components" :key="index">
+                    {{item.presentation_name}}
+              </div>
             </div>
         </div>
         <div class="line">&nbsp;</div>
@@ -141,6 +143,8 @@ body {
       margin-top:.7rem;
       float:right;
       font-weight:bold;
+      margin-left: 0.7rem;
+
     }
   }
 }

@@ -18,9 +18,11 @@
                 <img src="~assets/img/faq/ic_categary_copy41.png" alt="" @click="moreFaqs">
               </p>
               <ul v-if="serviceData.questions">
-                  <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index">{{item.content}}</li>
+                  <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id" >{{item.content}}</li>
               </ul>
-              <div class="btn">COMPLAIN</div>
+              <div class="btn" v-for="(item,index) in serviceData.service_components" :key="index">
+                {{item.presentation_name}}
+              </div>
           </div>
           <div class="gap"></div>
           <div class="more" @click="moreOrders">
@@ -35,9 +37,9 @@
           <a :class="{on:serviceTag == 'Pay'}" @click="changeServiceTag('Pay')"><img src="~assets/img/faq/ic_categary_copy4.png" alt=""></a>
           <a :class="{on:serviceTag == 'Account'}" @click="changeServiceTag('Account')"><img src="~assets/img/faq/ic_tv1.png" alt=""></a>
         </nav>
-        <div class="questions" ref="questions">
+        <div class="questions">
           <ul v-show="serviceTag == 'Hot'">
-            <li v-for="(item,index) in faqsByTag" :key="index">{{item.content}}</li>
+            <li v-for="(item,index) in faqsByTag" :key="index" >{{item.content}}</li>
           </ul>
           <div v-show="serviceTag == 'ON'" >2</div>
           <div v-show="serviceTag == 'TV'" >3</div>
@@ -55,7 +57,6 @@
 </template>
 <script>
 let moment = require("moment/moment.js");
-import BScroll from 'better-scroll'
 export default {
   layout: "base",
   data: function() {
@@ -89,10 +90,6 @@ export default {
       }
     });
     this.changeServiceTag(this.serviceTag)
-    this.$nextTick(() => {
-        this.scroll = new BScroll(this.$refs.questions ,{})
-      })
-
   },
   methods: {
     moreFaqs() {
@@ -104,10 +101,10 @@ export default {
         order_amount: this.serviceData.order_info.order_amount
       };
       sessionStorage.setItem("orderMsg", JSON.stringify(param))
-      this.$router.replace("/hybrid/faq/customerServiceMore")
+      this.$router.push("/hybrid/faq/customerService")
     },
     moreOrders() {
-      this.$router.replace("/hybrid/faq/moreOrders")
+      this.$router.push("/hybrid/faq/moreOrders")
     },
     changeServiceTag(tag) {
       this.serviceTag = tag
@@ -220,7 +217,9 @@ body {
       font-size: 0.8rem;
       margin-top: 0.7rem;
       float: right;
+      margin-left: 0.7rem;
       font-weight: bold;
+     
     }
   }
   .more {
@@ -265,7 +264,8 @@ body {
       font-size: 0.8rem;
       & + li {
         border-top: 1px solid #eeeeee;
-      }
+      }    
+
     }
   }
 }

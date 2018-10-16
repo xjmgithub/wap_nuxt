@@ -77,6 +77,40 @@ module.exports ={
           date_end: "string"
         }
       ],
+      service_components:[
+        {
+          id: 0,
+          service_type_id: 0,
+          service_sub_type_id: 0,
+          business_type_id: 0,
+          order_type_id: 0,
+          service_type: "string",
+          service_sub_typed: "string",
+          business_type: "string",
+          order_type: "string",
+          presentation_style: 0,
+          presentation_name: "BOUQUET",
+          presentation_img_url: "~assets/img/faq/ic_categary_copy42.png",
+          service_address: "string",
+          service_description: "string"
+        },
+        {
+          id: 0,
+          service_type_id: 0,
+          service_sub_type_id: 0,
+          business_type_id: 0,
+          order_type_id: 0,
+          service_type: "string",
+          service_sub_typed: "string",
+          business_type: "string",
+          order_type: "string",
+          presentation_style: 0,
+          presentation_name: "COMPLAIN",
+          presentation_img_url: "~assets/img/faq/ic_categary_copy42.png",
+          service_address: "string",
+          service_description: "string"
+        },
+      ]
     },
     {
       id: 1,
@@ -153,6 +187,24 @@ module.exports ={
           date_end: "string"
         }
       ],
+      service_components:[
+        {
+          id: 0,
+          service_type_id: 0,
+          service_sub_type_id: 0,
+          business_type_id: 0,
+          order_type_id: 0,
+          service_type: "string",
+          service_sub_typed: "string",
+          business_type: "string",
+          order_type: "string",
+          presentation_style: 0,
+          presentation_name: "BOUQUET",
+          presentation_img_url: "~assets/img/faq/ic_categary_copy42.png",
+          service_address: "string",
+          service_description: "string"
+        }
+      ]
     },
     {
       id: 2,
@@ -229,6 +281,40 @@ module.exports ={
           date_end: "string"
         }
       ],
+      service_components:[
+        {
+          id: 0,
+          service_type_id: 0,
+          service_sub_type_id: 0,
+          business_type_id: 0,
+          order_type_id: 0,
+          service_type: "string",
+          service_sub_typed: "string",
+          business_type: "string",
+          order_type: "string",
+          presentation_style: 0,
+          presentation_name: "BOUQUET",
+          presentation_img_url: "~assets/img/faq/ic_categary_copy42.png",
+          service_address: "string",
+          service_description: "string"
+        },
+        {
+          id: 0,
+          service_type_id: 0,
+          service_sub_type_id: 0,
+          business_type_id: 0,
+          order_type_id: 0,
+          service_type: "string",
+          service_sub_typed: "string",
+          business_type: "string",
+          order_type: "string",
+          presentation_style: 0,
+          presentation_name: "COMPLAIN",
+          presentation_img_url: "~assets/img/faq/ic_categary_copy42.png",
+          service_address: "string",
+          service_description: "string"
+        },
+      ]
     },
   ]
 }
