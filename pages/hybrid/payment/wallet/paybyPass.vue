@@ -104,7 +104,7 @@ export default {
                                 payerPayPassword: this.password,
                                 subject: payObject.paySubject,
                                 signature: data.extendInfo.signature,
-                                extendInfo: {
+                                extensionInfo: {
                                     paySeqNo: data.extendInfo.paySeqNo
                                 }
                             })
