@@ -82,33 +82,32 @@ export default {
             let order = localStorage.getItem('txNo')
 
             this.$axios
-                .post(
-                    '/payment/api/v2/invoke-payment',
-                    {
-                        payToken: this.payToken,
-                        payChannelId: this.payChannelId,
-                        tradeType: 'JSAPI',
-                        deviceInfo: '',
-                        extendInfo: {} // 没有动态表单收集信息的传空对象
-                    })
+                .post('/payment/api/v2/invoke-payment', {
+                    payToken: this.payToken,
+                    payChannelId: this.payChannelId,
+                    tradeType: 'JSAPI',
+                    deviceInfo: '',
+                    extendInfo: {} // 没有动态表单收集信息的传空对象
+                })
                 .then(res => {
                     let data = res.data
                     let redirect = res.data.merchantPayRedirectUrl
                     if (data && data.resultCode == 0) {
                         this.$axios
-                            .post(
-                                '/mobilewallet/v1/balance-payments',
-                                {
-                                    amount: payObject.totalAmount,
-                                    currency: payObject.currency,
-                                    note: payObject.payNote,
-                                    orderId: order,
-                                    payeeAccountNo: this.payChannelId,
-                                    payerAccountNo: ewallet.accountNo,
-                                    payerPayPassword: this.password,
-                                    subject: payObject.paySubject,
-                                    signature: data.extendInfo.signature
-                                })
+                            .post('/mobilewallet/v1/balance-payments', {
+                                amount: payObject.totalAmount,
+                                currency: payObject.currency,
+                                note: payObject.payNote,
+                                orderId: order,
+                                payeeAccountNo: this.payChannelId,
+                                payerAccountNo: ewallet.accountNo,
+                                payerPayPassword: this.password,
+                                subject: payObject.paySubject,
+                                signature: data.extendInfo.signature,
+                                extendInfo: {
+                                    paySeqNo: data.paySeqNo
+                                }
+                            })
                             .then(res => {
                                 if (res.data && res.data.resultCode == 0) {
                                     this.$router.push(
