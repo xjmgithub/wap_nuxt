@@ -4,9 +4,9 @@
       <label class="radio">
         <input type="radio" name="pay-options" value="item.code" @click="checkThis(item.code)" :checked="item.checked?true:false"/>
         <i></i>
-        <div class="img-box" v-show="item.imgUrl">
+        <!-- <div class="img-box" v-show="item.imgUrl">
           <img :src="item.imgUrl" alt=""> 
-        </div>
+        </div> -->
         <span :class="{ml15:item.imgUrl!=''}">{{item.value}}</span>
       </label>
     </div>
