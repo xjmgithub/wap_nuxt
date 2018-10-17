@@ -105,7 +105,7 @@ export default {
                                 subject: payObject.paySubject,
                                 signature: data.extendInfo.signature,
                                 extendInfo: {
-                                    paySeqNo: data.paySeqNo
+                                    paySeqNo: data.extendInfo.paySeqNo
                                 }
                             })
                             .then(res => {
