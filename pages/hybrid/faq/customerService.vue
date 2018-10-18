@@ -93,13 +93,14 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 body {
     background: #eee;
 }
 #wrapper {
     font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
     margin-bottom: 4.7rem;
+    background: #eee;
 }
 .fl {
     float: left;

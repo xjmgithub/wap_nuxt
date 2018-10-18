@@ -45,9 +45,20 @@
                     </a>
                 </nav>
                 <div class="questions">
-                    <div ref="scrollTop" v-show="serviceTagName == 'Hot'">
+                    <div ref="scrollTop" v-show="serviceTagName">
                         <ul ref="child">
-                            <li v-for="(item,index) in faqsByTag.Hot" :key="index" @click="saveFaq('tagFaq',item.content)">{{item.content}}</li>
+                            <li>asdfasdf1</li>
+                            <li>asdfasdf2</li>
+                            <li>asdfasdf3</li>
+                            <li>asdfasdf4</li>
+                            <li>asdfasdf5</li>
+                            <li>asdfasdf6</li>
+                            <li>asdfasdf1</li>
+                            <li>asdfasdf2</li>
+                            <li>asdfasdf3</li>
+                            <li>asdfasdf4</li>
+                            <li>asdfasdf5</li>
+                            <li>asdfasdf6</li>
                         </ul>
                     </div>
                     <div v-show="serviceTagName == 'ON'">2</div>
@@ -199,7 +210,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 html {
     overflow-y: hidden;
 }
@@ -329,9 +340,13 @@ body {
     }
     .questions {
         // margin-bottom: 4.5rem;
-        height: 8rem;
-        overflow: scroll;
+        // overflow: scroll;
         flex: 1;
+        overflow:hidden;
+        div{
+            overflow: auto;
+            height:100%;
+        }
         li {
             overflow: hidden;
             text-overflow: ellipsis;
