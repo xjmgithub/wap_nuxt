@@ -91,17 +91,7 @@ export default {
             title: 'Customer Service'
         }
     }
-<<<<<<< HEAD
-  },
-  head() {
-    return {
-      title: "Customer Service"
-    };
-  }
-};
-=======
 }
->>>>>>> ce2938852442581a2f6f1f48d87797d4420d16b9
 </script>
 <style lang="less">
 body {
