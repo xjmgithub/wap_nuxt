@@ -29,22 +29,26 @@
                     MORE ORDERS
                 </div>
             </div>
-            <div class="service">
+            <div class="service" v-if="faqTagsData" >
                 <nav id="nav">
-                    <a :class="{on:serviceTag == 'Hot'}" @click="changeServiceTag('Hot')"><img src="~assets/img/faq/ic_categary_copy42.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'ON'}" @click="changeServiceTag('ON')"><img src="~assets/img/faq/ic_categary_copy2.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'TV' }" @click="changeServiceTag('TV')"><img src="~assets/img/faq/ic_categary_copy21.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'Pay'}" @click="changeServiceTag('Pay')"><img src="~assets/img/faq/ic_categary_copy4.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'Account'}" @click="changeServiceTag('Account')"><img src="~assets/img/faq/ic_tv1.png" alt=""></a>
+                    <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:serviceTagId == item.tagging_id}" @click="changeServiceTag(index,item.tagging_id,item.tagging_name)">
+                        <img src="~assets/img/faq/ic_categary_copy42.png" v-show="item.tagging_name == 'Hot'">
+                        <img src="~assets/img/faq/ic_categary_copy2.png" v-show="item.tagging_name == 'ON'">
+                        <img src="~assets/img/faq/ic_categary_copy21.png"  v-show="item.tagging_name == 'TV'">
+                        <img src="~assets/img/faq/ic_categary_copy4.png" v-show="item.tagging_name == 'Pay'">
+                        <img src="~assets/img/faq/ic_tv1.png" v-show="item.tagging_name == 'Account'">
+                    </a>
                 </nav>
-                <div class="questions">
-                    <ul v-show="serviceTag == 'Hot'">
-                        <li v-for="(item,index) in faqsByTag" :key="index">{{item.content}}</li>
-                    </ul>
-                    <div v-show="serviceTag == 'ON'">2</div>
-                    <div v-show="serviceTag == 'TV'">3</div>
-                    <div v-show="serviceTag == 'Pay'">4</div>
-                    <div v-show="serviceTag == 'Account'">5</div>
+                <div class="questions" >
+                    <div ref="scrollTop" v-show="serviceTagName == 'Hot'" >
+                        <ul ref="child">
+                            <li v-for="(item,index) in faqsByTag.Hot" :key="index">{{item.content}}</li>
+                        </ul>
+                    </div>
+                    <div v-show="serviceTagName == 'ON'">2</div>
+                    <div v-show="serviceTagName == 'TV'">3</div>
+                    <div v-show="serviceTagName == 'Pay'">4</div>
+                    <div v-show="serviceTagName == 'Account'">5</div> 
                 </div>
             </div>
         </div>
@@ -61,14 +65,24 @@ export default {
     layout: 'base',
     data: function() {
         return {
-            serviceTag: 'Hot',
+            serviceTagId: '',
+            serviceTagName:'Hot',
             entranceId: this.$route.query.entrance_id || '',
             serviceData: {},
             faqTagsData: [],
-            faqsByTag: [],
+            faqsByTag: {
+                Hot:[],
+                ON:[],
+                TV:[],
+                Pay:[],
+                Account:[]
+            },
             canLoadingMore: true,
             pageSize: 10,
-            pageNum: 1
+            pageNum: [1,1,1,1,1],
+            page:0,
+            isLoading :0
+
         }
     },
     filters: {
@@ -77,19 +91,22 @@ export default {
         }
     },
     mounted() {
+        let _this = this
         this.$axios
             .get(`/ocs/v1/service?entranceId=${this.entranceId}`, {})
             .then(res => {
                 if (res.data) {
-                    this.serviceData = res.data.data
+                    _this.serviceData = res.data.data
                 }
             })
         this.$axios.get('/ocs/v1/faqs/Tags', {}).then(res => {
             if (res.data) {
-                this.faqTagsData = res.data.data
+                _this.faqTagsData = res.data.data
+                _this.serviceTagId = 0
             }
         })
-        this.changeServiceTag(this.serviceTag)
+        this.changeServiceTag(0,this.serviceTagId,'Hot')
+        this.$refs.scrollTop.addEventListener('scroll', this.handleScroll)
     },
     methods: {
         moreFaqs() {
@@ -101,29 +118,60 @@ export default {
                 order_status: this.serviceData.order_info.order_status,
                 order_amount: this.serviceData.order_info.order_amount
             }
-            sessionStorage.setItem('orderMsg', JSON.stringify(param))
+            localStorage.setItem('orderMsg', JSON.stringify(param))
             this.$router.push('/hybrid/faq/customerService')
         },
         moreOrders() {
             this.$router.push('/hybrid/faq/moreOrders')
         },
-        changeServiceTag(tag) {
-            this.serviceTag = tag
-            this.$axios
+        changeServiceTag(page,tagId,tagName) {
+            let _this = this
+            this.page = page
+            this.serviceTagId = tagId
+            this.serviceTagName = tagName
+            if(_this.faqsByTag[this.serviceTagName].length <= 0){
+                _this.$axios
+                    .get(
+                        `/ocs/v1/faqs/byTag?tagId=${_this.serviceTagId}&
+                                  pageSize=${_this.pageSize}&
+                                  pageNum=${_this.pageNum[_this.page]}`,
+                        {}
+                    )
+                    .then(res => {
+                        if (res.data) {
+                            _this.faqsByTag[_this.serviceTagName] = res.data.data.rows
+                            if (res.data.data.rows <= _this.pageSize) {
+                                _this.canLoadingMore = false
+                            }
+                        }
+                })
+            }
+        },
+        handleScroll(){
+            let _this = this
+            let childHeight = this.$refs.child.offsetHeight
+            let scrollTop = this.$refs.scrollTop.scrollTop 
+            if(childHeight - scrollTop <= 150 && _this.canLoadingMore && this.isLoading == 0){
+                this.isLoading =1
+                this.$axios
                 .get(
-                    `/ocs/v1/faqs/byTag?tagId=${this.serviceTag}&
+                    `/ocs/v1/faqs/byTag?tagId=${this.serviceTagId}&
                               pageSize=${this.pageSize}&
-                              pageNum=${this.pageNum}`,
+                              pageNum=${this.pageNum[this.page] + 1}`,
                     {}
                 )
                 .then(res => {
                     if (res.data) {
-                        this.faqsByTag = res.data.data.rows
-                        if (this.faqsByTag.length <= this.pageSize) {
-                            this.canLoadingMore = false
+                        res.data.data.rows.forEach(ele => _this.faqsByTag[this.serviceTagName].push(ele))
+                        _this.$nextTick(()=>{
+                            this.isLoading = 0
+                        })
+                        if (res.data.data.rows.length <= _this.pageSize) {
+                            _this.canLoadingMore = false
                         }
                     }
                 })
+            }
         }
     },
     head() {
@@ -134,6 +182,9 @@ export default {
 }
 </script>
 <style lang="less">
+html{
+  overflow-y: hidden; 
+}
 body {
     background: #fff;
 }
@@ -254,8 +305,8 @@ body {
     }
     .questions {
         margin-bottom: 4.5rem;
-        height: 22rem;
-        overflow: auto;
+        height: 8rem;
+        overflow: scroll;
         li {
             overflow: hidden;
             text-overflow: ellipsis;
