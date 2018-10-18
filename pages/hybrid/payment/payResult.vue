@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         back() {
-            if (this.redirect) window.location.href = this.redirect
+            if (this.redirect) window.location.href = this.redirect || 'https://m.startimestv.com'
         }
     }
 }
