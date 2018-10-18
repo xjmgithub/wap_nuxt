@@ -86,7 +86,7 @@ export default {
   },
   head() {
     return {
-      title: "Customer Service - More"
+      title: "Customer Service"
     };
   }
 };
@@ -299,6 +299,7 @@ body {
     padding: 0.3rem;
     font-weight: bold;
     width: 60%;
+    outline: none;
   }
 }
 </style>
