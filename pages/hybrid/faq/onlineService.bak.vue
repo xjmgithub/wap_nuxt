@@ -1,5 +1,5 @@
 <template>
-    <div style="height:100vh;display:flex;flex-direction:column;">
+    <div>
         <div id="wrapper">
             <div class="order-msg" v-if="serviceData.order_info">
                 <div class="top">
@@ -198,9 +198,6 @@ body {
 #wrapper {
     padding: 0.5rem;
     font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
-    flex: 12;
-    display: flex;
-    flex-direction: column;
 }
 .clearfix:after {
     display: block;
@@ -293,9 +290,6 @@ body {
 }
 .service {
     margin-top: 1rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     #nav {
         width: 100%;
         margin: 0 auto;
@@ -316,10 +310,9 @@ body {
         }
     }
     .questions {
-        // margin-bottom: 4.5rem;
+        margin-bottom: 4.5rem;
         height: 8rem;
         overflow: scroll;
-        flex: 1;
         li {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -338,10 +331,12 @@ body {
     text-align: center;
     color: #0087eb;
     border-top: 1px solid #eeeeee;
+    margin-top: 1.5rem;
     padding: 1rem 0;
+    position: fixed;
+    bottom: 0;
     background: #fff;
     height: 4.25rem;
-    flex: 1;
     button {
         margin: 0 auto;
         border: 1px solid #0087eb;
