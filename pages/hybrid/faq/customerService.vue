@@ -72,7 +72,7 @@ export default {
     };
   },
   mounted() {
-    this.orderMsg = JSON.parse(sessionStorage.getItem("orderMsg"));
+    this.orderMsg = JSON.parse(localStorage.getItem("orderMsg"));
     this.$axios.get("/ocs/v1/moreFaqs", {}).then(res => {
       if (res.data.data.length > 0) {
         this.moreFaqsDate = res.data.data;
