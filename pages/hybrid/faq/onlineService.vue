@@ -18,7 +18,7 @@
                         <img src="~assets/img/faq/ic_categary_copy41.png" alt="" @click="moreFaqs">
                     </p>
                     <ul v-if="serviceData.questions">
-                        <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id" @click="saveFaq('orderFaq',item.content)">{{item.content}}</li>
+                        <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id" @click="saveFaq('orderFaq',item)">{{item.content}}</li>
                     </ul>
                     <div class="btn" v-for="(item,index) in serviceData.service_components" :key="index">
                         {{item.presentation_name}}
@@ -45,20 +45,9 @@
                     </a>
                 </nav>
                 <div class="questions">
-                    <div ref="scrollTop" v-show="serviceTagName">
+                    <div ref="scrollTop" v-show="serviceTagName=='Hot'">
                         <ul ref="child">
-                            <li>asdfasdf1</li>
-                            <li>asdfasdf2</li>
-                            <li>asdfasdf3</li>
-                            <li>asdfasdf4</li>
-                            <li>asdfasdf5</li>
-                            <li>asdfasdf6</li>
-                            <li>asdfasdf1</li>
-                            <li>asdfasdf2</li>
-                            <li>asdfasdf3</li>
-                            <li>asdfasdf4</li>
-                            <li>asdfasdf5</li>
-                            <li>asdfasdf6</li>
+                            <li v-for="(item,index) in faqsByTag.Hot" :key="index" @click="saveFaq('tagFaq',item)">{{item.content}}</li>
                         </ul>
                     </div>
                     <div v-show="serviceTagName == 'ON'">2</div>
@@ -120,7 +109,7 @@ export default {
                         order_status: _this.serviceData.order_info.order_status,
                         order_amount: _this.serviceData.order_info.order_amount
                     }
-                    localStorage.setItem('orderMsg', JSON.stringify(param))
+                    localStorage.setItem('orderMsg', JSON.stringify(_this.serviceData.order_info))
                 }
             })
         this.$axios.get('/ocs/v1/faqs/Tags', {}).then(res => {
