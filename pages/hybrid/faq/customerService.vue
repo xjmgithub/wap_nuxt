@@ -301,6 +301,7 @@ body {
         padding: 0.3rem;
         font-weight: bold;
         width: 60%;
+        outline: none;
     }
 }
 </style>

@@ -18,7 +18,7 @@
                         <img src="~assets/img/faq/ic_categary_copy41.png" alt="" @click="moreFaqs">
                     </p>
                     <ul v-if="serviceData.questions">
-                        <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id">{{item.content}}</li>
+                        <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id" @click="saveFaq('orderFaq',item.content)">{{item.content}}</li>
                     </ul>
                     <div class="btn" v-for="(item,index) in serviceData.service_components" :key="index">
                         {{item.presentation_name}}
@@ -32,17 +32,22 @@
             <div class="service" v-if="faqTagsData">
                 <nav id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:serviceTagId == item.tagging_id}" @click="changeServiceTag(index,item.tagging_id,item.tagging_name)">
-                        <img src="~assets/img/faq/ic_categary_copy42.png" v-show="item.tagging_name == 'Hot'">
-                        <img src="~assets/img/faq/ic_categary_copy2.png" v-show="item.tagging_name == 'ON'">
-                        <img src="~assets/img/faq/ic_categary_copy21.png" v-show="item.tagging_name == 'TV'">
-                        <img src="~assets/img/faq/ic_categary_copy4.png" v-show="item.tagging_name == 'Pay'">
-                        <img src="~assets/img/faq/ic_tv1.png" v-show="item.tagging_name == 'Account'">
+                        <img src="~assets/img/faq/ic_favorite_def_blue.png" v-show="item.tagging_name == 'Hot' && serviceTagId == item.tagging_id">
+                        <img src="~assets/img/faq/ic_favorite_def_g.png" v-show="item.tagging_name == 'Hot'    && serviceTagId != item.tagging_id">
+                        <img src="~assets/img/faq/ic_OTT_def_b.png" v-show="item.tagging_name == 'ON' && serviceTagId == item.tagging_id">
+                        <img src="~assets/img/faq/ic_OTT_def_g.png" v-show="item.tagging_name == 'ON' && serviceTagId != item.tagging_id">
+                        <img src="~assets/img/faq/ic_TV_def_blue.png" v-show="item.tagging_name == 'TV' && serviceTagId == item.tagging_id">
+                        <img src="~assets/img/faq/ic_TV_def_g.png" v-show="item.tagging_name == 'TV' && serviceTagId != item.tagging_id">
+                        <img src="~assets/img/faq/ic_changecard_def_blue.png" v-show="item.tagging_name == 'Pay' && serviceTagId == item.tagging_id">
+                        <img src="~assets/img/faq/ic_changecard_def_g.png" v-show="item.tagging_name == 'Pay' && serviceTagId != item.tagging_id">
+                        <img src="~assets/img/faq/ic_accountconfirm_def_blue.png" v-show="item.tagging_name == 'Account' && serviceTagId == item.tagging_id">
+                        <img src="~assets/img/faq/ic_accountconfirm_def_g.png" v-show="item.tagging_name == 'Account' && serviceTagId != item.tagging_id">
                     </a>
                 </nav>
                 <div class="questions">
                     <div ref="scrollTop" v-show="serviceTagName == 'Hot'">
                         <ul ref="child">
-                            <li v-for="(item,index) in faqsByTag.Hot" :key="index">{{item.content}}</li>
+                            <li v-for="(item,index) in faqsByTag.Hot" :key="index" @click="saveFaq('tagFaq',item.content)">{{item.content}}</li>
                         </ul>
                     </div>
                     <div v-show="serviceTagName == 'ON'">2</div>
@@ -53,7 +58,7 @@
             </div>
         </div>
         <div class="costomer">
-            <button class="btn">
+            <button class="btn" @click="costomerService">
                 COSTOMER SERVICE
             </button>
         </div>
@@ -96,6 +101,15 @@ export default {
             .then(res => {
                 if (res.data) {
                     _this.serviceData = res.data.data
+                    let param = {
+                        order_create_time:
+                            _this.serviceData.order_info.order_create_time,
+                        order_type: _this.serviceData.order_info.order_type,
+                        card_no: _this.serviceData.order_info.card_no,
+                        order_status: _this.serviceData.order_info.order_status,
+                        order_amount: _this.serviceData.order_info.order_amount
+                    }
+                    localStorage.setItem('orderMsg', JSON.stringify(param))
                 }
             })
         this.$axios.get('/ocs/v1/faqs/Tags', {}).then(res => {
@@ -109,15 +123,7 @@ export default {
     },
     methods: {
         moreFaqs() {
-            let param = {
-                order_create_time: this.serviceData.order_info
-                    .order_create_time,
-                order_type: this.serviceData.order_info.order_type,
-                card_no: this.serviceData.order_info.card_no,
-                order_status: this.serviceData.order_info.order_status,
-                order_amount: this.serviceData.order_info.order_amount
-            }
-            localStorage.setItem('orderMsg', JSON.stringify(param))
+            localStorage.removeItem('orderFaq')
             this.$router.push('/hybrid/faq/customerService')
         },
         moreOrders() {
@@ -132,8 +138,8 @@ export default {
                 _this.$axios
                     .get(
                         `/ocs/v1/faqs/byTag?tagId=${_this.serviceTagId}&
-                                  pageSize=${_this.pageSize}&
-                                  pageNum=${_this.pageNum[_this.page]}`,
+                                    pageSize=${_this.pageSize}&
+                                    pageNum=${_this.pageNum[_this.page]}`,
                         {}
                     )
                     .then(res => {
@@ -160,8 +166,8 @@ export default {
                 this.$axios
                     .get(
                         `/ocs/v1/faqs/byTag?tagId=${this.serviceTagId}&
-                              pageSize=${this.pageSize}&
-                              pageNum=${this.pageNum[this.page] + 1}`,
+                                pageSize=${this.pageSize}&
+                                pageNum=${this.pageNum[this.page] + 1}`,
                         {}
                     )
                     .then(res => {
@@ -178,6 +184,12 @@ export default {
                         }
                     })
             }
+        },
+        saveFaq(faqName, content) {
+            localStorage.setItem(faqName, JSON.stringify(content))
+        },
+        costomerService() {
+            localStorage.removeItem('tagFaq')
         }
     },
     head() {
@@ -350,6 +362,7 @@ body {
         padding: 0.3rem;
         font-weight: bold;
         width: 60%;
+        outline: none;
     }
 }
 </style>
