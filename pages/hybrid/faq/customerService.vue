@@ -1,66 +1,66 @@
 <template>
-  <div>
-    <div id="wrapper">
-      <div class="list_faq_item  clearfix">
-        <div class="content_avatar fr"><img src="~assets/img/faq/1-02.png"></div>
-        <div class="content_show fr">
-          <img class="arrow" src="~assets/img/faq/Triangle_right.png">
-          <div class="faq_content">More Questions.</div>
-        </div>
-      </div>
-      <div class="order-msg">
-        <p class="time">{{orderMsg.order_create_time | formatDate}}</p>
-        <div class="order-type clearfix">
-          <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-          <div class="right">
-            <p class="order-name">{{orderMsg.order_type}}<span>{{orderMsg.order_amount}}</span></p>
-            <p class="order-status">{{orderMsg.card_no}}<span>{{orderMsg.order_status}}</span></p>
-          </div>
-        </div>
-      </div>
-      <div class="list_faq_item clearfix">
-        <div class="content_avatar fl"><img src="~assets/img/faq/ic_onlineservice_def_multicolor.png"></div>
-        <div class="welcome-wraper ">
-          <img class="arrow" src="~assets/img/faq/Triangle.png">
-          <div class="hint">You may ask:</div>
-          <ul class="ques-item-wraper clearfix">
-            <li v-for="(item,index) in moreFaqsDate" :key="index">
-              <span class="recommend_q_con">{{item.content}}</span>
-              <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="list_faq_item clearfix">
-        <div class="content_avatar fl">
-          <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
-        </div>
-        <div class="welcome-wraper ">
-          <img class="arrow" src="~assets/img/faq/Triangle.png">
-          <span class="welcome-item">1. Please make sure you have signed in the authorized account that you subscribed StarTimes ON. 2. Please make sure the channel is in the plan you have subscribed. 3. Please make sure the internet connection is working.</span>
-          <div>
-            <div class="btn">COMPLAIN</div>
-            <div class="clear"></div>
-            <div class="attitude-container">
-              <div class="yes-item">
-                <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
-                <span>YES</span>
-              </div>
-              <div class="no-item">
-                <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
-                <span>NO</span>
-              </div>
+    <div>
+        <div id="wrapper">
+            <div class="list_faq_item  clearfix">
+                <div class="content_avatar fr"><img src="~assets/img/faq/1-02.png"></div>
+                <div class="content_show fr">
+                    <img class="arrow" src="~assets/img/faq/Triangle_right.png">
+                    <div class="faq_content">More Questions.</div>
+                </div>
             </div>
-          </div>
+            <div class="order-msg">
+                <p class="time">{{orderMsg.order_create_time | formatDate}}</p>
+                <div class="order-type clearfix">
+                    <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                    <div class="right">
+                        <p class="order-name">{{orderMsg.order_type}}<span>{{orderMsg.order_amount}}</span></p>
+                        <p class="order-status">{{orderMsg.card_no}}<span>{{orderMsg.order_status}}</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="list_faq_item clearfix">
+                <div class="content_avatar fl"><img src="~assets/img/faq/ic_onlineservice_def_multicolor.png"></div>
+                <div class="welcome-wraper ">
+                    <img class="arrow" src="~assets/img/faq/Triangle.png">
+                    <div class="hint">You may ask:</div>
+                    <ul class="ques-item-wraper clearfix">
+                        <li v-for="(item,index) in moreFaqsDate" :key="index">
+                            <span class="recommend_q_con">{{item.content}}</span>
+                            <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="list_faq_item clearfix">
+                <div class="content_avatar fl">
+                    <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+                </div>
+                <div class="welcome-wraper ">
+                    <img class="arrow" src="~assets/img/faq/Triangle.png">
+                    <span class="welcome-item">1. Please make sure you have signed in the authorized account that you subscribed StarTimes ON. 2. Please make sure the channel is in the plan you have subscribed. 3. Please make sure the internet connection is working.</span>
+                    <div>
+                        <div class="btn">COMPLAIN</div>
+                        <div class="clear"></div>
+                        <div class="attitude-container">
+                            <div class="yes-item">
+                                <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
+                                <span>YES</span>
+                            </div>
+                            <div class="no-item">
+                                <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
+                                <span>NO</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="live-chat">
+            <button class="btn">
+                LIVE CHAT
+            </button>
+        </div>
     </div>
-    <div class="live-chat">
-      <button class="btn">
-        LIVE CHAT
-      </button>
-    </div>
-  </div>
 </template>
 <script>
 let moment = require('moment/moment.js')
@@ -70,20 +70,87 @@ export default {
         return {
             moreFaqsDate: [],
             orderMsg: {},
-            isLogin: this.$store.state.user.type  // 如果有值即为登录状态,没有值则是匿名登录
+            isLogin: this.$store.state.user.type, // 如果有值即为登录状态,没有值则是匿名登录
+            user: this.$store.state.user,
+            config_id: this.$route.query.config_id,
+            directory_id: this.$route.query.directory_id,
+            showLiveChatBtn: false
         }
     },
     mounted() {
+        
+        
+        this.createServiceRecord()
+        // 登录状态判断是否本地缓存有对话记录，进行恢复
+        // 
+
+
         this.orderMsg = JSON.parse(localStorage.getItem('orderMsg'))
-        this.$axios.get('/ocs/v1/moreFaqs', {}).then(res => {
-            if (res.data.data.length > 0) {
-                this.moreFaqsDate = res.data.data
-            }
-        })
+        let questions = JSON.parse(localStorage.getItem('tagFaq'))
+        if (this.directory_id) {
+            // TODO 展示原来的faq逻辑，默认根目录
+            let areaId = user.areaID
+            this.$axios.get(`/ocs/v1/faqs//directory/${areaId}`).then(res => {
+                let categoryId = 183
+                if (res.data.code == 200) {
+                    categoryId = res.data.data
+                } else {
+                    categoryId = 183
+                }
+
+                // TODO WELCOME
+            })
+        } else if (questions) {
+            // TODO 单个问题
+            
+            this.renderOrder()
+            this.getAnswer(id)
+            // TODO 订单信息显示
+
+        } else {
+            // TODO MORE FAQS
+            this.$axios.get('/ocs/v1/moreFaqs', {}).then(res => {
+                if (res.data.data.length > 0) {
+                    this.moreFaqsDate = res.data.data
+                }
+            })
+        }
+
+        // livechat btn 按钮判断
+        
     },
     filters: {
         formatDate(date) {
             return moment(date).format('D MMM YYYY HH-mm:ss')
+        }
+    },
+    methods: {
+        getfaqDirectory(id) {
+            if (!id) return false
+            this.$axios.get(`/ocs/v1/faqs/category/${id}`).then(res => {
+                if (res.data.code == 200) {
+                    // TODO FAQ 列表
+                    // TODO 发送服务历史
+                    // TODO 未登录状态需要存储该操作记录进入本地缓存
+                }
+            })
+        },
+        getAnswer(id) {
+            // TODO
+            // TODO 发送服务历史
+            // TODO 未登录状态需要存储该操作记录进入本地缓存
+        },
+        renderOrder(){
+            // TODO 
+            // TODO 发送服务历史
+            // TODO 未登录状态需要存储该操作记录进入本地缓存
+        },
+        createServiceRecord(){
+            // TODO 生成一条服务记录,服务记录要全局记录
+            // TODO 未登录状态需要存储该操作记录进入本地缓存
+        },
+        cacheRecord(){
+            // TODO 未登录状态需要存储该操作记录进入本地缓存
         }
     },
     head() {
