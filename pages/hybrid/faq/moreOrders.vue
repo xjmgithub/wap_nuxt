@@ -61,7 +61,7 @@ let moment = require("moment/moment.js");
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 body {
     background: #fff;
 }
