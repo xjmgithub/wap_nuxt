@@ -86,7 +86,7 @@ export default {
 
 
         this.orderMsg = JSON.parse(localStorage.getItem('orderMsg'))
-        let questions = JSON.parse(localStorage.getItem('tagFaq'))
+        let questions = JSON.parse(localStorage.getItem('faq_question'))
         if (this.directory_id) {
             // TODO 展示原来的faq逻辑，默认根目录
             let areaId = user.areaID

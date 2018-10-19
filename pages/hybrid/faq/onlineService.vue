@@ -63,17 +63,12 @@ export default {
     layout: 'base',
     data: function() {
         return {
-            serviceTagId: '',
-            serviceTagName: 'Hot',
             entranceId: this.$route.query.entrance_id || '',
             serviceData: {},
             faqTagsData: [],
             faqsByTag: {},
-            canLoadingMore: true,
             pageSize: 10,
-            pageNum: [1, 1, 1, 1, 1],
             isLoading: false,
-            tagImg: {}
         }
     },
     filters: {
@@ -313,7 +308,7 @@ body {
     }
 }
 .service {
-    margin-top: 1rem;
+    margin-top: .8rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -321,7 +316,7 @@ body {
         width: 100%;
         margin: 0 auto;
         text-align: center;
-        padding-bottom: 0.7rem;
+        padding-bottom: 0.6rem;
         display: flex;
         a {
             border-bottom: 3px solid #eeeeee;
@@ -330,23 +325,24 @@ body {
             padding-bottom: 0.7rem;
 
             div {
-                width: 100%;
-                height: 2rem;
-                background-size: 100% 100%;
+                width: 1.4rem;
+                margin:0 auto;
+                height: 1.5rem;
+                background-size: contain !important;
                 &.tab_hot {
-                    background: url('~/assets/img/faq/ic_favorite_def_g.png');
+                    background: url('~/assets/img/faq/ic_favorite_def_g.png') no-repeat center;
                 }
                 &.tab_on {
-                    background: url('~/assets/img/faq/ic_OTT_def_g.png');
+                    background: url('~/assets/img/faq/ic_OTT_def_g.png') no-repeat center;
                 }
                 &.tab_tv {
-                    background: url('~/assets/img/faq/ic_TV_def_g.png');
+                    background: url('~/assets/img/faq/ic_TV_def_g.png') no-repeat center;
                 }
                 &.tab_pay {
-                    background: url('~/assets/img/faq/ic_changecard_def_g.png');
+                    background: url('~/assets/img/faq/ic_changecard_def_g.png') no-repeat center;
                 }
                 &.tab_account {
-                    background: url('~/assets/img/faq/ic_accountconfirm_def_g.png');
+                    background: url('~/assets/img/faq/ic_accountconfirm_def_g.png') no-repeat center;
                 }
             }
 
@@ -354,19 +350,19 @@ body {
                 border-bottom: 3px solid #0087eb;
                 div {
                     &.tab_hot {
-                        background: url('~/assets/img/faq/ic_favorite_def_blue.png');
+                        background: url('~/assets/img/faq/ic_favorite_def_blue.png') no-repeat center;
                     }
                     &.tab_on {
-                        background: url('~/assets/img/faq/ic_OTT_def_b.png');
+                        background: url('~/assets/img/faq/ic_OTT_def_b.png') no-repeat center;
                     }
                     &.tab_tv {
-                        background: url('~/assets/img/faq/ic_TV_def_blue.png');
+                        background: url('~/assets/img/faq/ic_TV_def_blue.png') no-repeat center;
                     }
                     &.tab_pay {
-                        background: url('~/assets/img/faq/ic_changecard_def_blue.png');
+                        background: url('~/assets/img/faq/ic_changecard_def_blue.png') no-repeat center;
                     }
                     &.tab_account {
-                        background: url('~/assets/img/faq/ic_accountconfirm_def_blue.png');
+                        background: url('~/assets/img/faq/ic_accountconfirm_def_blue.png') no-repeat center;
                     }
                 }
             }
