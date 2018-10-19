@@ -117,6 +117,11 @@ export default {
         }
 
         // livechat btn 按钮判断
+        this.$axios.get('/faqConfigByAreaId', {}).then(res => {
+                if (res.data.data.length > 0) {
+                    this.moreFaqsDate = res.data.data
+                }
+            })
         
     },
     filters: {
