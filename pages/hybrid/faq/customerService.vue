@@ -1,61 +1,81 @@
 <template>
     <div>
         <div id="wrapper">
-            <div class="list_faq_item  clearfix">
-                <div class="content_avatar fr"><img src="~assets/img/faq/1-02.png"></div>
-                <div class="content_show fr">
-                    <img class="arrow" src="~assets/img/faq/Triangle_right.png">
-                    <div class="faq_content">More Questions.</div>
-                </div>
-            </div>
-            <div class="order-msg">
-                <p class="time">{{orderMsg.order_create_time | formatDate}}</p>
-                <div class="order-type clearfix">
-                    <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                    <div class="right">
-                        <p class="order-name">{{orderMsg.order_type}}<span>{{orderMsg.order_amount}}</span></p>
-                        <p class="order-status">{{orderMsg.card_no}}<span>{{orderMsg.order_status}}</span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="list_faq_item clearfix">
-                <div class="content_avatar fl"><img src="~assets/img/faq/ic_onlineservice_def_multicolor.png"></div>
-                <div class="welcome-wraper ">
-                    <img class="arrow" src="~assets/img/faq/Triangle.png">
-                    <div class="hint">You may ask:</div>
-                    <ul class="ques-item-wraper clearfix">
-                        <li v-for="(item,index) in moreFaqsDate" :key="index">
-                            <span class="recommend_q_con">{{item.content}}</span>
-                            <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="list_faq_item clearfix">
+            <div class="list_faq_item clearfix" v-show="entrance_id">
                 <div class="content_avatar fl">
                     <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
                 </div>
                 <div class="welcome-wraper ">
                     <img class="arrow" src="~assets/img/faq/Triangle.png">
-                    <span class="welcome-item">1. Please make sure you have signed in the authorized account that you subscribed StarTimes ON. 2. Please make sure the channel is in the plan you have subscribed. 3. Please make sure the internet connection is working.</span>
-                    <div>
-                        <div class="btn">COMPLAIN</div>
-                        <div class="clear"></div>
-                        <div class="attitude-container">
-                            <div class="yes-item">
-                                <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
-                                <span>YES</span>
-                            </div>
-                            <div class="no-item">
-                                <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
-                                <span>NO</span>
+                    <span class="welcome-item">Welcome to StarTimes Online Service.</span>
+                </div>
+            </div>
+            <template v-for="(item,index) in renderQueue">
+                <div v-if="item.tpl=='list'" :key="index" class="list_faq_item clearfix">
+                    <div class="content_avatar fl">
+                        <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+                    </div>
+                    <div class="content_show">
+                        <img class="arrow" src="~assets/img/faq/Triangle.png">
+                        <div class="hint">You may ask:</div>
+                        <ul class="ques-item-wraper clearfix">
+                            <li v-for="(item2,index2) in item.contents" @click="askThis(item2)" :key="index2">
+                                <span class="recommend_q_con">{{item2.name}}</span>
+                                <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div v-if="item.tpl=='ask'" :key="index" class="list_faq_item list_faq_item_fr clearfix">
+                    <div class="content_avatar fr">
+                        <img v-show="user.head" :src="user.head" />
+                        <img v-show="!user.head" src="~assets/img/faq/1-02.png" />
+                    </div>
+                    <div class="content_show fr">
+                        <img class="arrow" src="~assets/img/faq/Triangle_right.png">
+                        <div class="faq_content">{{item.name}}</div>
+                    </div>
+                </div>
+                <div v-if="item.tpl=='order'" :key="index" class="order-msg">
+                    <p class="time">{{orderMsg.order_create_time | formatDate}}</p>
+                    <div class="order-type clearfix">
+                        <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                        <div class="right">
+                            <p class="order-name">
+                                {{orderMsg.order_type}}<span>{{orderMsg.order_amount}}</span>
+                            </p>
+                            <p class="order-status">
+                                {{orderMsg.card_no}}<span>{{orderMsg.order_status}}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="item.tpl=='content'" :key="index" class="list_faq_item clearfix">
+                    <div class="content_avatar fl">
+                        <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+                    </div>
+                    <div class="welcome-wraper ">
+                        <img class="arrow" src="~assets/img/faq/Triangle.png">
+                        <span class="welcome-item">1. Please make sure you have signed in the authorized account that you subscribed StarTimes ON. 2. Please make sure the channel is in the plan you have subscribed. 3. Please make sure the internet connection is working.</span>
+                        <div>
+                            <div class="btn">COMPLAIN</div>
+                            <div class="clear"></div>
+                            <div class="attitude-container">
+                                <div class="yes-item">
+                                    <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
+                                    <span>YES</span>
+                                </div>
+                                <div class="no-item">
+                                    <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
+                                    <span>NO</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
-        <div class="live-chat">
+        <div v-show="showLiveChatBtn" class="live-chat">
             <button class="btn">
                 LIVE CHAT
             </button>
@@ -73,40 +93,35 @@ export default {
             isLogin: this.$store.state.user.type, // 如果有值即为登录状态,没有值则是匿名登录
             user: this.$store.state.user,
             config_id: this.$route.query.config_id,
-            directory_id: this.$route.query.directory_id,
-            showLiveChatBtn: false
+            entrance_id: this.$route.query.entrance_id,
+            categoryId: 183, // default others
+            showLiveChatBtn: false,
+            serviceRecord: null,
+            renderQueue: []
         }
     },
     mounted() {
-        
-        
         this.createServiceRecord()
-        // 登录状态判断是否本地缓存有对话记录，进行恢复
-        // 
-
+        // TODO 登录状态判断是否本地缓存有对话记录，进行恢复
 
         this.orderMsg = JSON.parse(localStorage.getItem('orderMsg'))
         let questions = JSON.parse(localStorage.getItem('faq_question'))
-        if (this.directory_id) {
-            // TODO 展示原来的faq逻辑，默认根目录
-            let areaId = user.areaID
-            this.$axios.get(`/ocs/v1/faqs//directory/${areaId}`).then(res => {
-                let categoryId = 183
-                if (res.data.code == 200) {
-                    categoryId = res.data.data
-                } else {
-                    categoryId = 183
-                }
+        if (this.entrance_id) {
+            this.$axios
+                .get(`/ocs/v1/faqs/directory/${this.user.areaID}`)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        this.categoryId = res.data.data
 
-                // TODO WELCOME
-            })
+                        this.getfaqDirectory(res.data.data)
+                    }
+                })
         } else if (questions) {
             // TODO 单个问题
-            
+
             this.renderOrder()
             this.getAnswer(id)
             // TODO 订单信息显示
-
         } else {
             // TODO MORE FAQS
             this.$axios.get('/ocs/v1/moreFaqs', {}).then(res => {
@@ -117,12 +132,20 @@ export default {
         }
 
         // livechat btn 按钮判断
-        this.$axios.get('/faqConfigByAreaId', {}).then(res => {
-                if (res.data.data.length > 0) {
-                    this.moreFaqsDate = res.data.data
-                }
-            })
-        
+        this.user.areaID &&
+            this.$axios
+                .get(
+                    `/ocs/v1/faqs/faqConfigByAreaId?areaId=${
+                        this.user.areaID
+                    }&entranceId=${this.entrance_id}`
+                )
+                .then(res => {
+                    if (res.data.code == 200) {
+                        if (res.data.data.shortcuts_codes.indexOf(1) >= 0) {
+                            this.showLiveChatBtn = true
+                        }
+                    }
+                })
     },
     filters: {
         formatDate(date) {
@@ -132,30 +155,51 @@ export default {
     methods: {
         getfaqDirectory(id) {
             if (!id) return false
-            this.$axios.get(`/ocs/v1/faqs/category/${id}`).then(res => {
-                if (res.data.code == 200) {
-                    // TODO FAQ 列表
-                    // TODO 发送服务历史
-                    // TODO 未登录状态需要存储该操作记录进入本地缓存
-                }
-            })
+            this.$axios
+                .get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        let obj = Object.assign({}, res.data.data, {
+                            operator: 0, // 0 客服， 1 用户
+                            tpl: 'list' // list , content, order
+                        })
+                        this.renderQueue.push(obj)
+                        // TODO FAQ 列表
+                        // TODO 发送服务历史
+                        // TODO 未登录状态需要存储该操作记录进入本地缓存
+                    }
+                })
+        },
+        askThis(item) {
+            this.renderQueue.push(
+                Object.assign({}, item, {
+                    operator: 1,
+                    tpl: 'ask'
+                })
+            )
+            this.getfaqDirectory(item.id)
         },
         getAnswer(id) {
             // TODO
             // TODO 发送服务历史
             // TODO 未登录状态需要存储该操作记录进入本地缓存
         },
-        renderOrder(){
-            // TODO 
+        renderOrder() {
+            // TODO
             // TODO 发送服务历史
             // TODO 未登录状态需要存储该操作记录进入本地缓存
         },
-        createServiceRecord(){
+        createServiceRecord() {
             // TODO 生成一条服务记录,服务记录要全局记录
             // TODO 未登录状态需要存储该操作记录进入本地缓存
         },
-        cacheRecord(){
-            // TODO 未登录状态需要存储该操作记录进入本地缓存
+        cacheRecord(callback) {
+            this.$axios.post('/css/v1/service/start?type=6').then(res => {
+                if (res.data.code == 0) {
+                    this.serviceRecord = res.data.data.recordId
+                    if (callback) callback()
+                }
+            })
         }
     },
     head() {
@@ -166,13 +210,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-body {
-    background: #eee;
-}
 #wrapper {
     font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
-    margin-bottom: 4.7rem;
     background: #eee;
+    height: 100vh;
+    overflow: auto;
+    padding-bottom: 4.5rem;
 }
 .fl {
     float: left;
@@ -206,7 +249,6 @@ body {
     }
     .welcome-wraper {
         display: inline-block;
-        width: auto;
         margin-left: 10px;
         background: #fff;
         border-radius: 5px;
@@ -218,7 +260,7 @@ body {
             margin: 0;
             height: auto;
             line-height: 1.2rem;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #333333;
         }
         img.arrow {
@@ -228,93 +270,115 @@ body {
             top: 13px;
             left: -8px;
         }
-        .hint {
-            font-weight: 600;
-            font-size: 16px;
-            margin-left: 0;
-            padding-bottom: 0.6rem;
-        }
-        .btn {
-            color: #0087eb;
-            font-size: 0.8rem;
-            margin: 0.7rem 0;
-            float: right;
-            font-weight: 600;
-        }
-        span.recommend_q_con {
-            color: #666666;
-            font-size: 0.85rem;
-        }
-        .ques-item-wraper {
-            li {
-                position: relative;
-                border-top: 1px solid #eee;
-                padding: 0.3rem 0.94rem 0.3rem 0;
-                span {
-                    display: inline-block;
-                    width: 95%;
-                    vertical-align: middle;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-                img {
-                    width: 20px;
-                    height: 20px;
-                    position: absolute;
-                    right: 0;
-                    top: 50%;
-                    margin-top: -10px;
-                }
-            }
-        }
-        .attitude-container {
-            padding-top: 0.6rem;
-            color: #212121;
-            font-size: 0.9rem;
-            border-top: 1px solid #eeeeee;
-            div {
-                display: inline-block;
-                text-align: center;
-                line-height: 1.3rem;
-                &:last-child {
-                    margin-left: 20px;
-                }
-            }
-            img {
-                width: 25px;
-                height: 25px;
-                margin: 0 auto;
-                display: block;
-            }
-        }
     }
 }
 .content_show {
-    display: inline-block;
-    width: auto;
-    margin-right: 10px;
-    background: #0087eb;
+    margin-left: 45px;
     border-radius: 5px;
-    max-width: 75%;
     position: relative;
+    background: white;
+    width: 75%;
+    padding: 0.6rem 0.8rem;
     .faq_content {
         display: inline-block;
         margin: 0;
-        padding: 0.6rem;
+        padding: 0.6rem 0;
         height: auto;
-        line-height: 1.2rem;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
+        line-height: 1rem;
         color: #fff;
     }
-    img {
+    .arrow {
         width: 8px;
         height: 12px;
         position: absolute;
         top: 13px;
-        right: -8px;
+        left: -8px;
+    }
+
+    .hint {
+        font-weight: 600;
+        font-size: 16px;
+        margin-left: 0;
+        padding-bottom: 0.6rem;
+    }
+    .btn {
+        color: #0087eb;
+        font-size: 0.8rem;
+        margin: 0.7rem 0;
+        float: right;
+        font-weight: 600;
+    }
+    span.recommend_q_con {
+        color: #666666;
+        font-size: 0.85rem;
+    }
+    .ques-item-wraper {
+        li {
+            position: relative;
+            border-top: 1px solid #eee;
+            padding: 0.3rem 0.94rem 0.3rem 0;
+            span {
+                display: inline-block;
+                width: 95%;
+                vertical-align: middle;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            img {
+                width: 20px;
+                height: 20px;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                margin-top: -10px;
+            }
+        }
+    }
+    .attitude-container {
+        padding-top: 0.6rem;
+        color: #212121;
+        font-size: 0.9rem;
+        border-top: 1px solid #eeeeee;
+        div {
+            display: inline-block;
+            text-align: center;
+            line-height: 1.3rem;
+            &:last-child {
+                margin-left: 20px;
+            }
+        }
+        img {
+            width: 25px;
+            height: 25px;
+            margin: 0 auto;
+            display: block;
+        }
     }
 }
+
+.list_faq_item_fr {
+    .content_show {
+        border-radius: 5px;
+        padding: 0 10px;
+        position: relative;
+        margin-right: 10px;
+        background: #1c88de;
+        margin-left: 0px;
+        width: auto;
+        max-width: 75%;
+        .arrow {
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            top: 0.65rem;
+            right: -7px;
+            left: auto;
+        }
+    }
+}
+
 .order-msg {
     box-shadow: 0px 1px 3px 1px #dddddd;
     border-radius: 5px;
