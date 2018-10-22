@@ -71,6 +71,7 @@ module.exports = {
         '/ocs/v1/faqs/byTag': 'http://localhost:9001',
         '/ocs/': env.ms_host,
         '/css/': 'http://localhost:9001',
+        '/genesys-proxy/v1/chats':env.ms_host,
         '/membership/': env.ms_host,
         '/mobilewallet/': env.ms_host,
         '/payment/api': env.ms_host,

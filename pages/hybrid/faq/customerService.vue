@@ -82,12 +82,22 @@
                             </div>
                         </div>
                     </div>
+                    <div v-if="item.tpl=='chatanswer'" :key="index" class="list_faq_item clearfix">
+                        <div class="content_avatar fl">
+                            <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+                        </div>
+                        <div class="welcome-wraper ">
+                            <img class="arrow" src="~assets/img/faq/Triangle.png">
+                            <span class="welcome-item">{{item.text}}</span>
+                        </div>
+                    </div>
                 </template>
             </div>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
             <button class="btn" @click="connectLiveChat">
-                LIVE CHAT
+                <span v-show="!connecting">LIVE CHAT</span>
+                <span v-show="connecting">Connecting …</span>
             </button>
         </div>
     </div>
@@ -111,7 +121,8 @@ export default {
             renderQueue: [],
             showWelcome: false,
             loadHistoryState: false,
-            bscroll: null
+            bscroll: null,
+            connecting:false
         }
     },
     mounted() {
@@ -393,13 +404,14 @@ export default {
                 })
         },
         connectLiveChat() {
-            if (!isLogin) return false
+            if (!this.isLogin) return false
 
-            // TODO LIVE CHAT BUTTON 按钮状态
+            this.connecting = true
 
             let chatLink = sessionStorage.getItem('chatLink')
             if (chatLink) {
                 // 直接跳转
+                chatLink = JSON.parse(chatLink)
                 this.$axios
                     .post(
                         `/genesys-proxy/v1/chats/${chatLink.chatId}}/messages`,
@@ -412,7 +424,29 @@ export default {
                         }
                     )
                     .then(res => {
+                        this.connecting = false
                         if (res.data.statusCode == 0 && !res.data.chatEnded) {
+                            let messages = res.data.messages
+                            messages.forEach(item => {
+
+                                // TODO 发送历史记录
+                                if (item.from.type == 'Agent' && item.text) {
+                                    this.renderQueue.push({
+                                        operator: 2,
+                                        tpl: 'chatanswer',
+                                        name: item.text,
+                                        id: '-98'
+                                    })
+                                }
+                                if (item.from.type == 'Client' && item.text) {
+                                    this.renderQueue.push({
+                                        operator: 1,
+                                        tpl: 'chatask',
+                                        name: item.text,
+                                        id: '-98'
+                                    })
+                                }
+                            })
                         } else {
                             sessionStorage.setItem('chatLink', '')
                             this.connectLiveChat()
@@ -432,7 +466,7 @@ export default {
                     })
                     .then(res => {
                         if (res.data.statusCode == 0) {
-                            sessionStorage.setItem('chatLink', res.data)
+                            sessionStorage.setItem('chatLink', JSON.stringify(res.data))
                             this.connectLiveChat()
                         } else if (res.data.statusCode == -1) {
                             // TODO 不再服务时间
