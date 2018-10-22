@@ -86,7 +86,7 @@
             </div>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
-            <button class="btn">
+            <button class="btn" @click="connectLiveChat">
                 LIVE CHAT
             </button>
         </div>
@@ -198,6 +198,8 @@ export default {
                     })
             } else {
                 // 根目录
+
+                // TODO WELCOME 统一
                 this.showWelcome = true
                 this.$axios
                     .get(`/ocs/v1/faqs/directory/${this.user.areaID}`)
@@ -389,6 +391,56 @@ export default {
                         this.scroll.refresh()
                     })
                 })
+        },
+        connectLiveChat() {
+            if (!isLogin) return false
+
+            // TODO LIVE CHAT BUTTON 按钮状态
+
+            let chatLink = sessionStorage.getItem('chatLink')
+            if (chatLink) {
+                // 直接跳转
+                this.$axios
+                    .post(
+                        `/genesys-proxy/v1/chats/${chatLink.chatId}}/messages`,
+                        {
+                            alias: chatLink.alias,
+                            operationName: 'GetChat',
+                            secureKey: chatLink.secureKey,
+                            tenantName: 'Resources',
+                            userId: chatLink.userId
+                        }
+                    )
+                    .then(res => {
+                        if (res.data.statusCode == 0 && !res.data.chatEnded) {
+                        } else {
+                            sessionStorage.setItem('chatLink', '')
+                            this.connectLiveChat()
+                        }
+                    })
+            } else {
+                this.$axios
+                    .post('/genesys-proxy/v1/chats', {
+                        emailAddress: this.user.id,
+                        nickname: this.user.id,
+                        subject: 'app live chat',
+                        tenantName: 'Resources',
+                        userData: {
+                            key1: this.user.countryCode,
+                            key2: 'value2'
+                        }
+                    })
+                    .then(res => {
+                        if (res.data.statusCode == 0) {
+                            sessionStorage.setItem('chatLink', res.data)
+                            this.connectLiveChat()
+                        } else if (res.data.statusCode == -1) {
+                            // TODO 不再服务时间
+                        } else {
+                            // TODO 链接失败
+                        }
+                    })
+            }
         }
     },
     head() {
@@ -404,7 +456,7 @@ export default {
     background: #eee;
     height: 100vh;
     overflow: auto;
-    .content{
+    .content {
         padding-bottom: 4.5rem;
     }
 }
