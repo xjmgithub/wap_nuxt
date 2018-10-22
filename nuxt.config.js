@@ -70,6 +70,7 @@ module.exports = {
         '/ocs/v1/faqs/Tags': 'http://localhost:9001',
         '/ocs/v1/faqs/byTag': 'http://localhost:9001',
         '/ocs/': env.ms_host,
+        '/css/': 'http://localhost:9001',
         '/membership/': env.ms_host,
         '/mobilewallet/': env.ms_host,
         '/payment/api': env.ms_host,

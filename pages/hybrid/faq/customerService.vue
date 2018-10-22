@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="wrapper">
-            <div class="list_faq_item clearfix" v-show="entrance_id">
+            <div class="list_faq_item clearfix" v-show="showWelcome">
                 <div class="content_avatar fl">
                     <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
                 </div>
@@ -19,7 +19,7 @@
                         <img class="arrow" src="~assets/img/faq/Triangle.png">
                         <div class="hint">You may ask:</div>
                         <ul class="ques-item-wraper clearfix">
-                            <li v-for="(item2,index2) in item.contents" @click="askThis(item2)" :key="index2">
+                            <li v-for="(item2,index2) in item.contents" @click="askThis(item2,item.type)" :key="index2">
                                 <span class="recommend_q_con">{{item2.name}}</span>
                                 <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
                             </li>
@@ -37,15 +37,15 @@
                     </div>
                 </div>
                 <div v-if="item.tpl=='order'" :key="index" class="order-msg">
-                    <p class="time">{{orderMsg.order_create_time | formatDate}}</p>
+                    <p class="time">{{item.order.order_create_time | formatDate}}</p>
                     <div class="order-type clearfix">
                         <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
                         <div class="right">
                             <p class="order-name">
-                                {{orderMsg.order_type}}<span>{{orderMsg.order_amount}}</span>
+                                {{item.order.order_create_time}}<span>{{item.order.order_amount}}</span>
                             </p>
                             <p class="order-status">
-                                {{orderMsg.card_no}}<span>{{orderMsg.order_status}}</span>
+                                {{item.order.card_no}}<span>{{item.order.order_status}}</span>
                             </p>
                         </div>
                     </div>
@@ -54,9 +54,9 @@
                     <div class="content_avatar fl">
                         <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
                     </div>
-                    <div class="welcome-wraper ">
+                    <div class="content_show">
                         <img class="arrow" src="~assets/img/faq/Triangle.png">
-                        <span class="welcome-item">1. Please make sure you have signed in the authorized account that you subscribed StarTimes ON. 2. Please make sure the channel is in the plan you have subscribed. 3. Please make sure the internet connection is working.</span>
+                        <div class="result-wraper" v-html="item.content"></div>
                         <div>
                             <div class="btn">COMPLAIN</div>
                             <div class="clear"></div>
@@ -97,40 +97,71 @@ export default {
             categoryId: 183, // default others
             showLiveChatBtn: false,
             serviceRecord: null,
-            renderQueue: []
+            renderQueue: [],
+            showWelcome: false
         }
     },
     mounted() {
-        this.createServiceRecord()
+        let questions = JSON.parse(localStorage.getItem('faq_question'))
+        let serviceModuleId = localStorage.getItem('serviceModuleId')
+        let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
         // TODO 登录状态判断是否本地缓存有对话记录，进行恢复
 
-        this.orderMsg = JSON.parse(localStorage.getItem('orderMsg'))
-        let questions = JSON.parse(localStorage.getItem('faq_question'))
-        if (this.entrance_id) {
-            this.$axios
-                .get(`/ocs/v1/faqs/directory/${this.user.areaID}`)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        this.categoryId = res.data.data
+        //if(this.isLogin&&renderQueue&&renderQueue.length>0){
+        if (renderQueue && renderQueue.length > 0) {
+            this.renderFromCacheQueue()
 
-                        this.getfaqDirectory(res.data.data)
-                    }
-                })
-        } else if (questions) {
-            // TODO 单个问题
-
-            this.renderOrder()
-            this.getAnswer(id)
-            // TODO 订单信息显示
-        } else {
-            // TODO MORE FAQS
-            this.$axios.get('/ocs/v1/moreFaqs', {}).then(res => {
-                if (res.data.data.length > 0) {
-                    this.moreFaqsDate = res.data.data
-                }
-            })
+            return false
         }
 
+        this.createServiceRecord(() => {
+            if (questions) {
+                // TODO 单个问题
+                this.askThis(question, 1, 1)
+            } else if (serviceModuleId) {
+                // MORE FAQS
+                this.renderQueue.push({
+                    operator: 1,
+                    tpl: 'ask',
+                    name: 'more questions',
+                    id: '-99'
+                })
+                this.renderOrder()
+                this.$axios
+                    .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
+                    .then(res => {
+                        if (res.data.code == 0) {
+                            let list = []
+                            res.data.data.forEach((item, index) => {
+                                list.push({
+                                    id: item.id,
+                                    name: item.content
+                                })
+                            })
+                            this.renderQueue.push(
+                                Object.assign({}, res.data.data, {
+                                    operator: 0, // 0 客服， 1 用户
+                                    tpl: 'list', // list , content, order
+                                    pId: '-99',
+                                    type: 1,
+                                    contents: list
+                                })
+                            )
+                        }
+                    })
+            } else {
+                // 根目录
+                this.showWelcome = true
+                this.$axios
+                    .get(`/ocs/v1/faqs/directory/${this.user.areaID}`)
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            this.categoryId = res.data.data
+                            this.getfaqDirectory(res.data.data)
+                        }
+                    })
+            }
+        })
         // livechat btn 按钮判断
         this.user.areaID &&
             this.$axios
@@ -159,46 +190,148 @@ export default {
                 .get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`)
                 .then(res => {
                     if (res.data.code == 200) {
-                        let obj = Object.assign({}, res.data.data, {
-                            operator: 0, // 0 客服， 1 用户
-                            tpl: 'list' // list , content, order
-                        })
-                        this.renderQueue.push(obj)
-                        // TODO FAQ 列表
-                        // TODO 发送服务历史
-                        // TODO 未登录状态需要存储该操作记录进入本地缓存
+                        this.renderQueue.push(
+                            Object.assign({}, res.data.data, {
+                                operator: 0, // 0 客服， 1 用户
+                                tpl: 'list' // list , content, order
+                            })
+                        )
+
+                        this.cacheHisory(1, res.data.data)
+
+                        // TODO TAGS
                     }
                 })
         },
-        askThis(item) {
+        askThis(item, type, withOrder) {
             this.renderQueue.push(
                 Object.assign({}, item, {
                     operator: 1,
                     tpl: 'ask'
                 })
             )
-            this.getfaqDirectory(item.id)
+
+            this.cacheHisory(4, item)
+
+            if (withOrder) {
+                this.renderOrder()
+            }
+            if (type == 1) {
+                this.getAnswer(item.id)
+            } else {
+                this.getfaqDirectory(item.id)
+            }
         },
         getAnswer(id) {
-            // TODO
-            // TODO 发送服务历史
-            // TODO 未登录状态需要存储该操作记录进入本地缓存
+            this.$axios.get(`/ocs/v1/faqs/answer/${id}`).then(res => {
+                if (res.data.code == 200) {
+                    this.renderQueue.push(
+                        Object.assign({}, res.data.data, {
+                            operator: 0,
+                            tpl: 'content'
+                        })
+                    )
+                    this.cacheHisory(2, res.data.data)
+                }
+            })
         },
         renderOrder() {
-            // TODO
-            // TODO 发送服务历史
-            // TODO 未登录状态需要存储该操作记录进入本地缓存
+            let order = JSON.parse(localStorage.getItem('orderMsg'))
+            if (order) {
+                this.renderQueue.push({
+                    operator: 0,
+                    tpl: 'order',
+                    order: order
+                })
+            }
+
+            this.cacheHisory(3, order)
         },
-        createServiceRecord() {
-            // TODO 生成一条服务记录,服务记录要全局记录
-            // TODO 未登录状态需要存储该操作记录进入本地缓存
-        },
-        cacheRecord(callback) {
+        createServiceRecord(callback) {
             this.$axios.post('/css/v1/service/start?type=6').then(res => {
                 if (res.data.code == 0) {
                     this.serviceRecord = res.data.data.recordId
+                    let cacheRecord = localStorage.getItem('serviceRecords')
+                    if (cacheRecord) {
+                        cacheRecord = JSON.parse(cacheRecord)
+                        cacheRecord.push(this.serviceRecord) // TODO 去重
+                    } else {
+                        cacheRecord = [this.serviceRecord]
+                    }
+                    localStorage.setItem(
+                        'serviceRecords',
+                        JSON.stringify(cacheRecord)
+                    )
                     if (callback) callback()
                 }
+            })
+        },
+        cacheHisory(type, data) {
+            // type 1-faqlist,2-faqanswer,3-faqorder
+            let remark, serviceInfo
+            if (type == 1) {
+                remark = data
+                serviceInfo = 'faqlist-'
+                data.contents.forEach(item => {
+                    serviceInfo += item.name + ' | '
+                })
+            } else if (type == 2) {
+                remark = {}
+                serviceInfo = 'faqanswer-' + data.content
+            } else if (type == 3) {
+                remark = data
+                serviceInfo = 'faqorder-'
+            } else if (type == 4) {
+                remark = {}
+                serviceInfo = 'faqask-' + data.name
+            }
+
+            this.updateCacheQueue()
+
+            this.$axios
+                .post('/css/v1/service/history', {
+                    service_type: 1,
+                    service_group_id: this.serviceRecord,
+                    service_state: 2,
+                    remark: remark,
+                    service_info: serviceInfo,
+                    operator: 1 // faq的值固定为1即用户，live chat根据情况选择用户或客服
+                })
+                .then(res => {
+                    let cacheHisory = localStorage.getItem('historys')
+                    if (cacheHisory) {
+                        cacheHisory = JSON.parse(cacheHisory)
+
+                        if (cacheHisory.indexOf(res.data.data.historyId) < 0) {
+                            cacheHisory.push(res.data.data.historyId)
+                        }
+                    } else {
+                        cacheHisory = [res.data.data.historyId]
+                    }
+                    localStorage.setItem(
+                        'historys',
+                        JSON.stringify(cacheHisory)
+                    )
+                })
+        },
+        updateCacheQueue() {
+            if (!this.isLogin) {
+                localStorage.setItem(
+                    'renderQueue',
+                    JSON.stringify(this.renderQueue)
+                )
+            }
+        },
+        renderFromCacheQueue() {
+            // 恢复对话
+            this.renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
+
+            // 更新历史记录
+            let historys = JSON.parse(localStorage.getItem('historys'))
+            let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
+            this.$axios.post('css/v1/history/updateUserId', {
+                historyIds: historys,
+                serviceIds: serviceIds
             })
         }
     },
@@ -440,5 +573,37 @@ export default {
         width: 60%;
         outline: none;
     }
+}
+</style>
+<style>
+/* for v-html */
+.result-wraper p:first-child {
+    padding-top: 9px;
+}
+
+.result-wraper p {
+    line-height: 1.5;
+    font-size: 14px;
+    word-wrap: break-word;
+    word-break: normal;
+    color: #757575;
+}
+
+.result-wraper p img {
+    display: block;
+    width: 70% !important;
+    height: auto !important;
+    margin: 0 auto;
+}
+
+.result-wraper p span {
+    display: inline-block;
+    max-width: 100%;
+    color: #212121 !important;
+}
+
+.result-wraper p a {
+    color: #2196f3 !important;
+    text-decoration: none !important;
 }
 </style>
