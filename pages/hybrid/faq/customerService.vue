@@ -1,7 +1,6 @@
 <template>
     <div>
         <div id="wrapper">
-
             <div class="content">
                 <div class="pull_refresh">
                     <div style="padding-top:1rem;" v-show="!loadHistoryState">
@@ -111,7 +110,8 @@ export default {
             serviceRecord: null,
             renderQueue: [],
             showWelcome: false,
-            loadHistoryState: false
+            loadHistoryState: false,
+            bscroll: null
         }
     },
     mounted() {
@@ -119,12 +119,26 @@ export default {
         let serviceModuleId = localStorage.getItem('serviceModuleId')
         let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
 
-        // TODO 登录状态判断是否本地缓存有对话记录，进行恢复
+        // livechat btn 按钮判断
+        this.user.areaID &&
+            this.$axios
+                .get(
+                    `/ocs/v1/faqs/faqConfigByAreaId?areaId=${
+                        this.user.areaID
+                    }&entranceId=${this.entrance_id}`
+                )
+                .then(res => {
+                    if (res.data.code == 200) {
+                        if (res.data.data.shortcuts_codes.indexOf(1) >= 0) {
+                            this.showLiveChatBtn = true
+                        }
+                    }
+                })
 
         let _this = this
         this.$nextTick(() => {
             let wrapper = document.querySelector('#wrapper')
-            let scroll = new BScroll(wrapper, {
+            this.scroll = new BScroll(wrapper, {
                 pullDownRefresh: {
                     threshold: 20,
                     stop: 40
@@ -134,13 +148,13 @@ export default {
                     top: true
                 }
             })
-            scroll.on('pullingDown', function() {
+            this.scroll.on('pullingDown', function() {
                 _this.loadHistoryState = true
                 _this.loadHistory()
-                //scroll.finishPullDown()
             })
         })
 
+        // TODO REMOVE
         //if(this.isLogin&&renderQueue&&renderQueue.length>0){
         if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
@@ -195,21 +209,6 @@ export default {
                     })
             }
         })
-        // livechat btn 按钮判断
-        this.user.areaID &&
-            this.$axios
-                .get(
-                    `/ocs/v1/faqs/faqConfigByAreaId?areaId=${
-                        this.user.areaID
-                    }&entranceId=${this.entrance_id}`
-                )
-                .then(res => {
-                    if (res.data.code == 200) {
-                        if (res.data.data.shortcuts_codes.indexOf(1) >= 0) {
-                            this.showLiveChatBtn = true
-                        }
-                    }
-                })
     },
     filters: {
         formatDate(date) {
@@ -304,19 +303,15 @@ export default {
             let remark, serviceInfo
             remark = data
             if (type == 1) {
-                
                 serviceInfo = 'faqlist-'
                 data.contents.forEach(item => {
                     serviceInfo += item.name + ' | '
                 })
             } else if (type == 2) {
-                remark = data
                 serviceInfo = 'faqanswer-' + data.content
             } else if (type == 3) {
-                remark = data
                 serviceInfo = 'faqorder-'
             } else if (type == 4) {
-                remark = {}
                 serviceInfo = 'faqask-' + data.name
             }
 
@@ -378,16 +373,21 @@ export default {
                 .then(res => {
                     if (res.data instanceof Array && res.data.length > 0) {
                         res.data.forEach(item => {
-                            if (operator == 1) {
-                                this.renderOrder.unshift(item.remark)
+                            if (item.operator == 1) {
+                                this.renderQueue.unshift(item.remark)
                             } else {
                                 // TODO live Chat
                             }
                         })
                     } else {
-                        
                         // TODO  不再加载
                     }
+
+                    this.loadHistoryState = false
+                    this.scroll.finishPullDown()
+                    this.$nextTick(() => {
+                        this.scroll.refresh()
+                    })
                 })
         }
     },
@@ -404,7 +404,9 @@ export default {
     background: #eee;
     height: 100vh;
     overflow: auto;
-    padding-bottom: 4.5rem;
+    .content{
+        padding-bottom: 4.5rem;
+    }
 }
 .fl {
     float: left;
