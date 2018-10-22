@@ -1,79 +1,90 @@
 <template>
     <div>
         <div id="wrapper">
-            <div class="list_faq_item clearfix" v-show="showWelcome">
-                <div class="content_avatar fl">
-                    <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+
+            <div class="content">
+                <div class="pull_refresh">
+                    <div style="padding-top:1rem;" v-show="!loadHistoryState">
+                        <span class="refresh_text">Pull down to see more history</span>
+                    </div>
+                    <div>
+                        <img class="refresh_img" v-show="loadHistoryState" src="~/assets/img/spinner.gif" />
+                    </div>
                 </div>
-                <div class="welcome-wraper ">
-                    <img class="arrow" src="~assets/img/faq/Triangle.png">
-                    <span class="welcome-item">Welcome to StarTimes Online Service.</span>
-                </div>
-            </div>
-            <template v-for="(item,index) in renderQueue">
-                <div v-if="item.tpl=='list'" :key="index" class="list_faq_item clearfix">
+                <div class="list_faq_item clearfix" v-show="showWelcome">
                     <div class="content_avatar fl">
                         <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
                     </div>
-                    <div class="content_show">
+                    <div class="welcome-wraper ">
                         <img class="arrow" src="~assets/img/faq/Triangle.png">
-                        <div class="hint">You may ask:</div>
-                        <ul class="ques-item-wraper clearfix">
-                            <li v-for="(item2,index2) in item.contents" @click="askThis(item2,item.type)" :key="index2">
-                                <span class="recommend_q_con">{{item2.name}}</span>
-                                <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
-                            </li>
-                        </ul>
+                        <span class="welcome-item">Welcome to StarTimes Online Service.</span>
                     </div>
                 </div>
-                <div v-if="item.tpl=='ask'" :key="index" class="list_faq_item list_faq_item_fr clearfix">
-                    <div class="content_avatar fr">
-                        <img v-show="user.head" :src="user.head" />
-                        <img v-show="!user.head" src="~assets/img/faq/1-02.png" />
-                    </div>
-                    <div class="content_show fr">
-                        <img class="arrow" src="~assets/img/faq/Triangle_right.png">
-                        <div class="faq_content">{{item.name}}</div>
-                    </div>
-                </div>
-                <div v-if="item.tpl=='order'" :key="index" class="order-msg">
-                    <p class="time">{{item.order.order_create_time | formatDate}}</p>
-                    <div class="order-type clearfix">
-                        <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                        <div class="right">
-                            <p class="order-name">
-                                {{item.order.order_create_time}}<span>{{item.order.order_amount}}</span>
-                            </p>
-                            <p class="order-status">
-                                {{item.order.card_no}}<span>{{item.order.order_status}}</span>
-                            </p>
+                <template v-for="(item,index) in renderQueue">
+                    <div v-if="item.tpl=='list'" :key="index" class="list_faq_item clearfix">
+                        <div class="content_avatar fl">
+                            <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+                        </div>
+                        <div class="content_show">
+                            <img class="arrow" src="~assets/img/faq/Triangle.png">
+                            <div class="hint">You may ask:</div>
+                            <ul class="ques-item-wraper clearfix">
+                                <li v-for="(item2,index2) in item.contents" @click="askThis(item2,item.type)" :key="index2">
+                                    <span class="recommend_q_con">{{item2.name}}</span>
+                                    <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </div>
-                <div v-if="item.tpl=='content'" :key="index" class="list_faq_item clearfix">
-                    <div class="content_avatar fl">
-                        <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+                    <div v-if="item.tpl=='ask'" :key="index" class="list_faq_item list_faq_item_fr clearfix">
+                        <div class="content_avatar fr">
+                            <img v-show="user.head" :src="user.head" />
+                            <img v-show="!user.head" src="~assets/img/faq/1-02.png" />
+                        </div>
+                        <div class="content_show fr">
+                            <img class="arrow" src="~assets/img/faq/Triangle_right.png">
+                            <div class="faq_content">{{item.name}}</div>
+                        </div>
                     </div>
-                    <div class="content_show">
-                        <img class="arrow" src="~assets/img/faq/Triangle.png">
-                        <div class="result-wraper" v-html="item.content"></div>
-                        <div>
-                            <div class="btn">COMPLAIN</div>
-                            <div class="clear"></div>
-                            <div class="attitude-container">
-                                <div class="yes-item">
-                                    <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
-                                    <span>YES</span>
-                                </div>
-                                <div class="no-item">
-                                    <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
-                                    <span>NO</span>
+                    <div v-if="item.tpl=='order'" :key="index" class="order-msg">
+                        <p class="time">{{item.order.order_create_time | formatDate}}</p>
+                        <div class="order-type clearfix">
+                            <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                            <div class="right">
+                                <p class="order-name">
+                                    {{item.order.order_create_time}}<span>{{item.order.order_amount}}</span>
+                                </p>
+                                <p class="order-status">
+                                    {{item.order.card_no}}<span>{{item.order.order_status}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="item.tpl=='content'" :key="index" class="list_faq_item clearfix">
+                        <div class="content_avatar fl">
+                            <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+                        </div>
+                        <div class="content_show">
+                            <img class="arrow" src="~assets/img/faq/Triangle.png">
+                            <div class="result-wraper" v-html="item.content"></div>
+                            <div>
+                                <div class="btn">COMPLAIN</div>
+                                <div class="clear"></div>
+                                <div class="attitude-container">
+                                    <div class="yes-item">
+                                        <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
+                                        <span>YES</span>
+                                    </div>
+                                    <div class="no-item">
+                                        <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
+                                        <span>NO</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </template>
+                </template>
+            </div>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
             <button class="btn">
@@ -84,6 +95,7 @@
 </template>
 <script>
 let moment = require('moment/moment.js')
+import BScroll from 'better-scroll'
 export default {
     layout: 'base',
     data() {
@@ -98,19 +110,40 @@ export default {
             showLiveChatBtn: false,
             serviceRecord: null,
             renderQueue: [],
-            showWelcome: false
+            showWelcome: false,
+            loadHistoryState: false
         }
     },
     mounted() {
         let questions = JSON.parse(localStorage.getItem('faq_question'))
         let serviceModuleId = localStorage.getItem('serviceModuleId')
         let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
+
         // TODO 登录状态判断是否本地缓存有对话记录，进行恢复
+
+        let _this = this
+        this.$nextTick(() => {
+            let wrapper = document.querySelector('#wrapper')
+            let scroll = new BScroll(wrapper, {
+                pullDownRefresh: {
+                    threshold: 20,
+                    stop: 40
+                },
+                startY: 0,
+                bounce: {
+                    top: true
+                }
+            })
+            scroll.on('pullingDown', function() {
+                _this.loadHistoryState = true
+                _this.loadHistory()
+                //scroll.finishPullDown()
+            })
+        })
 
         //if(this.isLogin&&renderQueue&&renderQueue.length>0){
         if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
-
             return false
         }
 
@@ -269,14 +302,15 @@ export default {
         cacheHisory(type, data) {
             // type 1-faqlist,2-faqanswer,3-faqorder
             let remark, serviceInfo
+            remark = data
             if (type == 1) {
-                remark = data
+                
                 serviceInfo = 'faqlist-'
                 data.contents.forEach(item => {
                     serviceInfo += item.name + ' | '
                 })
             } else if (type == 2) {
-                remark = {}
+                remark = data
                 serviceInfo = 'faqanswer-' + data.content
             } else if (type == 3) {
                 remark = data
@@ -293,7 +327,7 @@ export default {
                     service_type: 1,
                     service_group_id: this.serviceRecord,
                     service_state: 2,
-                    remark: remark,
+                    remark: data,
                     service_info: serviceInfo,
                     operator: 1 // faq的值固定为1即用户，live chat根据情况选择用户或客服
                 })
@@ -329,10 +363,32 @@ export default {
             // 更新历史记录
             let historys = JSON.parse(localStorage.getItem('historys'))
             let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
-            this.$axios.post('css/v1/history/updateUserId', {
+            this.$axios.post('/css/v1/history/updateUserId', {
                 historyIds: historys,
                 serviceIds: serviceIds
             })
+        },
+        loadHistory() {
+            this.$axios
+                .post('/css/v1/history/app', {
+                    pageNum: 12,
+                    pageSize: 12,
+                    minId: 1
+                })
+                .then(res => {
+                    if (res.data instanceof Array && res.data.length > 0) {
+                        res.data.forEach(item => {
+                            if (operator == 1) {
+                                this.renderOrder.unshift(item.remark)
+                            } else {
+                                // TODO live Chat
+                            }
+                        })
+                    } else {
+                        
+                        // TODO  不再加载
+                    }
+                })
         }
     },
     head() {
@@ -572,6 +628,23 @@ export default {
         font-weight: bold;
         width: 60%;
         outline: none;
+    }
+}
+
+.pull_refresh {
+    position: absolute;
+    top: -2.5rem;
+    width: 100%;
+    text-align: center;
+    .refresh_text {
+        background: #ccc;
+        border-radius: 1rem;
+        color: white;
+        font-size: 0.8rem;
+        padding: 0.2rem 1rem;
+    }
+    .refresh_img {
+        width: 2.5rem;
     }
 }
 </style>
