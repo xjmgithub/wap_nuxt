@@ -68,7 +68,7 @@ export default {
             faqTagsData: [],
             faqsByTag: {},
             pageSize: 10,
-            isLoading: false,
+            isLoading: false
         }
     },
     filters: {
@@ -193,8 +193,7 @@ export default {
         saveFaq(content) {
             localStorage.setItem('faq_question', JSON.stringify(content))
             this.$router.push('/hybrid/faq/customerService')
-        },
-        
+        }
     },
     head() {
         return {
@@ -308,7 +307,7 @@ body {
     }
 }
 .service {
-    margin-top: .8rem;
+    margin-top: 0.8rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -326,23 +325,28 @@ body {
 
             div {
                 width: 1.4rem;
-                margin:0 auto;
+                margin: 0 auto;
                 height: 1.5rem;
                 background-size: contain !important;
                 &.tab_hot {
-                    background: url('~/assets/img/faq/ic_favorite_def_g.png') no-repeat center;
+                    background: url('~/assets/img/faq/ic_favorite_def_g.png')
+                        no-repeat center;
                 }
                 &.tab_on {
-                    background: url('~/assets/img/faq/ic_OTT_def_g.png') no-repeat center;
+                    background: url('~/assets/img/faq/ic_OTT_def_g.png')
+                        no-repeat center;
                 }
                 &.tab_tv {
-                    background: url('~/assets/img/faq/ic_TV_def_g.png') no-repeat center;
+                    background: url('~/assets/img/faq/ic_TV_def_g.png')
+                        no-repeat center;
                 }
                 &.tab_pay {
-                    background: url('~/assets/img/faq/ic_changecard_def_g.png') no-repeat center;
+                    background: url('~/assets/img/faq/ic_changecard_def_g.png')
+                        no-repeat center;
                 }
                 &.tab_account {
-                    background: url('~/assets/img/faq/ic_accountconfirm_def_g.png') no-repeat center;
+                    background: url('~/assets/img/faq/ic_accountconfirm_def_g.png')
+                        no-repeat center;
                 }
             }
 
@@ -350,19 +354,24 @@ body {
                 border-bottom: 3px solid #0087eb;
                 div {
                     &.tab_hot {
-                        background: url('~/assets/img/faq/ic_favorite_def_blue.png') no-repeat center;
+                        background: url('~/assets/img/faq/ic_favorite_def_blue.png')
+                            no-repeat center;
                     }
                     &.tab_on {
-                        background: url('~/assets/img/faq/ic_OTT_def_b.png') no-repeat center;
+                        background: url('~/assets/img/faq/ic_OTT_def_b.png')
+                            no-repeat center;
                     }
                     &.tab_tv {
-                        background: url('~/assets/img/faq/ic_TV_def_blue.png') no-repeat center;
+                        background: url('~/assets/img/faq/ic_TV_def_blue.png')
+                            no-repeat center;
                     }
                     &.tab_pay {
-                        background: url('~/assets/img/faq/ic_changecard_def_blue.png') no-repeat center;
+                        background: url('~/assets/img/faq/ic_changecard_def_blue.png')
+                            no-repeat center;
                     }
                     &.tab_account {
-                        background: url('~/assets/img/faq/ic_accountconfirm_def_blue.png') no-repeat center;
+                        background: url('~/assets/img/faq/ic_accountconfirm_def_blue.png')
+                            no-repeat center;
                     }
                 }
             }
