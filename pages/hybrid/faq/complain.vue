@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper">
-    <div class="order-msg" v-if="serviceData.id">
+    <div class="order-msg" v-if="serviceData.order_status">
       <p class="time">{{serviceData.order_create_time | formatDate }}
             <nuxt-link to="/hybrid/faq/chooseOrder">
                 <img src="~assets/img/faq/ic_Setting_def_g.png" alt="">
