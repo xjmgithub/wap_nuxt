@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="gap"></div>
-                <nuxt-link to="/hybrid/faq/moreOrders">
+                <nuxt-link :to="{ path:'/hybrid/faq/moreOrders',query:$route.query }">
                     <div class="more">
                         MORE ORDERS
                     </div>
