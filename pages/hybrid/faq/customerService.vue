@@ -481,7 +481,6 @@ export default {
                                     this.connectState = 2 // BUTTON 变成输入框
 
                                     this.chatPullTimer = setInterval(() => {
-                                        // TODO clear timer
                                         this.pullReply()
                                     }, 5000)
                                     this.nextPosition = res.data.nextPosition
