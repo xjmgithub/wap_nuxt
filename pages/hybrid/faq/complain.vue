@@ -27,20 +27,13 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <select name="problem" id="problem" v-model="problemId">
+            <select name="problem" v-model="problemId" v-if="questionsList&&questionsList.length>0">
                 <option value='' disabled>Please select the problem you need to solve</option>
-                <option value="problem1">You select the problem1</option>
-                <option value="problem2">You select the problem2</option>
-                <option value="problem3">You select the problem3</option>
-                <option value="problem4">You select the problem4</option>
+                <option v-for="item in questionsList" :key="item.id" :value="item.id">{{item.name}}</option>
             </select>
-            <select name="channel-type" id="channel-type" v-on:change="changeType_index($event)" v-model="indexId">
+            <select name="channel-type" v-on:change="changeChannelID">
                 <option value="Select Channel Type" disabled>Select Channel Type</option>
-                <option :value="item.text" v-for="item in channel_type" :key="item.id">{{item.text}}</option>
-            </select>
-            <select name="channel-name" id="channel-name" v-model="indexId2">
-                <option value="Select Channel Name" disabled>Select Channel Name</option>
-                <option :value="item.text" v-for="item in channel_name" :key="item.id">{{item.text}}</option>
+                <option :value="item.id" v-for="item in channelList" :key="item.id">{{item.name}}</option>
             </select>
             <p>Detail Description</p>
             <textarea name="" id="" cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment"></textarea>
@@ -53,72 +46,52 @@
                     <p class="p-name">Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">Huangj@startimes.con.cn</p>
+                    <p class="p-value">{{user.id}}</p>
                 </li>
                 <li>
                     <p class="p-name">Country
                         <span>*</span>
                     </p>
-                    <p class="p-value">Nigeria</p>
-                </li>
-                <li>
-                    <p class="p-name">Telecom Info</p>
-                    <p class="p-value">Safricon 4G</p>
+                    <p class="p-value">{{user.countryCode}}</p>
                 </li>
                 <li>
                     <p class="p-name">Device
                         <span>*</span>
                     </p>
-                    <p class="p-value">Tecno N2.0</p>
+                    <p class="p-value">{{deviceInfo}}</p>
                 </li>
             </ul>
         </div>
         <div class="submit">
-            <button class="btn">
-                SUBMIT
-            </button>
+            <button class="btn">SUBMIT</button>
         </div>
     </div>
 </template>
 <script>
-var channel_type = [
-    {
-        text: 'Channel Type A',
-        ZY: [
-            { text: 'Channel Name A' },
-            { text: 'Channel Name B' },
-            { text: 'Channel Name C' }
-        ]
-    },
-    {
-        text: 'Channel Type B',
-        ZY: [
-            { text: 'Channel Name D' },
-            { text: 'Channel Name E' },
-            { text: 'Channel Name F' }
-        ]
-    }
-]
 export default {
     layout: 'base',
     data() {
         return {
-            problemId: '',
-            channel_type: channel_type,
             indexId: 'Select Channel Type',
             indexId2: 'Select Channel Name',
             indexNum: 0,
-            order: {}
+            order: {},
+            user: this.$store.state.user,
+            deviceInfo: '',
+            type: this.$route.query.type || 1, // 1 代表支付相关 2 代表频道相关 0 公共相关
+            questionsList: [],
+            problemId: '',
+            channelList: []
         }
     },
     methods: {
-        changeType_index(event) {
-            this.indexNum = event.target.value
-            this.indexId2 = this.channel_name[0].text
+        changeChannelID(item) {
+            console.log(item)
         }
     },
     computed: {
-        channel_name: function() {
+        channelNameList: function() {
+            return false
             for (var i = 0; i < this.channel_type.length; i++) {
                 if (this.channel_type[i].text == this.indexNum) {
                     return this.channel_type[i].ZY
@@ -128,12 +101,42 @@ export default {
     },
     mounted() {
         let order = localStorage.getItem('orderMsg')
-        if(order){
+        if (order) {
             this.order = JSON.parse(order)
-        }else{
+        } else {
             this.order = {}
         }
-        
+
+        let ua = window.navigator.userAgent
+        let deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
+        this.deviceInfo = deviceInfo[deviceInfo.length - 1].split('like')[0]
+
+        // more faqs
+        let serviceModuleId = localStorage.getItem('serviceModuleId')
+        let faq_question = localStorage.getItem('faq_question')
+        this.$axios
+            .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
+            .then(res => {
+                if (res.data.code == 0) {
+                    let list = []
+                    res.data.data.forEach((item, index) => {
+                        list.push({
+                            id: item.id,
+                            name: item.content
+                        })
+                    })
+                    this.questionsList = list
+                    if (faq_question) {
+                        this.problemId = JSON.parse(faq_question).id
+                    }
+                }
+            })
+
+        this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
+            if (res.data && res.data instanceof Array) {
+                this.channelList = res.data
+            }
+        })
     },
     head() {
         return {
