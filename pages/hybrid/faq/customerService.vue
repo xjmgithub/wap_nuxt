@@ -101,6 +101,39 @@
                 </div>
             </div>
         </div>
+        <!-- Waiting For Result -->
+        <div>
+             <div class="order-msg">
+                    <p class="time">11 Oct 2018 17-25:52 <span class="wait-result">Waiting For Result</span></p>
+                    <div class="order-type clearfix">
+                        <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                        <div class="right">
+                            <p class="order-name"> DVB Recharge </p>
+                            <p class="order-status">Order ID: D1398765409 </p>
+                        </div>
+                    </div>
+                    <p class="complain">Complain</p>
+                    <p>I’ve recharged, but I still can’t watch channels on TV.</p>
+                </div>
+        </div>
+        <!-- 评价星星星 -->
+        <div class="evaluation">
+            <p class="eval-title">Does this Custom-Service help you solve the problem?</p>
+            <div class="eval-img">
+                <span>
+                    <img src="~assets/img/faq/ic_happy_sl_green.png"> NO
+                </span>
+                <span>
+                    <img src="~assets/img/faq/ic_disappoint_def_g.png"> YES
+                </span>
+            </div>
+            <div class="gave-star">
+                <p>Please evaluate for us? THX.</p>
+                <!-- <img src="~assets/img/faq/ic_favoritez_blue_evl.png" alt=""> -->
+                <img v-for ="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favorite_def_evl.png" @click="starToBlue(index,$event)">
+                <!-- <img v-for ="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favoritez_blue_evl.png" @click="starToBlue(index,$event)"> -->
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -613,6 +646,16 @@ export default {
             // TODO 断开链接 变换按钮状态
             // TODO 创建新的服务记录
             // TODO 输入框多行支持
+        },
+        starToBlue(index,event){
+            let imgNode = document.querySelectorAll(".gave-star img");
+            console.log(event)
+            for(let i = 0;i<imgNode.length;i++){
+                // TODO 先全部恢复默认状态
+            }
+            for(let i = 0;i<=index;i++){
+                // TODO 当前index及之前变为蓝色
+            }
         }
     },
     filters: {
@@ -813,6 +856,20 @@ export default {
         font-size: 0.8rem;
         border-bottom: 1px solid #eeeeee;
         padding: 0.2rem 0;
+        .wait-result{
+            color:#333333;
+            float:right;
+            font-weight:bold;
+        }
+    }
+    .complain{
+        font-size:.9rem;
+        color:#666666;
+        font-weight:bold;
+        &+p{
+            color:#666666;
+            font-size:.8rem;
+        }
     }
 }
 .order-type {
@@ -879,7 +936,45 @@ export default {
         width: 2.5rem;
     }
 }
-
+.evaluation{
+    box-shadow: 0px 1px 3px 1px #dddddd;
+    border-radius: 5px;
+    padding:1rem 1.5rem 2rem ;
+    width: 95%;
+    margin: 1rem 2.5% 2.5% 2.5%;
+    background: #fff;
+    font-size:.9rem;
+    color:#333333;
+    .eval-title{
+        font-weight:bold;
+    }
+    .eval-img{
+        margin-top:.5rem;
+        padding:.5rem 1rem;
+        border-top:1px solid #EEEEEE;
+        border-bottom:1px solid #EEEEEE;
+        span{
+            text-align:center;
+            display:inline-block;
+            width:1.8rem;
+            margin-right:4rem;
+            img{
+                display:block;
+                width:100%;
+            }
+        }
+    }
+    .gave-star{
+        padding: .5rem ;
+        p{
+            margin-bottom:.3rem;
+        }
+        img{
+            width:1.8rem;
+            margin-right:1.5rem;
+        }
+    }
+}
 /* livechat input */
 
 .live-chat-input {
