@@ -27,14 +27,9 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <select name="problem" v-model="problemId" v-if="questionsList&&questionsList.length>0">
-                <option value='' disabled>Please select the problem you need to solve</option>
-                <option v-for="item in questionsList" :key="item.id" :value="item.id">{{item.name}}</option>
-            </select>
-            <select name="channel-type" v-on:change="changeChannelID">
-                <option value="Select Channel Type" disabled>Select Channel Type</option>
-                <option :value="item.id" v-for="item in channelList" :key="item.id">{{item.name}}</option>
-            </select>
+            <mselect :list="questionsList" ref="questionSelect"></mselect>
+            <mselect :list="channelList" @change="setChannelName"></mselect>
+            <mselect :list="channelNameList"></mselect>
             <p>Detail Description</p>
             <textarea name="" id="" cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment"></textarea>
         </div>
@@ -68,6 +63,7 @@
     </div>
 </template>
 <script>
+import mselect from '~/components/select'
 export default {
     layout: 'base',
     data() {
@@ -80,23 +76,15 @@ export default {
             deviceInfo: '',
             type: this.$route.query.type || 1, // 1 代表支付相关 2 代表频道相关 0 公共相关
             questionsList: [],
-            problemId: '',
-            channelList: []
+            question: '',
+            channelList: [],
+            channelNameList:[]
         }
     },
     methods: {
-        changeChannelID(item) {
+        setChannelName(item){
             console.log(item)
-        }
-    },
-    computed: {
-        channelNameList: function() {
-            return false
-            for (var i = 0; i < this.channel_type.length; i++) {
-                if (this.channel_type[i].text == this.indexNum) {
-                    return this.channel_type[i].ZY
-                }
-            }
+            this.channelNameList = item.disparkChannel
         }
     },
     mounted() {
@@ -126,9 +114,7 @@ export default {
                         })
                     })
                     this.questionsList = list
-                    if (faq_question) {
-                        this.problemId = JSON.parse(faq_question).id
-                    }
+                    this.$refs.questionSelect.setValue(JSON.parse(faq_question).id)
                 }
             })
 
@@ -137,6 +123,9 @@ export default {
                 this.channelList = res.data
             }
         })
+    },
+    components: {
+        mselect: mselect
     },
     head() {
         return {
