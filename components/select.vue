@@ -1,8 +1,8 @@
 <template>
     <div class="container" v-if="list.length>0">
         <div class="checked" @click="showList=true">
-            <span v-if="selected">{{selected.name}}</span>
-            <span v-if="!selected" class="placeholder">{{placeholder}}</span>
+            <span v-show="selected.id">{{selected.name}}</span>
+            <span v-show="!selected.id" class="placeholder">{{placeholder}}</span>
             <img src="~/assets/img/ic_sl_g.png" />
         </div>
         <ul class="list" v-show="showList">
@@ -23,53 +23,63 @@ export default {
             }
             */
         },
+        default: {
+            require: false
+        },
         placeholder: {
             require: false,
             type: String,
-            default: 'please select a value'
+            default: 'please select a value',
+            initState: false
         }
     },
     data() {
         return {
+            renderList: [],
             showList: false,
-            selected: null
+            selected: {}
         }
     },
     watch: {
         list(nv, ov) {
-            this.selected = null
+            this.init()
         }
     },
-    mounted() {
-        if (this.list.length > 0) {
-            this.initData()
-        }
+    mounted(){
+        this.init()
     },
     methods: {
-        choose(item) {
-            if (this.selected) {
-                if (item.id != this.selected.id) {
-                    this.selected = item
-                    this.$emit('change', item)
-                }
-            } else {
-                this.selected = item
-                this.$emit('change', item)
-            }
-            this.showList = false
-        },
-        setValue(val) {
-            if (val instanceof Object) {
-                this.choose(val)
-            } else {
-                if (this.list.length > 0) {
+        init() {
+            this.renderList = this.list
+
+            // 处理default值
+            if (this.default || this.default == 0) {
+                if (this.default instanceof Object) {
+                    this.choose(this.default)
+                } else {
                     this.list.forEach(item => {
-                        if (item.id == val) {
+                        if (item.id == this.default) {
                             this.choose(item)
                         }
                     })
                 }
             }
+            this.initState = true
+        },
+        choose(obj) {
+            if (this.list.length > 0) {
+                let tmp = this.selected
+                console.log(obj)
+                this.list.forEach(item => {
+                    if (item.id == obj.id) {
+                        this.selected = item
+                    }
+                })
+                if (tmp.id != this.selected.id) {
+                    this.$emit('change', this.selected)
+                }
+            }
+            this.showList = false
         }
     }
 }

@@ -27,11 +27,12 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <mselect :list="questionsList" ref="questionSelect"></mselect>
-            <mselect :list="channelList" @change="setChannelName"></mselect>
-            <mselect :list="channelNameList"></mselect>
+            <mselect :list="questionsList" :default="question" placeholder="Please choose your question" ref="questionSelect"></mselect>
+            <mselect :list="channelList" placeholder="Please choose channel type" @change="setChannelName" v-if="type==2"></mselect>
+            <mselect :list="channelNameList" placeholder="Please choose channel name" v-if="type==2"></mselect>
+            <mselect :list="countryList" :default="defaultCountry" placeholder="Please choose your country" ref="countrySelect" v-if="type==0"></mselect>
             <p>Detail Description</p>
-            <textarea name="" id="" cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment"></textarea>
+            <textarea cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment" v-model="moredes"></textarea>
         </div>
         <div class="gap"></div>
         <div class="personal">
@@ -58,12 +59,13 @@
             </ul>
         </div>
         <div class="submit">
-            <button class="btn">SUBMIT</button>
+            <button class="btn" @click="submit">SUBMIT</button>
         </div>
     </div>
 </template>
 <script>
 import mselect from '~/components/select'
+import moment from 'moment/moment.js'
 export default {
     layout: 'base',
     data() {
@@ -74,17 +76,51 @@ export default {
             order: {},
             user: this.$store.state.user,
             deviceInfo: '',
-            type: this.$route.query.type || 1, // 1 代表支付相关 2 代表频道相关 0 公共相关
+            type: this.$route.query.type || 2, // 1 代表支付相关 2 代表频道相关 0 公共相关
             questionsList: [],
             question: '',
             channelList: [],
-            channelNameList:[]
+            channelNameList: [],
+            countryList: [],
+            defaultCountry: '',
+            moredes:''
         }
     },
     methods: {
-        setChannelName(item){
-            console.log(item)
+        setChannelName(item) {
             this.channelNameList = item.disparkChannel
+        },
+        submit() {
+            let order = localStorage.getItem('orderMsg')
+
+            let param = {
+                    orderType: order? JSON.parse(order).order_type:'',
+                    orderNo: order? JSON.parse(order).order_no:'',
+                    orderStatus: 'string',
+                    userAccount: this.user.userName,
+                    appVersion: this.$store.state.appVersion,
+                    problemId: 'string',
+                    problem: 'string',
+                    problemChannelTypeKey: 'string',
+                    problemChannelTypeValue: 'string',
+                    problemChannelNameKey: 'string',
+                    problemChannelNameValue: 'string',
+                    problemCountryId: 'string',
+                    problemCountryCode: 'string',
+                    message: 'string',
+                    leavingImgsDtoList: []
+                }
+
+            this.$axios
+                .post(`/csms-service/v1/get-standard-leaving-message-record`, param)
+                .then(res => {
+                    if (res.data.code == 0) {
+                        localStorage.setItem('leaveMsg',Object.assign({},param,{
+                            id:res.data.data.messageId
+                        }))
+                        this.$router.push('/hybrid/faq/customerService')
+                    }
+                })
         }
     },
     mounted() {
@@ -114,18 +150,50 @@ export default {
                         })
                     })
                     this.questionsList = list
-                    this.$refs.questionSelect.setValue(JSON.parse(faq_question).id)
+                    this.question = JSON.parse(faq_question).id
                 }
             })
 
+        // 渠道分类
         this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
             if (res.data && res.data instanceof Array) {
+                res.data.forEach(item => {
+                    item.disparkChannel.forEach(i => {
+                        i.id = i.channelId
+                    })
+                })
                 this.channelList = res.data
             }
         })
+
+        // country
+        this.$axios
+            .get(
+                `/cms/vup/v2/areas?versionCode=${this.$store.state.appVersion}`
+            )
+            .then(res => {
+                if (res.data && res.data instanceof Array) {
+                    this.countryList = res.data
+                    this.countryList.forEach(item => {
+                        if (item.country) {
+                            if (
+                                item.country.toLowerCase() ==
+                                this.user.countryCode.toLowerCase()
+                            ) {
+                                this.defaultCountry = item.id
+                            }
+                        }
+                    })
+                }
+            })
     },
     components: {
         mselect: mselect
+    },
+    filters: {
+        formatDate(date) {
+            return moment(date).format('D MMM YYYY HH-mm:ss')
+        }
     },
     head() {
         return {

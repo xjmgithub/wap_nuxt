@@ -69,6 +69,7 @@ module.exports = {
         '/ocs/v1/moreFaqs': 'http://localhost:9001',
         '/ocs/v1/faqs/Tags': 'http://localhost:9001',
         '/ocs/v1/faqs/byTag': 'http://localhost:9001',
+        '/csms-service': 'http://localhost:9001',
         '/ocs/': env.ms_host,
         '/css/': 'http://localhost:9001',
         '/genesys-proxy/v1/chats':env.ms_host,
