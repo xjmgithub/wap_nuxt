@@ -1,7 +1,7 @@
 let env = require('./env.js')
 module.exports = {
     head: {
-        title: 'StarTimes pay',
+        title: 'StarTimesTV',
         meta: [
             { charset: 'utf-8' },
             {
@@ -18,10 +18,6 @@ module.exports = {
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         script: [
-            // {
-            //     src:
-            //         'https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.17.1/hello.all.min.js'
-            // },
             {
                 src: '/res_nuxt/sdk.js'
             },
@@ -30,17 +26,8 @@ module.exports = {
             }
         ]
     },
-    /*
-  ** Customize the progress bar color
-  */
     loading: { color: '#3B8070' },
-    /*
-  ** Build configuration
-  */
     build: {
-        /*
-    ** Run ESLint on save
-    */
         extend(config, { isDev, isClient }) {
             if (isDev && isClient) {
                 config.module.rules.push({
@@ -52,9 +39,7 @@ module.exports = {
             }
         }
     },
-
     modules: ['@nuxtjs/axios'],
-
     axios: {
         // proxyHeaders: false,
         proxy: true, // Can be also an object with default options
@@ -64,6 +49,12 @@ module.exports = {
         '/ums/': env.ms_host,
         '/vup/': env.ms_host,
         '/cms/': env.ms_host,
+        '/genesys-proxy/v1/chats': env.ms_host,
+        '/membership/': env.ms_host,
+        '/mobilewallet/': env.ms_host,
+        '/payment/api': env.ms_host,
+        '/payment/v2': env.ms_host,
+        '/payment/platform/v1': env.mechant_request_url,
         '/ocs/v1/service': 'http://localhost:9001',
         '/ocs/v1/service-list': 'http://localhost:9001',
         '/ocs/v1/moreFaqs': 'http://localhost:9001',
@@ -71,18 +62,10 @@ module.exports = {
         '/ocs/v1/faqs/byTag': 'http://localhost:9001',
         '/csms-service': 'http://localhost:9001',
         '/ocs/': env.ms_host,
-        '/css/': 'http://localhost:9001',
-        '/genesys-proxy/v1/chats':env.ms_host,
-        '/membership/': env.ms_host,
-        '/mobilewallet/': env.ms_host,
-        '/payment/api': env.ms_host,
-        '/payment/v2': env.ms_host,
-        '/payment/platform/v1':'http://10.0.63.5:8010',
-        // '/mobilewallet/': 'http://localhost:9001',
-        // '/payment/': 'http://localhost:9001',
+        '/css/': 'http://localhost:9001'
     },
     plugins: [
-        // { src: '~plugins/analysis.js', ssr: false },
+        { src: '~plugins/analysis.js', ssr: false },
         { src: '~plugins/auth.js', ssr: false },
         { src: '~plugins/deviceid.js', ssr: false },
         { src: '~plugins/axios.js', ssr: false },
