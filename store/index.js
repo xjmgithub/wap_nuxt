@@ -95,6 +95,7 @@ export const actions = {
                 commit('SET_DEVICE', result)
             }
         }
+
         if (req.headers['http_token']) {
             commit('SET_TOKEN', req.headers['http_token'])
         } else {
@@ -119,7 +120,6 @@ export const actions = {
         }
 
         // 用户信息
-
         await this.$axios.get('/cms/users/me', {
             headers: {
                 token: this.state.token
@@ -128,7 +128,7 @@ export const actions = {
             commit('SET_USER', user.data)
         }).catch(error => {
             if (error.response.status == 401) {
-                //console.log('auth failure')
+                //TODO console.log('auth failure')
             } else {
                 console.log(error)
             }

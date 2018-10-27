@@ -1,245 +1,387 @@
 <template>
     <div id="wrapper">
-        <div class="order-msg">
-            <p class="time">9 Dec 2018 19:34:35</p>
+        <div class="order-msg" v-if="order.order_status">
+            <p class="time">{{order.order_create_time | formatDate }}
+                <nuxt-link to="/hybrid/faq/chooseOrder">
+                    <img src="~assets/img/faq/ic_Setting_def_g.png" alt="">
+                </nuxt-link>
+            </p>
             <div class="order-type clearfix">
-                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
                 <div class="right">
-                    <p class="order-name">DVB Recharge<span>￥980 </span></p>
-                    <p class="order-status">Card No. 0213 9030 831<span>Successful</span></p>
+                    <p class="order-name">{{order.order_type }}
+                        <span>{{order.order_amount }}</span>
+                    </p>
+                    <p class="order-status">{{order.card_no }}
+                        <span>{{order.order_status }}</span>
+                    </p>
                 </div>
             </div>
         </div>
+        <div class="choose-order" v-else>
+            <nuxt-link to="/hybrid/faq/chooseOrder">
+                <div>
+                    <img src="~/assets/img/faq/ic_add_def_g.png"> Choose An Order
+                </div>
+            </nuxt-link>
+        </div>
         <div class="problem">
             <p>Your Problem</p>
-            <select name="problem" id="problem" v-model="problemId">
-              <option value='' disabled>Please select the problem you need to solve</option>
-              <option value="problem1">You select the problem1</option>  
-              <option value="problem2">You select the problem2</option>  
-              <option value="problem3">You select the problem3</option>  
-              <option value="problem4">You select the problem4</option>  
-            </select>
-            <select name="channel-type" id="channel-type"  v-on:change="changeType_index($event)" v-model="indexId" >
-              <option value="Select Channel Type" disabled>Select Channel Type</option>  
-              <option :value="item.text" v-for="item in channel_type" :key="item.id">{{item.text}}</option>
-            </select>
-            <select name="channel-name" id="channel-name" v-model="indexId2">
-              <option value="Select Channel Name" disabled>Select Channel Name</option>
-              <option :value="item.text" v-for="item in channel_name" :key="item.id">{{item.text}}</option>
-            </select>
+            <mselect :list="questionsList" :default="question" placeholder="Please choose your question" ref="questionSelect"></mselect>
+            <mselect :list="channelList" placeholder="Please choose channel type" @change="setChannelName" v-if="type==2"></mselect>
+            <mselect :list="channelNameList" placeholder="Please choose channel name" v-if="type==2"></mselect>
+            <mselect :list="countryList" :default="defaultCountry" placeholder="Please choose your country" ref="countrySelect" v-if="type==0"></mselect>
             <p>Detail Description</p>
-            <textarea name="" id="" cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment"></textarea>
+            <textarea cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment" v-model="moredes"></textarea>
         </div>
         <div class="gap"></div>
         <div class="personal">
             <p>Personal Information</p>
-           <ul>
-               <li><p class="p-name">Account <span>*</span></p><p class="p-value">Huangj@startimes.con.cn</p></li>
-               <li><p class="p-name">Country <span>*</span></p><p class="p-value">Nigeria</p></li>
-               <li><p class="p-name">Telecom Info</p><p class="p-value">Safricon 4G</p></li>
-               <li><p class="p-name">Device <span>*</span></p><p class="p-value">Tecno N2.0</p></li>
-           </ul>
+            <ul>
+                <li>
+                    <p class="p-name">Account
+                        <span>*</span>
+                    </p>
+                    <p class="p-value">{{user.id}}</p>
+                </li>
+                <li>
+                    <p class="p-name">Country
+                        <span>*</span>
+                    </p>
+                    <p class="p-value">{{user.countryCode}}</p>
+                </li>
+                <li>
+                    <p class="p-name">Device
+                        <span>*</span>
+                    </p>
+                    <p class="p-value">{{deviceInfo}}</p>
+                </li>
+            </ul>
         </div>
         <div class="submit">
-            <button class="btn">
-                SUBMIT
-            </button>
+            <button class="btn" @click="submit">SUBMIT</button>
         </div>
     </div>
 </template>
 <script>
-var channel_type = [
-                {
-                    text:'Channel Type A',
-                    ZY:[
-                      {text:'Channel Name A'},
-                      {text:'Channel Name B'},
-                      {text:"Channel Name C"},
-                    ]
-                },
-                {
-                    text:'Channel Type B',
-                    ZY:[
-                      {text:'Channel Name D'},
-                      {text:'Channel Name E'},
-                      {text:"Channel Name F"},
-                    ]
-                },
-            ]
+import mselect from '~/components/select'
+import moment from 'moment/moment.js'
 export default {
-  layout: "base",
-  data(){
-    return{
-        problemId:'',
-        channel_type:channel_type,
-        indexId:'Select Channel Type', 
-        indexId2:'Select Channel Name',
-        indexNum:0
-    }
-  },
-  methods:{
-    changeType_index(event){
-      this.indexNum = event.target.value
-      this.indexId2 = this.channel_name[0].text
-    }
-  },
-  computed:{
-    channel_name :function(){
-      for(var i = 0; i < this.channel_type.length; i++){
-         if(this.channel_type[i].text == this.indexNum){
-            return this.channel_type[i].ZY
-         }
-      }
-    } 
-  },
-  head() {
-    return {
-      title: "Complain"
-    };
-  }
-};
-</script>
-<style lang="less">
-body {
-  background: #fff;
-}
-.wrapper {
-  font-family: "DINPro", Roboto, Arial, Helvetica, Sans-serif;
-}
-.clearfix:after {
-  display: block;
-  visibility: hidden;
-  clear: both;
-  height: 0;
-  content: "";
-}
-.clearfix {
-  zoom: 1;
-}
-.gap {
-  background-color: #f2f2f2;
-  height: 4px;
-  width: 100%;
-}
-.order-msg {
-  box-shadow: 0px 1px 3px 1px #dddddd;
-  border-radius: 5px;
-  padding: 0.5rem;
-  width: 95%;
-  margin: 0.5rem 2.5% 0 2.5%;
-  .time {
-    width: 100%;
-    color: #aaaaaa;
-    font-size: 0.8rem;
-    border-bottom: 1px solid #eeeeee;
-    padding: 0.2rem 0;
-  }
-}
-.order-type {
-  padding: 0.7em 0;
-  img {
-    width: 2.5rem;
-    height: 2.5rem;
-    float: left;
-  }
-  .right {
-    margin-left: 3rem;
-  }
-  .order-name {
-    span {
-      font-weight: bold;
-      float: right;
-    }
-  }
-  .order-status {
-    font-size: 0.9rem;
-    color: #999999;
-    span {
-      color: #00cc33;
-      float: right;
-    }
-  }
-}
-.problem {
-  padding: 0.5rem;
-  p {
-    margin: 0.6rem 0 0.3rem 0;
-    color: #212121;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-  select{
-    border: 1px solid #dddddd;
-    width: 100%;
-    font-size: 0.8rem;
-    padding: 0.3rem;
-    margin-bottom:.3rem;
-    border-radius: 4px;
-  }
-  textarea {
-    font-size: 0.8rem;
-    border: 1px solid #dddddd;
-    width: 100%;
-    padding: 0.3rem;
-  }
-}
-.personal {
-  width: 95%;
-  margin: 0 2.5% 4.5rem 2.5%;
-  & > p {
-    margin: 0.6rem 0 0.3rem 0;
-    color: #212121;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-  ul {
-    box-shadow: 0px 1px 3px 1px #dddddd;
-    padding: 0.5rem 0.8rem;
-    border-radius: 5px;
-    li {
-      padding: 0.5rem 0;
-      p {
-        display: inline-block;
-        color: #212121;
-        font-size: 0.8rem;
-        &.p-name {
-          width: 30%;
-          border-right: 1px solid #eeeeee;
-          span {
-            color: #0087e0;
-          }
+    layout: 'base',
+    data() {
+        return {
+            indexId: 'Select Channel Type',
+            indexId2: 'Select Channel Name',
+            indexNum: 0,
+            order: {},
+            user: this.$store.state.user,
+            deviceInfo: '',
+            type: this.$route.query.type || 2, // 1 代表支付相关 2 代表频道相关 0 公共相关
+            questionsList: [],
+            question: '',
+            channelList: [],
+            channelNameList: [],
+            countryList: [],
+            defaultCountry: '',
+            moredes:''
         }
-        &.p-value {
-          font-weight: bold;
-          margin-left: 1.5rem;
-        }
-      }
-      & + li {
-        border-top: 1px solid #eeeeee;
-      }
-    }
-  }
-}
-.submit {
-  width: 100%;
-  text-align: center;
-  color: #0087eb;
-  border-top: 1px solid #eeeeee;
-  margin-top: 1.5rem;
-  padding: 1rem 0;
-  position: fixed;
-  bottom: 0;
-  height: 4.25rem;  
-  background: #fff;
+    },
+    methods: {
+        setChannelName(item) {
+            this.channelNameList = item.disparkChannel
+        },
+        submit() {
+            let order = localStorage.getItem('orderMsg')
 
-  button {
-    margin: 0 auto;
-    border: 1px solid #0087eb;
-    border-radius: 2px;
+            let param = {
+                    orderType: order? JSON.parse(order).order_type:'',
+                    orderNo: order? JSON.parse(order).order_no:'',
+                    orderStatus: 'string',
+                    userAccount: this.user.userName,
+                    appVersion: this.$store.state.appVersion,
+                    problemId: 'string',
+                    problem: 'string',
+                    problemChannelTypeKey: 'string',
+                    problemChannelTypeValue: 'string',
+                    problemChannelNameKey: 'string',
+                    problemChannelNameValue: 'string',
+                    problemCountryId: 'string',
+                    problemCountryCode: 'string',
+                    message: 'string',
+                    leavingImgsDtoList: []
+                }
+
+            this.$axios
+                .post(`/csms-service/v1/get-standard-leaving-message-record`, param)
+                .then(res => {
+                    if (res.data.code == 0) {
+                        localStorage.setItem('leaveMsg',Object.assign({},param,{
+                            id:res.data.data.messageId
+                        }))
+                        this.$router.push('/hybrid/faq/customerService')
+                    }
+                })
+        }
+    },
+    mounted() {
+        let order = localStorage.getItem('orderMsg')
+        if (order) {
+            this.order = JSON.parse(order)
+        } else {
+            this.order = {}
+        }
+
+        let ua = window.navigator.userAgent
+        let deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
+        this.deviceInfo = deviceInfo[deviceInfo.length - 1].split('like')[0]
+
+        // more faqs
+        let serviceModuleId = localStorage.getItem('serviceModuleId')
+        let faq_question = localStorage.getItem('faq_question')
+        this.$axios
+            .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
+            .then(res => {
+                if (res.data.code == 0) {
+                    let list = []
+                    res.data.data.forEach((item, index) => {
+                        list.push({
+                            id: item.id,
+                            name: item.content
+                        })
+                    })
+                    this.questionsList = list
+                    this.question = JSON.parse(faq_question).id
+                }
+            })
+
+        // 渠道分类
+        this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
+            if (res.data && res.data instanceof Array) {
+                res.data.forEach(item => {
+                    item.disparkChannel.forEach(i => {
+                        i.id = i.channelId
+                    })
+                })
+                this.channelList = res.data
+            }
+        })
+
+        // country
+        this.$axios
+            .get(
+                `/cms/vup/v2/areas?versionCode=${this.$store.state.appVersion}`
+            )
+            .then(res => {
+                if (res.data && res.data instanceof Array) {
+                    this.countryList = res.data
+                    this.countryList.forEach(item => {
+                        if (item.country) {
+                            if (
+                                item.country.toLowerCase() ==
+                                this.user.countryCode.toLowerCase()
+                            ) {
+                                this.defaultCountry = item.id
+                            }
+                        }
+                    })
+                }
+            })
+    },
+    components: {
+        mselect: mselect
+    },
+    filters: {
+        formatDate(date) {
+            return moment(date).format('D MMM YYYY HH-mm:ss')
+        }
+    },
+    head() {
+        return {
+            title: 'Complain'
+        }
+    }
+}
+</script>
+<style lang="less" scoped>
+body {
     background: #fff;
-    padding: 0.3rem;
-    font-weight: bold;
-    width: 60%;
-  }
+}
+
+.wrapper {
+    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
+}
+
+.clearfix:after {
+    display: block;
+    visibility: hidden;
+    clear: both;
+    height: 0;
+    content: '';
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+.gap {
+    background-color: #f2f2f2;
+    height: 4px;
+    width: 100%;
+}
+
+.order-msg {
+    box-shadow: 0px 1px 3px 1px #dddddd;
+    border-radius: 2px;
+    padding: 0.5rem;
+    width: 95%;
+    margin: 0.5rem 2.5% 0 2.5%;
+    position: relative;
+    .time {
+        width: 100%;
+        color: #aaaaaa;
+        font-size: 0.8rem;
+        border-bottom: 1px solid #eeeeee;
+        padding: 0.2rem 0;
+        img {
+            position: absolute;
+            display: block;
+            width: 1.2rem;
+            right: 0.4rem;
+            top: 0.4rem;
+        }
+    }
+}
+
+.choose-order {
+    box-shadow: 0px 1px 3px 1px #dddddd;
+    padding: 1.3rem;
+    width: 95%;
+    margin: 0.5rem 2.5% 0 2.5%;
+    border-radius: 2px;
+    div {
+        width: 100%;
+        text-align: center;
+        color: #212121;
+        font-size: 0.85rem;
+        font-weight: bold;
+        img {
+            vertical-align: sub;
+            margin-right: 0.2rem;
+            width: 0.9rem;
+        }
+    }
+}
+
+.order-type {
+    padding: 0.7em 0;
+    img {
+        width: 2.5rem;
+        height: 2.5rem;
+        float: left;
+    }
+    .right {
+        margin-left: 3rem;
+    }
+    .order-name {
+        span {
+            font-weight: bold;
+            float: right;
+        }
+    }
+    .order-status {
+        font-size: 0.9rem;
+        color: #999999;
+        span {
+            color: #00cc33;
+            float: right;
+        }
+    }
+}
+
+.problem {
+    padding: 0.5rem;
+    p {
+        margin: 0.6rem 0 0.3rem 0;
+        color: #212121;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+    select {
+        border: 1px solid #dddddd;
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 0.3rem;
+        margin-bottom: 0.3rem;
+        border-radius: 4px;
+    }
+    textarea {
+        font-size: 0.8rem;
+        border: 1px solid #dddddd;
+        width: 100%;
+        padding: 0.3rem;
+        border-radius: 2px;
+    }
+}
+
+.personal {
+    width: 95%;
+    margin: 0 2.5% 4.5rem 2.5%;
+    & > p {
+        margin: 0.6rem 0 0.3rem 0;
+        color: #212121;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+    ul {
+        box-shadow: 0px 1px 3px 1px #dddddd;
+        padding: 0.5rem 0.8rem;
+        border-radius: 5px;
+        li {
+            padding: 0.5rem 0;
+            p {
+                display: inline-block;
+                color: #212121;
+                font-size: 0.8rem;
+                &.p-name {
+                    width: 30%;
+                    border-right: 1px solid #eeeeee;
+                    span {
+                        color: #0087e0;
+                    }
+                }
+                &.p-value {
+                    font-weight: bold;
+                    margin-left: 1.5rem;
+                }
+            }
+            & + li {
+                border-top: 1px solid #eeeeee;
+            }
+        }
+    }
+}
+
+.submit {
+    width: 100%;
+    text-align: center;
+    color: #0087eb;
+    border-top: 1px solid #eeeeee;
+    margin-top: 1.5rem;
+    padding: 1rem 0;
+    position: fixed;
+    bottom: 0;
+    height: 4.25rem;
+    background: #fff;
+
+    button {
+        margin: 0 auto;
+        border: 1px solid #0087eb;
+        border-radius: 2px;
+        background: #fff;
+        padding: 0.3rem;
+        font-weight: bold;
+        width: 60%;
+        outline: none;
+    }
 }
 </style>

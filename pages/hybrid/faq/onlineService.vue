@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <div style="height:100vh;display:flex;flex-direction:column;">
         <div id="wrapper">
             <div class="order-msg" v-if="serviceData.order_info">
                 <div class="top">
                     <p class="time">{{serviceData.order_info.order_create_time | formatDate }}</p>
                     <div class="order-type clearfix">
-                        <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                        <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
                         <div class="right">
                             <p class="order-name">{{serviceData.order_info.order_type }}<span>{{serviceData.order_info.order_amount }}</span></p>
                             <p class="order-status">{{serviceData.order_info.card_no }}<span>{{serviceData.order_info.order_status }}</span></p>
@@ -15,43 +15,45 @@
                 <div class="gap"></div>
                 <div class="bottom clearfix">
                     <p class="clearfix">Questions
-                        <img src="~assets/img/faq/ic_categary_copy41.png" alt="" @click="moreFaqs">
+                        <nuxt-link to="/hybrid/faq/customerService">
+                            <img src="~/assets/img/faq/ic_categary_copy41.png">
+                        </nuxt-link>
                     </p>
                     <ul v-if="serviceData.questions">
-                        <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id">{{item.content}}</li>
+                        <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id" @click="saveFaq(item)">{{item.content}}</li>
                     </ul>
                     <div class="btn" v-for="(item,index) in serviceData.service_components" :key="index">
                         {{item.presentation_name}}
                     </div>
                 </div>
                 <div class="gap"></div>
-                <div class="more" @click="moreOrders">
-                    MORE ORDERS
-                </div>
+                <nuxt-link :to="{ path:'/hybrid/faq/moreOrders',query:$route.query }">
+                    <div class="more">
+                        MORE ORDERS
+                    </div>
+                </nuxt-link>
             </div>
-            <div class="service">
+            <div class="service" v-if="faqTagsData">
                 <nav id="nav">
-                    <a :class="{on:serviceTag == 'Hot'}" @click="changeServiceTag('Hot')"><img src="~assets/img/faq/ic_categary_copy42.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'ON'}" @click="changeServiceTag('ON')"><img src="~assets/img/faq/ic_categary_copy2.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'TV' }" @click="changeServiceTag('TV')"><img src="~assets/img/faq/ic_categary_copy21.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'Pay'}" @click="changeServiceTag('Pay')"><img src="~assets/img/faq/ic_categary_copy4.png" alt=""></a>
-                    <a :class="{on:serviceTag == 'Account'}" @click="changeServiceTag('Account')"><img src="~assets/img/faq/ic_tv1.png" alt=""></a>
+                    <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
+                        <div :class="item.class"></div>
+                    </a>
                 </nav>
                 <div class="questions">
-                    <ul v-show="serviceTag == 'Hot'">
-                        <li v-for="(item,index) in faqsByTag" :key="index">{{item.content}}</li>
-                    </ul>
-                    <div v-show="serviceTag == 'ON'">2</div>
-                    <div v-show="serviceTag == 'TV'">3</div>
-                    <div v-show="serviceTag == 'Pay'">4</div>
-                    <div v-show="serviceTag == 'Account'">5</div>
+                    <div v-for="(item,index) in faqTagsData" :key="index" v-show="item.checked">
+                        <ul>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="saveFaq(item)">{{item2.content}}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="costomer">
-            <button class="btn">
-                COSTOMER SERVICE
-            </button>
+            <nuxt-link to="/hybrid/faq/customerService?config_id=&directory_id=">
+                <button class="btn">
+                    COSTOMER SERVICE
+                </button>
+            </nuxt-link>
         </div>
     </div>
 </template>
@@ -61,14 +63,12 @@ export default {
     layout: 'base',
     data: function() {
         return {
-            serviceTag: 'Hot',
             entranceId: this.$route.query.entrance_id || '',
             serviceData: {},
             faqTagsData: [],
-            faqsByTag: [],
-            canLoadingMore: true,
+            faqsByTag: {},
             pageSize: 10,
-            pageNum: 1
+            isLoading: false
         }
     },
     filters: {
@@ -77,53 +77,122 @@ export default {
         }
     },
     mounted() {
+        localStorage.removeItem('faq_question')
+
+        // 服务块
         this.$axios
             .get(`/ocs/v1/service?entranceId=${this.entranceId}`, {})
             .then(res => {
                 if (res.data) {
                     this.serviceData = res.data.data
+                    localStorage.setItem(
+                        'orderMsg',
+                        JSON.stringify(this.serviceData.order_info)
+                    )
+                    localStorage.setItem(
+                        'serviceModuleId',
+                        this.serviceData.service_module.id
+                    )
                 }
             })
-        this.$axios.get('/ocs/v1/faqs/Tags', {}).then(res => {
+
+        this.$axios.get('/ocs/v1/faqs/Tags').then(res => {
             if (res.data) {
-                this.faqTagsData = res.data.data
-            }
-        })
-        this.changeServiceTag(this.serviceTag)
-    },
-    methods: {
-        moreFaqs() {
-            let param = {
-                order_create_time: this.serviceData.order_info
-                    .order_create_time,
-                order_type: this.serviceData.order_info.order_type,
-                card_no: this.serviceData.order_info.card_no,
-                order_status: this.serviceData.order_info.order_status,
-                order_amount: this.serviceData.order_info.order_amount
-            }
-            sessionStorage.setItem('orderMsg', JSON.stringify(param))
-            this.$router.push('/hybrid/faq/customerService')
-        },
-        moreOrders() {
-            this.$router.push('/hybrid/faq/moreOrders')
-        },
-        changeServiceTag(tag) {
-            this.serviceTag = tag
-            this.$axios
-                .get(
-                    `/ocs/v1/faqs/byTag?tagId=${this.serviceTag}&
-                              pageSize=${this.pageSize}&
-                              pageNum=${this.pageNum}`,
-                    {}
-                )
-                .then(res => {
-                    if (res.data) {
-                        this.faqsByTag = res.data.data.rows
-                        if (this.faqsByTag.length <= this.pageSize) {
-                            this.canLoadingMore = false
-                        }
+                let arr = []
+                let firstTagId = null
+                res.data.data.forEach((item, index) => {
+                    let checked = index <= 0 ? true : false
+                    if (index == 0) firstTagId = item.tagging_id
+                    let logoMap = {
+                        hot: 'tab_hot',
+                        on: 'tab_on',
+                        tv: 'tab_tv',
+                        pay: 'tab_pay',
+                        account: 'tab_account'
+                    }
+
+                    arr.push({
+                        id: item.tagging_id,
+                        name: item.tagging_name,
+                        checked: checked,
+                        class:
+                            logoMap[item.tagging_name.toLowerCase()] ||
+                            'tab_hot',
+                        page: 1, // 每个页默认加载起始页,
+                        untilTotal: false,
+                        faqs: []
+                    })
+                })
+                this.faqTagsData = arr
+                this.changeServiceTag(firstTagId)
+
+                this.$nextTick(() => {
+                    let collect = document.querySelectorAll('.questions div')
+                    for (let i = 0; i < collect.length; i++) {
+                        collect[i].addEventListener('scroll', this.handleScroll)
                     }
                 })
+            }
+        })
+    },
+    methods: {
+        getfaqsByTag(tagid, moretag) {
+            let tag = {}
+            this.faqTagsData.forEach(item => {
+                if (item.id == tagid) {
+                    tag = item
+                }
+            })
+            if (!moretag && tag.page > 1) return
+            this.$axios
+                .get(
+                    `/ocs/v1/faqs/byTag?tagId=${tagid}&
+                                    pageSize=${this.pageSize}&
+                                    pageNum=${tag.page}`
+                )
+                .then(res => {
+                    this.isLoading = false
+                    if (res.data) {
+                        tag.faqs = tag.faqs.concat(res.data.data.rows)
+                        tag.page = tag.page + 1
+
+                        // TODO 设置untilTotal
+                    }
+                })
+        },
+        changeServiceTag(tagId) {
+            this.faqTagsData.forEach(item => {
+                if (item.id == tagId) {
+                    item.checked = true
+                } else {
+                    item.checked = false
+                }
+            })
+
+            this.getfaqsByTag(tagId)
+        },
+        handleScroll(evt) {
+            let container = evt.target
+            let child = evt.target.querySelector('ul')
+            let childHeight = child.offsetHeight
+            let scrollTop = container.scrollTop
+
+            // TODO untilTotal
+            if (childHeight - scrollTop <= 150 && this.isLoading == false) {
+                this.isLoading = true
+                let checkedId = null
+                this.faqTagsData.forEach(item => {
+                    if (item.checked == true) {
+                        checkedId = item.id
+                    }
+                })
+
+                this.getfaqsByTag(checkedId, true)
+            }
+        },
+        saveFaq(content) {
+            localStorage.setItem('faq_question', JSON.stringify(content))
+            this.$router.push('/hybrid/faq/customerService')
         }
     },
     head() {
@@ -133,7 +202,10 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
+html {
+    overflow-y: hidden;
+}
 body {
     background: #fff;
 }
@@ -141,6 +213,9 @@ body {
 #wrapper {
     padding: 0.5rem;
     font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
+    flex: 12;
+    display: flex;
+    flex-direction: column;
 }
 .clearfix:after {
     display: block;
@@ -232,30 +307,85 @@ body {
     }
 }
 .service {
-    margin-top: 1rem;
+    margin-top: 0.8rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     #nav {
         width: 100%;
         margin: 0 auto;
         text-align: center;
-        padding-bottom: 0.7rem;
+        padding-bottom: 0.6rem;
+        display: flex;
         a {
             border-bottom: 3px solid #eeeeee;
-            width: 20%;
-            display: inline-block;
+            flex: 1;
+            display: block;
             padding-bottom: 0.7rem;
+
+            div {
+                width: 1.4rem;
+                margin: 0 auto;
+                height: 1.5rem;
+                background-size: contain !important;
+                &.tab_hot {
+                    background: url('~/assets/img/faq/ic_favorite_def_g.png')
+                        no-repeat center;
+                }
+                &.tab_on {
+                    background: url('~/assets/img/faq/ic_OTT_def_g.png')
+                        no-repeat center;
+                }
+                &.tab_tv {
+                    background: url('~/assets/img/faq/ic_TV_def_g.png')
+                        no-repeat center;
+                }
+                &.tab_pay {
+                    background: url('~/assets/img/faq/ic_changecard_def_g.png')
+                        no-repeat center;
+                }
+                &.tab_account {
+                    background: url('~/assets/img/faq/ic_accountconfirm_def_g.png')
+                        no-repeat center;
+                }
+            }
+
             &.on {
                 border-bottom: 3px solid #0087eb;
-            }
-            img {
-                width: 1.5rem;
-                height: 1.5rem;
+                div {
+                    &.tab_hot {
+                        background: url('~/assets/img/faq/ic_favorite_def_blue.png')
+                            no-repeat center;
+                    }
+                    &.tab_on {
+                        background: url('~/assets/img/faq/ic_OTT_def_b.png')
+                            no-repeat center;
+                    }
+                    &.tab_tv {
+                        background: url('~/assets/img/faq/ic_TV_def_blue.png')
+                            no-repeat center;
+                    }
+                    &.tab_pay {
+                        background: url('~/assets/img/faq/ic_changecard_def_blue.png')
+                            no-repeat center;
+                    }
+                    &.tab_account {
+                        background: url('~/assets/img/faq/ic_accountconfirm_def_blue.png')
+                            no-repeat center;
+                    }
+                }
             }
         }
     }
     .questions {
-        margin-bottom: 4.5rem;
-        height: 22rem;
-        overflow: auto;
+        // margin-bottom: 4.5rem;
+        // overflow: scroll;
+        flex: 1;
+        overflow: hidden;
+        div {
+            overflow: auto;
+            height: 100%;
+        }
         li {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -274,12 +404,10 @@ body {
     text-align: center;
     color: #0087eb;
     border-top: 1px solid #eeeeee;
-    margin-top: 1.5rem;
     padding: 1rem 0;
-    position: fixed;
-    bottom: 0;
     background: #fff;
     height: 4.25rem;
+    flex: 1;
     button {
         margin: 0 auto;
         border: 1px solid #0087eb;
@@ -288,6 +416,7 @@ body {
         padding: 0.3rem;
         font-weight: bold;
         width: 60%;
+        outline: none;
     }
 }
 </style>
