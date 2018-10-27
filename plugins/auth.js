@@ -10,7 +10,7 @@ let auth_ignore = [
     /^\/hybrid\/payment\/payResult/,
     /^\/hybrid\/payment\/form/,
     /^\/hybrid\/payment\/methods/,
-    /^\/hybrid\/faq/,
+    /^\/hybrid\/faq/, // TODO
 ]
 function inIgnore(url) {
     let result = false
@@ -28,7 +28,7 @@ export default ({ app: { router }, store }) => {
             if (loginUser) {
                 next()
             } else {
-                next('/hybrid/account/login?pre='+ encodeURIComponent(to.fullPath))
+                next('/hybrid/account/login?pre=' + encodeURIComponent(to.fullPath))
             }
         } else {
             next()
