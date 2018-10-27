@@ -67,6 +67,7 @@ module.exports = {
     plugins: [
         { src: '~plugins/analysis.js', ssr: false },
         { src: '~plugins/auth.js', ssr: false },
+        { src: '~plugins/clearUser.js', ssr: false },
         { src: '~plugins/deviceid.js', ssr: false },
         { src: '~plugins/axios.js', ssr: false },
     ]

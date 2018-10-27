@@ -11,77 +11,11 @@
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <div v-if="item.tpl=='list'" :key="index" class="list_faq_item clearfix">
-                    <div class="content_avatar fl">
-                        <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
-                    </div>
-                    <div class="content_show">
-                        <img class="arrow" src="~assets/img/faq/Triangle.png">
-                        <div class="hint">You may ask:</div>
-                        <ul class="ques-item-wraper clearfix">
-                            <li v-for="(item2,index2) in item.contents" @click="askQuest(item2,item.type)" :key="index2">
-                                <span class="recommend_q_con">{{item2.name}}</span>
-                                <img class="forward_arrow" src="~assets/img/faq/ic_categary_copy41.png">
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" class="list_faq_item list_faq_item_fr clearfix">
-                    <div class="content_avatar fr">
-                        <img v-show="user.head" :src="user.head" />
-                        <img v-show="!user.head" src="~assets/img/faq/1-02.png" />
-                    </div>
-                    <div class="content_show fr">
-                        <img class="arrow" src="~assets/img/faq/Triangle_right.png">
-                        <div class="faq_content">{{item.name}}</div>
-                    </div>
-                </div>
-                <div v-if="item.tpl=='order'" :key="index" class="order-msg">
-                    <p class="time">{{item.order.order_create_time | formatDate}}</p>
-                    <div class="order-type clearfix">
-                        <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                        <div class="right">
-                            <p class="order-name">
-                                {{item.order.order_type}}<span>{{item.order.order_amount}}</span>
-                            </p>
-                            <p class="order-status">
-                                {{item.order.card_no}}<span>{{item.order.order_status}}</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="item.tpl=='content'" :key="index" class="list_faq_item clearfix">
-                    <div class="content_avatar fl">
-                        <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
-                    </div>
-                    <div class="content_show">
-                        <img class="arrow" src="~assets/img/faq/Triangle.png">
-                        <div class="result-wraper" v-html="item.content"></div>
-                        <div>
-                            <div class="btn">COMPLAIN</div>
-                            <div class="clear"></div>
-                            <div class="attitude-container">
-                                <div class="yes-item">
-                                    <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
-                                    <span>YES</span>
-                                </div>
-                                <div class="no-item">
-                                    <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
-                                    <span>NO</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" class="list_faq_item clearfix">
-                    <div class="content_avatar fl">
-                        <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
-                    </div>
-                    <div class="welcome-wraper ">
-                        <img class="arrow" src="~assets/img/faq/Triangle.png">
-                        <span class="welcome-item">{{item.name}}</span>
-                    </div>
-                </div>
+                <questionListTpl v-if="item.tpl=='list'" :key="index" :list="item.contents"></questionListTpl>
+                <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"></orderBlockTpl>
+                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"></askTpl>
+                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"></answerTpl>
+                <contentTpl v-if="item.tpl=='content'" :key="index" :content="item.item.content"></contentTpl>
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
@@ -103,18 +37,18 @@
         </div>
         <!-- Waiting For Result -->
         <div>
-             <div class="order-msg">
-                    <p class="time">11 Oct 2018 17-25:52 <span class="wait-result">Waiting For Result</span></p>
-                    <div class="order-type clearfix">
-                        <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                        <div class="right">
-                            <p class="order-name"> DVB Recharge </p>
-                            <p class="order-status">Order ID: D1398765409 </p>
-                        </div>
+            <div class="order-msg">
+                <p class="time">11 Oct 2018 17-25:52 <span class="wait-result">Waiting For Result</span></p>
+                <div class="order-type clearfix">
+                    <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                    <div class="right">
+                        <p class="order-name"> DVB Recharge </p>
+                        <p class="order-status">Order ID: D1398765409 </p>
                     </div>
-                    <p class="complain">Complain</p>
-                    <p>I’ve recharged, but I still can’t watch channels on TV.</p>
                 </div>
+                <p class="complain">Complain</p>
+                <p>I’ve recharged, but I still can’t watch channels on TV.</p>
+            </div>
         </div>
         <!-- 评价星星星 -->
         <div class="evaluation">
@@ -130,7 +64,7 @@
             <div class="gave-star">
                 <p>Please evaluate for us? THX.</p>
                 <!-- <img src="~assets/img/faq/ic_favoritez_blue_evl.png" alt=""> -->
-                <img v-for ="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favorite_def_evl.png" @click="starToBlue(index,$event)">
+                <img v-for="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favorite_def_evl.png" @click="starToBlue(index,$event)">
                 <!-- <img v-for ="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favoritez_blue_evl.png" @click="starToBlue(index,$event)"> -->
             </div>
         </div>
@@ -139,11 +73,16 @@
 <script>
 import moment from 'moment/moment.js'
 import BScroll from 'better-scroll'
+import questionListTpl from '~/components/faq/questionListTpl'
+import orderBlockTpl from '~/components/faq/orderBlockTpl'
+import askTpl from '~/components/faq/askTpl'
+import answerTpl from '~/components/faq/answerTpl'
+import contentTpl from '~/components/faq/contentTpl'
 export default {
     layout: 'base',
     data() {
         return {
-            isLogin: this.$store.state.user.type, // 如果有值即为登录状态,没有值则是匿名登录
+            isLogin: this.$store.state.user.type || false,
             user: this.$store.state.user,
             config_id: this.$route.query.config_id,
             entrance_id: this.$route.query.entrance_id,
@@ -163,10 +102,18 @@ export default {
             chatLink: null
         }
     },
+    components: {
+        questionListTpl,
+        orderBlockTpl,
+        askTpl,
+        answerTpl,
+        contentTpl
+    },
     mounted() {
         let questions = JSON.parse(localStorage.getItem('faq_question'))
         let serviceModuleId = localStorage.getItem('serviceModuleId')
         let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
+        
         let _this = this
         // LiveChat 按钮判断
         this.user.areaID &&
@@ -647,13 +594,12 @@ export default {
             // TODO 创建新的服务记录
             // TODO 输入框多行支持
         },
-        starToBlue(index,event){
-            let imgNode = document.querySelectorAll(".gave-star img");
-            console.log(event)
-            for(let i = 0;i<imgNode.length;i++){
+        starToBlue(index, event) {
+            let imgNode = document.querySelectorAll('.gave-star img')
+            for (let i = 0; i < imgNode.length; i++) {
                 // TODO 先全部恢复默认状态
             }
-            for(let i = 0;i<=index;i++){
+            for (let i = 0; i <= index; i++) {
                 // TODO 当前index及之前变为蓝色
             }
         }
@@ -670,408 +616,6 @@ export default {
     }
 }
 </script>
-
-<style lang="less" scoped>
-#wrapper {
-    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
-    background: #eee;
-    height: 100vh;
-    overflow: auto;
-    .content {
-        padding-bottom: 4.5rem;
-    }
-}
-.fl {
-    float: left;
-}
-
-.fr {
-    float: right;
-}
-.clearfix:after {
-    display: block;
-    visibility: hidden;
-    clear: both;
-    height: 0;
-    content: '';
-}
-.clearfix {
-    zoom: 1;
-}
-.clear {
-    clear: both;
-}
-.list_faq_item {
-    margin-left: 8px;
-    margin-right: 8px;
-    padding-top: 1rem;
-    .content_avatar {
-        img {
-            width: 36px;
-            height: 36px;
-        }
-    }
-    .welcome-wraper {
-        display: inline-block;
-        margin-left: 10px;
-        background: #fff;
-        border-radius: 5px;
-        max-width: 75%;
-        position: relative;
-        padding: 0.6rem 0.8rem;
-        .welcome-item {
-            display: inline-block;
-            margin: 0;
-            height: auto;
-            line-height: 1.2rem;
-            font-size: 0.9rem;
-            color: #333333;
-        }
-        img.arrow {
-            width: 8px;
-            height: 12px;
-            position: absolute;
-            top: 13px;
-            left: -8px;
-        }
-    }
-}
-.content_show {
-    margin-left: 45px;
-    border-radius: 5px;
-    position: relative;
-    background: white;
-    width: 75%;
-    padding: 0.6rem 0.8rem;
-    .faq_content {
-        display: inline-block;
-        margin: 0;
-        padding: 0.6rem 0;
-        height: auto;
-        font-size: 0.9rem;
-        line-height: 1rem;
-        color: #fff;
-    }
-    .arrow {
-        width: 8px;
-        height: 12px;
-        position: absolute;
-        top: 13px;
-        left: -8px;
-    }
-
-    .hint {
-        font-weight: 600;
-        font-size: 16px;
-        margin-left: 0;
-        padding-bottom: 0.6rem;
-    }
-    .btn {
-        color: #0087eb;
-        font-size: 0.8rem;
-        margin: 0.7rem 0;
-        float: right;
-        font-weight: 600;
-    }
-    span.recommend_q_con {
-        color: #666666;
-        font-size: 0.85rem;
-    }
-    .ques-item-wraper {
-        li {
-            position: relative;
-            border-top: 1px solid #eee;
-            padding: 0.3rem 0.94rem 0.3rem 0;
-            span {
-                display: inline-block;
-                width: 95%;
-                vertical-align: middle;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            img {
-                width: 20px;
-                height: 20px;
-                position: absolute;
-                right: 0;
-                top: 50%;
-                margin-top: -10px;
-            }
-        }
-    }
-    .attitude-container {
-        padding-top: 0.6rem;
-        color: #212121;
-        font-size: 0.9rem;
-        border-top: 1px solid #eeeeee;
-        div {
-            display: inline-block;
-            text-align: center;
-            line-height: 1.3rem;
-            &:last-child {
-                margin-left: 20px;
-            }
-        }
-        img {
-            width: 25px;
-            height: 25px;
-            margin: 0 auto;
-            display: block;
-        }
-    }
-}
-
-.list_faq_item_fr {
-    .content_show {
-        border-radius: 5px;
-        padding: 0 10px;
-        position: relative;
-        margin-right: 10px;
-        background: #1c88de;
-        margin-left: 0px;
-        width: auto;
-        max-width: 75%;
-        .arrow {
-            position: absolute;
-            width: 8px;
-            height: 12px;
-            top: 0.65rem;
-            right: -7px;
-            left: auto;
-        }
-    }
-}
-
-.order-msg {
-    box-shadow: 0px 1px 3px 1px #dddddd;
-    border-radius: 5px;
-    padding: 0.5rem;
-    width: 95%;
-    margin: 1rem 2.5% 0 2.5%;
-    background: #fff;
-    .time {
-        width: 100%;
-        color: #aaaaaa;
-        font-size: 0.8rem;
-        border-bottom: 1px solid #eeeeee;
-        padding: 0.2rem 0;
-        .wait-result{
-            color:#333333;
-            float:right;
-            font-weight:bold;
-        }
-    }
-    .complain{
-        font-size:.9rem;
-        color:#666666;
-        font-weight:bold;
-        &+p{
-            color:#666666;
-            font-size:.8rem;
-        }
-    }
-}
-.order-type {
-    padding: 0.7em 0;
-    img {
-        width: 2.5rem;
-        height: 2.5rem;
-        float: left;
-    }
-    .right {
-        margin-left: 3rem;
-    }
-    .order-name {
-        span {
-            font-weight: bold;
-            float: right;
-        }
-    }
-    .order-status {
-        font-size: 0.9rem;
-        color: #999999;
-        span {
-            color: #00cc33;
-            float: right;
-        }
-    }
-}
-
-.live-chat {
-    width: 100%;
-    background: #fff;
-    text-align: center;
-    color: #0087eb;
-    border-top: 1px solid #eeeeee;
-    margin-top: 1.5rem;
-    padding: 1rem 0;
-    position: fixed;
-    bottom: 0;
-    .btn {
-        margin: 0 auto;
-        border: 1px solid #0087eb;
-        border-radius: 2px;
-        background: #fff;
-        padding: 0.3rem;
-        font-weight: bold;
-        width: 60%;
-        outline: none;
-    }
-}
-
-.pull_refresh {
-    position: absolute;
-    top: -2.5rem;
-    width: 100%;
-    text-align: center;
-    .refresh_text {
-        background: #ccc;
-        border-radius: 1rem;
-        color: white;
-        font-size: 0.8rem;
-        padding: 0.2rem 1rem;
-    }
-    .refresh_img {
-        width: 2.5rem;
-    }
-}
-.evaluation{
-    box-shadow: 0px 1px 3px 1px #dddddd;
-    border-radius: 5px;
-    padding:1rem 1.5rem 2rem ;
-    width: 95%;
-    margin: 1rem 2.5% 2.5% 2.5%;
-    background: #fff;
-    font-size:.9rem;
-    color:#333333;
-    .eval-title{
-        font-weight:bold;
-    }
-    .eval-img{
-        margin-top:.5rem;
-        padding:.5rem 1rem;
-        border-top:1px solid #EEEEEE;
-        border-bottom:1px solid #EEEEEE;
-        span{
-            text-align:center;
-            display:inline-block;
-            width:1.8rem;
-            margin-right:4rem;
-            img{
-                display:block;
-                width:100%;
-            }
-        }
-    }
-    .gave-star{
-        padding: .5rem ;
-        p{
-            margin-bottom:.3rem;
-        }
-        img{
-            width:1.8rem;
-            margin-right:1.5rem;
-        }
-    }
-}
-/* livechat input */
-
-.live-chat-input {
-    width: 100%;
-    background: #fff;
-    text-align: center;
-    color: #0087eb;
-    border-top: 1px solid #eeeeee;
-    padding: 0.8rem 0.5rem;
-    position: fixed;
-    bottom: 0;
-    .user-control-w {
-        width: 100%;
-        display: flex;
-        position: relative;
-        .user-edit-w {
-            width: 78%;
-            border: solid 1px #a7a1a1;
-            border-radius: 2px;
-            textarea {
-                height: 2rem;
-                padding: 0.5rem;
-                width: 100%;
-                resize: none;
-                line-height: 20px;
-                display: block;
-                border: none;
-                font-size: 1rem;
-                color: #20293d;
-                outline: none;
-                float: left;
-            }
-        }
-        .user-submit-w {
-            position: absolute;
-            right: 0;
-            width: 20%;
-            height: 2rem;
-            border-radius: 2px;
-            overflow: hidden;
-            button {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                display: block;
-                border: none;
-                text-align: center;
-                color: #fff;
-                background: #0087eb;
-            }
-        }
-    }
-}
-.tips {
-    padding-top: 1rem;
-    div {
-        text-align: center;
-        width: 80%;
-        background: #ccc;
-        padding: 0.1rem 0.4rem;
-        border-radius: 0.7rem;
-        color: white;
-        font-size: 0.8rem;
-        margin: auto;
-    }
-}
-</style>
-<style>
-/* for v-html */
-.result-wraper p:first-child {
-    padding-top: 9px;
-}
-
-.result-wraper p {
-    line-height: 1.5;
-    font-size: 14px;
-    word-wrap: break-word;
-    word-break: normal;
-    color: #757575;
-}
-
-.result-wraper p img {
-    display: block;
-    width: 70% !important;
-    height: auto !important;
-    margin: 0 auto;
-}
-
-.result-wraper p span {
-    display: inline-block;
-    max-width: 100%;
-    color: #212121 !important;
-}
-
-.result-wraper p a {
-    color: #2196f3 !important;
-    text-decoration: none !important;
-}
+<style lang="less">
+@import '~assets/less/faq/common.less';
 </style>

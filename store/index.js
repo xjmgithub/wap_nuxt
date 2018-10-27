@@ -12,7 +12,6 @@ export const state = () => ({
     shadowStatus: false,
     payToken: '',
     user: null,
-    payToken: '',
     txNo: ''
 })
 
@@ -127,11 +126,7 @@ export const actions = {
         }).then(user => {
             commit('SET_USER', user.data)
         }).catch(error => {
-            if (error.response.status == 401) {
-                //TODO console.log('auth failure')
-            } else {
-                console.log(error)
-            }
+            // 用户失效在plugin/clearUser当中处理
         })
 
 
