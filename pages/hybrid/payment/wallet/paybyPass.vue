@@ -91,7 +91,7 @@ export default {
                 })
                 .then(res => {
                     let data = res.data
-                    let redirect = res.data.merchantPayRedirectUrl
+                    let redirect = res.data.merchantPayRedirectUrl || 'https://m.startimestv.com'
                     if (data && data.resultCode == 0) {
                         this.$axios
                             .post('/mobilewallet/v1/balance-payments', {
