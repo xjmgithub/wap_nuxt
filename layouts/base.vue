@@ -43,6 +43,16 @@ body {
     margin: 0px;
     padding: 0px;
     min-height: 100%;
-    font-family: 'Hiragino Sans GB, Roboto, Arial, Helvetica, Sans-serif';
+    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
+}
+.clearfix:after {
+    display: block;
+    visibility: hidden;
+    clear: both;
+    height: 0;
+    content: '';
+}
+.clearfix {
+    zoom: 1;
 }
 </style>
