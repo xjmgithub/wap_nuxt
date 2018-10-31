@@ -38,12 +38,16 @@ export default {
 </script>
 <style>
 @import '~/assets/css/normalize.css';
+@font-face {
+    font-family: Roboto;
+    src: url('~/assets/fonts/Roboto-Regular.ttf');
+    font-style:"normal";
+}
 html,
 body {
     margin: 0px;
     padding: 0px;
     min-height: 100%;
-    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
 }
 .clearfix:after {
     display: block;

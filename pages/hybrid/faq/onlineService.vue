@@ -46,7 +46,7 @@ export default {
         
         // 服务块
         this.$axios
-            .get(`/ocs/v1/service?entranceId=${this.entranceId}`)
+            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`)
             .then(res => {
                 if (res.data) {
                     this.serviceData = res.data.data
