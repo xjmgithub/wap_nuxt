@@ -131,7 +131,6 @@ export default {
 </script>
 <style lang="less" scoped>
 #wrapper {
-    font-family: 'Roboto';
     padding: 1rem 0.8rem;
 
     .tab {

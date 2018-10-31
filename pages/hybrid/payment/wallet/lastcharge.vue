@@ -94,7 +94,6 @@ export default {
 </script>
 <style scoped>
 .container {
-    font-family: 'Roboto';
     padding: 5rem 1rem 0;
     text-align: center;
 }

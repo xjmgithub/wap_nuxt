@@ -98,7 +98,6 @@ export default {
 </script>
 <style scoped lang="less">
 .container {
-    font-family: 'Roboto';
     padding: 5rem 1rem 0;
     text-align: center;
     &.grey-back {

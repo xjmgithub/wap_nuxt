@@ -117,7 +117,6 @@ export default {
 </script>
 <style lang="less" scoped>
 #wrapper {
-    font-family: 'Roboto';
 
     img {
         display: block;

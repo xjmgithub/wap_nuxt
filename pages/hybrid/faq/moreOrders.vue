@@ -41,6 +41,5 @@ body {
 
 #wrapper {
     padding: 0.5rem;
-    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
 }
 </style>
