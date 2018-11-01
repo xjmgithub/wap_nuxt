@@ -14,15 +14,13 @@ module.exports = {
                 content: 'Nuxt.js project'
             },
             { name: 'format-detection', content: 'email=no' },
-            { name: 'format-detection', content: 'telephone=no' }
+            { name: 'format-detection', content: 'telephone=no' },
+            { name: 'google-signin-client_id', content: '461626275431-sngbv2nv2bmecefaiu01r67cu1n88rja.apps.googleusercontent.com' }
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         script: [
             {
                 src: '/res_nuxt/sdk.js'
-            },
-            {
-                src: '/res_nuxt/api_client.js'
             }
         ]
     },
@@ -69,6 +67,6 @@ module.exports = {
         { src: '~plugins/auth.js', ssr: false },
         { src: '~plugins/clearUser.js', ssr: false },
         { src: '~plugins/deviceid.js', ssr: false },
-        { src: '~plugins/axios.js', ssr: false },
+        { src: '~plugins/axios.js', ssr: false }
     ]
 }
