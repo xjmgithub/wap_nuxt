@@ -11,7 +11,7 @@
                 <div class="questions">
                     <div v-for="(item,index) in faqTagsData" :key="index" v-show="item.checked">
                         <ul>
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.content}}</li>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
                         </ul>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ export default {
             serviceData: {},
             faqTagsData: [],
             faqsByTag: {},
-            pageSize: 10,
+            pageSize: 30,
             isLoading: false
         }
     },
@@ -43,12 +43,12 @@ export default {
         localStorage.removeItem('faq_question')
 
         let entranceId = this.$route.query.entrance_id || ''
-        
+
         // 服务块
         this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`)
+            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`)
             .then(res => {
-                if (res.data) {
+                if (res.data && res.data.data) {
                     this.serviceData = res.data.data
                     localStorage.setItem(
                         'orderMsg',
@@ -107,9 +107,9 @@ export default {
             if (!moretag && tag.page > 1) return
             this.$axios
                 .get(
-                    `/ocs/v1/faqs/byTag?tagId=${tagid}&
-                                    pageSize=${this.pageSize}&
-                                    pageNum=${tag.page}`
+                    `/ocs/v1/faqs/byTag?tagId=${tagid}&pageSize=${
+                        this.pageSize
+                    }&pageNum=${tag.page}`
                 )
                 .then(res => {
                     this.isLoading = false
