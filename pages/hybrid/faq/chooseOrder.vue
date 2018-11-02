@@ -91,9 +91,6 @@ body {
     background: #fff;
     height: 100%;
 }
-#wrapper {
-    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
-}
 
 .clearfix:after {
     display: block;

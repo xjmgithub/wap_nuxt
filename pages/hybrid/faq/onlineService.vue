@@ -1,38 +1,7 @@
 <template>
-    <div style="height:100vh;display:flex;flex-direction:column;">
+    <div class="container">
         <div id="wrapper">
-            <div class="order-msg" v-if="serviceData.order_info">
-                <div class="top">
-                    <p class="time">{{serviceData.order_info.order_create_time | formatDate }}</p>
-                    <div class="order-type clearfix">
-                        <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                        <div class="right">
-                            <p class="order-name">{{serviceData.order_info.order_type }}<span>{{serviceData.order_info.order_amount }}</span></p>
-                            <p class="order-status">{{serviceData.order_info.card_no }}<span>{{serviceData.order_info.order_status }}</span></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="gap"></div>
-                <div class="bottom clearfix">
-                    <p class="clearfix">Questions
-                        <nuxt-link to="/hybrid/faq/customerService">
-                            <img src="~/assets/img/faq/ic_categary_copy41.png">
-                        </nuxt-link>
-                    </p>
-                    <ul v-if="serviceData.questions">
-                        <li v-for="(item,index) in serviceData.questions.slice(0,3)" :key="index" :data-id="item.id" @click="saveFaq(item)">{{item.content}}</li>
-                    </ul>
-                    <div class="btn" v-for="(item,index) in serviceData.service_components" :key="index">
-                        {{item.presentation_name}}
-                    </div>
-                </div>
-                <div class="gap"></div>
-                <nuxt-link :to="{ path:'/hybrid/faq/moreOrders',query:$route.query }">
-                    <div class="more">
-                        MORE ORDERS
-                    </div>
-                </nuxt-link>
-            </div>
+            <serviceBlock :service="serviceData" showMore="true"></serviceBlock>
             <div class="service" v-if="faqTagsData">
                 <nav id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
@@ -42,7 +11,7 @@
                 <div class="questions">
                     <div v-for="(item,index) in faqTagsData" :key="index" v-show="item.checked">
                         <ul>
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="saveFaq(item)">{{item2.content}}</li>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
                         </ul>
                     </div>
                 </div>
@@ -58,40 +27,32 @@
     </div>
 </template>
 <script>
-let moment = require('moment/moment.js')
+import serviceBlock from '~/components/faq/serviceBlock'
 export default {
     layout: 'base',
     data: function() {
         return {
-            entranceId: this.$route.query.entrance_id || '',
             serviceData: {},
             faqTagsData: [],
             faqsByTag: {},
-            pageSize: 10,
+            pageSize: 30,
             isLoading: false
-        }
-    },
-    filters: {
-        formatDate(date) {
-            return moment(date).format('D MMM YYYY HH-mm:ss')
         }
     },
     mounted() {
         localStorage.removeItem('faq_question')
 
+        let entranceId = this.$route.query.entrance_id || ''
+
         // 服务块
         this.$axios
-            .get(`/ocs/v1/service?entranceId=${this.entranceId}`, {})
+            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`)
             .then(res => {
-                if (res.data) {
+                if (res.data && res.data.data) {
                     this.serviceData = res.data.data
                     localStorage.setItem(
                         'orderMsg',
                         JSON.stringify(this.serviceData.order_info)
-                    )
-                    localStorage.setItem(
-                        'serviceModuleId',
-                        this.serviceData.service_module.id
                     )
                 }
             })
@@ -146,9 +107,9 @@ export default {
             if (!moretag && tag.page > 1) return
             this.$axios
                 .get(
-                    `/ocs/v1/faqs/byTag?tagId=${tagid}&
-                                    pageSize=${this.pageSize}&
-                                    pageNum=${tag.page}`
+                    `/ocs/v1/faqs/byTag?tagId=${tagid}&pageSize=${
+                        this.pageSize
+                    }&pageNum=${tag.page}`
                 )
                 .then(res => {
                     this.isLoading = false
@@ -190,10 +151,16 @@ export default {
                 this.getfaqsByTag(checkedId, true)
             }
         },
-        saveFaq(content) {
-            localStorage.setItem('faq_question', JSON.stringify(content))
-            this.$router.push('/hybrid/faq/customerService')
+        clickQues(item) {
+            localStorage.setItem('faq_question', JSON.stringify(item))
+            this.$router.push({
+                path: '/hybrid/faq/customerService',
+                query: this.$route.query
+            })
         }
+    },
+    components: {
+        serviceBlock
     },
     head() {
         return {
@@ -203,111 +170,19 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-html {
-    overflow-y: hidden;
-}
-body {
+.container {
     background: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
-
 #wrapper {
     padding: 0.5rem;
-    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
     flex: 12;
     display: flex;
     flex-direction: column;
 }
-.clearfix:after {
-    display: block;
-    visibility: hidden;
-    clear: both;
-    height: 0;
-    content: '';
-}
-.clearfix {
-    zoom: 1;
-}
-
-.order-msg {
-    box-shadow: 0px 1px 3px 1px #dddddd;
-    border-radius: 5px;
-    .top {
-        padding: 0 0.5rem;
-        p.time {
-            width: 100%;
-            color: #aaaaaa;
-            font-size: 0.8rem;
-            border-bottom: 1px solid #eeeeee;
-            padding: 0.2rem 0;
-        }
-    }
-    .order-type {
-        padding: 0.7em 0;
-        img {
-            width: 2.5rem;
-            height: 2.5rem;
-            float: left;
-        }
-        .right {
-            margin-left: 3rem;
-        }
-        .order-name {
-            span {
-                font-weight: bold;
-                float: right;
-            }
-        }
-        .order-status {
-            font-size: 0.9rem;
-            color: #999999;
-            span {
-                color: #00cc33;
-                float: right;
-            }
-        }
-    }
-    .gap {
-        background-color: #f2f2f2;
-        height: 4px;
-        width: 100%;
-    }
-    .bottom {
-        padding: 0.7rem 0.5rem;
-        p {
-            font-size: 0.9rem;
-            color: #333333;
-            img {
-                float: right;
-                width: 1.5rem;
-                height: 1.5rem;
-            }
-        }
-        li {
-            color: #333333;
-            font-size: 0.8rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .btn {
-            color: #0087eb;
-            font-size: 0.8rem;
-            margin-top: 0.7rem;
-            float: right;
-            margin-left: 0.7rem;
-            font-weight: bold;
-        }
-    }
-    .more {
-        color: #0087eb;
-        font-size: 0.8rem;
-        font-weight: bold;
-        text-align: center;
-        padding: 0.7rem 0;
-    }
-}
 .service {
-    margin-top: 0.8rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -378,8 +253,6 @@ body {
         }
     }
     .questions {
-        // margin-bottom: 4.5rem;
-        // overflow: scroll;
         flex: 1;
         overflow: hidden;
         div {

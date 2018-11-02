@@ -26,6 +26,32 @@ export default {
         if (this.pre) {
             localStorage.setItem('login_prefer', this.pre)
         }
+        
+        var googleUser = {}
+        let _this = this
+        var script = document.createElement('script')
+        script.src = 'https://apis.google.com/js/platform.js'
+
+        script.onload = function() {
+            gapi.load('auth2', function() {
+                var auth2 = gapi.auth2.init({
+                    client_id:
+                        '461626275431-sngbv2nv2bmecefaiu01r67cu1n88rja.apps.googleusercontent.com',
+                    cookiepolicy: 'single_host_origin'
+                })
+                auth2.attachClickHandler(
+                    document.getElementById('google-btn'),
+                    {},
+                    function(googleUser) {
+                        _this.loginByThird(googleUser.getBasicProfile().getId())
+                    },
+                    function(error) {
+                        console.log(JSON.stringify(error, undefined, 2))
+                    }
+                )
+            })
+        }
+        document.getElementsByTagName('head')[0].appendChild(script)
 
         // facebook登录初始化
         FB.init({
@@ -34,26 +60,7 @@ export default {
             cookie: true,
             version: 'v3.1'
         })
-
-        var googleUser = {}
-        let _this = this
-        gapi.load('auth2', function() {
-            var auth2 = gapi.auth2.init({
-                client_id:
-                    '152211292692-l849uvbt5jfmghi40e05o2jhuf8n3epj.apps.googleusercontent.com',
-                cookiepolicy: 'single_host_origin'
-            })
-            auth2.attachClickHandler(
-                document.getElementById('google-btn'),
-                {},
-                function(googleUser) {
-                    _this.loginByThird(googleUser.getBasicProfile().getId())
-                },
-                function(error) {
-                    console.log(JSON.stringify(error, undefined, 2))
-                }
-            )
-        })
+        
     },
     methods: {
         byfacebook() {
@@ -117,8 +124,6 @@ export default {
 </script>
 <style lang="less" scoped>
 #wrapper {
-    font-family: 'Roboto';
-
     img {
         display: block;
         height: 2.3rem;

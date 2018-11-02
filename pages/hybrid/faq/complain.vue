@@ -207,10 +207,6 @@ body {
     background: #fff;
 }
 
-.wrapper {
-    font-family: 'DINPro', Roboto, Arial, Helvetica, Sans-serif;
-}
-
 .clearfix:after {
     display: block;
     visibility: hidden;
