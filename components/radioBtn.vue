@@ -7,7 +7,7 @@
         <!-- <div class="img-box" v-show="item.imgUrl">
           <img :src="item.imgUrl" alt=""> 
         </div> -->
-        <span :class="{ml15:item.imgUrl!=''}">{{item.value}}</span>
+        <span>{{item.value}}</span>
       </label>
     </div>
   </div>
