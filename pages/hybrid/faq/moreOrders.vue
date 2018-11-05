@@ -20,7 +20,12 @@ export default {
     mounted() {
         let entranceId = this.$route.query.entrance_id || ''
         this.$axios
-            .get(`/ocs/v1/service-list?entranceId=${this.entranceId}`)
+            .get(`/ocs/v1/service/module/moreOrder?entranceId=${entranceId}`,{
+                headers:{
+                    'x-clientType':1,
+                    'x-appVersion':'5300'
+                }
+            })
             .then(res => {
                 if (res.data) {
                     this.serviceList = res.data.data

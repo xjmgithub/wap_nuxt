@@ -151,11 +151,11 @@ export default {
         })
 
         // TODO REMOVE
-        if (this.isLogin && renderQueue && renderQueue.length > 0) {
-            // if (renderQueue && renderQueue.length > 0) {
-            this.renderFromCacheQueue()
-            return false
-        }
+        // if (this.isLogin && renderQueue && renderQueue.length > 0) {
+        //     // if (renderQueue && renderQueue.length > 0) {
+        //     this.renderFromCacheQueue()
+        //     return false
+        // }
 
         // 创建服务记录
         this.createServiceRecord(6, () => {
@@ -268,7 +268,7 @@ export default {
         },
         createServiceRecord(type, callback) {
             this.$axios
-                .post(`/css/v1/service/start?type=${type || 6}`)
+                .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`)
                 .then(res => {
                     if (res.data.code == 0) {
                         this.serviceRecord = res.data.data.recordId

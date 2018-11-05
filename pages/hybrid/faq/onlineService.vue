@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="costomer">
-            <nuxt-link to="/hybrid/faq/customerService?config_id=&directory_id=">
+            <nuxt-link :to="{path:'/hybrid/faq/customerService',query:$route.query}">
                 <button class="btn">
                     COSTOMER SERVICE
                 </button>
@@ -46,10 +46,10 @@ export default {
 
         // 服务块
         this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`,{
-                headers:{
-                    'x-clientType':1,
-                    'x-appVersion':'5300'
+            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`, {
+                headers: {
+                    'x-clientType': 1,
+                    'x-appVersion': '5300'
                 }
             })
             .then(res => {

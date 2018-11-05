@@ -60,7 +60,7 @@ module.exports = {
         // '/ocs/v1/faqs/byTag': 'http://localhost:9001',
         '/csms-service': 'http://localhost:9001',
         '/ocs/': env.ms_host,
-        '/css/': 'http://localhost:9001'
+        '/css/': env.ms_host
     },
     plugins: [
         { src: '~plugins/analysis.js', ssr: false },
