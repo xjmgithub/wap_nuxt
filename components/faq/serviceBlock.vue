@@ -11,7 +11,7 @@
                     </p>
                     <p class="order-status">
                         {{orderName}}
-                        <span>{{service.order_info.order_status}}</span>
+                        <span>{{orderStatus}}</span>
                     </p>
                 </div>
             </div>
@@ -68,6 +68,63 @@ export default {
                         return this.service.order_info.order_name
                 }
             } else {
+                return ''
+            }
+        },
+        orderStatus(){
+            if (this.service && this.service.order_info) {
+                let type = this.service.order_info.order_type_id
+                if(['1','2','3'].indexOf(type)>=0){
+                    // bouquet,link,charge
+                    switch(this.service.order_info.order_status){
+                        case '0':
+                            return 'UNPAID'
+                            break;
+                        case '10': 
+                            return 'UNRECHARGED'
+                            break;
+                        case '20':
+                        case '4':
+                            return 'FAILD'
+                            break;
+                        case '3':
+                            return 'SUCCESS'
+                            break;
+                        case '11':
+                            return 'CHARGING'
+                            break;
+                        default:
+                            return ''
+                    }
+                }else{
+                    // ott
+                    switch(this.service.order_info.order_status){
+                        case '1':
+                        case '2':
+                        case '4':
+                            return 'UNPAID'
+                            break;
+                        case '3': 
+                        case '6':
+                            return 'CANCEL'
+                            break;
+                        case '5':
+                            return 'SUCCESS'
+                            break;
+                        case '7':
+                            return 'REFUNDING'
+                            break;
+                        case '8':
+                            return 'REFUNDED'
+                            break;
+                        case '9':
+                            return 'EXPIRED'
+                            break;
+                        default:
+                            return ''
+                    }
+                }
+            }else{
                 return ''
             }
         }
