@@ -12,45 +12,49 @@ export const state = () => ({
     shadowStatus: false,
     payToken: '',
     user: null,
-    txNo: ''
+    txNo: '',
+    country: {}
 })
 
 export const mutations = {
-    SET_LANG: function (state, lang) {
+    SET_LANG: function(state, lang) {
         state.lang = lang
     },
-    SET_DEVICE: function (state, deviceId) {
+    SET_DEVICE: function(state, deviceId) {
         state.deviceId = deviceId
     },
-    SET_TOKEN: function (state, token) {
+    SET_TOKEN: function(state, token) {
         state.token = token
     },
-    SET_APPTYPE: function (state, type) {
+    SET_APPTYPE: function(state, type) {
         state.appType = type
     },
-    SET_GA_CLIENT: function (state, id) {
+    SET_GA_CLIENT: function(state, id) {
         state.gaClientId = id
     },
-    SET_APP_VERSION: function (state, v) {
+    SET_APP_VERSION: function(state, v) {
         state.appVersion = v
     },
-    SHOW_SHADOW_LAYER: function (state) {
+    SHOW_SHADOW_LAYER: function(state) {
         state.shadowStatus = true
     },
-    HIDE_SHADOW_LAYER: function (state) {
+    HIDE_SHADOW_LAYER: function(state) {
         state.shadowStatus = false
     },
-    SET_PAYTOKEN: function (state, token) {
+    SET_PAYTOKEN: function(state, token) {
         state.payToken = token
     },
-    SET_USER: function (state, user) {
+    SET_USER: function(state, user) {
         state.user = user
     },
-    SET_PAYTOKEN: function (state, payToken) {
+    SET_PAYTOKEN: function(state, payToken) {
         state.payToken = payToken
     },
-    SET_TXNO: function (state, txNo) {
+    SET_TXNO: function(state, txNo) {
         state.txNo = txNo
+    },
+    SET_AREA_INFO: function(state, conf) {
+        state.country = conf
     }
 }
 
@@ -119,16 +123,18 @@ export const actions = {
         }
 
         // 用户信息
-        await this.$axios.get('/cms/users/me', {
-            headers: {
-                token: this.state.token
-            }
-        }).then(user => {
-            commit('SET_USER', user.data)
-        }).catch(error => {
-            // 用户失效在plugin/clearUser当中处理
-        })
-
+        await this.$axios
+            .get('/cms/users/me', {
+                headers: {
+                    token: this.state.token
+                }
+            })
+            .then(user => {
+                commit('SET_USER', user.data)
+            })
+            .catch(error => {
+                // 用户失效在plugin/clearUser当中处理
+            })
 
         // APP TYPE
         if (req.headers['http_client'] == 'android') {

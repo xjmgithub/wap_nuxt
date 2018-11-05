@@ -46,7 +46,12 @@ export default {
 
         // 服务块
         this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`)
+            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`,{
+                headers:{
+                    'x-clientType':1,
+                    'x-appVersion':'5300'
+                }
+            })
             .then(res => {
                 if (res.data && res.data.data) {
                     this.serviceData = res.data.data

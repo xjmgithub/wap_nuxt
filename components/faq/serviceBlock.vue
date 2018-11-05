@@ -7,10 +7,10 @@
                 <div class="right">
                     <p class="order-name">
                         {{service.order_info.order_type}}
-                        <span>{{service.order_info.order_amount}}</span>
+                        <span>{{currency}} {{service.order_info.order_amount}}</span>
                     </p>
                     <p class="order-status">
-                        {{service.order_info.card_no}}
+                        {{orderName}}
                         <span>{{service.order_info.order_status}}</span>
                     </p>
                 </div>
@@ -24,7 +24,7 @@
             </p>
             <ul v-if="service.questions">
                 <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">
-                    {{item.content}}
+                    {{item.thema}}
                 </li>
             </ul>
             <div class="btn" v-for="(item,index) in service.service_components" :key="index">
@@ -50,6 +50,26 @@ export default {
         showMore: {
             require: false,
             default: false
+        }
+    },
+    computed: {
+        currency() {
+            return this.$store.state.country.currencySymbol
+        },
+        orderName() {
+            if (this.service && this.service.order_info) {
+                switch (this.service.order_info.order_type_id) {
+                    case '1':
+                    case '2':
+                    case '3':
+                        return 'Card No.' + this.service.order_info.card_no
+                        break
+                    default:
+                        return this.service.order_info.order_name
+                }
+            } else {
+                return ''
+            }
         }
     },
     filters: {
@@ -82,7 +102,7 @@ export default {
 .order-msg {
     box-shadow: 0px 1px 3px 1px #dddddd;
     border-radius: 5px;
-    margin-bottom:0.8rem;
+    margin-bottom: 0.8rem;
     .top {
         padding: 0 0.5rem;
         p.time {

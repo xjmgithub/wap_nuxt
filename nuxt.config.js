@@ -67,6 +67,7 @@ module.exports = {
         { src: '~plugins/auth.js', ssr: false },
         { src: '~plugins/clearUser.js', ssr: false },
         { src: '~plugins/deviceid.js', ssr: false },
-        { src: '~plugins/axios.js', ssr: false }
+        { src: '~plugins/axios.js', ssr: false },
+        { src: '~plugins/getCountryInfo.js', ssr: false }
     ]
 }
