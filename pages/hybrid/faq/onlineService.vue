@@ -186,6 +186,7 @@ export default {
     padding: 0.5rem;
     flex: 12;
     display: flex;
+    background: #fff;
     flex-direction: column;
 }
 .service {
