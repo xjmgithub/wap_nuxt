@@ -35,7 +35,7 @@ export default {
             serviceData: {},
             faqTagsData: [],
             faqsByTag: {},
-            pageSize: 30,
+            pageSize: 15,
             isLoading: false
         }
     },
@@ -84,7 +84,7 @@ export default {
                         class:
                             logoMap[item.tagging_name.toLowerCase()] ||
                             'tab_hot',
-                        page: 1, // 每个页默认加载起始页,
+                        page: 1,
                         untilTotal: false,
                         faqs: []
                     })
@@ -110,6 +110,7 @@ export default {
                 }
             })
             if (!moretag && tag.page > 1) return
+            if (tag.untilTotal) return
             this.$axios
                 .get(
                     `/ocs/v1/faqs/byTag?tagId=${tagid}&pageSize=${
@@ -121,8 +122,9 @@ export default {
                     if (res.data) {
                         tag.faqs = tag.faqs.concat(res.data.data.rows)
                         tag.page = tag.page + 1
-
-                        // TODO 设置untilTotal
+                        if (tag.faqs.length >= res.data.data.total) {
+                            tag.untilTotal = true
+                        }
                     }
                 })
         },
@@ -142,9 +144,8 @@ export default {
             let child = evt.target.querySelector('ul')
             let childHeight = child.offsetHeight
             let scrollTop = container.scrollTop
-
-            // TODO untilTotal
-            if (childHeight - scrollTop <= 150 && this.isLoading == false) {
+            
+            if (childHeight - scrollTop -container.offsetHeight <= 150 && this.isLoading == false) {
                 this.isLoading = true
                 let checkedId = null
                 this.faqTagsData.forEach(item => {
