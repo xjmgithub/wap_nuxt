@@ -124,6 +124,7 @@ export default {
         })
 
         // TODO REMOVE
+        console.log(this.isLogin)
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             // if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
@@ -282,7 +283,7 @@ export default {
                 let operator = 1 // 用户发起
                 if (obj.tpl == 'list') {
                     serviceInfo = 'faqlist-'
-                    data.contents.forEach(item => {
+                    obj.contents.forEach(item => {
                         serviceInfo += item.name + ' | '
                     })
                 } else if (obj.tpl == 'ask' || obj.tpl == 'chatask') {
