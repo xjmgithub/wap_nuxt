@@ -86,7 +86,7 @@ export default {
         let questions = JSON.parse(localStorage.getItem('faq_question'))
         let serviceModuleId = localStorage.getItem('serviceModuleId')
         let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
-        
+
         let _this = this
         // LiveChat 按钮判断
         this.user.areaID &&
@@ -124,7 +124,6 @@ export default {
         })
 
         // TODO REMOVE
-        console.log(this.isLogin)
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             // if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
@@ -160,7 +159,7 @@ export default {
                             this.renderQueue.push(
                                 Object.assign({}, res.data.data, {
                                     operator: 0, // 0 客服， 1 用户
-                                    tpl: 'list',  // list , content, order
+                                    tpl: 'list', // list , content, order
                                     pId: '-99',
                                     type: 1,
                                     contents: list
@@ -206,7 +205,7 @@ export default {
             this.addOperate(
                 Object.assign({}, item, {
                     tpl: 'ask',
-                    name:item.thema || item.name
+                    name: item.thema || item.name
                 })
             )
 
@@ -360,10 +359,11 @@ export default {
             let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
 
             // TODO 设置minHistoryId
-            this.$axios.post('/css/v1/history/updateUserId', {
-                historyIds: historys.join(','),
-                serviceIds: serviceIds.join(',')
-            })
+            if (historys && serviceIds) {
+                this.$axios.post(
+                    `/css/v1/history/updateUserId?historyIds=${historys.join(',')}&serviceIds=${serviceIds.join(',')}`
+                )
+            }
         },
         loadHistory() {
             if (this.historyEnd) return
