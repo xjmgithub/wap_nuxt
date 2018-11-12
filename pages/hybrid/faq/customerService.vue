@@ -11,11 +11,11 @@
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <questionListTpl v-if="item.tpl=='list'" :key="index" :list="item.contents"></questionListTpl>
+                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest"></questionListTpl>
                 <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"></orderBlockTpl>
                 <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"></askTpl>
                 <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"></answerTpl>
-                <contentTpl v-if="item.tpl=='content'" :key="index" :content="item.item.content"></contentTpl>
+                <contentTpl v-if="item.tpl=='content'" :key="index" :content="item.content"></contentTpl>
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
@@ -159,7 +159,7 @@ export default {
                             this.renderQueue.push(
                                 Object.assign({}, res.data.data, {
                                     operator: 0, // 0 客服， 1 用户
-                                    tpl: 'list', // list , content, order
+                                    tpl: 'list',  // list , content, order
                                     pId: '-99',
                                     type: 1,
                                     contents: list
@@ -263,7 +263,6 @@ export default {
                                 JSON.stringify(cacheRecord)
                             )
                         }
-                        console.log(123)
                         if (callback) callback()
                     }
                 })

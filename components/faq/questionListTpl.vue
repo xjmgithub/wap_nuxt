@@ -21,11 +21,15 @@ export default {
         list: {
             require: true,
             type: Array
+        },
+        dtype:{
+            require:false,
+            type:Number
         }
     },
     methods: {
         ask(item) {
-            this.$emit('ask', item)
+            this.$emit('ask', item,this.dtype)
         }
     }
 }
