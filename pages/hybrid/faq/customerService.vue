@@ -361,8 +361,8 @@ export default {
 
             // TODO 设置minHistoryId
             this.$axios.post('/css/v1/history/updateUserId', {
-                historyIds: historys,
-                serviceIds: serviceIds
+                historyIds: historys.join(','),
+                serviceIds: serviceIds.join(',')
             })
         },
         loadHistory() {
