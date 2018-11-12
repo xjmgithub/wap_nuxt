@@ -35,7 +35,7 @@ export default {
             serviceData: {},
             faqTagsData: [],
             faqsByTag: {},
-            pageSize: 15,
+            pageSize: 20,
             isLoading: false
         }
     },

@@ -20,6 +20,8 @@
                     <div>{{item.text}}</div>
                 </div>
             </template>
+            <msgTpl v-show="false"></msgTpl>
+            <evaluate v-show="false"></evaluate>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
             <div class="btn" v-show="connectState==0" @click="connectLiveChat">LIVE CHAT</div>
@@ -35,39 +37,6 @@
                 </div>
             </div>
         </div>
-        <!-- Waiting For Result -->
-        <div>
-            <div class="order-msg">
-                <p class="time">11 Oct 2018 17-25:52 <span class="wait-result">Waiting For Result</span></p>
-                <div class="order-type clearfix">
-                    <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                    <div class="right">
-                        <p class="order-name"> DVB Recharge </p>
-                        <p class="order-status">Order ID: D1398765409 </p>
-                    </div>
-                </div>
-                <p class="complain">Complain</p>
-                <p>I’ve recharged, but I still can’t watch channels on TV.</p>
-            </div>
-        </div>
-        <!-- 评价星星星 -->
-        <div class="evaluation">
-            <p class="eval-title">Does this Custom-Service help you solve the problem?</p>
-            <div class="eval-img">
-                <span>
-                    <img src="~assets/img/faq/ic_happy_sl_green.png"> NO
-                </span>
-                <span>
-                    <img src="~assets/img/faq/ic_disappoint_def_g.png"> YES
-                </span>
-            </div>
-            <div class="gave-star">
-                <p>Please evaluate for us? THX.</p>
-                <!-- <img src="~assets/img/faq/ic_favoritez_blue_evl.png" alt=""> -->
-                <img v-for="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favorite_def_evl.png" @click="starToBlue(index,$event)">
-                <!-- <img v-for ="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favoritez_blue_evl.png" @click="starToBlue(index,$event)"> -->
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -78,6 +47,8 @@ import orderBlockTpl from '~/components/faq/orderBlockTpl'
 import askTpl from '~/components/faq/askTpl'
 import answerTpl from '~/components/faq/answerTpl'
 import contentTpl from '~/components/faq/contentTpl'
+import msgTpl from '~/components/faq/message'
+import evaluate from '~/components/faq/evaluate'
 export default {
     layout: 'base',
     data() {
@@ -107,7 +78,9 @@ export default {
         orderBlockTpl,
         askTpl,
         answerTpl,
-        contentTpl
+        contentTpl,
+        msgTpl,
+        evaluate
     },
     mounted() {
         let questions = JSON.parse(localStorage.getItem('faq_question'))
@@ -151,11 +124,11 @@ export default {
         })
 
         // TODO REMOVE
-        // if (this.isLogin && renderQueue && renderQueue.length > 0) {
-        //     // if (renderQueue && renderQueue.length > 0) {
-        //     this.renderFromCacheQueue()
-        //     return false
-        // }
+        if (this.isLogin && renderQueue && renderQueue.length > 0) {
+            // if (renderQueue && renderQueue.length > 0) {
+            this.renderFromCacheQueue()
+            return false
+        }
 
         // 创建服务记录
         this.createServiceRecord(6, () => {
@@ -175,12 +148,12 @@ export default {
                 this.$axios
                     .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
                     .then(res => {
-                        if (res.data.code == 0) {
+                        if (res.data.code == 200) {
                             let list = []
                             res.data.data.forEach((item, index) => {
                                 list.push({
                                     id: item.id,
-                                    name: item.content
+                                    name: item.thema
                                 })
                             })
                             this.renderQueue.push(
@@ -196,7 +169,6 @@ export default {
                     })
             } else {
                 // 默认根目录进入
-
                 this.addOperate({
                     tpl: 'welcome',
                     name: 'Welcome to StarTimes Online Service.'
@@ -270,7 +242,7 @@ export default {
             this.$axios
                 .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`)
                 .then(res => {
-                    if (res.data.code == 0) {
+                    if (res.data.code == 200) {
                         this.serviceRecord = res.data.data.recordId
                         if (!this.isLogin) {
                             let cacheRecord = localStorage.getItem(
@@ -291,6 +263,7 @@ export default {
                                 JSON.stringify(cacheRecord)
                             )
                         }
+                        console.log(123)
                         if (callback) callback()
                     }
                 })
@@ -330,7 +303,7 @@ export default {
                         service_type: 1, // TODO
                         service_group_id: this.serviceRecord,
                         service_state: 2,
-                        remark: obj,
+                        remark: JSON.stringify(obj),
                         service_info: serviceInfo,
                         operator: operator
                     })
