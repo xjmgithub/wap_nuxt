@@ -134,7 +134,7 @@ export default {
         this.createServiceRecord(6, () => {
             if (questions) {
                 // 单个问题
-                this.askQuest(question, 1, 1)
+                this.askQuest(questions, 1, 1)
             } else if (serviceModuleId) {
                 // MORE FAQS
 
@@ -204,7 +204,8 @@ export default {
         askQuest(item, type, withOrder) {
             this.addOperate(
                 Object.assign({}, item, {
-                    tpl: 'ask'
+                    tpl: 'ask',
+                    name:item.thema || item.name
                 })
             )
 
