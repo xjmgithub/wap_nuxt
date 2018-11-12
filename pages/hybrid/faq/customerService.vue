@@ -244,7 +244,7 @@ export default {
                 .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`)
                 .then(res => {
                     if (res.data.code == 200) {
-                        this.serviceRecord = res.data.data.recordId
+                        this.serviceRecord = res.data.data
                         if (!this.isLogin) {
                             let cacheRecord = localStorage.getItem(
                                 'serviceRecords'
