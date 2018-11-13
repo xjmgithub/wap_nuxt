@@ -140,7 +140,6 @@ export default {
                 this.askQuest(questions, 1, 1)
             } else if (serviceModuleId) {
                 // MORE FAQS
-
                 this.addOperate({
                     tpl: 'ask',
                     name: 'more questions'
@@ -360,28 +359,32 @@ export default {
             // 更新历史记录
             let historys = JSON.parse(localStorage.getItem('historys'))
             let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
-            historys.forEach(item => {
-                if (this.minHistoryId) {
-                    if (item < this.minHistoryId) {
+            
+            if (historys) {
+                historys.forEach(item => {
+                    if (this.minHistoryId) {
+                        if (item < this.minHistoryId) {
+                            this.minHistoryId = item
+                        }
+                    } else {
                         this.minHistoryId = item
                     }
-                } else {
-                    this.minHistoryId = item
+                })
+                if (historys && serviceIds) {
+                    this.$axios
+                        .post(
+                            `/css/v1/history/updateUserId?historyIds=${historys.join(
+                                ','
+                            )}&serviceIds=${serviceIds.join(',')}`
+                        )
+                        .then(res => {
+                            if (res.data.code == 200) {
+                                localStorage.removeItem('serviceRecords')
+                                localStorage.removeItem('historys')
+                                localStorage.removeItem('renderQueue')
+                            }
+                        })
                 }
-            })
-            if (historys && serviceIds) {
-                this.$axios
-                    .post(
-                        `/css/v1/history/updateUserId?historyIds=${historys.join(
-                            ','
-                        )}&serviceIds=${serviceIds.join(',')}`
-                    )
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            //localStorage.removeItem('serviceRecords')
-                            //localStorage.removeItem('historys')
-                        }
-                    })
             }
         },
         loadHistory() {
