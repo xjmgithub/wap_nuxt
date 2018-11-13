@@ -320,16 +320,12 @@ export default {
                                 if (cacheHisory) {
                                     cacheHisory = JSON.parse(cacheHisory)
                                     if (
-                                        cacheHisory.indexOf(
-                                            res.data.data.historyId
-                                        ) < 0
+                                        cacheHisory.indexOf(res.data.data) < 0
                                     ) {
-                                        cacheHisory.push(
-                                            res.data.data.historyId
-                                        )
+                                        cacheHisory.push(res.data.data)
                                     }
                                 } else {
-                                    cacheHisory = [res.data.data.historyId]
+                                    cacheHisory = [res.data.data]
                                 }
                                 localStorage.setItem(
                                     'historys',
@@ -340,10 +336,7 @@ export default {
                                 if (!this.minHistoryId) {
                                     this.minHistoryId = res.data.data
                                 } else {
-                                    if (
-                                        res.data.data.historyId <
-                                        this.minHistoryId
-                                    ) {
+                                    if (res.data.data < this.minHistoryId) {
                                         this.minHistoryId = res.data.data
                                     }
                                 }
@@ -367,24 +360,39 @@ export default {
             // 更新历史记录
             let historys = JSON.parse(localStorage.getItem('historys'))
             let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
-
-            // TODO 设置minHistoryId
+            historys.forEach(item => {
+                if (this.minHistoryId) {
+                    if (item < this.minHistoryId) {
+                        this.minHistoryId = item
+                    }
+                } else {
+                    this.minHistoryId = item
+                }
+            })
             if (historys && serviceIds) {
-                this.$axios.post(
-                    `/css/v1/history/updateUserId?historyIds=${historys.join(
-                        ','
-                    )}&serviceIds=${serviceIds.join(',')}`
-                )
+                this.$axios
+                    .post(
+                        `/css/v1/history/updateUserId?historyIds=${historys.join(
+                            ','
+                        )}&serviceIds=${serviceIds.join(',')}`
+                    )
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            //localStorage.removeItem('serviceRecords')
+                            //localStorage.removeItem('historys')
+                        }
+                    })
             }
         },
         loadHistory() {
             if (this.historyEnd) return
             this.loadHistoryState = true
+            let minHistoryId = this.minHistoryId || 999999999
             this.$axios
                 .get(
-                    `/css/v1/history/app?pageSize=5&pageNum=${
+                    `/css/v1/history/app?pageSize=10&pageNum=${
                         this.historyPage
-                    }&minId=${this.minHistoryId}`
+                    }&minId=${minHistoryId}`
                 )
                 .then(res => {
                     if (res.data.code == 200 && res.data.data.rows.length > 0) {
