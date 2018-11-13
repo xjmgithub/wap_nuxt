@@ -474,6 +474,7 @@ export default {
                                 ) {
                                     this.connectState = 2 // BUTTON 变成输入框
                                     autosize(document.querySelectorAll('textarea.form-control'))
+
                                     this.chatPullTimer = setInterval(() => {
                                         this.pullReply()
                                     }, 5000)
@@ -517,6 +518,9 @@ export default {
                     name: msg
                 })
                 this.chatMsg = ''
+                this.$nextTick(()=>{
+                    autosize.update(document.querySelectorAll('textarea.form-control'))
+                })
 
                 this.$axios
                     .post(`/genesys-proxy/v1/chats/${chatLink.chatId}`, {
