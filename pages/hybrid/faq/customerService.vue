@@ -49,6 +49,7 @@ import answerTpl from '~/components/faq/answerTpl'
 import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
+import autosize from 'autosize'
 export default {
     layout: 'base',
     data() {
@@ -472,7 +473,7 @@ export default {
                                     !res.data.chatEnded
                                 ) {
                                     this.connectState = 2 // BUTTON 变成输入框
-
+                                    autosize(document.querySelectorAll('textarea.form-control'))
                                     this.chatPullTimer = setInterval(() => {
                                         this.pullReply()
                                     }, 5000)
