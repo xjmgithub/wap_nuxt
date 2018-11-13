@@ -15,7 +15,7 @@
                 <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"></orderBlockTpl>
                 <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"></askTpl>
                 <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"></answerTpl>
-                <contentTpl v-if="item.tpl=='content'" :key="index" :content="item.content"></contentTpl>
+                <contentTpl v-if="item.tpl=='content'" :noevaluate="item.noEvaluate" :serviceRecord="item.serviceRecord" :key="index" :content="item.content"></contentTpl>
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
@@ -224,9 +224,11 @@ export default {
         getAnswer(id) {
             this.$axios.get(`/ocs/v1/faqs/answer/${id}`).then(res => {
                 if (res.data.code == 200) {
+                    let serviceRecord = this.serviceRecord
                     this.addOperate(
                         Object.assign({}, res.data.data, {
-                            tpl: 'content'
+                            tpl: 'content',
+                            serviceRecord: this.serviceRecord
                         })
                     )
                 }
@@ -340,6 +342,12 @@ export default {
                                     }
                                 }
                             }
+                            
+                            // 如果是回答则重新创建一条服务记录
+                            if(obj.tpl == 'content'){
+                                this.createServiceRecord()
+                            }
+
                         }
                     })
             }
@@ -404,7 +412,13 @@ export default {
                             return a.id - b.id
                         })
                         rows.reverse().forEach(item => {
-                            this.renderQueue.unshift(JSON.parse(item.remark))
+                            let data = JSON.parse(item.remark)
+                            
+                            // 历史记录里的答案不可评价
+                            if(data.tpl=='content'){
+                                data.noEvaluate = true
+                            }
+                            this.renderQueue.unshift(data)
                         })
                     } else {
                         this.historyEnd = true
