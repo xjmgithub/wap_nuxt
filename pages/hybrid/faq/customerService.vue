@@ -518,16 +518,16 @@ export default {
                     name: msg
                 })
                 this.chatMsg = ''
-                this.$nextTick(()=>{
+                this.$nextTick(()=>{ // 重置输入框的高
                     autosize.update(document.querySelectorAll('textarea.form-control'))
                 })
 
                 this.$axios
-                    .post(`/genesys-proxy/v1/chats/${chatLink.chatId}`, {
-                        alias: chatLink.alias,
-                        secureKey: chatLink.secureKey,
+                    .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}`, {
+                        alias: this.chatLink.alias,
+                        secureKey: this.chatLink.secureKey,
                         tenantName: 'Resources',
-                        userId: chatLink.userId,
+                        userId: this.chatLink.userId,
                         operationName: 'SendMessage',
                         text: msg
                     })
