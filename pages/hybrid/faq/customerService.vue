@@ -1,6 +1,6 @@
 <template>
     <div id="wrapper">
-        <div class="content">
+        <div class="content" style="min-height:101vh">
             <div class="pull_refresh">
                 <div style="padding-top:1rem;" v-show="!loadHistoryState">
                     <span class="refresh_text" v-show="!historyEnd">Pull down to see more history</span>
@@ -114,7 +114,10 @@ export default {
                 },
                 startY: 0,
                 bounce: {
-                    top: true
+                    top: true,
+                    bottom: true,
+                    left: true,
+                    right: true
                 },
                 click: true
             })
@@ -361,7 +364,9 @@ export default {
             // TODO 设置minHistoryId
             if (historys && serviceIds) {
                 this.$axios.post(
-                    `/css/v1/history/updateUserId?historyIds=${historys.join(',')}&serviceIds=${serviceIds.join(',')}`
+                    `/css/v1/history/updateUserId?historyIds=${historys.join(
+                        ','
+                    )}&serviceIds=${serviceIds.join(',')}`
                 )
             }
         },
@@ -369,17 +374,17 @@ export default {
             if (this.historyEnd) return
             this.loadHistoryState = true
             this.$axios
-                .post('/css/v1/history/app', {
-                    pageNum: this.historyPage,
-                    pageSize: 20,
-                    minId: this.minHistoryId
-                })
+                .get(
+                    `/css/v1/history/app?pageSize=20&pageNum=${
+                        this.historyPage
+                    }&minId=1000`
+                )
                 .then(res => {
-                    if (res.data instanceof Array && res.data.length > 0) {
+                    if (res.data.code==200 && res.data.data.rows.length > 0) {
                         this.historyPage++
                         // TODO 倒叙
-                        res.data.reverse().forEach(item => {
-                            this.renderQueue.unshift(item.remark)
+                        res.data.data.rows.reverse().forEach(item => {
+                            this.renderQueue.unshift(JSON.parse(item.remark))
                         })
                     } else {
                         this.historyEnd = true
@@ -592,4 +597,10 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/faq/common.less';
+
+</style>
+<style lang="less" scoped>
+#wrapper{
+    overflow: hidden;
+}
 </style>

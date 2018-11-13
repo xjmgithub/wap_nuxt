@@ -41,6 +41,8 @@ export default {
     },
     mounted() {
         localStorage.removeItem('faq_question')
+        localStorage.removeItem('serviceModuleId')
+        console.log(123)
 
         let entranceId = this.$route.query.entrance_id || ''
 
