@@ -1,8 +1,8 @@
 <template>
-    <div class="order-msg" v-if="service.order_info">
+    <div class="b-order-msg" v-if="service.order_info">
         <div class="top">
             <p class="time">{{service.order_info.order_create_time | formatDate}}</p>
-            <div class="order-type clearfix">
+            <div class="b-order-type clearfix">
                 <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" />
                 <div class="right">
                     <p class="order-name">
@@ -156,7 +156,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.order-msg {
+.b-order-msg {
     box-shadow: 0px 1px 3px 1px #dddddd;
     border-radius: 5px;
     margin-bottom: 0.8rem;
@@ -170,7 +170,7 @@ export default {
             padding: 0.2rem 0;
         }
     }
-    .order-type {
+    .b-order-type {
         padding: 0.7em 0;
         img {
             width: 2.5rem;

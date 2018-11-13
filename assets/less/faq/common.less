@@ -158,6 +158,61 @@
     }
 }
 
+.order-msg {
+    box-shadow: 0px 1px 3px 1px #dddddd;
+    border-radius: 5px;
+    padding: 0.5rem;
+    width: 95%;
+    margin: 1rem 2.5% 0 2.5%;
+    background: #fff;
+    .time {
+        width: 100%;
+        color: #aaaaaa;
+        font-size: 0.8rem;
+        border-bottom: 1px solid #eeeeee;
+        padding: 0.2rem 0;
+        .wait-result {
+            color: #333333;
+            float: right;
+            font-weight: bold;
+        }
+    }
+    .complain {
+        font-size: 0.9rem;
+        color: #666666;
+        font-weight: bold;
+        & + p {
+            color: #666666;
+            font-size: 0.8rem;
+        }
+    }
+}
+.order-type {
+    padding: 0.7em 0;
+    img {
+        width: 2.5rem;
+        height: 2.5rem;
+        float: left;
+    }
+    .right {
+        margin-left: 3rem;
+    }
+    .order-name {
+        span {
+            font-weight: bold;
+            float: right;
+        }
+    }
+    .order-status {
+        font-size: 0.9rem;
+        color: #999999;
+        span {
+            color: #00cc33;
+            float: right;
+        }
+    }
+}
+
 .live-chat {
     width: 100%;
     background: #fff;
