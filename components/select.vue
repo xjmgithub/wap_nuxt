@@ -45,7 +45,7 @@ export default {
             this.init()
         }
     },
-    mounted(){
+    mounted() {
         this.init()
     },
     methods: {
@@ -87,7 +87,7 @@ export default {
 <style lang="less" scoped>
 .container {
     position: relative;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     width: 100%;
     margin: 0.5rem 0;
     .checked {
@@ -97,11 +97,17 @@ export default {
         line-height: 2rem;
         padding: 0 0.6rem;
         position: relative;
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
         img {
             position: absolute;
             right: 0.5rem;
             top: 0.5rem;
-            height: 0.8rem;
+            height: 0.85rem;
         }
         .placeholder {
             color: #dddddd;
@@ -117,11 +123,10 @@ export default {
         background: white;
         z-index: 999;
         li {
-            padding: 0 0.5rem;
-            height: 2rem;
-            line-height: 2rem;
-            font-size: 0.9rem;
-            // border-bottom:#ccc solid 1px;
+            margin: 0 0.5rem;
+            padding: 0.3rem 0;
+            font-size: 0.8rem;
+            // border-bottom:solid 1px #ddd;
         }
     }
 }

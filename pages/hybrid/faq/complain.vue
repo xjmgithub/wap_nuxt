@@ -112,7 +112,7 @@ export default {
                 }
 
             this.$axios
-                .post(`/csms-service/v1/get-standard-leaving-message-record`, param)
+                .post(`/csms-service/v1/standard-leaving-message-records`, param)
                 .then(res => {
                     if (res.data.code == 0) {
                         localStorage.setItem('leaveMsg',Object.assign({},param,{
@@ -144,16 +144,17 @@ export default {
         this.$axios
             .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
             .then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code == 200) {
                     let list = []
                     res.data.data.forEach((item, index) => {
                         list.push({
                             id: item.id,
-                            name: item.content
+                            name: item.thema
                         })
                     })
+                    console.log(list)
                     this.questionsList = list
-                    this.question = JSON.parse(faq_question).id
+                    // this.question = JSON.parse(faq_question).id
                 }
             })
 
@@ -205,21 +206,12 @@ export default {
     }
 }
 </script>
+<style lang="less">
+@import '~assets/less/faq/common.less';
+</style>
 <style lang="less" scoped>
-body {
-    background: #fff;
-}
-
-.clearfix:after {
-    display: block;
-    visibility: hidden;
-    clear: both;
-    height: 0;
-    content: '';
-}
-
-.clearfix {
-    zoom: 1;
+#wrapper {
+    background: #ffffff;
 }
 
 .gap {
@@ -267,32 +259,6 @@ body {
             vertical-align: sub;
             margin-right: 0.2rem;
             width: 0.9rem;
-        }
-    }
-}
-
-.order-type {
-    padding: 0.7em 0;
-    img {
-        width: 2.5rem;
-        height: 2.5rem;
-        float: left;
-    }
-    .right {
-        margin-left: 3rem;
-    }
-    .order-name {
-        span {
-            font-weight: bold;
-            float: right;
-        }
-    }
-    .order-status {
-        font-size: 0.9rem;
-        color: #999999;
-        span {
-            color: #00cc33;
-            float: right;
         }
     }
 }
