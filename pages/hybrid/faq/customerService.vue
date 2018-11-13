@@ -272,6 +272,7 @@ export default {
                 })
         },
         addOperate(obj, send) {
+            
             if (obj && obj.tpl) {
                 this.renderQueue.push(obj)
                 this.updateCacheQueue()
@@ -311,7 +312,7 @@ export default {
                         operator: operator
                     })
                     .then(res => {
-                        if (res.data.code == 0) {
+                        if (res.data.code == 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
                                 let cacheHisory = localStorage.getItem(
@@ -337,8 +338,13 @@ export default {
                                 )
                             } else {
                                 // 最小historyId记录
+                                
                                 if (!this.minHistoryId) {
-                                    this.minHistoryId = res.data.data.historyId
+                                    this.minHistoryId = res.data.data
+                                }else{
+                                    if(res.data.data.historyId<this.minHistoryId){
+                                        this.minHistoryId = res.data.data
+                                    }
                                 }
                             }
                         }
@@ -375,15 +381,17 @@ export default {
             this.loadHistoryState = true
             this.$axios
                 .get(
-                    `/css/v1/history/app?pageSize=20&pageNum=${
+                    `/css/v1/history/app?pageSize=5&pageNum=${
                         this.historyPage
-                    }&minId=1000`
+                    }&minId=${this.minHistoryId}`
                 )
                 .then(res => {
                     if (res.data.code==200 && res.data.data.rows.length > 0) {
                         this.historyPage++
-                        // TODO 倒叙
-                        res.data.data.rows.reverse().forEach(item => {
+                        let rows = res.data.data.rows.sort((a,b)=>{
+                            return a.id-b.id
+                        })
+                        rows.reverse().forEach(item => {
                             this.renderQueue.unshift(JSON.parse(item.remark))
                         })
                     } else {
