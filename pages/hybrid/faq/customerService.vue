@@ -159,7 +159,7 @@ export default {
                                     name: item.thema
                                 })
                             })
-                            this.renderQueue.push(
+                            this.addOperate(
                                 Object.assign({}, res.data.data, {
                                     operator: 0, // 0 客服， 1 用户
                                     tpl: 'list', // list , content, order
@@ -272,7 +272,6 @@ export default {
                 })
         },
         addOperate(obj, send) {
-            
             if (obj && obj.tpl) {
                 this.renderQueue.push(obj)
                 this.updateCacheQueue()
@@ -338,11 +337,13 @@ export default {
                                 )
                             } else {
                                 // 最小historyId记录
-                                
                                 if (!this.minHistoryId) {
                                     this.minHistoryId = res.data.data
-                                }else{
-                                    if(res.data.data.historyId<this.minHistoryId){
+                                } else {
+                                    if (
+                                        res.data.data.historyId <
+                                        this.minHistoryId
+                                    ) {
                                         this.minHistoryId = res.data.data
                                     }
                                 }
@@ -386,10 +387,10 @@ export default {
                     }&minId=${this.minHistoryId}`
                 )
                 .then(res => {
-                    if (res.data.code==200 && res.data.data.rows.length > 0) {
+                    if (res.data.code == 200 && res.data.data.rows.length > 0) {
                         this.historyPage++
-                        let rows = res.data.data.rows.sort((a,b)=>{
-                            return a.id-b.id
+                        let rows = res.data.data.rows.sort((a, b) => {
+                            return a.id - b.id
                         })
                         rows.reverse().forEach(item => {
                             this.renderQueue.unshift(JSON.parse(item.remark))
@@ -605,10 +606,9 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/faq/common.less';
-
 </style>
 <style lang="less" scoped>
-#wrapper{
+#wrapper {
     overflow: hidden;
 }
 </style>
