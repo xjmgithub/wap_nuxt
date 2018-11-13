@@ -86,6 +86,7 @@ export default {
     mounted() {
         let questions = JSON.parse(localStorage.getItem('faq_question'))
         let serviceModuleId = localStorage.getItem('serviceModuleId')
+        let morefaqs = localStorage.getItem('morefaqs')
         let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
 
         let _this = this
@@ -139,7 +140,7 @@ export default {
             if (questions) {
                 // 单个问题
                 this.askQuest(questions, 1, 1)
-            } else if (serviceModuleId) {
+            } else if (morefaqs) {
                 // MORE FAQS
                 this.addOperate({
                     tpl: 'ask',

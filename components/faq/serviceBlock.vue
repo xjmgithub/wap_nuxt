@@ -71,60 +71,60 @@ export default {
                 return ''
             }
         },
-        orderStatus(){
+        orderStatus() {
             if (this.service && this.service.order_info) {
                 let type = this.service.order_info.order_type_id
-                if(['1','2','3'].indexOf(type)>=0){
+                if (['1', '2', '3'].indexOf(type) >= 0) {
                     // bouquet,link,charge
-                    switch(this.service.order_info.order_status){
+                    switch (this.service.order_info.order_status) {
                         case '0':
                             return 'UNPAID'
-                            break;
-                        case '10': 
+                            break
+                        case '10':
                             return 'UNRECHARGED'
-                            break;
+                            break
                         case '20':
                         case '4':
                             return 'FAILD'
-                            break;
+                            break
                         case '3':
                             return 'SUCCESS'
-                            break;
+                            break
                         case '11':
                             return 'CHARGING'
-                            break;
+                            break
                         default:
                             return ''
                     }
-                }else{
+                } else {
                     // ott
-                    switch(this.service.order_info.order_status){
+                    switch (this.service.order_info.order_status) {
                         case '1':
                         case '2':
                         case '4':
                             return 'UNPAID'
-                            break;
-                        case '3': 
+                            break
+                        case '3':
                         case '6':
                             return 'CANCEL'
-                            break;
+                            break
                         case '5':
                             return 'SUCCESS'
-                            break;
+                            break
                         case '7':
                             return 'REFUNDING'
-                            break;
+                            break
                         case '8':
                             return 'REFUNDED'
-                            break;
+                            break
                         case '9':
                             return 'EXPIRED'
-                            break;
+                            break
                         default:
                             return ''
                     }
                 }
-            }else{
+            } else {
                 return ''
             }
         }
@@ -143,10 +143,7 @@ export default {
             })
         },
         moreQues(item) {
-            localStorage.setItem(
-                'serviceModuleId',
-                this.service.service_module.id
-            )
+            localStorage.setItem('morefaqs', 1)
             this.$router.push({
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query

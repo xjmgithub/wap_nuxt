@@ -137,7 +137,10 @@ export default {
 
         // more faqs
         let serviceModuleId = localStorage.getItem('serviceModuleId')
+        
+        // TODO faq指定
         let faq_question = localStorage.getItem('faq_question')
+
         this.$axios
             .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
             .then(res => {

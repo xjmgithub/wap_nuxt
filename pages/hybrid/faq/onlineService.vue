@@ -41,8 +41,7 @@ export default {
     },
     mounted() {
         localStorage.removeItem('faq_question')
-        localStorage.removeItem('serviceModuleId')
-        console.log(123)
+        localStorage.removeItem('morefaqs')
 
         let entranceId = this.$route.query.entrance_id || ''
 
@@ -57,6 +56,11 @@ export default {
             .then(res => {
                 if (res.data && res.data.data) {
                     this.serviceData = res.data.data
+                    localStorage.setItem(
+                        'serviceModuleId',
+                        this.serviceData.service_module.id
+                    )
+
                     localStorage.setItem(
                         'orderMsg',
                         JSON.stringify(this.serviceData.order_info)
