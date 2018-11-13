@@ -52,7 +52,7 @@ export default {
     mounted() {
         let cachedOrder = localStorage.getItem('orderMsg')
         this.$axios
-            .get(`/ocs/v1/service-list?entranceId=${this.entranceId}`, {})
+            .get(`/ocs/v1/service/module/moreOrder?entranceId=${this.entranceId}`, {})
             .then(res => {
                 if (res.data) {
                     this.serviceList = res.data.data

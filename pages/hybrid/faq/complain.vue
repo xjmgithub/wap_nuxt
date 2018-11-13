@@ -2,7 +2,7 @@
     <div id="wrapper">
         <div class="order-msg" v-if="order.order_status">
             <p class="time">{{order.order_create_time | formatDate }}
-                <nuxt-link to="/hybrid/faq/chooseOrder">
+                <nuxt-link :to="{'path':'/hybrid/faq/chooseOrder',query:$route.query}">
                     <img src="~assets/img/faq/ic_Setting_def_g.png" alt="">
                 </nuxt-link>
             </p>
