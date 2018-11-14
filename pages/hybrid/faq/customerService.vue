@@ -19,6 +19,7 @@
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
+                <evaluate v-if="item.tpl=='evaluate'" :key="index" :serviceRecord="item.serviceRecord"></evaluate>
             </template>
             <msgTpl v-show="false"></msgTpl>
             <evaluate v-show="false"></evaluate>
@@ -577,16 +578,16 @@ export default {
                                         name: item.text
                                     })
                                 }
-                                if (
-                                    item.from.type == 'Client' &&
-                                    item.type == 'Message' &&
-                                    item.text
-                                ) {
-                                    this.addOperate({
-                                        tpl: 'chatask',
-                                        name: item.text
-                                    })
-                                }
+                                // if (
+                                //     item.from.type == 'Client' &&
+                                //     item.type == 'Message' &&
+                                //     item.text
+                                // ) {
+                                //     this.addOperate({
+                                //         tpl: 'chatask',
+                                //         name: item.text
+                                //     })
+                                // }
                             })
                         }
                     } else if (res.data.statusCode == -1) {
@@ -609,9 +610,12 @@ export default {
         },
         endChat() {
             // TODO 评价
-            // TODO 断开链接 变换按钮状态
+            this.renderOrder.push({
+                tpl: 'evaluate',
+                serviceRecord: this.serviceRecord
+            })
+            // TODO 变换按钮状态
             // TODO 创建新的服务记录
-            // TODO 输入框多行支持
         },
         starToBlue(index, event) {
             let imgNode = document.querySelectorAll('.gave-star img')
