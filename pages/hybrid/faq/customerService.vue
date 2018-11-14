@@ -129,7 +129,6 @@ export default {
             })
         })
 
-        // TODO REMOVE
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             // if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
@@ -248,7 +247,7 @@ export default {
         },
         createServiceRecord(type, callback) {
             this.$axios
-                .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`)
+                    .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
                 .then(res => {
                     if (res.data.code == 200) {
                         this.serviceRecord = res.data.data
@@ -470,6 +469,7 @@ export default {
                                 }
                             )
                             .then(res => {
+                                this.createServiceRecord(1)
                                 if (
                                     res.data.statusCode == 0 &&
                                     !res.data.chatEnded
@@ -609,13 +609,14 @@ export default {
                 })
         },
         endChat() {
-            // TODO 评价
-            this.renderOrder.push({
+            this.renderQueue.push({
                 tpl: 'evaluate',
                 serviceRecord: this.serviceRecord
             })
-            // TODO 变换按钮状态
-            // TODO 创建新的服务记录
+            // BUTTON 变成输入框
+            this.connectState = 0 
+            // 创建新服务记录
+            this.createServiceRecord(6)
         },
         starToBlue(index, event) {
             let imgNode = document.querySelectorAll('.gave-star img')
