@@ -13,7 +13,8 @@ export const state = () => ({
     payToken: '',
     user: null,
     txNo: '',
-    country: {}
+    country: {},
+    selectCompId:0
 })
 
 export const mutations = {
@@ -55,6 +56,9 @@ export const mutations = {
     },
     SET_AREA_INFO: function(state, conf) {
         state.country = conf
+    },
+    ADD_SELECT_COMP: function (state,val){
+        state.selectCompId = val
     }
 }
 
