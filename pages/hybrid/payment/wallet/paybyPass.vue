@@ -99,7 +99,7 @@ export default {
                                 currency: payObject.currency,
                                 note: payObject.payNote,
                                 orderId: order,
-                                payeeAccountNo: this.payChannelId,
+                                payeeAccountNo: data.extendInfo.payeeAccountNo,
                                 payerAccountNo: ewallet.accountNo,
                                 payerPayPassword: this.password,
                                 subject: payObject.paySubject,
