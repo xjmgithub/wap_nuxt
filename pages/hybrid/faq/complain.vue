@@ -135,9 +135,9 @@ export default {
             let param = {
                 orderType: order ? JSON.parse(order).order_type_id : '',
                 orderNo: order ? JSON.parse(order).order_no : '',
-                orderStatus: order ? JSON.parse(order).order_status : '',
                 userAccount: this.user.userName,
-                appVersion: this.$store.state.appVersion,
+                unitType: this.$store.state.unitType,
+                operatorInfo:'',
                 problemId: this.$refs.questionSelect.selected.id,
                 problem: this.$refs.questionSelect.selected.name,
                 problemChannelTypeKey: this.type[1]?this.$refs.channelSelect.selected.id:'',
@@ -147,7 +147,8 @@ export default {
                 problemCountryId: !this.type[0]&&!this.type[1]? this.$refs.countrySelect.selected.id:'',
                 problemCountryCode: !this.type[0]&&!this.type[1]?this.$refs.countrySelect.selected.name:'',
                 message: this.moredes,
-                leavingImgsDtoList: []
+                channelNameAdditional:'',
+                channelType:''
             }
 
             this.$axios

@@ -14,7 +14,9 @@ export const state = () => ({
     user: null,
     txNo: '',
     country: {},
-    selectCompId:0
+    selectCompId: 0,
+    netType: 0,
+    carrier:''
 })
 
 export const mutations = {
@@ -57,8 +59,14 @@ export const mutations = {
     SET_AREA_INFO: function(state, conf) {
         state.country = conf
     },
-    ADD_SELECT_COMP: function (state,val){
+    ADD_SELECT_COMP: function(state, val) {
         state.selectCompId = val
+    },
+    SET_NET_TYPE: function(state, val) {
+        state.netType = val
+    },
+    SET_CARRIER: function(state, val) {
+        state.carrier = val
     }
 }
 
@@ -72,6 +80,7 @@ export const actions = {
                 _COOKIE[parts[0].trim()] = (parts[1] || '').trim()
             })
 
+        // set language
         let language =
             req.headers['http_lncode'] || req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
@@ -165,6 +174,14 @@ export const actions = {
                     versionMap[req.headers['http_versioncode']]
                 )
             }
+        }
+
+        if (req.headers['http_network']) {
+            commit('SET_NET_TYPE', req.headers['http_network'])
+        }
+
+        if (req.headers['http_x_carrier']) {
+            commit('SET_CARRIER', req.headers['http_x_carrier'])
         }
     }
 }

@@ -126,6 +126,8 @@ export default {
         top: 0;
         background: white;
         z-index: 999;
+        max-height:10rem;
+        overflow-y: auto;
         li {
             padding: 0.3rem 0.5rem;
             font-size: 0.8rem;
