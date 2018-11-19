@@ -31,7 +31,7 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <div>{{msg.problem}}</div>
+            <div class="problem_txt">{{msg.problem}}</div>
             <p>Detail Description</p>
             <div class="msg_container">{{msg.message}}</div>
         </div>
@@ -132,6 +132,14 @@ export default {
         color: #212121;
         font-weight: bold;
         font-size: 0.9rem;
+    }
+    .problem_txt{
+        font-size:0.9rem;
+    }
+    .msg_container{
+        font-size:0.9rem;
+        border:solid 1px #dddddd;
+        padding:0.5rem;
     }
 }
 
