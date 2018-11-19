@@ -144,7 +144,7 @@ export default {
                 orderCreateTime: order
                     ? JSON.parse(order).order_create_time
                     : '',
-                userAccount: this.user.userName,
+                userAccount: this.user.id,
                 unitType: this.unitType || '',
                 operatorInfo: this.carrier || '',
                 problemId: this.$refs.questionSelect.selected.id,
@@ -182,6 +182,7 @@ export default {
                 .then(res => {
                     if (res.data.code == 200) {
                         // TODO 存一条留言
+
                         localStorage.setItem(
                             'addMsg',
                             JSON.stringify(Object.assign({}, param))

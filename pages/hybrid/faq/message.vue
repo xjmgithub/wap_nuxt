@@ -1,10 +1,10 @@
 <template>
     <div id="wrapper">
         <div class="reply">
-            <div class="waiting" v-msg="!msg.replyRecordDtoList||msg.replyRecordDtoList.length<=0">
+            <div class="waiting" v-if="!msg.replyRecordDtoList||msg.replyRecordDtoList.length<=0">
                 <div class="waiting_btn">Waiting For Result…</div>
             </div>
-            <div class="over" v-msg="msg.replyRecordDtoList&&msg.replyRecordDtoList.length>0">
+            <div class="over" v-if="msg.replyRecordDtoList&&msg.replyRecordDtoList.length>0">
                 <div class="replied_txt">Replied</div>
                 <div class="replied_content">
                     Hi, We have found the problem. Your account hasn’t changed correctly. We’re sorry for our mistake.
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="gap"></div>
-        <div class="order-msg" v-if="msg.order_status">
+        <div class="order-msg" v-if="msg.orderNo">
             <p class="time">{{msg.orderCreateTime | formatDate }}</p>
             <div class="order-type clearfix">
                 <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
@@ -43,13 +43,7 @@
                     <p class="p-name">Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{msg.Account}}</p>
-                </li>
-                <li>
-                    <p class="p-name">Country
-                        <span>*</span>
-                    </p>
-                    <p class="p-value">{{msg.countryCode}}</p>
+                    <p class="p-value">{{msg.userAccount}}</p>
                 </li>
                 <li v-if="carrier">
                     <p class="p-name">Telecom Info
