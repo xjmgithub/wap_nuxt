@@ -2,7 +2,7 @@
     <div id="wrapper">
         <div v-show="loaded&&serviceList.length>0">
             <div class="orders">
-                <div class="order-msg" v-for="(item,index) in serviceList" :key="index" @click="chooseThis(item.order_info)">
+                <div class="order-msg" v-for="(item,index) in serviceList" :key="index">
                     <label>
                         <p class="time">{{item.order_info.order_create_time | formatDate }}
                             <input type="radio" name="order" :value="item" :checked="item.id == checked.id">
@@ -41,7 +41,7 @@ export default {
             entranceId: this.$route.query.entrance_id || '',
             serviceList: [],
             checked: {},
-            loaded:false
+            loaded: false
         }
     },
     filters: {
@@ -52,7 +52,17 @@ export default {
     mounted() {
         let cachedOrder = localStorage.getItem('orderMsg')
         this.$axios
-            .get(`/ocs/v1/service/module/moreOrder?entranceId=${this.entranceId}`, {})
+            .get(
+                `/ocs/v1/service/module/moreOrder?entranceId=${
+                    this.entranceId
+                }`,
+                {
+                    headers: {
+                        'x-clientType': 1,
+                        'x-appVersion': '5300'
+                    }
+                }
+            )
             .then(res => {
                 if (res.data) {
                     this.serviceList = res.data.data
@@ -74,9 +84,6 @@ export default {
                     query: this.$route.query
                 })
             }
-        },
-        chooseThis(item) {
-            this.checked = item
         }
     },
     head() {
