@@ -50,11 +50,17 @@
                     </p>
                     <p class="p-value">{{user.countryCode}}</p>
                 </li>
-                <li>
+                <li v-if="carrier">
+                    <p class="p-name">Telecom Info
+                        <span>*</span>
+                    </p>
+                    <p class="p-value">{{carrier}}</p>
+                </li>
+                <li v-if="unitType">
                     <p class="p-name">Device
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{deviceInfo}}</p>
+                    <p class="p-value">{{unitType}}</p>
                 </li>
             </ul>
         </div>
@@ -75,8 +81,9 @@ export default {
             indexNum: 0,
             order: {},
             user: this.$store.state.user,
-            deviceInfo: '',
-            type: [0,0],
+            carrier: this.$store.state.carrier,
+            unitType: this.$store.state.phoneModel,
+            type: [0, 0],
             questionsList: [],
             question: '',
             channelList: [],
@@ -92,13 +99,13 @@ export default {
         },
         setQuestion(question) {
             let tags = question.tags
-            let type = [0,0]  // 1 支付，2频道
-            if(tags&&tags.length>0){
-                tags.forEach(item=>{
-                    if(item.tagging_name=='pay'){
+            let type = [0, 0] // 1 支付，2频道
+            if (tags && tags.length > 0) {
+                tags.forEach(item => {
+                    if (item.tagging_name == 'pay') {
                         type[0] = 1
                     }
-                    if(item.tagging_name=='channel'){
+                    if (item.tagging_name == 'channel') {
                         type[1] = 1
                     }
                 })
@@ -107,48 +114,60 @@ export default {
         },
         submit() {
             let order = localStorage.getItem('orderMsg')
-            
-            
-            if(this.type[1]){
-                if(!this.$refs.channelSelect.selected.id){
+
+            if (this.type[1]) {
+                if (!this.$refs.channelSelect.selected.id) {
                     this.$alert('Please select a channel type')
                     return false
                 }
-                if(!this.$refs.channelNameSelect.selected.id){
+                if (!this.$refs.channelNameSelect.selected.id) {
                     this.$alert('Please select a channel Name')
                     return false
                 }
             }
-            if(!this.type[0]&&!this.type[1]){
-                if(!this.$refs.countrySelect.selected.id){
+            if (!this.type[0] && !this.type[1]) {
+                if (!this.$refs.countrySelect.selected.id) {
                     this.$alert('Please select a country')
                     return false
                 }
             }
 
-            if(!this.moredes){
+            if (!this.moredes) {
                 this.$alert('Please fill in the problem description')
                 return false
             }
-
 
             let param = {
                 orderType: order ? JSON.parse(order).order_type_id : '',
                 orderNo: order ? JSON.parse(order).order_no : '',
                 userAccount: this.user.userName,
-                unitType: this.$store.state.unitType,
-                operatorInfo:'',
+                unitType: this.unitType || '',
+                operatorInfo: this.carrier || '',
                 problemId: this.$refs.questionSelect.selected.id,
                 problem: this.$refs.questionSelect.selected.name,
-                problemChannelTypeKey: this.type[1]?this.$refs.channelSelect.selected.id:'',
-                problemChannelTypeValue: this.type[1]?this.$refs.channelSelect.selected.name:'',
-                problemChannelNameKey: this.type[1]?this.$refs.channelNameSelect.selected.id:'',
-                problemChannelNameValue: this.type[1]?this.$refs.channelNameSelect.selected.name:'',
-                problemCountryId: !this.type[0]&&!this.type[1]? this.$refs.countrySelect.selected.id:'',
-                problemCountryCode: !this.type[0]&&!this.type[1]?this.$refs.countrySelect.selected.name:'',
+                problemChannelTypeKey: this.type[1]
+                    ? this.$refs.channelSelect.selected.id
+                    : '',
+                problemChannelTypeValue: this.type[1]
+                    ? this.$refs.channelSelect.selected.name
+                    : '',
+                problemChannelNameKey: this.type[1]
+                    ? this.$refs.channelNameSelect.selected.id
+                    : '',
+                problemChannelNameValue: this.type[1]
+                    ? this.$refs.channelNameSelect.selected.name
+                    : '',
+                problemCountryId:
+                    !this.type[0] && !this.type[1]
+                        ? this.$refs.countrySelect.selected.id
+                        : '',
+                problemCountryCode:
+                    !this.type[0] && !this.type[1]
+                        ? this.$refs.countrySelect.selected.name
+                        : '',
                 message: this.moredes,
-                channelNameAdditional:'',
-                channelType:''
+                channelNameAdditional: '',
+                channelType: ''
             }
 
             this.$axios

@@ -16,7 +16,8 @@ export const state = () => ({
     country: {},
     selectCompId: 0,
     netType: 0,
-    carrier:''
+    carrier:'',
+    phoneModel:''
 })
 
 export const mutations = {
@@ -67,6 +68,9 @@ export const mutations = {
     },
     SET_CARRIER: function(state, val) {
         state.carrier = val
+    },
+    SET_PHONE_MODEL: function(state,val){
+        state.phoneModel = val
     }
 }
 
@@ -182,6 +186,10 @@ export const actions = {
 
         if (req.headers['http_x_carrier']) {
             commit('SET_CARRIER', req.headers['http_x_carrier'])
+        }
+
+        if (req.headers['http_phonemodel']) {
+            commit('SET_PHONE_MODEL', req.headers['http_phonemodel'])
         }
     }
 }
