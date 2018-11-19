@@ -51,6 +51,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
+import { setInterval } from 'timers';
 export default {
     layout: 'base',
     data() {
@@ -137,6 +138,10 @@ export default {
 
         // 创建服务记录
         this.createServiceRecord(6, () => {
+            
+            // TODO 是否有留言
+            
+
             if (questions) {
                 // 单个问题
                 this.askQuest(questions, 1, 1)
@@ -187,9 +192,33 @@ export default {
                         }
                     })
             }
+
+            this.$nextTick(()=>{
+                setInterval(()=>{
+                    this.getLeaveMessage()
+                },5*1000)
+            })
         })
+
+
+        
+        
     },
     methods: {
+        getLeaveMessage(){
+            this.$axios
+                .get(`/csms-service/v1/get-standard-leaving-message-record`)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        // TODO 留言
+                        // this.addOperate(
+                        //     Object.assign({}, res.data.data, {
+                        //         tpl: 'list'
+                        //     })
+                        // )
+                    }
+                })
+        },
         getfaqDirectory(id) {
             if (!id) return false
             this.$axios
@@ -201,7 +230,6 @@ export default {
                                 tpl: 'list'
                             })
                         )
-                        // TODO TAGS
                     }
                 })
         },

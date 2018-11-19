@@ -177,11 +177,11 @@ export default {
                 )
                 .then(res => {
                     if (res.data.code == 0) {
-
-                        // 存一条留言
                         localStorage.setItem(
                             'leaveMsg',
-                            Object.assign({}, param)
+                            Object.assign({}, param, {
+                                id: res.data.data.messageId
+                            })
                         )
                         this.$router.push('/hybrid/faq/customerService')
                     }
