@@ -140,6 +140,10 @@ export default {
             let param = {
                 orderType: order ? JSON.parse(order).order_type_id : '',
                 orderNo: order ? JSON.parse(order).order_no : '',
+                orderName: order ? JSON.parse(order).order_name : '',
+                orderCreateTime: order
+                    ? JSON.parse(order).order_create_time
+                    : '',
                 userAccount: this.user.userName,
                 unitType: this.unitType || '',
                 operatorInfo: this.carrier || '',
@@ -176,14 +180,16 @@ export default {
                     param
                 )
                 .then(res => {
-                    if (res.data.code == 0) {
-
-                        // 存一条留言
+                    if (res.data.code == 200) {
+                        // TODO 存一条留言
                         localStorage.setItem(
-                            'leaveMsg',
-                            Object.assign({}, param)
+                            'addMsg',
+                            JSON.stringify(Object.assign({}, param))
                         )
-                        this.$router.push('/hybrid/faq/customerService')
+                        this.$router.push({
+                            path: '/hybrid/faq/customerService',
+                            query: this.$route.query
+                        })
                     }
                 })
         }

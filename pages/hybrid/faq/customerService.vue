@@ -20,9 +20,8 @@
                     <div>{{item.text}}</div>
                 </div>
                 <evaluate v-if="item.tpl=='evaluate'" :key="index" :serviceRecord="item.serviceRecord"></evaluate>
+                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied"></msgTpl>
             </template>
-            <msgTpl v-show="false"></msgTpl>
-            <evaluate v-show="false"></evaluate>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
             <div class="btn" v-show="connectState==0" @click="connectLiveChat">LIVE CHAT</div>
@@ -51,7 +50,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { setInterval } from 'timers';
+import { setInterval } from 'timers'
 export default {
     layout: 'base',
     data() {
@@ -90,6 +89,7 @@ export default {
         let serviceModuleId = localStorage.getItem('serviceModuleId')
         let morefaqs = localStorage.getItem('morefaqs')
         let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
+        let addMsg = localStorage.getItem('addMsg')
 
         let _this = this
         // LiveChat 按钮判断
@@ -138,11 +138,16 @@ export default {
 
         // 创建服务记录
         this.createServiceRecord(6, () => {
-            
             // TODO 是否有留言
-            
-
-            if (questions) {
+            if (addMsg) {
+                this.addOperate(
+                    Object.assign({}, JSON.parse(addMsg), {
+                        tpl: 'message',
+                        replied: false
+                    })
+                )
+                //localStorage.removeItem('addMsg')
+            } else if (questions) {
                 // 单个问题
                 this.askQuest(questions, 1, 1)
             } else if (morefaqs) {
@@ -192,30 +197,30 @@ export default {
                         }
                     })
             }
-
-            this.$nextTick(()=>{
-                setInterval(()=>{
-                    this.getLeaveMessage()
-                },5*1000)
-            })
+            
+            // TODO REMOVE
+            // this.$nextTick(() => {
+            //     setInterval(() => {
+            //         this.getLeaveMessage()
+            //     }, 5 * 1000)
+            // })
         })
-
-
-        
-        
     },
     methods: {
-        getLeaveMessage(){
+        getLeaveMessage() {
             this.$axios
                 .get(`/csms-service/v1/get-standard-leaving-message-record`)
                 .then(res => {
-                    if (res.data.code == 200) {
+                    if (res.data && res.data.length > 0) {
                         // TODO 留言
-                        // this.addOperate(
-                        //     Object.assign({}, res.data.data, {
-                        //         tpl: 'list'
-                        //     })
-                        // )
+                        res.data.forEach(item => {
+                            this.addOperate(
+                                Object.assign({}, item, {
+                                    tpl: 'message',
+                                    replied: true
+                                })
+                            )
+                        })
                     }
                 })
         },
@@ -275,7 +280,7 @@ export default {
         },
         createServiceRecord(type, callback) {
             this.$axios
-                    .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
+                .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
                 .then(res => {
                     if (res.data.code == 200) {
                         this.serviceRecord = res.data.data
@@ -372,12 +377,11 @@ export default {
                                     }
                                 }
                             }
-                            
+
                             // 如果是回答则重新创建一条服务记录
-                            if(obj.tpl == 'content'){
+                            if (obj.tpl == 'content') {
                                 this.createServiceRecord()
                             }
-
                         }
                     })
             }
@@ -397,7 +401,7 @@ export default {
             // 更新历史记录
             let historys = JSON.parse(localStorage.getItem('historys'))
             let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
-            
+
             if (historys) {
                 historys.forEach(item => {
                     if (this.minHistoryId) {
@@ -443,9 +447,9 @@ export default {
                         })
                         rows.reverse().forEach(item => {
                             let data = JSON.parse(item.remark)
-                            
+
                             // 历史记录里的答案不可评价
-                            if(data.tpl=='content'){
+                            if (data.tpl == 'content') {
                                 data.noEvaluate = true
                             }
                             this.renderQueue.unshift(data)
@@ -503,7 +507,11 @@ export default {
                                     !res.data.chatEnded
                                 ) {
                                     this.connectState = 2 // BUTTON 变成输入框
-                                    autosize(document.querySelectorAll('textarea.form-control'))
+                                    autosize(
+                                        document.querySelectorAll(
+                                            'textarea.form-control'
+                                        )
+                                    )
 
                                     this.chatPullTimer = setInterval(() => {
                                         this.pullReply()
@@ -548,8 +556,11 @@ export default {
                     name: msg
                 })
                 this.chatMsg = ''
-                this.$nextTick(()=>{ // 重置输入框的高
-                    autosize.update(document.querySelectorAll('textarea.form-control'))
+                this.$nextTick(() => {
+                    // 重置输入框的高
+                    autosize.update(
+                        document.querySelectorAll('textarea.form-control')
+                    )
                 })
 
                 this.$axios
@@ -642,7 +653,7 @@ export default {
                 serviceRecord: this.serviceRecord
             })
             // BUTTON 变成输入框
-            this.connectState = 0 
+            this.connectState = 0
             // 创建新服务记录
             this.createServiceRecord(6)
         },
