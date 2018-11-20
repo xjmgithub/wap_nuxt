@@ -177,7 +177,13 @@ export default {
             this.$axios
                 .post(
                     `/csms-service/v1/standard-leaving-message-records`,
-                    param
+                    param,
+                    {
+                        headers: {
+                            'x-clientType': 1,
+                            'x-appVersion': '5300'
+                        }
+                    }
                 )
                 .then(res => {
                     if (res.data.code == 200) {
