@@ -53,7 +53,8 @@ module.exports = {
         '/payment/api': env.ms_host,
         '/payment/v2': env.ms_host,
         '/payment/platform/v1': env.mechant_request_url,
-        '/csms-service': 'http://localhost:9001',
+        // '/csms-service': 'http://localhost:9001',
+        '/csms-service': env.ms_host,
         '/ocs/': env.ms_host,
         '/css/': env.ms_host
     },

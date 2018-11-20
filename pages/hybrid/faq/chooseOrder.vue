@@ -1,21 +1,21 @@
 <template>
     <div id="wrapper">
-        <div v-show="loaded&&serviceList.length>0">
+        <div v-show="loaded&&serviceList">
             <div class="orders">
                 <div class="order-msg" v-for="(item,index) in serviceList" :key="index">
-                    <label>
-                        <p class="time">{{item.order_info.order_create_time | formatDate }}
-                            <input type="radio" name="order" :value="item" :checked="item.id == checked.id">
+                    <label @click="check(item.id)">
+                        <p class="time">{{item.order_create_time | formatDate }}
+                            <input type="radio" name="order" :checked="item.id==checkedId">
                             <i></i>
                         </p>
                         <div class="order-type clearfix">
                             <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
                             <div class="right">
-                                <p class="order-name">{{item.order_info.order_type }}
-                                    <span>{{item.order_info.order_amount }}</span>
+                                <p class="order-name">{{item.order_type }}
+                                    <span>{{item.order_amount }}</span>
                                 </p>
-                                <p class="order-status">{{item.order_info.card_no }}
-                                    <span>{{item.order_info.order_status }}</span>
+                                <p class="order-status">{{item.card_no }}
+                                    <span>{{item.order_status }}</span>
                                 </p>
                             </div>
                         </div>
@@ -26,7 +26,7 @@
                 <button class="btn" @click="submit">OK</button>
             </div>
         </div>
-        <div v-show="loaded&&serviceList.length<=0" class="no-orders">
+        <div v-show="loaded&&!serviceList" class="no-orders">
             <img src="~assets/img/faq/Group5.png" alt="">
             <p>No Orders.</p>
         </div>
@@ -39,9 +39,14 @@ export default {
     data: function() {
         return {
             entranceId: this.$route.query.entrance_id || '',
-            serviceList: [],
-            checked: {},
+            serviceList: null,
+            checkedId:null,
             loaded: false
+        }
+    },
+    computed:{
+        checked(){
+            return this.serviceList[this.checkedId]
         }
     },
     filters: {
@@ -65,19 +70,28 @@ export default {
             )
             .then(res => {
                 if (res.data) {
-                    this.serviceList = res.data.data
+                    let obj = {}
+                    res.data.data.forEach((item,index)=>{
+                        obj[item.order_info.id] = item.order_info
+                        if(index==0){
+                            this.checkedId = item.order_info.id
+                        }
+                    })
+                    this.serviceList = obj
                     if (cachedOrder) {
-                        this.checked = JSON.parse(cachedOrder)
-                    } else {
-                        this.checked = this.serviceList[0].order_info
+                        this.checkedId = JSON.parse(cachedOrder).id
                     }
                 }
+                console.log(this.serviceList)
                 this.loaded = true
             })
     },
     methods: {
+        check(id){
+            this.checkedId = id
+        },
         submit() {
-            if (this.checked.id) {
+            if (this.checkedId) {
                 localStorage.setItem('orderMsg', JSON.stringify(this.checked))
                 this.$router.push({
                     path: '/hybrid/faq/complain',
