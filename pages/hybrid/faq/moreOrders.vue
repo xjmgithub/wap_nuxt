@@ -40,11 +40,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-body {
-    background: #fff;
-}
 
 #wrapper {
+    background: #fff;
     padding: 0.5rem;
 }
 </style>

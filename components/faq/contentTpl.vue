@@ -48,6 +48,16 @@ export default {
             default: false
         }
     },
+    mounted(){
+        this.$nextTick(()=>{
+            let s = document.querySelectorAll('.result-wraper img')
+            for(let i=0;i<s.length;i++){
+                s[i].onload = ()=>{
+                    this.$emit('imgloaded')
+                }
+            }
+        })
+    },
     methods: {
         evaluate(type) {
             if (!this.ended) {
