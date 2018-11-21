@@ -51,6 +51,7 @@ import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
 import { setInterval } from 'timers'
+import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -476,7 +477,16 @@ export default {
             })
         },
         connectLiveChat() {
-            if (!this.isLogin) return false
+            
+            if (!this.isLogin) {
+                if (this.$store.state.appType == 1) {
+                    toNativePage('com.star.mobile.video.account.LoginActivity')
+                } else {
+                    toNativePage('startimes://login')
+                }
+                return false
+            }
+
             this.connectState = 1
             this.$axios
                 .post('/genesys-proxy/v1/chats', {
@@ -518,9 +528,12 @@ export default {
                                         )
                                     )
 
-                                    this.chatPullTimer = window.setInterval(() => {
-                                        this.pullReply()
-                                    }, 5000)
+                                    this.chatPullTimer = window.setInterval(
+                                        () => {
+                                            this.pullReply()
+                                        },
+                                        5000
+                                    )
                                     this.nextPosition = res.data.nextPosition
                                     let messages = res.data.messages
 
