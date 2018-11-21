@@ -116,7 +116,6 @@ export const actions = {
             }
         }
         
-        console.log(req.headers)
         if (req.headers['token']) {
             commit('SET_TOKEN', req.headers['token'])
         } else {
@@ -153,7 +152,6 @@ export const actions = {
             .catch(error => {
                 // 用户失效在plugin/clearUser当中处理
             })
-
         // APP TYPE
         if (req.headers['client'] == 'android') {
             commit('SET_APPTYPE', 1)

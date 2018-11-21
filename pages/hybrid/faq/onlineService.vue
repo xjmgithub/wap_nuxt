@@ -44,7 +44,6 @@ export default {
         localStorage.removeItem('morefaqs')
 
         let entranceId = this.$route.query.entrance_id || ''
-
         // 服务块
         this.$axios
             .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`, {
