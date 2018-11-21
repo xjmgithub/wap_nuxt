@@ -268,9 +268,12 @@ export default {
     .questions {
         flex: 1;
         overflow: hidden;
+        position:relative;
         div {
-            overflow: auto;
-            height: 100%;
+            overflow-y: auto;
+            position: absolute;
+            top:0;
+            bottom:0;
         }
         li {
             overflow: hidden;
