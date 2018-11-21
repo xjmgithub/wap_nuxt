@@ -518,7 +518,7 @@ export default {
                                         )
                                     )
 
-                                    this.chatPullTimer = setInterval(() => {
+                                    this.chatPullTimer = window.setInterval(() => {
                                         this.pullReply()
                                     }, 5000)
                                     this.nextPosition = res.data.nextPosition
@@ -647,7 +647,7 @@ export default {
                             text: 'Disconnected',
                             tpl: 'tips'
                         })
-                        clearInterval(this.chatPullTimer)
+                        window.clearInterval(this.chatPullTimer)
                         this.endChat()
                     }
                 })
