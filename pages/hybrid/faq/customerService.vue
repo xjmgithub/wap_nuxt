@@ -197,7 +197,7 @@ export default {
                         }
                     })
             }
-            
+
             // TODO REMOVE
             // this.$nextTick(() => {
             //     setInterval(() => {
@@ -307,17 +307,17 @@ export default {
                     }
                 })
         },
-        refreshScroll(){
+        refreshScroll() {
             this.$nextTick(() => {
                 this.scroll.refresh()
-                this.scrollToBottom() // 是不是所有的刷新都要滚到底部
             })
         },
         addOperate(obj, send) {
             if (obj && obj.tpl) {
                 this.renderQueue.push(obj)
                 this.updateCacheQueue()
-                this.refreshScroll()  // 要滚动到底部
+                this.refreshScroll()
+                this.scrollToBottom()
 
                 // 发送历史记录
                 let serviceInfo = ''
@@ -469,9 +469,11 @@ export default {
                 })
         },
         scrollToBottom() {
-            let h1 = document.querySelector('#wrapper').offsetHeight
-            let h2 = document.querySelector('.content').offsetHeight
-            this.scroll.scrollTo(0, h1 - h2, 300)
+            this.$nextTick(() => {
+                let h1 = document.querySelector('#wrapper').offsetHeight
+                let h2 = document.querySelector('.content').offsetHeight
+                this.scroll.scrollTo(0, h1 - h2, 300)
+            })
         },
         connectLiveChat() {
             if (!this.isLogin) return false
