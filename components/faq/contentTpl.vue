@@ -9,13 +9,15 @@
             <div>
                 <div class="btn">COMPLAIN</div>
                 <div class="clear"></div>
-                <div class="attitude-container">
-                    <div class="yes-item">
-                        <img src="~assets/img/faq/ic_happy_def_g.png" alt="">
+                <div class="attitude-container" v-if="!noevaluate">
+                    <div class="yes-item" @click="evaluate(1)">
+                        <img v-show="!agree" src="~assets/img/faq/ic_happy_def_g.png" alt="">
+                        <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt="">
                         <span>YES</span>
                     </div>
-                    <div class="no-item">
-                        <img src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
+                    <div class="no-item" @click="evaluate(0)">
+                        <img v-show="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
+                        <img v-show="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png" alt="">
                         <span>NO</span>
                     </div>
                 </div>
@@ -25,10 +27,48 @@
 </template>
 <script>
 export default {
+    data() {
+        return {
+            agree: false,
+            disagree: false,
+            ended: false
+        }
+    },
     props: {
         content: {
             require: true,
             type: String
+        },
+        serviceRecord: {
+            require: true,
+            type: Number
+        },
+        noevaluate: {
+            require: false,
+            default: false
+        }
+    },
+    methods: {
+        evaluate(type) {
+            if (!this.ended) {
+                this.$axios
+                    .post(
+                        `/css/v1/service/evaluation/${
+                            this.serviceRecord
+                        }?whether_to_solve=${type}&grade=${type ? 2 : 1}`
+                    )
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            // 改变状态
+                            if (type) {
+                                this.agree = true
+                            } else {
+                                this.disagree = true
+                            }
+                            this.ended = true
+                        }
+                    })
+            }
         }
     }
 }

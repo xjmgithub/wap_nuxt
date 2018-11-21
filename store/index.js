@@ -12,45 +12,65 @@ export const state = () => ({
     shadowStatus: false,
     payToken: '',
     user: null,
-    txNo: ''
+    txNo: '',
+    country: {},
+    selectCompId: 0,
+    netType: 0,
+    carrier:'',
+    phoneModel:''
 })
 
 export const mutations = {
-    SET_LANG: function (state, lang) {
+    SET_LANG: function(state, lang) {
         state.lang = lang
     },
-    SET_DEVICE: function (state, deviceId) {
+    SET_DEVICE: function(state, deviceId) {
         state.deviceId = deviceId
     },
-    SET_TOKEN: function (state, token) {
+    SET_TOKEN: function(state, token) {
         state.token = token
     },
-    SET_APPTYPE: function (state, type) {
+    SET_APPTYPE: function(state, type) {
         state.appType = type
     },
-    SET_GA_CLIENT: function (state, id) {
+    SET_GA_CLIENT: function(state, id) {
         state.gaClientId = id
     },
-    SET_APP_VERSION: function (state, v) {
+    SET_APP_VERSION: function(state, v) {
         state.appVersion = v
     },
-    SHOW_SHADOW_LAYER: function (state) {
+    SHOW_SHADOW_LAYER: function(state) {
         state.shadowStatus = true
     },
-    HIDE_SHADOW_LAYER: function (state) {
+    HIDE_SHADOW_LAYER: function(state) {
         state.shadowStatus = false
     },
-    SET_PAYTOKEN: function (state, token) {
+    SET_PAYTOKEN: function(state, token) {
         state.payToken = token
     },
-    SET_USER: function (state, user) {
+    SET_USER: function(state, user) {
         state.user = user
     },
-    SET_PAYTOKEN: function (state, payToken) {
+    SET_PAYTOKEN: function(state, payToken) {
         state.payToken = payToken
     },
-    SET_TXNO: function (state, txNo) {
+    SET_TXNO: function(state, txNo) {
         state.txNo = txNo
+    },
+    SET_AREA_INFO: function(state, conf) {
+        state.country = conf
+    },
+    ADD_SELECT_COMP: function(state, val) {
+        state.selectCompId = val
+    },
+    SET_NET_TYPE: function(state, val) {
+        state.netType = val
+    },
+    SET_CARRIER: function(state, val) {
+        state.carrier = val
+    },
+    SET_PHONE_MODEL: function(state,val){
+        state.phoneModel = val
     }
 }
 
@@ -64,6 +84,7 @@ export const actions = {
                 _COOKIE[parts[0].trim()] = (parts[1] || '').trim()
             })
 
+        // set language
         let language =
             req.headers['http_lncode'] || req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
@@ -119,16 +140,18 @@ export const actions = {
         }
 
         // 用户信息
-        await this.$axios.get('/cms/users/me', {
-            headers: {
-                token: this.state.token
-            }
-        }).then(user => {
-            commit('SET_USER', user.data)
-        }).catch(error => {
-            // 用户失效在plugin/clearUser当中处理
-        })
-
+        await this.$axios
+            .get('/cms/users/me', {
+                headers: {
+                    token: this.state.token
+                }
+            })
+            .then(user => {
+                commit('SET_USER', user.data)
+            })
+            .catch(error => {
+                // 用户失效在plugin/clearUser当中处理
+            })
 
         // APP TYPE
         if (req.headers['http_client'] == 'android') {
@@ -155,6 +178,18 @@ export const actions = {
                     versionMap[req.headers['http_versioncode']]
                 )
             }
+        }
+
+        if (req.headers['http_network']) {
+            commit('SET_NET_TYPE', req.headers['http_network'])
+        }
+
+        if (req.headers['http_x_carrier']) {
+            commit('SET_CARRIER', req.headers['http_x_carrier'])
+        }
+
+        if (req.headers['http_phonemodel']) {
+            commit('SET_PHONE_MODEL', req.headers['http_phonemodel'])
         }
     }
 }

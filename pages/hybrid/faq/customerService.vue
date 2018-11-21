@@ -1,6 +1,6 @@
 <template>
     <div id="wrapper">
-        <div class="content">
+        <div class="content" style="min-height:101vh">
             <div class="pull_refresh">
                 <div style="padding-top:1rem;" v-show="!loadHistoryState">
                     <span class="refresh_text" v-show="!historyEnd">Pull down to see more history</span>
@@ -11,14 +11,16 @@
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <questionListTpl v-if="item.tpl=='list'" :key="index" :list="item.contents"></questionListTpl>
+                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest"></questionListTpl>
                 <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"></orderBlockTpl>
                 <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"></askTpl>
                 <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"></answerTpl>
-                <contentTpl v-if="item.tpl=='content'" :key="index" :content="item.item.content"></contentTpl>
+                <contentTpl v-if="item.tpl=='content'" :noevaluate="item.noEvaluate" :serviceRecord="item.serviceRecord" :key="index" :content="item.content"></contentTpl>
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
+                <evaluate v-if="item.tpl=='evaluate'" :key="index" :serviceRecord="item.serviceRecord"></evaluate>
+                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied"></msgTpl>
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
@@ -35,39 +37,6 @@
                 </div>
             </div>
         </div>
-        <!-- Waiting For Result -->
-        <div>
-            <div class="order-msg">
-                <p class="time">11 Oct 2018 17-25:52 <span class="wait-result">Waiting For Result</span></p>
-                <div class="order-type clearfix">
-                    <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
-                    <div class="right">
-                        <p class="order-name"> DVB Recharge </p>
-                        <p class="order-status">Order ID: D1398765409 </p>
-                    </div>
-                </div>
-                <p class="complain">Complain</p>
-                <p>I’ve recharged, but I still can’t watch channels on TV.</p>
-            </div>
-        </div>
-        <!-- 评价星星星 -->
-        <div class="evaluation">
-            <p class="eval-title">Does this Custom-Service help you solve the problem?</p>
-            <div class="eval-img">
-                <span>
-                    <img src="~assets/img/faq/ic_happy_sl_green.png"> NO
-                </span>
-                <span>
-                    <img src="~assets/img/faq/ic_disappoint_def_g.png"> YES
-                </span>
-            </div>
-            <div class="gave-star">
-                <p>Please evaluate for us? THX.</p>
-                <!-- <img src="~assets/img/faq/ic_favoritez_blue_evl.png" alt=""> -->
-                <img v-for="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favorite_def_evl.png" @click="starToBlue(index,$event)">
-                <!-- <img v-for ="(item,index) in 5" :key="index" src="~assets/img/faq/ic_favoritez_blue_evl.png" @click="starToBlue(index,$event)"> -->
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -78,6 +47,10 @@ import orderBlockTpl from '~/components/faq/orderBlockTpl'
 import askTpl from '~/components/faq/askTpl'
 import answerTpl from '~/components/faq/answerTpl'
 import contentTpl from '~/components/faq/contentTpl'
+import msgTpl from '~/components/faq/message'
+import evaluate from '~/components/faq/evaluate'
+import autosize from 'autosize'
+import { setInterval } from 'timers'
 export default {
     layout: 'base',
     data() {
@@ -107,13 +80,17 @@ export default {
         orderBlockTpl,
         askTpl,
         answerTpl,
-        contentTpl
+        contentTpl,
+        msgTpl,
+        evaluate
     },
     mounted() {
         let questions = JSON.parse(localStorage.getItem('faq_question'))
         let serviceModuleId = localStorage.getItem('serviceModuleId')
+        let morefaqs = localStorage.getItem('morefaqs')
         let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
-        
+        let addMsg = localStorage.getItem('addMsg')
+
         let _this = this
         // LiveChat 按钮判断
         this.user.areaID &&
@@ -141,7 +118,10 @@ export default {
                 },
                 startY: 0,
                 bounce: {
-                    top: true
+                    top: true,
+                    bottom: true,
+                    left: true,
+                    right: true
                 },
                 click: true
             })
@@ -150,7 +130,6 @@ export default {
             })
         })
 
-        // TODO REMOVE
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             // if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
@@ -159,12 +138,20 @@ export default {
 
         // 创建服务记录
         this.createServiceRecord(6, () => {
-            if (questions) {
+            // TODO 是否有留言
+            if (addMsg) {
+                this.addOperate(
+                    Object.assign({}, JSON.parse(addMsg), {
+                        tpl: 'message',
+                        replied: false
+                    })
+                )
+                //localStorage.removeItem('addMsg')
+            } else if (questions) {
                 // 单个问题
-                this.askQuest(question, 1, 1)
-            } else if (serviceModuleId) {
+                this.askQuest(questions, 1, 1)
+            } else if (morefaqs) {
                 // MORE FAQS
-
                 this.addOperate({
                     tpl: 'ask',
                     name: 'more questions'
@@ -175,15 +162,15 @@ export default {
                 this.$axios
                     .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
                     .then(res => {
-                        if (res.data.code == 0) {
+                        if (res.data.code == 200) {
                             let list = []
                             res.data.data.forEach((item, index) => {
                                 list.push({
                                     id: item.id,
-                                    name: item.content
+                                    name: item.thema
                                 })
                             })
-                            this.renderQueue.push(
+                            this.addOperate(
                                 Object.assign({}, res.data.data, {
                                     operator: 0, // 0 客服， 1 用户
                                     tpl: 'list', // list , content, order
@@ -196,7 +183,6 @@ export default {
                     })
             } else {
                 // 默认根目录进入
-
                 this.addOperate({
                     tpl: 'welcome',
                     name: 'Welcome to StarTimes Online Service.'
@@ -211,9 +197,33 @@ export default {
                         }
                     })
             }
+            
+            // TODO REMOVE
+            // this.$nextTick(() => {
+            //     setInterval(() => {
+            //         this.getLeaveMessage()
+            //     }, 5 * 1000)
+            // })
         })
     },
     methods: {
+        getLeaveMessage() {
+            this.$axios
+                .get(`/csms-service/v1/get-standard-leaving-message-record`)
+                .then(res => {
+                    if (res.data && res.data.length > 0) {
+                        // TODO 留言
+                        res.data.forEach(item => {
+                            this.addOperate(
+                                Object.assign({}, item, {
+                                    tpl: 'message',
+                                    replied: true
+                                })
+                            )
+                        })
+                    }
+                })
+        },
         getfaqDirectory(id) {
             if (!id) return false
             this.$axios
@@ -225,14 +235,14 @@ export default {
                                 tpl: 'list'
                             })
                         )
-                        // TODO TAGS
                     }
                 })
         },
         askQuest(item, type, withOrder) {
             this.addOperate(
                 Object.assign({}, item, {
-                    tpl: 'ask'
+                    tpl: 'ask',
+                    name: item.thema || item.name
                 })
             )
 
@@ -249,9 +259,11 @@ export default {
         getAnswer(id) {
             this.$axios.get(`/ocs/v1/faqs/answer/${id}`).then(res => {
                 if (res.data.code == 200) {
+                    let serviceRecord = this.serviceRecord
                     this.addOperate(
                         Object.assign({}, res.data.data, {
-                            tpl: 'content'
+                            tpl: 'content',
+                            serviceRecord: this.serviceRecord
                         })
                     )
                 }
@@ -268,10 +280,10 @@ export default {
         },
         createServiceRecord(type, callback) {
             this.$axios
-                .post(`/css/v1/service/start?type=${type || 6}`)
+                .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
                 .then(res => {
-                    if (res.data.code == 0) {
-                        this.serviceRecord = res.data.data.recordId
+                    if (res.data.code == 200) {
+                        this.serviceRecord = res.data.data
                         if (!this.isLogin) {
                             let cacheRecord = localStorage.getItem(
                                 'serviceRecords'
@@ -309,7 +321,7 @@ export default {
                 let operator = 1 // 用户发起
                 if (obj.tpl == 'list') {
                     serviceInfo = 'faqlist-'
-                    data.contents.forEach(item => {
+                    obj.contents.forEach(item => {
                         serviceInfo += item.name + ' | '
                     })
                 } else if (obj.tpl == 'ask' || obj.tpl == 'chatask') {
@@ -330,12 +342,12 @@ export default {
                         service_type: 1, // TODO
                         service_group_id: this.serviceRecord,
                         service_state: 2,
-                        remark: obj,
+                        remark: JSON.stringify(obj),
                         service_info: serviceInfo,
                         operator: operator
                     })
                     .then(res => {
-                        if (res.data.code == 0) {
+                        if (res.data.code == 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
                                 let cacheHisory = localStorage.getItem(
@@ -344,16 +356,12 @@ export default {
                                 if (cacheHisory) {
                                     cacheHisory = JSON.parse(cacheHisory)
                                     if (
-                                        cacheHisory.indexOf(
-                                            res.data.data.historyId
-                                        ) < 0
+                                        cacheHisory.indexOf(res.data.data) < 0
                                     ) {
-                                        cacheHisory.push(
-                                            res.data.data.historyId
-                                        )
+                                        cacheHisory.push(res.data.data)
                                     }
                                 } else {
-                                    cacheHisory = [res.data.data.historyId]
+                                    cacheHisory = [res.data.data]
                                 }
                                 localStorage.setItem(
                                     'historys',
@@ -362,8 +370,17 @@ export default {
                             } else {
                                 // 最小historyId记录
                                 if (!this.minHistoryId) {
-                                    this.minHistoryId = res.data.data.historyId
+                                    this.minHistoryId = res.data.data
+                                } else {
+                                    if (res.data.data < this.minHistoryId) {
+                                        this.minHistoryId = res.data.data
+                                    }
                                 }
+                            }
+
+                            // 如果是回答则重新创建一条服务记录
+                            if (obj.tpl == 'content') {
+                                this.createServiceRecord()
                             }
                         }
                     })
@@ -385,27 +402,57 @@ export default {
             let historys = JSON.parse(localStorage.getItem('historys'))
             let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
 
-            // TODO 设置minHistoryId
-            this.$axios.post('/css/v1/history/updateUserId', {
-                historyIds: historys,
-                serviceIds: serviceIds
-            })
+            if (historys) {
+                historys.forEach(item => {
+                    if (this.minHistoryId) {
+                        if (item < this.minHistoryId) {
+                            this.minHistoryId = item
+                        }
+                    } else {
+                        this.minHistoryId = item
+                    }
+                })
+                if (historys && serviceIds) {
+                    this.$axios
+                        .post(
+                            `/css/v1/history/updateUserId?historyIds=${historys.join(
+                                ','
+                            )}&serviceIds=${serviceIds.join(',')}`
+                        )
+                        .then(res => {
+                            if (res.data.code == 200) {
+                                localStorage.removeItem('serviceRecords')
+                                localStorage.removeItem('historys')
+                                localStorage.removeItem('renderQueue')
+                            }
+                        })
+                }
+            }
         },
         loadHistory() {
             if (this.historyEnd) return
             this.loadHistoryState = true
+            let minHistoryId = this.minHistoryId || 999999999
             this.$axios
-                .post('/css/v1/history/app', {
-                    pageNum: this.historyPage,
-                    pageSize: 20,
-                    minId: this.minHistoryId
-                })
+                .get(
+                    `/css/v1/history/app?pageSize=10&pageNum=${
+                        this.historyPage
+                    }&minId=${minHistoryId}`
+                )
                 .then(res => {
-                    if (res.data instanceof Array && res.data.length > 0) {
+                    if (res.data.code == 200 && res.data.data.rows.length > 0) {
                         this.historyPage++
-                        // TODO 倒叙
-                        res.data.reverse().forEach(item => {
-                            this.renderQueue.unshift(item.remark)
+                        let rows = res.data.data.rows.sort((a, b) => {
+                            return a.id - b.id
+                        })
+                        rows.reverse().forEach(item => {
+                            let data = JSON.parse(item.remark)
+
+                            // 历史记录里的答案不可评价
+                            if (data.tpl == 'content') {
+                                data.noEvaluate = true
+                            }
+                            this.renderQueue.unshift(data)
                         })
                     } else {
                         this.historyEnd = true
@@ -454,11 +501,17 @@ export default {
                                 }
                             )
                             .then(res => {
+                                this.createServiceRecord(1)
                                 if (
                                     res.data.statusCode == 0 &&
                                     !res.data.chatEnded
                                 ) {
                                     this.connectState = 2 // BUTTON 变成输入框
+                                    autosize(
+                                        document.querySelectorAll(
+                                            'textarea.form-control'
+                                        )
+                                    )
 
                                     this.chatPullTimer = setInterval(() => {
                                         this.pullReply()
@@ -503,13 +556,19 @@ export default {
                     name: msg
                 })
                 this.chatMsg = ''
+                this.$nextTick(() => {
+                    // 重置输入框的高
+                    autosize.update(
+                        document.querySelectorAll('textarea.form-control')
+                    )
+                })
 
                 this.$axios
-                    .post(`/genesys-proxy/v1/chats/${chatLink.chatId}`, {
-                        alias: chatLink.alias,
-                        secureKey: chatLink.secureKey,
+                    .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}`, {
+                        alias: this.chatLink.alias,
+                        secureKey: this.chatLink.secureKey,
                         tenantName: 'Resources',
-                        userId: chatLink.userId,
+                        userId: this.chatLink.userId,
                         operationName: 'SendMessage',
                         text: msg
                     })
@@ -558,16 +617,16 @@ export default {
                                         name: item.text
                                     })
                                 }
-                                if (
-                                    item.from.type == 'Client' &&
-                                    item.type == 'Message' &&
-                                    item.text
-                                ) {
-                                    this.addOperate({
-                                        tpl: 'chatask',
-                                        name: item.text
-                                    })
-                                }
+                                // if (
+                                //     item.from.type == 'Client' &&
+                                //     item.type == 'Message' &&
+                                //     item.text
+                                // ) {
+                                //     this.addOperate({
+                                //         tpl: 'chatask',
+                                //         name: item.text
+                                //     })
+                                // }
                             })
                         }
                     } else if (res.data.statusCode == -1) {
@@ -589,10 +648,14 @@ export default {
                 })
         },
         endChat() {
-            // TODO 评价
-            // TODO 断开链接 变换按钮状态
-            // TODO 创建新的服务记录
-            // TODO 输入框多行支持
+            this.renderQueue.push({
+                tpl: 'evaluate',
+                serviceRecord: this.serviceRecord
+            })
+            // BUTTON 变成输入框
+            this.connectState = 0
+            // 创建新服务记录
+            this.createServiceRecord(6)
         },
         starToBlue(index, event) {
             let imgNode = document.querySelectorAll('.gave-star img')
@@ -618,4 +681,9 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/faq/common.less';
+</style>
+<style lang="less" scoped>
+#wrapper {
+    overflow: hidden;
+}
 </style>

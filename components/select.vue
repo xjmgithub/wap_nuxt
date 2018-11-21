@@ -1,11 +1,11 @@
 <template>
     <div class="container" v-if="list.length>0">
-        <div class="checked" @click="showList=true">
+        <div class="checked" @click="showList">
             <span v-show="selected.id">{{selected.name}}</span>
             <span v-show="!selected.id" class="placeholder">{{placeholder}}</span>
             <img src="~/assets/img/ic_sl_g.png" />
         </div>
-        <ul class="list" v-show="showList">
+        <ul class="list" v-show="$store.state.selectCompId==compSelectId">
             <li v-for="(item,index) in list" :key="index" @click="choose(item)">{{item.name}}</li>
         </ul>
     </div>
@@ -36,8 +36,8 @@ export default {
     data() {
         return {
             renderList: [],
-            showList: false,
-            selected: {}
+            selected: {},
+            compSelectId:null
         }
     },
     watch: {
@@ -45,13 +45,12 @@ export default {
             this.init()
         }
     },
-    mounted(){
+    mounted() {
         this.init()
     },
     methods: {
         init() {
             this.renderList = this.list
-
             // 处理default值
             if (this.default || this.default == 0) {
                 if (this.default instanceof Object) {
@@ -66,10 +65,14 @@ export default {
             }
             this.initState = true
         },
+        showList(){
+            let s = this.$store.state.selectCompId + 1
+            this.$store.commit('ADD_SELECT_COMP',s)
+            this.compSelectId = this.$store.state.selectCompId
+        },
         choose(obj) {
             if (this.list.length > 0) {
                 let tmp = this.selected
-                console.log(obj)
                 this.list.forEach(item => {
                     if (item.id == obj.id) {
                         this.selected = item
@@ -79,7 +82,8 @@ export default {
                     this.$emit('change', this.selected)
                 }
             }
-            this.showList = false
+            let s = this.$store.state.selectCompId + 1
+            this.$store.commit('ADD_SELECT_COMP',s)
         }
     }
 }
@@ -87,7 +91,7 @@ export default {
 <style lang="less" scoped>
 .container {
     position: relative;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     width: 100%;
     margin: 0.5rem 0;
     .checked {
@@ -97,11 +101,17 @@ export default {
         line-height: 2rem;
         padding: 0 0.6rem;
         position: relative;
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
         img {
             position: absolute;
             right: 0.5rem;
             top: 0.5rem;
-            height: 0.8rem;
+            height: 0.85rem;
         }
         .placeholder {
             color: #dddddd;
@@ -116,12 +126,14 @@ export default {
         top: 0;
         background: white;
         z-index: 999;
+        max-height:10rem;
+        overflow-y: auto;
         li {
-            padding: 0 0.5rem;
-            height: 2rem;
-            line-height: 2rem;
-            font-size: 0.9rem;
-            // border-bottom:#ccc solid 1px;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.8rem;
+            &:hover{
+                background:#dddddd;
+            }
         }
     }
 }

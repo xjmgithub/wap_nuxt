@@ -1,17 +1,17 @@
 <template>
-    <div class="order-msg" v-if="service.order_info">
+    <div class="b-order-msg" v-if="service.order_info">
         <div class="top">
             <p class="time">{{service.order_info.order_create_time | formatDate}}</p>
-            <div class="order-type clearfix">
+            <div class="b-order-type clearfix">
                 <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" />
                 <div class="right">
                     <p class="order-name">
                         {{service.order_info.order_type}}
-                        <span>{{service.order_info.order_amount}}</span>
+                        <span>{{currency}} {{service.order_info.order_amount}}</span>
                     </p>
                     <p class="order-status">
-                        {{service.order_info.card_no}}
-                        <span>{{service.order_info.order_status}}</span>
+                        {{orderName}}
+                        <span>{{orderStatus}}</span>
                     </p>
                 </div>
             </div>
@@ -24,7 +24,7 @@
             </p>
             <ul v-if="service.questions">
                 <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">
-                    {{item.content}}
+                    {{item.thema}}
                 </li>
             </ul>
             <div class="btn" v-for="(item,index) in service.service_components" :key="index">
@@ -52,6 +52,83 @@ export default {
             default: false
         }
     },
+    computed: {
+        currency() {
+            return this.$store.state.country.currencySymbol
+        },
+        orderName() {
+            if (this.service && this.service.order_info) {
+                switch (this.service.order_info.order_type_id) {
+                    case '1':
+                    case '2':
+                    case '3':
+                        return 'Card No.' + this.service.order_info.card_no
+                        break
+                    default:
+                        return this.service.order_info.order_name
+                }
+            } else {
+                return ''
+            }
+        },
+        orderStatus() {
+            if (this.service && this.service.order_info) {
+                let type = this.service.order_info.order_type_id
+                if (['1', '2', '3'].indexOf(type) >= 0) {
+                    // bouquet,link,charge
+                    switch (this.service.order_info.order_status) {
+                        case '0':
+                            return 'UNPAID'
+                            break
+                        case '10':
+                            return 'UNRECHARGED'
+                            break
+                        case '20':
+                        case '4':
+                            return 'FAILD'
+                            break
+                        case '3':
+                            return 'SUCCESS'
+                            break
+                        case '11':
+                            return 'CHARGING'
+                            break
+                        default:
+                            return ''
+                    }
+                } else {
+                    // ott
+                    switch (this.service.order_info.order_status) {
+                        case '1':
+                        case '2':
+                        case '4':
+                            return 'UNPAID'
+                            break
+                        case '3':
+                        case '6':
+                            return 'CANCEL'
+                            break
+                        case '5':
+                            return 'SUCCESS'
+                            break
+                        case '7':
+                            return 'REFUNDING'
+                            break
+                        case '8':
+                            return 'REFUNDED'
+                            break
+                        case '9':
+                            return 'EXPIRED'
+                            break
+                        default:
+                            return ''
+                    }
+                }
+            } else {
+                return ''
+            }
+        }
+    },
     filters: {
         formatDate(date) {
             return dayjs(date).format('D MMM YYYY HH:mm:ss')
@@ -66,10 +143,7 @@ export default {
             })
         },
         moreQues(item) {
-            localStorage.setItem(
-                'serviceModuleId',
-                this.service.service_module.id
-            )
+            localStorage.setItem('morefaqs', 1)
             this.$router.push({
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
@@ -79,10 +153,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.order-msg {
+.b-order-msg {
     box-shadow: 0px 1px 3px 1px #dddddd;
     border-radius: 5px;
-    margin-bottom:0.8rem;
+    margin-bottom: 0.8rem;
     .top {
         padding: 0 0.5rem;
         p.time {
@@ -93,7 +167,7 @@ export default {
             padding: 0.2rem 0;
         }
     }
-    .order-type {
+    .b-order-type {
         padding: 0.7em 0;
         img {
             width: 2.5rem;

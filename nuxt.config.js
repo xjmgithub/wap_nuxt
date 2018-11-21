@@ -53,20 +53,17 @@ module.exports = {
         '/payment/api': env.ms_host,
         '/payment/v2': env.ms_host,
         '/payment/platform/v1': env.mechant_request_url,
-        // '/ocs/v1/service': 'http://localhost:9001',
-        // '/ocs/v1/service-list': 'http://localhost:9001',
-        // '/ocs/v1/moreFaqs': 'http://localhost:9001',
-        // '/ocs/v1/faqs/Tags': 'http://localhost:9001',
-        // '/ocs/v1/faqs/byTag': 'http://localhost:9001',
-        '/csms-service': 'http://localhost:9001',
+        // '/csms-service': 'http://localhost:9001',
+        '/csms-service': env.ms_host,
         '/ocs/': env.ms_host,
-        '/css/': 'http://localhost:9001'
+        '/css/': env.ms_host
     },
     plugins: [
         { src: '~plugins/analysis.js', ssr: false },
         { src: '~plugins/auth.js', ssr: false },
         { src: '~plugins/clearUser.js', ssr: false },
         { src: '~plugins/deviceid.js', ssr: false },
-        { src: '~plugins/axios.js', ssr: false }
+        { src: '~plugins/axios.js', ssr: false },
+        { src: '~plugins/getCountryInfo.js', ssr: false }
     ]
 }

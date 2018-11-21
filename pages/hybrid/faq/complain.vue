@@ -2,7 +2,7 @@
     <div id="wrapper">
         <div class="order-msg" v-if="order.order_status">
             <p class="time">{{order.order_create_time | formatDate }}
-                <nuxt-link to="/hybrid/faq/chooseOrder">
+                <nuxt-link :to="{'path':'/hybrid/faq/chooseOrder',query:$route.query}">
                     <img src="~assets/img/faq/ic_Setting_def_g.png" alt="">
                 </nuxt-link>
             </p>
@@ -27,10 +27,10 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <mselect :list="questionsList" :default="question" placeholder="Please choose your question" ref="questionSelect"></mselect>
-            <mselect :list="channelList" placeholder="Please choose channel type" @change="setChannelName" v-if="type==2"></mselect>
-            <mselect :list="channelNameList" placeholder="Please choose channel name" v-if="type==2"></mselect>
-            <mselect :list="countryList" :default="defaultCountry" placeholder="Please choose your country" ref="countrySelect" v-if="type==0"></mselect>
+            <mselect :list="questionsList" :default="question" placeholder="Please choose your question" ref="questionSelect" @change="setQuestion"></mselect>
+            <mselect :list="channelList" placeholder="Please choose channel type" ref="channelSelect" @change="setChannelName" v-if="type[1]"></mselect>
+            <mselect :list="channelNameList" placeholder="Please choose channel name" ref="channelNameSelect" v-if="type[1]"></mselect>
+            <mselect :list="countryList" :default="defaultCountry" placeholder="Please choose your country" ref="countrySelect" v-if="!type[0]&&!type[1]"></mselect>
             <p>Detail Description</p>
             <textarea cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment" v-model="moredes"></textarea>
         </div>
@@ -50,11 +50,17 @@
                     </p>
                     <p class="p-value">{{user.countryCode}}</p>
                 </li>
-                <li>
+                <li v-if="carrier">
+                    <p class="p-name">Telecom Info
+                        <span>*</span>
+                    </p>
+                    <p class="p-value">{{carrier}}</p>
+                </li>
+                <li v-if="unitType">
                     <p class="p-name">Device
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{deviceInfo}}</p>
+                    <p class="p-value">{{unitType}}</p>
                 </li>
             </ul>
         </div>
@@ -75,50 +81,122 @@ export default {
             indexNum: 0,
             order: {},
             user: this.$store.state.user,
-            deviceInfo: '',
-            type: this.$route.query.type || 2, // 1 代表支付相关 2 代表频道相关 0 公共相关
+            carrier: this.$store.state.carrier,
+            unitType: this.$store.state.phoneModel,
+            type: [0, 0],
             questionsList: [],
             question: '',
             channelList: [],
             channelNameList: [],
             countryList: [],
             defaultCountry: '',
-            moredes:''
+            moredes: ''
         }
     },
     methods: {
         setChannelName(item) {
             this.channelNameList = item.disparkChannel
         },
+        setQuestion(question) {
+            let tags = question.tags
+            let type = [0, 0] // 1 支付，2频道
+            if (tags && tags.length > 0) {
+                tags.forEach(item => {
+                    if (item.tagging_name == 'pay') {
+                        type[0] = 1
+                    }
+                    if (item.tagging_name == 'channel') {
+                        type[1] = 1
+                    }
+                })
+            }
+            this.type = type
+        },
         submit() {
             let order = localStorage.getItem('orderMsg')
 
-            let param = {
-                    orderType: order? JSON.parse(order).order_type:'',
-                    orderNo: order? JSON.parse(order).order_no:'',
-                    orderStatus: 'string',
-                    userAccount: this.user.userName,
-                    appVersion: this.$store.state.appVersion,
-                    problemId: 'string',
-                    problem: 'string',
-                    problemChannelTypeKey: 'string',
-                    problemChannelTypeValue: 'string',
-                    problemChannelNameKey: 'string',
-                    problemChannelNameValue: 'string',
-                    problemCountryId: 'string',
-                    problemCountryCode: 'string',
-                    message: 'string',
-                    leavingImgsDtoList: []
+            if (this.type[1]) {
+                if (!this.$refs.channelSelect.selected.id) {
+                    this.$alert('Please select a channel type')
+                    return false
                 }
+                if (!this.$refs.channelNameSelect.selected.id) {
+                    this.$alert('Please select a channel Name')
+                    return false
+                }
+            }
+            if (!this.type[0] && !this.type[1]) {
+                if (!this.$refs.countrySelect.selected.id) {
+                    this.$alert('Please select a country')
+                    return false
+                }
+            }
+
+            if (!this.moredes) {
+                this.$alert('Please fill in the problem description')
+                return false
+            }
+
+            let param = {
+                orderType: order ? JSON.parse(order).order_type_id : '',
+                orderNo: order ? JSON.parse(order).order_no : '',
+                orderName: order ? JSON.parse(order).order_name : '',
+                orderCreateTime: order
+                    ? JSON.parse(order).order_create_time
+                    : '',
+                userAccount: this.user.id,
+                unitType: this.unitType || '',
+                operatorInfo: this.carrier || '',
+                problemId: this.$refs.questionSelect.selected.id,
+                problem: this.$refs.questionSelect.selected.name,
+                problemChannelTypeKey: this.type[1]
+                    ? this.$refs.channelSelect.selected.id
+                    : '',
+                problemChannelTypeValue: this.type[1]
+                    ? this.$refs.channelSelect.selected.name
+                    : '',
+                problemChannelNameKey: this.type[1]
+                    ? this.$refs.channelNameSelect.selected.id
+                    : '',
+                problemChannelNameValue: this.type[1]
+                    ? this.$refs.channelNameSelect.selected.name
+                    : '',
+                problemCountryId:
+                    !this.type[0] && !this.type[1]
+                        ? this.$refs.countrySelect.selected.id
+                        : '',
+                problemCountryCode:
+                    !this.type[0] && !this.type[1]
+                        ? this.$refs.countrySelect.selected.name
+                        : '',
+                message: this.moredes,
+                channelNameAdditional: '',
+                channelType: ''
+            }
 
             this.$axios
-                .post(`/csms-service/v1/get-standard-leaving-message-record`, param)
+                .post(
+                    `/csms-service/v1/standard-leaving-message-records`,
+                    param,
+                    {
+                        headers: {
+                            'x-clientType': 1,
+                            'x-appVersion': '5300'
+                        }
+                    }
+                )
                 .then(res => {
-                    if (res.data.code == 0) {
-                        localStorage.setItem('leaveMsg',Object.assign({},param,{
-                            id:res.data.data.messageId
-                        }))
-                        this.$router.push('/hybrid/faq/customerService')
+                    if (res.data.code == 200) {
+                        // TODO 存一条留言
+
+                        localStorage.setItem(
+                            'addMsg',
+                            JSON.stringify(Object.assign({}, param))
+                        )
+                        this.$router.push({
+                            path: '/hybrid/faq/customerService',
+                            query: this.$route.query
+                        })
                     }
                 })
         }
@@ -137,20 +215,25 @@ export default {
 
         // more faqs
         let serviceModuleId = localStorage.getItem('serviceModuleId')
+
+        // 如果是从首页的单个faq默认选中
         let faq_question = localStorage.getItem('faq_question')
         this.$axios
             .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
             .then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code == 200) {
                     let list = []
                     res.data.data.forEach((item, index) => {
                         list.push({
                             id: item.id,
-                            name: item.content
+                            name: item.thema,
+                            tags: item.tags
                         })
                     })
                     this.questionsList = list
-                    this.question = JSON.parse(faq_question).id
+                    if (faq_question) {
+                        this.question = JSON.parse(faq_question).id
+                    }
                 }
             })
 
@@ -202,21 +285,12 @@ export default {
     }
 }
 </script>
+<style lang="less">
+@import '~assets/less/faq/common.less';
+</style>
 <style lang="less" scoped>
-body {
-    background: #fff;
-}
-
-.clearfix:after {
-    display: block;
-    visibility: hidden;
-    clear: both;
-    height: 0;
-    content: '';
-}
-
-.clearfix {
-    zoom: 1;
+#wrapper {
+    background: #ffffff;
 }
 
 .gap {
@@ -264,32 +338,6 @@ body {
             vertical-align: sub;
             margin-right: 0.2rem;
             width: 0.9rem;
-        }
-    }
-}
-
-.order-type {
-    padding: 0.7em 0;
-    img {
-        width: 2.5rem;
-        height: 2.5rem;
-        float: left;
-    }
-    .right {
-        margin-left: 3rem;
-    }
-    .order-name {
-        span {
-            font-weight: bold;
-            float: right;
-        }
-    }
-    .order-status {
-        font-size: 0.9rem;
-        color: #999999;
-        span {
-            color: #00cc33;
-            float: right;
         }
     }
 }
