@@ -54,7 +54,9 @@ export default {
                 }
             })
             .then(res => {
+                alert(res.data.code)
                 if (res.data && res.data.data) {
+                    alert(res.data.data.id)
                     this.serviceData = res.data.data
                     localStorage.setItem(
                         'serviceModuleId',
