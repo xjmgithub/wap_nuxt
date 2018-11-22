@@ -256,7 +256,7 @@ export default {
         // country
         this.$axios
             .get(
-                `/cms/vup/v2/areas?versionCode=${this.$store.state.appVersion}`
+                `/cms/vup/v2/areas?versionCode=${this.$store.state.appVersionCode}`
             )
             .then(res => {
                 if (res.data && res.data instanceof Array) {

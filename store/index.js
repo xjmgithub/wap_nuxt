@@ -7,6 +7,7 @@ export const state = () => ({
     token: '',
     appType: 0, // 0 others 1 android_app 2 ios_app
     appVersion: '-1',
+    appVersionCode:'-1',
     gaClientId: '',
     lang: {},
     shadowStatus: false,
@@ -38,6 +39,9 @@ export const mutations = {
     },
     SET_APP_VERSION: function(state, v) {
         state.appVersion = v
+    },
+    SET_APP_VERSION_CODE: function(state, v) {
+        state.appVersionCode = v
     },
     SHOW_SHADOW_LAYER: function(state) {
         state.shadowStatus = true
@@ -163,6 +167,12 @@ export const actions = {
 
         if (req.headers['cid']) {
             commit('SET_GA_CLIENT', req.headers['cid'])
+        }
+
+        if(req.headers['versioncode']){
+            commit('SET_APP_VERSION_CODE',req.headers['versioncode'])
+        }else{
+            commit('SET_APP_VERSION_CODE',-99)
         }
 
         if (req.headers['versionname']) {
