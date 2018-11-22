@@ -265,7 +265,7 @@ export default {
                         Object.assign({}, res.data.data, {
                             tpl: 'content',
                             serviceRecord: this.serviceRecord,
-                            questionId:id
+                            questionId: id
                         })
                     )
                 }
@@ -478,7 +478,6 @@ export default {
             })
         },
         connectLiveChat() {
-            
             if (!this.isLogin) {
                 if (this.$store.state.appType == 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
