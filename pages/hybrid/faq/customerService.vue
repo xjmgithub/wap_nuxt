@@ -15,7 +15,7 @@
                 <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"></orderBlockTpl>
                 <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"></askTpl>
                 <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"></answerTpl>
-                <contentTpl v-if="item.tpl=='content'" :noevaluate="item.noEvaluate" :serviceRecord="item.serviceRecord" :key="index" :content="item.content" @imgloaded="refreshScroll"></contentTpl>
+                <contentTpl v-if="item.tpl=='content'" :noevaluate="item.noEvaluate" :serviceRecord="item.serviceRecord" :key="index" :question="item.questionId" :content="item.content" @imgloaded="refreshScroll"></contentTpl>
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
@@ -264,7 +264,8 @@ export default {
                     this.addOperate(
                         Object.assign({}, res.data.data, {
                             tpl: 'content',
-                            serviceRecord: this.serviceRecord
+                            serviceRecord: this.serviceRecord,
+                            questionId:id
                         })
                     )
                 }

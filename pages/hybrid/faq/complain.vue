@@ -217,7 +217,9 @@ export default {
         let serviceModuleId = localStorage.getItem('serviceModuleId')
 
         // 如果是从首页的单个faq默认选中
-        let faq_question = localStorage.getItem('faq_question')
+        //let faq_question = localStorage.getItem('faq_question')
+            
+
         this.$axios
             .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
             .then(res => {
@@ -231,8 +233,10 @@ export default {
                         })
                     })
                     this.questionsList = list
-                    if (faq_question) {
-                        this.question = JSON.parse(faq_question).id
+                    let question = this.$route.query.question
+                    if (question) {
+                        //this.question = JSON.parse(faq_question).id
+                        this.question = question
                     }
                 }
             })

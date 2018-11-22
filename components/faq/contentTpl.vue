@@ -7,7 +7,7 @@
             <img class="arrow" src="~assets/img/faq/Triangle.png">
             <div class="result-wraper" v-html="content"></div>
             <div>
-                <div class="btn">COMPLAIN</div>
+                <div class="btn" @click="tocomplain">COMPLAIN</div>
                 <div class="clear"></div>
                 <div class="attitude-container" v-if="!noevaluate">
                     <div class="yes-item" @click="evaluate(1)">
@@ -43,9 +43,12 @@ export default {
             require: true,
             type: Number
         },
-        noevaluate: {
+        noevaluate: { // 是否有评价
             require: false,
             default: false
+        },
+        question:{
+            require:true
         }
     },
     mounted(){
@@ -79,6 +82,9 @@ export default {
                         }
                     })
             }
+        },
+        tocomplain(){
+            this.$router.push({path:'/hybrid/faq/complain',query:{question:this.question}});
         }
     }
 }
