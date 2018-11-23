@@ -18,7 +18,8 @@ export const state = () => ({
     selectCompId: 0,
     netType: 0,
     carrier:'',
-    phoneModel:''
+    phoneModel:'',
+    intervalTimer:null
 })
 
 export const mutations = {
@@ -75,6 +76,9 @@ export const mutations = {
     },
     SET_PHONE_MODEL: function(state,val){
         state.phoneModel = val
+    },
+    SET_TIMER: function(state,val){
+        state.intervalTimer = val
     }
 }
 

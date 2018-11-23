@@ -50,7 +50,6 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { setInterval } from 'timers'
 import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -73,7 +72,8 @@ export default {
             historyPage: 1,
             minHistoryId: '',
             historyEnd: false,
-            chatLink: null
+            chatLink: null,
+            messageShowed:[] // 记录已经展示出来的
         }
     },
     components: {
@@ -198,11 +198,13 @@ export default {
                         }
                     })
             }
-
+            
             this.$nextTick(() => {
-                setInterval(() => {
-                    this.getLeaveMessage()
-                }, 5 * 1000)
+                if(this.$store.state.intervalTimer){
+                    clearInterval(this.$store.state.intervalTimer)
+                }
+                let timer = setInterval(this.getLeaveMessage, 5 * 1000)
+                this.$store.commit('SET_TIMER',timer)
             })
         })
     },
@@ -217,14 +219,17 @@ export default {
                 })
                 .then(res => {
                     if (res.data && res.data.length > 0) {
-                        // TODO 留言
                         res.data.forEach(item => {
-                            this.addOperate(
-                                Object.assign({}, item, {
-                                    tpl: 'message',
-                                    replied: true
-                                })
-                            )
+                            if(this.messageShowed.indexOf(item.id)<0){
+                                this.messageShowed.push(item.id)
+                                this.addOperate(
+                                    Object.assign({}, item, {
+                                        tpl: 'message',
+                                        replied: true
+                                    })
+                                )
+                            }
+                            
                         })
                     }
                 })
@@ -657,7 +662,7 @@ export default {
                                 'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
                             tpl: 'tips'
                         })
-                        clearInterval(this.chatPullTimer)
+                        window.clearInterval(this.chatPullTimer)
                         this.endChat()
                     } else {
                         this.addOperate({
