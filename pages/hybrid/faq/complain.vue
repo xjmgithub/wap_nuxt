@@ -187,13 +187,12 @@ export default {
                 )
                 .then(res => {
                     if (res.data.code == 200) {
-                        // TODO 存一条留言
 
                         localStorage.setItem(
                             'addMsg',
                             JSON.stringify(Object.assign({}, param))
                         )
-                        this.$router.push({
+                        this.$router.replace({
                             path: '/hybrid/faq/customerService',
                             query: this.$route.query
                         })
@@ -218,7 +217,6 @@ export default {
 
         // 如果是从首页的单个faq默认选中
         //let faq_question = localStorage.getItem('faq_question')
-            
 
         this.$axios
             .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
@@ -256,7 +254,9 @@ export default {
         // country
         this.$axios
             .get(
-                `/cms/vup/v2/areas?versionCode=${this.$store.state.appVersionCode}`
+                `/cms/vup/v2/areas?versionCode=${
+                    this.$store.state.appVersionCode
+                }`
             )
             .then(res => {
                 if (res.data && res.data instanceof Array) {

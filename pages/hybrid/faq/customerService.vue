@@ -147,7 +147,7 @@ export default {
                         replied: false
                     })
                 )
-                //localStorage.removeItem('addMsg')
+                localStorage.removeItem('addMsg')
             } else if (questions) {
                 // 单个问题
                 this.askQuest(questions, 1, 1)

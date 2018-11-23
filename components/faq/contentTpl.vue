@@ -26,12 +26,14 @@
     </div>
 </template>
 <script>
+import { toNativePage } from '~/functions/utils'
 export default {
     data() {
         return {
             agree: false,
             disagree: false,
-            ended: false
+            ended: false,
+            isLogin: this.$store.state.user.type || false,
         }
     },
     props: {
@@ -84,7 +86,17 @@ export default {
             }
         },
         tocomplain(){
-            this.$router.push({path:'/hybrid/faq/complain',query:Object.assign({},this.$route.query,{question:this.question})});
+            if(!this.isLogin){
+                if (this.$store.state.appType == 1) {
+                    toNativePage('com.star.mobile.video.account.LoginActivity')
+                } else {
+                    toNativePage('startimes://login')
+                }
+                return false
+            }else{
+                this.$router.replace({path:'/hybrid/faq/complain',query:Object.assign({},this.$route.query,{question:this.question})});
+            }
+            
         }
     }
 }
