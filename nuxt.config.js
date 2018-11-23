@@ -24,7 +24,7 @@ module.exports = {
             }
         ]
     },
-    loading: { color: '#3B8070' },
+    loading: false,
     build: {
         extend(config, { isDev, isClient }) {
             if (isDev && isClient) {

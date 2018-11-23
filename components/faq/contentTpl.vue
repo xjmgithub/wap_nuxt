@@ -84,7 +84,7 @@ export default {
             }
         },
         tocomplain(){
-            this.$router.push({path:'/hybrid/faq/complain',query:{question:this.question}});
+            this.$router.push({path:'/hybrid/faq/complain',query:Object.assign({},this.$route.query,{question:this.question})});
         }
     }
 }

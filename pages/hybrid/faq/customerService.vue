@@ -199,18 +199,22 @@ export default {
                     })
             }
 
-            // TODO REMOVE
-            // this.$nextTick(() => {
-            //     setInterval(() => {
-            //         this.getLeaveMessage()
-            //     }, 5 * 1000)
-            // })
+            this.$nextTick(() => {
+                setInterval(() => {
+                    this.getLeaveMessage()
+                }, 5 * 1000)
+            })
         })
     },
     methods: {
         getLeaveMessage() {
             this.$axios
-                .get(`/csms-service/v1/get-standard-leaving-message-record`)
+                .get(`/csms-service/v1/get-standard-leaving-message-record`,{
+                    headers: {
+                        'x-clientType': 1,
+                        'x-appVersion': '5300'
+                    }
+                })
                 .then(res => {
                     if (res.data && res.data.length > 0) {
                         // TODO 留言
