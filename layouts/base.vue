@@ -47,7 +47,8 @@ html,
 body {
     margin: 0px;
     padding: 0px;
-    min-height: 100%;
+    height: 100%;
+    overflow-y: auto;
 }
 .clearfix:after {
     display: block;

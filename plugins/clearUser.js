@@ -5,14 +5,14 @@ export default ({ app: { router }, store }) => {
         if (store.state.intervalTimer) {
             clearInterval(store.state.intervalTimer)
         }
-
+        
         if (store.state.user) {
             next()
         } else {
             // 如果是app里
             if (store.state.appType == 1 || store.state.appType == 2) {
                 document.querySelector('body').innerHTML =
-                    '<div style="height:100vh;width:100vw;background:#ccc">\
+                    '<div style="height:100%;width:100%;background:#ccc">\
                     <div class="dialog" style="transform: translate(-50%, -50%);">\
                         <div class="dialog-body">\
                             <div class="pop-default">\
