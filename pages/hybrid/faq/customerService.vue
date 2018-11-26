@@ -417,7 +417,6 @@ export default {
             let historys = JSON.parse(sessionStorage.getItem('historys'))
             let serviceIds = JSON.parse(sessionStorage.getItem('serviceRecords'))
             
-            console.log(123123)
             if (historys) {
                 historys.forEach(item => {
                     if (this.minHistoryId) {
