@@ -43,7 +43,7 @@
                     <p class="p-name">Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{msg.userAccount}}</p>
+                    <p class="p-value">{{msg.userId}}</p>
                 </li>
                 <li v-if="carrier">
                     <p class="p-name">Telecom Info
