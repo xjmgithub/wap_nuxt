@@ -130,7 +130,6 @@ export default {
                 _this.loadHistory()
             })
         })
-
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             // if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
@@ -210,6 +209,8 @@ export default {
     },
     methods: {
         getLeaveMessage() {
+            // TODO REMOVE 
+            return false
             this.$axios
                 .get(`/csms-service/v1/get-standard-leaving-message-record`,{
                     headers: {
@@ -381,14 +382,14 @@ export default {
                                     'historys',
                                     JSON.stringify(cacheHisory)
                                 )
+                            } 
+                            
+                            // 最小historyId记录
+                            if (!this.minHistoryId) {
+                                this.minHistoryId = res.data.data
                             } else {
-                                // 最小historyId记录
-                                if (!this.minHistoryId) {
+                                if (res.data.data < this.minHistoryId) {
                                     this.minHistoryId = res.data.data
-                                } else {
-                                    if (res.data.data < this.minHistoryId) {
-                                        this.minHistoryId = res.data.data
-                                    }
                                 }
                             }
 
@@ -415,7 +416,8 @@ export default {
             // 更新历史记录
             let historys = JSON.parse(localStorage.getItem('historys'))
             let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
-
+            
+            console.log(123123)
             if (historys) {
                 historys.forEach(item => {
                     if (this.minHistoryId) {
