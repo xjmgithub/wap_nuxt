@@ -113,7 +113,7 @@ export default {
             this.type = type
         },
         submit() {
-            let order = localStorage.getItem('orderMsg')
+            let order = sessionStorage.getItem('orderMsg')
 
             if (this.type[1]) {
                 if (!this.$refs.channelSelect.selected.id) {
@@ -189,7 +189,7 @@ export default {
                 .then(res => {
                     if (res.data.code == 200) {
 
-                        localStorage.setItem(
+                        sessionStorage.setItem(
                             'addMsg',
                             JSON.stringify(Object.assign({}, param))
                         )
@@ -202,7 +202,7 @@ export default {
         }
     },
     mounted() {
-        let order = localStorage.getItem('orderMsg')
+        let order = sessionStorage.getItem('orderMsg')
         if (order) {
             this.order = JSON.parse(order)
         } else {
@@ -214,10 +214,10 @@ export default {
         this.deviceInfo = deviceInfo[deviceInfo.length - 1].split('like')[0]
 
         // more faqs
-        let serviceModuleId = localStorage.getItem('serviceModuleId')
+        let serviceModuleId = sessionStorage.getItem('serviceModuleId')
 
         // 如果是从首页的单个faq默认选中
-        //let faq_question = localStorage.getItem('faq_question')
+        //let faq_question = sessionStorage.getItem('faq_question')
 
         this.$axios
             .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)

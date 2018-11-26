@@ -71,7 +71,7 @@ export default {
         }
     },
     mounted() {
-        let msg = localStorage.getItem('showMsg')
+        let msg = sessionStorage.getItem('showMsg')
         if (msg) {
             this.msg = JSON.parse(msg)
             // 设为已读状态

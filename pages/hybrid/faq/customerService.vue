@@ -86,11 +86,11 @@ export default {
         evaluate
     },
     mounted() {
-        let questions = JSON.parse(localStorage.getItem('faq_question'))
-        let serviceModuleId = localStorage.getItem('serviceModuleId')
-        let morefaqs = localStorage.getItem('morefaqs')
-        let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
-        let addMsg = localStorage.getItem('addMsg')
+        let questions = JSON.parse(sessionStorage.getItem('faq_question'))
+        let serviceModuleId = sessionStorage.getItem('serviceModuleId')
+        let morefaqs = sessionStorage.getItem('morefaqs')
+        let renderQueue = JSON.parse(sessionStorage.getItem('renderQueue'))
+        let addMsg = sessionStorage.getItem('addMsg')
 
         let _this = this
         // LiveChat 按钮判断
@@ -146,7 +146,7 @@ export default {
                         replied: false
                     })
                 )
-                localStorage.removeItem('addMsg')
+                sessionStorage.removeItem('addMsg')
             } else if (questions) {
                 // 单个问题
                 this.askQuest(questions, 1, 1)
@@ -282,7 +282,7 @@ export default {
             })
         },
         renderOrder() {
-            let order = JSON.parse(localStorage.getItem('orderMsg'))
+            let order = JSON.parse(sessionStorage.getItem('orderMsg'))
             if (order) {
                 this.addOperate({
                     tpl: 'order',
@@ -297,7 +297,7 @@ export default {
                     if (res.data.code == 200) {
                         this.serviceRecord = res.data.data
                         if (!this.isLogin) {
-                            let cacheRecord = localStorage.getItem(
+                            let cacheRecord = sessionStorage.getItem(
                                 'serviceRecords'
                             )
                             if (cacheRecord) {
@@ -310,7 +310,7 @@ export default {
                             } else {
                                 cacheRecord = [this.serviceRecord]
                             }
-                            localStorage.setItem(
+                            sessionStorage.setItem(
                                 'serviceRecords',
                                 JSON.stringify(cacheRecord)
                             )
@@ -365,7 +365,7 @@ export default {
                         if (res.data.code == 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
-                                let cacheHisory = localStorage.getItem(
+                                let cacheHisory = sessionStorage.getItem(
                                     'historys'
                                 )
                                 if (cacheHisory) {
@@ -378,7 +378,7 @@ export default {
                                 } else {
                                     cacheHisory = [res.data.data]
                                 }
-                                localStorage.setItem(
+                                sessionStorage.setItem(
                                     'historys',
                                     JSON.stringify(cacheHisory)
                                 )
@@ -403,7 +403,7 @@ export default {
         },
         updateCacheQueue() {
             if (!this.isLogin) {
-                localStorage.setItem(
+                sessionStorage.setItem(
                     'renderQueue',
                     JSON.stringify(this.renderQueue)
                 )
@@ -411,11 +411,11 @@ export default {
         },
         renderFromCacheQueue() {
             // 恢复对话
-            this.renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
+            this.renderQueue = JSON.parse(sessionStorage.getItem('renderQueue'))
 
             // 更新历史记录
-            let historys = JSON.parse(localStorage.getItem('historys'))
-            let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
+            let historys = JSON.parse(sessionStorage.getItem('historys'))
+            let serviceIds = JSON.parse(sessionStorage.getItem('serviceRecords'))
             
             console.log(123123)
             if (historys) {
@@ -437,9 +437,9 @@ export default {
                         )
                         .then(res => {
                             if (res.data.code == 200) {
-                                localStorage.removeItem('serviceRecords')
-                                localStorage.removeItem('historys')
-                                localStorage.removeItem('renderQueue')
+                                sessionStorage.removeItem('serviceRecords')
+                                sessionStorage.removeItem('historys')
+                                sessionStorage.removeItem('renderQueue')
                             }
                         })
                 }
