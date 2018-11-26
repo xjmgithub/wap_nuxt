@@ -113,7 +113,7 @@ export default {
             let wrapper = document.querySelector('#wrapper')
             this.scroll = new BScroll(wrapper, {
                 pullDownRefresh: {
-                    threshold: 120, // 下拉距离
+                    threshold: 110, // 下拉距离
                     stop: 40
                 },
                 startY: 0,
