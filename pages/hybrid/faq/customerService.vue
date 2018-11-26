@@ -683,15 +683,6 @@ export default {
             this.connectState = 0
             // 创建新服务记录
             this.createServiceRecord(6)
-        },
-        starToBlue(index, event) {
-            let imgNode = document.querySelectorAll('.gave-star img')
-            for (let i = 0; i < imgNode.length; i++) {
-                // TODO 先全部恢复默认状态
-            }
-            for (let i = 0; i <= index; i++) {
-                // TODO 当前index及之前变为蓝色
-            }
         }
     },
     filters: {

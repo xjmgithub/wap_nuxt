@@ -32,6 +32,9 @@
         <div class="problem">
             <p>Your Problem</p>
             <div class="problem_txt">{{msg.problem}}</div>
+            <div class="problem_txt" v-if="msg.problemChannelTypeValue">{{msg.problemChannelTypeValue}}</div>
+            <div class="problem_txt" v-if="msg.problemChannelNameValue">{{msg.problemChannelNameValue}}</div>
+            <div class="problem_txt" v-if="msg.problemCountryCode">{{msg.problemCountryCode}}</div>
             <p>Detail Description</p>
             <div class="msg_container">{{msg.message}}</div>
         </div>
@@ -140,6 +143,7 @@ export default {
         font-size:0.9rem;
         border:solid 1px #dddddd;
         padding:0.5rem;
+        word-break:break-all;
     }
 }
 

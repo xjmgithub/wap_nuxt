@@ -145,6 +145,7 @@ export default {
                     ? JSON.parse(order).order_create_time
                     : '',
                 userAccount: this.user.id,
+                userId:this.user.id,
                 unitType: this.unitType || '',
                 operatorInfo: this.carrier || '',
                 problemId: this.$refs.questionSelect.selected.id,
