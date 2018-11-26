@@ -82,7 +82,7 @@ export default {
             let messageStr = messageids.join('_') 
             this.$axios
                 .put(
-                    `/v1/reply-records/update-have-read?replyIds=${messageStr}`
+                    `/csms-service/v1/reply-records/update-have-read?replyIds=${messageStr}`
                 )
                 .then(res => {
                     if (res.data.code != 200) {

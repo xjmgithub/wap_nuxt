@@ -50,7 +50,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage,setCookie,getCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -89,9 +89,8 @@ export default {
         let questions = JSON.parse(sessionStorage.getItem('faq_question'))
         let serviceModuleId = sessionStorage.getItem('serviceModuleId')
         let morefaqs = sessionStorage.getItem('morefaqs')
-        let renderQueue = JSON.parse(sessionStorage.getItem('renderQueue'))
+        let renderQueue = JSON.parse(getCookie('renderQueue'))
         let addMsg = sessionStorage.getItem('addMsg')
-
         let _this = this
         // LiveChat 按钮判断
         this.user.areaID &&
@@ -130,10 +129,10 @@ export default {
                 _this.loadHistory()
             })
         })
+        
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
-            // if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
-            return false
+            // return false
         }
 
         // 创建服务记录
@@ -209,8 +208,6 @@ export default {
     },
     methods: {
         getLeaveMessage() {
-            // TODO REMOVE 
-            return false
             this.$axios
                 .get(`/csms-service/v1/get-standard-leaving-message-record`,{
                     headers: {
@@ -230,7 +227,6 @@ export default {
                                     })
                                 )
                             }
-                            
                         })
                     }
                 })
@@ -297,9 +293,7 @@ export default {
                     if (res.data.code == 200) {
                         this.serviceRecord = res.data.data
                         if (!this.isLogin) {
-                            let cacheRecord = sessionStorage.getItem(
-                                'serviceRecords'
-                            )
+                            let cacheRecord = getCookie('serviceRecords')
                             if (cacheRecord) {
                                 cacheRecord = JSON.parse(cacheRecord)
                                 if (
@@ -310,9 +304,10 @@ export default {
                             } else {
                                 cacheRecord = [this.serviceRecord]
                             }
-                            sessionStorage.setItem(
+                            setCookie(
                                 'serviceRecords',
-                                JSON.stringify(cacheRecord)
+                                JSON.stringify(cacheRecord),
+                                Infinity
                             )
                         }
                         if (callback) callback()
@@ -365,7 +360,7 @@ export default {
                         if (res.data.code == 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
-                                let cacheHisory = sessionStorage.getItem(
+                                let cacheHisory = getCookie(
                                     'historys'
                                 )
                                 if (cacheHisory) {
@@ -378,9 +373,10 @@ export default {
                                 } else {
                                     cacheHisory = [res.data.data]
                                 }
-                                sessionStorage.setItem(
+                                setCookie(
                                     'historys',
-                                    JSON.stringify(cacheHisory)
+                                    JSON.stringify(cacheHisory),
+                                    Infinity
                                 )
                             } 
                             
@@ -403,19 +399,23 @@ export default {
         },
         updateCacheQueue() {
             if (!this.isLogin) {
-                sessionStorage.setItem(
-                    'renderQueue',
-                    JSON.stringify(this.renderQueue)
-                )
+                setCookie('renderQueue', JSON.stringify(this.renderQueue),Infinity)
+                // sessionStorage.setItem(
+                //     'renderQueue',
+                //     JSON.stringify(this.renderQueue)
+                // )
             }
         },
         renderFromCacheQueue() {
             // 恢复对话
-            this.renderQueue = JSON.parse(sessionStorage.getItem('renderQueue'))
+            this.renderQueue = JSON.parse(getCookie('renderQueue'))
+            // this.renderQueue = JSON.parse(sessionStorage.getItem('renderQueue'))
 
             // 更新历史记录
-            let historys = JSON.parse(sessionStorage.getItem('historys'))
-            let serviceIds = JSON.parse(sessionStorage.getItem('serviceRecords'))
+            let historys = JSON.parse(getCookie('historys'))
+            let serviceIds = JSON.parse(getCookie('serviceRecords'))
+            // let historys = JSON.parse(sessionStorage.getItem('historys'))
+            // let serviceIds = JSON.parse(sessionStorage.getItem('serviceRecords'))
             
             if (historys) {
                 historys.forEach(item => {
@@ -436,9 +436,9 @@ export default {
                         )
                         .then(res => {
                             if (res.data.code == 200) {
-                                sessionStorage.removeItem('serviceRecords')
-                                sessionStorage.removeItem('historys')
-                                sessionStorage.removeItem('renderQueue')
+                                setCookie('serviceRecords','')
+                                setCookie('historys','')
+                                setCookie('renderQueue','')
                             }
                         })
                 }
