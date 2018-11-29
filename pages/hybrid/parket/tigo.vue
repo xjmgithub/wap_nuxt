@@ -23,10 +23,9 @@ import mButton from '~/components/button'
       methods: {
           nextStep(){
                 let phone = this.$refs.telpicker.tel
-                console.log(phone)
                 if(phone.length < 9){
                     this.error_tel = 'Must be 9 digits'
-                    console.log(111)
+                    this.$refs.telpicker.show_error = true
                 }else{
                     window.location.href = 'http://www.tigosports.co.tz/Home/Home?MSISDN=255' + phone + '&ConsumerName=Startimes'
                 }

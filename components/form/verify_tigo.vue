@@ -10,7 +10,7 @@
                     placeholder="9 digits total"
                 >
             </div>
-            <div class="error" v-show="error_tel">{{error_tel}}</div>
+            <div class="error" v-show="show_error">{{error_tel}}</div>
         </div>
     </div>
 </template>
@@ -33,17 +33,17 @@ export default {
     data() {
         return {
             tel:'',
+            show_error:false
         }
     },
     watch:{
         tel(nv ,ov) {
-            this.error_tel = ''
+            this.show_error = false
             if( nv.length > 9) {
                 this.tel = nv.slice(0,9)
             }
         }
     }
-
 }
 </script>
 <style lang="less" scoped>
