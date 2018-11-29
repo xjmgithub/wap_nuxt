@@ -2,36 +2,36 @@
     <div id="wrapper">
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
-                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.svg" />
+                <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
                 <a href="#" class="sign-way">Use phone number sign in</a>
             </div>
             <div v-show="type==0" @click="changetype(1)">
-                <img class="gray" src="~/assets/img/users/ic_email_def_gray.svg" />
+                <img class="gray" src="~assets/img/users/ic_email_def_gray.svg">
                 <a href="#" class="sign-way">Use Email sign in</a>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" v-if="areaInfo" @click="countryDialogStatus=true">
-                <img :src="areaInfo.nationalFlag" />
+                <img :src="areaInfo.nationalFlag">
                 <span>{{areaInfo.name}}</span>
             </div>
             <div class="img-box">
-                <img src="~/assets/img/users/ic_user_def_w.png" alt="">
-                <input type="tel" v-model="phoneNum" placeholder="Phone Number" />
+                <img src="~assets/img/users/ic_user_def_w.png" alt>
+                <input type="tel" v-model="phoneNum" placeholder="Phone Number">
             </div>
             <div class="img-box">
-                <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
-                <input type="password" v-model="password" placeholder="Password" />
+                <img src="~assets/img/users/ic_lockr_def_w.png" alt>
+                <input type="password" v-model="password" placeholder="Password">
             </div>
         </div>
         <div v-show="type==1" class="by_email">
             <div class="img-box">
-                <img src="~/assets/img/users/ic_user_def_w.png" alt="">
-                <input type="email" v-model="email" placeholder="E-mail" />
+                <img src="~assets/img/users/ic_user_def_w.png" alt>
+                <input type="email" v-model="email" placeholder="E-mail">
             </div>
             <div class="img-box">
-                <img src="~/assets/img/users/ic_lockr_def_w.png" alt="">
-                <input type="password" v-model="password" placeholder="Password" />
+                <img src="~assets/img/users/ic_lockr_def_w.png" alt>
+                <input type="password" v-model="password" placeholder="Password">
             </div>
         </div>
         <div class="next-btn" @click="login">SIGN IN</div>
@@ -42,12 +42,12 @@
             <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag" />
+                    <img :src="item.nationalFlag">
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
@@ -106,10 +106,7 @@ export default {
                     pwd: this.password
                 }
             } else {
-                let tel =
-                    this.phoneNum.length > 10
-                        ? this.phoneNum.substr(3)
-                        : this.phoneNum
+                let tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
                 params = {
                     applicationId: 1,
                     phoneCc: this.areaInfo['phonePrefix'],
@@ -121,11 +118,7 @@ export default {
             }
             this.$axios.post('/ums/v1/user/login', params).then(res => {
                 if (res.data.code == 0) {
-                    initUser(
-                        res.data.data.token,
-                        res.data.data.userId,
-                        res.data.data
-                    )
+                    initUser(res.data.data.token, res.data.data.userId, res.data.data)
                     if (this.pre) {
                         window.location.href = this.pre
                     } else {
@@ -158,9 +151,9 @@ export default {
 
             img {
                 height: 1.3rem;
-                width:1.3rem;
+                width: 1.3rem;
                 margin-right: 0.5rem;
-                margin-top:-0.3rem;
+                margin-top: -0.3rem;
             }
 
             .sign-way {
@@ -200,8 +193,8 @@ export default {
         .country_choose {
             line-height: 4rem;
             height: 4rem;
-            margin-top:1rem;
-            margin-bottom:1rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
 
             img {
                 width: 1.5rem;

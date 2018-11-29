@@ -1,17 +1,26 @@
 <template>
     <div class="container">
         <div id="wrapper">
-            <serviceBlock :service="serviceData" showMore="true"></serviceBlock>
+            <serviceBlock :service="serviceData" :show-more="true"/>
             <div class="service" v-if="faqTagsData">
-                <nav id="nav">
-                    <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
-                        <div :class="item.class"></div>
+                <div id="nav">
+                    <a
+                        v-for="(item,index) in faqTagsData"
+                        :key="index"
+                        :class="{on:item.checked}"
+                        @click="changeServiceTag(item.id)"
+                    >
+                        <div :class="item.class"/>
                     </a>
-                </nav>
+                </div>
                 <div class="questions">
                     <div v-for="(item,index) in faqTagsData" :key="index" v-show="item.checked">
                         <ul>
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
+                            <li
+                                v-for="(item2,index2) in item.faqs"
+                                :key="index2"
+                                @click="clickQues(item2)"
+                            >{{item2.thema}}</li>
                         </ul>
                     </div>
                 </div>
@@ -19,9 +28,7 @@
         </div>
         <div class="costomer">
             <nuxt-link :to="{path:'/hybrid/faq/customerService',query:$route.query}">
-                <button class="btn">
-                    COSTOMER SERVICE
-                </button>
+                <button class="btn">COSTOMER SERVICE</button>
             </nuxt-link>
         </div>
     </div>
@@ -55,15 +62,9 @@ export default {
             .then(res => {
                 if (res.data && res.data.data) {
                     this.serviceData = res.data.data
-                    sessionStorage.setItem(
-                        'serviceModuleId',
-                        this.serviceData.service_module.id
-                    )
+                    sessionStorage.setItem('serviceModuleId', this.serviceData.service_module.id)
 
-                    sessionStorage.setItem(
-                        'orderMsg',
-                        JSON.stringify(this.serviceData.order_info)
-                    )
+                    sessionStorage.setItem('orderMsg', JSON.stringify(this.serviceData.order_info))
                 }
             })
 
@@ -86,9 +87,7 @@ export default {
                         id: item.tagging_id,
                         name: item.tagging_name,
                         checked: checked,
-                        class:
-                            logoMap[item.tagging_name.toLowerCase()] ||
-                            'tab_hot',
+                        class: logoMap[item.tagging_name.toLowerCase()] || 'tab_hot',
                         page: 1,
                         untilTotal: false,
                         faqs: []
@@ -116,22 +115,16 @@ export default {
             })
             if (!moretag && tag.page > 1) return
             if (tag.untilTotal) return
-            this.$axios
-                .get(
-                    `/ocs/v1/faqs/byTag?tagId=${tagid}&pageSize=${
-                        this.pageSize
-                    }&pageNum=${tag.page}`
-                )
-                .then(res => {
-                    this.isLoading = false
-                    if (res.data) {
-                        tag.faqs = tag.faqs.concat(res.data.data.rows)
-                        tag.page = tag.page + 1
-                        if (tag.faqs.length >= res.data.data.total) {
-                            tag.untilTotal = true
-                        }
+            this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagid}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
+                this.isLoading = false
+                if (res.data) {
+                    tag.faqs = tag.faqs.concat(res.data.data.rows)
+                    tag.page = tag.page + 1
+                    if (tag.faqs.length >= res.data.data.total) {
+                        tag.untilTotal = true
                     }
-                })
+                }
+            })
         },
         changeServiceTag(tagId) {
             this.faqTagsData.forEach(item => {
@@ -149,8 +142,8 @@ export default {
             let child = evt.target.querySelector('ul')
             let childHeight = child.offsetHeight
             let scrollTop = container.scrollTop
-            
-            if (childHeight - scrollTop -container.offsetHeight <= 150 && this.isLoading == false) {
+
+            if (childHeight - scrollTop - container.offsetHeight <= 150 && this.isLoading == false) {
                 this.isLoading = true
                 let checkedId = null
                 this.faqTagsData.forEach(item => {
@@ -216,24 +209,19 @@ export default {
                 height: 1.5rem;
                 background-size: contain !important;
                 &.tab_hot {
-                    background: url('~/assets/img/faq/ic_favorite_def_g.png')
-                        no-repeat center;
+                    background: url('~assets/img/faq/ic_favorite_def_g.png') no-repeat center;
                 }
                 &.tab_on {
-                    background: url('~/assets/img/faq/ic_OTT_def_g.png')
-                        no-repeat center;
+                    background: url('~assets/img/faq/ic_OTT_def_g.png') no-repeat center;
                 }
                 &.tab_tv {
-                    background: url('~/assets/img/faq/ic_TV_def_g.png')
-                        no-repeat center;
+                    background: url('~assets/img/faq/ic_TV_def_g.png') no-repeat center;
                 }
                 &.tab_pay {
-                    background: url('~/assets/img/faq/ic_changecard_def_g.png')
-                        no-repeat center;
+                    background: url('~assets/img/faq/ic_changecard_def_g.png') no-repeat center;
                 }
                 &.tab_account {
-                    background: url('~/assets/img/faq/ic_accountconfirm_def_g.png')
-                        no-repeat center;
+                    background: url('~assets/img/faq/ic_accountconfirm_def_g.png') no-repeat center;
                 }
             }
 
@@ -241,24 +229,19 @@ export default {
                 border-bottom: 3px solid #0087eb;
                 div {
                     &.tab_hot {
-                        background: url('~/assets/img/faq/ic_favorite_def_blue.png')
-                            no-repeat center;
+                        background: url('~assets/img/faq/ic_favorite_def_blue.png') no-repeat center;
                     }
                     &.tab_on {
-                        background: url('~/assets/img/faq/ic_OTT_def_b.png')
-                            no-repeat center;
+                        background: url('~assets/img/faq/ic_OTT_def_b.png') no-repeat center;
                     }
                     &.tab_tv {
-                        background: url('~/assets/img/faq/ic_TV_def_blue.png')
-                            no-repeat center;
+                        background: url('~assets/img/faq/ic_TV_def_blue.png') no-repeat center;
                     }
                     &.tab_pay {
-                        background: url('~/assets/img/faq/ic_changecard_def_blue.png')
-                            no-repeat center;
+                        background: url('~assets/img/faq/ic_changecard_def_blue.png') no-repeat center;
                     }
                     &.tab_account {
-                        background: url('~/assets/img/faq/ic_accountconfirm_def_blue.png')
-                            no-repeat center;
+                        background: url('~assets/img/faq/ic_accountconfirm_def_blue.png') no-repeat center;
                     }
                 }
             }
@@ -267,12 +250,12 @@ export default {
     .questions {
         flex: 1;
         overflow: hidden;
-        position:relative;
+        position: relative;
         div {
             overflow-y: auto;
             position: absolute;
-            top:0;
-            bottom:0;
+            top: 0;
+            bottom: 0;
         }
         li {
             overflow: hidden;

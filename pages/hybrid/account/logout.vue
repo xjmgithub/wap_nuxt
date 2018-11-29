@@ -7,12 +7,7 @@ export default {
     methods: {
         logout() {
             document.cookie.split(';').forEach(function(c) {
-                document.cookie = c
-                    .replace(/^ +/, '')
-                    .replace(
-                        /=.*/,
-                        '=;expires=' + new Date().toUTCString() + ';path=/'
-                    )
+                document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
             })
             localStorage.clear()
             alert('logout success')

@@ -1,16 +1,28 @@
 <template>
     <div class="password-box">
         <p class="pwd-type">{{placeholder}}</p>
-        <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="toggleView&&isCiphertext==1" alt="" @click="isCiphertext=2">
-        <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="toggleView&&isCiphertext==2" alt="" @click="isCiphertext=1">
+        <img
+            class="open-close"
+            src="~assets/img/ic_hide_def_g.png"
+            v-if="toggleView&&isCiphertext==1"
+            alt
+            @click="isCiphertext=2"
+        >
+        <img
+            class="open-close"
+            src="~assets/img/ic_show_def_g.png"
+            v-if="toggleView&&isCiphertext==2"
+            alt
+            @click="isCiphertext=1"
+        >
         <div class="pwd-input">
             <!-- TODO 支持自定义化数量 -->
-            <div class="input-item" v-html="N1"></div>
-            <div class="input-item" v-show="length>=2" v-html="N2"></div>
-            <div class="input-item" v-show="length>=3" v-html="N3"></div>
-            <div class="input-item" v-show="length>=4" v-html="N4"></div>
-            <div class="input-item" v-show="length>=5" v-html="N5"></div>
-            <div class="input-item" v-show="length>=6" v-html="N6"></div>
+            <div class="input-item" v-html="N1"/>
+            <div class="input-item" v-show="length>=2" v-html="N2"/>
+            <div class="input-item" v-show="length>=3" v-html="N3"/>
+            <div class="input-item" v-show="length>=4" v-html="N4"/>
+            <div class="input-item" v-show="length>=5" v-html="N5"/>
+            <div class="input-item" v-show="length>=6" v-html="N6"/>
         </div>
         <input type="tel" :maxlength="length" v-model="password" class="hidden-pwd">
     </div>

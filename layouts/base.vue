@@ -1,9 +1,9 @@
 <template>
     <div>
-        <nuxt />
-        <alert ref="alert"></alert>
-        <confirm ref="confirm"></confirm>
-        <shadowLayer v-show="layer"></shadowLayer>
+        <nuxt/>
+        <alert ref="alert"/>
+        <confirm ref="confirm"/>
+        <shadowLayer v-show="layer"/>
     </div>
 </template>
 <script>
@@ -36,12 +36,12 @@ export default {
     }
 }
 </script>
-<style>
+<style lang="less">
 @import '~/assets/css/normalize.css';
 @font-face {
     font-family: Roboto;
-    src: url('~/assets/fonts/Roboto-Regular.ttf');
-    font-style:"normal";
+    src: url('~assets/fonts/Roboto-Regular.ttf');
+    font-style: 'normal';
 }
 html,
 body {

@@ -3,7 +3,7 @@
         <div class="top">
             <p class="time">{{service.order_info.order_create_time | formatDate}}</p>
             <div class="b-order-type clearfix">
-                <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" />
+                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png">
                 <div class="right">
                     <p class="order-name">
                         {{service.order_info.order_type}}
@@ -16,26 +16,31 @@
                 </div>
             </div>
         </div>
-        <div class="gap"></div>
+        <div class="gap"/>
         <div class="bottom clearfix">
             <p class="clearfix">
                 Questions
-                <img @click="moreQues(service.id)" src="~/assets/img/faq/ic_categary_copy41.png">
+                <img
+                    @click="moreQues(service.id)"
+                    src="~assets/img/faq/ic_categary_copy41.png"
+                >
             </p>
             <ul v-if="service.questions">
-                <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">
-                    {{item.thema}}
-                </li>
+                <li
+                    v-for="(item,index) in service.questions.slice(0,3)"
+                    :key="index"
+                    @click="clickQues(item)"
+                >{{item.thema}}</li>
             </ul>
-            <div class="btn" v-for="(item,index) in service.service_components" :key="index">
-                {{item.presentation_name}}
-            </div>
+            <div
+                class="btn"
+                v-for="(item,index) in service.service_components"
+                :key="index"
+            >{{item.presentation_name}}</div>
         </div>
-        <div v-if="showMore" class="gap"></div>
+        <div v-if="showMore" class="gap"/>
         <nuxt-link v-if="showMore" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}">
-            <div class="more">
-                MORE ORDERS
-            </div>
+            <div class="more">MORE ORDERS</div>
         </nuxt-link>
     </div>
 </template>
@@ -45,10 +50,12 @@ export default {
     props: {
         service: {
             type: Object,
-            require: true
+            require: true,
+            default: null
         },
         showMore: {
             require: false,
+            type: Boolean,
             default: false
         }
     },

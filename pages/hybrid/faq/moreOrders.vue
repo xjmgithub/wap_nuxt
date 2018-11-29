@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div id="wrapper">
-        <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item"></serviceBlock>
+    <div>
+        <div id="wrapper">
+            <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item"/>
+        </div>
     </div>
-  </div>
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
@@ -14,16 +14,16 @@ export default {
             serviceList: []
         }
     },
-    components:{
+    components: {
         serviceBlock
     },
     mounted() {
         let entranceId = this.$route.query.entrance_id || ''
         this.$axios
-            .get(`/ocs/v1/service/module/moreOrder?entranceId=${entranceId}`,{
-                headers:{
-                    'x-clientType':1,
-                    'x-appVersion':'5300'
+            .get(`/ocs/v1/service/module/moreOrder?entranceId=${entranceId}`, {
+                headers: {
+                    'x-clientType': 1,
+                    'x-appVersion': '5300'
                 }
             })
             .then(res => {
@@ -40,7 +40,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
 #wrapper {
     background: #fff;
     padding: 0.5rem;

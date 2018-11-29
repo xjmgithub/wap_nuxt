@@ -1,21 +1,47 @@
 <template>
     <div class="wrapper">
         <div class="input-item">
-            <div class="label">Create a Password
-                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext==1" alt="" @click="isCiphertext=2">
-                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext==2" alt="" @click="isCiphertext=1">
+            <div class="label">
+                Create a Password
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_hide_def_g.png"
+                    v-if="isCiphertext==1"
+                    alt
+                    @click="isCiphertext=2"
+                >
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_show_def_g.png"
+                    v-if="isCiphertext==2"
+                    alt
+                    @click="isCiphertext=1"
+                >
             </div>
-            <input :type="pwdType" v-model="pass" @blur="checkpass" />
+            <input :type="pwdType" v-model="pass" @blur="checkpass">
         </div>
         <div class="input-item">
-            <div class="label">Confirm New Password
-                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
-                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
+            <div class="label">
+                Confirm New Password
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_hide_def_g.png"
+                    v-if="isCiphertext_confirm==1"
+                    alt
+                    @click="isCiphertext_confirm=2"
+                >
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_show_def_g.png"
+                    v-if="isCiphertext_confirm==2"
+                    alt
+                    @click="isCiphertext_confirm=1"
+                >
             </div>
-            <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" />
+            <input :type="pwdType_confirm" v-model="repass" @blur="checkpass">
         </div>
         <div class="footer">
-            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -34,7 +60,7 @@ export default {
             repass: '',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
-            disabled:true
+            disabled: true
         }
     },
     methods: {
@@ -68,9 +94,7 @@ export default {
                 if (res.data.code == 0) {
                     this.$router.push('/hybrid/account/login')
                 } else {
-                    this.$alert(
-                        'This code you entered is incorrect. Please try again.'
-                    )
+                    this.$alert('This code you entered is incorrect. Please try again.')
                 }
             })
         }
@@ -86,21 +110,21 @@ export default {
             return this.isCiphertext_confirm == 1 ? 'password' : 'text'
         }
     },
-    watch:{
-         pass: function(val,oldVal){
-            if(/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass){
+    watch: {
+        pass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass) {
                 this.disabled = false
-            }else{
+            } else {
                 this.disabled = true
             }
-         },
-         repass: function(val,oldVal){
-            if( /^[a-zA-Z0-9]{6,18}$/.test(val)  && val == this.pass){
+        },
+        repass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.pass) {
                 this.disabled = false
-            }else{
+            } else {
                 this.disabled = true
             }
-         }
+        }
     }
 }
 </script>

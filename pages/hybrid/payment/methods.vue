@@ -1,10 +1,10 @@
 <template>
     <div style="padding:1rem;">
-        <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
-        <div style="height:0;border-bottom:solid 1px #E0E0E0;margin:1rem 0;"></div>
-        <RadioBtn :radioList="radioList2" class="radioBtn" @pick="changeItem"></RadioBtn>
+        <RadioBtn :radio-list="radioList" class="radioBtn" @pick="changeItem"/>
+        <div style="height:0;border-bottom:solid 1px #E0E0E0;margin:1rem 0;"/>
+        <RadioBtn :radio-list="radioList2" class="radioBtn" @pick="changeItem"/>
         <div class="footer">
-            <mButton text="OK" @click="next()"></mButton>
+            <mButton text="OK" @click="next()"/>
         </div>
     </div>
 </template>
@@ -43,17 +43,9 @@ export default {
         },
         next() {
             if (this.selected > 9001 && this.selected < 9029) {
-                this.$router.push(
-                    `/hybrid/payment/wallet/payto?payToken=${
-                        this.payToken
-                    }&payChannel=${this.selected}&txNo=${this.txNo}`
-                )
+                this.$router.push(`/hybrid/payment/wallet/payto?payToken=${this.payToken}&payChannel=${this.selected}&txNo=${this.txNo}`)
             } else {
-                this.$router.push(
-                    `/hybrid/payment/channelDesc?payToken=${
-                        this.payToken
-                    }&payChannel=${this.selected}`
-                )
+                this.$router.push(`/hybrid/payment/channelDesc?payToken=${this.payToken}&payChannel=${this.selected}`)
             }
         }
     },
@@ -62,9 +54,7 @@ export default {
             return false
         }
         let res = await axios.post(
-            `${
-                env.mechant_request_url
-            }payment/platform/v1/oauth/token?grant_type=client_credentials`,
+            `${env.mechant_request_url}payment/platform/v1/oauth/token?grant_type=client_credentials`,
             {},
             {
                 auth: {
@@ -77,9 +67,7 @@ export default {
             let paramArr = [
                 {
                     key: 'redirectUrl',
-                    value:
-                        app.context.route.query.redirectUrl ||
-                        'https://m.startimestv.com'
+                    value: app.context.route.query.redirectUrl || 'https://m.startimestv.com'
                 },
                 {
                     key: 'paySubject',
@@ -119,9 +107,7 @@ export default {
                 },
                 {
                     key: 'notifyUrl',
-                    value:
-                        app.context.route.query.redirectUrl ||
-                        'https://m.startimestv.com'
+                    value: app.context.route.query.redirectUrl || 'https://m.startimestv.com'
                 },
                 {
                     key: 'tradeTimeout',
@@ -168,15 +154,11 @@ export default {
             let up = hmac.update(str)
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
-            let res2 = await axios.post(
-                `${env.mechant_request_url}payment/platform/v1/create-payment`,
-                paramObj,
-                {
-                    headers: {
-                        Authorization: 'Bearer ' + res.data.access_token
-                    }
+            let res2 = await axios.post(`${env.mechant_request_url}payment/platform/v1/create-payment`, paramObj, {
+                headers: {
+                    Authorization: 'Bearer ' + res.data.access_token
                 }
-            )
+            })
             store.commit('SET_PAYTOKEN', res2.data.payToken)
             store.commit('SET_TXNO', res2.data.txNo)
         } else {
@@ -187,48 +169,44 @@ export default {
         this.payToken = this.$store.state.payToken
         this.txNo = this.$store.state.txNo
         let _this = this
-        this.$axios
-            .get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
-            .then(res => {
-                let data = res.data
-                let list = []
-                let list2 = []
-                if (data && data.payChannels && data.payChannels.length > 0) {
-                    let payChannels = {}
+        this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
+            let data = res.data
+            let list = []
+            let list2 = []
+            if (data && data.payChannels && data.payChannels.length > 0) {
+                let payChannels = {}
 
-                    data.payChannels.forEach((item, index) => {
-                        if (item.id > 9001 && item.id < 9029) {
-                            list2.push({
-                                code: item.id,
-                                value: item.name,
-                                imgUrl: item.logoUrl || '',
-                                desc: item.description,
-                                checked: false,
-                                channelType: item.channelType,
-                                ussd: item.shortUssdCode
-                            })
-                        } else {
-                            list.push({
-                                code: item.id,
-                                value: item.name,
-                                imgUrl: item.logoUrl || '',
-                                desc: item.description,
-                                checked: false,
-                                channelType: item.channelType,
-                                ussd: item.shortUssdCode
-                            })
-                        }
-                    })
-                    list[0].checked = true
-                    _this.radioList = list
-                    _this.radioList2 = list2
-                    _this.selected = list[0].code
-                } else {
-                    _this.$alert(
-                        'The merchant has not yet opened a supportable payment channel.'
-                    )
-                }
-            })
+                data.payChannels.forEach((item, index) => {
+                    if (item.id > 9001 && item.id < 9029) {
+                        list2.push({
+                            code: item.id,
+                            value: item.name,
+                            imgUrl: item.logoUrl || '',
+                            desc: item.description,
+                            checked: false,
+                            channelType: item.channelType,
+                            ussd: item.shortUssdCode
+                        })
+                    } else {
+                        list.push({
+                            code: item.id,
+                            value: item.name,
+                            imgUrl: item.logoUrl || '',
+                            desc: item.description,
+                            checked: false,
+                            channelType: item.channelType,
+                            ussd: item.shortUssdCode
+                        })
+                    }
+                })
+                list[0].checked = true
+                _this.radioList = list
+                _this.radioList2 = list2
+                _this.selected = list[0].code
+            } else {
+                _this.$alert('The merchant has not yet opened a supportable payment channel.')
+            }
+        })
     }
 }
 </script>

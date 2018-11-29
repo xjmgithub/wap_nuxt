@@ -1,30 +1,24 @@
 <template>
     <div class="container" :class="{'grey-back':result==2}">
-        <loading v-show="loadStatus"></loading>
+        <loading v-show="loadStatus" />
         <template v-if="result=='1'&&!loadStatus">
-            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
-            <p class="success">
-                Payment Successful
-            </p>
+            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
+            <p class="success">Payment Successful</p>
             <p class="money">
                 {{amount}}
                 <span>{{currency}}</span>
             </p>
-            <p class="msg">
-                Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
-            </p>
+            <p
+                class="msg"
+            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'&&!loadStatus">
-            <img src="~assets/img/pay/img_failed_def_b.png" alt="">
-            <p class="fail">
-                Payment Failed
-            </p>
-            <p class="msg">
-                {{fail_message}}
-            </p>
+            <img src="~assets/img/pay/img_failed_def_b.png" alt>
+            <p class="fail">Payment Failed</p>
+            <p class="msg">{{fail_message}}</p>
         </template>
         <div class="footer" v-show="!loadStatus">
-            <mButton :disabled="false" text="OK" @click="back"></mButton>
+            <mButton :disabled="false" text="OK" @click="back" />
         </div>
     </div>
 </template>
@@ -71,7 +65,7 @@ export default {
     text-align: center;
     &.grey-back {
         height: 100vh;
-        background: #EEEEEE;
+        background: #eeeeee;
     }
 }
 .container img {
@@ -81,7 +75,7 @@ export default {
 .container img.success_img {
     width: 3rem;
     height: 3rem;
-    margin-top:2rem;
+    margin-top: 2rem;
 }
 .container .success {
     color: #0087eb;
@@ -110,7 +104,7 @@ export default {
     font-size: 1rem;
     line-height: 1.4rem;
 }
-.container .msg.lf{
+.container .msg.lf {
     text-align: left;
 }
 .footer {

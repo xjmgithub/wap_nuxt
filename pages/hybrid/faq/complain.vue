@@ -1,18 +1,21 @@
 <template>
     <div id="wrapper">
         <div class="order-msg" v-if="order.order_status">
-            <p class="time">{{order.order_create_time | formatDate }}
+            <p class="time">
+                {{order.order_create_time | formatDate }}
                 <nuxt-link :to="{'path':'/hybrid/faq/chooseOrder',query:$route.query}">
-                    <img src="~assets/img/faq/ic_Setting_def_g.png" alt="">
+                    <img src="~assets/img/faq/ic_Setting_def_g.png" alt>
                 </nuxt-link>
             </p>
             <div class="order-type clearfix">
-                <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
                 <div class="right">
-                    <p class="order-name">{{order.order_type }}
+                    <p class="order-name">
+                        {{order.order_type }}
                         <span>{{order.order_amount }}</span>
                     </p>
-                    <p class="order-status">{{order.card_no }}
+                    <p class="order-status">
+                        {{order.card_no }}
                         <span>{{order.order_status }}</span>
                     </p>
                 </div>
@@ -21,43 +24,75 @@
         <div class="choose-order" v-else>
             <nuxt-link to="/hybrid/faq/chooseOrder">
                 <div>
-                    <img src="~/assets/img/faq/ic_add_def_g.png"> Choose An Order
+                    <img src="~assets/img/faq/ic_add_def_g.png"> Choose An Order
                 </div>
             </nuxt-link>
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <mselect :list="questionsList" :default="question" placeholder="Please choose your question" ref="questionSelect" @change="setQuestion"></mselect>
-            <mselect :list="channelList" placeholder="Please choose channel type" ref="channelSelect" @change="setChannelName" v-if="type[1]"></mselect>
-            <mselect :list="channelNameList" placeholder="Please choose channel name" ref="channelNameSelect" v-if="type[1]"></mselect>
-            <mselect :list="countryList" :default="defaultCountry" placeholder="Please choose your country" ref="countrySelect" v-if="!type[0]&&!type[1]"></mselect>
+            <mselect
+                :list="questionsList"
+                :default="question"
+                placeholder="Please choose your question"
+                ref="questionSelect"
+                @change="setQuestion"
+            />
+            <mselect
+                :list="channelList"
+                placeholder="Please choose channel type"
+                ref="channelSelect"
+                @change="setChannelName"
+                v-if="type[1]"
+            />
+            <mselect
+                :list="channelNameList"
+                placeholder="Please choose channel name"
+                ref="channelNameSelect"
+                v-if="type[1]"
+            />
+            <mselect
+                :list="countryList"
+                :default="defaultCountry"
+                placeholder="Please choose your country"
+                ref="countrySelect"
+                v-if="!type[0]&&!type[1]"
+            />
             <p>Detail Description</p>
-            <textarea cols="35" rows="5" placeholder="To rapidly help solve the problem,please show us the screenshots of your payment" v-model="moredes"></textarea>
+            <textarea
+                cols="35"
+                rows="5"
+                placeholder="To rapidly help solve the problem,please show us the screenshots of your payment"
+                v-model="moredes"
+            />
         </div>
-        <div class="gap"></div>
+        <div class="gap"/>
         <div class="personal">
             <p>Personal Information</p>
             <ul>
                 <li>
-                    <p class="p-name">Account
+                    <p class="p-name">
+                        Account
                         <span>*</span>
                     </p>
                     <p class="p-value">{{user.id}}</p>
                 </li>
                 <li>
-                    <p class="p-name">Country
+                    <p class="p-name">
+                        Country
                         <span>*</span>
                     </p>
                     <p class="p-value">{{user.countryCode}}</p>
                 </li>
                 <li v-if="carrier">
-                    <p class="p-name">Telecom Info
+                    <p class="p-name">
+                        Telecom Info
                         <span>*</span>
                     </p>
                     <p class="p-value">{{carrier}}</p>
                 </li>
                 <li v-if="unitType">
-                    <p class="p-name">Device
+                    <p class="p-name">
+                        Device
                         <span>*</span>
                     </p>
                     <p class="p-value">{{unitType}}</p>
@@ -141,58 +176,34 @@ export default {
                 orderType: order ? JSON.parse(order).order_type_id : '',
                 orderNo: order ? JSON.parse(order).order_no : '',
                 orderName: order ? JSON.parse(order).order_name : '',
-                orderCreateTime: order
-                    ? JSON.parse(order).order_create_time
-                    : '',
+                orderCreateTime: order ? JSON.parse(order).order_create_time : '',
                 userAccount: this.user.id,
-                userId:this.user.id,
+                userId: this.user.id,
                 unitType: this.unitType || '',
                 operatorInfo: this.carrier || '',
                 problemId: this.$refs.questionSelect.selected.id,
                 problem: this.$refs.questionSelect.selected.name,
-                problemChannelTypeKey: this.type[1]
-                    ? this.$refs.channelSelect.selected.id
-                    : '',
-                problemChannelTypeValue: this.type[1]
-                    ? this.$refs.channelSelect.selected.name
-                    : '',
-                problemChannelNameKey: this.type[1]
-                    ? this.$refs.channelNameSelect.selected.id
-                    : '',
-                problemChannelNameValue: this.type[1]
-                    ? this.$refs.channelNameSelect.selected.name
-                    : '',
-                problemCountryId:
-                    !this.type[0] && !this.type[1]
-                        ? this.$refs.countrySelect.selected.id
-                        : '',
-                problemCountryCode:
-                    !this.type[0] && !this.type[1]
-                        ? this.$refs.countrySelect.selected.name
-                        : '',
+                problemChannelTypeKey: this.type[1] ? this.$refs.channelSelect.selected.id : '',
+                problemChannelTypeValue: this.type[1] ? this.$refs.channelSelect.selected.name : '',
+                problemChannelNameKey: this.type[1] ? this.$refs.channelNameSelect.selected.id : '',
+                problemChannelNameValue: this.type[1] ? this.$refs.channelNameSelect.selected.name : '',
+                problemCountryId: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.id : '',
+                problemCountryCode: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.name : '',
                 message: this.moredes,
                 channelNameAdditional: '',
                 channelType: ''
             }
 
             this.$axios
-                .post(
-                    `/csms-service/v1/standard-leaving-message-records`,
-                    param,
-                    {
-                        headers: {
-                            'x-clientType': 1,
-                            'x-appVersion': '5300'
-                        }
+                .post(`/csms-service/v1/standard-leaving-message-records`, param, {
+                    headers: {
+                        'x-clientType': 1,
+                        'x-appVersion': '5300'
                     }
-                )
+                })
                 .then(res => {
                     if (res.data.code == 200) {
-
-                        sessionStorage.setItem(
-                            'addMsg',
-                            JSON.stringify(Object.assign({}, param))
-                        )
+                        sessionStorage.setItem('addMsg', JSON.stringify(Object.assign({}, param)))
                         this.$router.replace({
                             path: '/hybrid/faq/customerService',
                             query: this.$route.query
@@ -219,26 +230,24 @@ export default {
         // 如果是从首页的单个faq默认选中
         //let faq_question = sessionStorage.getItem('faq_question')
 
-        this.$axios
-            .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
-            .then(res => {
-                if (res.data.code == 200) {
-                    let list = []
-                    res.data.data.forEach((item, index) => {
-                        list.push({
-                            id: item.id,
-                            name: item.thema,
-                            tags: item.tags
-                        })
+        this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
+            if (res.data.code == 200) {
+                let list = []
+                res.data.data.forEach((item, index) => {
+                    list.push({
+                        id: item.id,
+                        name: item.thema,
+                        tags: item.tags
                     })
-                    this.questionsList = list
-                    let question = this.$route.query.question
-                    if (question) {
-                        //this.question = JSON.parse(faq_question).id
-                        this.question = question
-                    }
+                })
+                this.questionsList = list
+                let question = this.$route.query.question
+                if (question) {
+                    //this.question = JSON.parse(faq_question).id
+                    this.question = question
                 }
-            })
+            }
+        })
 
         // 渠道分类
         this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
@@ -253,27 +262,18 @@ export default {
         })
 
         // country
-        this.$axios
-            .get(
-                `/cms/vup/v2/areas?versionCode=${
-                    this.$store.state.appVersionCode
-                }`
-            )
-            .then(res => {
-                if (res.data && res.data instanceof Array) {
-                    this.countryList = res.data
-                    this.countryList.forEach(item => {
-                        if (item.country) {
-                            if (
-                                item.country.toLowerCase() ==
-                                this.user.countryCode.toLowerCase()
-                            ) {
-                                this.defaultCountry = item.id
-                            }
+        this.$axios.get(`/cms/vup/v2/areas?versionCode=${this.$store.state.appVersionCode}`).then(res => {
+            if (res.data && res.data instanceof Array) {
+                this.countryList = res.data
+                this.countryList.forEach(item => {
+                    if (item.country) {
+                        if (item.country.toLowerCase() == this.user.countryCode.toLowerCase()) {
+                            this.defaultCountry = item.id
                         }
-                    })
-                }
-            })
+                    }
+                })
+            }
+        })
     },
     components: {
         mselect: mselect

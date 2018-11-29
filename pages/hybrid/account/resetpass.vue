@@ -2,44 +2,55 @@
     <div id="wrapper">
         <div class="tab">
             <div :class="{seled:type==0}" @click="changetype(0)">
-                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.png" />
-                <img class="blue" src="~/assets/img/users/ic_telephone_sl_blue.png" />
-                <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
+                <img class="gray" src="~assets/img/users/ic_telephone_def_g.png">
+                <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.png">
+                <img class="arrow" src="~assets/img/users/line_arrow.jpg">
             </div>
             <div :class="{seled:type==1}" @click="changetype(1)">
-                <img class="gray" src="~/assets/img/users/ic_email_def_gray.png" />
-                <img class="blue" src="~/assets/img/users/ic_email_sl_blue.png" />
-                <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
+                <img class="gray" src="~assets/img/users/ic_email_def_gray.png">
+                <img class="blue" src="~assets/img/users/ic_email_sl_blue.png">
+                <img class="arrow" src="~assets/img/users/line_arrow.jpg">
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" @click="countryDialogStatus=true">
-                <img :src="areaInfo.nationalFlag" />
+                <img :src="areaInfo.nationalFlag">
                 <span>{{areaInfo.name}}</span>
             </div>
-            <verifyTel ref="telpicker" type="1" :prefix="areaInfo.phonePrefix" @pass="changePhoneCanNext"></verifyTel>
+            <verifyTel
+                ref="telpicker"
+                type="1"
+                :prefix="areaInfo.phonePrefix"
+                @pass="changePhoneCanNext"
+            />
         </div>
         <div v-show="type==1" class="by_email">
             <div class="input-email" :class="{focus:focus_email,error:error_email}">
                 <div class="number">
-                    <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email address" />
+                    <input
+                        type="email"
+                        v-model="email"
+                        @focus="focus_email=true"
+                        @blur="focus_email=false"
+                        placeholder="Enter your email address"
+                    >
                 </div>
                 <div class="error" v-show="error_email">{{error_email}}</div>
             </div>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"/>
         </div>
         <div class="country-choose-dialog" v-show="countryDialogStatus">
             <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseeCountry(item)">
-                    <img :src="item.nationalFlag" />
+                    <img :src="item.nationalFlag">
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
     </div>
 </template>
 <script>
@@ -110,10 +121,10 @@ export default {
             if (this.type == 1) {
                 this.$axios
                     .get(`/ums/v1/register/password/change?email=${this.email}`, {
-                    headers: {
-                        token: this.$store.state.token
-                    }
-                })
+                        headers: {
+                            token: this.$store.state.token
+                        }
+                    })
                     .then(res => {
                         if (res.data.code == 0) {
                             this.$alert(
@@ -123,8 +134,7 @@ export default {
                                 }
                             )
                         } else {
-                            this.error_email =
-                                'Please confirm you have entered the right email.'
+                            this.error_email = 'Please confirm you have entered the right email.'
                         }
                     })
             } else {
@@ -132,9 +142,7 @@ export default {
                 let code = this.$refs.telpicker.vscode
                 let phoneCc = this.areaInfo.phonePrefix
                 let countryId = this.country.id
-                this.$router.push(
-                    `/hybrid/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
-                )
+                this.$router.push(`/hybrid/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
             }
         }
     },

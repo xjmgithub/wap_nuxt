@@ -3,7 +3,7 @@
         <div class="checked" @click="showList">
             <span v-show="selected.id">{{selected.name}}</span>
             <span v-show="!selected.id" class="placeholder">{{placeholder}}</span>
-            <img src="~/assets/img/ic_sl_g.png" />
+            <img src="~assets/img/ic_sl_g.png">
         </div>
         <ul class="list" v-show="$store.state.selectCompId==compSelectId">
             <li v-for="(item,index) in list" :key="index" @click="choose(item)">{{item.name}}</li>
@@ -15,7 +15,10 @@ export default {
     props: {
         list: {
             type: Array,
-            require: true
+            require: true,
+            default() {
+                return []
+            }
             /* 
             {
                 id:id,
@@ -24,7 +27,9 @@ export default {
             */
         },
         default: {
-            require: false
+            require: false,
+            type: Object,
+            default: null
         },
         placeholder: {
             require: false,
@@ -37,7 +42,7 @@ export default {
         return {
             renderList: [],
             selected: {},
-            compSelectId:null
+            compSelectId: null
         }
     },
     watch: {
@@ -65,9 +70,9 @@ export default {
             }
             this.initState = true
         },
-        showList(){
+        showList() {
             let s = this.$store.state.selectCompId + 1
-            this.$store.commit('ADD_SELECT_COMP',s)
+            this.$store.commit('ADD_SELECT_COMP', s)
             this.compSelectId = this.$store.state.selectCompId
         },
         choose(obj) {
@@ -83,7 +88,7 @@ export default {
                 }
             }
             let s = this.$store.state.selectCompId + 1
-            this.$store.commit('ADD_SELECT_COMP',s)
+            this.$store.commit('ADD_SELECT_COMP', s)
         }
     }
 }
@@ -126,13 +131,13 @@ export default {
         top: 0;
         background: white;
         z-index: 999;
-        max-height:10rem;
+        max-height: 10rem;
         overflow-y: auto;
         li {
             padding: 0.3rem 0.5rem;
             font-size: 0.8rem;
-            &:hover{
-                background:#dddddd;
+            &:hover {
+                background: #dddddd;
             }
         }
     }

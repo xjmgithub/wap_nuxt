@@ -2,25 +2,25 @@
     <button :class="{disabled:disabled}" @click="click">{{text}}</button>
 </template>
 <script>
-    export default {
-        props:{
-          disabled:{
-            type:Boolean,
-            default:false
-          },
-          text:{
-            type:String,
-            default:'OK'
-          }
+export default {
+    props: {
+        disabled: {
+            type: Boolean,
+            default: false
         },
-        methods:{
-            click(){
-                if(!this.disabled){
-                    this.$emit('click')
-                }
+        text: {
+            type: String,
+            default: 'OK'
+        }
+    },
+    methods: {
+        click() {
+            if (!this.disabled) {
+                this.$emit('click')
             }
         }
     }
+}
 </script>
 <style lang="less" scoped>
 button {
@@ -31,7 +31,7 @@ button {
     margin: 0 auto;
     margin-top: 0.7rem;
     background: #0087eb;
-    font-size:1rem;
+    font-size: 1rem;
     color: white;
     border-radius: 3px;
     &.disabled {

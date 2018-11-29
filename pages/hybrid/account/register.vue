@@ -2,28 +2,28 @@
     <div id="wrapper">
         <div class="tab">
             <div :class="{seled:type==0}" @click="changetype(0)">
-                <img class="gray" src="~/assets/img/users/ic_telephone_def_g.svg" />
-                <img class="blue" src="~/assets/img/users/ic_telephone_sl_blue.svg" />
-                <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
+                <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
+                <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.svg">
+                <img class="arrow" src="~assets/img/users/line_arrow.jpg">
             </div>
             <div :class="{seled:type==1}" @click="changetype(1)">
-                <img class="gray" src="~/assets/img/users/ic_email_def_gray.svg" />
-                <img class="blue" src="~/assets/img/users/ic_email_sl_blue.svg" />
-                <img class="arrow" src="~/assets/img/users/line_arrow.jpg" />
+                <img class="gray" src="~assets/img/users/ic_email_def_gray.svg">
+                <img class="blue" src="~assets/img/users/ic_email_sl_blue.svg">
+                <img class="arrow" src="~assets/img/users/line_arrow.jpg">
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" @click="countryDialogStatus=true">
-                <img :src="areaInfo.nationalFlag" />
+                <img :src="areaInfo.nationalFlag">
                 <span>{{areaInfo.name}}</span>
             </div>
-            <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="changePhoneCanNext"></verifyTel>
+            <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="changePhoneCanNext"/>
         </div>
         <div v-show="type==1" class="by_email">
-            <verifyEmail ref="emailpicker" @pass="changeEmailCanNext"></verifyEmail>
+            <verifyEmail ref="emailpicker" @pass="changeEmailCanNext"/>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"/>
         </div>
         <div class="terms">
             <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
@@ -32,12 +32,12 @@
             <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag" />
+                    <img :src="item.nationalFlag">
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"></shadowLayer>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
     </div>
 </template>
 <script>
@@ -97,22 +97,17 @@ export default {
             this.countryDialogStatus = false
         },
         nextStep() {
-            
             if (this.type == 1) {
                 let email = this.$refs.emailpicker.email
                 let code = this.$refs.emailpicker.vscode
 
-                this.$router.push(
-                    `/hybrid/account/setpass?email=${email}&code=${code}`
-                )
+                this.$router.push(`/hybrid/account/setpass?email=${email}&code=${code}`)
             } else {
                 let phone = this.$refs.telpicker.tel
                 let code = this.$refs.telpicker.vscode
                 let phoneCc = this.areaInfo.phonePrefix
                 let countryId = this.country
-                this.$router.push(
-                    `/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`
-                )
+                this.$router.push(`/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
             }
         }
     },
@@ -143,7 +138,7 @@ export default {
 
             img {
                 width: 2.2rem;
-                height:2.2rem;
+                height: 2.2rem;
                 margin: 0 auto;
                 display: block;
             }
@@ -190,7 +185,7 @@ export default {
     .by_tel {
         .country_choose {
             line-height: 2rem;
-            padding-top:1rem;
+            padding-top: 1rem;
             img {
                 width: 1.5rem;
                 height: 1.5rem;

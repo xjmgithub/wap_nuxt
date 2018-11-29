@@ -1,14 +1,13 @@
 <template>
     <div id="wrapper">
-        <img class="st_logo" src="~/assets/img/logo01.png" />
-        <img class="third_login facebook" @click="byfacebook" src="~/assets/img/users/btn_facebook_def.png" />
-        <img class="third_login twitter" @click="bytwitter" src="~/assets/img/users/btn_twitter_def.png" />
-        <img id="google-btn" class="third_login google" src="~/assets/img/users/btn_google_def.png" />
+        <img class="st_logo" src="~assets/img/logo01.png">
+        <img class="third_login facebook" @click="byfacebook" src="~assets/img/users/btn_facebook_def.png">
+        <img class="third_login twitter" @click="bytwitter" src="~assets/img/users/btn_twitter_def.png">
+        <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
         <nuxt-link to="/hybrid/account/signin">
-            <div class="login_btn"> SIGN IN </div>
+            <div class="login_btn">SIGN IN</div>
         </nuxt-link>
-        <div class="regtext">
-            Don't have an account?
+        <div class="regtext">Don't have an account?
             <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
         </div>
     </div>
@@ -26,7 +25,7 @@ export default {
         if (this.pre) {
             localStorage.setItem('login_prefer', this.pre)
         }
-        
+
         var googleUser = {}
         let _this = this
         var script = document.createElement('script')
@@ -35,8 +34,7 @@ export default {
         script.onload = function() {
             gapi.load('auth2', function() {
                 var auth2 = gapi.auth2.init({
-                    client_id:
-                        '461626275431-sngbv2nv2bmecefaiu01r67cu1n88rja.apps.googleusercontent.com',
+                    client_id: '461626275431-sngbv2nv2bmecefaiu01r67cu1n88rja.apps.googleusercontent.com',
                     cookiepolicy: 'single_host_origin'
                 })
                 auth2.attachClickHandler(
@@ -60,7 +58,6 @@ export default {
             cookie: true,
             version: 'v3.1'
         })
-        
     },
     methods: {
         byfacebook() {
@@ -98,16 +95,11 @@ export default {
                 })
                 .then(res => {
                     if (res.data.code == 0) {
-                        initUser(
-                            res.data.data.token,
-                            res.data.data.userId,
-                            res.data.data
-                        )
+                        initUser(res.data.data.token, res.data.data.userId, res.data.data)
                         if (this.pre) {
                             window.location.href = this.pre
                         } else {
-                            window.location.href =
-                                '/hybrid/payment/wallet/payto'
+                            window.location.href = '/hybrid/payment/wallet/payto'
                         }
                     } else {
                         this.$alert(res.datea.message)

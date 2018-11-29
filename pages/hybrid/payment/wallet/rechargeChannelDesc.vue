@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <h3>Recharge by {{name}}</h3>
+        <h3>Recharge by {{ name }}</h3>
         <h4 class="description">Description</h4>
         <div class="desc">
-            <div v-html="desc"></div>
-            <div id="copy-button" :data-clipboard-text="ussd" v-if="ussd">click to copy {{ussd}}</div>
+            <div v-html="desc"/>
+            <div id="copy-button" :data-clipboard-text="ussd" v-if="ussd">click to copy {{ ussd }}</div>
         </div>
         <div class="footer">
-            <mButton :disabled="type!=4&&type!=1" text="NEXT" @click="nextStep"></mButton>
+            <mButton :disabled="type!=4&&type!=1" text="NEXT" @click="nextStep"/>
         </div>
     </div>
 </template>
@@ -29,9 +29,7 @@ export default {
         mButton
     },
     mounted() {
-        let channelInfo = JSON.parse(
-            window.localStorage.getItem('wallet_charge_channel')
-        )
+        let channelInfo = JSON.parse(window.localStorage.getItem('wallet_charge_channel'))
         this.name = channelInfo.value
         this.desc = channelInfo.desc
         this.code = channelInfo.code
@@ -92,7 +90,7 @@ export default {
 }
 .desc {
     padding: 1rem 0;
-    color:#666666;
+    color: #666666;
 }
 .footer {
     position: fixed;
@@ -102,9 +100,9 @@ export default {
     left: 0;
     right: 0;
 }
-#copy-button{
-    margin-top:1rem;
-    font-weight:bold;
-    color:blue;
+#copy-button {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: blue;
 }
 </style>

@@ -1,10 +1,8 @@
 <template>
     <div class="container">
-        <p>
-            {{desc}}
-        </p>
+        <p>{{desc}}</p>
         <div class="footer">
-            <mButton :disabled="false" text="PAY NOW" @click="nextStep"></mButton>
+            <mButton :disabled="false" text="PAY NOW" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -35,44 +33,33 @@ export default {
             return false
         }
 
-        this.$axios
-            .get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`)
-            .then(res => {
-                let data = res.data
-                if (data && data.payChannels && data.payChannels.length > 0) {
-                    let payChannels = {}
-                    data.payChannels.forEach((item, index) => {
-                        payChannels[item.id] = item
-                    })
-                    if (payChannels[this.payChannel]) {
-                        this.desc = payChannels[this.payChannel].description
-                        this.form_exit =
-                            payChannels[this.payChannel].formConfigExist
-                        this.appInterfaceMode =
-                            payChannels[this.payChannel].appInterfaceMode
-                        this.payType = payChannels[this.payChannel].payType
+        this.$axios.get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
+            let data = res.data
+            if (data && data.payChannels && data.payChannels.length > 0) {
+                let payChannels = {}
+                data.payChannels.forEach((item, index) => {
+                    payChannels[item.id] = item
+                })
+                if (payChannels[this.payChannel]) {
+                    this.desc = payChannels[this.payChannel].description
+                    this.form_exit = payChannels[this.payChannel].formConfigExist
+                    this.appInterfaceMode = payChannels[this.payChannel].appInterfaceMode
+                    this.payType = payChannels[this.payChannel].payType
 
-                        // 请求支付
-                        this.invokePay()
-                    } else {
-                        this.$alert(
-                            'payToken and payChannel Mismatch! please check request'
-                        )
-                    }
+                    // 请求支付
+                    this.invokePay()
                 } else {
-                    this.$alert(
-                        'The merchant has not yet opened a supportable payment channel.'
-                    )
+                    this.$alert('payToken and payChannel Mismatch! please check request')
                 }
-            })
+            } else {
+                this.$alert('The merchant has not yet opened a supportable payment channel.')
+            }
+        })
     },
     methods: {
         invokePay() {
             if (!this.form_exit) {
-                if (
-                    this.payType != 3 &&
-                    [2, 3].indexOf(this.appInterfaceMode) < 0
-                ) {
+                if (this.payType != 3 && [2, 3].indexOf(this.appInterfaceMode) < 0) {
                     /* payType 取值
                     1、钱包余额
                     2、现金
@@ -105,8 +92,7 @@ export default {
                             if (this.appInterfaceMode == 2) {
                                 this.redirectUrl = data.tppRedirectUrl
                             }
-                            this.merchantRedirectUrl =
-                                data.merchantPayRedirectUrl
+                            this.merchantRedirectUrl = data.merchantPayRedirectUrl
                         }
                     })
             }
@@ -114,11 +100,7 @@ export default {
         nextStep() {
             if (this.form_exit) {
                 this.$router.push(
-                    `/hybrid/payment/form?payToken=${
-                        this.payToken
-                    }&payChannelId=${this.payChannel}&appInterfaceMode=${
-                        this.appInterfaceMode
-                    }`
+                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.payChannel}&appInterfaceMode=${this.appInterfaceMode}`
                 )
             } else {
                 if (this.appInterfaceMode == 2) {
@@ -132,9 +114,7 @@ export default {
                     //     'Try again'
                     // )
                 }
-                this.$router.push(
-                    `/hybrid/payment/payResult?payToken=${this.payToken}`
-                )
+                this.$router.push(`/hybrid/payment/payResult?payToken=${this.payToken}`)
             }
         }
     },

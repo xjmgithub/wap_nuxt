@@ -3,13 +3,31 @@
         <div class="input-tel" :class="{focus:focus_tel,error:error_tel}">
             <div class="prefix">+{{prefix}}</div>
             <div class="number">
-                <input type="tel" v-model="tel" @focus="focus_tel=true" @blur="focus_tel=false" placeholder="Enter your Phone Number" />
+                <input
+                    type="tel"
+                    v-model="tel"
+                    @focus="focus_tel=true"
+                    @blur="focus_tel=false"
+                    placeholder="Enter your Phone Number"
+                >
             </div>
             <div class="error" v-show="error_tel">{{error_tel}}</div>
         </div>
         <div class="get-code">
-            <input type="text" maxlength="4" :class="{focus:focus_code,error:error_code}" v-model="vscode" @focus="focus_code=true" @blur="focus_code=false" placeholder="Click to get verification code" />
-            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get code'}}</div>
+            <input
+                type="text"
+                maxlength="4"
+                :class="{focus:focus_code,error:error_code}"
+                v-model="vscode"
+                @focus="focus_code=true"
+                @blur="focus_code=false"
+                placeholder="Click to get verification code"
+            >
+            <div
+                class="btn"
+                :class="{disabled:!canGetCode}"
+                @click="getCode"
+            >{{codeDuring>0?`${codeDuring}s`:'Get code'}}</div>
             <div class="error_code" v-show="error_code">{{error_code}}</div>
         </div>
     </div>
@@ -19,9 +37,11 @@ import qs from 'qs'
 export default {
     props: {
         prefix: {
+            type: String,
             required: true
         },
         type: {
+            type: Number,
             default: 0
         }
     },
@@ -43,16 +63,13 @@ export default {
                         phone: this.tel,
                         code: nv
                     }),
-                    url: this.type
-                        ? '/ums/v1/user/code/sms'
-                        : '/ums/v1/register/code/sms'
+                    url: this.type ? '/ums/v1/user/code/sms' : '/ums/v1/register/code/sms'
                 }).then(res => {
                     if (res.data.code == 0) {
                         this.$emit('pass', true)
                     } else {
                         this.$emit('pass', false)
-                        this.error_code =
-                            'This code you entered is incorrect. Please try again.'
+                        this.error_code = 'This code you entered is incorrect. Please try again.'
                     }
                 })
             } else {
@@ -88,20 +105,15 @@ export default {
             // TODO 防止多次点击
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
-            let url = this.type
-                ? '/ums/v1/user/code/sms'
-                : '/ums/v1/register/code/sms'
-            this.$axios
-                .get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}`)
-                .then(res => {
-                    this.waiting_res = false
-                    if (res.data.code == 0) {
-                        this.codeDuring = 60
-                    } else {
-                        this.error_tel =
-                            'Please confirm you have entered the right number.'
-                    }
-                })
+            let url = this.type ? '/ums/v1/user/code/sms' : '/ums/v1/register/code/sms'
+            this.$axios.get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}`).then(res => {
+                this.waiting_res = false
+                if (res.data.code == 0) {
+                    this.codeDuring = 60
+                } else {
+                    this.error_tel = 'Please confirm you have entered the right number.'
+                }
+            })
         }
     },
     beforeDestroy() {
@@ -147,8 +159,8 @@ export default {
             border: none;
             display: block;
             padding: 0 0.5rem;
-            height:1.5rem;
-            line-height:1.5rem;
+            height: 1.5rem;
+            line-height: 1.5rem;
             outline: none;
             &::-webkit-input-placeholder {
                 font-size: 0.9rem;
@@ -190,7 +202,7 @@ export default {
         background: #0087eb;
         color: white;
         font-size: 0.9rem;
-        font-weight:bold;
+        font-weight: bold;
         text-align: center;
         height: 2.3rem;
         line-height: 2.3rem;

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <loading v-show="loadStatus"></loading>
+        <loading v-show="loadStatus"/>
         <!-- TODO SETPASSWORD -->
     </div>
 </template>
@@ -8,6 +8,9 @@
 import loading from '~/components/loading'
 export default {
     layout: 'base',
+    components: {
+        loading
+    },
     data() {
         return {
             loadStatus: true
@@ -38,21 +41,14 @@ export default {
                 })
                 if (type == true) {
                     // if (phoneIsSet == 'false') {
-                        this.$router.replace(
-                            '/hybrid/payment/wallet/validPhone?init=true'
-                        )
+                    this.$router.replace('/hybrid/payment/wallet/validPhone?init=true')
                     // }
                 } else {
                     // if (emailIsSet == 'false') {
-                        this.$router.replace(
-                            '/hybrid/payment/wallet/validEmail?init=true'
-                        )
+                    this.$router.replace('/hybrid/payment/wallet/validEmail?init=true')
                     // }
                 }
             })
-    },
-    components: {
-        loading
     }
 }
 </script>

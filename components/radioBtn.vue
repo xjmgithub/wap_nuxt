@@ -1,25 +1,37 @@
 <template>
-  <div class="radio-box">
-    <div v-for="(item,i) in radioList" :key="i">
-      <label class="radio">
-        <input type="radio" name="pay-options" value="item.code" @click="checkThis(item.code)" :checked="item.checked?true:false"/>
-        <i></i>
-        <!-- <div class="img-box" v-show="item.imgUrl">
+    <div class="radio-box">
+        <div v-for="(item,i) in radioList" :key="i">
+            <label class="radio">
+                <input
+                    type="radio"
+                    name="pay-options"
+                    value="item.code"
+                    @click="checkThis(item.code)"
+                    :checked="item.checked?true:false"
+                >
+                <i/>
+                <!-- <div class="img-box" v-show="item.imgUrl">
           <img :src="item.imgUrl" alt=""> 
-        </div> -->
-        <span>{{item.value}}</span>
-      </label>
+                </div>-->
+                <span :class="{ml15:item.imgUrl!=''}">{{item.value}}</span>
+            </label>
+        </div>
     </div>
-  </div>
 </template>
 <script>
 export default {
-  props: ["radioList"],
-  methods:{
-      checkThis(code){
-          this.$emit('pick',code)
-      }
-  }
+    props: {
+        radioList: {
+            type: Array,
+            required: true,
+            default: new Array()
+        }
+    }['radioList'],
+    methods: {
+        checkThis(code) {
+            this.$emit('pick', code)
+        }
+    }
 }
 </script>
 <style scoped>
@@ -30,8 +42,8 @@ export default {
     position: relative;
     cursor: pointer;
     display: block;
-    line-height:1.65rem;
-    height:1.65rem;
+    line-height: 1.65rem;
+    height: 1.65rem;
 }
 .radio-box input {
     position: absolute;

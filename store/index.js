@@ -7,7 +7,7 @@ export const state = () => ({
     token: '',
     appType: 0, // 0 others 1 android_app 2 ios_app
     appVersion: '-1',
-    appVersionCode:'-1',
+    appVersionCode: '-1',
     gaClientId: '',
     lang: {},
     shadowStatus: false,
@@ -17,9 +17,9 @@ export const state = () => ({
     country: {},
     selectCompId: 0,
     netType: 0,
-    carrier:'',
-    phoneModel:'',
-    intervalTimer:null
+    carrier: '',
+    phoneModel: '',
+    intervalTimer: null
 })
 
 export const mutations = {
@@ -74,10 +74,10 @@ export const mutations = {
     SET_CARRIER: function(state, val) {
         state.carrier = val
     },
-    SET_PHONE_MODEL: function(state,val){
+    SET_PHONE_MODEL: function(state, val) {
         state.phoneModel = val
     },
-    SET_TIMER: function(state,val){
+    SET_TIMER: function(state, val) {
         state.intervalTimer = val
     }
 }
@@ -93,8 +93,7 @@ export const actions = {
             })
 
         // set language
-        let language =
-            req.headers['lncode'] || req.headers['accept-language']
+        let language = req.headers['lncode'] || req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
             commit('SET_LANG', LANG.fy)
         } else if (language.indexOf('sw') >= 0) {
@@ -123,7 +122,7 @@ export const actions = {
                 commit('SET_DEVICE', result)
             }
         }
-        
+
         if (req.headers['token']) {
             commit('SET_TOKEN', req.headers['token'])
         } else {
@@ -131,10 +130,7 @@ export const actions = {
                 commit('SET_TOKEN', _COOKIE['token'])
             } else {
                 // this.$axios.setHeader('x-forwarded-for', '41.219.255.255')
-                this.$axios.setHeader(
-                    'x-forwarded-for',
-                    req.connection.remoteAddress
-                )
+                this.$axios.setHeader('x-forwarded-for', req.connection.remoteAddress)
                 let res = await this.$axios.post('/ums/v1/user/login', {
                     applicationId: 1,
                     deviceType: 1,
@@ -173,23 +169,17 @@ export const actions = {
             commit('SET_GA_CLIENT', req.headers['cid'])
         }
 
-        if(req.headers['versioncode']){
-            commit('SET_APP_VERSION_CODE',req.headers['versioncode'])
-        }else{
-            commit('SET_APP_VERSION_CODE',-99)
+        if (req.headers['versioncode']) {
+            commit('SET_APP_VERSION_CODE', req.headers['versioncode'])
+        } else {
+            commit('SET_APP_VERSION_CODE', -99)
         }
 
         if (req.headers['versionname']) {
             commit('SET_APP_VERSION', req.headers['versionname'])
         } else {
-            if (
-                req.headers['versioncode'] &&
-                versionMap[req.headers['versioncode']]
-            ) {
-                commit(
-                    'SET_APP_VERSION',
-                    versionMap[req.headers['versioncode']]
-                )
+            if (req.headers['versioncode'] && versionMap[req.headers['versioncode']]) {
+                commit('SET_APP_VERSION', versionMap[req.headers['versioncode']])
             }
         }
 

@@ -2,20 +2,20 @@
     <div class="wrapper">
         <div class="input-item">
             <div class="label">Create a Password</div>
-            <input type="text" v-model="pass" @blur="checkpass" />
+            <input type="text" v-model="pass" @blur="checkpass">
         </div>
-            <div class="input-item">
-                <div class="label">Confirm New Password</div>
-                <input type="text" v-model="repass" @blur="checkpass" />
+        <div class="input-item">
+            <div class="label">Confirm New Password</div>
+            <input type="text" v-model="repass" @blur="checkpass">
         </div>
-                <div class="input-item invite">
-                    <div class="label">Invitation Code(Optional)</div>
-                    <input type="text" v-model="inviteCode" @blur="checkpass" />
+        <div class="input-item invite">
+            <div class="label">Invitation Code(Optional)</div>
+            <input type="text" v-model="inviteCode" @blur="checkpass">
         </div>
-                    <div class="footer">
-                        <mButton :disabled="false" :text="'NEXT'" @click="nextStep"></mButton>
-                    </div>
-                </div>
+        <div class="footer">
+            <mButton :disabled="false" :text="'NEXT'" @click="nextStep" />
+        </div>
+    </div>
 </template>
 <script>
 import mButton from '~/components/button'
@@ -56,16 +56,13 @@ export default {
                 options.type = 0
             }
 
-            this.$axios
-                .post('/ums/v1/register', options)
-                .then(res => {
-                    if (res.data.code == 0) {
-                        this.$router.push('/hybrid/account/login')
-                    } else {
-                        this.error_code =
-                            'This code you entered is incorrect. Please try again.'
-                    }
-                })
+            this.$axios.post('/ums/v1/register', options).then(res => {
+                if (res.data.code == 0) {
+                    this.$router.push('/hybrid/account/login')
+                } else {
+                    this.error_code = 'This code you entered is incorrect. Please try again.'
+                }
+            })
         }
     },
     components: {

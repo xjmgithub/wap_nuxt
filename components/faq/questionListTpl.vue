@@ -20,16 +20,18 @@ export default {
     props: {
         list: {
             require: true,
-            type: Array
+            type: Array,
+            default: new Array()
         },
-        dtype:{
-            require:false,
-            type:Number
+        dtype: {
+            require: false,
+            type: Number,
+            default: 0
         }
     },
     methods: {
         ask(item) {
-            this.$emit('ask', item,this.dtype)
+            this.$emit('ask', item, this.dtype)
         }
     }
 }

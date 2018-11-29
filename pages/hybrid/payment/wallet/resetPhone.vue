@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <verifyTel ref="phone" :disabled="!nocheck" :title="title" :prefix="prefix" @canNext="canStep1=true"></verifyTel>
+        <verifyTel ref="phone" :disabled="!nocheck" :title="title" :prefix="prefix" @canNext="canStep1=true" />
         <div class="footer">
-            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"></mButton>
+            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"/>
         </div>
-        <div class="step2" v-show="step==2">
-            <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code" @endinput="codeEnd"></passInput>
+        <div v-show="step==2" class="step2">
+            <passInput />
             <div class="footer">
-                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)"></mButton>
+                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)" />
             </div>
         </div>
     </div>
@@ -18,6 +18,11 @@ import mButton from '~/components/button'
 import passInput from '~/components/password'
 export default {
     layout: 'base',
+    components: {
+        verifyTel,
+        mButton,
+        passInput
+    },
     data() {
         return {
             canStep1: false,
@@ -32,15 +37,11 @@ export default {
     },
     computed: {
         title() {
-            return !this.nocheck
-                ? 'Confirm your cellphone number'
-                : 'Enter cellphone number'
+            return !this.nocheck ? 'Confirm your cellphone number' : 'Enter cellphone number'
         }
     },
     mounted() {
-        let walletAccount = JSON.parse(
-            window.localStorage.getItem('wallet_account')
-        )
+        let walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
         this.accountNo = walletAccount.accountNo
         if (!this.nocheck) {
             if (walletAccount.phone) {
@@ -65,10 +66,7 @@ export default {
                 if (this.nocheck) {
                     this.$axios
                         .put(
-                            `/mobilewallet/v1/accounts/${
-                                this.accountNo
-                            }/phone?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}&oldPhone=${
+                            `/mobilewallet/v1/accounts/${this.accountNo}/phone?phone=${this.prefix + tel}&verifyCode=${vscode}&oldPhone=${
                                 this.oldphone
                             }&verifyCode4Old=${this.vscode}`
                         )
@@ -76,8 +74,7 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.$alert('Set phone successfully.', () => {
-                                    window.location.href =
-                                        '/hybrid/payment/wallet/payto'
+                                    window.location.href = '/hybrid/payment/wallet/payto'
                                 })
                             } else {
                                 this.$alert(data.message)
@@ -85,17 +82,11 @@ export default {
                         })
                 } else {
                     this.$axios
-                        .get(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/verify-code?phone=${this.prefix +
-                                tel}&verifyCode=${vscode}`
-                        )
+                        .get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${this.prefix + tel}&verifyCode=${vscode}`)
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
-                                window.location.href = `/hybrid/payment/wallet/resetPhone?nocheck=1&oldphone=${this
-                                    .prefix + tel}&vscode=${vscode}`
+                                window.location.href = `/hybrid/payment/wallet/resetPhone?nocheck=1&oldphone=${this.prefix + tel}&vscode=${vscode}`
                             } else {
                                 this.$alert(data.message)
                             }
@@ -114,11 +105,6 @@ export default {
         codeEnd(bool) {
             this.canStep2 = bool
         }
-    },
-    components: {
-        verifyTel,
-        mButton,
-        passInput
     }
 }
 </script>

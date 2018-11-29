@@ -1,10 +1,10 @@
 <template>
-    <div class="shadow-layer" @click="click"></div>
+    <div class="shadow-layer" @click="click"/>
 </template>
 <script>
 export default {
-    methods:{
-        click(){
+    methods: {
+        click() {
             this.$emit('click')
         }
     }
@@ -18,6 +18,6 @@ export default {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
-    z-index:100;
+    z-index: 100;
 }
 </style>

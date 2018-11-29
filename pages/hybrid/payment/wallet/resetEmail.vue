@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <verifyEmail ref="emailCont" :disabled="!nocheck"></verifyEmail>
+        <verifyEmail ref="emailCont" :disabled="!nocheck"/>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="goStep(2)"></mButton>
+            <mButton :disabled="false" text="NEXT" @click="goStep(2)"/>
         </div>
-        <div class="step2" v-show="step==2">
-            <passInput length="4" ref="vscode" placeholder="Enter SMS verification code"></passInput>
+        <div v-show="step==2" class="step2">
+            <passInput/>
             <div class="footer">
-                <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
+                <mButton :disabled="false" text="NEXT" @click="goStep(3)"/>
             </div>
         </div>
     </div>
@@ -18,6 +18,11 @@ import mButton from '~/components/button'
 import passInput from '~/components/password'
 export default {
     layout: 'base',
+    components: {
+        verifyEmail,
+        mButton,
+        passInput
+    },
     data() {
         return {
             canStep1: false,
@@ -29,15 +34,8 @@ export default {
             vscode: this.$route.query.vscode
         }
     },
-    components: {
-        verifyEmail,
-        mButton,
-        passInput
-    },
     mounted() {
-        let walletAccount = JSON.parse(
-            window.localStorage.getItem('wallet_account')
-        )
+        let walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
         this.accountNo = walletAccount.accountNo
         if (!this.nocheck) {
             if (walletAccount.email) {
@@ -52,26 +50,18 @@ export default {
             if (num == 2) {
                 // TODO BUTTON按钮状态
                 let email = this.$refs.emailCont.email
-                this.$axios
-                    .post(
-                        `/mobilewallet/uc/v2/accounts/${
-                            this.accountNo
-                        }/verify-code-mail?email=${email}`
-                    )
-                    .then(res => {
-                        if (res.data.code == 0) {
-                            this.step = num
-                        }
-                    })
+                this.$axios.post(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code-mail?email=${email}`).then(res => {
+                    if (res.data.code == 0) {
+                        this.step = num
+                    }
+                })
             } else if (num == 3) {
                 let vscode = this.$refs.vscode.password
                 let email = this.$refs.emailCont.email
                 if (this.nocheck) {
                     this.$axios
                         .put(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/setEmail?email=${email}&verifyCode=${vscode}&oldEmail=${
+                            `/mobilewallet/uc/v2/accounts/${this.accountNo}/setEmail?email=${email}&verifyCode=${vscode}&oldEmail=${
                                 this.oldemail
                             }&verifyCode4Old=${this.vscode}`
                         )
@@ -79,28 +69,21 @@ export default {
                             let data = res.data
                             if (data && data.code == '0') {
                                 this.$alert('Set email successfully.', () => {
-                                    window.location.href =
-                                        '/hybrid/payment/wallet/payto'
+                                    window.location.href = '/hybrid/payment/wallet/payto'
                                 })
                             } else {
                                 this.$alert(data.message)
                             }
                         })
                 } else {
-                    this.$axios
-                        .get(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/verify-code?phone=${email}&verifyCode=${vscode}`
-                        )
-                        .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
-                                window.location.href = `/hybrid/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
-                            } else {
-                                this.$alert(data.message)
-                            }
-                        })
+                    this.$axios.get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${email}&verifyCode=${vscode}`).then(res => {
+                        let data = res.data
+                        if (data && data.code == '0') {
+                            window.location.href = `/hybrid/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
+                        } else {
+                            this.$alert(data.message)
+                        }
+                    })
                 }
             }
         },

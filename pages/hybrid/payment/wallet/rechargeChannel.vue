@@ -1,16 +1,16 @@
 <template>
     <div>
         <div class="eWallet">
-            <p class="cardNo">eWallet No. {{walletAccount}}</p>
+            <p class="cardNo">eWallet No. {{ walletAccount }}</p>
             <div>
-                <span class="balance">Balance: </span>
-                <span class="currency">{{currency}}</span>
-                <span class="money">{{walletLeft | fixAmount}}</span>
+                <span class="balance">Balance:</span>
+                <span class="currency">{{ currency }}</span>
+                <span class="money">{{ walletLeft | fixAmount }}</span>
             </div>
         </div>
-        <RadioBtn :radioList="radioList" class="radioBtn" @pick="changeItem"></RadioBtn>
+        <RadioBtn :radio-list="radioList" class="radioBtn" @pick="changeItem"/>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="nextStep"></mButton>
+            <mButton :disabled="false" text="NEXT" @click="nextStep"/>
         </div>
     </div>
 </template>
@@ -46,7 +46,7 @@ export default {
         this.walletAccount = wallet.accountNo
         this.walletLeft = wallet.amount
         this.currency = JSON.parse(localStorage.getItem('payObject')).currency
-        
+
         this.$axios.get('/mobilewallet/v1/recharge-channels').then(res => {
             let list = []
             if (res.data && res.data.length > 0) {
@@ -78,10 +78,7 @@ export default {
     },
     methods: {
         nextStep() {
-            window.localStorage.setItem(
-                'wallet_charge_channel',
-                JSON.stringify(this.selectedChannel)
-            )
+            window.localStorage.setItem('wallet_charge_channel', JSON.stringify(this.selectedChannel))
             this.$router.push('/hybrid/payment/wallet/rechargeChannelDesc')
         },
         changeItem(code) {

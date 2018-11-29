@@ -2,12 +2,22 @@
     <div class="email-cont">
         <div class="input-email" :class="{focus:focus_email,error:error_email}">
             <div class="number">
-                <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email address" />
+                <input
+                    type="email"
+                    v-model="email"
+                    @focus="focus_email=true"
+                    @blur="focus_email=false"
+                    placeholder="Enter your email address"
+                >
             </div>
             <div class="error" v-show="error_email">{{error_email}}</div>
         </div>
         <div class="get-code">
-            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+            <div
+                class="btn"
+                :class="{disabled:!canGetCode}"
+                @click="getCode"
+            >{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
         </div>
     </div>
 </template>
@@ -16,6 +26,7 @@ import qs from 'qs'
 export default {
     props: {
         type: {
+            type: Number,
             default: 0
         }
     },
@@ -49,16 +60,15 @@ export default {
             if (!this.canGetCode) return false
             this.$axios
                 .get(`/ums/v1/register/password/change?email=${this.email}`, {
-                headers: {
-                    token: this.$store.state.token
-                }
-            })
+                    headers: {
+                        token: this.$store.state.token
+                    }
+                })
                 .then(res => {
                     if (res.data.code == 0) {
                         this.codeDuring = 60
                     } else {
-                        this.error_email =
-                            'Please confirm you have entered the right email.'
+                        this.error_email = 'Please confirm you have entered the right email.'
                     }
                 })
         }

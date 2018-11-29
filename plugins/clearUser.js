@@ -5,7 +5,7 @@ export default ({ app: { router }, store }) => {
         if (store.state.intervalTimer) {
             clearInterval(store.state.intervalTimer)
         }
-        
+
         if (store.state.user) {
             next()
         } else {
@@ -28,9 +28,7 @@ export default ({ app: { router }, store }) => {
                 </div>'
                 document.getElementById('mis').onclick = function() {
                     if (store.state.appType == 1) {
-                        toNativePage(
-                            'com.star.mobile.video.account.LoginActivity'
-                        )
+                        toNativePage('com.star.mobile.video.account.LoginActivity')
                     } else {
                         toNativePage('startimes://login')
                     }

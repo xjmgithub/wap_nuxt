@@ -1,29 +1,29 @@
 <template>
     <div class="container">
-        <verifyEmail :disabled="reset" ref="emailCont"></verifyEmail>
-        <div class="change-phone-link" v-if="reset">
+        <verifyEmail ref="emailCont" :disabled="reset"/>
+        <div v-if="reset" class="change-phone-link">
             <nuxt-link to="/hybrid/payment/wallet/resetEmail">Change email</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="goStep(2)" style="margin-bottom:0.5rem"></mButton>
+            <mButton :disabled="false" text="NEXT" style="margin-bottom:0.5rem" @click="goStep(2)"/>
             <nuxt-link v-if="!init&&wallet_phone_config" to="/hybrid/payment/wallet/validPhone">RESET IT BY CELLPHONE NUMBER</nuxt-link>
         </div>
-        <div class="step2" v-show="step==2">
-            <passInput length="4" ref="vscode" :toggleView="true" placeholder="Enter SMS verification code"></passInput>
+        <div v-show="step==2" class="step2">
+            <passInput/>
             <div class="footer">
-                <mButton :disabled="false" text="NEXT" @click="goStep(3)"></mButton>
+                <mButton :disabled="false" text="NEXT" @click="goStep(3)"/>
             </div>
         </div>
-        <div class="step2 step3" v-show="step==3">
-            <passInput ref="newpass" :toggleView="true" placeholder="Set payment password" @endinput="inputPass"></passInput>
+        <div v-show="step==3" class="step2 step3">
+            <passInput ref="newpass" :toggle-view="true" placeholder="Set payment password" @endinput="inputPass"/>
             <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"></mButton>
+                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"/>
             </div>
         </div>
-        <div class="step2 step4" v-show="step==4">
-            <passInput ref="confirmpass" :toggleView="true" placeholder="Confirm Password" @endinput="confirmEnd"></passInput>
+        <div v-show="step==4" class="step2 step4">
+            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm Password" @endinput="confirmEnd"/>
             <div class="footer">
-                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"></mButton>
+                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"/>
             </div>
         </div>
     </div>
@@ -34,6 +34,11 @@ import mButton from '~/components/button'
 import passInput from '~/components/password'
 export default {
     layout: 'base',
+    components: {
+        verifyEmail,
+        mButton,
+        passInput
+    },
     data() {
         return {
             reset: false,
@@ -47,15 +52,8 @@ export default {
             wallet_phone_config: false
         }
     },
-    components: {
-        verifyEmail,
-        mButton,
-        passInput
-    },
     mounted() {
-        let walletAccount = JSON.parse(
-            window.localStorage.getItem('wallet_account')
-        )
+        let walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
         this.accountNo = walletAccount.accountNo
 
         if (walletAccount.phone) {
@@ -73,9 +71,7 @@ export default {
                 let email = this.$refs.emailCont.email
                 this.$axios
                     .post(
-                        `/mobilewallet/uc/v2/accounts/${
-                            this.accountNo
-                        }/verify-code-mail?email=${email}`,
+                        `/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code-mail?email=${email}`,
                         {},
                         {
                             headers: {
@@ -91,23 +87,16 @@ export default {
             } else if (num == 3) {
                 let vscode = this.$refs.vscode.password
                 let email = this.$refs.emailCont.email
-                let wallet_config = JSON.parse(
-                    localStorage.getItem('wallet_config')
-                )
+                let wallet_config = JSON.parse(localStorage.getItem('wallet_config'))
 
                 if (this.reset) {
                     // 验证邮箱
                     this.$axios
-                        .get(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/verify-code?phone=${email}&verifyCode=${vscode}`,
-                            {
-                                headers: {
-                                    token: this.$store.state.token
-                                }
+                        .get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${email}&verifyCode=${vscode}`, {
+                            headers: {
+                                token: this.$store.state.token
                             }
-                        )
+                        })
                         .then(res => {
                             let data = res.data
                             if (data && data.code == '0') {
@@ -120,9 +109,7 @@ export default {
                     // 设置邮箱
                     this.$axios
                         .put(
-                            `/mobilewallet/uc/v2/accounts/${
-                                this.accountNo
-                            }/setEmail?email=${email}&verifyCode=${vscode}`,
+                            `/mobilewallet/uc/v2/accounts/${this.accountNo}/setEmail?email=${email}&verifyCode=${vscode}`,
                             {},
                             {
                                 headers: {
@@ -135,9 +122,7 @@ export default {
                             if (data && data.code == '0') {
                                 this.$alert('Set email successfully', () => {
                                     if (wallet_config.payPassword == 'true') {
-                                        this.$router.replace(
-                                            '/hybrid/payment/wallet/paybyPass'
-                                        )
+                                        this.$router.replace('/hybrid/payment/wallet/paybyPass')
                                     } else {
                                         this.step = num
                                     }
@@ -155,26 +140,19 @@ export default {
                     this.$confirm(
                         'Password do not match.Please try again.',
                         () => {
-                            window.location.href =
-                                '/hybrid/payment/wallet/validEmail'
+                            window.location.href = '/hybrid/payment/wallet/validEmail'
                         },
                         () => {
-                            this.$confirm(
-                                'Cancel setting your payment password?',
-                                () => {
-                                    window.location.href =
-                                        '/hybrid/payment/wallet/payto'
-                                }
-                            )
+                            this.$confirm('Cancel setting your payment password?', () => {
+                                window.location.href = '/hybrid/payment/wallet/payto'
+                            })
                         }
                     )
                     return false
                 }
                 this.$axios
                     .put(
-                        `/mobilewallet/uc/v2/accounts/${
-                            this.accountNo
-                        }/pay-password?newPassword=${newpass}&verifyCode=${vscode}`,
+                        `/mobilewallet/uc/v2/accounts/${this.accountNo}/pay-password?newPassword=${newpass}&verifyCode=${vscode}`,
                         {},
                         {
                             headers: {

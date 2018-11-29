@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <mheader />
-    <mnav />
-    <nuxt/>
-    <mfooter/>
-  </div>
+    <div>
+        <mheader/>
+        <mnav/>
+        <nuxt/>
+        <mfooter/>
+    </div>
 </template>
 
 <script>
@@ -13,15 +13,15 @@ import mheader from '~/components/header.vue'
 import mnav from '~/components/nav.vue'
 
 export default {
-  components: {
-    mfooter,
-    mheader,
-    mnav
-  }
+    components: {
+        mfooter,
+        mheader,
+        mnav
+    }
 }
 </script>
 
-<style>
+<style scoped>
 html,
 body {
     padding: 0;

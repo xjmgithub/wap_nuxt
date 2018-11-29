@@ -1,30 +1,24 @@
 <template>
     <div class="container" :class="{'grey-back':result==2}">
-        <loading v-show="loadStatus"></loading>
+        <loading v-show="loadStatus" />
         <template v-if="result=='1'&&!loadStatus">
-            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt="">
-            <p class="success">
-                Payment Successful
-            </p>
+            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
+            <p class="success">Payment Successful</p>
             <p class="money">
                 {{money}}
                 <span>{{currency}}</span>
             </p>
-            <p class="msg lf">
-                Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
-            </p>
+            <p
+                class="msg lf"
+            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'&&!loadStatus">
-            <img src="~assets/img/pay/img_failed_def_b.png" alt="">
-            <p class="fail">
-                Payment Failed
-            </p>
-            <p class="msg">
-                {{fail_message}}
-            </p>
+            <img src="~assets/img/pay/img_failed_def_b.png" alt>
+            <p class="fail">Payment Failed</p>
+            <p class="msg">{{fail_message}}</p>
         </template>
         <div class="footer" v-show="!loadStatus">
-            <mButton text="OK" @click="back"></mButton>
+            <mButton text="OK" @click="back" />
         </div>
     </div>
 </template>
@@ -63,30 +57,22 @@ export default {
                 _this.result = 2
                 _this.loadStatus = false
             }
-            _this.$axios
-                .get(
-                    `/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`
-                )
-                .then(res => {
-                    _this.redirect = res.data.merchantPayRedirectUrl
-                    if (res.data && res.data.tradeState == 'SUCCESS') {
-                        _this.result = 1
-                        _this.loadStatus = false
-                        _this.money = res.data.totalAmount
-                        _this.currency = res.data.currency
-                        clearInterval(timer)
-                    } else if (
-                        res.data &&
-                        (res.data.tradeState == 'NOTPAY' ||
-                            res.data.tradeState == 'PAYING')
-                    ) {
-                        // 正在支付
-                    } else if (res.data && res.data.tradeState == 'FAIL') {
-                        clearInterval(timer)
-                        _this.result = 2
-                        _this.loadStatus = false
-                    }
-                })
+            _this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`).then(res => {
+                _this.redirect = res.data.merchantPayRedirectUrl
+                if (res.data && res.data.tradeState == 'SUCCESS') {
+                    _this.result = 1
+                    _this.loadStatus = false
+                    _this.money = res.data.totalAmount
+                    _this.currency = res.data.currency
+                    clearInterval(timer)
+                } else if (res.data && (res.data.tradeState == 'NOTPAY' || res.data.tradeState == 'PAYING')) {
+                    // 正在支付
+                } else if (res.data && res.data.tradeState == 'FAIL') {
+                    clearInterval(timer)
+                    _this.result = 2
+                    _this.loadStatus = false
+                }
+            })
         }, 4000)
     },
     methods: {

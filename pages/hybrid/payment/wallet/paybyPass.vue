@@ -1,14 +1,13 @@
 <template>
     <div class="container">
-        <Password ref="pass" :placeholder="pwdType" :toggleView="true" @endinput="setPassword"></Password>
+        <Password ref="pass" :placeholder="pwdType" :toggle-view="true" @endinput="setPassword"/>
         <div class="forgot-pwd">
             <nuxt-link :to="forgetUrl">Forgot payment password?</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"></mButton>
+            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
         </div>
     </div>
-
 </template>
 <script>
 import mButton from '~/components/button'
@@ -32,9 +31,7 @@ export default {
         Password
     },
     mounted() {
-        this.payChannelId = JSON.parse(
-            window.localStorage.getItem('payChannelId')
-        )
+        this.payChannelId = JSON.parse(window.localStorage.getItem('payChannelId'))
         this.payToken = localStorage.getItem('payToken')
         updateWalletAccount(this, account => {
             updateWalletConf(this, account.accountNo, walletConf => {
@@ -58,9 +55,7 @@ export default {
                             }
                         })
                         if (type == false && walletConf.email == 'false') {
-                            this.$router.replace(
-                                '/hybrid/payment/wallet/validEmail?init=true'
-                            )
+                            this.$router.replace('/hybrid/payment/wallet/validEmail?init=true')
                         }
                     })
 
@@ -99,7 +94,7 @@ export default {
                                 currency: payObject.currency,
                                 note: payObject.payNote,
                                 orderId: order,
-                                payeeAccountNo: data.extendInfo.payeeAccountNo,
+                                payeeAccountNo: this.payChannelId,
                                 payerAccountNo: ewallet.accountNo,
                                 payerPayPassword: this.password,
                                 subject: payObject.paySubject,
@@ -111,19 +106,13 @@ export default {
                             .then(res => {
                                 if (res.data && res.data.resultCode == 0) {
                                     this.$router.push(
-                                        `/hybrid/payment/wallet/payResult?result=1&amount=${
-                                            payObject.totalAmount
-                                        }&currency=${
+                                        `/hybrid/payment/wallet/payResult?result=1&amount=${payObject.totalAmount}&currency=${
                                             payObject.currency
-                                        }&currensySymbol=${
-                                            payObject.currency
-                                        }&redirect=${redirect}`
+                                        }&currensySymbol=${payObject.currency}&redirect=${redirect}`
                                     )
                                 } else {
                                     this.$router.push(
-                                        `/hybrid/payment/wallet/payResult?result=2&message=${
-                                            res.data.resultMessage
-                                        }&redirect=${redirect}`
+                                        `/hybrid/payment/wallet/payResult?result=2&message=${res.data.resultMessage}&redirect=${redirect}`
                                     )
                                 }
                             })

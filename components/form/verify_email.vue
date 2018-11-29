@@ -2,13 +2,31 @@
     <div class="email-cont">
         <div class="input-email" :class="{focus:focus_email,error:error_email}">
             <div class="number">
-                <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email address" />
+                <input
+                    type="email"
+                    v-model="email"
+                    @focus="focus_email=true"
+                    @blur="focus_email=false"
+                    placeholder="Enter your email address"
+                >
             </div>
             <div class="error" v-show="error_email">{{error_email}}</div>
         </div>
         <div class="get-code">
-            <input type="text" maxlength="4" :class="{focus:focus_code,error:error_code}" v-model="vscode" @focus="focus_code=true" @blur="focus_code=false" placeholder="Click to get verification code" />
-            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+            <input
+                type="text"
+                maxlength="4"
+                :class="{focus:focus_code,error:error_code}"
+                v-model="vscode"
+                @focus="focus_code=true"
+                @blur="focus_code=false"
+                placeholder="Click to get verification code"
+            >
+            <div
+                class="btn"
+                :class="{disabled:!canGetCode}"
+                @click="getCode"
+            >{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
             <div class="error_code" v-show="error_code">{{error_code}}</div>
         </div>
     </div>
@@ -18,6 +36,7 @@ import qs from 'qs'
 export default {
     props: {
         type: {
+            type: Number,
             default: 0
         }
     },
@@ -38,16 +57,13 @@ export default {
                         email: this.email,
                         code: nv
                     }),
-                    url: this.type
-                        ? '/ums/v1/user/code/verify'
-                        : '/ums/v1/register/code/verify'
+                    url: this.type ? '/ums/v1/user/code/verify' : '/ums/v1/register/code/verify'
                 }).then(res => {
                     if (res.data.code == 0) {
                         this.$emit('pass', true)
                     } else {
                         this.$emit('pass', false)
-                        this.error_code =
-                            'This code you entered is incorrect. Please try again.'
+                        this.error_code = 'This code you entered is incorrect. Please try again.'
                     }
                 })
             } else {
@@ -83,16 +99,13 @@ export default {
         getCode() {
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
-            let url = this.type
-                ? '/ums/v1/register/password/change'
-                : '/ums/v1/register/code/email'
+            let url = this.type ? '/ums/v1/register/password/change' : '/ums/v1/register/code/email'
             this.$axios.get(`${url}?email=${this.email}`).then(res => {
                 this.waiting_res = false
                 if (res.data.code == 0) {
                     this.codeDuring = 60
                 } else {
-                    this.error_email =
-                        'Please confirm you have entered the right email.'
+                    this.error_email = 'Please confirm you have entered the right email.'
                 }
             })
         }

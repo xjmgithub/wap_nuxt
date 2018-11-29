@@ -9,10 +9,10 @@
 </template>
 <script>
 export default {
-    data () {
+    data() {
         return { list: {} }
     },
-    created(){
+    created() {
         let _this = this
         // let areaId = this.$store.state.country.id
         // this.$axios.get(`http://pc.startimestv.com/home/home/recommendNavigationBar?areaID=${areaId}`)
@@ -24,7 +24,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 ul {
     list-style: none;
     padding: 0;

@@ -5,19 +5,19 @@
         </div>
         <div class="content_show">
             <img class="arrow" src="~assets/img/faq/Triangle.png">
-            <div class="result-wraper" v-html="content"></div>
+            <div class="result-wraper" v-html="content"/>
             <div>
                 <div class="btn" @click="tocomplain">COMPLAIN</div>
-                <div class="clear"></div>
+                <div class="clear"/>
                 <div class="attitude-container" v-if="!noevaluate">
                     <div class="yes-item" @click="evaluate(1)">
-                        <img v-show="!agree" src="~assets/img/faq/ic_happy_def_g.png" alt="">
-                        <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt="">
+                        <img v-show="!agree" src="~assets/img/faq/ic_happy_def_g.png" alt>
+                        <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt>
                         <span>YES</span>
                     </div>
                     <div class="no-item" @click="evaluate(0)">
-                        <img v-show="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png" alt="">
-                        <img v-show="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png" alt="">
+                        <img v-show="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png" alt>
+                        <img v-show="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png" alt>
                         <span>NO</span>
                     </div>
                 </div>
@@ -33,31 +33,37 @@ export default {
             agree: false,
             disagree: false,
             ended: false,
-            isLogin: this.$store.state.user.type || false,
+            isLogin: this.$store.state.user.type || false
         }
     },
     props: {
         content: {
             require: true,
-            type: String
+            type: String,
+            default: ''
         },
         serviceRecord: {
             require: true,
-            type: Number
+            type: Number,
+            default: -1
         },
-        noevaluate: { // 是否有评价
+        noevaluate: {
+            // 是否有评价
+            type: Boolean,
             require: false,
             default: false
         },
-        question:{
-            require:true
+        question: {
+            type: String,
+            require: true,
+            default: ''
         }
     },
-    mounted(){
-        this.$nextTick(()=>{
+    mounted() {
+        this.$nextTick(() => {
             let s = document.querySelectorAll('.result-wraper img')
-            for(let i=0;i<s.length;i++){
-                s[i].onload = ()=>{
+            for (let i = 0; i < s.length; i++) {
+                s[i].onload = () => {
                     this.$emit('imgloaded')
                 }
             }
@@ -66,37 +72,30 @@ export default {
     methods: {
         evaluate(type) {
             if (!this.ended) {
-                this.$axios
-                    .post(
-                        `/css/v1/service/evaluation/${
-                            this.serviceRecord
-                        }?whether_to_solve=${type}&grade=${type ? 2 : 1}`
-                    )
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            // 改变状态
-                            if (type) {
-                                this.agree = true
-                            } else {
-                                this.disagree = true
-                            }
-                            this.ended = true
+                this.$axios.post(`/css/v1/service/evaluation/${this.serviceRecord}?whether_to_solve=${type}&grade=${type ? 2 : 1}`).then(res => {
+                    if (res.data.code == 200) {
+                        // 改变状态
+                        if (type) {
+                            this.agree = true
+                        } else {
+                            this.disagree = true
                         }
-                    })
+                        this.ended = true
+                    }
+                })
             }
         },
-        tocomplain(){
-            if(!this.isLogin){
+        tocomplain() {
+            if (!this.isLogin) {
                 if (this.$store.state.appType == 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
                 } else {
                     toNativePage('startimes://login')
                 }
                 return false
-            }else{
-                this.$router.replace({path:'/hybrid/faq/complain',query:Object.assign({},this.$route.query,{question:this.question})});
+            } else {
+                this.$router.replace({ path: '/hybrid/faq/complain', query: Object.assign({}, this.$route.query, { question: this.question }) })
             }
-            
         }
     }
 }

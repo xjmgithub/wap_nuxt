@@ -7,20 +7,55 @@
                     <span class="refresh_text" v-show="historyEnd">No more history</span>
                 </div>
                 <div>
-                    <img class="refresh_img" v-show="loadHistoryState" src="~/assets/img/spinner.gif" />
+                    <img
+                        class="refresh_img"
+                        v-show="loadHistoryState"
+                        src="~assets/img/spinner.gif"
+                    >
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest"></questionListTpl>
-                <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"></orderBlockTpl>
-                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"></askTpl>
-                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"></answerTpl>
-                <contentTpl v-if="item.tpl=='content'" :noevaluate="item.noEvaluate" :serviceRecord="item.serviceRecord" :key="index" :question="item.questionId" :content="item.content" @imgloaded="refreshScroll"></contentTpl>
+                <questionListTpl
+                    v-if="item.tpl=='list'"
+                    :key="index"
+                    :dtype="item.type"
+                    :list="item.contents"
+                    @ask="askQuest"
+                />
+                <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"/>
+                <askTpl
+                    v-if="item.tpl=='ask'||item.tpl=='chatask'"
+                    :key="index"
+                    :question="item.name"
+                />
+                <answerTpl
+                    v-if="item.tpl=='chatanswer' || item.tpl=='welcome'"
+                    :key="index"
+                    :answer="item.name"
+                />
+                <contentTpl
+                    v-if="item.tpl=='content'"
+                    :noevaluate="item.noEvaluate"
+                    :service-record="item.serviceRecord"
+                    :key="index"
+                    :question="item.questionId"
+                    :content="item.content"
+                    @imgloaded="refreshScroll"
+                />
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
-                <evaluate v-if="item.tpl=='evaluate'" :key="index" :serviceRecord="item.serviceRecord"></evaluate>
-                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied"></msgTpl>
+                <evaluate
+                    v-if="item.tpl=='evaluate'"
+                    :key="index"
+                    :service-record="item.serviceRecord"
+                />
+                <msgTpl
+                    v-if="item.tpl=='message'"
+                    :key="index"
+                    :message="item"
+                    :replied="item.replied"
+                />
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
@@ -30,7 +65,11 @@
         <div class="live-chat-input" v-show="showLiveChatBtn&&connectState==2">
             <div class="user-control-w">
                 <div class="user-edit-w">
-                    <textarea class="form-control user-edit" v-model="chatMsg" placeholder="Enter your question"></textarea>
+                    <textarea
+                        class="form-control user-edit"
+                        v-model="chatMsg"
+                        placeholder="Enter your question"
+                    />
                 </div>
                 <div class="user-submit-w">
                     <button type="submit" class="user-submit-btn" @click="sendChatMsg">SEND</button>
@@ -50,7 +89,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage,setCookie,getCookie } from '~/functions/utils'
+import { toNativePage, setCookie, getCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -73,7 +112,7 @@ export default {
             minHistoryId: '',
             historyEnd: false,
             chatLink: null,
-            messageShowed:[] // 记录已经展示出来的
+            messageShowed: [] // 记录已经展示出来的
         }
     },
     components: {
@@ -94,20 +133,11 @@ export default {
         let _this = this
         // LiveChat 按钮判断
         this.user.areaID &&
-            this.$axios
-                .get(
-                    `/ocs/v1/faqs/faqConfigByAreaId?areaId=${
-                        this.user.areaID
-                    }&entranceId=${this.entrance_id}`
-                )
-                .then(res => {
-                    if (
-                        res.data.code == 200 &&
-                        res.data.data.shortcuts_codes.indexOf(1) >= 0
-                    ) {
-                        this.showLiveChatBtn = true
-                    }
-                })
+            this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.user.areaID}&entranceId=${this.entrance_id}`).then(res => {
+                if (res.data.code == 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
+                    this.showLiveChatBtn = true
+                }
+            })
 
         this.$nextTick(() => {
             let wrapper = document.querySelector('#wrapper')
@@ -129,7 +159,7 @@ export default {
                 _this.loadHistory()
             })
         })
-        
+
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
             // return false
@@ -158,28 +188,26 @@ export default {
 
                 this.renderOrder()
 
-                this.$axios
-                    .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            let list = []
-                            res.data.data.forEach((item, index) => {
-                                list.push({
-                                    id: item.id,
-                                    name: item.thema
-                                })
+                this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
+                    if (res.data.code == 200) {
+                        let list = []
+                        res.data.data.forEach((item, index) => {
+                            list.push({
+                                id: item.id,
+                                name: item.thema
                             })
-                            this.addOperate(
-                                Object.assign({}, res.data.data, {
-                                    operator: 0, // 0 客服， 1 用户
-                                    tpl: 'list', // list , content, order
-                                    pId: '-99',
-                                    type: 1,
-                                    contents: list
-                                })
-                            )
-                        }
-                    })
+                        })
+                        this.addOperate(
+                            Object.assign({}, res.data.data, {
+                                operator: 0, // 0 客服， 1 用户
+                                tpl: 'list', // list , content, order
+                                pId: '-99',
+                                type: 1,
+                                contents: list
+                            })
+                        )
+                    }
+                })
             } else {
                 // 默认根目录进入
                 this.addOperate({
@@ -187,29 +215,27 @@ export default {
                     name: 'Welcome to StarTimes Online Service.'
                 })
 
-                this.$axios
-                    .get(`/ocs/v1/faqs/directory/${this.user.areaID}`)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.categoryId = res.data.data
-                            this.getfaqDirectory(res.data.data)
-                        }
-                    })
+                this.$axios.get(`/ocs/v1/faqs/directory/${this.user.areaID}`).then(res => {
+                    if (res.data.code == 200) {
+                        this.categoryId = res.data.data
+                        this.getfaqDirectory(res.data.data)
+                    }
+                })
             }
-            
+
             this.$nextTick(() => {
-                if(this.$store.state.intervalTimer){
+                if (this.$store.state.intervalTimer) {
                     clearInterval(this.$store.state.intervalTimer)
                 }
                 let timer = setInterval(this.getLeaveMessage, 5 * 1000)
-                this.$store.commit('SET_TIMER',timer)
+                this.$store.commit('SET_TIMER', timer)
             })
         })
     },
     methods: {
         getLeaveMessage() {
             this.$axios
-                .get(`/csms-service/v1/get-standard-leaving-message-record`,{
+                .get(`/csms-service/v1/get-standard-leaving-message-record`, {
                     headers: {
                         'x-clientType': 1,
                         'x-appVersion': '5300'
@@ -218,7 +244,7 @@ export default {
                 .then(res => {
                     if (res.data && res.data.length > 0) {
                         res.data.forEach(item => {
-                            if(this.messageShowed.indexOf(item.id)<0){
+                            if (this.messageShowed.indexOf(item.id) < 0) {
                                 this.messageShowed.push(item.id)
                                 this.addOperate(
                                     Object.assign({}, item, {
@@ -233,17 +259,15 @@ export default {
         },
         getfaqDirectory(id) {
             if (!id) return false
-            this.$axios
-                .get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        this.addOperate(
-                            Object.assign({}, res.data.data, {
-                                tpl: 'list'
-                            })
-                        )
-                    }
-                })
+            this.$axios.get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`).then(res => {
+                if (res.data.code == 200) {
+                    this.addOperate(
+                        Object.assign({}, res.data.data, {
+                            tpl: 'list'
+                        })
+                    )
+                }
+            })
         },
         askQuest(item, type, withOrder) {
             this.addOperate(
@@ -296,19 +320,13 @@ export default {
                             let cacheRecord = getCookie('serviceRecords')
                             if (cacheRecord) {
                                 cacheRecord = JSON.parse(cacheRecord)
-                                if (
-                                    cacheRecord.indexOf(this.serviceRecord) < 0
-                                ) {
+                                if (cacheRecord.indexOf(this.serviceRecord) < 0) {
                                     cacheRecord.push(this.serviceRecord)
                                 }
                             } else {
                                 cacheRecord = [this.serviceRecord]
                             }
-                            setCookie(
-                                'serviceRecords',
-                                JSON.stringify(cacheRecord),
-                                Infinity
-                            )
+                            setCookie('serviceRecords', JSON.stringify(cacheRecord), Infinity)
                         }
                         if (callback) callback()
                     }
@@ -360,26 +378,18 @@ export default {
                         if (res.data.code == 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
-                                let cacheHisory = getCookie(
-                                    'historys'
-                                )
+                                let cacheHisory = getCookie('historys')
                                 if (cacheHisory) {
                                     cacheHisory = JSON.parse(cacheHisory)
-                                    if (
-                                        cacheHisory.indexOf(res.data.data) < 0
-                                    ) {
+                                    if (cacheHisory.indexOf(res.data.data) < 0) {
                                         cacheHisory.push(res.data.data)
                                     }
                                 } else {
                                     cacheHisory = [res.data.data]
                                 }
-                                setCookie(
-                                    'historys',
-                                    JSON.stringify(cacheHisory),
-                                    Infinity
-                                )
-                            } 
-                            
+                                setCookie('historys', JSON.stringify(cacheHisory), Infinity)
+                            }
+
                             // 最小historyId记录
                             if (!this.minHistoryId) {
                                 this.minHistoryId = res.data.data
@@ -399,7 +409,7 @@ export default {
         },
         updateCacheQueue() {
             if (!this.isLogin) {
-                setCookie('renderQueue', JSON.stringify(this.renderQueue),Infinity)
+                setCookie('renderQueue', JSON.stringify(this.renderQueue), Infinity)
                 // sessionStorage.setItem(
                 //     'renderQueue',
                 //     JSON.stringify(this.renderQueue)
@@ -416,7 +426,7 @@ export default {
             let serviceIds = JSON.parse(getCookie('serviceRecords'))
             // let historys = JSON.parse(sessionStorage.getItem('historys'))
             // let serviceIds = JSON.parse(sessionStorage.getItem('serviceRecords'))
-            
+
             if (historys) {
                 historys.forEach(item => {
                     if (this.minHistoryId) {
@@ -428,19 +438,13 @@ export default {
                     }
                 })
                 if (historys && serviceIds) {
-                    this.$axios
-                        .post(
-                            `/css/v1/history/updateUserId?historyIds=${historys.join(
-                                ','
-                            )}&serviceIds=${serviceIds.join(',')}`
-                        )
-                        .then(res => {
-                            if (res.data.code == 200) {
-                                setCookie('serviceRecords','')
-                                setCookie('historys','')
-                                setCookie('renderQueue','')
-                            }
-                        })
+                    this.$axios.post(`/css/v1/history/updateUserId?historyIds=${historys.join(',')}&serviceIds=${serviceIds.join(',')}`).then(res => {
+                        if (res.data.code == 200) {
+                            setCookie('serviceRecords', '')
+                            setCookie('historys', '')
+                            setCookie('renderQueue', '')
+                        }
+                    })
                 }
             }
         },
@@ -448,37 +452,31 @@ export default {
             if (this.historyEnd) return
             this.loadHistoryState = true
             let minHistoryId = this.minHistoryId || 999999999
-            this.$axios
-                .get(
-                    `/css/v1/history/app?pageSize=10&pageNum=${
-                        this.historyPage
-                    }&minId=${minHistoryId}`
-                )
-                .then(res => {
-                    if (res.data.code == 200 && res.data.data.rows.length > 0) {
-                        this.historyPage++
-                        let rows = res.data.data.rows.sort((a, b) => {
-                            return a.id - b.id
-                        })
-                        rows.reverse().forEach(item => {
-                            let data = JSON.parse(item.remark)
-
-                            // 历史记录里的答案不可评价
-                            if (data.tpl == 'content') {
-                                data.noEvaluate = true
-                            }
-                            this.renderQueue.unshift(data)
-                        })
-                    } else {
-                        this.historyEnd = true
-                    }
-
-                    this.loadHistoryState = false
-                    this.scroll.finishPullDown()
-                    this.$nextTick(() => {
-                        this.scroll.refresh()
+            this.$axios.get(`/css/v1/history/app?pageSize=10&pageNum=${this.historyPage}&minId=${minHistoryId}`).then(res => {
+                if (res.data.code == 200 && res.data.data.rows.length > 0) {
+                    this.historyPage++
+                    let rows = res.data.data.rows.sort((a, b) => {
+                        return a.id - b.id
                     })
+                    rows.reverse().forEach(item => {
+                        let data = JSON.parse(item.remark)
+
+                        // 历史记录里的答案不可评价
+                        if (data.tpl == 'content') {
+                            data.noEvaluate = true
+                        }
+                        this.renderQueue.unshift(data)
+                    })
+                } else {
+                    this.historyEnd = true
+                }
+
+                this.loadHistoryState = false
+                this.scroll.finishPullDown()
+                this.$nextTick(() => {
+                    this.scroll.refresh()
                 })
+            })
         },
         scrollToBottom() {
             this.$nextTick(() => {
@@ -513,37 +511,22 @@ export default {
                     if (res.data.statusCode == 0) {
                         this.chatLink = res.data
                         this.$axios
-                            .post(
-                                `/genesys-proxy/v1/chats/${
-                                    this.chatLink.chatId
-                                }}/messages`,
-                                {
-                                    alias: this.chatLink.alias,
-                                    operationName: 'GetChat',
-                                    secureKey: this.chatLink.secureKey,
-                                    tenantName: 'Resources',
-                                    userId: this.chatLink.userId
-                                }
-                            )
+                            .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}}/messages`, {
+                                alias: this.chatLink.alias,
+                                operationName: 'GetChat',
+                                secureKey: this.chatLink.secureKey,
+                                tenantName: 'Resources',
+                                userId: this.chatLink.userId
+                            })
                             .then(res => {
                                 this.createServiceRecord(1)
-                                if (
-                                    res.data.statusCode == 0 &&
-                                    !res.data.chatEnded
-                                ) {
+                                if (res.data.statusCode == 0 && !res.data.chatEnded) {
                                     this.connectState = 2 // BUTTON 变成输入框
-                                    autosize(
-                                        document.querySelectorAll(
-                                            'textarea.form-control'
-                                        )
-                                    )
+                                    autosize(document.querySelectorAll('textarea.form-control'))
 
-                                    this.chatPullTimer = window.setInterval(
-                                        () => {
-                                            this.pullReply()
-                                        },
-                                        5000
-                                    )
+                                    this.chatPullTimer = window.setInterval(() => {
+                                        this.pullReply()
+                                    }, 5000)
                                     this.nextPosition = res.data.nextPosition
                                     let messages = res.data.messages
 
@@ -560,8 +543,7 @@ export default {
                     } else if (res.data.statusCode == -1) {
                         // TODO 是否要只显示一次
                         this.renderOrder.push({
-                            text:
-                                'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
+                            text: 'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
                             tpl: 'tips'
                         })
                     } else {
@@ -586,9 +568,7 @@ export default {
                 this.chatMsg = ''
                 this.$nextTick(() => {
                     // 重置输入框的高
-                    autosize.update(
-                        document.querySelectorAll('textarea.form-control')
-                    )
+                    autosize.update(document.querySelectorAll('textarea.form-control'))
                 })
 
                 this.$axios
@@ -618,28 +598,21 @@ export default {
         },
         pullReply() {
             this.$axios
-                .post(
-                    `/genesys-proxy/v1/chats/${this.chatLink.chatId}/messages`,
-                    {
-                        alias: this.chatLink.alias,
-                        operationName: 'GetChat',
-                        secureKey: this.chatLink.secureKey,
-                        tenantName: 'Resources',
-                        userId: this.chatLink.userId,
-                        transcriptPosition: this.nextPosition
-                    }
-                )
+                .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}/messages`, {
+                    alias: this.chatLink.alias,
+                    operationName: 'GetChat',
+                    secureKey: this.chatLink.secureKey,
+                    tenantName: 'Resources',
+                    userId: this.chatLink.userId,
+                    transcriptPosition: this.nextPosition
+                })
                 .then(res => {
                     if (res.data.statusCode == 0 && !res.data.chatEnded) {
                         this.nextPosition = res.data.nextPosition
                         let messages = res.data.messages
                         if (messages.length > 0) {
                             messages.forEach(item => {
-                                if (
-                                    item.from.type == 'Agent' &&
-                                    item.type == 'Message' &&
-                                    item.text
-                                ) {
+                                if (item.from.type == 'Agent' && item.type == 'Message' && item.text) {
                                     this.addOperate({
                                         tpl: 'chatanswer',
                                         name: item.text
@@ -659,8 +632,7 @@ export default {
                         }
                     } else if (res.data.statusCode == -1) {
                         this.addOperate({
-                            text:
-                                'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
+                            text: 'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
                             tpl: 'tips'
                         })
                         window.clearInterval(this.chatPullTimer)

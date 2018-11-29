@@ -2,27 +2,57 @@
     <div id="pay-form" class="container">
         <template v-for="(item,index) in configs">
             <div class="form-item" :key="index" v-if="item.displayState!=2">
-                <div v-if="item.formType=='select'||item.formType=='radio'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType">
+                <div
+                    v-if="item.formType=='select'||item.formType=='radio'"
+                    :data-show="item.displayCondition"
+                    :data-state="item.displayState"
+                    :data-id="item.code"
+                    :data-type="item.formType"
+                >
                     <p class="network">{{item.name}}</p>
                     <div class="radio-box">
                         <div v-for="(radio,i) in item.optionArr" :key="i">
                             <label class="radio">
-                                <input type="radio" :name="item.name" :value="radio" :checked="radio == item.defaultValue ? 'checked' : false" />
-                                <i></i>
+                                <input
+                                    type="radio"
+                                    :name="item.name"
+                                    :value="radio"
+                                    :checked="radio == item.defaultValue ? 'checked' : false"
+                                >
+                                <i />
                                 <span>{{radio}}</span>
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="form-item input-tel" v-if="item.formType=='tel'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern" :data-precode="item.countryCallingCode" :data-name="item.name">
+                <div
+                    class="form-item input-tel"
+                    v-if="item.formType=='tel'"
+                    :data-show="item.displayCondition"
+                    :data-state="item.displayState"
+                    :data-id="item.code"
+                    :data-type="item.formType"
+                    :data-reg="item.pattern"
+                    :data-precode="item.countryCallingCode"
+                    :data-name="item.name"
+                >
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
-                        <input type="tel" :placeholder="item.placeholder" />
+                        <input type="tel" :placeholder="item.placeholder">
                     </div>
                 </div>
-                <div class="form-item input-tel" v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'" :data-show="item.displayCondition" :data-state="item.displayState" :data-id="item.code" :data-type="item.formType" :data-reg="item.pattern" :data-name="item.name">
+                <div
+                    class="form-item input-tel"
+                    v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'"
+                    :data-show="item.displayCondition"
+                    :data-state="item.displayState"
+                    :data-id="item.code"
+                    :data-type="item.formType"
+                    :data-reg="item.pattern"
+                    :data-name="item.name"
+                >
                     <div class="number">
-                        <input :type="item.formType" :placeholder="item.placeholder" />
+                        <input :type="item.formType" :placeholder="item.placeholder">
                     </div>
                 </div>
                 <div>
@@ -31,8 +61,8 @@
             </div>
         </template>
         <div class="footer">
-            <mButton class="next" :disabled="false" text="NEXT"></mButton>
-            <!-- <mButton class="cancel" :disabled="false" text="CANCEL"></mButton> -->
+            <mButton class="next" :disabled="false" text="NEXT" />
+            <!-- <mButton class="cancel" :disabled="false" text="CANCEL" /> -->
         </div>
     </div>
 </template>
@@ -52,25 +82,23 @@ export default {
         mButton
     },
     mounted() {
-        this.$axios
-            .get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`)
-            .then(res => {
-                let data = res.data
-                if (data && data instanceof Array && data.length > 0) {
-                    let configs = data.sort(function(a, b) {
-                        return a.orderSeq - b.orderSeq
-                    })
-                    configs.forEach((item, index) => {
-                        if (item.options) {
-                            item.optionArr = item.options.split('|')
-                        }
-                    })
-                    this.configs = configs
-                    this.$nextTick(function() {
-                        ifShow()
-                    })
-                }
-            })
+        this.$axios.get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`).then(res => {
+            let data = res.data
+            if (data && data instanceof Array && data.length > 0) {
+                let configs = data.sort(function(a, b) {
+                    return a.orderSeq - b.orderSeq
+                })
+                configs.forEach((item, index) => {
+                    if (item.options) {
+                        item.optionArr = item.options.split('|')
+                    }
+                })
+                this.configs = configs
+                this.$nextTick(function() {
+                    ifShow()
+                })
+            }
+        })
 
         let _this = this
 
@@ -81,13 +109,9 @@ export default {
             .on('change', 'input[type="checkbox"]', function() {
                 ifShow()
             })
-            .on(
-                'blur',
-                'input[type="text"],input[type="password"],input[type="tel"],input[type="email"]',
-                function() {
-                    ifShow()
-                }
-            )
+            .on('blur', 'input[type="text"],input[type="password"],input[type="tel"],input[type="email"]', function() {
+                ifShow()
+            })
             .on('click', '.cancel', function() {
                 _this.$router.go(-1)
             })
@@ -101,12 +125,7 @@ export default {
                     var type = item.data('type')
                     var value = getItemVal(id)
 
-                    if (
-                        type == 'text' ||
-                        type == 'password' ||
-                        type == 'tel' ||
-                        type == 'email'
-                    ) {
+                    if (type == 'text' || type == 'password' || type == 'tel' || type == 'email') {
                         if (!value) {
                             item.find('.error')
                                 .remove()
@@ -140,10 +159,7 @@ export default {
                                 item.find('.error').remove()
                                 if (type == 'tel') {
                                     var precode = item.data('precode')
-                                    if (
-                                        precode &&
-                                        value.indexOf(precode) != 0
-                                    ) {
+                                    if (precode && value.indexOf(precode) != 0) {
                                         if (value.indexOf('0') == 0) {
                                             value = precode + value.substring(1)
                                         } else {
@@ -171,32 +187,18 @@ export default {
                             if (_this.paymethod.appInterfaceMode == 2) {
                                 // open other payment
                                 window.open(res.data.tppRedirectUrl)
-                                _this.$router.push(
-                                    `/hybrid/payment/payResult?payToken=${
-                                        _this.payToken
-                                    }`
-                                )
+                                _this.$router.push(`/hybrid/payment/payResult?payToken=${_this.payToken}`)
                             } else if (_this.paymethod.appInterfaceMode == 3) {
                                 // processing
-                                _this.$router.push(
-                                    `/hybrid/payment/payResult?payToken=${
-                                        this.payToken
-                                    }`
-                                )
+                                _this.$router.push(`/hybrid/payment/payResult?payToken=${this.payToken}`)
                             } else {
                                 // SDK 和 其他 不支持,
                                 // payType 1 钱包支付
-                                _this.$alert(
-                                    'The payment method is not supported for the time being'
-                                )
+                                _this.$alert('The payment method is not supported for the time being')
                             }
                         } else {
                             // TODO fail
-                            _this.$router.push(
-                                `/hybrid/payment/payResult?payToken=${
-                                    _this.payToken
-                                }`
-                            )
+                            _this.$router.push(`/hybrid/payment/payResult?payToken=${_this.payToken}`)
                         }
                     })
             })
@@ -294,7 +296,7 @@ export default {
         float: left;
         -webkit-box-flex: 1.2;
         flex: 1.2;
-        margin-right:0.5rem;
+        margin-right: 0.5rem;
     }
     .number {
         -webkit-box-flex: 11;
@@ -323,8 +325,8 @@ export default {
     position: relative;
     cursor: pointer;
     display: block;
-    line-height:1.65rem;
-    height:1.65rem;
+    line-height: 1.65rem;
+    height: 1.65rem;
 }
 .radio-box input {
     position: absolute;

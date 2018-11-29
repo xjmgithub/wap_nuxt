@@ -12,14 +12,20 @@
             <p>Input Recharge Pin</p>
             <div>
                 <span :class="{focus:isFocus}">Enter the 4-32 digits on Voucher Card</span>
-                <input type="tel" maxlength="39" @focus="isFocus=true" v-model="rechargePin" @input="changePinNum">
+                <input
+                    type="tel"
+                    maxlength="39"
+                    @focus="isFocus=true"
+                    v-model="rechargePin"
+                    @input="changePinNum"
+                >
             </div>
-            <p class="msg">
-                Vocher PIN is on the StarTimes recharge card that you bought from StarTimes business hall or dealer
-            </p>
+            <p
+                class="msg"
+            >Vocher PIN is on the StarTimes recharge card that you bought from StarTimes business hall or dealer</p>
         </div>
         <div class="footer">
-            <mButton :disabled="!canNext" text="NEXT" @click="nextStep"></mButton>
+            <mButton :disabled="!canNext" text="NEXT" @click="nextStep"/>
         </div>
     </div>
 </template>
@@ -74,31 +80,19 @@ export default {
             `,
                 () => {
                     this.$axios
-                        .post(
-                            `/mobilewallet/v2/accounts/${
-                                this.walletAccount
-                            }/recharge-by-rc?rechargeCardPin=${this.oriPinNum}`,
-                            {
-                                rechargeCardPin: this.oriPinNum
-                            }
-                        )
+                        .post(`/mobilewallet/v2/accounts/${this.walletAccount}/recharge-by-rc?rechargeCardPin=${this.oriPinNum}`, {
+                            rechargeCardPin: this.oriPinNum
+                        })
                         .then(res => {
                             if (res.data && res.data.code == 0) {
                                 this.$router.push(
-                                    `/hybrid/payment/wallet/rechargeResult?result=1&amount=${
-                                        res.data.data.amount
-                                    }&currency=${
+                                    `/hybrid/payment/wallet/rechargeResult?result=1&amount=${res.data.data.amount}&currency=${
                                         res.data.data.currency
-                                    }&currensySymbol=${
-                                        res.data.data.currencySymbol
-                                    }`
+                                    }&currensySymbol=${res.data.data.currencySymbol}`
                                 )
                             } else {
                                 // TODO 充值结果页面未使用
-                                this.$router.push(
-                                    '/hybrid/payment/wallet/rechargeResult?result=2&message=' +
-                                        res.data.message
-                                )
+                                this.$router.push('/hybrid/payment/wallet/rechargeResult?result=2&message=' + res.data.message)
                             }
                         })
                 },

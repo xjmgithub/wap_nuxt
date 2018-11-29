@@ -1,25 +1,61 @@
 <template>
     <div class="wrapper">
         <div class="input-item">
-            <div class="label">Create a Password
-                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext==1" alt="" @click="isCiphertext=2">
-                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext==2" alt="" @click="isCiphertext=1">
+            <div class="label">
+                Create a Password
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_hide_def_g.png"
+                    v-if="isCiphertext==1"
+                    alt
+                    @click="isCiphertext=2"
+                >
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_show_def_g.png"
+                    v-if="isCiphertext==2"
+                    alt
+                    @click="isCiphertext=1"
+                >
             </div>
-            <input :type="pwdType" v-model="pass" placeholder="Password(6-18 digits or letters)" @blur="checkpass" />
+            <input
+                :type="pwdType"
+                v-model="pass"
+                placeholder="Password(6-18 digits or letters)"
+                @blur="checkpass"
+            >
         </div>
         <div class="input-item">
-            <div class="label">Confirm New Password
-                <img class="open-close" src="~/assets/img/ic_hide_def_g.png" v-if="isCiphertext_confirm==1" alt="" @click="isCiphertext_confirm=2">
-                <img class="open-close" src="~/assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt="" @click="isCiphertext_confirm=1">
+            <div class="label">
+                Confirm New Password
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_hide_def_g.png"
+                    v-if="isCiphertext_confirm==1"
+                    alt
+                    @click="isCiphertext_confirm=2"
+                >
+                <img
+                    class="open-close"
+                    src="~assets/img/ic_show_def_g.png"
+                    v-if="isCiphertext_confirm==2"
+                    alt
+                    @click="isCiphertext_confirm=1"
+                >
             </div>
-            <input :type="pwdType_confirm" placeholder="Password(6-18 digits or letters)" v-model="repass" @blur="checkpass" />
+            <input
+                :type="pwdType_confirm"
+                placeholder="Password(6-18 digits or letters)"
+                v-model="repass"
+                @blur="checkpass"
+            >
         </div>
         <div class="input-item invite">
             <div class="label">Invitation Code(Optional)</div>
-            <input type="text" v-model="inviteCode" @blur="checkpass" />
+            <input type="text" v-model="inviteCode" @blur="checkpass">
         </div>
         <div class="footer">
-            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep"></mButton>
+            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep"/>
         </div>
     </div>
 </template>
@@ -94,24 +130,18 @@ export default {
 
                     this.$axios.post('/ums/v1/user/login', params).then(res => {
                         if (res.data.code == 0) {
-                            initUser(
-                                res.data.data.token,
-                                res.data.data.userId,
-                                res.data.data
-                            )
+                            initUser(res.data.data.token, res.data.data.userId, res.data.data)
                             if (this.pre) {
                                 window.location.href = this.pre
                             } else {
-                                window.location.href =
-                                    '/hybrid/payment/wallet/payto'
+                                window.location.href = '/hybrid/payment/wallet/payto'
                             }
                         } else {
                             this.$alert(res.data.message)
                         }
                     })
                 } else {
-                    this.error_code =
-                        'This code you entered is incorrect. Please try again.'
+                    this.error_code = 'This code you entered is incorrect. Please try again.'
                 }
             })
         }

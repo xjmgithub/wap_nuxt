@@ -3,7 +3,14 @@
         <div class="title">Enter your email</div>
         <div class="input-email" :class="{focus:focus_email,error:error_email}">
             <div class="number">
-                <input type="email" :disabled="disabled" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email" />
+                <input
+                    type="email"
+                    :disabled="disabled"
+                    v-model="email"
+                    @focus="focus_email=true"
+                    @blur="focus_email=false"
+                    placeholder="Enter your email"
+                >
             </div>
             <div class="error" v-show="error_email">{{error_email}}</div>
         </div>
@@ -14,6 +21,7 @@ import qs from 'qs'
 export default {
     props: {
         disabled: {
+            type: Boolean,
             default: false
         }
     },
@@ -48,19 +56,15 @@ export default {
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
             this.$axios
-                .get(
-                    `/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail`,
-                    {
-                        email: this.email
-                    }
-                )
+                .get(`/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail`, {
+                    email: this.email
+                })
                 .then(res => {
                     this.waiting_res = false
                     if (res.data.code == 0) {
                         this.codeDuring = 60
                     } else {
-                        this.error_email =
-                            'Please confirm you have entered the right email.'
+                        this.error_email = 'Please confirm you have entered the right email.'
                     }
                 })
         },

@@ -1,18 +1,19 @@
 <template>
     <div class="container">
-        <loading v-show="loadStatus"></loading>
+        <loading v-show="loadStatus"/>
         <p class="amount">Payments to {{merchant}}</p>
         <div class="pay-number">
-            <div class="signature">
-                {{signature}}
-            </div>
+            <div class="signature">{{signature}}</div>
             <div class="money">
-                <input type="tel" placeholder="Payment amount" v-model="amount" disabled="disabled" />
-                <div class="balance" :class="{notenough:!enough}">eWallet Balance:{{balanceCurrency}}{{balance}}</div>
+                <input type="tel" placeholder="Payment amount" v-model="amount" disabled="disabled">
+                <div
+                    class="balance"
+                    :class="{notenough:!enough}"
+                >eWallet Balance:{{balanceCurrency}}{{balance}}</div>
             </div>
         </div>
         <div class="footer">
-            <mButton :disabled="false" :text="enough?'NEXT':'RECHARGE'" @click="nextStep"></mButton>
+            <mButton :disabled="false" :text="enough?'NEXT':'RECHARGE'" @click="nextStep"/>
         </div>
     </div>
 </template>
@@ -104,9 +105,7 @@ export default {
         nextStep() {
             if (this.enough) {
                 // 支付流程
-                let passIsSet = JSON.parse(
-                    localStorage.getItem('wallet_config')
-                ).payPassword
+                let passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
                 if (passIsSet == 'true') {
                     this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                 } else {
