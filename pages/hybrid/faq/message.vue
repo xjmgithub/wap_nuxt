@@ -6,11 +6,7 @@
             </div>
             <div class="over" v-if="msg.replyRecordDtoList&&msg.replyRecordDtoList.length>0">
                 <div class="replied_txt">Replied</div>
-                <div
-                    class="replied_content"
-                    v-for="item in msg.replyRecordDtoList"
-                    :key="item.id"
-                >{{item.message}}</div>
+                <div class="replied_content" v-for="item in msg.replyRecordDtoList" :key="item.id">{{item.message}}</div>
             </div>
         </div>
         <div class="gap"/>
@@ -33,14 +29,8 @@
         <div class="problem">
             <p>Your Problem</p>
             <div class="problem_txt">{{msg.problem}}</div>
-            <div
-                class="problem_txt"
-                v-if="msg.problemChannelTypeValue"
-            >{{msg.problemChannelTypeValue}}</div>
-            <div
-                class="problem_txt"
-                v-if="msg.problemChannelNameValue"
-            >{{msg.problemChannelNameValue}}</div>
+            <div class="problem_txt" v-if="msg.problemChannelTypeValue">{{msg.problemChannelTypeValue}}</div>
+            <div class="problem_txt" v-if="msg.problemChannelNameValue">{{msg.problemChannelNameValue}}</div>
             <div class="problem_txt" v-if="msg.problemCountryCode">{{msg.problemCountryCode}}</div>
             <p>Detail Description</p>
             <div class="msg_container">{{msg.message}}</div>
@@ -89,7 +79,6 @@ export default {
             this.msg = JSON.parse(msg)
             // 设为已读状态
             let messageids = []
-            console.log(this.msg)
             if (this.msg.replyRecordDtoList) {
                 this.msg.replyRecordDtoList.forEach(item => {
                     messageids.push(item.id)
@@ -97,7 +86,7 @@ export default {
                 let messageStr = messageids.join('_')
                 this.$axios.put(`/csms-service/v1/reply-records/update-have-read?replyIds=${messageStr}`).then(res => {
                     if (res.data.code != 200) {
-                        this.$alert('message readed set error')
+                        //this.$alert('message readed set error')
                     }
                 })
             }

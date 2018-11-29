@@ -54,9 +54,9 @@ export default {
             default: false
         },
         question: {
-            type: String,
+            type: Number,
             require: true,
-            default: ''
+            default: -1
         }
     },
     mounted() {
