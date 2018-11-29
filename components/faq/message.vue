@@ -19,8 +19,7 @@ export default {
     props:['message','replied'],
     methods:{
         toDetail(){
-            // TODO storage message
-            localStorage.setItem('showMsg',JSON.stringify(this.message))
+            sessionStorage.setItem('showMsg',JSON.stringify(this.message))
             this.$router.push('/hybrid/faq/message')
         }
     }

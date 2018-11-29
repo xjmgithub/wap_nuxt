@@ -7,7 +7,7 @@
             <img class="arrow" src="~assets/img/faq/Triangle.png">
             <div class="result-wraper" v-html="content"></div>
             <div>
-                <div class="btn">COMPLAIN</div>
+                <div class="btn" @click="tocomplain">COMPLAIN</div>
                 <div class="clear"></div>
                 <div class="attitude-container" v-if="!noevaluate">
                     <div class="yes-item" @click="evaluate(1)">
@@ -26,12 +26,14 @@
     </div>
 </template>
 <script>
+import { toNativePage } from '~/functions/utils'
 export default {
     data() {
         return {
             agree: false,
             disagree: false,
-            ended: false
+            ended: false,
+            isLogin: this.$store.state.user.type || false,
         }
     },
     props: {
@@ -43,10 +45,23 @@ export default {
             require: true,
             type: Number
         },
-        noevaluate: {
+        noevaluate: { // 是否有评价
             require: false,
             default: false
+        },
+        question:{
+            require:true
         }
+    },
+    mounted(){
+        this.$nextTick(()=>{
+            let s = document.querySelectorAll('.result-wraper img')
+            for(let i=0;i<s.length;i++){
+                s[i].onload = ()=>{
+                    this.$emit('imgloaded')
+                }
+            }
+        })
     },
     methods: {
         evaluate(type) {
@@ -69,6 +84,19 @@ export default {
                         }
                     })
             }
+        },
+        tocomplain(){
+            if(!this.isLogin){
+                if (this.$store.state.appType == 1) {
+                    toNativePage('com.star.mobile.video.account.LoginActivity')
+                } else {
+                    toNativePage('startimes://login')
+                }
+                return false
+            }else{
+                this.$router.replace({path:'/hybrid/faq/complain',query:Object.assign({},this.$route.query,{question:this.question})});
+            }
+            
         }
     }
 }

@@ -136,14 +136,14 @@ export default {
     },
     methods: {
         clickQues(item) {
-            localStorage.setItem('faq_question', JSON.stringify(item))
+            sessionStorage.setItem('faq_question', JSON.stringify(item))
             this.$router.push({
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
             })
         },
         moreQues(item) {
-            localStorage.setItem('morefaqs', 1)
+            sessionStorage.setItem('morefaqs', 1)
             this.$router.push({
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query

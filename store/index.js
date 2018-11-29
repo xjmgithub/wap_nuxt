@@ -7,6 +7,7 @@ export const state = () => ({
     token: '',
     appType: 0, // 0 others 1 android_app 2 ios_app
     appVersion: '-1',
+    appVersionCode:'-1',
     gaClientId: '',
     lang: {},
     shadowStatus: false,
@@ -17,7 +18,8 @@ export const state = () => ({
     selectCompId: 0,
     netType: 0,
     carrier:'',
-    phoneModel:''
+    phoneModel:'',
+    intervalTimer:null
 })
 
 export const mutations = {
@@ -38,6 +40,9 @@ export const mutations = {
     },
     SET_APP_VERSION: function(state, v) {
         state.appVersion = v
+    },
+    SET_APP_VERSION_CODE: function(state, v) {
+        state.appVersionCode = v
     },
     SHOW_SHADOW_LAYER: function(state) {
         state.shadowStatus = true
@@ -71,6 +76,9 @@ export const mutations = {
     },
     SET_PHONE_MODEL: function(state,val){
         state.phoneModel = val
+    },
+    SET_TIMER: function(state,val){
+        state.intervalTimer = val
     }
 }
 
@@ -86,7 +94,7 @@ export const actions = {
 
         // set language
         let language =
-            req.headers['http_lncode'] || req.headers['accept-language']
+            req.headers['lncode'] || req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
             commit('SET_LANG', LANG.fy)
         } else if (language.indexOf('sw') >= 0) {
@@ -98,8 +106,8 @@ export const actions = {
         }
 
         // set deviceId plugins to set cookie
-        if (req.headers['http_deviceid']) {
-            commit('SET_DEVICE', req.headers['http_deviceid'])
+        if (req.headers['deviceid']) {
+            commit('SET_DEVICE', req.headers['deviceid'])
         } else {
             if (_COOKIE['deviceId']) {
                 commit('SET_DEVICE', _COOKIE['deviceId'])
@@ -115,9 +123,9 @@ export const actions = {
                 commit('SET_DEVICE', result)
             }
         }
-
-        if (req.headers['http_token']) {
-            commit('SET_TOKEN', req.headers['http_token'])
+        
+        if (req.headers['token']) {
+            commit('SET_TOKEN', req.headers['token'])
         } else {
             if (_COOKIE['token']) {
                 commit('SET_TOKEN', _COOKIE['token'])
@@ -152,44 +160,49 @@ export const actions = {
             .catch(error => {
                 // 用户失效在plugin/clearUser当中处理
             })
-
         // APP TYPE
-        if (req.headers['http_client'] == 'android') {
+        if (req.headers['client'] == 'android') {
             commit('SET_APPTYPE', 1)
-        } else if (req.headers['http_client'] == 'ios') {
+        } else if (req.headers['client'] == 'ios') {
             commit('SET_APPTYPE', 2)
         } else {
             commit('SET_APPTYPE', 0)
         }
 
-        if (req.headers['http_cid']) {
-            commit('SET_GA_CLIENT', req.headers['http_cid'])
+        if (req.headers['cid']) {
+            commit('SET_GA_CLIENT', req.headers['cid'])
         }
 
-        if (req.headers['http_versionname']) {
-            commit('SET_APP_VERSION', req.headers['http_versionname'])
+        if(req.headers['versioncode']){
+            commit('SET_APP_VERSION_CODE',req.headers['versioncode'])
+        }else{
+            commit('SET_APP_VERSION_CODE',-99)
+        }
+
+        if (req.headers['versionname']) {
+            commit('SET_APP_VERSION', req.headers['versionname'])
         } else {
             if (
-                req.headers['http_versioncode'] &&
-                versionMap[req.headers['http_versioncode']]
+                req.headers['versioncode'] &&
+                versionMap[req.headers['versioncode']]
             ) {
                 commit(
                     'SET_APP_VERSION',
-                    versionMap[req.headers['http_versioncode']]
+                    versionMap[req.headers['versioncode']]
                 )
             }
         }
 
-        if (req.headers['http_network']) {
-            commit('SET_NET_TYPE', req.headers['http_network'])
+        if (req.headers['network']) {
+            commit('SET_NET_TYPE', req.headers['network'])
         }
 
-        if (req.headers['http_x_carrier']) {
-            commit('SET_CARRIER', req.headers['http_x_carrier'])
+        if (req.headers['x_carrier']) {
+            commit('SET_CARRIER', req.headers['x_carrier'])
         }
 
-        if (req.headers['http_phonemodel']) {
-            commit('SET_PHONE_MODEL', req.headers['http_phonemodel'])
+        if (req.headers['phonemodel']) {
+            commit('SET_PHONE_MODEL', req.headers['phonemodel'])
         }
     }
 }

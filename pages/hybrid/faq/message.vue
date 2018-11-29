@@ -6,25 +6,22 @@
             </div>
             <div class="over" v-if="msg.replyRecordDtoList&&msg.replyRecordDtoList.length>0">
                 <div class="replied_txt">Replied</div>
-                <div class="replied_content">
-                    Hi, We have found the problem. Your account hasn’t changed correctly. We’re sorry for our mistake.
-                </div>
-                <div class="replied_content">
-                    ASDASDF unt hasn’t changed correctly. We’re sorry for our mistake.
-                </div>
+                <div class="replied_content" v-for="item in msg.replyRecordDtoList" :key="item.id">{{item.message}}</div>
             </div>
         </div>
         <div class="gap"></div>
         <div class="order-msg" v-if="msg.orderNo">
             <p class="time">{{msg.orderCreateTime | formatDate }}</p>
             <div class="order-type clearfix">
-                <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" alt="">
+                <img src="~/assets/img/faq/ic_RechargeOrder_def_b.png" alt>
                 <div class="right">
-                    <p class="order-name">{{msg.orderType }}
-                        <span>{{msg.orderAmount }}</span>
+                    <p class="order-name">
+                        {{msg.orderType }}
+                        <span>{{msg.orderAmount}}</span>
                     </p>
-                    <p class="order-status">{{msg.orderName }}
-                        <span>{{msg.orderStatus }}</span>
+                    <p class="order-status">
+                        {{msg.orderName }}
+                        <span>{{msg.orderStatus}}</span>
                     </p>
                 </div>
             </div>
@@ -32,6 +29,9 @@
         <div class="problem">
             <p>Your Problem</p>
             <div class="problem_txt">{{msg.problem}}</div>
+            <div class="problem_txt" v-if="msg.problemChannelTypeValue">{{msg.problemChannelTypeValue}}</div>
+            <div class="problem_txt" v-if="msg.problemChannelNameValue">{{msg.problemChannelNameValue}}</div>
+            <div class="problem_txt" v-if="msg.problemCountryCode">{{msg.problemCountryCode}}</div>
             <p>Detail Description</p>
             <div class="msg_container">{{msg.message}}</div>
         </div>
@@ -40,19 +40,22 @@
             <p>Personal Information</p>
             <ul>
                 <li>
-                    <p class="p-name">Account
+                    <p class="p-name">
+                        Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{msg.userAccount}}</p>
+                    <p class="p-value">{{msg.userId}}</p>
                 </li>
-                <li v-if="carrier">
-                    <p class="p-name">Telecom Info
+                <li v-if="msg.operatorInfo">
+                    <p class="p-name">
+                        Telecom Info
                         <span>*</span>
                     </p>
                     <p class="p-value">{{msg.operatorInfo}}</p>
                 </li>
-                <li v-if="unitType">
-                    <p class="p-name">Device
+                <li v-if="msg.unitType">
+                    <p class="p-name">
+                        Device
                         <span>*</span>
                     </p>
                     <p class="p-value">{{msg.unitType}}</p>
@@ -62,34 +65,52 @@
     </div>
 </template>
 <script>
-import moment from 'moment/moment.js'
+import moment from "moment/moment.js";
 export default {
-    layout: 'base',
+    layout: "base",
     data() {
         return {
             msg: {}
-        }
+        };
     },
     mounted() {
-        let msg = localStorage.getItem('showMsg')
+        let msg = sessionStorage.getItem("showMsg");
         if (msg) {
-            this.msg = JSON.parse(msg)
+            this.msg = JSON.parse(msg);
+            // 设为已读状态
+            let messageids = [];
+            console.log(this.msg);
+            if (this.msg.replyRecordDtoList) {
+                this.msg.replyRecordDtoList.forEach(item => {
+                    messageids.push(item.id);
+                });
+                let messageStr = messageids.join("_");
+                this.$axios
+                    .put(
+                        `/csms-service/v1/reply-records/update-have-read?replyIds=${messageStr}`
+                    )
+                    .then(res => {
+                        if (res.data.code != 200) {
+                            this.$alert("message readed set error");
+                        }
+                    });
+            }
         }
     },
     filters: {
         formatDate(date) {
-            return moment(date).format('D MMM YYYY HH-mm:ss')
+            return moment(date).format("D MMM YYYY HH-mm:ss");
         }
     },
     head() {
         return {
-            title: 'Complain'
-        }
+            title: "Complain"
+        };
     }
-}
+};
 </script>
 <style lang="less">
-@import '~assets/less/faq/common.less';
+@import "~assets/less/faq/common.less";
 </style>
 <style lang="less" scoped>
 #wrapper {
@@ -133,13 +154,14 @@ export default {
         font-weight: bold;
         font-size: 0.9rem;
     }
-    .problem_txt{
-        font-size:0.9rem;
+    .problem_txt {
+        font-size: 0.9rem;
     }
-    .msg_container{
-        font-size:0.9rem;
-        border:solid 1px #dddddd;
-        padding:0.5rem;
+    .msg_container {
+        font-size: 0.9rem;
+        border: solid 1px #dddddd;
+        padding: 0.5rem;
+        word-break: break-all;
     }
 }
 

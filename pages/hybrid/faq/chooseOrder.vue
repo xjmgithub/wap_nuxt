@@ -55,7 +55,7 @@ export default {
         }
     },
     mounted() {
-        let cachedOrder = localStorage.getItem('orderMsg')
+        let cachedOrder = sessionStorage.getItem('orderMsg')
         this.$axios
             .get(
                 `/ocs/v1/service/module/moreOrder?entranceId=${
@@ -92,7 +92,7 @@ export default {
         },
         submit() {
             if (this.checkedId) {
-                localStorage.setItem('orderMsg', JSON.stringify(this.checked))
+                sessionStorage.setItem('orderMsg', JSON.stringify(this.checked))
                 this.$router.push({
                     path: '/hybrid/faq/complain',
                     query: this.$route.query

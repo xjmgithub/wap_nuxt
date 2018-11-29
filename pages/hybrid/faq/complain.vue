@@ -113,7 +113,7 @@ export default {
             this.type = type
         },
         submit() {
-            let order = localStorage.getItem('orderMsg')
+            let order = sessionStorage.getItem('orderMsg')
 
             if (this.type[1]) {
                 if (!this.$refs.channelSelect.selected.id) {
@@ -145,6 +145,7 @@ export default {
                     ? JSON.parse(order).order_create_time
                     : '',
                 userAccount: this.user.id,
+                userId:this.user.id,
                 unitType: this.unitType || '',
                 operatorInfo: this.carrier || '',
                 problemId: this.$refs.questionSelect.selected.id,
@@ -187,13 +188,12 @@ export default {
                 )
                 .then(res => {
                     if (res.data.code == 200) {
-                        // TODO 存一条留言
 
-                        localStorage.setItem(
+                        sessionStorage.setItem(
                             'addMsg',
                             JSON.stringify(Object.assign({}, param))
                         )
-                        this.$router.push({
+                        this.$router.replace({
                             path: '/hybrid/faq/customerService',
                             query: this.$route.query
                         })
@@ -202,7 +202,7 @@ export default {
         }
     },
     mounted() {
-        let order = localStorage.getItem('orderMsg')
+        let order = sessionStorage.getItem('orderMsg')
         if (order) {
             this.order = JSON.parse(order)
         } else {
@@ -214,10 +214,11 @@ export default {
         this.deviceInfo = deviceInfo[deviceInfo.length - 1].split('like')[0]
 
         // more faqs
-        let serviceModuleId = localStorage.getItem('serviceModuleId')
+        let serviceModuleId = sessionStorage.getItem('serviceModuleId')
 
         // 如果是从首页的单个faq默认选中
-        let faq_question = localStorage.getItem('faq_question')
+        //let faq_question = sessionStorage.getItem('faq_question')
+
         this.$axios
             .get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`)
             .then(res => {
@@ -231,8 +232,10 @@ export default {
                         })
                     })
                     this.questionsList = list
-                    if (faq_question) {
-                        this.question = JSON.parse(faq_question).id
+                    let question = this.$route.query.question
+                    if (question) {
+                        //this.question = JSON.parse(faq_question).id
+                        this.question = question
                     }
                 }
             })
@@ -252,7 +255,9 @@ export default {
         // country
         this.$axios
             .get(
-                `/cms/vup/v2/areas?versionCode=${this.$store.state.appVersion}`
+                `/cms/vup/v2/areas?versionCode=${
+                    this.$store.state.appVersionCode
+                }`
             )
             .then(res => {
                 if (res.data && res.data instanceof Array) {

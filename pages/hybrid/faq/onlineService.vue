@@ -40,11 +40,10 @@ export default {
         }
     },
     mounted() {
-        localStorage.removeItem('faq_question')
-        localStorage.removeItem('morefaqs')
+        sessionStorage.removeItem('faq_question')
+        sessionStorage.removeItem('morefaqs')
 
         let entranceId = this.$route.query.entrance_id || ''
-
         // 服务块
         this.$axios
             .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`, {
@@ -56,12 +55,12 @@ export default {
             .then(res => {
                 if (res.data && res.data.data) {
                     this.serviceData = res.data.data
-                    localStorage.setItem(
+                    sessionStorage.setItem(
                         'serviceModuleId',
                         this.serviceData.service_module.id
                     )
 
-                    localStorage.setItem(
+                    sessionStorage.setItem(
                         'orderMsg',
                         JSON.stringify(this.serviceData.order_info)
                     )
@@ -164,7 +163,7 @@ export default {
             }
         },
         clickQues(item) {
-            localStorage.setItem('faq_question', JSON.stringify(item))
+            sessionStorage.setItem('faq_question', JSON.stringify(item))
             this.$router.push({
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
@@ -268,9 +267,12 @@ export default {
     .questions {
         flex: 1;
         overflow: hidden;
+        position:relative;
         div {
-            overflow: auto;
-            height: 100%;
+            overflow-y: auto;
+            position: absolute;
+            top:0;
+            bottom:0;
         }
         li {
             overflow: hidden;

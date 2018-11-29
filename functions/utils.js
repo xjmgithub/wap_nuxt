@@ -34,8 +34,8 @@ export const getCookie = name => {
     let value = document.cookie.replace(
         new RegExp(
             '(?:(?:^|.*;)\\s*' +
-            encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') +
-            '\\s*\\=\\s*([^;]*).*$)|^.*$'
+                encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') +
+                '\\s*\\=\\s*([^;]*).*$)|^.*$'
         ),
         '$1'
     )
@@ -43,7 +43,7 @@ export const getCookie = name => {
 }
 
 export const delCookie = name => {
-    document.cookie = name + '=; Max-Age=-99999999;';
+    document.cookie = name + '=; Max-Age=-99999999;'
 }
 
 export const initUser = (token, id, obj) => {
@@ -54,17 +54,13 @@ export const initUser = (token, id, obj) => {
     window.localStorage.setItem('user', JSON.stringify(obj))
 }
 
-
 export const updateWalletAccount = (v, callback) => {
-    v.$axios
-        .get('/mobilewallet/v1/accounts/me')
-        .then(res => {
-            if (res.data) {
-                localStorage.setItem('wallet_account', JSON.stringify(res.data))
-            }
-            if (callback)
-                callback(res.data)
-        })
+    v.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
+        if (res.data) {
+            localStorage.setItem('wallet_account', JSON.stringify(res.data))
+        }
+        if (callback) callback(res.data)
+    })
 }
 
 export const updateWalletConf = (v, account, callback) => {
@@ -72,7 +68,15 @@ export const updateWalletConf = (v, account, callback) => {
         .get(`/mobilewallet/v1/accounts/${account}/prop-details`)
         .then(res => {
             localStorage.setItem('wallet_config', JSON.stringify(res.data))
-            if (callback)
-                callback(res.data)
+            if (callback) callback(res.data)
         })
+}
+
+export const toNativePage = (page) => {
+    if (page.indexOf('com.star.mobile.video')>=0) {
+        // TODO toAppPage 参数确定
+        window.getChannelId && window.getChannelId.toAppPage(3, page, '')
+    } else {
+        window.location.href = page
+    }
 }

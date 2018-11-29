@@ -15,7 +15,7 @@
                 <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"></orderBlockTpl>
                 <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"></askTpl>
                 <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"></answerTpl>
-                <contentTpl v-if="item.tpl=='content'" :noevaluate="item.noEvaluate" :serviceRecord="item.serviceRecord" :key="index" :content="item.content"></contentTpl>
+                <contentTpl v-if="item.tpl=='content'" :noevaluate="item.noEvaluate" :serviceRecord="item.serviceRecord" :key="index" :question="item.questionId" :content="item.content" @imgloaded="refreshScroll"></contentTpl>
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
@@ -50,7 +50,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { setInterval } from 'timers'
+import { toNativePage,setCookie,getCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -72,7 +72,8 @@ export default {
             historyPage: 1,
             minHistoryId: '',
             historyEnd: false,
-            chatLink: null
+            chatLink: null,
+            messageShowed:[] // 记录已经展示出来的
         }
     },
     components: {
@@ -85,12 +86,11 @@ export default {
         evaluate
     },
     mounted() {
-        let questions = JSON.parse(localStorage.getItem('faq_question'))
-        let serviceModuleId = localStorage.getItem('serviceModuleId')
-        let morefaqs = localStorage.getItem('morefaqs')
-        let renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
-        let addMsg = localStorage.getItem('addMsg')
-
+        let questions = JSON.parse(sessionStorage.getItem('faq_question'))
+        let serviceModuleId = sessionStorage.getItem('serviceModuleId')
+        let morefaqs = sessionStorage.getItem('morefaqs')
+        let renderQueue = JSON.parse(getCookie('renderQueue'))
+        let addMsg = sessionStorage.getItem('addMsg')
         let _this = this
         // LiveChat 按钮判断
         this.user.areaID &&
@@ -113,7 +113,7 @@ export default {
             let wrapper = document.querySelector('#wrapper')
             this.scroll = new BScroll(wrapper, {
                 pullDownRefresh: {
-                    threshold: 20,
+                    threshold: 100, // 下拉距离
                     stop: 40
                 },
                 startY: 0,
@@ -129,11 +129,10 @@ export default {
                 _this.loadHistory()
             })
         })
-
+        
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
-            // if (renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
-            return false
+            // return false
         }
 
         // 创建服务记录
@@ -146,7 +145,7 @@ export default {
                         replied: false
                     })
                 )
-                //localStorage.removeItem('addMsg')
+                sessionStorage.removeItem('addMsg')
             } else if (questions) {
                 // 单个问题
                 this.askQuest(questions, 1, 1)
@@ -198,28 +197,36 @@ export default {
                     })
             }
             
-            // TODO REMOVE
-            // this.$nextTick(() => {
-            //     setInterval(() => {
-            //         this.getLeaveMessage()
-            //     }, 5 * 1000)
-            // })
+            this.$nextTick(() => {
+                if(this.$store.state.intervalTimer){
+                    clearInterval(this.$store.state.intervalTimer)
+                }
+                let timer = setInterval(this.getLeaveMessage, 5 * 1000)
+                this.$store.commit('SET_TIMER',timer)
+            })
         })
     },
     methods: {
         getLeaveMessage() {
             this.$axios
-                .get(`/csms-service/v1/get-standard-leaving-message-record`)
+                .get(`/csms-service/v1/get-standard-leaving-message-record`,{
+                    headers: {
+                        'x-clientType': 1,
+                        'x-appVersion': '5300'
+                    }
+                })
                 .then(res => {
                     if (res.data && res.data.length > 0) {
-                        // TODO 留言
                         res.data.forEach(item => {
-                            this.addOperate(
-                                Object.assign({}, item, {
-                                    tpl: 'message',
-                                    replied: true
-                                })
-                            )
+                            if(this.messageShowed.indexOf(item.id)<0){
+                                this.messageShowed.push(item.id)
+                                this.addOperate(
+                                    Object.assign({}, item, {
+                                        tpl: 'message',
+                                        replied: true
+                                    })
+                                )
+                            }
                         })
                     }
                 })
@@ -263,14 +270,15 @@ export default {
                     this.addOperate(
                         Object.assign({}, res.data.data, {
                             tpl: 'content',
-                            serviceRecord: this.serviceRecord
+                            serviceRecord: this.serviceRecord,
+                            questionId: id
                         })
                     )
                 }
             })
         },
         renderOrder() {
-            let order = JSON.parse(localStorage.getItem('orderMsg'))
+            let order = JSON.parse(sessionStorage.getItem('orderMsg'))
             if (order) {
                 this.addOperate({
                     tpl: 'order',
@@ -285,9 +293,7 @@ export default {
                     if (res.data.code == 200) {
                         this.serviceRecord = res.data.data
                         if (!this.isLogin) {
-                            let cacheRecord = localStorage.getItem(
-                                'serviceRecords'
-                            )
+                            let cacheRecord = getCookie('serviceRecords')
                             if (cacheRecord) {
                                 cacheRecord = JSON.parse(cacheRecord)
                                 if (
@@ -298,23 +304,27 @@ export default {
                             } else {
                                 cacheRecord = [this.serviceRecord]
                             }
-                            localStorage.setItem(
+                            setCookie(
                                 'serviceRecords',
-                                JSON.stringify(cacheRecord)
+                                JSON.stringify(cacheRecord),
+                                Infinity
                             )
                         }
                         if (callback) callback()
                     }
                 })
         },
+        refreshScroll() {
+            this.$nextTick(() => {
+                this.scroll.refresh()
+            })
+        },
         addOperate(obj, send) {
             if (obj && obj.tpl) {
                 this.renderQueue.push(obj)
                 this.updateCacheQueue()
-                this.$nextTick(() => {
-                    this.scroll.refresh()
-                    this.scrollToBottom()
-                })
+                this.refreshScroll()
+                this.scrollToBottom()
 
                 // 发送历史记录
                 let serviceInfo = ''
@@ -350,7 +360,7 @@ export default {
                         if (res.data.code == 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
-                                let cacheHisory = localStorage.getItem(
+                                let cacheHisory = getCookie(
                                     'historys'
                                 )
                                 if (cacheHisory) {
@@ -363,18 +373,19 @@ export default {
                                 } else {
                                     cacheHisory = [res.data.data]
                                 }
-                                localStorage.setItem(
+                                setCookie(
                                     'historys',
-                                    JSON.stringify(cacheHisory)
+                                    JSON.stringify(cacheHisory),
+                                    Infinity
                                 )
+                            } 
+                            
+                            // 最小historyId记录
+                            if (!this.minHistoryId) {
+                                this.minHistoryId = res.data.data
                             } else {
-                                // 最小historyId记录
-                                if (!this.minHistoryId) {
+                                if (res.data.data < this.minHistoryId) {
                                     this.minHistoryId = res.data.data
-                                } else {
-                                    if (res.data.data < this.minHistoryId) {
-                                        this.minHistoryId = res.data.data
-                                    }
                                 }
                             }
 
@@ -388,20 +399,24 @@ export default {
         },
         updateCacheQueue() {
             if (!this.isLogin) {
-                localStorage.setItem(
-                    'renderQueue',
-                    JSON.stringify(this.renderQueue)
-                )
+                setCookie('renderQueue', JSON.stringify(this.renderQueue),Infinity)
+                // sessionStorage.setItem(
+                //     'renderQueue',
+                //     JSON.stringify(this.renderQueue)
+                // )
             }
         },
         renderFromCacheQueue() {
             // 恢复对话
-            this.renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
+            this.renderQueue = JSON.parse(getCookie('renderQueue'))
+            // this.renderQueue = JSON.parse(sessionStorage.getItem('renderQueue'))
 
             // 更新历史记录
-            let historys = JSON.parse(localStorage.getItem('historys'))
-            let serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
-
+            let historys = JSON.parse(getCookie('historys'))
+            let serviceIds = JSON.parse(getCookie('serviceRecords'))
+            // let historys = JSON.parse(sessionStorage.getItem('historys'))
+            // let serviceIds = JSON.parse(sessionStorage.getItem('serviceRecords'))
+            
             if (historys) {
                 historys.forEach(item => {
                     if (this.minHistoryId) {
@@ -421,9 +436,9 @@ export default {
                         )
                         .then(res => {
                             if (res.data.code == 200) {
-                                localStorage.removeItem('serviceRecords')
-                                localStorage.removeItem('historys')
-                                localStorage.removeItem('renderQueue')
+                                setCookie('serviceRecords','')
+                                setCookie('historys','')
+                                setCookie('renderQueue','')
                             }
                         })
                 }
@@ -466,12 +481,22 @@ export default {
                 })
         },
         scrollToBottom() {
-            let h1 = document.querySelector('#wrapper').offsetHeight
-            let h2 = document.querySelector('.content').offsetHeight
-            this.scroll.scrollTo(0, h1 - h2, 300)
+            this.$nextTick(() => {
+                let h1 = document.querySelector('#wrapper').offsetHeight
+                let h2 = document.querySelector('.content').offsetHeight
+                this.scroll.scrollTo(0, h1 - h2, 300)
+            })
         },
         connectLiveChat() {
-            if (!this.isLogin) return false
+            if (!this.isLogin) {
+                if (this.$store.state.appType == 1) {
+                    toNativePage('com.star.mobile.video.account.LoginActivity')
+                } else {
+                    toNativePage('startimes://login')
+                }
+                return false
+            }
+
             this.connectState = 1
             this.$axios
                 .post('/genesys-proxy/v1/chats', {
@@ -513,9 +538,12 @@ export default {
                                         )
                                     )
 
-                                    this.chatPullTimer = setInterval(() => {
-                                        this.pullReply()
-                                    }, 5000)
+                                    this.chatPullTimer = window.setInterval(
+                                        () => {
+                                            this.pullReply()
+                                        },
+                                        5000
+                                    )
                                     this.nextPosition = res.data.nextPosition
                                     let messages = res.data.messages
 
@@ -635,14 +663,14 @@ export default {
                                 'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
                             tpl: 'tips'
                         })
-                        clearInterval(this.chatPullTimer)
+                        window.clearInterval(this.chatPullTimer)
                         this.endChat()
                     } else {
                         this.addOperate({
                             text: 'Disconnected',
                             tpl: 'tips'
                         })
-                        clearInterval(this.chatPullTimer)
+                        window.clearInterval(this.chatPullTimer)
                         this.endChat()
                     }
                 })
@@ -656,15 +684,6 @@ export default {
             this.connectState = 0
             // 创建新服务记录
             this.createServiceRecord(6)
-        },
-        starToBlue(index, event) {
-            let imgNode = document.querySelectorAll('.gave-star img')
-            for (let i = 0; i < imgNode.length; i++) {
-                // TODO 先全部恢复默认状态
-            }
-            for (let i = 0; i <= index; i++) {
-                // TODO 当前index及之前变为蓝色
-            }
         }
     },
     filters: {
