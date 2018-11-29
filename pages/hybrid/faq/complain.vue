@@ -30,26 +30,9 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <mselect
-                :list="questionsList"
-                :default="question"
-                placeholder="Please choose your question"
-                ref="questionSelect"
-                @change="setQuestion"
-            />
-            <mselect
-                :list="channelList"
-                placeholder="Please choose channel type"
-                ref="channelSelect"
-                @change="setChannelName"
-                v-if="type[1]"
-            />
-            <mselect
-                :list="channelNameList"
-                placeholder="Please choose channel name"
-                ref="channelNameSelect"
-                v-if="type[1]"
-            />
+            <mselect :list="questionsList" :default="question" placeholder="Please choose your question" ref="questionSelect" @change="setQuestion"/>
+            <mselect :list="channelList" placeholder="Please choose channel type" ref="channelSelect" @change="setChannelName" v-if="type[1]"/>
+            <mselect :list="channelNameList" placeholder="Please choose channel name" ref="channelNameSelect" v-if="type[1]"/>
             <mselect
                 :list="countryList"
                 :default="defaultCountry"

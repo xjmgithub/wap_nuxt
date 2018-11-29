@@ -6,11 +6,7 @@
                     <label @click="check(item.id)">
                         <p class="time">
                             {{ item.order_create_time | formatDate }}
-                            <input
-                                :checked="item.id==checkedId"
-                                type="radio"
-                                name="order"
-                            >
+                            <input :checked="item.id==checkedId" type="radio" name="order">
                             <i/>
                         </p>
                         <div class="order-type clearfix">
