@@ -40,7 +40,7 @@
     </div>
 </template>
 <script>
-let moment = require('moment/moment.js')
+import dayjs from 'dayjs'
 export default {
     layout: 'base',
     data: function() {
@@ -58,7 +58,7 @@ export default {
     },
     filters: {
         formatDate(date) {
-            return moment(date).format('D MMM YYYY HH-mm:ss')
+            return dayjs(date).format('D MMM YYYY HH-mm:ss')
         }
     },
     mounted() {

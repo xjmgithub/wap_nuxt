@@ -9,7 +9,7 @@
     </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import crypto from 'crypto'
 import mButton from '~/components/button'
 import RadioBtn from '~/components/radioBtn'
@@ -127,7 +127,7 @@ export default {
                 },
                 {
                     key: 'requestTime',
-                    value: moment().format('YYYY-MM-DD hh:mm:ss')
+                    value: dayjs().format('YYYY-MM-DD hh:mm:ss')
                 },
                 {
                     key: 'txNo',

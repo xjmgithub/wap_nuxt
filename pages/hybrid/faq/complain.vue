@@ -106,7 +106,7 @@
 </template>
 <script>
 import mselect from '~/components/select'
-import moment from 'moment/moment.js'
+import dayjs from 'dayjs'
 export default {
     layout: 'base',
     data() {
@@ -280,7 +280,7 @@ export default {
     },
     filters: {
         formatDate(date) {
-            return moment(date).format('D MMM YYYY HH-mm:ss')
+            return dayjs(date).format('D MMM YYYY HH-mm:ss')
         }
     },
     head() {

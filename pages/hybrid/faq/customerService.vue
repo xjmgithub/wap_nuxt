@@ -79,7 +79,7 @@
     </div>
 </template>
 <script>
-import moment from 'moment/moment.js'
+import dayjs from 'dayjs'
 import BScroll from 'better-scroll'
 import questionListTpl from '~/components/faq/questionListTpl'
 import orderBlockTpl from '~/components/faq/orderBlockTpl'
@@ -660,7 +660,7 @@ export default {
     },
     filters: {
         formatDate(date) {
-            return moment(date).format('D MMM YYYY HH-mm:ss')
+            return dayjs(date).format('D MMM YYYY HH-mm:ss')
         }
     },
     head() {
