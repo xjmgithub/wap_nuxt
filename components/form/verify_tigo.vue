@@ -24,16 +24,13 @@ export default {
         input_label: {
             type: String,
             default: ""
-        },
-        error_tel: {
-            type: String,
-            default: ""
         }
     },
     data() {
         return {
             tel:'',
-            show_error:false
+            show_error:false,
+            error_tel:''
         }
     },
     watch:{

@@ -1,7 +1,7 @@
 <template>
     <div id="wrapper">
         <div class="by_tel">
-            <verifyTigo ref="telpicker" :prefix="phonePrefix" :error_tel="error_tel" :input_label="input_label"/>
+            <verifyTigo ref="telpicker" :prefix="phonePrefix" :input_label="input_label"/>
         </div>
         <div class="footer">
             <mButton :disabled="false" :text="'OK'" @click="nextStep"/>
@@ -16,7 +16,6 @@ import mButton from '~/components/button'
       data(){
           return {
             phonePrefix:"255 0",
-            error_tel:'',
             input_label:'Input phone number to continue'
           }
       },
@@ -24,8 +23,8 @@ import mButton from '~/components/button'
           nextStep(){
                 let phone = this.$refs.telpicker.tel
                 if(phone.length < 9){
-                    this.error_tel = 'Must be 9 digits'
                     this.$refs.telpicker.show_error = true
+                    this.$refs.telpicker.error_tel = 'Must be 9 digits'
                 }else{
                     window.location.href = 'http://www.tigosports.co.tz/Home/Home?MSISDN=255' + phone + '&ConsumerName=Startimes'
                 }
