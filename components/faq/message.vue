@@ -2,7 +2,7 @@
     <div>
         <div class="order-msg" @click="toDetail">
             <p class="time">
-                {{message.orderCreateTime}}
+                {{message.orderCreateTime | formatDate}}
                 <span
                     class="wait-result"
                 >{{replied? 'Replied': 'Waiting For Result'}}</span>
@@ -20,6 +20,7 @@
     </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 export default {
     props: {
         message: {
@@ -37,6 +38,11 @@ export default {
         toDetail() {
             sessionStorage.setItem('showMsg', JSON.stringify(this.message))
             this.$router.push('/hybrid/faq/message')
+        }
+    },
+    filters: {
+        formatDate(date) {
+            return dayjs(date).format('D MMM YYYY HH:mm:ss')
         }
     }
 }

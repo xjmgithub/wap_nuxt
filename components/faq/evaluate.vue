@@ -5,12 +5,12 @@
             <span @click="setAgree(0)">
                 <img v-if="agree" src="~assets/img/faq/ic_happy_sl_green.png">
                 <img v-if="!agree" src="~assets/img/faq/ic_happy_def_g.png">
-                NO
+                YES
             </span>
             <span @click="setAgree(1)">
                 <img v-if="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png">
                 <img v-if="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png">
-                YES
+                NO
             </span>
         </div>
         <div class="gave-star">
