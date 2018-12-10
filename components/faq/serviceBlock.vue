@@ -36,7 +36,7 @@
                 class="btn"
                 v-for="(item,index) in service.service_components"
                 :key="index"
-            >{{item.presentation_name}}</div>
+            ><a :href="item.service_address">{{item.presentation_name}}</a></div>
         </div>
         <div v-if="showMore" class="gap"/>
         <nuxt-link v-if="showMore" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}">
