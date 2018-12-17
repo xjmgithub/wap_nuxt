@@ -12,7 +12,7 @@ export default ({ app: { router }, store}) => {
             
             if (store.state.appType == 1 || store.state.appType == 2) {
                 if(to.path!='/hybrid/account/tokenfail'){
-                    router.replace('/hybrid/account/tokenfail')
+                    window.location.href = '/hybrid/account/tokenfail' 
                 }else{
                     next()
                 }
