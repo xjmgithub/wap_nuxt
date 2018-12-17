@@ -103,11 +103,11 @@ export default {
             unitType: this.$store.state.phoneModel,
             type: [0, 0],
             questionsList: [],
-            question: '',
+            question: null,
             channelList: [],
             channelNameList: [],
             countryList: [],
-            defaultCountry: '',
+            defaultCountry: null,
             moredes: ''
         }
     },
