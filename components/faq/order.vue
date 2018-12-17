@@ -113,7 +113,7 @@ export default {
 </script>
 <style lang="less">
 .order-msg {
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     position: relative;
     p.time {
         width: 100%;
@@ -168,7 +168,7 @@ export default {
         }
     }
     .order-type {
-        padding: 0.7em 0;
+        padding: 0.5em 0;
         img {
             width: 2.5rem;
             height: 2.5rem;

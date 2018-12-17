@@ -181,7 +181,7 @@ export default {
     flex-direction: column;
 }
 #wrapper {
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0;
     flex: 12;
     display: flex;
     background: #fff;
@@ -275,10 +275,8 @@ export default {
     text-align: center;
     color: #0087eb;
     border-top: 1px solid #eeeeee;
-    padding: 1rem 0;
+    padding: 0.7rem 0;
     background: #fff;
-    height: 4.25rem;
-    flex: 1;
     button {
         margin: 0 auto;
         border: 1px solid #0087eb;

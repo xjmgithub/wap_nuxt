@@ -68,7 +68,7 @@ export default {
         width: 100%;
     }
     .bottom {
-        padding: 0.7rem 0.5rem;
+        padding: 0.5rem;
         p {
             font-size: 0.9rem;
             color: #333333;
@@ -88,7 +88,7 @@ export default {
         .btn {
             color: #0087eb;
             font-size: 0.8rem;
-            margin-top: 0.7rem;
+            margin-top: 0.3rem;
             float: right;
             margin-left: 0.7rem;
             font-weight: bold;
@@ -99,7 +99,7 @@ export default {
         font-size: 0.8rem;
         font-weight: bold;
         text-align: center;
-        padding: 0.7rem 0;
+        padding: 0.5rem 0;
     }
 }
 </style>
