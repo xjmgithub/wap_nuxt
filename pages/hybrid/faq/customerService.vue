@@ -81,7 +81,6 @@
     </div>
 </template>
 <script>
-import dayjs from 'dayjs'
 import BScroll from 'better-scroll'
 import questionListTpl from '~/components/faq/questionListTpl'
 import orderBlockTpl from '~/components/faq/order'
@@ -658,11 +657,6 @@ export default {
             this.connectState = 0
             // 创建新服务记录
             this.createServiceRecord(6)
-        }
-    },
-    filters: {
-        formatDate(date) {
-            return dayjs(date).format('D MMM YYYY HH-mm:ss')
         }
     },
     head() {

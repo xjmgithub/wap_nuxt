@@ -26,6 +26,9 @@
                 </div>
             </div>
         </div>
+        <div class="order-contain" v-if="msg.orderNo">
+            <orderBlock :order="msg.orderNo" />
+        </div>
         <div class="problem">
             <p>Your Problem</p>
             <div class="problem_txt">{{msg.problem}}</div>
@@ -65,7 +68,7 @@
     </div>
 </template>
 <script>
-import dayjs from 'dayjs'
+import orderBlock from '~/components/faq/order'
 export default {
     layout: 'base',
     data() {
@@ -92,10 +95,8 @@ export default {
             }
         }
     },
-    filters: {
-        formatDate(date) {
-            return dayjs(date).format('D MMM YYYY HH-mm:ss')
-        }
+    components: {
+        orderBlock: orderBlock
     },
     head() {
         return {
