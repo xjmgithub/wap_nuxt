@@ -11,12 +11,12 @@
                 <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
                 <div class="right">
                     <p class="order-name">
-                        {{order.order_type }}
-                        <span>{{order.order_amount }}</span>
+                        {{orderName}}
+                        <span>{{currency}} {{order.order_amount}}</span>
                     </p>
                     <p class="order-status">
-                        {{order.card_no }}
-                        <span>{{order.order_status }}</span>
+                        {{order.order_type}}
+                        <span>{{orderStatus}}</span>
                     </p>
                 </div>
             </div>
@@ -109,6 +109,80 @@ export default {
             countryList: [],
             defaultCountry: null,
             moredes: ''
+        }
+    },
+    computed: {
+        orderName() {
+            switch (this.order.order_type_id) {
+                case 1:
+                case 2:
+                case 3:
+                    return 'Card No.' + this.order.card_no
+                    break
+                default:
+                    return this.order.order_name
+            }
+        },
+        currency() {
+            return this.$store.state.country.currencySymbol
+        },
+        orderStatus() {
+            if (this.order) {
+                let type = this.order.order_type_id
+
+                if ([1, 2, 3].indexOf(type) >= 0) {
+                    // bouquet,link,charge
+                    switch (this.order.order_status) {
+                        case '0':
+                            return 'UNPAID'
+                            break
+                        case '10':
+                            return 'UNRECHARGED'
+                            break
+                        case '20':
+                        case '4':
+                            return 'FAILD'
+                            break
+                        case '3':
+                            return 'SUCCESS'
+                            break
+                        case '11':
+                            return 'CHARGING'
+                            break
+                        default:
+                            return ''
+                    }
+                } else {
+                    // ott
+                    switch (this.order.order_status) {
+                        case '1':
+                        case '10':
+                        case '100':
+                            return 'UNPAID'
+                            break
+                        case '11':
+                        case '110':
+                            return 'CANCEL'
+                            break
+                        case '101':
+                            return 'SUCCESS'
+                            break
+                        case '111':
+                            return 'REFUNDING'
+                            break
+                        case '1000':
+                            return 'REFUNDED'
+                            break
+                        case '1001':
+                            return 'EXPIRED'
+                            break
+                        default:
+                            return ''
+                    }
+                }
+            } else {
+                return ''
+            }
         }
     },
     methods: {
