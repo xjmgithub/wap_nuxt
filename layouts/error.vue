@@ -6,6 +6,7 @@
 </template>
 <script>
 export default {
+    layout: 'base',
     props: {
         error: {
             type: Object,
@@ -15,7 +16,6 @@ export default {
     }
 }
 </script>
-
 <style scoped>
 .title {
     margin-top: 15px;
