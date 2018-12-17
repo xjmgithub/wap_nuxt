@@ -22,7 +22,9 @@
                     :list="item.contents"
                     @ask="askQuest"
                 />
-                <orderBlockTpl v-if="item.tpl=='order'" :key="index" :order="item.order"/>
+                <div class="order-contain" v-if="item.tpl=='order'" :key="index">
+                    <orderBlockTpl :order="item.order"/>
+                </div>
                 <askTpl
                     v-if="item.tpl=='ask'||item.tpl=='chatask'"
                     :key="index"
@@ -82,7 +84,7 @@
 import dayjs from 'dayjs'
 import BScroll from 'better-scroll'
 import questionListTpl from '~/components/faq/questionListTpl'
-import orderBlockTpl from '~/components/faq/orderBlockTpl'
+import orderBlockTpl from '~/components/faq/order'
 import askTpl from '~/components/faq/askTpl'
 import answerTpl from '~/components/faq/answerTpl'
 import contentTpl from '~/components/faq/contentTpl'
@@ -676,5 +678,12 @@ export default {
 <style lang="less" scoped>
 #wrapper {
     overflow: hidden;
+}
+.order-contain {
+    box-shadow: 0px 1px 3px 1px #dddddd;
+    border-radius: 5px;
+    width: 95%;
+    margin: 1rem 2.5% 0 2.5%;
+    background: #fff;
 }
 </style>

@@ -1,42 +1,18 @@
 <template>
     <div class="b-order-msg" v-if="service.order_info">
-        <div class="top">
-            <p class="time">{{service.order_info.order_create_time | formatDate}}</p>
-            <div class="b-order-type clearfix">
-                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png">
-                <div class="right">
-                    <p class="order-name">
-                        {{orderName}}
-                        <span>{{currency}} {{service.order_info.order_amount}}</span>
-                    </p>
-                    <p class="order-status">
-                        {{service.order_info.order_type}}
-                        <span>{{orderStatus}}</span>
-                    </p>
-                </div>
-            </div>
-        </div>
+        <orderBlock :order="service.order_info"/>
         <div class="gap"/>
         <div class="bottom clearfix">
             <p class="clearfix">
                 Questions
-                <img
-                    @click="moreQues(service.id)"
-                    src="~assets/img/faq/ic_categary_copy41.png"
-                >
+                <img @click="moreQues(service.id)" src="~assets/img/faq/ic_categary_copy41.png">
             </p>
             <ul v-if="service.questions">
-                <li
-                    v-for="(item,index) in service.questions.slice(0,3)"
-                    :key="index"
-                    @click="clickQues(item)"
-                >{{item.thema}}</li>
+                <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">{{item.thema}}</li>
             </ul>
-            <div
-                class="btn"
-                v-for="(item,index) in service.service_components"
-                :key="index"
-            ><a :href="item.service_address">{{item.presentation_name}}</a></div>
+            <div class="btn" v-for="(item,index) in service.service_components" :key="index">
+                <a :href="item.service_address">{{item.presentation_name}}</a>
+            </div>
         </div>
         <div v-if="showMore" class="gap"/>
         <nuxt-link v-if="showMore" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}">
@@ -45,7 +21,7 @@
     </div>
 </template>
 <script>
-import dayjs from 'dayjs'
+import orderBlock from '~/components/faq/order'
 export default {
     props: {
         service: {
@@ -59,84 +35,8 @@ export default {
             default: false
         }
     },
-    computed: {
-        orderName(){
-            switch (this.service.order_info.order_type_id) {
-                case 1:
-                case 2:
-                case 3:
-                    return 'Card No.' + this.service.order_info.card_no
-                    break
-                default:
-                    return this.service.order_info.order_name
-            }
-        },
-        currency() {
-            return this.$store.state.country.currencySymbol
-        },
-        orderStatus() {
-            if (this.service && this.service.order_info) {
-                let type = this.service.order_info.order_type_id
-                
-                if ([1, 2, 3].indexOf(type) >= 0) {
-                    // bouquet,link,charge
-                    switch (this.service.order_info.order_status) {
-                        case '0':
-                            return 'UNPAID'
-                            break
-                        case '10':
-                            return 'UNRECHARGED'
-                            break
-                        case '20':
-                        case '4':
-                            return 'FAILD'
-                            break
-                        case '3':
-                            return 'SUCCESS'
-                            break
-                        case '11':
-                            return 'CHARGING'
-                            break
-                        default:
-                            return ''
-                    }
-                } else {
-                    // ott
-                    switch (this.service.order_info.order_status) {
-                        case '1':
-                        case '10':
-                        case '100':
-                            return 'UNPAID'
-                            break
-                        case '11':
-                        case '110':
-                            return 'CANCEL'
-                            break
-                        case '101':
-                            return 'SUCCESS'
-                            break
-                        case '111':
-                            return 'REFUNDING'
-                            break
-                        case '1000':
-                            return 'REFUNDED'
-                            break
-                        case '1001':
-                            return 'EXPIRED'
-                            break
-                        default:
-                            return ''
-                    }
-                }
-            } else {
-                return ''
-            }
-        }
-    },
-    filters: {
-        formatDate(date) {
-            return dayjs(date).format('D MMM YYYY HH:mm:ss')
-        }
+    components: {
+        orderBlock: orderBlock
     },
     methods: {
         clickQues(item) {
@@ -161,41 +61,7 @@ export default {
     box-shadow: 0px 1px 3px 1px #dddddd;
     border-radius: 5px;
     margin-bottom: 0.8rem;
-    .top {
-        padding: 0 0.5rem;
-        p.time {
-            width: 100%;
-            color: #aaaaaa;
-            font-size: 0.8rem;
-            border-bottom: 1px solid #eeeeee;
-            padding: 0.2rem 0;
-        }
-    }
-    .b-order-type {
-        padding: 0.7em 0;
-        img {
-            width: 2.5rem;
-            height: 2.5rem;
-            float: left;
-        }
-        .right {
-            margin-left: 3rem;
-        }
-        .order-name {
-            span {
-                font-weight: bold;
-                float: right;
-            }
-        }
-        .order-status {
-            font-size: 0.9rem;
-            color: #999999;
-            span {
-                color: #00cc33;
-                float: right;
-            }
-        }
-    }
+
     .gap {
         background-color: #f2f2f2;
         height: 4px;

@@ -1,25 +1,11 @@
 <template>
     <div id="wrapper">
-        <div class="order-msg" v-if="order.order_status">
-            <p class="time">
-                {{order.order_create_time | formatDate }}
+        <div class="order-contain" v-if="order.order_status">
+            <orderBlock :order="order">
                 <nuxt-link :to="{'path':'/hybrid/faq/chooseOrder',query:$route.query}">
                     <img src="~assets/img/faq/ic_Setting_def_g.png" alt>
                 </nuxt-link>
-            </p>
-            <div class="order-type clearfix">
-                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
-                <div class="right">
-                    <p class="order-name">
-                        {{orderName}}
-                        <span>{{currency}} {{order.order_amount}}</span>
-                    </p>
-                    <p class="order-status">
-                        {{order.order_type}}
-                        <span>{{orderStatus}}</span>
-                    </p>
-                </div>
-            </div>
+            </orderBlock>
         </div>
         <div class="choose-order" v-else>
             <nuxt-link to="/hybrid/faq/chooseOrder">
@@ -89,7 +75,7 @@
 </template>
 <script>
 import mselect from '~/components/select'
-import dayjs from 'dayjs'
+import orderBlock from '~/components/faq/order'
 export default {
     layout: 'base',
     data() {
@@ -109,80 +95,6 @@ export default {
             countryList: [],
             defaultCountry: null,
             moredes: ''
-        }
-    },
-    computed: {
-        orderName() {
-            switch (this.order.order_type_id) {
-                case 1:
-                case 2:
-                case 3:
-                    return 'Card No.' + this.order.card_no
-                    break
-                default:
-                    return this.order.order_name
-            }
-        },
-        currency() {
-            return this.$store.state.country.currencySymbol
-        },
-        orderStatus() {
-            if (this.order) {
-                let type = this.order.order_type_id
-
-                if ([1, 2, 3].indexOf(type) >= 0) {
-                    // bouquet,link,charge
-                    switch (this.order.order_status) {
-                        case '0':
-                            return 'UNPAID'
-                            break
-                        case '10':
-                            return 'UNRECHARGED'
-                            break
-                        case '20':
-                        case '4':
-                            return 'FAILD'
-                            break
-                        case '3':
-                            return 'SUCCESS'
-                            break
-                        case '11':
-                            return 'CHARGING'
-                            break
-                        default:
-                            return ''
-                    }
-                } else {
-                    // ott
-                    switch (this.order.order_status) {
-                        case '1':
-                        case '10':
-                        case '100':
-                            return 'UNPAID'
-                            break
-                        case '11':
-                        case '110':
-                            return 'CANCEL'
-                            break
-                        case '101':
-                            return 'SUCCESS'
-                            break
-                        case '111':
-                            return 'REFUNDING'
-                            break
-                        case '1000':
-                            return 'REFUNDED'
-                            break
-                        case '1001':
-                            return 'EXPIRED'
-                            break
-                        default:
-                            return ''
-                    }
-                }
-            } else {
-                return ''
-            }
         }
     },
     methods: {
@@ -333,12 +245,8 @@ export default {
         })
     },
     components: {
-        mselect: mselect
-    },
-    filters: {
-        formatDate(date) {
-            return dayjs(date).format('D MMM YYYY HH-mm:ss')
-        }
+        mselect: mselect,
+        orderBlock: orderBlock
     },
     head() {
         return {
@@ -355,33 +263,18 @@ export default {
     background: #ffffff;
 }
 
+.order-contain {
+    box-shadow: 0px 1px 3px 1px #dddddd;
+    border-radius: 5px;
+    width: 95%;
+    margin: 1rem 2.5% 0 2.5%;
+    background: #fff;
+}
+
 .gap {
     background-color: #f2f2f2;
     height: 4px;
     width: 100%;
-}
-
-.order-msg {
-    box-shadow: 0px 1px 3px 1px #dddddd;
-    border-radius: 2px;
-    padding: 0.5rem;
-    width: 95%;
-    margin: 0.5rem 2.5% 0 2.5%;
-    position: relative;
-    .time {
-        width: 100%;
-        color: #aaaaaa;
-        font-size: 0.8rem;
-        border-bottom: 1px solid #eeeeee;
-        padding: 0.2rem 0;
-        img {
-            position: absolute;
-            display: block;
-            width: 1.2rem;
-            right: 0.4rem;
-            top: 0.4rem;
-        }
-    }
 }
 
 .choose-order {
