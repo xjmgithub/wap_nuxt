@@ -1,5 +1,5 @@
 import { setCookie, toNativePage } from '~/functions/utils'
-export default ({ app: { router }, store,redirect }) => {
+export default ({ app: { router }, store}) => {
     router.beforeEach((to, from, next) => {
         // 清除计时器
         if (store.state.intervalTimer) {
@@ -9,9 +9,10 @@ export default ({ app: { router }, store,redirect }) => {
             next()
         } else {
             // 如果是app里
+            
             if (store.state.appType == 1 || store.state.appType == 2) {
                 if(to.path!='/hybrid/account/tokenfail'){
-                    location.href = '/hybrid/account/tokenfail'
+                    router.replace('/hybrid/account/tokenfail')
                 }else{
                     next()
                 }

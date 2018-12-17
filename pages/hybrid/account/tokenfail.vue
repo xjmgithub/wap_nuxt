@@ -8,6 +8,7 @@
     </div>
 </template>
 <script>
+import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     methods: {
