@@ -6,11 +6,11 @@
                 <img src="~assets/img/faq/ic_RechargeOrder_def_b.png">
                 <div class="right">
                     <p class="order-name">
-                        {{service.order_info.order_type}}
+                        {{orderName}}
                         <span>{{currency}} {{service.order_info.order_amount}}</span>
                     </p>
                     <p class="order-status">
-                        {{orderName}}
+                        {{service.order_info.order_type}}
                         <span>{{orderStatus}}</span>
                     </p>
                 </div>
@@ -60,28 +60,25 @@ export default {
         }
     },
     computed: {
+        orderName(){
+            switch (this.service.order_info.order_type_id) {
+                case 1:
+                case 2:
+                case 3:
+                    return 'Card No.' + this.service.order_info.card_no
+                    break
+                default:
+                    return this.service.order_info.order_name
+            }
+        },
         currency() {
             return this.$store.state.country.currencySymbol
-        },
-        orderName() {
-            if (this.service && this.service.order_info) {
-                switch (this.service.order_info.order_type_id) {
-                    case '1':
-                    case '2':
-                    case '3':
-                        return 'Card No.' + this.service.order_info.card_no
-                        break
-                    default:
-                        return this.service.order_info.order_name
-                }
-            } else {
-                return ''
-            }
         },
         orderStatus() {
             if (this.service && this.service.order_info) {
                 let type = this.service.order_info.order_type_id
-                if (['1', '2', '3'].indexOf(type) >= 0) {
+                
+                if ([1, 2, 3].indexOf(type) >= 0) {
                     // bouquet,link,charge
                     switch (this.service.order_info.order_status) {
                         case '0':
@@ -107,24 +104,24 @@ export default {
                     // ott
                     switch (this.service.order_info.order_status) {
                         case '1':
-                        case '2':
-                        case '4':
+                        case '10':
+                        case '100':
                             return 'UNPAID'
                             break
-                        case '3':
-                        case '6':
+                        case '11':
+                        case '110':
                             return 'CANCEL'
                             break
-                        case '5':
+                        case '101':
                             return 'SUCCESS'
                             break
-                        case '7':
+                        case '111':
                             return 'REFUNDING'
                             break
-                        case '8':
+                        case '1000':
                             return 'REFUNDED'
                             break
-                        case '9':
+                        case '1001':
                             return 'EXPIRED'
                             break
                         default:
