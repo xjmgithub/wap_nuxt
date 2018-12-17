@@ -3,19 +3,23 @@
         <div id="wrapper">
             <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item"/>
         </div>
+        <loading v-show="loadStatus" />
     </div>
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
+import loading from '~/components/loading'
 export default {
     layout: 'base',
     data: function() {
         return {
-            serviceList: []
+            serviceList: [],
+            loadStatus: true
         }
     },
     components: {
-        serviceBlock
+        serviceBlock,
+        loading
     },
     mounted() {
         let entranceId = this.$route.query.entrance_id || ''
@@ -27,6 +31,7 @@ export default {
                 }
             })
             .then(res => {
+                this.loadStatus = false
                 if (res.data) {
                     this.serviceList = res.data.data
                 }

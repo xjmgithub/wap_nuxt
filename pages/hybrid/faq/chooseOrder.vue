@@ -16,10 +16,12 @@
             <img src="~assets/img/faq/Group5.png" alt>
             <p>No Orders.</p>
         </div>
+        <loading v-show="!loaded" />
     </div>
 </template>
 <script>
 import orderBlock from '~/components/faq/order'
+import loading from '~/components/loading'
 export default {
     layout: 'base',
     data: function() {
@@ -33,11 +35,6 @@ export default {
     computed: {
         checked() {
             return this.serviceList[this.checkedId]
-        }
-    },
-    filters: {
-        formatDate(date) {
-            return dayjs(date).format('D MMM YYYY HH-mm:ss')
         }
     },
     mounted() {
@@ -81,7 +78,8 @@ export default {
         }
     },
     components: {
-        orderBlock: orderBlock
+        orderBlock: orderBlock,
+        loading:loading
     },
     head() {
         return {
