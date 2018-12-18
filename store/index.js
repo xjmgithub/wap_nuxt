@@ -1,6 +1,9 @@
 import crypto from 'crypto'
 import versionMap from '~/functions/appversion.js'
 import LANG from '~/languages/'
+import geoip from 'geoip-lite'
+import tokenMap from '~/functions/token.json'
+import countryMap from '~/functions/countrys.json'
 
 export const state = () => ({
     deviceId: '',
@@ -83,8 +86,7 @@ export const mutations = {
 }
 
 export const actions = {
-    // nuxtServerInit is called by Nuxt.js before server-rendering every page
-    async nuxtServerInit({ commit }, { req, res }) {
+    async nuxtServerInit({ commit }, { req, res, query }) {
         let _COOKIE = {}
         req.headers.cookie &&
             req.headers.cookie.split(';').forEach(Cookie => {
@@ -123,40 +125,6 @@ export const actions = {
             }
         }
 
-        if (req.headers['token']) {
-            commit('SET_TOKEN', req.headers['token'])
-        } else {
-            if (_COOKIE['token']) {
-                commit('SET_TOKEN', _COOKIE['token'])
-            } else {
-                // this.$axios.setHeader('x-forwarded-for', '41.219.255.255')
-                this.$axios.setHeader('x-forwarded-for', req.connection.remoteAddress)
-                let res = await this.$axios.post('/ums/v1/user/login', {
-                    applicationId: 1,
-                    deviceType: 1,
-                    deviceId: this.state.deviceId,
-                    timeZoneId: 'Asia/Shanghai',
-                    versionCode: '-99',
-                    type: '-1'
-                })
-                commit('SET_TOKEN', res.data.data.token)
-            }
-        }
-
-        // 用户信息
-        await this.$axios
-            .get('/cms/users/me', {
-                headers: {
-                    token: this.state.token
-                }
-            })
-            .then(user => {
-                commit('SET_USER', user.data)
-            })
-            .catch(error => {
-                // 用户失效在plugin/clearUser当中处理
-            })
-        // APP TYPE
         if (req.headers['client'] == 'android') {
             commit('SET_APPTYPE', 1)
         } else if (req.headers['client'] == 'ios') {
@@ -194,5 +162,56 @@ export const actions = {
         if (req.headers['phonemodel']) {
             commit('SET_PHONE_MODEL', req.headers['phonemodel'])
         }
+
+        let country = 'NG'
+        if (query.sarea) {
+            country = query.sarea.toUpperCase()
+        } else {
+            let ip = req.headers['x-forwarded-for']
+            let geo = geoip.lookup(ip)
+            if (geo) {
+                countryMap.forEach(item => {
+                    if (item.country == geo.country) {
+                        country = item.country
+                    }
+                })
+            }
+        }
+
+        if (req.headers['token']) {
+            commit('SET_TOKEN', req.headers['token'])
+        } else {
+            if (_COOKIE['token']) {
+                commit('SET_TOKEN', _COOKIE['token'])
+            } else {
+                commit('SET_TOKEN', tokenMap[country])
+            }
+        }
+        await this.$axios
+            .get('/cms/users/me', {
+                headers: {
+                    token: this.state.token
+                }
+            })
+            .then(res => {
+                if (res.status == 200) {
+                    commit('SET_USER', res.data)
+                    countryMap.forEach(item => {
+                        if (item.id == res.data.areaID) {
+                            country = item.country
+                        }
+                    })
+                }
+            })
+            .catch(error => {
+                // 用户失效在plugin/clearUser当中处理
+            })
+
+        commit('SET_AREA_INFO', countryMap[0])
+        countryMap.forEach(item => {
+            if ((item.country = country)) {
+                commit('SET_AREA_INFO', item)
+            }
+        })
     }
 }
