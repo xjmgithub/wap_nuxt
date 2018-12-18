@@ -13,10 +13,15 @@
 .clear {
     clear: both;
 }
+@keyframes sendFlower
+{
+    from { top: -2rem;}
+    50%{opacity: 1;}
+    to {top: 0; opacity: 0;}
+}
 html {
     font-size: 20px;
     body {
-        font-family: 'Roboto-Regular','Roboto', Helvetica, sans-serif;
         margin: 0;
         padding: 0;
         background-color: #FFF;
@@ -56,8 +61,10 @@ html {
         }
     }
 }
-#rank-content{
-    padding: 0 .5rem;
+#show-rank{
+    border-top: 1px #689E32 solid;
+    width: 95%;
+    margin: 1.2rem auto;
     .ranking-list {
         margin-top: .8rem;
         margin-bottom: .8rem;
@@ -98,6 +105,13 @@ html {
     margin: 0;
     padding: .5rem;
     text-align: center;
+    .leftvote{
+        font-size: .8rem;
+        text-align: left;
+        color: #333333;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+    }
     li{
         list-style: none;
         width: 32.1%;
@@ -154,4 +168,98 @@ html {
         width: 25%;
     }
 }
-
+#show-advisor {
+    width: 100%;
+    margin: 0;
+    padding: .5rem;
+    text-align: center;
+    .leftflower{
+        font-size: .8rem;
+        text-align: left;
+        color: #333333;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+    }
+    li {
+        list-style: none;
+        width: 32.1%;
+        float: left;
+        margin: 0 0.6% 0.5rem;
+        .img-box{
+            width: 100%;
+            overflow: hidden;
+            border: 4px solid #689E32;
+            .icon {
+                width: 100%;
+                display: block;
+            }
+        }
+    }
+    .flowers{
+        color:#666666;
+        font-size:.6rem;
+        width:4.7rem;
+        margin:0 auto;
+        position:relative;
+        .send-flower{
+            top: -2rem;
+            left: 0;
+            opacity: 0;
+            position: absolute;
+            width: 1.8rem;
+            &.sending{
+                animation: sendFlower .5s ease-out;
+            }
+        }
+        .bgt{
+            width:100%;
+        }
+        .flower-count{
+            padding-top:.35rem;
+            margin:0 !important;
+            position:absolute;
+            top: 0;
+            left: 2.4rem;
+            &+span{
+                position:absolute;
+                bottom: -2px;
+                left: 2rem;
+            }
+        }
+    }
+    span {
+        display: block;
+        margin: .2rem auto;
+        &.flower-state {
+            color: #fff;
+            font-size: .7rem;
+            cursor: pointer;
+            border-radius: 2px;
+            height:auto;
+            line-height: 0.9rem;
+            width:4.7rem;
+            padding:0.1rem 0;
+            &.send {
+                background: url("~assets/img/vote/btn_glod.png") no-repeat  ;
+                background-size: contain ;
+                height: 2rem;
+                line-height: 2rem;
+            }
+            &.sent {
+                background: url("~assets/img/vote/btn_sliver.png") no-repeat;
+                background-size: contain ;
+                height: 2rem;
+                line-height: 2rem;
+            }
+        }
+        &.player-name{
+            font-size: .7rem;
+            height: 1rem;
+            line-height: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333333;
+        }
+    }
+}

@@ -1,36 +1,23 @@
 <template>
     <div class="page-wrapper">
-        <mTab :tab="tabList" @changeTab="handleMessage" />
-        <mVote :player="playerList" v-show="boxIndex==0"/>
+        <mTab :tab="tabList" @onChange="handleTab" />
+        <mVote :player="playerList" v-show="boxIndex==0" @onVote="handleVote" :leftvote="leftvote" />
         <mRank :rank="rankList" v-show="boxIndex==1" />
+        <mViceVote :advisor="advisorList" v-show="boxIndex==2" @onVote="handleViceVote" :leftvote="leftvote" :leftflower="leftflower" />
     </div>
 </template>
 <script>
 import mTab from '~/components/vote/tab'
 import mVote from '~/components/vote/vote'
 import mRank from '~/components/vote/rank'
+import mViceVote from '~/components/vote/vice_vote'
 export default {
     layout: 'base',
     data() {
         return {
-            tabList: [
-                {
-                    title: 'vote',
-                    check: true
-                },
-                {
-                    title: 'rank',
-                    check: false
-                },
-                {
-                    title: 'judgevote',
-                    check: false
-                },
-                {
-                    title: 'about',
-                    check: false
-                }
-            ],
+            isLogin: this.$store.state.user.type || false,
+            token:this.$store.state.token,
+            tabList: ['vote','rank','judgevote','about'],
             rankList:[
                 {
                     name:'SARAPHINA MICHAEL',
@@ -50,47 +37,87 @@ export default {
                 }
             ],
             boxIndex:0,
-            playerList:[]
+            playerList:[],
+            advisorList:[],
+            leftvote:1,
+            leftflower:1
         }
     },
     mounted() {
-        this.getCandidatesList()
+        this.getPlayerList()
+        this.getAdvisorList()
     },
     methods:{
-        handleMessage(index) {
+        handleTab(index) {
             this.boxIndex = index
         },
-        getCandidatesList() {
-            //       this.$axios.get(`/voting/v1/candidates-show?vote_id=2`,{
-            //             headers: {
-            //                 token: this.$store.state.token
-            //             }
-            //         }).then(res => {
-            //         if (res.data.code == 0) {
-            //             this.buttonShow = data.data;
-            //         }
-            //     })
-            // }
-            this.playerList =  [
-                {
-                    ballot_num:0,
-                    created_time:"2018-10-31T09:49:16",
-                    icon:"http://cdn.startimestv.com/banner/JULIUSMACHA7.JPG",
-                    id:46,
-                    index:1,
-                    link_vod_code:"15302",
-                    name:"JULIUS MACHA",
-                    state:5,
-                    updated_time:"2018-10-31T09:49:22",
-                    user_ballot_num:0
+        handleVote(player){
+            // this.loginJudge()
+            let params = {
+                candidate_id: player.id,
+                vote_id: 2,
+                token:this.token
+            }
+            this.$axios.post(`/voting/v1/ballot`,params).then(res => {
+                if (res.data.code == 0) {
+                    if(this.leftvote == 0){
+                        this.$alert('Vote success, vote left: 0 \n Remember to vote tomorrow! Now you can invite friends to vote')
+                    } else{
+                        this.$alert('Vote success')
+                    }
+                } else {
+                    this.$alert('vote fail')
                 }
-            ]
-        }
+            })
+        },
+        handleViceVote(advisor){
+            // this.loginJudge()
+            let params = {
+                candidate_id: advisor.id,
+                vote_id: 3,
+                token:this.token
+            }
+            this.$axios.post(`/voting/v1/ballot`,params).then(res => {
+                if (res.data.code == 0) {
+                   
+                } 
+            })
+        },
+        loginJudge(){
+            if (this.$store.state.appType <= 0) {
+                this.gotoMarket()
+                return false
+            }
+            if (!this.isLogin) {
+                if (this.$store.state.appType == 1) {
+                    toNativePage('com.star.mobile.video.account.LoginActivity')
+                } else {
+                    toNativePage('startimes://login')
+                }
+                return false
+            }
+        },
+        getPlayerList() {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=2`).then(res => {
+                if (res.data.code == 0) {
+                    this.playerList = res.data.data;
+                }
+            })
+        },
+        getAdvisorList(){
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=3`).then(res => {
+                if (res.data.code == 0) {
+                    this.advisorList = res.data.data;
+                }
+            })
+        },
+        gotoMarket(){}
     },
     components: {
         mTab,
         mVote,
-        mRank
+        mRank,
+        mViceVote
     }
 }
 </script>

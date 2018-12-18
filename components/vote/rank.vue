@@ -1,5 +1,5 @@
 <template>
-    <div id="rank-content">
+    <div id="show-rank">
         <div class="ranking-list" v-for="(item,index) in rank" :key="index">
             <span class="ranking" :class="{first:index==0 ,second:index==1,third:index==2}">{{index + 1}}</span>
             <span class="ranking-name">{{item.name}}</span>
