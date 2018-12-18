@@ -9,7 +9,6 @@ export default ({ app: { router }, store}) => {
             next()
         } else {
             // 如果是app里
-            
             if (store.state.appType == 1 || store.state.appType == 2) {
                 if(to.path!='/hybrid/account/tokenfail'){
                     window.location.href = '/hybrid/account/tokenfail' 
@@ -17,8 +16,10 @@ export default ({ app: { router }, store}) => {
                     next()
                 }
             } else {
-                setCookie('token', '') // 清除失效的token
-                location.reload()
+                // TODO
+                next()
+                //setCookie('token', '') // 清除失效的token
+                //location.reload()
             }
         }
     })

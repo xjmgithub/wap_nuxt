@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import versionMap from '~/functions/appversion.js'
 import LANG from '~/languages/'
-import geoip from 'geoip-lite'
+import {preload, preload6, lookup} from '~/functions/geoip.js'
 import tokenMap from '~/functions/token.json'
 import countryMap from '~/functions/countrys.json'
 
@@ -163,12 +163,15 @@ export const actions = {
             commit('SET_PHONE_MODEL', req.headers['phonemodel'])
         }
 
+        
+        preload()
+        preload6()
         let country = 'NG'
         if (query.sarea) {
             country = query.sarea.toUpperCase()
         } else {
             let ip = req.headers['x-forwarded-for']
-            let geo = geoip.lookup(ip)
+            let geo = lookup(ip)
             if (geo) {
                 countryMap.forEach(item => {
                     if (item.country == geo.country) {
@@ -207,11 +210,7 @@ export const actions = {
                 // 用户失效在plugin/clearUser当中处理
             })
 
-        commit('SET_AREA_INFO', countryMap[0])
-        countryMap.forEach(item => {
-            if ((item.country = country)) {
-                commit('SET_AREA_INFO', item)
-            }
-        })
+            // TODO country info
+
     }
 }
