@@ -30,11 +30,11 @@ export default ({ app: { router }, store }) => {
             if (isLogin) {
                 next()
             } else {
-                if(store.state.appType==1){
+                if (store.state.appType == 1) {
                     next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
-                }else if(store.state.appType==2){
+                } else if (store.state.appType == 2) {
                     next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
-                }else{
+                } else {
                     next('/hybrid/account/login?pre=' + encodeURIComponent(to.fullPath))
                 }
             }

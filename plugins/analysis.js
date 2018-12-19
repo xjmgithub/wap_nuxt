@@ -103,17 +103,19 @@ export default ({ app: { router, $axios }, store, query }) => {
 
     let sendPvLog = () => {
         ga('send', 'pageview')
-        $axios.get(
-            env.pv_countly_server +
-                '/i?logtype=pv&app_key=' +
-                env.countly_appKey +
-                '&events=' +
-                JSON.stringify([commonLog]) +
-                '&device_id=' +
-                store.state.deviceId +
-                '&timestamp=' +
-                new Date().getTime()
-        )
+        $axios
+            .get(
+                env.pv_countly_server +
+                    '/i?logtype=pv&app_key=' +
+                    env.countly_appKey +
+                    '&events=' +
+                    JSON.stringify([commonLog]) +
+                    '&device_id=' +
+                    store.state.deviceId +
+                    '&timestamp=' +
+                    new Date().getTime()
+            )
+            .catch(err => {})
     }
 
     Vue.prototype.sendEvLog = msg => {
@@ -127,17 +129,19 @@ export default ({ app: { router, $axios }, store, query }) => {
             param[i] = commonLog[i]
         }
         param.lt = 'event'
-        $axios.get(
-            env.ev_countly_server +
-                '/i?logtype=event&app_key=' +
-                env.countly_appKey +
-                '&events=' +
-                JSON.stringify([param]) +
-                '&device_id=' +
-                store.state.deviceId +
-                '&timestamp=' +
-                new Date().getTime()
-        )
+        $axios
+            .get(
+                env.ev_countly_server +
+                    '/i?logtype=event&app_key=' +
+                    env.countly_appKey +
+                    '&events=' +
+                    JSON.stringify([param]) +
+                    '&device_id=' +
+                    store.state.deviceId +
+                    '&timestamp=' +
+                    new Date().getTime()
+            )
+            .catch(err => {})
 
         ga('send', {
             hitType: 'event',
