@@ -133,8 +133,8 @@ export default {
         let addMsg = sessionStorage.getItem('addMsg')
         let _this = this
         // LiveChat 按钮判断
-        this.user.areaID &&
-            this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.user.areaID}&entranceId=${this.entrance_id}`).then(res => {
+        this.$store.state.country &&
+            this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.$store.state.country.id}&entranceId=${this.entrance_id}`).then(res => {
                 if (res.data.code == 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
                     this.showLiveChatBtn = true
                 }
@@ -216,7 +216,7 @@ export default {
                     name: 'Welcome to StarTimes Online Service.'
                 })
 
-                this.$axios.get(`/ocs/v1/faqs/directory/${this.user.areaID}`).then(res => {
+                this.$axios.get(`/ocs/v1/faqs/directory/${this.$store.state.country.id}`).then(res => {
                     if (res.data.code == 200) {
                         this.categoryId = res.data.data
                         this.getfaqDirectory(res.data.data)
@@ -504,7 +504,7 @@ export default {
                     subject: 'app live chat',
                     tenantName: 'Resources',
                     userData: {
-                        key1: this.user.countryCode,
+                        key1: this.$store.state.country.country,
                         key2: 'value2'
                     }
                 })
