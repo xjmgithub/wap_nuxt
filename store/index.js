@@ -214,7 +214,7 @@ export const actions = {
                 }
             })
             .catch(error => {
-                // 用户失效在plugin/clearUser当中处理
+                commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
             })
 
         commit('SET_AREA_INFO', countryMap[country])
