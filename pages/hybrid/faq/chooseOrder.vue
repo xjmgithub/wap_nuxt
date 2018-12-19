@@ -1,7 +1,7 @@
 <template>
     <div id="wrapper">
         <div v-show="loaded&&serviceList">
-            <div class="orders">
+            <div class="orders" style="padding-bottom:5rem;">
                 <div class="order-contain" v-for="(item,index) in serviceList" :key="index" @click="check(item.id)">
                     <orderBlock :order="item">
                         <input :checked="item.id==checkedId" type="radio" name="order"><i/>
