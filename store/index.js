@@ -1,9 +1,15 @@
 import crypto from 'crypto'
 import versionMap from '~/functions/appversion.js'
 import LANG from '~/languages/'
-import {preload, preload6, lookup} from '~/functions/geoip.js'
+import { preload, preload6, lookup } from '~/functions/geoip.js'
 import tokenMap from '~/functions/token.json'
-import countryMap from '~/functions/countrys.json'
+import countryArr from '~/functions/countrys.json'
+import { getRandomInt } from '~/functions/utils.js'
+
+let countryMap = new Object()
+countryArr.forEach(item => {
+    countryMap[item.country] = item
+})
 
 export const state = () => ({
     deviceId: '',
@@ -163,7 +169,6 @@ export const actions = {
             commit('SET_PHONE_MODEL', req.headers['phonemodel'])
         }
 
-        
         preload()
         preload6()
         let country = 'NG'
@@ -173,12 +178,12 @@ export const actions = {
             let ip = req.headers['x-forwarded-for']
             let geo = lookup(ip)
             if (geo) {
-                countryMap.forEach(item => {
-                    if (item.country == geo.country) {
-                        country = item.country
-                    }
-                })
+                country = geo.country
             }
+        }
+
+        if (!countryMap[country]) {
+            country = 'NG'
         }
 
         if (req.headers['token']) {
@@ -199,18 +204,19 @@ export const actions = {
             .then(res => {
                 if (res.status == 200) {
                     commit('SET_USER', res.data)
-                    countryMap.forEach(item => {
+                    countryArr.forEach(item => {
                         if (item.id == res.data.areaID) {
                             country = item.country
                         }
                     })
+                } else {
+                    commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
                 }
             })
             .catch(error => {
                 // 用户失效在plugin/clearUser当中处理
             })
 
-            // TODO country info
-
+        commit('SET_AREA_INFO', countryMap[country])
     }
 }

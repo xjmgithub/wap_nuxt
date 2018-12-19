@@ -5,8 +5,8 @@ module.exports = {
     mode: 'universal',
 
     /*
-  ** Headers of the page
-  */
+    ** Headers of the page
+    */
     head: {
         title: pkg.name,
         meta: [
@@ -29,18 +29,18 @@ module.exports = {
     },
 
     /*
-  ** Customize the progress-bar color
-  */
+    ** Customize the progress-bar color
+    */
     loading: false,
 
     /*
-  ** Global CSS
-  */
+    ** Global CSS
+    */
     css: [],
 
     /*
-  ** Plugins to load before mounting the App
-  */
+    ** Plugins to load before mounting the App
+    */
     plugins: [
         { src: '~plugins/analysis.js', ssr: false },
         { src: '~plugins/auth.js', ssr: false },
@@ -50,15 +50,15 @@ module.exports = {
     ],
 
     /*
-  ** Nuxt.js modules
-  */
+    ** Nuxt.js modules
+    */
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
         '@nuxtjs/axios'
     ],
     /*
-  ** Axios module configuration
-  */
+    ** Axios module configuration
+    */
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
         proxy: true, // Can be also an object with default options
@@ -80,18 +80,18 @@ module.exports = {
     },
 
     /*
-  ** Build configuration
-  */
-    build: {
-    /*
-    ** You can extend webpack config here
+    ** Build configuration
     */
+    build: {
+        /*
+        ** You can extend webpack config here
+        */
         extend(config, ctx) {
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
                 config.node = {
                     fs: 'empty',
-                    net:'empty'
+                    net: 'empty'
                 }
                 config.module.rules.push({
                     enforce: 'pre',

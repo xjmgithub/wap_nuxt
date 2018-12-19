@@ -1,12 +1,12 @@
-var fs = require('fs')
-var net = require('net')
-var path = require('path')
+let fs = require('fs')
+let net = require('net')
+let path = require('path')
 
-var async = require('async')
+let async = require('async')
 
-var geodatadir = './functions/ipdb'
+let geodatadir = './functions/ipdb'
 
-var dataFiles = {
+let dataFiles = {
     city: path.join(geodatadir, 'geoip-city.dat'),
     city6: path.join(geodatadir, 'geoip-city6.dat'),
     cityNames: path.join(geodatadir, 'geoip-city-names.dat'),
@@ -14,13 +14,13 @@ var dataFiles = {
     country6: path.join(geodatadir, 'geoip-country6.dat')
 }
 
-var privateRange4 = [
+let privateRange4 = [
     [aton4('10.0.0.0'), aton4('10.255.255.255')],
     [aton4('172.16.0.0'), aton4('172.31.255.255')],
     [aton4('192.168.0.0'), aton4('192.168.255.255')]
 ]
 
-var cache4 = {
+let cache4 = {
     firstIP: null,
     lastIP: null,
     lastLine: 0,
@@ -30,7 +30,7 @@ var cache4 = {
     recordSize: 24
 }
 
-var cache6 = {
+let cache6 = {
     firstIP: null,
     lastIP: null,
     lastLine: 0,
@@ -38,26 +38,26 @@ var cache6 = {
     recordSize: 48
 }
 
-var RECORD_SIZE = 10
-var RECORD_SIZE6 = 34
+let RECORD_SIZE = 10
+let RECORD_SIZE6 = 34
 
 function lookup4(ip) {
-    var fline = 0
-    var floor = cache4.lastIP
-    var cline = cache4.lastLine
-    var ceil = cache4.firstIP
-    var line
-    var locId
+    let fline = 0
+    let floor = cache4.lastIP
+    let cline = cache4.lastLine
+    let ceil = cache4.firstIP
+    let line
+    let locId
 
-    var buffer = cache4.mainBuffer
-    var locBuffer = cache4.locationBuffer
-    var privateRange = privateRange4
-    var recordSize = cache4.recordSize
-    var locRecordSize = cache4.locationRecordSize
+    let buffer = cache4.mainBuffer
+    let locBuffer = cache4.locationBuffer
+    let privateRange = privateRange4
+    let recordSize = cache4.recordSize
+    let locRecordSize = cache4.locationRecordSize
 
-    var i
+    let i
 
-    var geodata = {
+    let geodata = {
         range: '',
         country: '',
         region: '',
@@ -121,12 +121,12 @@ function lookup4(ip) {
 }
 
 function lookup6(ip) {
-    var buffer = cache6.mainBuffer
-    var recordSize = cache6.recordSize
-    var locBuffer = cache4.locationBuffer
-    var locRecordSize = cache4.locationRecordSize
+    let buffer = cache6.mainBuffer
+    let recordSize = cache6.recordSize
+    let locBuffer = cache4.locationBuffer
+    let locRecordSize = cache4.locationRecordSize
 
-    var geodata = {
+    let geodata = {
         range: '',
         country: '',
         region: '',
@@ -134,8 +134,8 @@ function lookup6(ip) {
         ll: [0, 0]
     }
     function readip(line, offset) {
-        var ii = 0
-        var ip = []
+        let ii = 0
+        let ip = []
 
         for (ii = 0; ii < 2; ii++) {
             ip.push(buffer.readUInt32BE(line * recordSize + offset * 16 + ii * 4))
@@ -147,11 +147,11 @@ function lookup6(ip) {
     cache6.lastIP = readip(cache6.lastLine, 1)
     cache6.firstIP = readip(0, 0)
 
-    var fline = 0
-    var floor = cache6.lastIP
-    var cline = cache6.lastLine
-    var ceil = cache6.firstIP
-    var line
+    let fline = 0
+    let floor = cache6.lastIP
+    let cline = cache6.lastLine
+    let ceil = cache6.firstIP
+    let line
 
     if (cmp6(ip, cache6.lastIP) > 0 || cmp6(ip, cache6.firstIP) < 0) {
         return null
@@ -197,10 +197,10 @@ function lookup6(ip) {
 }
 
 function get4mapped(ip) {
-    var ipv6 = ip.toUpperCase()
-    var v6prefixes = ['0:0:0:0:0:FFFF:', '::FFFF:']
-    for (var i = 0; i < v6prefixes.length; i++) {
-        var v6prefix = v6prefixes[i]
+    let ipv6 = ip.toUpperCase()
+    let v6prefixes = ['0:0:0:0:0:FFFF:', '::FFFF:']
+    for (let i = 0; i < v6prefixes.length; i++) {
+        let v6prefix = v6prefixes[i]
         if (ipv6.indexOf(v6prefix) == 0) {
             return ipv6.substring(v6prefix.length)
         }
@@ -209,9 +209,9 @@ function get4mapped(ip) {
 }
 
 function preload(callback) {
-    var datFile
-    var datSize
-    var asyncCache = {
+    let datFile
+    let datSize
+    let asyncCache = {
         firstIP: null,
         lastIP: null,
         lastLine: 0,
@@ -348,9 +348,9 @@ function preload(callback) {
 }
 
 function preload6(callback) {
-    var datFile
-    var datSize
-    var asyncCache6 = {
+    let datFile
+    let datSize
+    let asyncCache6 = {
         firstIP: null,
         lastIP: null,
         lastLine: 0,
@@ -463,7 +463,7 @@ function lookup(ip) {
     } else if (net.isIP(ip) === 4) {
         return lookup4(aton4(ip))
     } else if (net.isIP(ip) === 6) {
-        var ipv4 = get4mapped(ip)
+        let ipv4 = get4mapped(ip)
         if (ipv4) {
             return lookup4(aton4(ipv4))
         } else {
@@ -482,8 +482,8 @@ function aton4(a) {
 function aton6(a) {
     a = a.replace(/"/g, '').split(/:/)
 
-    var l = a.length - 1
-    var i
+    let l = a.length - 1
+    let i
 
     if (a[l] === '') {
         a[l] = 0
@@ -505,7 +505,7 @@ function aton6(a) {
         }
     }
 
-    var r = []
+    let r = []
     for (i = 0; i < 4; i++) {
         r.push(((a[2 * i] << 16) + a[2 * i + 1]) >>> 0)
     }
@@ -514,7 +514,7 @@ function aton6(a) {
 }
 
 function cmp6(a, b) {
-    for (var ii = 0; ii < 2; ii++) {
+    for (let ii = 0; ii < 2; ii++) {
         if (a[ii] < b[ii]) {
             return -1
         }

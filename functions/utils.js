@@ -6,10 +6,7 @@ export const setCookie = (name, value, end, path, domain, secure) => {
     if (end) {
         switch (end.constructor) {
             case Number:
-                expires =
-                    end === Infinity
-                        ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT'
-                        : '; max-age=' + end
+                expires = end === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : '; max-age=' + end
                 break
             case String:
                 expires = '; expires=' + end
@@ -32,11 +29,7 @@ export const setCookie = (name, value, end, path, domain, secure) => {
 
 export const getCookie = name => {
     let value = document.cookie.replace(
-        new RegExp(
-            '(?:(?:^|.*;)\\s*' +
-                encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') +
-                '\\s*\\=\\s*([^;]*).*$)|^.*$'
-        ),
+        new RegExp('(?:(?:^|.*;)\\s*' + encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=\\s*([^;]*).*$)|^.*$'),
         '$1'
     )
     return decodeURIComponent(value) || null
@@ -64,16 +57,14 @@ export const updateWalletAccount = (v, callback) => {
 }
 
 export const updateWalletConf = (v, account, callback) => {
-    v.$axios
-        .get(`/mobilewallet/v1/accounts/${account}/prop-details`)
-        .then(res => {
-            localStorage.setItem('wallet_config', JSON.stringify(res.data))
-            if (callback) callback(res.data)
-        })
+    v.$axios.get(`/mobilewallet/v1/accounts/${account}/prop-details`).then(res => {
+        localStorage.setItem('wallet_config', JSON.stringify(res.data))
+        if (callback) callback(res.data)
+    })
 }
 
-export const toNativePage = (page) => {
-    if (page.indexOf('com.star.mobile.video')>=0) {
+export const toNativePage = page => {
+    if (page.indexOf('com.star.mobile.video') >= 0) {
         // TODO toAppPage 参数确定
         window.getChannelId && window.getChannelId.toAppPage(3, page, '')
     } else {
@@ -81,9 +72,15 @@ export const toNativePage = (page) => {
     }
 }
 
-export const getQuery = (name) => {
-    let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i")
+export const getQuery = name => {
+    let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
     let r = window.location.search.substr(1).match(reg)
     if (r != null) return decodeURIComponent(r[2])
     return null
+}
+
+export const getRandomInt = (min, max) => {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min)) + min 
 }

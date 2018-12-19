@@ -13,22 +13,7 @@ import env from '~/env.js'
     m.parentNode.insertBefore(a, m)
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
 
-window.Countly = window.Countly || {}
-window.Countly.app_key = env.countly_appKey
-window.Countly.url = env.countly_host
-;(function() {
-    var cly = document.createElement('script')
-    cly.type = 'text/javascript'
-    cly.async = true
-    cly.src = 'https://cdn.jsdelivr.net/countly-sdk-web/latest/countly.min.js'
-    cly.onload = function() {
-        window.Countly.init()
-    }
-    var s = document.getElementsByTagName('script')[0]
-    s.parentNode.insertBefore(cly, s)
-})()
-
-export default ({ app: { router }, store }) => {
+export default ({ app: { router,$axios }, store, query }) => {
     let ga_key = env.ga_wap_key
     if (store.state.appType == 1) {
         ga_key = env.ga_android_key
@@ -45,22 +30,124 @@ export default ({ app: { router }, store }) => {
     } else {
         ga('create', ga_key, 'auto')
     }
+    let deviceInfo = navigator.userAgent.match(/\(([^)]*)\)/)[1].split(';')
+    let swidth = screen.width * window.devicePixelRatio
+    let sheight = screen.height * window.devicePixelRatio
 
-    window.Countly.app_version = store.state.appVersion
+    let os = ''
+    if (store.state.appType == 1) {
+        os = 'Android'
+    } else if (store.state.appType == 2) {
+        os = 'IOS'
+    } else {
+        if (navigator.userAgent.indexOf('iPhone') >= 0 || navigator.userAgent.indexOf('iPad') >= 0) {
+            os = 'IOS'
+        } else {
+            os = 'Android'
+        }
+    }
 
-    if (store.state.deviceId) {
-        Countly.device_id = store.state.deviceId
+    var utm_source = ''
+    var utm_medium = ''
+    var utm_campaign = ''
+
+    let referrer = query.referrer
+    if (referrer) {
+        var t1 = referrer.match(new RegExp('(^|&)utm_source=([^&]*)(&|$)', 'i'))
+        var t2 = referrer.match(new RegExp('(^|&)utm_medium=([^&]*)(&|$)', 'i'))
+        var t3 = referrer.match(new RegExp('(^|&)utm_campaign=([^&]*)(&|$)', 'i'))
+        utm_source = t1 ? t1[2] : ''
+        utm_medium = t2 ? t2[2] : ''
+        utm_campaign = t3 ? t3[2] : ''
+    } else {
+        if (query.utm_source) {
+            utm_source = query.utm_source
+            utm_medium = query.utm_medium
+            utm_campaign = query.utm_campaign
+        }
+    }
+
+    let commonLog = {
+        al: store.state.lang, // App语言
+        bst: store.state.user && store.state.user.smartCartCount, // 用户绑卡状态
+        car: store.state.carrier,
+        curp: document.title, // 当前页面
+        cr: store.state.country.name,
+        ct: '',
+        dch: '', // 安装渠道标识
+        dd: '' + window.devicePixelRatio, // 屏幕密度
+        desp: '', // 跳转页面
+        durp: 0,
+        di: store.state.phoneModel || deviceInfo[deviceInfo.length - 1].split('like')[0], // 设备信息
+        did: store.state.deviceId, // 设备唯一标识
+        dr: swidth + 'x' + sheight, // 屏幕分辨率
+        iid: store.state.gaClientId, // 安装唯一标识
+        lst: store.state.user && store.state.user.type ? 'l' : 'a', // 用户登录状态
+        lt: 'pv', // 报数类型
+        lv: '1.0.0',
+        nt: '', // 网络类型
+        os: os,
+        osl: navigator.language, // 系统语言
+        osv: '', // 系统版本
+        pid: '', //	播放ID
+        pro: utm_source + '/' + utm_medium + '_' + utm_campaign, // 推广渠道标识
+        pst: '', // 用户付费状态
+        sid: '', // Session ID
+        sim: store.state.carrier, // 手机卡运营商
+        srcp: document.referrer,
+        ver: store.state.appVersion,
+        tt: new Date().getTime(),
+        uid: parseInt(store.state.user.id) || 0
+    }
+
+    let sendPvLog = () => {
+        ga('send', 'pageview')
+        $axios.get(
+            env.pv_countly_server +
+                '/i?logtype=pv&app_key=' +
+                env.countly_appKey +
+                '&events=' +
+                JSON.stringify([commonLog]) +
+                '&device_id=' +
+                store.state.deviceId +
+                '&timestamp=' +
+                new Date().getTime()
+        )
+    }
+
+    let sendEvLog = msg => {
+        for (var i in msg) {
+            msg[i] = '' + msg[i]
+        }
+        var param = {
+            msg: msg
+        }
+        for (var i in commonLog) {
+            param[i] = commonLog[i]
+        }
+        param.lt = 'event'
+        $axios.get(
+            env.ev_countly_server +
+                '/i?logtype=event&app_key=' +
+                env.countly_appKey +
+                '&events=' +
+                JSON.stringify([param]) +
+                '&device_id=' +
+                store.state.deviceId +
+                '&timestamp=' +
+                new Date().getTime()
+        )
+
+        ga('send', {
+            hitType: 'event',
+            eventCategory: msg.category,
+            eventAction: msg.action,
+            eventLabel: msg.label,
+            eventValue: 1
+        })
     }
 
     router.afterEach((to, from) => {
-        ga('set', 'page', to.fullPath)
-        ga('send', 'pageview')
-
-        window.Countly.q = Countly.q || []
-        window.Countly.q.push(['track_sessions'])
-        window.Countly.q.push(['track_pageview'])
-        window.Countly.q.push(['track_sessions'])
-        window.Countly.q.push(['track_clicks'])
-        window.Countly.q.push(['track_links'])
+        sendPvLog()
     })
 }
