@@ -1,4 +1,5 @@
 import env from '~/env.js'
+import Vue from 'vue'
 ;(function(i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r
     ;(i[r] =
@@ -13,7 +14,7 @@ import env from '~/env.js'
     m.parentNode.insertBefore(a, m)
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
 
-export default ({ app: { router,$axios }, store, query }) => {
+export default ({ app: { router, $axios }, store, query }) => {
     let ga_key = env.ga_wap_key
     if (store.state.appType == 1) {
         ga_key = env.ga_android_key
@@ -47,15 +48,15 @@ export default ({ app: { router,$axios }, store, query }) => {
         }
     }
 
-    var utm_source = ''
-    var utm_medium = ''
-    var utm_campaign = ''
+    let utm_source = ''
+    let utm_medium = ''
+    let utm_campaign = ''
 
     let referrer = query.referrer
     if (referrer) {
-        var t1 = referrer.match(new RegExp('(^|&)utm_source=([^&]*)(&|$)', 'i'))
-        var t2 = referrer.match(new RegExp('(^|&)utm_medium=([^&]*)(&|$)', 'i'))
-        var t3 = referrer.match(new RegExp('(^|&)utm_campaign=([^&]*)(&|$)', 'i'))
+        let t1 = referrer.match(new RegExp('(^|&)utm_source=([^&]*)(&|$)', 'i'))
+        let t2 = referrer.match(new RegExp('(^|&)utm_medium=([^&]*)(&|$)', 'i'))
+        let t3 = referrer.match(new RegExp('(^|&)utm_campaign=([^&]*)(&|$)', 'i'))
         utm_source = t1 ? t1[2] : ''
         utm_medium = t2 ? t2[2] : ''
         utm_campaign = t3 ? t3[2] : ''
@@ -115,14 +116,14 @@ export default ({ app: { router,$axios }, store, query }) => {
         )
     }
 
-    let sendEvLog = msg => {
-        for (var i in msg) {
+    Vue.prototype.sendEvLog = msg => {
+        for (let i in msg) {
             msg[i] = '' + msg[i]
         }
-        var param = {
+        let param = {
             msg: msg
         }
-        for (var i in commonLog) {
+        for (let i in commonLog) {
             param[i] = commonLog[i]
         }
         param.lt = 'event'

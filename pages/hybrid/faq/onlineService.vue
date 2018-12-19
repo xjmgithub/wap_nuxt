@@ -49,6 +49,12 @@ export default {
     mounted() {
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
+        // this.sendEvLog({
+        //     category:'dvbservice',
+        //     action:'smartcard_input',
+        //     value:1,
+        //     service_type:'Recharge',
+        // })
 
         let entranceId = this.$route.query.entrance_id || ''
         // 服务块
