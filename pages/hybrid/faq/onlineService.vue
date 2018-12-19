@@ -49,6 +49,7 @@ export default {
     mounted() {
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
+       
         // this.sendEvLog({
         //     category:'dvbservice',
         //     action:'smartcard_input',
@@ -181,31 +182,37 @@ export default {
 </script>
 <style lang="less" scoped>
 .container {
-    background: #fff;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+    background:white;
+    height: 100%;
+    display:-webkit-box;
+    /* 
+    autoprefixer: off 
+    https://github.com/Fyrd/caniuse/issues/3429
+    */
+    -webkit-box-orient:vertical;
 }
 #wrapper {
     padding: 0.5rem 0.5rem 0;
-    flex: 12;
-    display: flex;
+    -webkit-box-flex: 12;
+    display:-webkit-box;
     background: #fff;
-    flex-direction: column;
+    /* autoprefixer: off */
+    -webkit-box-orient:vertical;
 }
 .service {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    -webkit-box-flex: 1;
+    display: -webkit-box;
+    /* autoprefixer: off */
+    -webkit-box-orient:vertical;
     #nav {
         width: 100%;
         margin: 0 auto;
         text-align: center;
         padding-bottom: 0.6rem;
-        display: flex;
+        display: -webkit-box;
         a {
             border-bottom: 3px solid #eeeeee;
-            flex: 1;
+            -webkit-box-flex: 1;
             display: block;
             padding-bottom: 0.7rem;
 
@@ -254,7 +261,7 @@ export default {
         }
     }
     .questions {
-        flex: 1;
+        -webkit-box-flex: 1;
         overflow: hidden;
         position: relative;
         div {
