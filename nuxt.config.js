@@ -88,11 +88,11 @@ module.exports = {
         */
         extend(config, ctx) {
             // Run ESLint on save
+            config.node = {
+                fs: 'empty',
+                net: 'empty'
+            }
             if (ctx.isDev && ctx.isClient) {
-                config.node = {
-                    fs: 'empty',
-                    net: 'empty'
-                }
                 config.module.rules.push({
                     enforce: 'pre',
                     test: /\.(js|vue)$/,
