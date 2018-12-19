@@ -24,13 +24,19 @@ function inIgnore(url) {
     return result
 }
 export default ({ app: { router }, store }) => {
-    var loginUser = getCookie('userid')
+    let isLogin = store.state.user.type
     router.beforeEach((to, from, next) => {
         if (!inIgnore(to.path)) {
-            if (loginUser) {
+            if (isLogin) {
                 next()
             } else {
-                next('/hybrid/account/login?pre=' + encodeURIComponent(to.fullPath))
+                if(store.state.appType==1){
+                    next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
+                }else if(store.state.appType==2){
+                    next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
+                }else{
+                    next('/hybrid/account/login?pre=' + encodeURIComponent(to.fullPath))
+                }
             }
         } else {
             next()
