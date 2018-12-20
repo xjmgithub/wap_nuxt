@@ -49,8 +49,8 @@ export default {
             }
         }
     },
-    async asyncData({ app, store, redirect }) {
-        if (!app.context.isServer) {
+    async asyncData({store, redirect,query }) {
+        if (!process.server) {
             return false
         }
         let res = await axios.post(
@@ -58,8 +58,8 @@ export default {
             {},
             {
                 auth: {
-                    username: app.context.route.query.client_id,
-                    password: app.context.route.query.key
+                    username: query.client_id,
+                    password: query.key
                 }
             }
         )
@@ -67,7 +67,7 @@ export default {
             let paramArr = [
                 {
                     key: 'redirectUrl',
-                    value: app.context.route.query.redirectUrl || 'https://m.startimestv.com'
+                    value: query.redirectUrl || 'https://m.startimestv.com'
                 },
                 {
                     key: 'paySubject',
@@ -95,11 +95,11 @@ export default {
                 },
                 {
                     key: 'merchantAppId',
-                    value: app.context.route.query.merchantId || '10017'
+                    value: query.merchantId || '10017'
                 },
                 {
                     key: 'totalAmount',
-                    value: app.context.route.query.amount || 10
+                    value: query.amount || 10
                 },
                 {
                     key: 'signType',
@@ -107,7 +107,7 @@ export default {
                 },
                 {
                     key: 'notifyUrl',
-                    value: app.context.route.query.redirectUrl || 'https://m.startimestv.com'
+                    value: query.redirectUrl || 'https://m.startimestv.com'
                 },
                 {
                     key: 'tradeTimeout',
@@ -115,11 +115,11 @@ export default {
                 },
                 {
                     key: 'country',
-                    value: app.context.route.query.country || 'TZ'
+                    value: query.country || 'TZ'
                 },
                 {
                     key: 'currency',
-                    value: app.context.route.query.currency || 'TZS'
+                    value: query.currency || 'TZS'
                 },
                 {
                     key: 'payChannelCodes',
@@ -154,11 +154,13 @@ export default {
             let up = hmac.update(str)
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
+            console.log(paramObj)
             let res2 = await axios.post(`${env.mechant_request_url}payment/platform/v1/create-payment`, paramObj, {
                 headers: {
                     Authorization: 'Bearer ' + res.data.access_token
                 }
             })
+            console.log(res2.data)
             store.commit('SET_PAYTOKEN', res2.data.payToken)
             store.commit('SET_TXNO', res2.data.txNo)
         } else {

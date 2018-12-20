@@ -26,7 +26,7 @@ export default {
             required: true,
             default: new Array()
         }
-    }['radioList'],
+    },
     methods: {
         checkThis(code) {
             this.$emit('pick', code)
