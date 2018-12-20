@@ -19,15 +19,8 @@ export default {
     layout: 'base',
     data() {
         return {
-            client_id: this.$route.query.client_id,
-            app_key: this.$route.query.key,
-            country: this.$route.query.country || 'TZ',
-            currency: this.$route.query.currency || 'TZS',
-            amount: this.$route.query.amount || '10',
-            merchantId: this.$route.query.merchantId || '10017',
             payToken: '',
             txNo: '',
-            redirect: this.$route.query.redirectUrl || '',
             radioList: [],
             radioList2: [],
             selected: null
@@ -95,7 +88,7 @@ export default {
                 },
                 {
                     key: 'merchantAppId',
-                    value: query.merchantId || '10017'
+                    value: query.appId || '10017'
                 },
                 {
                     key: 'totalAmount',
