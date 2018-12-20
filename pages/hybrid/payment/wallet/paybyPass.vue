@@ -81,7 +81,8 @@ export default {
                     payToken: this.payToken,
                     payChannelId: this.payChannelId,
                     tradeType: 'JSAPI',
-                    deviceInfo: '',
+                    signType: "MD5",
+                    deviceInfo: 'H5(others%2C+MQQBrowser_71.0.3578.98)', // TODO 
                     extendInfo: {} // 没有动态表单收集信息的传空对象
                 })
                 .then(res => {
@@ -94,7 +95,7 @@ export default {
                                 currency: payObject.currency,
                                 note: payObject.payNote,
                                 orderId: order,
-                                payeeAccountNo: this.payChannelId,
+                                payeeAccountNo: data.extendInfo.payeeAccountNo,
                                 payerAccountNo: ewallet.accountNo,
                                 payerPayPassword: this.password,
                                 subject: payObject.paySubject,
