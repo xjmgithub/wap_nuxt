@@ -11,9 +11,9 @@
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
-            <div class="country_choose" v-if="areaInfo" @click="countryDialogStatus=true">
-                <img :src="areaInfo.nationalFlag">
-                <span>{{areaInfo.name}}</span>
+            <div class="country_choose" v-if="country" @click="countryDialogStatus=true">
+                <img :src="country.nationalFlag">
+                <span>{{country.name}}</span>
             </div>
             <div class="img-box">
                 <img src="~assets/img/users/ic_user_def_w.png" alt>
@@ -53,38 +53,23 @@
 <script>
 import shadowLayer from '~/components/shadow-layer'
 import { setCookie, initUser } from '~/functions/utils'
+import countrArr from '~/functions/countrys.json'
 export default {
     layout: 'base',
-    async asyncData({ app, store, redirect }) {
-        app.$axios.setHeader('token', store.state.token)
-        let res = await app.$axios.get('/cms/vup/v2/areas?versionCode=5300')
-        let countrys = {}
-        res.data.forEach((item, index) => {
-            countrys[item.id] = item
-        })
-        return {
-            countrys: countrys
-        }
-    },
     data() {
         return {
             type: 0, // 0 tel 1 email
-            country: this.$store.state.user.areaID,
+            country: this.$store.state.country,
             countryDialogStatus: false,
             pre: '',
             phoneNum: '',
             password: '',
             email: '',
-            countrys: []
+            countrys: countrArr
         }
     },
     mounted() {
         this.pre = localStorage.getItem('login_prefer')
-    },
-    computed: {
-        areaInfo() {
-            return this.countrys[this.country]
-        }
     },
     methods: {
         changetype(type) {
@@ -92,7 +77,7 @@ export default {
             this.password = ''
         },
         chooseCountry(country) {
-            this.country = country.id
+            this.country = country
             this.countryDialogStatus = false
         },
         login() {
@@ -109,7 +94,7 @@ export default {
                 let tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
                 params = {
                     applicationId: 1,
-                    phoneCc: this.areaInfo['phonePrefix'],
+                    phoneCc: this.country['phonePrefix'],
                     phone: tel,
                     pwd: this.password,
                     deviceId: this.$store.state.deviceId,
