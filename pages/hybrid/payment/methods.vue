@@ -60,7 +60,7 @@ export default {
             let paramArr = [
                 {
                     key: 'redirectUrl',
-                    value: query.redirectUrl || 'https://m.startimestv.com'
+                    value: query.redirectUrl || ''
                 },
                 {
                     key: 'paySubject',
@@ -100,7 +100,7 @@ export default {
                 },
                 {
                     key: 'notifyUrl',
-                    value: query.redirectUrl || 'https://m.startimestv.com'
+                    value: query.redirectUrl || ''
                 },
                 {
                     key: 'tradeTimeout',
