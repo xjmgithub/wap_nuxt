@@ -150,17 +150,15 @@ export default {
                 }
                 paramObj[item.key] = item.value
             })
-            let hmac = crypto.createHmac('md5', '123456')
+            let hmac = crypto.createHmac('md5', query.key||'123456')
             let up = hmac.update(str)
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
-            console.log(paramObj)
             let res2 = await axios.post(`${env.mechant_request_url}payment/platform/v1/create-payment`, paramObj, {
                 headers: {
                     Authorization: 'Bearer ' + res.data.access_token
                 }
             })
-            console.log(res2.data)
             store.commit('SET_PAYTOKEN', res2.data.payToken)
             store.commit('SET_TXNO', res2.data.txNo)
         } else {
