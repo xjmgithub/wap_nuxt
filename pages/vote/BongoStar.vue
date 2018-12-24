@@ -1,6 +1,6 @@
 <template>
     <div class="page-wrapper">
-        <Swiper>
+        <!-- <Swiper>
             <Slide>
                 1
             </Slide>
@@ -10,11 +10,11 @@
             <Slide>
                 3
             </Slide>
-        </Swiper>
+        </Swiper> -->
         <mTab :tab="tabList" @onChange="handleTab" />
-        <mVote :player="playerList" v-show="boxIndex==0" @onVote="handleVote" :leftvote="leftvote" @onInvite="handleInvite"/>
-        <mRank :rank="rankList" v-show="boxIndex==1" />
-        <mViceVote :advisor="advisorList" v-show="boxIndex==2" @onVote="handleViceVote" :leftvote="leftvote" :leftflower="leftflower" />
+        <mVote :player="playerList" v-show="boxIndex==0" :leftvote="leftvote" @onVote="handleVote" @onInvite="handleInvite" @onPlayVod="handlePlayVod"/>
+        <mRank :rank="rankList" v-show="boxIndex==1" @onInvite="handleInvite"/>
+        <mViceVote :advisor="advisorList" v-show="boxIndex==2" :leftvote="leftvote" :leftflower="leftflower" @onVote="handleViceVote" @onInvite="handleInvite" />
     </div>
 </template>
 <script>
@@ -23,9 +23,7 @@ import mVote from '~/components/vote/vote'
 import mRank from '~/components/vote/rank'
 import mViceVote from '~/components/vote/vice_vote'
 import qs from 'qs'
-import { Swiper, Slide } from 'vue-swiper-component'
-// import Swiper from 'vue-swiper-component/swiper.vue'
-// import Slide from 'vue-swiper-component/slide.vue'
+// import { Swiper, Slide } from 'vue-swiper-component'
 export default {
     layout: 'base',
     data() {
@@ -42,6 +40,12 @@ export default {
         }
     },
     mounted() {
+        this.sendEvLog({
+            category:'vote_Bongostar',
+            action:'homepage_show',
+            label:'',
+            value:10
+        })
         this.getVote()
         this.getVoteLeft(2)
         this.getVoteLeft(3)
@@ -51,8 +55,43 @@ export default {
     methods: {
         handleTab(index) {
             this.boxIndex = index
+            if (index == 0) {
+                this.sendEvLog({
+                    category:'vote_Bongostar',
+                    action:'tab_click',
+                    label:'tab_vote',
+                    value:10
+                })
+            } else if (index == 1) {
+                this.sendEvLog({
+                    category:'vote_Bongostar',
+                    action:'tab_click',
+                    label:'tab_rank',
+                    value:10
+                })
+            } else if(index == 2){
+                this.sendEvLog({
+                    category:'vote_Bongostar',
+                    action:'tab_click',
+                    label:'tab_judges',
+                    value:10
+                })
+            }else{
+                this.sendEvLog({
+                    category:'vote_Bongostar',
+                    action:'tab_click',
+                    label:'tab_about',
+                    value:10
+                })
+            }
         },
         handleVote(player) {
+            this.sendEvLog({
+                category:'vote_Bongostar',
+                action:'votebtn_click',
+                label:'tab_' + player.name,
+                value:10
+            })
             if(!this.loginJudge()) return 
             if(data.state ==-1){ 
                 this.$alert('NOT START')
@@ -88,6 +127,12 @@ export default {
             })
         },
         handleViceVote(advisor) {
+            this.sendEvLog({
+                category:'vote_Bongostar',
+                action:'flowerbtn_click',
+                label:'flower_' + advisor.name,
+                value:10
+            })
             if(!this.loginJudge()) return 
             if(data.state ==-1){ 
                 this.$alert('NOT START')
@@ -121,6 +166,12 @@ export default {
             })
         },
         handleInvite(){
+            this.sendEvLog({
+                category:'vote_Bongostar',
+                action:'share_click',
+                label:'',
+                value:10
+            })
             let link = window.location.href 
             let shareTitle = "Vote & Win Coupons Now!"
             let shareContent = "Vote for your favorite Bongo Star in StarTimes ON! Win coupons easily!"
@@ -129,11 +180,26 @@ export default {
             }else{
                 link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=bongo_' + this.tabList[this.boxIndex]
             }
-                // TODO  分享链接
-                // if(getChannelId&&getChannelId.showCustorm){
-                //     var content = '【' + shareTitle + '】' + shareContent  + link
-                //     window.getChannelId.showCustorm(content,link,link,link,link,link,link,shareLink,'BongoStar')
-                // }
+            // TODO  分享链接
+            // if(getChannelId&&getChannelId.showCustorm){
+            //     var content = '【' + shareTitle + '】' + shareContent  + link
+            //     window.getChannelId.showCustorm(content,link,link,link,link,link,link,shareLink,'BongoStar')
+            // }
+        },
+        handlePlayVod(vod,name){
+            this.sendEvLog({
+                category:'vote_Bongostar',
+                action:'votepic_click',
+                label:'tab_' + name,
+                value:10
+            })
+             if (vod) {
+                if (this.$store.state.appType == 2) {
+                    window.location.href = 'startimes://player?vodId=' + vod
+                } else if(this.$store.state.appType == 1){
+                    window.getChannelId.toAppPage(3, "com.star.mobile.video.player.PlayerVodActivity?vodId=" + vod, "");
+                }
+            }
         },
         loginJudge() {
             if (this.$store.state.appType <= 0) {
@@ -170,7 +236,13 @@ export default {
                     method: 'get',
                     data: {}
                 }).then(res => {
-                    console.log(res)
+                    let  bannerName = result[i].name;
+                    this.sendEvLog({
+                        category:'vote_Bongostar',
+                        action:'banner_show',
+                        label:'banner_'+bannerName,
+                        value:10
+                    })
                     // if (res.data.code == 0) {
                     //     let shareLink = res.data.data[0].materials
                     //     for (var i = 0; i < result.length; i++) {
@@ -221,14 +293,33 @@ export default {
             })
         },
         gotoMarket() {
+            this.sendEvLog({
+                category:'vote_Bongostar',
+                action:'downloadpopup_show',
+                label:'',
+                value:10
+            })
             let ua = window.navigator.userAgent
             if (ua.indexOf('iPhone') >= 0 || ua.indexOf('iPad') >= 0) {
                 this.$confirm(
                     'Download StarTimes ON to vote! Go to App Store now',
                     () => {
+                        this.sendEvLog({
+                            category:'vote_Bongostar',
+                            action:'downloadpopup_click',
+                            label:'go',
+                            value:10
+                        })
                         window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
                     },
-                    () => {},
+                    () => {
+                        this.sendEvLog({
+                            category:'vote_Bongostar',
+                            action:'downloadpopup_click',
+                            label:'not now',
+                            value:10
+                        })
+                    },
                     'Go',
                     'Not now'
                 )
@@ -236,6 +327,12 @@ export default {
                 this.$confirm(
                     'Download StarTimes ON to vote! Go to Google Play now',
                     () => {
+                        this.sendEvLog({
+                            category:'vote_Bongostar',
+                            action:'downloadpopup_click',
+                            label:'go',
+                            value:10
+                        })
                         let s
                         if (location.href.indexOf('referrer') > 0) {
                             s = location.search
@@ -248,7 +345,14 @@ export default {
                         }
                         window.location.href = 'market://details?id=com.star.mobile.video' + s
                     },
-                    () => {},
+                    () => {
+                        this.sendEvLog({
+                            category:'vote_Bongostar',
+                            action:'downloadpopup_click',
+                            label:'not now',
+                            value:10
+                        })
+                    },
                     'Go',
                     'Not now'
                 )
@@ -259,9 +363,9 @@ export default {
         mTab,
         mVote,
         mRank,
-        mViceVote,
-        Swiper,
-        Slide
+        mViceVote
+        // ,Swiper,
+        // Slide
     }
 }
 </script>

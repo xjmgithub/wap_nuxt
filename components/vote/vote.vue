@@ -6,7 +6,7 @@
         </div>
         <ul class="clearfix">
             <li v-for="(item,index) in player" :key="index" data-id="item.id" data-vod="item.link_vod_code">
-                <div class="img-box" @onclick="playerVodActivity(item.link_vod_code)">
+                <div class="img-box" @onclick="doPlayVod(item.link_vod_code,item.name)">
                     <img :src="item.icon" class="icon">
                     <img src="~assets/img/vote/ic_play_sl_t.png" v-show="item.link_vod_code!=''" class="playbutton">
                 </div>
@@ -43,14 +43,8 @@ export default {
         doInvite(){
             this.$emit('onInvite')
         },
-        playerVodActivity(vod){
-            if (vod) {
-                if (this.$store.state.appType == 2) {
-                    window.location.href = 'startimes://player?vodId=' + vod
-                } else if(this.$store.state.appType == 1){
-                    window.getChannelId.toAppPage(3, "com.star.mobile.video.player.PlayerVodActivity?vodId=" + vod, "");
-                }
-            }
+        doPlayVod(data){
+            this.$emit('onPlayVod',data)
         }
     },
     filters:{
