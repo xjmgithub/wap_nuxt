@@ -35,7 +35,6 @@ export default {
     },
     methods:{
         setTel(tel){
-            console.log(345)
             this.tel = tel.substr(tel.length-9,9)
         }
     },
