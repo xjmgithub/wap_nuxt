@@ -41,7 +41,7 @@ import mButton from '~/components/button'
     },
  }   
 </script>
-<style   lang="less" scoped>
+<style  lang="less" scoped>
 #wrapper {
     padding: 1rem 0.8rem;
     .by_tel {
