@@ -33,6 +33,11 @@ export default {
             error_tel:''
         }
     },
+    methods:{
+        setTel(tel){
+            this.tel = tel.substr(tel.length-9,9)
+        }
+    },
     watch:{
         tel(nv ,ov) {
             this.show_error = false

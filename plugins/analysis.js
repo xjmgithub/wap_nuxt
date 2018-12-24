@@ -67,7 +67,6 @@ export default ({ app: { router, $axios }, store, query }) => {
             utm_campaign = query.utm_campaign
         }
     }
-    console.log(store.state.user)
     let commonLog = {
         al: store.state.lang, // App语言
         bst: store.state.user && store.state.user.smartCartCount, // 用户绑卡状态
