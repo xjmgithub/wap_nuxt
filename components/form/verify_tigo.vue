@@ -35,7 +35,8 @@ export default {
     },
     methods:{
         setTel(tel){
-            this.tel = tel
+            console.log(345)
+            this.tel = tel.substr(tel.length-9,9)
         }
     },
     watch:{

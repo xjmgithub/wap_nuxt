@@ -24,7 +24,7 @@ export default {
             .get('/ums/v1/user/carrier')
             .then(res => {
                 if (res.data && res.data.data && res.data.data.phoneNumber) {
-                    this.$refs.verifyTigo.setTel(res.data.data.phoneNumber)
+                    this.$refs.telpicker.setTel(res.data.data.phoneNumber)
                     this.sendEvLog({
                         category: 'flow_packet',
                         action: 'tigo_packet_show',
