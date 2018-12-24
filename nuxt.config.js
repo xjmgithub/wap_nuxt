@@ -79,7 +79,8 @@ module.exports = {
     '/csms-service': env.ms_host,
     '/ocs/': env.ms_host,
     '/css/': env.ms_host,
-    '/voting/': env.ms_host
+    '/voting/': env.ms_host,
+    '/adm/': env.ms_host
   },
 
   /*

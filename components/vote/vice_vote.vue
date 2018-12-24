@@ -1,6 +1,9 @@
 <template>
     <div id="show-advisor">
-        <div class="leftflower">left flower：{{leftflower}}</div>
+        <div class="clearfix">
+            <span class="leftflower"> left flower：{{leftflower}}</span>
+            <span class="invited" v-show="app==1" @click="doInvite">invite friends to vote</span>
+        </div>
         <ul class="clearfix">
             <li v-for="(item,index) in advisor" :key="index" data-id="item.id">
                 <div class="img-box">
@@ -29,17 +32,22 @@ export default {
             }
         },
         leftflower: {
-            type: Number,
-            default: 1
+            type: String,
+            default: '-'
+        }
+    },
+    data(){
+        return{
+            app:this.$store.state.appType
         }
     },
     methods: {
         doVote(data) {
-            if (data.state <= 0) {
-                //TODO 给用户不能操作的提示
-                return
-            }
+           
             this.$emit('onVote', data)
+        },
+        doInvite(){
+            this.$emit('onInvite')
         }
     },
     filters: {
