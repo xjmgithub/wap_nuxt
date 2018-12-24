@@ -11,35 +11,71 @@
 <script>
 import verifyTigo from '~/components/form/verify_tigo'
 import mButton from '~/components/button'
- export default {
-      layout: 'base',
-      data(){
-          return {
-            phonePrefix:"255 0",
-            input_label:'Input phone number to continue'
-          }
-      },
-      methods: {
-          nextStep(){
-                let phone = this.$refs.telpicker.tel
-                if(phone.length < 9){
-                    this.$refs.telpicker.show_error = true
-                    this.$refs.telpicker.error_tel = 'Must be 9 digits'
-                }else{
-                    window.location.href = 'http://www.tigosports.co.tz/Home/Home?MSISDN=255' + phone + '&ConsumerName=Startimes'
+export default {
+    layout: 'base',
+    data() {
+        return {
+            phonePrefix: '255 0',
+            input_label: 'Input phone number to continue'
+        }
+    },
+    mounted() {
+        this.$axios
+            .get('/ums/v1/user/carrier')
+            .then(res => {
+                if (res.data && res.data.data && res.data.data.phoneNumber) {
+                    this.$refs.verifyTigo.setTel(res.data.data.phoneNumber)
+                    this.sendEvLog({
+                        category: 'flow_packet',
+                        action: 'tigo_packet_show',
+                        label: res.data.data.phoneNumber,
+                        value: 1
+                    })
+                } else {
+                    this.sendEvLog({
+                        category: 'flow_packet',
+                        action: 'tigo_packet_show',
+                        label: 'none',
+                        value: 1
+                    })
                 }
-          }
-      },
-      head() {
+            })
+            .catch(err => {
+                this.sendEvLog({
+                    category: 'flow_packet',
+                    action: 'tigo_packet_show',
+                    label: 'none',
+                    value: 1
+                })
+            })
+    },
+    methods: {
+        nextStep() {
+            let phone = this.$refs.telpicker.tel
+            this.sendEvLog({
+                category: 'flow_packet',
+                action: 'tigo_packet_submit',
+                label: phone,
+                value: 1
+            })
+            if (phone.length < 9) {
+                this.$refs.telpicker.show_error = true
+                this.$refs.telpicker.error_tel = 'Must be 9 digits'
+            } else {
+                window.location.href = 'http://www.tigosports.co.tz/Home/Home?MSISDN=255' + phone + '&ConsumerName=Startimes'
+            }
+        }
+    },
+    head() {
         return {
             title: 'Tigo'
         }
     },
-     components: {
+    components: {
         verifyTigo,
         mButton
-    },
- }   
+    }
+}
 </script>
 <style  lang="less" scoped>
 #wrapper {

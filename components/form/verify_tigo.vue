@@ -33,6 +33,11 @@ export default {
             error_tel:''
         }
     },
+    methods:{
+        setTel(tel){
+            this.tel = tel
+        }
+    },
     watch:{
         tel(nv ,ov) {
             this.show_error = false
