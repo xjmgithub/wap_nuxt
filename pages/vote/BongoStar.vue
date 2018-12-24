@@ -16,53 +16,52 @@ export default {
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
-            token:this.$store.state.token,
-            tabList: ['vote','rank','judgevote','about'],
-            rankList:[
+            tabList: ['vote', 'rank', 'judgevote', 'about'],
+            rankList: [
                 {
-                    name:'SARAPHINA MICHAEL',
-                    ballot_num:'77'
+                    name: 'SARAPHINA MICHAEL',
+                    ballot_num: '77'
                 },
                 {
-                    name:'JULIUS MACHA',
-                    ballot_num:'66'
+                    name: 'JULIUS MACHA',
+                    ballot_num: '66'
                 },
                 {
-                    name:'REGINA LEONARD',
-                    ballot_num:'55'
+                    name: 'REGINA LEONARD',
+                    ballot_num: '55'
                 },
                 {
-                    name:'ASWAGILE MWASONGO',
-                    ballot_num:'44'
+                    name: 'ASWAGILE MWASONGO',
+                    ballot_num: '44'
                 }
             ],
-            boxIndex:0,
-            playerList:[],
-            advisorList:[],
-            leftvote:1,
-            leftflower:1
+            boxIndex: 0,
+            playerList: [],
+            advisorList: [],
+            leftvote: 1,
+            leftflower: 1
         }
     },
     mounted() {
         this.getPlayerList()
         this.getAdvisorList()
     },
-    methods:{
+    methods: {
         handleTab(index) {
             this.boxIndex = index
         },
-        handleVote(player){
+        handleVote(player) {
             // this.loginJudge()
             let params = {
                 candidate_id: player.id,
                 vote_id: 2,
-                token:this.token
             }
-            this.$axios.post(`/voting/v1/ballot`,params).then(res => {
+            this.$axios.setHeader('Content-Type', 'application/x-www-form-urlencoded')
+            this.$axios.post(`/voting/v1/ballot`, params).then(res => {
                 if (res.data.code == 0) {
-                    if(this.leftvote == 0){
+                    if (this.leftvote == 0) {
                         this.$alert('Vote success, vote left: 0 \n Remember to vote tomorrow! Now you can invite friends to vote')
-                    } else{
+                    } else {
                         this.$alert('Vote success')
                     }
                 } else {
@@ -70,20 +69,19 @@ export default {
                 }
             })
         },
-        handleViceVote(advisor){
+        handleViceVote(advisor) {
             // this.loginJudge()
             let params = {
                 candidate_id: advisor.id,
                 vote_id: 3,
-                token:this.token
             }
-            this.$axios.post(`/voting/v1/ballot`,params).then(res => {
+            this.$axios.setHeader('Content-Type', 'application/x-www-form-urlencoded')
+            this.$axios.post(`/voting/v1/ballot`, params).then(res => {
                 if (res.data.code == 0) {
-                   
-                } 
+                }
             })
         },
-        loginJudge(){
+        loginJudge() {
             if (this.$store.state.appType <= 0) {
                 this.gotoMarket()
                 return false
@@ -100,18 +98,76 @@ export default {
         getPlayerList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=2`).then(res => {
                 if (res.data.code == 0) {
-                    this.playerList = res.data.data;
+                    this.playerList = res.data.data
                 }
             })
         },
-        getAdvisorList(){
+        getAdvisorList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=3`).then(res => {
                 if (res.data.code == 0) {
-                    this.advisorList = res.data.data;
+                    this.advisorList = res.data.data
                 }
             })
         },
-        gotoMarket(){}
+        gotoMarket() {
+            let ua = window.navigator.userAgent
+            // if (ua.indexOf('iPhone') >= 0 || ua.indexOf('iPad') >= 0) {
+            //     this.$comfirm(
+            //         'Download StarTimes ON to vote! Go to App Store now',
+            //         () => {
+            //             sendEvLog({
+            //                 category: 'vote_Bongostar',
+            //                 action: 'downloadpopup_click',
+            //                 label: 'go',
+            //                 value: 10
+            //             })
+            //             window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+            //         },
+            //         () => {
+            //             sendEvLog({
+            //                 category: 'vote_Bongostar',
+            //                 action: 'downloadpopup_click',
+            //                 label: 'not now',
+            //                 value: 10
+            //             })
+            //         },
+            //         'Go',
+            //         'Not now'
+            //     )
+            // } else {
+            //     this.$comfirm(
+            //         'Download StarTimes ON to vote! Go to Google Play now',
+            //         () => {
+            //             sendEvLog({
+            //                 category: 'vote_Bongostar',
+            //                 action: 'downloadpopup_click',
+            //                 label: 'go',
+            //                 value: 10
+            //             })
+            //             if (location.href.indexOf('referrer') > 0) {
+            //                 let s = location.search
+            //             } else {
+            //                 if (location.href.indexOf('utm_source') > 0) {
+            //                     let s = '&referrer=' + encodeURIComponent(location.search.substr(1))
+            //                 } else {
+            //                     let s = '&' + location.search.substr(1)
+            //                 }
+            //             }
+            //             window.location.href = 'market://details?id=com.star.mobile.video' + s
+            //         },
+            //         () => {
+            //             sendEvLog({
+            //                 category: 'vote_Bongostar',
+            //                 action: 'downloadpopup_click',
+            //                 label: 'not now',
+            //                 value: 10
+            //             })
+            //         },
+            //         'Go',
+            //         'Not now'
+            //     )
+            // }
+        }
     },
     components: {
         mTab,
