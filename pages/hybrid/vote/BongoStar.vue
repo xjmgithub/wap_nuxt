@@ -1,9 +1,9 @@
 <template>
     <div class="page-wrapper">
-        <Swiper :auto-play="false">
-            <Slide>1</Slide>
-            <Slide>2</Slide>
-            <Slide>3</Slide>
+        <Swiper :auto-play="false" v-if="bannerList.length > 0">
+            <Slide v-for="(item,index) in bannerList" :key="index" @click="clickBanner(item)" >
+                <img :src="item.materials" alt="">
+            </Slide>
         </Swiper>
         <mTab :tab="tabList" @onChange="handleTab"/>
         <mVote
@@ -44,7 +44,8 @@ export default {
             playerList: [],
             advisorList: [],
             leftvote: '-',
-            leftflower: '-'
+            leftflower: '-',
+            bannerList:[]
         }
     },
     mounted() {
@@ -189,10 +190,10 @@ export default {
                 link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=bongo_' + this.tabList[this.boxIndex]
             }
             // TODO  分享链接
-            // if(getChannelId&&getChannelId.showCustorm){
-            //     var content = '【' + shareTitle + '】' + shareContent  + link
-            //     window.getChannelId.showCustorm(content,link,link,link,link,link,link,shareLink,'BongoStar')
-            // }
+            if(window.getChannelId&&window.getChannelId.showCustorm){
+                var content = '【' + shareTitle + '】' + shareContent  + link
+                window.getChannelId.showCustorm(content,link,link,link,link,link,link,shareLink,'BongoStar')
+            }
         },
         handlePlayVod(vod, name) {
             this.sendEvLog({
@@ -202,20 +203,20 @@ export default {
                 value: 10
             })
             if (vod) {
-                if (this.$store.state.appType == 2) {
+                if (this.appType == 2) {
                     window.location.href = 'startimes://player?vodId=' + vod
-                } else if (this.$store.state.appType == 1) {
+                } else if (this.appType == 1) {
                     window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
                 }
             }
         },
         loginJudge() {
-            if (this.$store.state.appType <= 0) {
+            if (this.appType <= 0) {
                 this.gotoMarket()
                 return
             }
             if (!this.isLogin) {
-                if (this.$store.state.appType == 1) {
+                if (this.appType == 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
                 } else {
                     toNativePage('startimes://login')
@@ -244,19 +245,19 @@ export default {
                 method: 'get',
                 data: {}
             }).then(res => {
-                let bannerName = result[i].name
-                this.sendEvLog({
-                    category: 'vote_Bongostar',
-                    action: 'banner_show',
-                    label: 'banner_' + bannerName,
-                    value: 10
-                })
-                // if (res.data.code == 0) {
-                //     let shareLink = res.data.data[0].materials
-                //     for (var i = 0; i < result.length; i++) {
-                //         var  bannerName = result[i].name;
-                //     }
-                // }
+                if (res.data.code == 0) {
+                    let shareLink = res.data.data[0].materials
+                    this.bannerList = res.data.data
+                    for (var i = 0; i < res.data.data.length; i++) {
+                        let bannerName = res.data.data[i].name
+                        this.sendEvLog({
+                            category: 'vote_Bongostar',
+                            action: 'banner_show',
+                            label: 'banner_' + bannerName,
+                            value: 10
+                        })
+                    }
+                }
             })
         },
         getVoteLeft(id) {
@@ -365,7 +366,26 @@ export default {
                     'Not now'
                 )
             }
+        },
+        clickBanner(banner){
+            let href = banner.link
+            let bannerName =banner.name
+            this.sendEvLog({
+                category:'vote_Bongostar',
+                action:'banner_click',
+                label:'banner_'+ bannerName,
+                value:10
+            })
+            if (href.indexOf('com.star.mobile') == 0) {
+                if (this.appType == 1) {
+                    //TODO 点击banner操作 materials ??
+                    // skip4(3, href, "", INITCONFIG.PLAT);
+                }
+            } else {
+                window.location.href = href
+            }
         }
+
     },
     components: {
         mTab,

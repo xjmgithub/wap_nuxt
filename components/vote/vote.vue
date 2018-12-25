@@ -33,7 +33,7 @@ export default {
     },
     data(){
         return{
-            app: 1 ||  this.$store.state.appType
+            app:this.$store.state.appType
         }
     },
     methods: {
