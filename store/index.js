@@ -28,7 +28,8 @@ export const state = () => ({
     netType: 0,
     carrier: '',
     phoneModel: '',
-    intervalTimer: null
+    intervalTimer: null,
+    appInitTime: new Date().getTime()
 })
 
 export const mutations = {
@@ -88,6 +89,9 @@ export const mutations = {
     },
     SET_TIMER: function(state, val) {
         state.intervalTimer = val
+    },
+    SET_INIT_TIME: function(state, val) {
+        state.appInitTime = val || new Date().getTime()
     }
 }
 
@@ -167,6 +171,10 @@ export const actions = {
 
         if (req.headers['phonemodel']) {
             commit('SET_PHONE_MODEL', req.headers['phonemodel'])
+        }
+
+        if (req.headers['startTime']) {
+            commit('SET_INIT_TIME', req.headers['startTime'])
         }
 
         preload()
