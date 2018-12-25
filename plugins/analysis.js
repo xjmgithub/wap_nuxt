@@ -100,15 +100,24 @@ export default ({ app: { router, $axios }, store, query }) => {
         uid: parseInt(store.state.user.id) || 0
     }
 
-    let sendPvLog = () => {
-        ga('send', 'pageview')
+    let sendPvLog = msg => {
+        for (let i in msg) {
+            msg[i] = '' + msg[i]
+        }
+        let param = {
+            msg: msg
+        }
+        for (let i in commonLog) {
+            param[i] = commonLog[i]
+        }
+        param.lt = 'pv'
         $axios
             .get(
                 env.pv_countly_server +
                     '/i?logtype=pv&app_key=' +
                     env.countly_appKey +
                     '&events=' +
-                    JSON.stringify([commonLog]) +
+                    JSON.stringify([param]) +
                     '&device_id=' +
                     store.state.deviceId +
                     '&timestamp=' +
@@ -151,7 +160,19 @@ export default ({ app: { router, $axios }, store, query }) => {
         })
     }
 
+    sendPvLog({
+        category: 'h5_open',
+        action: 'page_init_start',
+        label: location.href,
+        value: new Date().getTime() - store.state.appInitTime
+    })
+
     router.afterEach((to, from) => {
-        sendPvLog()
+        ga('send', 'pageview')
+        sendPvLog({
+            category: 'page_view',
+            action: 'show',
+            label: location.href
+        })
     })
 }

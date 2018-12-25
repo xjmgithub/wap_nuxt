@@ -48,7 +48,7 @@ module.exports = {
         { src: '~plugins/cookie.js', ssr: false },
         { src: '~plugins/axios.js', ssr: false }
     ],
-
+    
     /*
     ** Nuxt.js modules
     */
