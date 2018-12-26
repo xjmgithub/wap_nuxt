@@ -14,6 +14,7 @@ let auth_ignore = [
     /^\/hybrid\/faq/,
     /^\/hybrid\/packet/,
     /^\/hybrid\/lands/,
+    /^\/hybrid\/tools/,
 ]
 function inIgnore(url) {
     let result = false
