@@ -28,7 +28,8 @@ export const state = () => ({
     netType: 0,
     carrier: '',
     phoneModel: '',
-    intervalTimer: null
+    intervalTimer: null,
+    rankList:[]
 })
 
 export const mutations = {
@@ -88,6 +89,10 @@ export const mutations = {
     },
     SET_TIMER: function(state, val) {
         state.intervalTimer = val
+    },
+    SET_RANKLIST: function(state, val) {
+        let [...arr] = val
+        state.rankList = arr
     }
 }
 
