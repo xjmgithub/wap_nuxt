@@ -36,7 +36,14 @@ module.exports = {
     /*
     ** Global CSS
     */
-    css: [],
+    css: [
+        '~assets/css/page-animate.css'
+        // '~assets/css/animate.min.css'
+    ],
+    transition: {
+        name: 'page',
+        mode: 'out-in'
+    },
 
     /*
     ** Plugins to load before mounting the App
@@ -49,37 +56,37 @@ module.exports = {
         { src: '~plugins/axios.js', ssr: false }
     ],
 
-  /*
+    /*
   ** Nuxt.js modules
   */
-  modules: [
-    // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
-  ],
-  /*
+    modules: [
+        // Doc: https://github.com/nuxt-community/axios-module#usage
+        '@nuxtjs/axios'
+    ],
+    /*
   ** Axios module configuration
   */
-  axios: {
-    // See https://github.com/nuxt-community/axios-module#options
-    proxy: true, // Can be also an object with default options
-    retry: { retries: 0 }
-  },
-  proxy: {
-    '/ums/': env.ms_host,
-    '/vup/': env.ms_host,
-    '/cms/': env.ms_host,
-    '/genesys-proxy/v1/chats': env.ms_host,
-    '/membership/': env.ms_host,
-    '/mobilewallet/': env.ms_host,
-    '/payment/api': env.ms_host,
-    '/payment/v2': env.ms_host,
-    '/payment/platform/v1': env.mechant_request_url,
-    '/csms-service': env.ms_host,
-    '/ocs/': env.ms_host,
-    '/css/': env.ms_host,
-    '/voting/': env.ms_host,
-    '/adm/': env.ms_host
-  },
+    axios: {
+        // See https://github.com/nuxt-community/axios-module#options
+        proxy: true, // Can be also an object with default options
+        retry: { retries: 0 }
+    },
+    proxy: {
+        '/ums/': env.ms_host,
+        '/vup/': env.ms_host,
+        '/cms/': env.ms_host,
+        '/genesys-proxy/v1/chats': env.ms_host,
+        '/membership/': env.ms_host,
+        '/mobilewallet/': env.ms_host,
+        '/payment/api': env.ms_host,
+        '/payment/v2': env.ms_host,
+        '/payment/platform/v1': env.mechant_request_url,
+        '/csms-service': env.ms_host,
+        '/ocs/': env.ms_host,
+        '/css/': env.ms_host,
+        '/voting/': env.ms_host,
+        '/adm/': env.ms_host
+    },
 
     /*
     ** Build configuration
