@@ -158,7 +158,7 @@ export default {
                     label: 'tab_judges',
                     value: 10
                 })
-            } else if(item.type=='about'){
+            } else if(item.type.indexOf('about')>0){
                 this.sendEvLog({
                     category: 'vote_'+this.share.voteName,
                     action: 'tab_click',
