@@ -1,10 +1,6 @@
 <template>
     <nav id="nav">
-        <a 
-            v-for="(item,index) in tab" 
-            :key="index" 
-            :class="{on:tabIndex == index}" 
-            @click="doChange(item,index)">
+        <a v-for="(item,index) in tab" :key="index" :class="{on:tabIndex == index}" @click="doChange(item,index)">
             {{item.name}}
         </a>
     </nav>
@@ -15,20 +11,20 @@ export default {
     props: {
         tab: {
             type: Array,
-            default: function() {
+            default: () => {
                 return []
             }
         }
     },
-    data(){
-        return{
-            tabIndex:0
+    data() {
+        return {
+            tabIndex: 0
         }
     },
     methods: {
-        doChange(item,index) {
+        doChange(item, index) {
             this.tabIndex = index
-            this.$emit('onChange',item,index)
+            this.$emit('onChange', item, index)
         }
     }
 }

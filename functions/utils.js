@@ -84,3 +84,16 @@ export const getRandomInt = (min, max) => {
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min)) + min 
 }
+
+export const shareInvite = (link, shareTitle, shareContent, tabName,voteName) => {
+    if (link.indexOf('?') > 0) {
+        link += '&utm_source=startimes_app&utm_medium=share&utm_campaign='+ voteName +'_'+ tabName
+    } else {
+        link += '?utm_source=startimes_app&utm_medium=share&utm_campaign='+ voteName +'_'+ tabName
+    }
+    // TODO  分享链接
+    if (window.getChannelId && window.getChannelId.showCustorm) {
+        let content = '【' + shareTitle + '】' + shareContent + link
+        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareLink, voteName)
+    }
+}

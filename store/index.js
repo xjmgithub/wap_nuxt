@@ -29,7 +29,8 @@ export const state = () => ({
     carrier: '',
     phoneModel: '',
     intervalTimer: null,
-    rankList:[]
+    rankList:[],
+    serverTime:new Date()
 })
 
 export const mutations = {
@@ -93,6 +94,9 @@ export const mutations = {
     SET_RANKLIST: function(state, val) {
         let [...arr] = val
         state.rankList = arr
+    },
+    SET_SERVER_TIME:function(state,val){
+        state.serverTime = val
     }
 }
 

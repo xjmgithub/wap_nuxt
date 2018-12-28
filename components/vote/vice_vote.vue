@@ -27,18 +27,26 @@ import loading from '~/components/loading'
 import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
-     props:{
-        vote_id: {
-            type: Number,
-            default: 3
+    props: {
+        tab_msg: {
+            type: Object,
+            default: () => {
+                return {}
+            }
+        },
+        share: {
+            type: Object,
+            default: () => {
+                return {}
+            }
         }
     },
-    data(){
-        return{
+    data() {
+        return {
             isLogin: this.$store.state.user.type || false,
-            app:this.$store.state.appType,
+            app: this.$store.state.appType,
             advisorList: [],
-            leftflower: '-',
+            leftflower: '-'
         }
     },
     mounted() {
@@ -48,7 +56,7 @@ export default {
     methods: {
         handleViceVote(advisor) {
             this.sendEvLog({
-                category: 'vote_Bongostar',
+                category: 'vote_'+this.share.voteName,
                 action: 'flowerbtn_click',
                 label: 'flower_' + advisor.name,
                 value: 10
@@ -72,7 +80,7 @@ export default {
                 },
                 data: qs.stringify({
                     candidate_id: advisor.id,
-                    vote_id: 3
+                    vote_id: this.tab_msg.vote_id
                 })
             }).then(res => {
                 if (res.data.code == 0) {
@@ -87,27 +95,16 @@ export default {
         },
         handleInvite() {
             this.sendEvLog({
-                category: 'vote_Bongostar',
+                category: 'vote_'+this.share.voteName,
                 action: 'share_click',
                 label: '',
                 value: 10
             })
             let link = window.location.href
-            let shareTitle = 'Vote & Win Coupons Now!'
-            let shareContent = 'Vote for your favorite Bongo Star in StarTimes ON! Win coupons easily!'
-            if (link.indexOf('?') > 0) {
-                link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=bongo_' + this.tabList[this.boxIndex]
-            } else {
-                link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=bongo_' + this.tabList[this.boxIndex]
-            }
-            // TODO  分享链接
-            if(window.getChannelId&&window.getChannelId.showCustorm){
-                var content = '【' + shareTitle + '】' + shareContent  + link
-                window.getChannelId.showCustorm(content,link,link,link,link,link,link,shareLink,'BongoStar')
-            }
+            shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
         },
         getAdvisorList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.tab_msg.vote_id}`).then(res => {
                 if (res.data.code == 0) {
                     this.advisorList = res.data.data
                 }
@@ -116,7 +113,7 @@ export default {
         getVoteLeft() {
             if (this.isLogin) {
                 this.$axios({
-                    url: `/voting/v1/ballot/user-ballot-nums?vote_id=${this.vote_id}`,
+                    url: `/voting/v1/ballot/user-ballot-nums?vote_id=${this.tab_msg.vote_id}`,
                     method: 'get',
                     data: {}
                 }).then(res => {
@@ -145,7 +142,7 @@ export default {
         },
         gotoMarket() {
             this.sendEvLog({
-                category: 'vote_Bongostar',
+                category: 'vote_'+this.share.voteName,
                 action: 'downloadpopup_show',
                 label: '',
                 value: 10
@@ -156,7 +153,7 @@ export default {
                     'Download StarTimes ON to vote! Go to App Store now',
                     () => {
                         this.sendEvLog({
-                            category: 'vote_Bongostar',
+                            category: 'vote_'+this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'go',
                             value: 10
@@ -165,7 +162,7 @@ export default {
                     },
                     () => {
                         this.sendEvLog({
-                            category: 'vote_Bongostar',
+                            category: 'vote_'+this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'not now',
                             value: 10
@@ -179,7 +176,7 @@ export default {
                     'Download StarTimes ON to vote! Go to Google Play now',
                     () => {
                         this.sendEvLog({
-                            category: 'vote_Bongostar',
+                            category: 'vote_'+this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'go',
                             value: 10
@@ -198,7 +195,7 @@ export default {
                     },
                     () => {
                         this.sendEvLog({
-                            category: 'vote_Bongostar',
+                            category: 'vote_'+this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'not now',
                             value: 10
@@ -213,17 +210,17 @@ export default {
     filters: {
         canVoteState(state) {
             if (state == -1) {
-                return  'UNSTART' 
+                return 'UNSTART'
             } else if (state == -2) {
-                return  'END'
+                return 'END'
             } else if (state == 0) {
-                return  'SENT'
+                return 'SENT'
             } else if (state == 1) {
-                return  'SEND'
+                return 'SEND'
             }
         }
     },
-    components:{
+    components: {
         loading
     }
 }
