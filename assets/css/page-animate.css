@@ -2,10 +2,10 @@
     transform: translateX(100%);
 }
 .page-enter-active {
-    animation: bounce-in 0.5s;
+    animation: bounce-in 0.3s;
 }
 .page-leave {
-    animation: bounce-out 0.5s;
+    animation: bounce-out 0.3s;
 }
 @keyframes bounce-in {
     0% {
