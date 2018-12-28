@@ -85,7 +85,8 @@ module.exports = {
         '/ocs/': env.ms_host,
         '/css/': env.ms_host,
         '/voting/': env.ms_host,
-        '/adm/': env.ms_host
+        '/adm/': env.ms_host,
+        '/self/': env.ms_host
     },
 
     /*

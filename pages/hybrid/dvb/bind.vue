@@ -12,17 +12,17 @@
                             @input="changeNum"
                             @focus="canBuy=false"
                             @blur="checkout"
-                            placeholder="<?php echo $alang['please_input_smartcard']; ?>"
+                            :placeholder="$store.state.lang.please_input_smartcard"
                             type="tel"
                             maxlength="13"
                         >
-                        <span v-show="canBuy" class="card_state" v-bind:class="card_state == 'VALID' ? 'program-state-valid' : 'program-state'">
-                            <span v-if="card_state=='PUNISH_STOP'"><?php echo $alang['dormant']; ?></span>
-                            <span v-if="card_state=='PAUSE'"><?php echo $alang['link_suspend']; ?></span>
-                            <span v-if="card_state=='VALID'&&stop_days"><?php echo $alang['dvb_acitve_to']; ?> {{stop_days | formatStopDays}}</span>
-                            <span v-if="card_state=='VALID'&&!stop_days"><?php echo $alang['active_']; ?></span>
+                        <span v-show="canBuy" class="card_state" :class="card_state == 'VALID' ? 'program-state-valid' : 'program-state'">
+                            <span v-if="card_state=='PUNISH_STOP'">{{$store.state.lang.dormant}}</span>
+                            <span v-if="card_state=='PAUSE'">{{$store.state.lang.link_suspend}}</span>
+                            <span v-if="card_state=='VALID'&&stop_days">{{$store.state.lang.dvb_acitve_to}} {{stop_days | formatStopDays}}</span>
+                            <span v-if="card_state=='VALID'&&!stop_days">{{$store.state.lang.active_}}</span>
                         </span>
-                        <span class="error-card" :class="{showError:isErrorCard}"><?php echo $alang['h5_input_card_wrong']; ?></span>
+                        <span class="error-card" :class="{showError:isErrorCard}">{{$store.state.lang.h5_input_card_wrong}}</span>
                         <p class="count">
                             <span class="current">{{current}}</span> /
                             <span class="total">11</span>
@@ -31,36 +31,37 @@
                             <img @click="clearInput" v-show="oriCardNum!=''" src="../resource/img/recharge/delete.png">
                         </div>
                         <ul class="history" v-show="showHistoryList">
-                            <li v-for="(item,index) in historyList" @click="chooseCard(index)">{{ formatCard(item) }}</li>
+                            <li v-for="(item,index) in historyList" @click="chooseCard(index)" :key="index">{{ formatCard(item) }}</li>
                         </ul>
                     </div>
                 </div>
                 <div class="demoDialog" v-show="!loaded&&historyLoaded&&historyList.length<=0">
                     <div @click="focusInput">
-                        <p><?php echo $alang['input_your_smartcard_number']; ?></p>
+                        <p>{{$store.state.lang.input_your_smartcard_number}}</p>
                         <div>
                             <img src="../resource/img/icon_smart_card.png">
                         </div>
-                        <p><?php echo $alang['recharge_your_decoder_account']; ?></p>
-                        <p class="tips"><?php echo $alang['Tips_check_your_Balance']; ?></p>
+                        <p>{{$store.state.lang.recharge_your_decoder_account}}</p>
+                        <p class="tips">{{$store.state.lang.Tips_check_your_Balance}}</p>
                     </div>
                     <p>
-                        <?php echo $alang['if_you_are_not_a_startimes_tv_user']; ?>
+                        {{$store.state.lang.if_you_are_not_a_startimes_tv_user}}
                         <a
                             href="javascript:void(0)"
                             @click="toLoadurl"
-                        ><?php echo $alang['click_here']; ?></a>
-                        <?php echo $alang['if_you_are_not_a_startimes_tv_user2']; ?>
+                        >
+                         {{$store.state.lang.click_here}}</a>
+                        {{$store.state.lang.if_you_are_not_a_startimes_tv_user2}} 
                     </p>
                 </div>
                 <div class="program-box" v-show="loaded">
                     <p v-show="canBuy">
-                        <?php echo $alang['topup_bouquet']; ?>:
+                        {{$store.state.lang.topup_bouquet}}:
                         <span class="program-name">{{ program_name }}</span>
                     </p>
                 </div>
                 <div class="money-box clearfix" :class="{disabled:!canBuy}" v-show="loaded&&recharge_items.length>0">
-                    <p><?php echo $alang['select_']; ?></p>
+                    <p>{{$store.state.lang.select_}}</p>
                     <ul class="recharge-style">
                         <li
                             v-for="(item,index) in recharge_items"
@@ -92,12 +93,12 @@
                 <div class="first-charge" v-show="firstChargeTip">
                     <img src="../resource/img/recharge/ic_gift_def.png">
                     <div style="width:65%;float:left;">{{firstChargeTip}}</div>
-                    <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails"><?php echo $alang['first_recharge_detail']; ?></div>
+                    <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails"> {{$store.state.lang.first_recharge_detail}}</div>
                 </div>
                 <div class="count-box clearfix" :class="{disabled:!canBuy}">
-                    <p v-show="loaded&&countList.length>1"><?php echo $alang['results_recharge_amount']; ?></p>
+                    <p v-show="loaded&&countList.length>1">{{$store.state.lang.results_recharge_amount}}</p>
                     <ul class="choose clearfix" v-show="loaded&&countList.length>1">
-                        <li v-for="(item,index) in countList">
+                        <li v-for="(item,index) in countList" :key="index">
                             <label class="radio">
                                 {{ item }}
                                 <input
@@ -108,14 +109,14 @@
                                     :checked="index == chargeNumIndex"
                                     v-model="checkedValue"
                                 >
-                                <i></i>
+                                <i/>
                             </label>
                         </li>
                     </ul>
                 </div>
-                <div class="pay-btn" v-on:click="buyNow" :class="{disabled:!canBuy}" v-show="loaded">
+                <div class="pay-btn" @click="buyNow" :class="{disabled:!canBuy}" v-show="loaded">
                     <span class="need-pay">{{ currency }}{{ paymentAmount | formatRateAmount }}</span>
-                    <?php echo $alang['next_']; ?>
+                    {{$store.state.lang.next_}}
                 </div>
             </div>
             <img
@@ -127,9 +128,9 @@
             <div class="blank_bottom" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">&nbsp;</div>
             <div class="more-services" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">
                 <p @click="showAllWays">
-                    <?php echo $alang['more_recharge_method']; ?>
+                    {{$store.state.lang.more_recharge_method}}
                     <span class="all">
-                        <?php echo $alang['membership_all']; ?>
+                        {{$store.state.lang.membership_all}}
                         <img src="../resource/img/recharge/ic_right_def_r.png" alt>
                     </span>
                 </p>
@@ -141,7 +142,7 @@
 <script>
 export default {
     layout: 'base',
-    data: function() {
+    data() {
         return {
             cardNum: '',
             historyList: [],
@@ -161,42 +162,44 @@ export default {
             chargeItemIndex: 0,
             checkedValue: 1,
             chargeNumIndex: 0,
-            countryCode: "<?php echo $COUNTRY['code']; ?>",
-            currency: "<?php echo $COUNTRY['currency_symbol']; ?>",
-            currencyCode: "<?php echo $COUNTRY['currency_code']; ?>",
+            countryCode: this.$store.state.countryCode,
+            currency: this.$store.state.currency_symbol,
+            currencyCode: this.$store.state.currency_code,
             stop_days: '',
             isLoading: false,
             init: true,
             cardHaveCharged: false,
             user_status: false,
-            isApp: isApp
+            isLogin: this.$store.state.user.type || false,
+            isApp: this.$store.state.appType,
+
         }
     },
     computed: {
-        oriCardNum: function() {
-            var reg = /^[0-9]*$/
-            var tmp = this.cardNum.replace(/\s/g, '')
+        oriCardNum() {
+            let reg = /^[0-9]*$/
+            let tmp = this.cardNum.replace(/\s/g, '')
             return reg.test(tmp) ? tmp : ''
         },
-        rechargeAmount: function() {
-            var item = this.recharge_items[this.chargeItemIndex]
+        rechargeAmount() {
+            let item = this.recharge_items[this.chargeItemIndex]
             if (item) {
                 return Number(item.rate_amount) * Number(this.checkedValue)
             } else {
                 return 0
             }
         },
-        rechargeExplanation: function() {
-            var name = this.recharge_items[this.chargeItemIndex].rate_display_name
+        rechargeExplanation() {
+            let name = this.recharge_items[this.chargeItemIndex].rate_display_name
             if (name.indexOf('/') >= 0) {
                 return name.split('/')[1] + ' x ' + this.checkedValue
             } else {
                 return name + ' x ' + this.checkedValue
             }
         },
-        paymentAmount: function() {
-            var item = this.recharge_items[this.chargeItemIndex]
-            var count = 0
+        paymentAmount() {
+            let item = this.recharge_items[this.chargeItemIndex]
+            let count = 0
             if (item) {
                 if (item.preferentialPlanVo && item.preferentialPlanVo.exclusivePrice > 0) {
                     count = item.preferentialPlanVo.exclusivePrice
@@ -206,8 +209,8 @@ export default {
             }
             return Number(count) * Number(this.checkedValue)
         },
-        firstChargeTip: function() {
-            var item = this.recharge_items[this.chargeItemIndex]
+        firstChargeTip() {
+            let item = this.recharge_items[this.chargeItemIndex]
             if (item) {
                 if (item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
                     return item.preferentialPlanVo.description
@@ -218,8 +221,8 @@ export default {
                 return ''
             }
         },
-        firstChargeDetails: function() {
-            var item = this.recharge_items[this.chargeItemIndex]
+        firstChargeDetails() {
+            let item = this.recharge_items[this.chargeItemIndex]
             if (item) {
                 if (item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
                     return item.preferentialPlanVo.descDetail
@@ -232,21 +235,21 @@ export default {
         }
     },
     filters: {
-        formatStopDays: function(str) {
+        formatStopDays(str) {
             return dayjs(str).format('MMM DD YYYY') || ''
         },
-        formatDate: function(str) {
+        formatDate(str) {
             if (str.indexOf('/') >= 0) {
                 return str.split('/')[1]
             } else {
                 return str
             }
         },
-        formatRateAmount: function(val) {
-            // var tmp = String(str).split('').reverse().join('').match(/(\d{1,3})/g)
+        formatRateAmount(val) {
+            // let tmp = String(str).split('').reverse().join('').match(/(\d{1,3})/g)
             // return tmp.join(',').split('').reverse().join('')
             if (!isNaN(val)) {
-                var arr = val.toString().split('.')
+                let arr = val.toString().split('.')
                 if (arr[1]) {
                     return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
                 } else {
@@ -256,15 +259,15 @@ export default {
                 return ''
             }
         },
-        discountAmount: function(item) {
-            var count = 0
+        discountAmount(item) {
+            let count = 0
             if (item.preferentialPlanVo && item.preferentialPlanVo.exclusivePrice > 0) {
                 count = item.preferentialPlanVo.exclusivePrice
             } else {
                 count = item.rate_amount
             }
             if (!isNaN(count)) {
-                var arr = count.toString().split('.')
+                let arr = count.toString().split('.')
                 if (arr[1]) {
                     return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
                 } else {
@@ -276,12 +279,12 @@ export default {
         }
     },
     methods: {
-        focusInput: function() {
+        focusInput() {
             this.$nextTick(function() {
                 document.querySelector('input.card').focus()
             })
         },
-        showAllWays: function() {
+        showAllWays() {
             this.sendEvLog({
                 category: 'dvbservice',
                 action: 'other_paymentWay_click',
@@ -289,12 +292,12 @@ export default {
                 value: 10,
                 service_type: 'Recharge'
             })
-            if (isApp == '1') {
+            if (this.isApp == '1') {
                 window.getChannelId.toAppPage(3, 'com.star.mobile.video.smartcard.recharge.RechargeActivity?fromNewRecharge=true', '')
             }
         },
-        toLoadurl: function() {
-            sendEvLog({
+        toLoadurl() {
+            this.sendEvLog({
                 category: 'dvbservice',
                 action: 'onlineServiceBtn_click',
                 label: 'dvb_recharge_empty_decoder',
@@ -317,16 +320,16 @@ export default {
                 window.location.href = 'http://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=139&dir_id=0'
             }
         },
-        showDetails: function() {
-            sendEvLog({
+        showDetails() {
+            this.sendEvLog({
                 category: 'dvbservice',
                 action: 'promotion_detail_click',
                 label: 'DVB_H5',
                 value: 10,
                 service_type: 'Recharge'
             })
-            malert(this.firstChargeDetails, '', function() {
-                sendEvLog({
+            this.$alert(this.firstChargeDetails,()=>{
+                this.sendEvLog({
                     category: 'dvbservice',
                     action: 'promotion_detail_back',
                     label: 'DVB_H5',
@@ -335,28 +338,27 @@ export default {
                 })
             })
         },
-        clearInput: function() {
+        clearInput() {
             this.cardNum = ''
             this.oriCardNum = ''
         },
-        getHistoryBindCard: function(callback) {
-            var _this = this
-            mAjax('/self/v1/user/all_smartcard_basic_info_4wx', token, {
-                type: 'get',
-                dataType: 'json',
-                data: '',
-                success: function(data) {
-                    _this.historyLoaded = true
-                    if (data && data.length > 0) {
-                        var arr = []
-                        data.forEach(function(item, index) {
+        getHistoryBindCard(callback) {
+            this.$axios({
+                    url: `/self/v1/user/all_smartcard_basic_info_4wx`,
+                    method: 'get',
+                    data: {}
+                }).then(res => {
+                    this.historyLoaded = true
+                    if (res.data && res.data.length > 0) {
+                        let arr = []
+                        res.data.forEach((item, index) =>{
                             arr.push(item.smardcard_no)
                         })
-                        _this.historyList = arr
-                        _this.user_status = true
+                        this.historyList = arr
+                        this.user_status = true
                         if (callback) callback()
                     } else {
-                        sendEvLog({
+                         this.sendEvLog({
                             category: 'dvbservice',
                             action: 'onlineServiceBtn_show',
                             label: 'dvb_recharge_empty_decoder',
@@ -364,33 +366,32 @@ export default {
                             service_type: 'Recharge'
                         })
                     }
-                },
-                error: function(err) {
-                    _this.historyLoaded = true
-                    sendEvLog({
+                })
+                .catch(err=> {
+                    this.historyLoaded = true
+                    this.sendEvLog({
                         category: 'dvbservice',
                         action: 'onlineServiceBtn_show',
                         label: 'dvb_recharge_empty_decoder',
                         value: 1,
                         service_type: 'Recharge'
                     })
-                }
-            })
+                });
         },
-        chooseCard: function(index) {
+        chooseCard(index) {
             this.cardNum = this.formatCard(this.historyList[index])
             this.checkout()
         },
-        formatCard: function(str) {
+        formatCard(str) {
             return str.replace(/(^\d{3}\B|\d{4}\B)/g, '$1 ')
         },
-        changeNum: function() {
+        changeNum() {
             this.cardNum = this.formatCard(this.oriCardNum)
         },
-        buyNow: function() {
-            var rechargeItem = this.recharge_items[this.chargeItemIndex]
+        buyNow() {
+            let rechargeItem = this.recharge_items[this.chargeItemIndex]
 
-            sendEvLog({
+            this.sendEvLog({
                 category: 'dvbservice',
                 action: 'recharge_click',
                 label: 'DVB_H5',
@@ -404,28 +405,26 @@ export default {
                 SmartCardNo: this.cardNum
             })
 
-            var _this = this
-
             if (!this.canBuy) return false
 
-            var currencyCode = _this.currencyCode
+            let currencyCode = this.currencyCode
             if (location.host.indexOf('qa.upms') >= 0 || location.host.indexOf('dev.upms') >= 0) {
-                if (_this.countryCode.toLowerCase() == 'mg') {
+                if (this.countryCode.toLowerCase() == 'mg') {
                     currencyCode = 'OUV'
                 }
             }
 
-            var preferentialPlanId = rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo
+            let preferentialPlanId = rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo
 
-            var params = {
-                cardNo: _this.oriCardNum,
-                countryCode: _this.countryCode,
+            let params = {
+                cardNo: this.oriCardNum,
+                countryCode: this.countryCode,
                 currencyCode: currencyCode,
-                currency: _this.currency,
-                rechargeExplanation: _this.rechargeExplanation,
+                currency: this.currency,
+                rechargeExplanation: this.rechargeExplanation,
                 promotionAmount: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.firstRechargeGiveMoney) || 0,
-                rechargeAmount: new Number(_this.rechargeAmount).toFixed(2),
-                paymentAmount: new Number(_this.paymentAmount).toFixed(2),
+                rechargeAmount: new Number(this.rechargeAmount).toFixed(2),
+                paymentAmount: new Number(this.paymentAmount).toFixed(2),
                 exclusivePrice: new Number(
                     (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.exclusivePrice) || rechargeItem.rate_amount
                 ).toFixed(2),
@@ -433,265 +432,259 @@ export default {
                 listingPrice: new Number(rechargeItem.rate_amount).toFixed(2), // 原始单价
                 rechargeItemSelectedQuantity: this.checkedValue,
                 rechargeItemSelectedName: rechargeItem.rate_display_name,
-                tv_platform: _this.tv_platform,
-                smartcard_status: _this.card_state,
-                stop_days: _this.stop_days,
-                program_name: _this.program_name,
-                money: _this.money,
-                rechargeAmount: _this.rechargeAmount,
-                firstChargeTip: _this.firstChargeTip,
-                cardHaveCharged: _this.cardHaveCharged
+                tv_platform: this.tv_platform,
+                smartcard_status: this.card_state,
+                stop_days: this.stop_days,
+                program_name: this.program_name,
+                money: this.money,
+                rechargeAmount: this.rechargeAmount,
+                firstChargeTip: this.firstChargeTip,
+                cardHaveCharged: this.cardHaveCharged
             }
 
             sessionStorage.setItem('order-info', JSON.stringify(params))
             window.location.href = 'order.php'
         },
-        selected: function(index) {
+        selected(index) {
             if (this.canBuy) {
                 this.chargeItemIndex = index
             }
         },
-        checkout: function() {
-            var _this = this
-            var reg = /^\d{11}$/g
-            var reg2 = /^(90|91|92|93)\d{9}$/g
-            var reg3 = /^(01|02)\d{9}$/g
+        checkout() {
+            let reg = /^\d{11}$/g
+            let reg2 = /^(90|91|92|93)\d{9}$/g
+            let reg3 = /^(01|02)\d{9}$/g
 
-            if (_this.oriCardNum == '') {
-                sendEvLog({
+            if (this.oriCardNum == '') {
+                this.sendEvLog({
                     category: 'dvbservice',
                     action: 'smartcard_input',
                     label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                     value: -1,
                     service_type: 'Recharge',
-                    SmartCardNo: _this.oriCardNum
+                    SmartCardNo: this.oriCardNum
                 })
                 return false
             } else {
-                if (!reg.test(_this.oriCardNum)) {
-                    sendEvLog({
+                if (!reg.test(this.oriCardNum)) {
+                    this.sendEvLog({
                         category: 'dvbservice',
                         action: 'smartcard_input',
                         label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                         value: -1,
                         service_type: 'Recharge',
-                        SmartCardNo: _this.oriCardNum
+                        SmartCardNo: this.oriCardNum
                     })
-                    _this.isErrorCard = true
+                    this.isErrorCard = true
                     return false
                 } else {
-                    if (!reg3.test(_this.oriCardNum)) {
-                        if (reg2.test(_this.oriCardNum)) {
-                            sendEvLog({
+                    if (!reg3.test(this.oriCardNum)) {
+                        if (reg2.test(this.oriCardNum)) {
+                            this.sendEvLog({
                                 category: 'dvbservice',
                                 action: 'smartcard_input',
                                 label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                                 value: 0,
                                 service_type: 'Recharge',
-                                SmartCardNo: _this.oriCardNum,
+                                SmartCardNo: this.oriCardNum,
                                 errorMsg: 'eWallet'
                             })
-                            mconfirm(
-                                "<?php echo $alang['besure_input_ewallet']; ?>",
-                                "<?php echo $alang['refuse_tip']; ?>",
-                                "<?php echo $alang['agree_tip']; ?>",
-                                function() {
+                            this.$confirm(
+                                this.$store.state.lang.besure_input_ewallet,
+                                () => {
                                     window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
-                                }
+                                },
+                                () => {},
+                                this.$store.state.lang.agree_tip,
+                                this.$store.state.lang.refuse_tip
                             )
                         } else {
-                            sendEvLog({
+                            this.sendEvLog({
                                 category: 'dvbservice',
                                 action: 'smartcard_input',
                                 label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                                 value: 0,
                                 service_type: 'Recharge',
-                                SmartCardNo: _this.oriCardNum,
+                                SmartCardNo: this.oriCardNum,
                                 errorMsg: 'Decoder'
                             })
-                            mconfirm(
-                                "<?php echo $alang['besure_have_card']; ?>",
-                                "<?php echo $alang['refuse_tip']; ?>",
-                                "<?php echo $alang['agree_tip']; ?>",
-                                function() {
-                                    _this.toLoadurl()
-                                }
+                             this.$confirm(
+                                this.$store.state.lang.besure_have_card,
+                                () => {
+                                    this.toLoadurl()
+                                },
+                                () => {},
+                                this.$store.state.lang.agree_tip,
+                                this.$store.state.lang.refuse_tip
                             )
                         }
-                        _this.isErrorCard = true
+                        this.isErrorCard = true
                         return false
                     }
 
-                    sendEvLog({
+                    this.sendEvLog({
                         category: 'dvbservice',
                         action: 'smartcard_input',
                         label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                         value: 1,
                         service_type: 'Recharge',
-                        SmartCardNo: _this.oriCardNum
+                        SmartCardNo: this.oriCardNum
                     })
                 }
             }
-            _this.isLoading = true
-            var timetr = new Date().getTime()
-            mAjax('/self/v1/user/smartcardinfo/sync4h5', token, {
-                type: 'get',
-                dataType: 'json',
-                data: {
-                    smartcard: _this.oriCardNum,
-                    is_bind_card: isLogin ? true : false
-                },
-                success: function(data) {
-                    var n_timetr = new Date().getTime()
+            this.isLoading = true
+            let timetr = new Date().getTime()
+            this.$axios({
+                url: `/self/v1/user/smartcardinfo/sync4h5?smartcard=${this.oriCardNum}&is_bind_card=${this.isLogin ? true : false}`,
+                method: 'get',
+                data: {}
+            }).then(res => {
+                let n_timetr = new Date().getTime()
+                this.isLoading = false
 
-                    _this.isLoading = false
-                    if (data && data.program_name) {
-                        // page status
-                        _this.loaded = true
-                        _this.canBuy = true
-                        _this.countLists = []
-                        _this.chargeItemIndex = 0
+                if (res.data && res.data.program_name) {
+                    this.loaded = true
+                        this.canBuy = true
+                        this.countLists = []
+                        this.chargeItemIndex = 0
 
-                        _this.program_name = data.program_name
-                        _this.tv_platform = data.tv_platform
-                        _this.card_state = data.smartcard_status
-                        _this.stop_days = data.penalty_stop
-                        _this.money = data.money
-                        _this.cardHaveCharged = data.have_rechareged
+                        this.program_name = data.program_name
+                        this.tv_platform = data.tv_platform
+                        this.card_state = data.smartcard_status
+                        this.stop_days = data.penalty_stop
+                        this.money = data.money
+                        this.cardHaveCharged = data.have_rechareged
                         if (data.recharge_items && data.recharge_items.length > 0) {
-                            _this.recharge_items = data.recharge_items || []
+                            this.recharge_items = data.recharge_items || []
                             // 默认选中最大值
-                            var maxMoney = 0
-                            _this.recharge_items.sort(function(a, b) {
+                            let maxMoney = 0
+                            this.recharge_items.sort(function(a, b) {
                                 return a.rate_amount - b.rate_amount
                             })
-                            _this.recharge_items.forEach(function(item, index) {
+                            this.recharge_items.forEach(function(item, index) {
                                 if (item.rate_amount > maxMoney) {
                                     maxMoney = item.rate_amount
-                                    _this.chargeItemIndex = index
+                                    this.chargeItemIndex = index
                                 }
                                 if (item.recharge_fee_numbers) {
-                                    _this.countLists[_this.countLists.length] = item.recharge_fee_numbers
+                                    this.countLists[this.countLists.length] = item.recharge_fee_numbers
                                 }
                             })
 
                             // 默认选中最小值
-                            // var minMoney = 0
-                            // _this.recharge_items.sort(function (a, b) {
+                            // let minMoney = 0
+                            // this.recharge_items.sort(function (a, b) {
                             //     return a.rate_amount - b.rate_amount;
                             // })
-                            // _this.recharge_items.forEach(function (item, index) {
+                            // this.recharge_items.forEach(function (item, index) {
                             //     if (item.rate_amount < minMoney) {
                             //         minMoney = item.rate_amount
-                            //         _this.chargeItemIndex = index
+                            //         this.chargeItemIndex = index
                             //     }
                             //     if (item.recharge_fee_numbers) {
-                            //         _this.countLists[_this.countLists.length] = item.recharge_fee_numbers
+                            //         this.countLists[this.countLists.length] = item.recharge_fee_numbers
                             //     }
                             // })
-                            sendEvLog({
+                            this.sendEvLog({
                                 category: 'dvbservice',
                                 action: 'load_recharge_item',
-                                label: _this.user_status ? 'AddCardUser' : 'NewCardUser',
+                                label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                                 value: 1,
-                                SmartCardNo: _this.oriCardNum,
-                                BouquetName: _this.program_name,
-                                CardState: _this.card_state,
-                                PauseDate: _this.stop_days,
+                                SmartCardNo: this.oriCardNum,
+                                BouquetName: this.program_name,
+                                CardState: this.card_state,
+                                PauseDate: this.stop_days,
                                 service_type: 'Recharge',
                                 timeAlong: n_timetr - timetr
                             })
                         } else {
-                            sendEvLog({
+                            this.sendEvLog({
                                 category: 'dvbservice',
                                 action: 'load_recharge_item',
-                                label: _this.user_status ? 'AddCardUser' : 'NewCardUser',
+                                label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                                 value: 0,
-                                SmartCardNo: _this.oriCardNum,
-                                BouquetName: _this.program_name,
-                                CardState: _this.card_state,
-                                PauseDate: _this.stop_days,
+                                SmartCardNo: this.oriCardNum,
+                                BouquetName: this.program_name,
+                                CardState: this.card_state,
+                                PauseDate: this.stop_days,
                                 service_type: 'Recharge',
                                 timeAlong: n_timetr - timetr
                             })
-                            _this.canBuy = false
-                            _this.$nextTick(function() {
+                            this.canBuy = false
+                            this.$nextTick(function() {
                                 malert("This bouquet can't be recharged for now, please contact the local center")
                             })
                         }
-                        if (_this.countLists.length > 0) {
-                            _this.countList = _this.countLists[_this.chargeItemIndex]
+                        if (this.countLists.length > 0) {
+                            this.countList = this.countLists[this.chargeItemIndex]
                         } else {
-                            _this.countList = [1]
+                            this.countList = [1]
                         }
-                        _this.checkedValue = _this.countList[0]
-                    } else {
-                        sendEvLog({
-                            category: 'dvbservice',
-                            action: 'load_recharge_item',
-                            label: _this.user_status ? 'AddCardUser' : 'NewCardUser',
-                            value: -1,
-                            SmartCardNo: _this.oriCardNum,
-                            BouquetName: _this.program_name,
-                            CardState: _this.card_state,
-                            PauseDate: _this.stop_days,
-                            service_type: 'Recharge',
-                            errorMsg: data.message,
-                            timeAlong: n_timetr - timetr
-                        })
-                        _this.isErrorCard = true
-                    }
-                },
-                error: function(err) {
-                    var n_timetr = new Date().getTime()
-                    sendEvLog({
+                        this.checkedValue = this.countList[0]
+                }else{
+                    this.sendEvLog({
                         category: 'dvbservice',
                         action: 'load_recharge_item',
-                        label: _this.user_status ? 'AddCardUser' : 'NewCardUser',
+                        label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                         value: -1,
-                        SmartCardNo: _this.oriCardNum,
-                        BouquetName: _this.program_name,
-                        CardState: _this.card_state,
-                        PauseDate: _this.stop_days,
+                        SmartCardNo: this.oriCardNum,
+                        BouquetName: this.program_name,
+                        CardState: this.card_state,
+                        PauseDate: this.stop_days,
                         service_type: 'Recharge',
-                        errorMsg: err.status + '~' + err.statusText,
+                        errorMsg: data.message,
                         timeAlong: n_timetr - timetr
                     })
-                    _this.isLoading = false
-
-                    _this.$nextTick(function() {
-                        if (err.status == 401) {
-                            malert("<?php echo $alang['account_signed_elsewhere']; ?>", '', function() {
-                                if (isApp == 1) {
-                                    window.getChannelId.toAppPage(
-                                        3,
-                                        'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
-                                            encodeURIComponent(window.location.href),
-                                        ''
-                                    )
-                                }
-                            })
-                            return false
-                        } else {
-                            malert("<?php echo $alang['error_network']; ?>")
-                        }
-                    })
+                    this.isErrorCard = true
                 }
+            }).catch(err=>{
+                let n_timetr = new Date().getTime()
+                this.sendEvLog({
+                    category: 'dvbservice',
+                    action: 'load_recharge_item',
+                    label: this.user_status ? 'AddCardUser' : 'NewCardUser',
+                    value: -1,
+                    SmartCardNo: this.oriCardNum,
+                    BouquetName: this.program_name,
+                    CardState: this.card_state,
+                    PauseDate: this.stop_days,
+                    service_type: 'Recharge',
+                    errorMsg: err.status + '~' + err.statusText,
+                    timeAlong: n_timetr - timetr
+                })
+                this.isLoading = false
+
+                this.$nextTick(()=> {
+                    if (err.status == 401) {
+                        this.$alert(this.$store.state.lang.account_signed_elsewhere,()=>{
+                               if (this.isApp == 1) {
+                                window.getChannelId.toAppPage(
+                                    3,
+                                    'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
+                                        encodeURIComponent(window.location.href),
+                                    ''
+                                )
+                            }
+                        })
+                        return false
+                    } else {
+                        this.$alert( this.$store.state.lang.error_network)
+                    }
+                })
             })
         }
     },
-    created: function() {
-        var _this = this
-        sendEvLog({
+    created() {
+        this.sendEvLog({
             category: 'dvbservice',
             action: 'recharge_show',
             label: 'DVB_H5',
             value: 10,
             service_type: 'Recharge'
         })
-        var step2 = sessionStorage.getItem('step2')
+        let step2 = sessionStorage.getItem('step2')
         if (step2) {
-            sendEvLog({
+            this.sendEvLog({
                 category: 'dvbservice',
                 action: 'back_history',
                 label: 'DVB_H5',
@@ -700,14 +693,14 @@ export default {
             })
         }
 
-        this.getHistoryBindCard(function() {
-            if (_this.historyList.length > 0) {
-                _this.cardNum = _this.formatCard(_this.historyList[0])
+        this.getHistoryBindCard(()=> {
+            if (this.historyList.length > 0) {
+                this.cardNum = this.formatCard(this.historyList[0])
             }
         })
     },
     watch: {
-        oriCardNum: function(val, oldVal) {
+        oriCardNum(val, oldVal) {
             this.current = val.length
             this.canBuy = false
             this.isErrorCard = false
@@ -727,7 +720,7 @@ export default {
                 }
             }
         },
-        chargeItemIndex: function(val, oldVal) {
+        chargeItemIndex(val, oldVal) {
             if (this.countLists.length > 0) {
                 this.countList = this.countLists[val]
             } else {
