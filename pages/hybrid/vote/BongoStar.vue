@@ -187,7 +187,8 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/vote/index.less';
+@navBackgound: #689E32;
+@navActiveBackground: rgba(63,109,17,0.5);
+@navActiveColor: #FBC042;
+@invitedColor:#0087EB;
 </style>
-<style lang="less" scoped>
-</style>
-
