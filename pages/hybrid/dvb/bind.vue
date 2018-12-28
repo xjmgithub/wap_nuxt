@@ -282,7 +282,7 @@ export default {
             })
         },
         showAllWays: function() {
-            sendEvLog({
+            this.sendEvLog({
                 category: 'dvbservice',
                 action: 'other_paymentWay_click',
                 label: this.user_status ? 'AddCardUser' : 'NewCardUser',
