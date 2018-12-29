@@ -24,11 +24,11 @@
                         </span>
                         <span class="error-card" :class="{showError:isErrorCard}">{{$store.state.lang.h5_input_card_wrong}}</span>
                         <p class="count">
-                            <span class="current">{{current}}</span> /
-                            <span class="total">11</span>
+                            <span>{{current}}</span> /
+                            <span>11</span>
                         </p>
                         <div class="operate">
-                            <img @click="clearInput" v-show="oriCardNum!=''" src="../resource/img/recharge/delete.png">
+                            <img @click="clearInput" v-show="oriCardNum!=''" src="~assets/img/dvb/delete.png">
                         </div>
                         <ul class="history" v-show="showHistoryList">
                             <li v-for="(item,index) in historyList" @click="chooseCard(index)" :key="index">{{ formatCard(item) }}</li>
@@ -39,7 +39,7 @@
                     <div @click="focusInput">
                         <p>{{$store.state.lang.input_your_smartcard_number}}</p>
                         <div>
-                            <img src="../resource/img/icon_smart_card.png">
+                            <img src="~assets/img/dvb/icon_smart_card.png">
                         </div>
                         <p>{{$store.state.lang.recharge_your_decoder_account}}</p>
                         <p class="tips">{{$store.state.lang.Tips_check_your_Balance}}</p>
@@ -49,8 +49,7 @@
                         <a
                             href="javascript:void(0)"
                             @click="toLoadurl"
-                        >
-                         {{$store.state.lang.click_here}}</a>
+                        >{{$store.state.lang.click_here}}</a>
                         {{$store.state.lang.if_you_are_not_a_startimes_tv_user2}} 
                     </p>
                 </div>
@@ -64,7 +63,8 @@
                     <p>{{$store.state.lang.select_}}</p>
                     <ul class="recharge-style">
                         <li
-                            v-for="(item,index) in recharge_items"
+                            v-for="(item,index) in recharge_items" 
+                            :key="index"
                             @click="selected(index)"
                             :class="{selected:index == chargeItemIndex,'center-text':!(item.preferentialPlanVo&&item.preferentialPlanVo.exclusivePrice>0&&item.rate_amount!=item.preferentialPlanVo.exclusivePrice)}"
                         >
@@ -81,17 +81,17 @@
                             <img
                                 v-if="item.preferentialPlanVo&&item.preferentialPlanVo.firstRechargeGiveMoney>0"
                                 class="first-charge-img"
-                                src="../resource/img/recharge/ic_gift_def.png"
+                                src="~assets/img/dvb/ic_gift_def.png"
                             >
                             <div v-if="item.preferentialPlanVo&&item.preferentialPlanVo.type==100" class="christmas">
-                                <img src="../resource/img/recharge/img_christmaslogo.png" class="christmaslogo">
+                                <img src="~assets/img/dvb/img_christmaslogo.png" class="christmaslogo">
                                 <span>{{((item.rate_amount-item.preferentialPlanVo.exclusivePrice)*100/item.rate_amount).toFixed(0)}}% OFF</span>
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div class="first-charge" v-show="firstChargeTip">
-                    <img src="../resource/img/recharge/ic_gift_def.png">
+                    <img src="~assets/img/dvb/ic_gift_def.png">
                     <div style="width:65%;float:left;">{{firstChargeTip}}</div>
                     <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails"> {{$store.state.lang.first_recharge_detail}}</div>
                 </div>
@@ -122,7 +122,7 @@
             <img
                 v-show="loaded&&(countryCode=='NG'||countryCode=='TZ')"
                 @click="buyNow"
-                src="../resource/img/recharge/dvb_ug_off.png"
+                src="~assets/img/dvb/dvb_ug_off.png"
                 style="width:100%"
             >
             <div class="blank_bottom" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">&nbsp;</div>
@@ -131,15 +131,16 @@
                     {{$store.state.lang.more_recharge_method}}
                     <span class="all">
                         {{$store.state.lang.membership_all}}
-                        <img src="../resource/img/recharge/ic_right_def_r.png" alt>
+                        <img src="~assets/img/dvb/ic_right_def_r.png" alt>
                     </span>
                 </p>
             </div>
         </div>
-        <loading v-show="!loaded"/>
+        <loading v-show="isLoading"/>
     </div>
 </template>
 <script>
+import loading from '~/components/loading'
 export default {
     layout: 'base',
     data() {
@@ -176,10 +177,15 @@ export default {
         }
     },
     computed: {
-        oriCardNum() {
-            let reg = /^[0-9]*$/
-            let tmp = this.cardNum.replace(/\s/g, '')
-            return reg.test(tmp) ? tmp : ''
+        oriCardNum:{
+            get(){
+                let reg = /^[0-9]*$/
+                let tmp = this.cardNum.replace(/\s/g, '')
+                return reg.test(tmp) ? tmp : ''
+            },
+            set(){
+
+            }
         },
         rechargeAmount() {
             let item = this.recharge_items[this.chargeItemIndex]
@@ -674,7 +680,7 @@ export default {
             })
         }
     },
-    created() {
+    mounted() {
         this.sendEvLog({
             category: 'dvbservice',
             action: 'recharge_show',
@@ -729,6 +735,9 @@ export default {
             this.checkedValue = this.countList[0]
         }
     },
+    components:{
+        loading
+    },
     head() {
         return {
             title: this.$store.state.lang.dvb_bind_title
@@ -736,3 +745,7 @@ export default {
     }
 }
 </script>
+<style lang="less">
+@import '~assets/less/dvb/index.less';
+</style>
+
