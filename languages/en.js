@@ -5,6 +5,7 @@ export default {
     live_chat_btn:'Live Chat',
 
     // dvb recharge
+    //bind
     dvb_bind_title:'Recharge SmartCard',
     please_input_smartcard:'Please input 11 digits Smart Card number.',
     dormant:'Dormant',
@@ -32,9 +33,22 @@ export default {
     account_signed_elsewhere:'Your account is signed in elsewhere',
     error_network:'Internet server unavailable, please try later.',
 
-
-
-
+    //order
+    my_order_details: 'Order Details',
+    smart_card_no_content: 'Card No.',
+    dormant: 'Dormant',
+    dvb_acitve_to: 'Active to:',
+    active_: 'Active',
+    link_suspend: 'Suspended',
+    smart_card_balance: 'Balance:',
+    dvb_recharge_link_recharge: 'Recharge', 
+    payment_details_promation: 'Promotion',
+    recharge_no_promotion: 'No Promotion',
+    payment_details_method: 'Payment Method',
+    monthly_billing: 'Due to the monthly system billing, your recharge may be delayed. In case of problems, please call the customer service.',
+    refresh_wallet: 'Please check your eWallet balance. Then use it to recharge for your TV account.',
+    continue_to_pay: 'CONTINUE',
+    error_network: 'Internet server unavailable, please try later.',
 
 
 

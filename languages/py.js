@@ -5,6 +5,7 @@ export default {
     live_chat_btn:'Live Chat',
     
     // dvb recharge
+    //bind
     dvb_bind_title:'Recarregue o seu Smartcard',
     please_input_smartcard: 'Por favor, insera 11 dígitos de número de Cartão Inteligente.',
     dormant: 'Suspendu',
@@ -32,6 +33,22 @@ export default {
     account_signed_elsewhere: 'Sua conta está activo em outro lugar',
     error_network: 'rede de servidor não disponível, por favor tente mais tarde.',
 
+    //order
+    my_order_details: 'Detalhes do Pedido',
+    smart_card_no_content: 'Número de Cartão.',
+    dormant: 'Suspendu',
+    dvb_acitve_to: 'Ativo até:',
+    active_:  'Ativo',
+    link_suspend: 'Suspenso',
+    smart_card_balance: 'Saldo:',
+    dvb_recharge_link_recharge: 'Recarregar', 
+    payment_details_promation: 'Promoção',
+    recharge_no_promotion: 'Nenhuma promoção',
+    payment_details_method: 'Métodos de Pagamento',
+    monthly_billing:  'Devido ao faturamento mensal do sistema, sua recarga pode ser atrasada. Em caso de problemas, ligue para o serviço de atendimento ao cliente.',
+    refresh_wallet:'Por favor, verifique o seu saldo de eWallet. Em seguida, use-o para recarregar sua conta de TV.',
+    continue_to_pay:'CONTINUAR',
+    error_network:'rede de servidor não disponível, por favor tente mais tarde.',
 
 
 

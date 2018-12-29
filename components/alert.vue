@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="dialog-footer">
-            <div class="btn" @click="sure">OK</div>
+            <div class="btn" @click="sure">{{text}}</div>
         </div>
     </div>
 </template>
@@ -20,7 +20,8 @@ export default {
             style: 'none',
             callback: '',
             offsetLeft: 0,
-            offsetTop: 0
+            offsetTop: 0,
+            text:''
         }
     },
     methods: {
@@ -29,9 +30,10 @@ export default {
             this.$store.commit('HIDE_SHADOW_LAYER')
             if (this.callback) this.callback()
         },
-        show(msg, callback) {
+        show(msg, callback, text) {
             let _this = this
             this.msg = msg
+            this.text = text || 'OK'
             this.style = 'block'
             this.$store.commit('SHOW_SHADOW_LAYER')
             this.$nextTick(() => {

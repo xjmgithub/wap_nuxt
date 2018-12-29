@@ -5,6 +5,7 @@ export default {
     live_chat_btn:'Live Chat',
 
     // dvb recharge
+    //bind
     dvb_bind_title:'Recharge de carte à puce',
     please_input_smartcard:'S\'il vous plaît entrez les 11 chiffres de la carte à puce.',
     dormant:'Suspendu',
@@ -31,5 +32,28 @@ export default {
     besure_have_card: "Ce que vous avez entré ne peut correspondre à aucun numéro de carte à puce. Contactez-nous pour profiter de l'émission de télévision StarTimes et obtenir de l'aide.",
     account_signed_elsewhere:'Votre compte est connecté ailleurs',
     error_network:'Serveur internet indisponible, veuillez réessayer plus tard.',
+
+    //order
+    my_order_details: 'Détails de la Commande',
+    smart_card_no_content: 'N ° de carte.',
+    dormant: 'Suspendu',
+    dvb_acitve_to: 'Activée jusqu\'au :',
+    active_:  'Actif',
+    link_suspend:  'Suspendu',
+    smart_card_balance: 'Balance:',
+    dvb_recharge_link_recharge: 'Recharger', 
+    payment_details_promation:  'Promotion',
+    recharge_no_promotion: 'Aucune promotion',
+    payment_details_method: 'Méthodes de Payement',
+    monthly_billing:  'En raison de la facturation mensuelle du système, votre recharge peut être retardée. En cas de problème, veuillez contacter le service clientèle.',
+    refresh_wallet: 'Veuillez vérifier votre solde de portefeuille électronique. Ensuite, utilisez-le pour recharger votre compte TV.',
+    continue_to_pay: 'CONTINUER',
+    error_network: 'Serveur internet indisponible, veuillez réessayer plus tard.',
+
+
+
+
+
+
 
 }
