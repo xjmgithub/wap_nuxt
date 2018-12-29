@@ -37,7 +37,7 @@ module.exports = {
     ** Global CSS
     */
     css: [
-        '~assets/css/page-animate.css'
+        '~assets/css/normalize.css'
         // '~assets/css/animate.min.css'
     ],
     transition: {

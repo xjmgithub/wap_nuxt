@@ -1,5 +1,6 @@
 <template>
     <div>
+        <loading style="z-index:-1"/>
         <nuxt/>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
@@ -11,11 +12,13 @@ import Vue from 'vue'
 import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import shadowLayer from '~/components/shadow-layer'
+import loading from '~/components/loading'
 export default {
     components: {
         alert,
         confirm,
-        shadowLayer
+        shadowLayer,
+        loading
     },
     computed: {
         layer() {
@@ -37,7 +40,6 @@ export default {
 }
 </script>
 <style lang="less">
-@import '~/assets/css/normalize.css';
 @font-face {
     font-family: Roboto;
     src: url('~assets/fonts/Roboto-Regular.ttf');
