@@ -1,6 +1,6 @@
 <template>
     <div id="wrapper">
-        <div class="content" style="min-height:101vh">
+        <div class="content" style="min-height:101%">
             <div class="pull_refresh">
                 <div style="padding-top:1rem;" v-show="!loadHistoryState">
                     <span class="refresh_text" v-show="!historyEnd">Pull down to see more history</span>
