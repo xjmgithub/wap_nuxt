@@ -433,75 +433,78 @@ export default {
         }
     }
 }
-sessionStorage.setItem('step2', 1)
-// invoke deviceInfo
-if (this.isApp == 1 || this.isApp == 2) {
-    let system = this.isApp == 1 ? 'android' : 'ios'
-    let dstr = 'APP(' + system + ',<?php echo $appVersionCode; ?>)'
-    dstr += ';H5(' + system
-    if (this.isApp == 1) {
-        let s = navigator.userAgent.indexOf('Android')
-        if (s > 0) {
-            dstr += '_' + navigator.userAgent.substr(s + 8).split(';')[0]
-        }
-    } else {
-        let s = navigator.userAgent.indexOf('iPhone OS')
-        if (s > 0) {
-            dstr += '_' + navigator.userAgent.substr(s + 10).split(' ')[0]
-        }
-    }
-    dstr += ', Chrome'
-    let b = navigator.userAgent.indexOf('Version')
-    let c = navigator.userAgent.indexOf('Chrome')
-    if (b > 0) {
-        let s = navigator.userAgent
-            .substr(b)
-            .split(' ')[1]
-            .split('/')[1]
-        if (s) {
-            dstr += '_' + s
-        }
-    } else {
-        if (c > 0) {
-            let s = navigator.userAgent
-                .substr(c)
-                .split(' ')[0]
-                .split('/')[1]
-            if (s) {
-                dstr += '_' + s
-            }
-        }
-    }
-    dstr += ')'
-} else {
-    let plat = 'others'
-    if (navigator.userAgent.indexOf('Android') > 0) {
-        plat = 'android'
-    } else if (navigator.userAgent.indexOf('iPhone') > 0) {
-        plat = 'ios'
-    }
-    let dstr = 'H5(' + plat + ', MQQBrowser'
-    let b = navigator.userAgent.indexOf('Version')
-    let c = navigator.userAgent.indexOf('Chrome')
-    if (b > 0) {
-        let s = navigator.userAgent
-            .substr(b)
-            .split(' ')[1]
-            .split('/')[1]
-        if (s) {
-            dstr += '_' + s
-        }
-    } else {
-        if (c > 0) {
-            let s = navigator.userAgent
-                .substr(c)
-                .split(' ')[0]
-                .split('/')[1]
-            if (s) {
-                dstr += '_' + s
-            }
-        }
-    }
-    dstr += ')'
-}
+// sessionStorage.setItem('step2', 1)
+// // invoke deviceInfo
+// if (this.isApp == 1 || this.isApp == 2) {
+//     let system = this.isApp == 1 ? 'android' : 'ios'
+//     let dstr = 'APP(' + system + ',<?php echo $appVersionCode; ?>)'
+//     dstr += ';H5(' + system
+//     if (this.isApp == 1) {
+//         let s = navigator.userAgent.indexOf('Android')
+//         if (s > 0) {
+//             dstr += '_' + navigator.userAgent.substr(s + 8).split(';')[0]
+//         }
+//     } else {
+//         let s = navigator.userAgent.indexOf('iPhone OS')
+//         if (s > 0) {
+//             dstr += '_' + navigator.userAgent.substr(s + 10).split(' ')[0]
+//         }
+//     }
+//     dstr += ', Chrome'
+//     let b = navigator.userAgent.indexOf('Version')
+//     let c = navigator.userAgent.indexOf('Chrome')
+//     if (b > 0) {
+//         let s = navigator.userAgent
+//             .substr(b)
+//             .split(' ')[1]
+//             .split('/')[1]
+//         if (s) {
+//             dstr += '_' + s
+//         }
+//     } else {
+//         if (c > 0) {
+//             let s = navigator.userAgent
+//                 .substr(c)
+//                 .split(' ')[0]
+//                 .split('/')[1]
+//             if (s) {
+//                 dstr += '_' + s
+//             }
+//         }
+//     }
+//     dstr += ')'
+// } else {
+//     let plat = 'others'
+//     if (navigator.userAgent.indexOf('Android') > 0) {
+//         plat = 'android'
+//     } else if (navigator.userAgent.indexOf('iPhone') > 0) {
+//         plat = 'ios'
+//     }
+//     let dstr = 'H5(' + plat + ', MQQBrowser'
+//     let b = navigator.userAgent.indexOf('Version')
+//     let c = navigator.userAgent.indexOf('Chrome')
+//     if (b > 0) {
+//         let s = navigator.userAgent
+//             .substr(b)
+//             .split(' ')[1]
+//             .split('/')[1]
+//         if (s) {
+//             dstr += '_' + s
+//         }
+//     } else {
+//         if (c > 0) {
+//             let s = navigator.userAgent
+//                 .substr(c)
+//                 .split(' ')[0]
+//                 .split('/')[1]
+//             if (s) {
+//                 dstr += '_' + s
+//             }
+//         }
+//     }
+//     dstr += ')'
+// }
 </script>
+<style lang="less">
+@import '~assets/less/dvb/index.less';
+</style>
