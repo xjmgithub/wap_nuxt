@@ -4,16 +4,12 @@
             <label class="radio">
                 <input
                     type="radio"
-                    name="pay-options"
-                    value="item.code"
+                    :name="item.name"
+                    :value="item.code"
                     @click="checkThis(item.code)"
-                    :checked="item.checked?true:false"
                 >
                 <i/>
-                <!-- <div class="img-box" v-show="item.imgUrl">
-          <img :src="item.imgUrl" alt=""> 
-                </div>-->
-                <span :class="{ml15:item.imgUrl!=''}" id="labelValue">{{item.value}}</span>
+                <span>{{item.value}}</span>
             </label>
         </div>
     </div>
@@ -36,14 +32,12 @@ export default {
 </script>
 <style scoped>
 .radio-box > div {
-    margin-top: 0.4rem;
+    margin: 0.3rem 0;
 }
 .radio-box .radio {
     position: relative;
     cursor: pointer;
     display: block;
-    line-height: 1.65rem;
-    height: 1.65rem;
 }
 .radio-box input {
     position: absolute;
@@ -61,10 +55,10 @@ export default {
 .radio-box .radio i {
     display: block;
     position: absolute;
-    top: 0.35rem;
+    top: 0.25rem;
     left: 0;
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1rem;
+    height: 1rem;
     outline: 0;
     border: 2px solid #ddd;
     background: #ffffff;
@@ -76,8 +70,8 @@ export default {
     content: '';
     top: 0.13rem;
     left: 0.13rem;
-    width: 0.6rem;
-    height: 0.6rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
     background-color: #008be9;
     opacity: 0;
@@ -95,7 +89,5 @@ export default {
     font-size: 0.9rem;
     margin-left: 1.5rem;
 }
-.radio-box span.ml15 {
-    margin-left: 0.5rem;
-}
+
 </style>
