@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" ref="wrapper">
+    <div class="wrapper" @scroll="scroll" >
         <div v-show="!isDone && !isSucessed">
             <div class="description">
                 <p>Dear users of StarTimes ON, thanks for your participation in advance. Your feedback is important to us! </p>
@@ -244,11 +244,36 @@ export default {
             loaded: false,
             isDone:false,
             isSucessed:false,
-            openTime:''
+            openTime:'',
+            box:null
         }
     },
     mounted(){
         this.openTime = new Date().getTime()
+        history.pushState({},'Survey','#')
+        window.addEventListener('popstate',()=>{
+            if(!this.isSucessed && !this.isDone){
+                let submitTime = new Date().getTime()
+                let timediff = submitTime - this.openTime
+                this.sendEvLog({
+                    category: 'questionnaire',
+                    action: 'back',
+                    label: 6,
+                    value: 0,
+                    timediff:timediff,
+                    answers1:this.allAnswer[0],
+                    answers2:this.allAnswer[1],
+                    answers3:this.allAnswer[2],
+                    answers4:this.allAnswer[3],
+                    answers5:this.allAnswer[4],
+                    answers6:this.allAnswer[5],
+                    answers7:this.allAnswer[6],
+                    answers8:this.allAnswer[7],
+                })
+            }
+            window.getChannelId && window.getChannelId.finish()
+            
+        })
         this.$axios({
                 url: `/voting/v1/questionnaire/has_submitted?questionnaire_id=6`,
                 method: 'get',
@@ -274,10 +299,7 @@ export default {
             this.allAnswer.forEach((ele, index) => {
                 if(ele == ''){
                     canSubmit = false
-                    let anchor = this.$el.querySelector('#question-'+index)
-                    this.$nextTick(() => {
-                        document.documentElement.scrollTop = anchor.offsetTop;
-                    })
+                    history.pushState({},'Survey','#question-1')
                     return
                 }
             });
@@ -325,6 +347,10 @@ export default {
                 label: 6,
                 value: ( this.isDone || this.isSucessed ) ? 1 : 0,
             })
+            
+        },
+        scroll(){
+            console.log(11)
         }
     },
     components: {
@@ -332,8 +358,10 @@ export default {
         loading,
         mButton
     },
-    header: {
-        title: 'Survey'
+    head() {
+        return {
+            title: 'Survey'
+        }
     }
 }
 </script>
