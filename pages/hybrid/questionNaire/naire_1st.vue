@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div v-show="!isDone && !isSucessed">
+        <div v-show="!isDone && !isSucessed && initLoading">
             <div class="description">
                 <p>Dear users of StarTimes ON, thanks for your participation in advance. Your feedback is important to us! </p>
                 <p>This survey is purely intended to help improve the users’ experience with StarTimes ON; all information collected here will be protected and will never be shared with others. Thanks again!</p>
@@ -16,7 +16,7 @@
             </div>
             <loading v-show="loaded" />
         </div>
-        <div v-show="isDone" class="done">
+        <div v-show="isDone && initLoading " class="done">
             <img src="~assets/img/naire/done.png" alt="">
             <p>You have already submitted. Thank you again.</p>
             <mButton @click="ok" :text="'OK'" class="ok"/>
@@ -243,6 +243,7 @@ export default {
             loaded: false,
             isDone:false,
             isSucessed:false,
+            initLoading:false,
             openTime:'',
             answers1:'',
             answers2:'',
@@ -287,6 +288,7 @@ export default {
             }).then(res => {
                 if (res.data.code == 0) {
                     this.isDone = res.data.data
+                    this.initLoading = true
                     this.sendEvLog({
                         category: 'questionnaire',
                         action: 'show',
@@ -392,6 +394,7 @@ export default {
         },
     },
     computed: {
+        allAnswer(){
         allAnswer(){
             return [
                 this.answers1,
