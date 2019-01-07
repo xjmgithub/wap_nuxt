@@ -395,7 +395,6 @@ export default {
     },
     computed: {
         allAnswer(){
-        allAnswer(){
             return [
                 this.answers1,
                 this.answers2,
