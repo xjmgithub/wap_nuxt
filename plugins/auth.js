@@ -35,7 +35,9 @@ export default ({ app: { router }, store }) => {
                 next()
             } else {
                 if (store.state.appType == 1) {
-                    next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
+                    window.getChannelId.isLogin()
+
+                    //next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
                 } else if (store.state.appType == 2) {
                     next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
                 } else {
