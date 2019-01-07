@@ -62,4 +62,7 @@ body {
 .clearfix {
     zoom: 1;
 }
+#wrapper{
+    min-height: 100%;
+}
 </style>
