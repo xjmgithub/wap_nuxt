@@ -244,8 +244,7 @@ export default {
             loaded: false,
             isDone:false,
             isSucessed:false,
-            openTime:'',
-            box:null
+            openTime:''
         }
     },
     mounted(){
@@ -296,13 +295,18 @@ export default {
         },
         submit(){
             let canSubmit = true
-            this.allAnswer.forEach((ele, index) => {
-                if(ele == ''){
-                    canSubmit = false
-                    history.pushState({},'Survey','#question-1')
-                    return
-                }
-            });
+            try {
+                this.allAnswer.forEach((ele, index) => {
+                    if(ele == ''){
+                        canSubmit = false
+                        document.querySelector('#question-'+index).scrollIntoView(true);
+                        throw new Error("EndIterative");
+                    }
+                });
+            } catch(e) {
+                if(e.message!="EndIterative") throw e;
+            };
+
             if(!canSubmit) return
             this.loaded = true
             let submitTime = new Date().getTime()
