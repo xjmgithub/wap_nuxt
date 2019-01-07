@@ -37,20 +37,11 @@ export default {
 .radio-box .radio {
     position: relative;
     cursor: pointer;
-    display: block;
+    /* display: block; */
 }
 .radio-box input {
     position: absolute;
     left: -9999px;
-}
-.radio-box .img-box {
-    display: inline-block;
-    margin-left: 1.5rem;
-    vertical-align: middle;
-}
-.radio-box .img-box img {
-    height: 1.5rem;
-    display: block;
 }
 .radio-box .radio i {
     display: block;
@@ -64,12 +55,11 @@ export default {
     background: #ffffff;
     border-radius: 50%;
 }
-
 .radio-box i:after {
     position: absolute;
     content: '';
-    top: 0.13rem;
-    left: 0.13rem;
+    top: 0.125rem;
+    left: 0.125rem;
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;

@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" @scroll="scroll" >
+    <div class="wrapper">
         <div v-show="!isDone && !isSucessed">
             <div class="description">
                 <p>Dear users of StarTimes ON, thanks for your participation in advance. Your feedback is important to us! </p>
@@ -222,7 +222,7 @@ export default {
                 {
                     question:'8.Will you recommend this app to your friend?',
                     answer:[
-                         {
+                        {
                             code: 'A',
                             value: 'A.Definitely',
                             name: 'recommend'
@@ -240,11 +240,18 @@ export default {
                     ]
                 }
             ],
-            allAnswer:['','','','','','','',''],
             loaded: false,
             isDone:false,
             isSucessed:false,
-            openTime:''
+            openTime:'',
+            answers1:'',
+            answers2:'',
+            answers3:'',
+            answers4:'',
+            answers5:'',
+            answers6:'',
+            answers7:'',
+            answers8:''
         }
     },
     mounted(){
@@ -260,14 +267,14 @@ export default {
                     label: 6,
                     value: 0,
                     timediff:timediff,
-                    answers1:this.allAnswer[0],
-                    answers2:this.allAnswer[1],
-                    answers3:this.allAnswer[2],
-                    answers4:this.allAnswer[3],
-                    answers5:this.allAnswer[4],
-                    answers6:this.allAnswer[5],
-                    answers7:this.allAnswer[6],
-                    answers8:this.allAnswer[7],
+                    answers1:this.answers1,
+                    answers2:this.answers2,
+                    answers3:this.answers3,
+                    answers4:this.answers4,
+                    answers5:this.answers5,
+                    answers6:this.answers6,
+                    answers7:this.answers7,
+                    answers8:this.answers8
                 })
             }
             window.getChannelId && window.getChannelId.finish()
@@ -291,7 +298,32 @@ export default {
     },
     methods: {
         changeItem(data,index) {
-            this.allAnswer[index] = data
+            switch(index){
+                case 0:
+                    this.answers1 = data
+                    break;
+                case 1:
+                    this.answers2 = data
+                    break;
+                case 2:
+                    this.answers3 = data
+                    break;
+                case 3:
+                    this.answers4 = data
+                    break;
+                case 4:
+                    this.answers5 = data
+                    break;
+                case 5:
+                    this.answers6 = data
+                    break;
+                case 6:
+                    this.answers7 = data
+                    break;
+                case 7:
+                    this.answers8 = data
+                    break;
+            }
         },
         submit(){
             let canSubmit = true
@@ -308,7 +340,6 @@ export default {
             } catch(e) {
                 if(e.message!="EndIterative") throw e;
             };
-
             if(!canSubmit) return
             this.loaded = true
             let submitTime = new Date().getTime()
@@ -319,6 +350,7 @@ export default {
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
                 },
+                timeout: 10000,
                 data: qs.stringify({
                         questionnaire_id: 6,
                     }),
@@ -326,7 +358,6 @@ export default {
                 if (res.data.code == 0 && res.data.message=='success') {
                     this.isSucessed = true
                     this.loaded = false
-
                 }
                 this.sendEvLog({
                     category: 'questionnaire',
@@ -334,17 +365,19 @@ export default {
                     label: 6,
                     value: this.isSucessed ? 1 : 0,
                     timediff:timediff,
-                    answers1:this.allAnswer[0],
-                    answers2:this.allAnswer[1],
-                    answers3:this.allAnswer[2],
-                    answers4:this.allAnswer[3],
-                    answers5:this.allAnswer[4],
-                    answers6:this.allAnswer[5],
-                    answers7:this.allAnswer[6],
-                    answers8:this.allAnswer[7],
+                    answers1:this.answers1,
+                    answers2:this.answers2,
+                    answers3:this.answers3,
+                    answers4:this.answers4,
+                    answers5:this.answers5,
+                    answers6:this.answers6,
+                    answers7:this.answers7,
+                    answers8:this.answers8
                 })
             }).catch(err=>{
-                this.$alert('Network  error!')
+                this.$alert('Network  error!',()=>{
+                    this.loaded = false
+                })
             })
         },
         ok(){
@@ -357,8 +390,20 @@ export default {
             window.getChannelId && window.getChannelId.finish()
             
         },
-        scroll(){
-            console.log(11)
+    },
+    computed: {
+        allAnswer(){
+            return [
+                this.answers1,
+                this.answers2,
+                this.answers3,
+                this.answers4,
+                this.answers5,
+                this.answers6,
+                this.answers7,
+                this.answers8
+            ]
+           
         }
     },
     components: {
