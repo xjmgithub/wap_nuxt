@@ -298,9 +298,11 @@ export default {
             try {
                 this.allAnswer.forEach((ele, index) => {
                     if(ele == ''){
-                        canSubmit = false
-                        document.querySelector('#question-'+index).scrollIntoView(true);
-                        throw new Error("EndIterative");
+                        this.$alert('Please answer all questions before you submit.',()=>{
+                            canSubmit = false
+                            document.querySelector('#question-'+index).scrollIntoView(true);
+                            throw new Error("EndIterative");
+                        })
                     }
                 });
             } catch(e) {
@@ -341,16 +343,18 @@ export default {
                     answers7:this.allAnswer[6],
                     answers8:this.allAnswer[7],
                 })
+            }).catch(err=>{
+                this.$alert('Network  error!')
             })
         },
         ok(){
-            // TODO 返回入口页
             this.sendEvLog({
                 category: 'questionnaire',
                 action: 'back',
                 label: 6,
                 value: ( this.isDone || this.isSucessed ) ? 1 : 0,
             })
+            window.getChannelId && window.getChannelId.finish()
             
         },
         scroll(){
