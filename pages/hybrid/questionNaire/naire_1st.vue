@@ -298,11 +298,11 @@ export default {
             try {
                 this.allAnswer.forEach((ele, index) => {
                     if(ele == ''){
+                        canSubmit = false
                         this.$alert('Please answer all questions before you submit.',()=>{
-                            canSubmit = false
                             document.querySelector('#question-'+index).scrollIntoView(true);
-                            throw new Error("EndIterative");
                         })
+                        throw new Error("EndIterative");
                     }
                 });
             } catch(e) {
