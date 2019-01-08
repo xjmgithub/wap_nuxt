@@ -473,6 +473,8 @@ export default {
             border-radius: 10px;
             p {
                 color: #333333;
+                margin-top:.6rem;
+
             }
             span {
                 color: #666666;
