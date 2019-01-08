@@ -3,7 +3,8 @@
         <div v-show="!isDone && !isSucessed && initLoading">
             <div class="description">
                 <p>Dear users of StarTimes ON, thanks for your participation in advance. Your feedback is important to us! </p>
-                <p>This survey is purely intended to help improve the users’ experience with StarTimes ON; all information collected here will be protected and will never be shared with others. Thanks again!</p>
+                <p>This survey is purely intended to help improve the users’ experience with StarTimes ON; all information collected here will be protected and will never be shared with others. </p>
+                <p>Thanks again!</p>
             </div>
             <div class="content">
                 <div class="question">
@@ -40,201 +41,201 @@ export default {
         return {
             naireList:[
                 {
-                    question:'1.Your Gender please?',
+                    question:'1. Your Gender please?',
                     answer:[
                         {
                             code: 'A',
-                            value: 'A.Male',
+                            value: 'A. Male',
                             name: 'gender'
                         },
                         {
                             code: 'B',
-                            value: 'B.Female',
+                            value: 'B. Female',
                             name: 'gender'
                         }
                     ],
                 },
                 {
-                    question:'2.Your Age please?',
+                    question:'2. Your Age please?',
                     answer:[
                         {
                             code: 'A',
-                            value: 'A.<18',
+                            value: 'A. <18',
                             name: 'age'
                         },
                         {
                             code: 'B',
-                            value: 'B.18-24',
+                            value: 'B. 18-24',
                             name: 'age'
                         },
                         {
                             code: 'C',
-                            value: 'C.25-29',
+                            value: 'C. 25-29',
                             name: 'age'
                         },
                         {
                             code: 'D',
-                            value: 'D.30-34',
+                            value: 'D. 30-34',
                             name: 'age'
                         },
                         {
                             code: 'E',
-                            value: 'E.35-44',
+                            value: 'E. 35-44',
                             name: 'age'
                         },
                         {
                             code: 'F',
-                            value: 'F.>45',
+                            value: 'F. >45',
                             name: 'age'
                         }
                     ]
                 },
                 {
-                    question:'3.How did you learn about StarTimes ON?',
+                    question:'3. How did you learn about StarTimes ON?',
                     answer:[
                          {
                             code: 'A',
-                            value: 'A.Google Search',
+                            value: 'A. Google Search',
                             name: 'download'
                         },
                         {
                             code: 'B',
-                            value: 'B.TV Ads.',
+                            value: 'B. TV Ads.',
                             name: 'download'
                         },
                         {
                             code: 'C',
-                            value: 'C.Recommendation from friends',
+                            value: 'C. Recommendation from friends',
                             name: 'download'
                         },
                         {
                             code: 'D',
-                            value: 'D.StarTimes Facebook Homepage',
+                            value: 'D. StarTimes Facebook Homepage',
                             name: 'download'
                         },
                         {
                             code: 'E',
-                            value: 'E.Others',
+                            value: 'E. Others',
                             name: 'download'
                         }
                     ]
                 },
                 {
-                    question:'4.How do you like our video contents?',
+                    question:'4. How do you like our video contents?',
                     answer:[
                         {
                             code: 'A',
-                            value: 'A.Very much',
+                            value: 'A. Very much',
                             name: 'contents'
                         },
                         {
                             code: 'B',
-                            value: 'B.Just so so',
+                            value: 'B. Just so so',
                             name: 'contents'
                         },
                         {
                             code: 'C',
-                            value: 'C.Not at all',
+                            value: 'C. Not at all',
                             name: 'contents'
                         },
                         {
                             code: 'D',
-                            value: 'D.I don’t know',
+                            value: 'D. I don’t know',
                             name: 'contents'
                         }
                     ]
                 },
                 {
-                    question:'5.Have you ever paid in the APP?',
+                    question:'5. Have you ever paid in the APP?',
                     answer:[
                         {
                             code: 'A',
-                            value: 'A.Yes, I have',
+                            value: 'A. Yes, I have',
                             name: 'paid'
                         },
                         {
                             code: 'B',
-                            value: 'B.No, never',
+                            value: 'B. No, never',
                             name: 'paid'
                         },
                         {
                             code: 'C',
-                            value: 'C.I don’t know there is some content I need pay to watch in this App',
+                            value: 'C. I don’t know there is some content I need pay to watch in this App',
                             name: 'paid'
                         }
                     ]
                 },
                 {
-                    question:'6.How do you rate the interaction experience of this App?',
+                    question:'6. How do you rate the interaction experience of this App?',
                     answer:[
                         {
                             code: 'A',
-                            value: 'A.Very good',
+                            value: 'A. Very good',
                             name: 'interaction'
                         },
                         {
                             code: 'B',
-                            value: 'B.Good',
+                            value: 'B. Good',
                             name: 'interaction'
                         },
                         {
                             code: 'C',
-                            value: 'C.Just OK',
+                            value: 'C. Just OK',
                             name: 'interaction'
                         },
                         {
                             code: 'D',
-                            value: 'D.Bad',
+                            value: 'D. Bad',
                             name: 'interaction'
                         },
                         {
                             code: 'E',
-                            value: 'E.Very Bad',
+                            value: 'E. Very Bad',
                             name: 'interaction'
                         }
                     ]
                 },
                 {
-                    question:'7.How do you like this APP generally?',
+                    question:'7. How do you like this APP generally?',
                     answer:[
                         {
                             code: 'A',
-                            value: 'A.Very much',
+                            value: 'A. Very much',
                             name: 'like'
                         },
                         {
                             code: 'B',
-                            value: 'B.Just so so',
+                            value: 'B. Just so so',
                             name: 'like'
                         },
                         {
                             code: 'C',
-                            value: 'C.Not at all',
+                            value: 'C. Not at all',
                             name: 'like'
                         },
                         {
                             code: 'D',
-                            value: 'D.I don’t know',
+                            value: 'D. I don’t know',
                             name: 'like'
                         }
                     ]
                 },
                 {
-                    question:'8.Will you recommend this app to your friend?',
+                    question:'8. Will you recommend this app to your friend?',
                     answer:[
                         {
                             code: 'A',
-                            value: 'A.Definitely',
+                            value: 'A. Definitely',
                             name: 'recommend'
                         },
                         {
                             code: 'B',
-                            value: 'B.Maybe',
+                            value: 'B. Maybe',
                             name: 'recommend'
                         },
                         {
                             code: 'C',
-                            value: 'C.No Way!',
+                            value: 'C. No Way!',
                             name: 'recommend'
                         }
                     ]
@@ -457,7 +458,7 @@ export default {
     margin: 0 auto;
     width: 100%;
     .description {
-        text-align: center;
+        text-align: left;
         padding: 1.5rem 1rem;
         background: url('~assets/img/naire/header_bg.png') no-repeat;
         background-color: #1657d7;

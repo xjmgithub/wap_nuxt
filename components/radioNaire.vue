@@ -46,7 +46,7 @@ export default {
 .radio-box .radio i {
     display: block;
     position: absolute;
-    top: 0.25rem;
+    top: 0.14rem;
     left: 0;
     width: 1rem;
     height: 1rem;
