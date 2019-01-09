@@ -35,7 +35,7 @@ export default ({ app: { router }, store }) => {
                 next()
             } else {
                 if (store.state.appType == 1) {
-                    if (store.state.appVersionCode > 5900) {
+                    if (store.state.appVersionCode >= 51000) {
                         window && window.getChannelId && window.getChannelId.isLogin()
                     } else {
                         toNativePage('com.star.mobile.video.account.LoginActivity')
