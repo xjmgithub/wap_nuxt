@@ -428,7 +428,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .btnStyle {
     color: #0087eb;
     background-color: #fff;
@@ -461,7 +461,6 @@ export default {
 }
 .wrapper {
     height: 100%;
-    min-height: 100vh;
     margin: 0 auto;
     width: 100%;
     .description {
