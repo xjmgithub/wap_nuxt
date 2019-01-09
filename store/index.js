@@ -19,6 +19,7 @@ export const state = () => ({
     appVersionCode: '-1',
     gaClientId: '',
     lang: {},
+    langType:'en',
     shadowStatus: false,
     payToken: '',
     user: null,
@@ -37,6 +38,9 @@ export const state = () => ({
 export const mutations = {
     SET_LANG: function(state, lang) {
         state.lang = lang
+    },
+    SET_LANG_TYPE: function(state, type) {
+        state.langType = type
     },
     SET_DEVICE: function(state, deviceId) {
         state.deviceId = deviceId
@@ -116,12 +120,16 @@ export const actions = {
         // set language
         let language = req.headers['lncode'] || req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
+            commit('SET_LANG_TYPE',language)
             commit('SET_LANG', LANG.fy)
         } else if (language.indexOf('sw') >= 0) {
+            commit('SET_LANG_TYPE',language)
             commit('SET_LANG', LANG.sy)
         } else if (language.indexOf('pt') >= 0) {
+            commit('SET_LANG_TYPE',language)
             commit('SET_LANG', LANG.py)
         } else {
+            commit('SET_LANG_TYPE',language)
             commit('SET_LANG', LANG.en)
         }
 
