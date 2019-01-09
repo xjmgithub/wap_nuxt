@@ -68,7 +68,7 @@ export default ({ app: { router, $axios }, store, query }) => {
         }
     }
     let commonLog = {
-        al: store.state.lang, // App语言
+        al: store.state.langType, // App语言
         bst: store.state.user && store.state.user.smartCartCount, // 用户绑卡状态
         car: store.state.carrier,
         curp: document.title, // 当前页面
