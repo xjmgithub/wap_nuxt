@@ -259,11 +259,10 @@ export default {
     mounted() {
         this.openTime = new Date().getTime()
         history.pushState({}, 'Survey', '#')
-        window.addEventListener('popstate', evt => {
-            let thisTime = new Date().getTime()
-            if (thisTime - this.openTime > 700) {
+        window.addEventListener('popstate', () => {
+            let submitTime = new Date().getTime()
+            if (submitTime - this.openTime > 2000) {
                 if (!this.isSucessed && !this.isDone) {
-                    let submitTime = new Date().getTime()
                     let timediff = submitTime - this.openTime
                     this.sendEvLog({
                         category: 'questionnaire',
