@@ -1,4 +1,4 @@
-import { getCookie,toNativePage } from '~/functions/utils'
+import { getCookie, toNativePage } from '~/functions/utils'
 let auth_ignore = [
     /^\/hybrid\/account\/login/,
     /^\/hybrid\/account\/logout/,
@@ -15,7 +15,7 @@ let auth_ignore = [
     /^\/hybrid\/packet/,
     /^\/hybrid\/lands/,
     /^\/hybrid\/tools/,
-    /^\/hybrid\/vote/,
+    /^\/hybrid\/vote/
     // /^\/hybrid\/questionNaire/,
 ]
 function inIgnore(url) {
@@ -35,8 +35,11 @@ export default ({ app: { router }, store }) => {
                 next()
             } else {
                 if (store.state.appType == 1) {
-                    window && window.getChannelId && window.getChannelId.isLogin()
-                    toNativePage('com.star.mobile.video.account.LoginActivity')
+                    if (store.state.appVersionCode > 5900) {
+                        window && window.getChannelId && window.getChannelId.isLogin()
+                    } else {
+                        toNativePage('com.star.mobile.video.account.LoginActivity')
+                    }
                     // next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))
                 } else if (store.state.appType == 2) {
                     next('/hybrid/account/tokenfail?pre=' + encodeURIComponent(to.fullPath))

@@ -378,6 +378,21 @@ export default {
                     answers8:this.answers8
                 })
             }).catch(err=>{
+                this.sendEvLog({
+                    category: 'questionnaire',
+                    action: 'submit',
+                    label: 6,
+                    value: 0,
+                    timediff:timediff,
+                    answers1:this.answers1,
+                    answers2:this.answers2,
+                    answers3:this.answers3,
+                    answers4:this.answers4,
+                    answers5:this.answers5,
+                    answers6:this.answers6,
+                    answers7:this.answers7,
+                    answers8:this.answers8
+                })
                 this.$alert('Network  error!',()=>{
                     this.loaded = false
                 })
