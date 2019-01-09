@@ -1,7 +1,7 @@
 <template>
     <div>
-        <loading style="z-index:-1"/>
-        <nuxt/>
+        <loading/>
+        <nuxt style="z-index:2;position:absolute;" />
         <alert ref="alert"/>
         <confirm ref="confirm"/>
         <shadowLayer v-show="layer"/>
