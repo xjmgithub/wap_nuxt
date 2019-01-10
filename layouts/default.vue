@@ -1,5 +1,5 @@
 <template>
-    <div class="frame" :class="{shownav:false}" style="overflow:visible">
+    <div class="frame" :class="{shownav:showNav}" style="overflow:visible">
         <mheader @redirect="goToPage"/>
         <nuxt/>
         <div class="slide-bar">
@@ -16,6 +16,11 @@
 <script>
 import mheader from '~/components/header.vue'
 export default {
+    computed:{
+        showNav(){
+            return this.$store.state.navState
+        }
+    },
     components: {
         mheader
     },
@@ -47,7 +52,7 @@ body {
 }
 
 .frame{
-    transition: transform 0.5s;
+    transition: transform 0.3s;
     overflow: visible;
 }
 .frame.shownav{
