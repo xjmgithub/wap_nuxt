@@ -102,22 +102,27 @@ export default {
                         },
                         {
                             code: 'B',
-                            value: 'B. TV Ads.',
+                            value: 'B. GooglePlay',
                             name: 'download'
                         },
                         {
                             code: 'C',
-                            value: 'C. Recommendation from friends',
+                            value: 'C. TV Ads.',
                             name: 'download'
                         },
                         {
                             code: 'D',
-                            value: 'D. StarTimes Facebook Homepage',
+                            value: 'D. Recommendation from friends',
                             name: 'download'
                         },
                         {
                             code: 'E',
-                            value: 'E. Others',
+                            value: 'E. StarTimes Facebook Homepage',
+                            name: 'download'
+                        },
+                        {
+                            code: 'F',
+                            value: 'F. Others',
                             name: 'download'
                         }
                     ]
@@ -223,7 +228,7 @@ export default {
                     ]
                 },
                 {
-                    question: '8. Will you recommend this app to your friend?',
+                    question: '8. Will you recommend this app to your friends?',
                     answer: [
                         {
                             code: 'A',
