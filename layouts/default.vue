@@ -25,6 +25,9 @@ export default {
                     break;
             }
         }
+    },
+    created(){
+        this.$axios.setHeader('token', this.$store.state.token)
     }
 }
 </script>
