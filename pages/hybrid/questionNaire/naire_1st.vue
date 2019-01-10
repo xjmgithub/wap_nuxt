@@ -27,7 +27,7 @@
         <div v-show="isSucessed" class="success">
             <img src="~assets/img/naire/success.png" alt>
             <p>Thank you for your participation and have a nice day!</p>
-            <mButton  v-if="appType==1" @click="ok" :text="'OK'" class="ok"/>
+            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok"/>
         </div>
     </div>
 </template>
