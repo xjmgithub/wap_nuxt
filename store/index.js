@@ -32,7 +32,8 @@ export const state = () => ({
     intervalTimer: null,
     appInitTime: new Date().getTime(),
     rankList:[],
-    serverTime:new Date()
+    serverTime:new Date(),
+    navState:false
 })
 
 export const mutations = {
@@ -105,6 +106,9 @@ export const mutations = {
     },
     SET_SERVER_TIME:function(state,val){
         state.serverTime = val
+    },
+    SET_NAV_STATE:function(state,val){
+        state.navState = val
     }
 }
 

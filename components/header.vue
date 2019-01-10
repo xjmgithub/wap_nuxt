@@ -1,6 +1,6 @@
 <template>
     <div class="m_header">
-        <img class="menu" src="~assets/img/web/ic_guidelist.png">
+        <img class="menu" @click="toggleNav" src="~assets/img/web/ic_guidelist.png">
         <img class="logo" src="~assets/img/logo.png" alt="Startimes" @click="redirect('index')">
         <div class="navigator">
             <img src="~assets/img/web/ic_home_def_g.png" @click="redirect('home')">
@@ -15,6 +15,11 @@ export default {
     methods: {
         redirect(url) {
             this.$emit('redirect', url)
+        },
+        toggleNav(){
+            let state = this.$store.state.navState
+            console.log(state)
+            this.$store.commit('SET_NAV_STATE',!state)
         }
     }
 }

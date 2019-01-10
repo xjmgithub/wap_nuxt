@@ -65,8 +65,6 @@ export default {
                             }
                         }
                     })
-                    console.log(this.antennaList)
-                    console.log(this.dishList)
                 }
             })
         },
@@ -81,17 +79,17 @@ export default {
             let data = name.toLowerCase()
             let imgUrl = ''
             if(data == 'sport plus'){
-                imgUrl = "../assets/img/web/pic_sportsplus_dtt.png"
+                imgUrl = "~assets/img/web/pic_sportsplus_dtt.png"
             }else if(data == 'unique'){
-                imgUrl = "../assets/img/web/pic_unique_dtt.png"
+                imgUrl = "~assets/img/web/pic_unique_dtt.png"
             }else if(data == 'classique'){
-                imgUrl = "../assets/img/web/pic_classique_dtt.png"
+                imgUrl = "~assets/img/web/pic_classique_dtt.png"
             }else if(data == 'nova'){
-                imgUrl = "../assets/img/web/pic_nova_dtt.png"
+                imgUrl = "~assets/img/web/pic_nova_dtt.png"
             }else if(data == 'basique'){
-                imgUrl = "../assets/img/web/pic_basique_dtt.png"
+                imgUrl = "~assets/img/web/pic_basique_dtt.png"
             }else if(data == 'sport play'){
-                imgUrl = "../assets/img/web/pic_sportsplay_dtt.png"
+                imgUrl = "~assets/img/web/pic_sportsplay_dtt.png"
             }
             return imgUrl
         },
@@ -99,19 +97,19 @@ export default {
             let data = name.toLowerCase()
             let imgUrl = ''
             if(data == 'sport plus'){
-                imgUrl = "../assets/img/web/pic_sportsplus_dth.png"
+                imgUrl = "~assets/img/web/pic_sportsplus_dth.png"
             }else if(data == 'super'){
-                imgUrl = "../assets/img/web/pic_super_dth.png"
+                imgUrl = "~assets/img/web/pic_super_dth.png"
             }else if(data == 'smart'){
-                imgUrl = "../assets/img/web/pic_smart_dth.png"
+                imgUrl = "~assets/img/web/pic_smart_dth.png"
             }else if(data == 'engilsh'){
-                imgUrl = "../assets/img/web/pic_engilsh_dth.png"
+                imgUrl = "~assets/img/web/pic_engilsh_dth.png"
             }else if(data == 'indian'){
-                imgUrl = "../assets/img/web/pic_indian_dth.png"
+                imgUrl = "~assets/img/web/pic_indian_dth.png"
             }else if(data == 'chinese'){
-                imgUrl = "../assets/img/web/pic_Chinese_dth.png"
+                imgUrl = "~assets/img/web/pic_Chinese_dth.png"
             }else if(data == 'sport play'){
-                imgUrl = "../assets/img/web/pic_sportsplay_dth.png"
+                imgUrl = "~assets/img/web/pic_sportsplay_dth.png"
             }
             return imgUrl
         }
