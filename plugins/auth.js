@@ -17,6 +17,7 @@ let auth_ignore = [
     /^\/hybrid\/tools/,
     /^\/hybrid\/vote/
     // /^\/hybrid\/questionNaire/,
+    // /^\/browser/
 ]
 function inIgnore(url) {
     let result = false

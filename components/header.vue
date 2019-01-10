@@ -1,24 +1,46 @@
 <template>
     <div class="m_header">
-        <img class="logo" src="~assets/img/logo.png" alt="Startimes">
-        <img class="user_head" src="~assets/img/icon_user_white.png" alt="Startimes">
+        <img class="menu" src="~assets/img/web/ic_guidelist.png">
+        <img class="logo" src="~assets/img/logo.png" alt="Startimes" @click="redirect('index')">
+        <div class="navigator">
+            <img src="~assets/img/web/ic_home_def_g.png" @click="redirect('home')">
+            <img src="~assets/img/web/ic_menu_def_w.png" @click="redirect('menu')">
+            <img src="~assets/img/web/ic_tvguide.png" @click="redirect('tvguide')">
+            <img src="~assets/img/web/ic_phoneplay_def_w.png" @click="redirect('phoneplay')">
+        </div>
     </div>
 </template>
-<style>
+<script>
+export default {
+    methods: {
+        redirect(url) {
+            this.$emit('redirect', url)
+        }
+    }
+}
+</script>
+<style lang="less">
 .m_header {
-    padding: 0.8rem 1rem;
-    background: #ff7a00;
-    height: 1.5rem;
-    line-height: 1.5rem;
+    padding: 0.6rem .8rem .6rem .3rem;
+    background: #222527;
+    height: 2.8rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    &>img{
+        float: left;
+        display: block;
+        height: 1.5rem;
+        margin-left:.4rem;
+    }
+    .navigator{
+        float:right;
+        img{
+            height:1.5rem;
+            margin-left:.4rem;
+        }
+    }
 }
-.logo {
-    display: block;
-    float: left;
-    height: 1.5rem;
-}
-.user_head {
-    display: block;
-    float: right;
-    height: 1.5rem;
-}
+
+
 </style>
