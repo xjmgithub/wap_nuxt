@@ -36,6 +36,7 @@ export default {
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
         this.$axios.setHeader('token', this.$store.state.token)
+        // this.$axios.setHeader('timeout', 2000)
     }
 }
 </script>

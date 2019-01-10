@@ -15,7 +15,9 @@
                 </div>
                 <mButton @click="submit" :text="'SUBMIT'" class="submit"/>
             </div>
-            <loading v-show="loaded"/>
+            <div class="loadlayer" v-show="loaded">
+                <loading/>
+            </div>
         </div>
         <div v-show="isDone && initLoading " class="done">
             <img src="~assets/img/naire/done.png" alt>
@@ -359,7 +361,7 @@ export default {
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
                 },
-                timeout: 10000,
+                timeout: 20000,
                 data: qs.stringify({
                     questionnaire_id: 6
                 })
@@ -448,7 +450,7 @@ export default {
     text-align: center;
     min-height: 100%;
     width: 100%;
-    padding-bottom:2rem;
+    padding-bottom: 2rem;
     border-top: 1px solid #1657d7;
     img {
         width: 80%;
@@ -502,6 +504,15 @@ export default {
     .success {
         .okPage;
     }
+}
+.loadlayer {
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
 }
 </style>
 
