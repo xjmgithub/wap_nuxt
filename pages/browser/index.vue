@@ -122,8 +122,7 @@ export default {
     clear: both;
 }
 .wrapper {
-    height: 100%;
-    min-height: 100vh;
+    min-height: 100%;
     padding-top: 2.8rem;
     width: 100%;
     .selfService {
