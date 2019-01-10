@@ -2,9 +2,21 @@
     <div>
         <mheader @redirect="goToPage"/>
         <nuxt/>
+        <div class="slide-bar">
+            <ul>
+                <li>
+                    asdfasdf
+                </li>
+                <li>
+                    asdfasdf
+                </li>
+                <li>
+                    asdfasdf
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
-
 <script>
 import mheader from '~/components/header.vue'
 export default {
@@ -31,12 +43,10 @@ export default {
     }
 }
 </script>
-
 <style scoped>
 html,
 body {
     padding: 0;
     margin: 0;
 }
-
 </style>
