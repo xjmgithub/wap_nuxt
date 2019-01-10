@@ -1,18 +1,12 @@
 <template>
-    <div>
+    <div style="transform: translateX(10rem);overflow: visible;">
         <mheader @redirect="goToPage"/>
         <nuxt/>
         <div class="slide-bar">
             <ul>
-                <li>
-                    asdfasdf
-                </li>
-                <li>
-                    asdfasdf
-                </li>
-                <li>
-                    asdfasdf
-                </li>
+                <li>asdfasdf</li>
+                <li>asdfasdf</li>
+                <li>asdfasdf</li>
             </ul>
         </div>
     </div>
@@ -23,22 +17,22 @@ export default {
     components: {
         mheader
     },
-    methods:{
-        goToPage(url){
-            switch(url){
+    methods: {
+        goToPage(url) {
+            switch (url) {
                 case 'home':
                     console.log(url)
-                    break;
+                    break
                 case 'menu':
-                    break;
+                    break
                 case 'tvguide':
-                    break;
+                    break
                 case 'phoneplay':
-                    break;
+                    break
             }
         }
     },
-    created(){
+    created() {
         this.$axios.setHeader('token', this.$store.state.token)
     }
 }
@@ -48,5 +42,12 @@ html,
 body {
     padding: 0;
     margin: 0;
+}
+.slide-bar {
+    position: absolute;
+    left: -10rem;
+    top: 0;
+    width:10rem;
+    background:#222527;
 }
 </style>

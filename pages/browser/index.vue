@@ -124,7 +124,7 @@ export default {
 .wrapper {
     height: 100%;
     min-height: 100vh;
-    margin: 2.8rem auto 0;
+    padding-top: 2.8rem;
     width: 100%;
     .selfService {
         .boxStyle;
