@@ -1,5 +1,5 @@
 <template>
-    <div class="frame" :class="{shownav:true}" style="overflow:visible">
+    <div class="frame" :class="{shownav:false}" style="overflow:visible">
         <mheader @redirect="goToPage"/>
         <nuxt/>
         <div class="slide-bar">
