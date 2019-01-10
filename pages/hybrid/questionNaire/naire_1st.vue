@@ -15,7 +15,7 @@
                 </div>
                 <mButton @click="submit" :text="'SUBMIT'" class="submit"/>
             </div>
-            <div class="loadlayer" v-show="true">
+            <div class="loadlayer" v-show="loaded">
                 <loading/>
             </div>
         </div>
