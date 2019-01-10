@@ -258,30 +258,35 @@ export default {
     },
     mounted() {
         this.openTime = new Date().getTime()
+        let s = navigator.userAgent.indexOf('Android')
+        let w = navigator.userAgent.substr(s + 8).split(';')[0]
+        let tag = 1
         history.pushState({}, 'Survey', '#')
         window.addEventListener('popstate', () => {
             let submitTime = new Date().getTime()
-            if (submitTime - this.openTime > 2000) {
-                if (!this.isSucessed && !this.isDone) {
-                    let timediff = submitTime - this.openTime
-                    this.sendEvLog({
-                        category: 'questionnaire',
-                        action: 'back',
-                        label: 6,
-                        value: 0,
-                        timediff: timediff,
-                        answers1: this.answers1,
-                        answers2: this.answers2,
-                        answers3: this.answers3,
-                        answers4: this.answers4,
-                        answers5: this.answers5,
-                        answers6: this.answers6,
-                        answers7: this.answers7,
-                        answers8: this.answers8
-                    })
-                }
-                window.getChannelId && window.getChannelId.finish()
+            if ('' + w < '4.5' && tag) {
+                tag = 0
+                return false
             }
+            if (!this.isSucessed && !this.isDone) {
+                let timediff = submitTime - this.openTime
+                this.sendEvLog({
+                    category: 'questionnaire',
+                    action: 'back',
+                    label: 6,
+                    value: 0,
+                    timediff: timediff,
+                    answers1: this.answers1,
+                    answers2: this.answers2,
+                    answers3: this.answers3,
+                    answers4: this.answers4,
+                    answers5: this.answers5,
+                    answers6: this.answers6,
+                    answers7: this.answers7,
+                    answers8: this.answers8
+                })
+            }
+            window.getChannelId && window.getChannelId.finish()
         })
         this.$axios({
             url: `/voting/v1/questionnaire/has_submitted?questionnaire_id=6`,
@@ -434,16 +439,16 @@ export default {
     background-color: #fff;
     width: 80%;
     font-weight: bold;
-    margin: 1.5rem auto 2rem;
+    margin: 1.5rem auto 0;
 }
 .okPage {
     background-color: #1657d7;
     color: #fff;
     font-size: 1rem;
     text-align: center;
-    height: 100%;
-    min-height: 100vh;
+    min-height: 100%;
     width: 100%;
+    padding-bottom:2rem;
     border-top: 1px solid #1657d7;
     img {
         width: 80%;
