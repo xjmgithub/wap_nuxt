@@ -17,7 +17,6 @@ export default {
     mounted() {
         let packageCode = this.$route.query.packageCode
         let id = this.$route.query.id
-        console.log(id)
         this.$axios.get(
             `/cms/v2/vup/snapshot/channels?count=500&platformTypes=1&platformTypes=0&packageCode=${packageCode}`
         ).then(res => {
@@ -36,7 +35,6 @@ export default {
                     })
                 });
             }
-        console.log(this.detailList)
         })
     },
     head() {

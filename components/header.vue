@@ -18,7 +18,6 @@ export default {
         },
         toggleNav(){
             let state = this.$store.state.navState
-            console.log(state)
             this.$store.commit('SET_NAV_STATE',!state)
         }
     }
