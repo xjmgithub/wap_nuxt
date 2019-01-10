@@ -75,7 +75,6 @@ export default {
     opacity: 1;
 }
 .radio-box span {
-    font-weight: bold;
     font-size: 0.9rem;
     margin-left: 1.5rem;
 }

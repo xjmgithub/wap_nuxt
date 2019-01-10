@@ -22,12 +22,12 @@
         <div v-show="isDone && initLoading " class="done">
             <img src="~assets/img/naire/done.png" alt>
             <p>You have already submitted. Thank you again.</p>
-            <mButton @click="ok" :text="'OK'" class="ok"/>
+            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok"/>
         </div>
         <div v-show="isSucessed" class="success">
             <img src="~assets/img/naire/success.png" alt>
             <p>Thank you for your participation and have a nice day!</p>
-            <mButton @click="ok" :text="'OK'" class="ok"/>
+            <mButton  v-if="appType==1" @click="ok" :text="'OK'" class="ok"/>
         </div>
     </div>
 </template>
@@ -41,6 +41,7 @@ export default {
     layout: 'base',
     data() {
         return {
+            appType:this.$store.state.appType,
             naireList: [
                 {
                     question: '1. Your Gender please?',
@@ -153,7 +154,7 @@ export default {
                     ]
                 },
                 {
-                    question: '5. Have you ever paid in the APP?',
+                    question: '5. Have you ever paid in the App?',
                     answer: [
                         {
                             code: 'A',
@@ -203,7 +204,7 @@ export default {
                     ]
                 },
                 {
-                    question: '7. How do you like this APP generally?',
+                    question: '7. How do you like this App generally?',
                     answer: [
                         {
                             code: 'A',
@@ -228,7 +229,7 @@ export default {
                     ]
                 },
                 {
-                    question: '8. Will you recommend this app to your friends?',
+                    question: '8. Will you recommend this App to your friends?',
                     answer: [
                         {
                             code: 'A',
@@ -493,6 +494,7 @@ export default {
             p {
                 color: #333333;
                 margin-top: 0.8rem;
+                font-weight:bold;
             }
             span {
                 color: #666666;
