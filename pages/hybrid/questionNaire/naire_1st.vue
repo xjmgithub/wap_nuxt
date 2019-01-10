@@ -15,7 +15,7 @@
                 </div>
                 <mButton @click="submit" :text="'SUBMIT'" class="submit"/>
             </div>
-            <div class="loadlayer" v-show="loaded">
+            <div class="loadlayer" v-show="true">
                 <loading/>
             </div>
         </div>
@@ -506,7 +506,7 @@ export default {
     }
 }
 .loadlayer {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(10, 52, 82, 0.46);
     width: 100%;
     height: 100%;
     position: fixed;
