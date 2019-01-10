@@ -15,13 +15,16 @@ export default {
         goToPage(url){
             switch(url){
                 case 'home':
-                    console.log(url)
+                    this.$router.push('/browser')
                     break;
                 case 'menu':
+                    this.$router.push('/browser/menu')
                     break;
                 case 'tvguide':
+                    this.$router.push('/browser/tvguide')
                     break;
                 case 'phoneplay':
+                    this.$router.push('/browser/phoneplay')
                     break;
             }
         }

@@ -19,7 +19,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scope>
 .m_header {
     padding: 0.6rem .8rem .6rem .3rem;
     background: #222527;
@@ -27,6 +27,7 @@ export default {
     position: fixed;
     top: 0;
     width: 100%;
+    box-sizing: border-box;
     &>img{
         float: left;
         display: block;
