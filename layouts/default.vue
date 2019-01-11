@@ -56,7 +56,6 @@ body {
 
 .frame{
     transition: transform 0.3s;
-    background: #222527;
 }
 .frame.shownav{
     transform: translateX(10rem);
