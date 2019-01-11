@@ -1,9 +1,11 @@
 <template>
-    <div>
+    <div class="navContain">
         <ul>
-            <li v-for="item in list" :key="item.id" :class="{choosed:item.id==choosedId}">{{item.name}}</li>
+            <li v-for="item in showList" :key="item.id" :class="{choosed:item.id==choosedId}">
+                <nuxt-link :to="{path:`/browser/programlist/${item.id}`}">{{item.name}}</nuxt-link>
+            </li>
             <li @click="toggleAll">
-                <img src="~assets/img/ic_menuarrow_def_w.png">
+                <img :class="{updown:showAll}" src="~assets/img/ic_menuarrow_def_w.png">
             </li>
         </ul>
     </div>
@@ -11,10 +13,10 @@
 <script>
 export default {
     data() {
-        let choosedId = this.$route.query.tagId
+        let choosedId = this.$route.params.id || 0
         return {
             showAll: false,
-            choosedId:choosedId,
+            choosedId: choosedId,
             list: [
                 {
                     id: 0,
@@ -111,3 +113,42 @@ export default {
     }
 }
 </script>
+
+<style lang="less">
+@import '~assets/less/browser/index.less';
+.navContain {
+    background: #222527;
+    overflow: hidden;
+    zoom: 1;
+    ul {
+        li {
+            display: block;
+            width: 21%;
+            margin: 0 2%;
+            float: left;
+            text-align: center;
+            height: 2.3rem;
+            line-height: 2.3rem;
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            a {
+                color: white;
+            }
+            &.choosed {
+                a {
+                    color: #ffbc2e;
+                }
+            }
+            img {
+                width: 0.6rem;
+                transition: transform 0.3s;
+                &.updown {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+    }
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wrapper">
         <program-category />
     </div>
 </template>
@@ -8,7 +8,7 @@ import programCategory from '~/components/web/programCategory'
 export default {
     data(){
         return {
-            tagId:this.$route.query.tagId
+            tagId:this.$route.params.id
         }
     },
     components:{
