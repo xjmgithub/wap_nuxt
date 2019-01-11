@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import programCategory from '~components/programCategory'
+import programCategory from '~/components/web/programCategory'
 export default {
     data(){
         return {
