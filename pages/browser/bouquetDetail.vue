@@ -86,8 +86,8 @@ export default {
     .bouquets{
         width: 94%;
         margin: 0 auto;
-        border-bottom: 2px solid #d8d8d8;
-        padding: 0.5rem 0 1rem 0.2rem;
+        border-bottom: 1px solid #d8d8d8;
+        padding: 0.5rem 0 .5rem 0.2rem;
         & > p {
             color: #333333;
             font-weight: 600;
@@ -114,6 +114,7 @@ export default {
             }
             .money{
                 font-size: .9rem;
+                line-height:1.9rem;
 
             }
         }
