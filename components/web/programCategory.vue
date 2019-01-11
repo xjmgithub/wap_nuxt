@@ -4,7 +4,7 @@
             <li v-for="item in showList" :key="item.id" :class="{choosed:item.id==choosedId}">
                 <nuxt-link :to="{path:`/browser/programlist/${item.id}`}">{{item.name}}</nuxt-link>
             </li>
-            <li @click="toggleAll">
+            <li @click="toggleAll" style="float:right">
                 <img :class="{updown:showAll}" src="~assets/img/ic_menuarrow_def_w.png">
             </li>
         </ul>
@@ -23,76 +23,84 @@ export default {
                     name: 'All'
                 },
                 {
-                    id: 267,
-                    name: 'wwy'
-                },
-                {
-                    id: 78,
-                    name: 'Social'
-                },
-                {
-                    id: 77,
-                    name: 'Environment'
-                },
-                {
-                    id: 71,
-                    name: 'Literature'
-                },
-                {
-                    id: 76,
-                    name: 'Medical'
-                },
-                {
-                    id: 70,
-                    name: 'Sport'
-                },
-                {
-                    id: 73,
-                    name: 'Geographic'
-                },
-                {
-                    id: 75,
-                    name: 'Technology'
-                },
-                {
-                    id: 74,
-                    name: 'Science'
-                },
-                {
-                    id: 72,
-                    name: 'International'
-                },
-                {
-                    id: 69,
-                    name: 'Religions'
-                },
-                {
-                    id: 68,
-                    name: 'Philosophy'
-                },
-                {
-                    id: 67,
-                    name: 'Educate'
-                },
-                {
-                    id: 66,
-                    name: 'Culture'
-                },
-                {
-                    id: 65,
-                    name: 'Economy'
-                },
-                {
-                    id: 64,
-                    name: 'Military'
+                    id: 62,
+                    name: 'Politics'
                 },
                 {
                     id: 63,
                     name: 'Law'
                 },
                 {
-                    id: 62,
-                    name: 'Politic'
+                    id: 64,
+                    name: 'Military'
+                },
+                {
+                    id: 65,
+                    name: 'Economy'
+                },
+                {
+                    id: 66,
+                    name: 'Cultural'
+                },
+                {
+                    id: 67,
+                    name: 'Education'
+                },
+                {
+                    id: 68,
+                    name: 'Philosophy'
+                },
+                {
+                    id: 69,
+                    name: 'Religion'
+                },
+                {
+                    id: 70,
+                    name: 'Sports'
+                },
+                {
+                    id: 71,
+                    name: 'Literature and Art'
+                },
+                {
+                    id: 72,
+                    name: 'History'
+                },
+                {
+                    id: 73,
+                    name: 'Geography'
+                },
+                {
+                    id: 74,
+                    name: 'Science'
+                },
+                {
+                    id: 75,
+                    name: 'Technology'
+                },
+                {
+                    id: 76,
+                    name: 'Healthy'
+                },
+                {
+                    id: 77,
+                    name: 'Environment'
+                },
+                {
+                    id: 78,
+                    name: 'Civil Life'
+                },
+                {
+                    id: 79,
+                    name: 'Entertainment'
+                },
+                {
+                    id: 204,
+                    name: 'Other'
+                },
+                {
+                    id: 397,
+                    name: 'Agriculture'
                 }
             ]
         }
@@ -113,7 +121,6 @@ export default {
     }
 }
 </script>
-
 <style lang="less">
 @import '~assets/less/browser/index.less';
 .navContain {
@@ -130,10 +137,11 @@ export default {
             height: 2.3rem;
             line-height: 2.3rem;
             font-size: 0.9rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
             a {
+                display: block;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
                 color: white;
             }
             &.choosed {
