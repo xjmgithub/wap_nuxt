@@ -86,7 +86,8 @@ export default {
                 color: #ffffff;
             }
             &.vip {
-                background-color: #ffbe19;
+                background-color: #FABE00;
+                color:#B27100;
             }
         }
     }

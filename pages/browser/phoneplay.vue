@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <p class="download clearfix">Download StarTimes On App to watch! <span>GO ></span></p>
+        <p class="download clearfix" @click="tolandingPage">Download StarTimes On App to watch! <span>GO ></span></p>
         <div class="channelList">
             <p class="title">{{channelList.length}} Channels live on StarTimes On</p>
             <channel 
@@ -46,6 +46,11 @@ export default {
                     });
                 }
             })
+    },
+    methods:{
+        tolandingPage(){
+            this.$router.push('/hybrid/lands')
+        }
     },
     components:{
         channel
