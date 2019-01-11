@@ -32,7 +32,7 @@ export default {
     top: 0;
     width: 100%;
     box-sizing: border-box;
-    z-index:900;
+    z-index: 999;
     &>img{
         float: left;
         display: block;
