@@ -132,6 +132,7 @@ export default {
             box-sizing: border-box;
             border-bottom: 1px solid #d8d8d8;
             border-right: 1px solid #d8d8d8;
+            position: relative;
             .lasy_bg {
                 width: 100%;
                 padding-top: 100%;
@@ -152,6 +153,7 @@ export default {
                 width: 1.5rem;
                 top: 0;
                 right: 0;
+                z-index: 3;
             }
         }
     }
