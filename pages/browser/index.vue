@@ -10,15 +10,15 @@
             <h3>Decoder Bouquets</h3>
             <span>Dish</span>
             <ul class="dish clearfix">
-                <li v-for="(item,index) in dishList" :key="index" v-show="item.imgUrl" @click="goToBouquetDetail(item)">
-                    <img :src="require(item.imgUrl)">
+                <li v-for="(item,index) in dishList" :key="index" v-show="item.className" @click="goToBouquetDetail(item)">
+                    <bgImg :bouquet-name="item.className" />
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
             <span>Antenna</span>
             <ul class="antenna clearfix">
-                <li v-for="(item,index) in antennaList" :key="index" v-show="item.imgUrl" @click="goToBouquetDetail(item)">
-                    <img :src="require(item.imgUrl)">
+                <li v-for="(item,index) in antennaList" :key="index" v-show="item.className" @click="goToBouquetDetail(item)">
+                    <bgImg :bouquet-name="item.className" />
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
@@ -36,12 +36,13 @@
 </template>
 
 <script>
+import bgImg from '~/components/web/bgImg'
 export default {
     layout: 'default',
     data() {
         return {
             dishList: [], //DTH
-            antennaList: [] ,//DTT
+            antennaList: [] //DTT
         }
     },
     mounted() {
@@ -54,13 +55,13 @@ export default {
                 if (data.length > 0) {
                     data.forEach(ele => {
                         if (ele.tvPlatForm == 'DTT') {
-                            ele.imgUrl = this.$options.filters.dttImgUrl(ele.name)
-                            if(ele.imgUrl){
+                            ele.className = this.$options.filters.dttImgUrl(ele.name)
+                            if (ele.className) {
                                 this.antennaList.push(ele)
                             }
                         } else if (ele.tvPlatForm == 'DTH') {
-                            ele.imgUrl = this.$options.filters.dthImgUrl(ele.name)
-                            if(ele.imgUrl){
+                            ele.className = this.$options.filters.dthImgUrl(ele.name)
+                            if (ele.className) {
                                 this.dishList.push(ele)
                             }
                         }
@@ -68,56 +69,46 @@ export default {
                 }
             })
         },
-        goToBouquetDetail(item){
+        goToBouquetDetail(item) {
             let packageCode = item.code
             let bouId = item.id
-            this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}`)
+            let className = item.className
+            let price = item.price
+            this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}&className=${className}&price=${price}`)
         }
     },
-    filters:{
-        dttImgUrl(name){
+    filters: {
+        dttImgUrl(name) {
             let data = name.toLowerCase()
-            let imgUrl = ''
-            if(data == 'sport plus'){
-                imgUrl = "~assets/img/web/pic_sportsplus_dtt.png"
-            }else if(data == 'unique'){
-                imgUrl = "~assets/img/web/pic_unique_dtt.png"
-            }else if(data == 'classique'){
-                imgUrl = "~assets/img/web/pic_classique_dtt.png"
-            }else if(data == 'nova'){
-                imgUrl = "~assets/img/web/pic_nova_dtt.png"
-            }else if(data == 'basique'){
-                imgUrl = "~assets/img/web/pic_basique_dtt.png"
-            }else if(data == 'sport play'){
-                imgUrl = "~assets/img/web/pic_sportsplay_dtt.png"
-            }
-            return imgUrl
+            let className = ''
+            if (data == 'sport plus') className = 'dtt-sportsplus'
+            else if (data == 'unique') className = 'dtt-unique'
+            else if (data == 'classique') className = 'dtt-classique'
+            else if (data == 'nova') className = 'dtt-nova'
+            else if (data == 'basique') className = 'dtt-basique'
+            else if (data == 'sport play') className = 'dtt-sportsplay'
+            return className
         },
-        dthImgUrl(name){
+        dthImgUrl(name) {
             let data = name.toLowerCase()
-            let imgUrl = ''
-            if(data == 'sport plus'){
-                imgUrl = "~assets/img/web/pic_sportsplus_dth.png"
-            }else if(data == 'super'){
-                imgUrl = "~assets/img/web/pic_super_dth.png"
-            }else if(data == 'smart'){
-                imgUrl = "~assets/img/web/pic_smart_dth.png"
-            }else if(data == 'engilsh'){
-                imgUrl = "~assets/img/web/pic_engilsh_dth.png"
-            }else if(data == 'indian'){
-                imgUrl = "~assets/img/web/pic_indian_dth.png"
-            }else if(data == 'chinese'){
-                imgUrl = "~assets/img/web/pic_Chinese_dth.png"
-            }else if(data == 'sport play'){
-                imgUrl = "~assets/img/web/pic_sportsplay_dth.png"
-            }
-            return imgUrl
+            let className = ''
+            if (data == 'sport plus') className = 'dth-sportsplus'
+            else if (data == 'super') className = 'dth-super'
+            else if (data == 'smart') className = 'dth-smart'
+            else if (data == 'engilsh') className = 'dth-engilsh'
+            else if (data == 'indian') className = 'dth-indian'
+            else if (data == 'chinese') className = 'dth-chinese'
+            else if (data == 'sport play') className = 'dth-sportsplay'
+            return className
         }
     },
     computed: {
         currency() {
             return this.$store.state.country.currencySymbol
         }
+    },
+    components:{
+        bgImg
     },
     head() {
         return {
