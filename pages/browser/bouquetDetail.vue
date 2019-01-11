@@ -15,6 +15,7 @@
         <ul class="channelList">
             <li v-for="(item,index) in detailList" :key="index">
                 <img :src="item.logo" alt="">
+                <img src="~assets/img/web/channelsOn.png" v-show ="item.liveStatus" class="imgOn">
             </li>
         </ul>
     </div>
@@ -53,6 +54,7 @@ export default {
                                 this.bouquetName = detail.name
                                 this.tvPlatForm =  detail.tvPlatForm == 'DTH' ? 'Dish' :'Antenna' 
                                 detail.logo = channel.logo.resources[0].url
+                                detail.liveStatus = channel.liveStatus
                                 this.detailList.push(detail)
                             }
                         })
@@ -129,8 +131,15 @@ export default {
             box-sizing: border-box;
             border-bottom:1px solid #d8d8d8;
             border-right:1px solid #d8d8d8;
+            position: relative;
             img{
                 width:100%;
+            }
+            .imgOn{
+                position: absolute;
+                width:1.5rem;
+                top:0;
+                right:0;
             }
         }
     }
