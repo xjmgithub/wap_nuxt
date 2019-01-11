@@ -1,23 +1,31 @@
 <template>
     <div class="m_header">
         <img class="menu" @click="toggleNav" src="~assets/img/web/ic_guidelist.png">
-        <img class="logo" src="~assets/img/logo.png" alt="Startimes" @click="redirect('index')">
+        <img class="logo" src="~assets/img/logo.png" alt="Startimes">
         <div class="navigator">
             <div>
-                <img src="~assets/img/web/ic_home_def_g.png" @click="redirect('home')">
-                <div class="nav_title">Home</div>
+                <nuxt-link to="/browser/">
+                    <img src="~assets/img/web/ic_home_def_g.png">
+                    <div class="nav_title">Home</div>
+                </nuxt-link>
             </div>
             <div>
-                <img src="~assets/img/web/ic_tvguide.png" @click="redirect('tvguide')">
-                <div class="nav_title">Guide</div>
+                <nuxt-link to="/browser/tvguide">
+                    <img src="~assets/img/web/ic_tvguide.png">
+                    <div class="nav_title">Guide</div>
+                </nuxt-link>
             </div>
             <div>
-                <img src="~assets/img/web/ic_menu_def_w.png" @click="redirect('menu')">
-                <div class="nav_title">List</div>
+                <nuxt-link to="/browser/programlist">
+                    <img src="~assets/img/web/ic_menu_def_w.png">
+                    <div class="nav_title">List</div>
+                </nuxt-link>
             </div>
-            <div>
-                <img src="~assets/img/web/ic_phoneplay_def_w.png" @click="redirect('phoneplay')">
-                <div class="nav_title">Live</div>
+            <div @click="redirect('phoneplay')">
+                <nuxt-link to="/browser/phoneplay">
+                    <img src="~assets/img/web/ic_phoneplay_def_w.png">
+                    <div class="nav_title">Live</div>
+                </nuxt-link>
             </div>
         </div>
     </div>
@@ -25,9 +33,6 @@
 <script>
 export default {
     methods: {
-        redirect(url) {
-            this.$emit('redirect', url)
-        },
         toggleNav() {
             let state = this.$store.state.navState
             this.$store.commit('SET_NAV_STATE', !state)
@@ -57,9 +62,9 @@ export default {
             float: left;
             margin-left: 0.85rem;
             text-align: center;
-            .nav_title{
-                font-size:0.7rem;
-                color:white;
+            .nav_title {
+                font-size: 0.7rem;
+                color: white;
             }
             img {
                 height: 1.6rem;
