@@ -14,7 +14,7 @@
     </div>
 </template>
 <script>
-import mheader from '~/components/header.vue'
+import mheader from '~/components/web/header.vue'
 export default {
     computed:{
         showNav(){
