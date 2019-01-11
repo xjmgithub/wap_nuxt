@@ -1,5 +1,5 @@
 <template>
-    <div class="frame" :class="{shownav:showNav}" style="overflow:visible">
+    <div class="frame" :class="{shownav:showNav}" style="overflow:visible;height:auto;">
         <mheader @redirect="goToPage"/>
         <nuxt/>
         <div class="slide-bar">
@@ -56,7 +56,6 @@ body {
 
 .frame{
     transition: transform 0.3s;
-    overflow: visible;
 }
 .frame.shownav{
     transform: translateX(10rem);
@@ -77,5 +76,6 @@ body {
 }
 .wrapper {
     box-shadow: -10rem 0 0 0px #222527;
+    background:white;
 }
 </style>

@@ -6,3 +6,4 @@ html,body,#__nuxt,#__layout,#__layout>div{height:100%;}#__layout>div{overflow-y:
 .page-leave-to {animation: bounce-out 0.3s;}
 @keyframes bounce-out {0% {transform: translateX(0);} 100% {transform: translateX(-100%);}}
 
+
