@@ -34,7 +34,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import bgImg from '~/components/web/bgImg'
 export default {

@@ -150,7 +150,7 @@ export default {
                 }
             }
             img {
-                width: 0.6rem;
+                width: 0.5rem;
                 transition: transform 0.3s;
                 &.updown {
                     transform: rotate(180deg);
