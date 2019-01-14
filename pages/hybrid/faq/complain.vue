@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="order-contain" v-if="order.order_status">
             <orderBlock :order="order">
                 <nuxt-link :to="{'path':'/hybrid/faq/chooseOrder',query:$route.query}">
@@ -259,7 +259,7 @@ export default {
 @import '~assets/less/faq/common.less';
 </style>
 <style lang="less" scoped>
-#wrapper {
+.wrapper {
     background: #ffffff;
 }
 

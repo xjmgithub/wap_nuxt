@@ -26,7 +26,10 @@ export default {
     methods: {
         chooseCountry(item){
             this.$store.commit('SET_AREA_INFO', item)
-            this.$router.push('/browser')
+            // TODO COOKIE
+            // TODO 更新用户国家
+            // 更换 token
+            window.history.go(-1)
         }
     },
     head() {

@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-
+import LANG from '~/languages/'
 export default {
     layout:'default',
     data(){
@@ -25,23 +25,35 @@ export default {
                 },
                 {
                    language:'French',
-                   lang:'fy'
+                   lang:'fr'
                 },
                 {
-                   language:'Swahili',
-                   lang:'sy'
+                   language:'Kiswahili',
+                   lang:'sw'
                 },
                 {
-                   language:'Portuguese',
-                   lang:'py'
+                   language:'português',
+                   lang:'pt'
                 }
             ]
         }
     },
     methods: {
         chooseLang(lang){
-            this.$store.commit('SET_LANG', lang)
-            this.$router.push('/browser')
+            if (lang.indexOf('fr') >= 0) {
+                this.$store.commit('SET_LANG_TYPE',lang)
+                this.$store.commit('SET_LANG', LANG.fy)
+            } else if (lang.indexOf('sw') >= 0) {
+                this.$store.commit('SET_LANG_TYPE',lang)
+                this.$store.commit('SET_LANG', LANG.sy)
+            } else if (lang.indexOf('pt') >= 0) {
+                this.$store.commit('SET_LANG_TYPE',lang)
+                this.$store.commit('SET_LANG', LANG.py)
+            } else {
+                this.$store.commit('SET_LANG_TYPE',lang)
+                this.$store.commit('SET_LANG', LANG.en)
+            }
+            window.history.go(-1)
         }
     },
     head() {

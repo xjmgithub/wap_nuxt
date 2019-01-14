@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="content" style="min-height:101%">
             <div class="pull_refresh">
                 <div style="padding-top:1rem;" v-show="!loadHistoryState">
@@ -141,7 +141,7 @@ export default {
             })
 
         this.$nextTick(() => {
-            let wrapper = document.querySelector('#wrapper')
+            let wrapper = document.querySelector('.wrapper')
             this.scroll = new BScroll(wrapper, {
                 pullDownRefresh: {
                     threshold: 100, // 下拉距离
@@ -481,8 +481,9 @@ export default {
         },
         scrollToBottom() {
             this.$nextTick(() => {
-                let h1 = document.querySelector('#wrapper').offsetHeight
+                let h1 = document.querySelector('.wrapper').offsetHeight
                 let h2 = document.querySelector('.content').offsetHeight
+                console.log(h1,h2)
                 this.scroll.scrollTo(0, h1 - h2, 300)
             })
         },
@@ -668,10 +669,16 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/faq/common.less';
+#__layout>div{
+    background:#eeeeee;
+}
 </style>
 <style lang="less" scoped>
-#wrapper {
+
+.wrapper {
     overflow: hidden;
+    height:88%;
+    background:#eeeeee;
 }
 .order-contain {
     box-shadow: 0px 1px 3px 1px #dddddd;
