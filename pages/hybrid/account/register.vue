@@ -114,6 +114,7 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     position: static;
+    padding:0 1.2rem;
     .tab {
         div {
             width: 50%;
