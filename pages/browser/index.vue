@@ -27,9 +27,15 @@
             <h3><img src="~assets/img/web/ON-RIGHT.png" alt=""> StarTimes ON</h3>
             <img src="~assets/img/web/pic_show.jpg" class="bigPic">
             <div class="download clearfix">
-                <img src="~assets/img/web/pic_downloadapk.png">
-                <img src="~assets/img/web/pic_googleplay.png">
-                <img src="~assets/img/web/pic_appstore.png">
+                <a href="https://m.startimestv.com/DownloadAPP.php">
+                    <img src="~assets/img/web/pic_downloadapk.png">
+                </a>
+                <a href="market://details?id=com.star.mobile.video" target="_blank">
+                    <img src="~assets/img/web/pic_googleplay.png">
+                </a>
+                <a href="https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8">
+                    <img src="~assets/img/web/pic_appstore.png">
+                </a>
             </div>
         </div>
     </div>
