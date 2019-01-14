@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="tab">
             <div :class="{seled:type==0}" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.png">
@@ -159,7 +159,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-#wrapper {
+.wrapper {
+    position: static;
     padding: 1rem 0.8rem;
 
     .tab {
