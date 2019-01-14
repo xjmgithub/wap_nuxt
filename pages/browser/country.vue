@@ -28,6 +28,7 @@ export default {
             this.$store.commit('SET_AREA_INFO', item)
             // TODO COOKIE
             // TODO 更新用户国家
+            // 更换 token
             window.history.go(-1)
         }
     },
