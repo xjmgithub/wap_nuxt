@@ -38,7 +38,7 @@ export default {
     computed: {
         user() {
             let userInfo = this.$store.state.user
-            return userInfo.role || null
+            return userInfo.role ? userInfo : null
         },
         showNav() {
             return this.$store.state.navState
@@ -116,12 +116,12 @@ body {
         }
     }
 }
-.user_info{
+.user_info {
     text-align: center;
-    padding:1rem;
-    img{
-        width:3rem;
-        margin:0 auto;
+    padding: 1rem;
+    img {
+        width: 3rem;
+        margin: 0 auto;
         border-radius: 3rem;
         display: block;
     }
