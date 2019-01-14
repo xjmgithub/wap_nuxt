@@ -114,6 +114,7 @@ export default {
     max-width: 1300px;
     margin: 0 auto;
     position: relative;
+    padding-top:0;
 }
 .page-top img {
     width: 100%;
