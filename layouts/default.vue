@@ -1,6 +1,6 @@
 <template>
     <div class="frame" :class="{shownav:showNav}" style="overflow:visible;height:auto;">
-        <mheader @redirect="goToPage"/>
+        <mheader/>
         <nuxt/>
         <div class="slide-bar">
             <ul>
@@ -25,22 +25,6 @@ export default {
         mheader
     },
     methods: {
-        goToPage(url) {
-            switch (url) {
-                case 'home':
-                    this.$router.push('/browser')
-                    break;
-                case 'menu':
-                    this.$router.push('/browser/menu')
-                    break;
-                case 'tvguide':
-                    this.$router.push('/browser/tvguide')
-                    break;
-                case 'phoneplay':
-                    this.$router.push('/browser/phoneplay')
-                    break;
-            }
-        },
         chooseLanguage(){
             this.$router.push('/browser/language')
             this.$store.commit('SET_NAV_STATE', !this.showNav)
