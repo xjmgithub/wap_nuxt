@@ -1,15 +1,21 @@
 <template>
     <div class="frame" :class="{shownav:showNav}" style="overflow:visible;height:auto;">
-        <mheader @redirect="goToPage"/>
+        <mheader/>
         <nuxt/>
         <div class="slide-bar">
             <ul>
                 <li>Signin / Register</li>
                 <li class="country">
-                    <span>{{country.name}}</span>
-                    <img :src="country.nationalFlag">
+                    <nuxt-link to="/browser/country">
+                        <span>{{country.name}}</span>
+                        <img :src="country.nationalFlag">
+                    </nuxt-link>
                 </li>
-                <li>{{language}}</li>
+                <li>
+                    <nuxt-link to="/browser/language">
+                        {{language}}
+                    </nuxt-link>
+                </li>
                 <li>
                     <a href="https://m.startimestv.com/faq.php">FAQ</a>
                 </li>

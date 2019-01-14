@@ -1,7 +1,9 @@
 <template>
     <div class="m_header">
-        <img class="menu" @click="toggleNav" src="~assets/img/web/ic_guidelist.png">
-        <img class="logo" src="~assets/img/logo.png" alt="Startimes">
+        <div class="logo">
+            <img @click="toggleNav" src="~assets/img/web/ic_guidelist.png">
+            <img src="~assets/img/logo.png" alt="Startimes">
+        </div>
         <div class="navigator">
             <div>
                 <nuxt-link to="/browser/">
@@ -21,7 +23,7 @@
                     <div class="nav_title">List</div>
                 </nuxt-link>
             </div>
-            <div @click="redirect('phoneplay')">
+            <div>
                 <nuxt-link to="/browser/phoneplay">
                     <img src="~assets/img/web/ic_phoneplay_def_w.png">
                     <div class="nav_title">Live</div>
@@ -50,18 +52,24 @@ export default {
     width: 100%;
     box-sizing: border-box;
     z-index: 999;
-    & > img {
+    .logo{
         float: left;
-        display: block;
-        height: 1.6rem;
-        margin-left: 0.4rem;
+        height:100%;
+        img {
+            height: 1.6rem;
+            margin-left: 0.4rem;
+            margin-top:.5rem;
+        }
     }
     .navigator {
         float: right;
         & > div {
             float: left;
-            margin-left: 0.85rem;
+            margin-left: 0.6rem;
             text-align: center;
+            &:first-of-type{
+                margin-left: 0;
+            }
             .nav_title {
                 font-size: 0.7rem;
                 color: white;
