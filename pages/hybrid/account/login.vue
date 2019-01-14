@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <img class="st_logo" src="~assets/img/logo01.png">
         <img class="third_login facebook" @click="byfacebook" src="~assets/img/users/btn_facebook_def.png">
         <img class="third_login twitter" @click="bytwitter" src="~assets/img/users/btn_twitter_def.png">
@@ -115,9 +115,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-#wrapper {
+.wrapper {
     position: static;
-    background:white;
     img {
         display: block;
         height: 2.3rem;

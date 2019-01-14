@@ -66,5 +66,6 @@ body {
     min-height: 100%;
     z-index:2;
     position:absolute;
+    background:white;
 }
 </style>

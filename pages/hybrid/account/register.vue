@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="tab">
             <div :class="{seled:type==0}" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
@@ -45,26 +45,13 @@ import verifyTel from '~/components/form/verify_tel'
 import verifyEmail from '~/components/form/verify_email'
 import shadowLayer from '~/components/shadow-layer'
 import mButton from '~/components/button'
+import countrys from '~/functions/countrys.json'
 export default {
     layout: 'base',
-    async asyncData({ app, store, redirect }) {
-        let res = await app.$axios.get('/cms/vup/v2/areas?versionCode=5300', {
-            headers: {
-                token: store.state.token
-            }
-        })
-        let countrys = {}
-        res.data.forEach((item, index) => {
-            countrys[item.id] = item
-        })
-        return {
-            countrys: countrys
-        }
-    },
     data() {
         return {
             type: 0,
-            country: this.$store.state.user.areaID,
+            countrys:countrys,
             countryDialogStatus: false,
             phoneCanNext: false,
             emailCanNext: false
@@ -72,7 +59,7 @@ export default {
     },
     computed: {
         areaInfo() {
-            return this.countrys[this.country]
+            return this.$store.state.country
         },
         canNext() {
             if (this.type == 1) {
@@ -125,9 +112,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-#wrapper {
-    padding: 1rem 0.8rem;
-
+.wrapper {
+    position: static;
     .tab {
         div {
             width: 50%;

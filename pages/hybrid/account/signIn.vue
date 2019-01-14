@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
@@ -126,8 +126,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-#wrapper {
+.wrapper {
     padding: 1rem 0.8rem;
+    width:100%;
 
     .tab {
         div {
