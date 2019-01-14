@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="by_tel">
             <verifyTigo ref="telpicker" :prefix="phonePrefix" :input_label="input_label"/>
         </div>
@@ -77,8 +77,8 @@ export default {
     }
 }
 </script>
-<style  lang="less" scoped>
-#wrapper {
+<style lang="less" scoped>
+.wrapper {
     padding: 1rem 0.8rem;
     .by_tel {
         padding-top: 5rem;

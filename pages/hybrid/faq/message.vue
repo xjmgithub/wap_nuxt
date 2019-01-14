@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="reply">
             <div class="waiting" v-if="!msg.replyRecordDtoList||msg.replyRecordDtoList.length<=0">
                 <div class="waiting_btn">Waiting For Result…</div>
@@ -109,7 +109,7 @@ export default {
 @import '~assets/less/faq/common.less';
 </style>
 <style lang="less" scoped>
-#wrapper {
+.wrapper {
     background: #ffffff;
 }
 

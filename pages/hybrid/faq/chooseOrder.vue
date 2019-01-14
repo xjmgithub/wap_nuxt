@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div v-show="loaded&&serviceList">
             <div class="orders" style="padding-bottom:5rem;">
                 <div class="order-contain" v-for="(item,index) in serviceList" :key="index" @click="check(item.id)">

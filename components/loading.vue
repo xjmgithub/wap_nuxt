@@ -8,6 +8,7 @@
     position: absolute;
     left: 50%;
     top: 50%;
+    z-index: -1;
     .spinner {
         width: 4.6rem;
         height: 4.6rem;

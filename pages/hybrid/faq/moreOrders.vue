@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div id="wrapper">
+        <div class="wrapper">
             <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item"/>
         </div>
         <loading v-show="loadStatus" />
@@ -45,7 +45,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-#wrapper {
+.wrapper {
     background: #fff;
     padding: 0.5rem;
 }
