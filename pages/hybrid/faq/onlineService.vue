@@ -1,26 +1,17 @@
 <template>
-    <div class="container">
-        <div id="wrapper">
+    <div class="wrapper">
+        <div class="container">
             <serviceBlock :service="serviceData" :show-more="true"/>
             <div class="service" v-if="faqTagsData">
                 <div id="nav">
-                    <a
-                        v-for="(item,index) in faqTagsData"
-                        :key="index"
-                        :class="{on:item.checked}"
-                        @click="changeServiceTag(item.id)"
-                    >
+                    <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
                         <div :class="item.class"/>
                     </a>
                 </div>
                 <div class="questions">
                     <div v-for="(item,index) in faqTagsData" :key="index" v-show="item.checked">
                         <ul>
-                            <li
-                                v-for="(item2,index2) in item.faqs"
-                                :key="index2"
-                                @click="clickQues(item2)"
-                            >{{item2.thema}}</li>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
                         </ul>
                     </div>
                 </div>
@@ -49,7 +40,7 @@ export default {
     mounted() {
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
-       
+
         // this.sendEvLog({
         //     category:'dvbservice',
         //     action:'smartcard_input',
@@ -181,29 +172,29 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.container {
-    background:white;
+.wrapper {
+    background: white;
     height: 100%;
-    display:-webkit-box;
+    display: -webkit-box;
     /* 
     autoprefixer: off 
     https://github.com/Fyrd/caniuse/issues/3429
     */
-    -webkit-box-orient:vertical;
+    -webkit-box-orient: vertical;
 }
-#wrapper {
+.container {
     padding: 0.5rem 0.5rem 0;
     -webkit-box-flex: 12;
-    display:-webkit-box;
+    display: -webkit-box;
     background: #fff;
     /* autoprefixer: off */
-    -webkit-box-orient:vertical;
+    -webkit-box-orient: vertical;
 }
 .service {
     -webkit-box-flex: 1;
     display: -webkit-box;
     /* autoprefixer: off */
-    -webkit-box-orient:vertical;
+    -webkit-box-orient: vertical;
     #nav {
         width: 100%;
         margin: 0 auto;
