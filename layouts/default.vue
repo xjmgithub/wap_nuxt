@@ -5,7 +5,13 @@
         <div class="slide-bar">
             <ul>
                 <li>
-                    <nuxt-link to="/hybrid/account/login">Signin / Register</nuxt-link>
+                    <div v-if="user">
+                        <div class="user_info">
+                            <img :src="user.head">
+                            <div>{{user.nickName}}</div>
+                        </div>
+                    </div>
+                    <nuxt-link v-else to="/hybrid/account/login">Signin / Register</nuxt-link>
                 </li>
                 <li class="country">
                     <nuxt-link to="/browser/country">
@@ -14,9 +20,7 @@
                     </nuxt-link>
                 </li>
                 <li>
-                    <nuxt-link to="/browser/language">
-                        {{language}}
-                    </nuxt-link>
+                    <nuxt-link to="/browser/language">{{language}}</nuxt-link>
                 </li>
                 <li>
                     <a href="https://m.startimestv.com/faq.php">FAQ</a>
@@ -32,22 +36,26 @@
 import mheader from '~/components/web/header.vue'
 export default {
     computed: {
+        user() {
+            let userInfo = this.$store.state.user
+            return userInfo.role || null
+        },
         showNav() {
             return this.$store.state.navState
         },
         country() {
             return this.$store.state.country
         },
-        language(){
+        language() {
             let type = this.$store.state.langType
-            switch(type){
-                case 'fr': 
+            switch (type) {
+                case 'fr':
                     return 'French'
-                case 'sw': 
+                case 'sw':
                     return 'Kiswahili'
-                case 'pt': 
+                case 'pt':
                     return 'português'
-                default : 
+                default:
                     return 'English'
             }
         }
@@ -103,20 +111,30 @@ body {
         color: white;
         line-height: 2rem;
         font-size: 0.9rem;
-        a{
-            color:white;
+        a {
+            color: white;
         }
+    }
+}
+.user_info{
+    text-align: center;
+    padding:1rem;
+    img{
+        width:3rem;
+        margin:0 auto;
+        border-radius: 3rem;
+        display: block;
     }
 }
 .wrapper {
     box-shadow: -10rem 0 0 0px #222527;
     background: white;
 }
-.country{
-    img{
-        width:1.5rem;
-        height:1.5rem;
-        margin-left:0.2rem;
+.country {
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-left: 0.2rem;
     }
 }
 </style>
