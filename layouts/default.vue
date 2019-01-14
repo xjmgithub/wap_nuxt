@@ -5,8 +5,8 @@
         <div class="slide-bar">
             <ul>
                 <li>Signin / Register</li>
-                <li>language</li>
-                <li>Country</li>
+                <li @click="chooseLanguage()">Language</li>
+                <li @click="chooseCountry()">Country</li>
                 <li>FAQ</li>
                 <li>Contact Us</li>
             </ul>
@@ -40,7 +40,15 @@ export default {
                     this.$router.push('/browser/phoneplay')
                     break;
             }
-        }
+        },
+        chooseLanguage(){
+            this.$router.push('/browser/language')
+            this.$store.commit('SET_NAV_STATE', !this.showNav)
+        },
+        chooseCountry(){
+            this.$router.push('/browser/country')
+            this.$store.commit('SET_NAV_STATE', !this.showNav)
+        },
     },
     created() {
         this.$axios.setHeader('token', this.$store.state.token)
