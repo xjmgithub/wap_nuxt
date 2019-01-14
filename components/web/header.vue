@@ -12,10 +12,10 @@
                 </nuxt-link>
             </div>
             <div>
-                <nuxt-link to="/browser/tvguide">
+                <a href="https://m.startimestv.com/TVguide_list.php">
                     <img src="~assets/img/web/ic_tvguide.png">
                     <div class="nav_title">Guide</div>
-                </nuxt-link>
+                </a>
             </div>
             <div>
                 <nuxt-link to="/browser/programlist">
