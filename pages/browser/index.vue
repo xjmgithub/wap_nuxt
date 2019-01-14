@@ -34,7 +34,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import bgImg from '~/components/web/bgImg'
 export default {
@@ -129,7 +128,6 @@ export default {
         display: list-item;
         list-style-type: disc;
         margin-left: 1em;
-        margin-bottom: 0.25rem;
         color: #333333;
         font-weight: bold;
     }
@@ -166,21 +164,25 @@ export default {
         font-size: 0.95rem;
         color: #333333;
         font-weight: 600;
+        margin-top:0.4rem;
+        clear:both;
+        display:block;
     }
     ul {
         width: 100%;
         li {
             float: left;
-            width: 31.3%;
-            margin: 3% 2% 3% 0;
+            width: 31%;
+            margin: 0.2rem 3% 0 0;
             display: block;
             &:nth-child(3n) {
-                margin-top: 3%;
+                margin:0.2rem 0 0 0;
             }
             .money {
                 color: #333333;
                 font-size: 0.85rem;
                 text-align: right;
+                line-height: 1.5rem;
                 margin-right: 0.3rem;
             }
             img {
@@ -191,7 +193,7 @@ export default {
 }
 .startimes {
     .boxStyle;
-    padding: 0.5rem 0 4.5rem 0.2rem;
+    padding: 0.5rem 0 1rem 0.2rem;
     margin-bottom: 1.5rem;
     h3 {
         display: block;

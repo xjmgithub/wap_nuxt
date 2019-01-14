@@ -1,5 +1,5 @@
 <template>
-    <div :class="bouquetName" id="img"/>
+    <div :class="bouquetName" class="bouquet_img"/>
 </template>
 <script>
 export default {
@@ -11,11 +11,17 @@ export default {
     },
 }
 </script>
-<style lang="less">
-#img{
-    height:4rem;
+<style lang="less" scoped>
+.bouquet_img{
     width:100%;
     background-size: 100% !important;
+    &::before{
+        content: '';
+        display: inline-block;
+        padding-bottom: 64%;
+        width: 0.1px;
+        vertical-align: middle;
+    }
     &.dtt-sportsplus{
         background: url("~assets/img/web/pic_sportsplus_dtt.png") no-repeat ;
     }

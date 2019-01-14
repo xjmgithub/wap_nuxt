@@ -3,7 +3,7 @@
         <p>{{channelName}}</p>
         <p>{{description}}</p>
         <div class="total">
-            <div class="now" :style="{ width: rate + '%'}" />
+            <div class="now" :style="{ width: rate + '%'}"/>
         </div>
         <div class="state">
             <p v-show="state==1" class="trial">TRIAL</p>
@@ -22,13 +22,13 @@ export default {
             type: String,
             default: ''
         },
-        state:{
-            type:Number,
-            default:0
+        state: {
+            type: Number,
+            default: 0
         },
-        rate:{
-            type:Number,
-            default:30
+        rate: {
+            type: Number,
+            default: 30
         }
     }
 }
@@ -36,19 +36,17 @@ export default {
 <style lang="less" scope>
 .channel {
     height: 5.5rem;
-    border: 1px solid #d8d8d8;
     position: relative;
-    padding: 0.3rem;
-    border-radius: 5px;
-    box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.3);
+    padding: 0.5rem;
+    box-shadow: 1px 2px 4px -1px rgba(0, 0, 0, 0.4);
     & > p {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: bold;
         & + p {
             font-weight: normal;
             font-size: 0.8rem;
             color: #aaaaaa;
-            height: 2.5rem;
+            height: 2.6rem;
             // overflow:hidden;
             // text-overflow:ellipsis;
             display: -webkit-box;
@@ -58,13 +56,11 @@ export default {
         }
     }
     .total {
-        width: 95%;
+        width: 100%;
         height: 4px;
         background-color: #dbdbdb;
         border-radius: 2px;
-        position: absolute;
-        bottom: 0.5rem;
-        left: 2.5%;
+        margin-top:0.2rem;
         .now {
             background-color: #0087eb;
             width: 30%;
@@ -79,15 +75,17 @@ export default {
         display: block;
         font-size: 0.8rem;
         p {
-            border-radius: 4px;
-            padding: 0 0.2rem;
+            border-radius: 3px;
+            padding: 0 0.4rem;
+            font-size: 0.7rem;
+            line-height: 0.9rem;
             &.trial {
                 background-color: #0087eb;
                 color: #ffffff;
             }
             &.vip {
-                background-color: #FABE00;
-                color:#B27100;
+                background-color: #fabe00;
+                color: #b27100;
             }
         }
     }
