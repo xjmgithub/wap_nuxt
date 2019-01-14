@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <p class="download clearfix" @click="tolandingPage">Download StarTimes On App to watch! <span>GO ></span></p>
+        <download class="clearfix"/>
         <div class="channelList">
             <p class="title">{{channelList.length}} Channels live on StarTimes On</p>
             <channel 
@@ -17,6 +17,7 @@
 
 <script>
 import channel from '~/components/web/channel'
+import download from '~/components/web/download'
 export default {
     layout:"default",
     data(){
@@ -47,13 +48,9 @@ export default {
                 }
             })
     },
-    methods:{
-        tolandingPage(){
-            this.$router.push('/hybrid/lands')
-        }
-    },
     components:{
-        channel
+        channel,
+        download
     },
     head() {
         return {
@@ -66,16 +63,6 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .wrapper{
-    .download{
-        padding:.5rem .8rem;
-        background-color: #FFBE19;
-        font-weight: bold;
-        font-size: .9rem;
-        span{
-            color:#0087EB;
-            float: right;
-        }
-    }
     .channelList{
         padding:.8rem;
         .title{
