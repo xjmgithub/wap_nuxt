@@ -41,6 +41,7 @@ export const mutations = {
         state.lang = lang
     },
     SET_LANG_TYPE: function(state, type) {
+        console.log(type)
         state.langType = type
     },
     SET_DEVICE: function(state, deviceId) {
