@@ -4,7 +4,9 @@
         <nuxt/>
         <div class="slide-bar">
             <ul>
-                <li>Signin / Register</li>
+                <li>
+                    <nuxt-link to="/hybrid/account/login">Signin / Register</nuxt-link>
+                </li>
                 <li class="country">
                     <nuxt-link to="/browser/country">
                         <span>{{country.name}}</span>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <loading/>
-        <nuxt style="z-index:2;position:absolute;" />
+        <nuxt/>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
         <shadowLayer v-show="layer"/>
@@ -64,5 +64,7 @@ body {
 }
 #wrapper{
     min-height: 100%;
+    z-index:2;
+    position:absolute;
 }
 </style>

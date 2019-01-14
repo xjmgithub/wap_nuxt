@@ -116,6 +116,8 @@ export default {
 </script>
 <style lang="less" scoped>
 #wrapper {
+    position: static;
+    background:white;
     img {
         display: block;
         height: 2.3rem;
