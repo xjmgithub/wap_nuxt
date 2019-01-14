@@ -2,7 +2,9 @@
     <div class="m_header">
         <div class="logo">
             <img @click="toggleNav" src="~assets/img/web/ic_guidelist.png">
-            <img src="~assets/img/logo.png" alt="Startimes">
+            <img class="logo_img" v-if="logo==0" src="~assets/img/startimes.png" alt="Startimes">
+            <img class="logo_img" v-if="logo==1" src="~assets/img/topstar_white.png" alt="Startimes">
+            <img class="logo_img" v-if="logo==2" src="~assets/img/starsat_white.png" alt="Startimes">
         </div>
         <div class="navigator">
             <div>
@@ -34,6 +36,18 @@
 </template>
 <script>
 export default {
+    computed:{
+        logo(){
+            let country = this.$store.state.country
+            if(country.id==6){
+                return 1
+            }else if(country.id==7){
+                return 2
+            }else{
+                return 0
+            }
+        }
+    },
     methods: {
         toggleNav() {
             let state = this.$store.state.navState
@@ -56,9 +70,10 @@ export default {
         float: left;
         height:100%;
         img {
-            height: 1.6rem;
-            margin-left: 0.4rem;
-            margin-top:.5rem;
+            height: 1.8rem;
+            &.logo_img{
+                height:2.2rem;
+            }
         }
     }
     .navigator {
