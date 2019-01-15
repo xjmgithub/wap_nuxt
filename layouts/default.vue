@@ -38,7 +38,7 @@ export default {
     computed: {
         user() {
             let userInfo = this.$store.state.user
-            return userInfo.role ? userInfo : null
+            return userInfo.roleName != 'ANONYMOUS' ? userInfo : null
         },
         showNav() {
             return this.$store.state.navState
@@ -87,10 +87,16 @@ export default {
 }
 </script>
 <style lang="less">
+@font-face {
+    font-family: Roboto;
+    src: url('~assets/fonts/Roboto-Regular.ttf');
+    font-style: 'normal';
+}
 html,
 body {
     padding: 0;
     margin: 0;
+    font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Sans-serif;
 }
 
 .frame {

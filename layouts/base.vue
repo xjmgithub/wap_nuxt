@@ -52,6 +52,7 @@ body {
     padding: 0px;
     height: 100%;
     overflow-y: auto;
+    font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Sans-serif;
 }
 .clearfix:after {
     display: block;
@@ -63,10 +64,10 @@ body {
 .clearfix {
     zoom: 1;
 }
-#wrapper{
+#wrapper {
     min-height: 100%;
-    z-index:2;
-    position:absolute;
-    background:white;
+    z-index: 2;
+    position: absolute;
+    background: white;
 }
 </style>

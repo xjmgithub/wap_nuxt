@@ -82,7 +82,7 @@ export default ({ app: { router, $axios }, store, query }) => {
         did: store.state.deviceId, // 设备唯一标识
         dr: swidth + 'x' + sheight, // 屏幕分辨率
         iid: store.state.gaClientId, // 安装唯一标识
-        lst: store.state.user && store.state.user.type ? 'l' : 'a', // 用户登录状态
+        lst: store.state.user && store.state.user.roleName != 'ANONYMOUS' ? 'l' : 'a', // 用户登录状态
         lt: 'pv', // 报数类型
         lv: '1.0.0',
         nt: '', // 网络类型
@@ -160,11 +160,15 @@ export default ({ app: { router, $axios }, store, query }) => {
         })
     }
 
+    let now = new Date().getTime()
+
     sendPvLog({
         category: 'h5_open',
         action: 'page_init_start',
         label: location.href,
-        value: new Date().getTime() - store.state.appInitTime
+        value: now - store.state.appInitTime,
+        native_time: store.state.appInitTime,
+        browser_time: now
     })
 
     router.afterEach((to, from) => {
