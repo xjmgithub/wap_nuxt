@@ -160,11 +160,15 @@ export default ({ app: { router, $axios }, store, query }) => {
         })
     }
 
+    let now = new Date().getTime()
+
     sendPvLog({
         category: 'h5_open',
         action: 'page_init_start',
         label: location.href,
-        value: new Date().getTime() - store.state.appInitTime
+        value: now - store.state.appInitTime,
+        native_time: store.state.appInitTime,
+        browser_time: now
     })
 
     router.afterEach((to, from) => {
