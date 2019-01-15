@@ -38,7 +38,7 @@ export default {
     computed: {
         user() {
             let userInfo = this.$store.state.user
-            return userInfo.role ? userInfo : null
+            return userInfo.roleName != 'ANONYMOUS' ? userInfo : null
         },
         showNav() {
             return this.$store.state.navState
