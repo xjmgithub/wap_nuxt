@@ -2,7 +2,6 @@ let axios = require('axios')
 let crypto = require('crypto')
 const OAuth = require('oauth-1.0a')
 const https = require('https')
-let timer = Math.floor(new Date().getTime() / 1000)
 
 const oauth = OAuth({
     consumer: { key: 'JdwbwCJH1XF4kspuF3Qoz03PI', secret: 'zc3RWN8Jp58CowGZm8wjxstMQHspDxpC9EVcmHdW82gZnVpIfN' },
@@ -27,11 +26,26 @@ export default function(req, res, next) {
         headers: oauth.toHeader(oauth.authorize(oauth_data)),
         httpsAgent: new https.Agent({ rejectUnauthorized: false })
     })
-        .then(res1 => {
-            console.log(123)
+        .then(resFromTwitter => {
+            let data = resFromTwitter.data.split('&')
+            let json = {}
+            data.forEach(item => {
+                let s = item.split('=')
+                json[s[0]] = s[1]
+            })
+            res.end(
+                JSON.stringify({
+                    code: 0,
+                    message: '',
+                    data: json
+                })
+            )
         })
         .catch(err => {
-            console.log(err)
+            res.end(JSON.stringify({
+                code: 101,
+                message: 'request token from twitter error!',
+                data: null
+            }))
         })
-    res.end('234')
 }

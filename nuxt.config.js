@@ -88,7 +88,7 @@ module.exports = {
         '/adm/': env.ms_host
     },
 
-    serverMiddleware: [{ path: '/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' }],
+    serverMiddleware: [{ path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' }],
 
     /*
     ** Build configuration
