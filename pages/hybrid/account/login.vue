@@ -73,16 +73,13 @@ export default {
             })
         },
         bytwitter() {
-            // let _this = this
-            // hello.login(
-            //     'twitter',
-            //     {
-            //         response_type: 'code'
-            //     },
-            //     function(res) {
-            //         _this.loginByThird(res.authResponse.user_id)
-            //     }
-            // )
+            this.$axios.get('/hybrid/api/twitter/oauth/request_token').then(res => {
+                if (res.data.code == 0) {
+                    window.location.href=`https://api.twitter.com/oauth/authenticate?oauth_token=${res.data.data.oauth_token}`
+                }else{
+                    // LOGIN ERROR
+                }
+            })
         },
         loginByThird(userkey) {
             this.$axios

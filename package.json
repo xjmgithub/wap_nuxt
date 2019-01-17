@@ -11,6 +11,7 @@
     },
     "scripts": {
         "dev": "nuxt",
+        "debug": "nodemon --watch api --exec \"nuxt\"",
         "build": "nuxt build",
         "start": "nuxt start",
         "generate": "nuxt generate",
@@ -31,7 +32,6 @@
         "less-loader": "^4.1.0",
         "mockjs": "^1.0.1-beta3",
         "nuxt": "^2.3.4",
-        "oauth-1.0a": "^2.2.5",
         "qs": "^6.6.0",
         "vue-pose": "^0.5.0"
     },
