@@ -10,15 +10,15 @@
             <h3>Decoder Bouquets</h3>
             <span>Dish</span>
             <ul class="dish clearfix">
-                <li v-for="(item,index) in dishList" :key="index" v-show="item.className" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.className" />
+                <li v-for="(item,index) in dishList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
+                    <bgImg :bouquet-name="item.name" tv-plat-form="DTH" />
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
             <span>Antenna</span>
             <ul class="antenna clearfix">
-                <li v-for="(item,index) in antennaList" :key="index" v-show="item.className" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.className" />
+                <li v-for="(item,index) in antennaList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
+                    <bgImg :bouquet-name="item.name" tv-plat-form="DTT" />
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
@@ -60,13 +60,13 @@ export default {
                 if (data.length > 0) {
                     data.forEach(ele => {
                         if (ele.tvPlatForm == 'DTT') {
-                            ele.className = this.$options.filters.dttImgUrl(ele.name)
-                            if (ele.className) {
+                            ele.show = this.$options.filters.dttImgUrl(ele.name)
+                            if (ele.show) {
                                 this.antennaList.push(ele)
                             }
                         } else if (ele.tvPlatForm == 'DTH') {
-                            ele.className = this.$options.filters.dthImgUrl(ele.name)
-                            if (ele.className) {
+                            ele.show = this.$options.filters.dthImgUrl(ele.name)
+                            if (ele.show) {
                                 this.dishList.push(ele)
                             }
                         }
@@ -77,34 +77,36 @@ export default {
         goToBouquetDetail(item) {
             let packageCode = item.code
             let bouId = item.id
-            let className = item.className
             let price = item.price
-            this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}&className=${className}&price=${price}`)
+            this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}&price=${price}`)
         }
     },
     filters: {
         dttImgUrl(name) {
             let data = name.toLowerCase()
-            let className = ''
-            if (data == 'sport plus') className = 'dtt-sportsplus'
-            else if (data == 'unique') className = 'dtt-unique'
-            else if (data == 'classique') className = 'dtt-classique'
-            else if (data == 'nova') className = 'dtt-nova'
-            else if (data == 'basique') className = 'dtt-basique'
-            else if (data == 'sport play') className = 'dtt-sportsplay'
-            return className
+            if (data == 'sport plus' 
+                || data == 'unique'  
+                || data == 'classique'
+                || data == 'nova'
+                || data == 'basique'
+                ||data == 'sport play'
+            ){
+                 return true
+            }
+           
         },
         dthImgUrl(name) {
             let data = name.toLowerCase()
-            let className = ''
-            if (data == 'sport plus') className = 'dth-sportsplus'
-            else if (data == 'super') className = 'dth-super'
-            else if (data == 'smart') className = 'dth-smart'
-            else if (data == 'engilsh') className = 'dth-engilsh'
-            else if (data == 'indian') className = 'dth-indian'
-            else if (data == 'chinese') className = 'dth-chinese'
-            else if (data == 'sport play') className = 'dth-sportsplay'
-            return className
+            if (data == 'sport plus' 
+                || data == 'super'
+                || data == 'smart'
+                || data == 'engilsh'
+                || data == 'indian'
+                || data == 'chinese'
+                || data == 'sport play'
+            ) {
+                return true
+            }
         }
     },
     computed: {
@@ -113,7 +115,8 @@ export default {
         }
     },
     components:{
-        bgImg
+       bgImg 
+               
     },
     head() {
         return {

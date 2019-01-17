@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper">
         <div class="bouquets clearfix">
-            <p>{{tvPlatForm}}</p>
+            <p>{{tvPlatFormName}}</p>
             <div class="logo">
-                <bgImg :bouquet-name="className"/>
+                <bgImg :bouquet-name="bouquetName" :tv-plat-form="tvPlatForm" />
             </div>
             <div class="info">
                 <p class="bouquetName">{{bouquetName}} Bouquet</p>
@@ -32,16 +32,15 @@ export default {
     data() {
         return {
             detailList: [],
-            className: '',
             price: '',
             bouquetName: '',
+            tvPlatFormName: '',
             tvPlatForm: ''
         }
     },
     mounted() {
         let packageCode = this.$route.query.packageCode
         let id = this.$route.query.id
-        this.className = this.$route.query.className
         this.price = this.$route.query.price
         this.$axios.get(`/cms/v2/vup/snapshot/channels?count=500&platformTypes=1&platformTypes=0&packageCode=${packageCode}`).then(res => {
             let countChannel = res.data
@@ -54,7 +53,8 @@ export default {
                         packages.forEach(detail => {
                             if (detail.id == id) {
                                 this.bouquetName = detail.name
-                                this.tvPlatForm = detail.tvPlatForm == 'DTH' ? 'Dish' : 'Antenna'
+                                this.tvPlatFormName = detail.tvPlatForm == 'DTH' ? 'Dish' : 'Antenna'
+                                this.tvPlatForm = detail.tvPlatForm
                                 detail.logo = channel.logo.resources[0].url
                                 detail.liveStatus = channel.liveStatus
                                 this.detailList.push(detail)

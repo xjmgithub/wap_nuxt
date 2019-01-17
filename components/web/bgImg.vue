@@ -1,5 +1,5 @@
 <template>
-    <div :class="bouquetName" class="bouquet_img"/>
+    <div :class="className" class="bouquet_img"/>
 </template>
 <script>
 export default {
@@ -7,6 +7,36 @@ export default {
         bouquetName: {
             type: String,
             default: ''
+        },
+        tvPlatForm: {
+            type: String,
+            default: ''
+        }
+    },
+    computed: {
+        className(){
+            if(this.tvPlatForm == 'DTT'){
+                let data = this.bouquetName.toLowerCase()
+                let tmp = ''
+                if (data == 'sport plus') tmp = 'dtt-sportsplus'
+                else if (data == 'unique') tmp = 'dtt-unique'
+                else if (data == 'classique') tmp = 'dtt-classique'
+                else if (data == 'nova') tmp = 'dtt-nova'
+                else if (data == 'basique') tmp = 'dtt-basique'
+                else if (data == 'sport play') tmp = 'dtt-sportsplay'
+                return tmp
+            }else if(this.tvPlatForm == 'DTH'){
+                let data = this.bouquetName.toLowerCase()
+                let tmp = ''
+                if (data == 'sport plus') tmp = 'dth-sportsplus'
+                else if (data == 'super') tmp = 'dth-super'
+                else if (data == 'smart') tmp = 'dth-smart'
+                else if (data == 'engilsh') tmp = 'dth-engilsh'
+                else if (data == 'indian') tmp = 'dth-indian'
+                else if (data == 'chinese') tmp = 'dth-chinese'
+                else if (data == 'sport play') tmp = 'dth-sportsplay'
+                return tmp
+            }
         }
     },
 }

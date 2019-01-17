@@ -1,5 +1,5 @@
 <template>
-    <div class="channel">
+    <div class="channel" @click="toLive">
         <p>{{channelName}}</p>
         <p>{{description}}</p>
         <div class="total">
@@ -29,6 +29,11 @@ export default {
         rate: {
             type: Number,
             default: 30
+        }
+    },
+    methods:{
+        toLive(){
+            this.$emit('onLive')
         }
     }
 }

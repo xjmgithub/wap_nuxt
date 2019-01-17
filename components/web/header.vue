@@ -26,7 +26,7 @@
                 </nuxt-link>
             </div>
             <div>
-                <nuxt-link to="/browser/phoneplay">
+                <nuxt-link to="/browser/live">
                     <img src="~assets/img/web/ic_phoneplay_def_w.png">
                     <div class="nav_title">Live</div>
                 </nuxt-link>

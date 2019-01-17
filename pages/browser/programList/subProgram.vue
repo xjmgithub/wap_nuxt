@@ -56,7 +56,7 @@ export default {
             font-weight: bold;
             color:#333333;
             margin:.5rem 0;
-        }
+        } 
         p{
             color:#666666;
             display: -webkit-box;
@@ -64,7 +64,8 @@ export default {
             -webkit-line-clamp: 2;
             overflow: hidden;
             height:3rem;
-            line-height: 1.5rem;
+            line-height: 1.2rem;
+            font-size:.9rem;
         }
         &.father{
             padding-bottom:.5rem;
