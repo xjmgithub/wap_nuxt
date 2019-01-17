@@ -182,7 +182,6 @@ export default {
                             this.channelList.push(item)
                         })
                     })
-                    console.log(this.channelList)
                     this.getChannelDetail()
                 }
             })
@@ -207,7 +206,6 @@ export default {
                         }else{
                             this.packages = []
                         }
-                        console.log(this.packages)
                         throw new Error('EndIterative')
                     }
                 })
