@@ -38,7 +38,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scope>
+<style lang="less" scoped>
 .channel {
     height: 5.5rem;
     position: relative;

@@ -1,25 +1,37 @@
 <template>
     <div class="wrapper">
-        <download class="clearfix" />
-        <div class="channelList">
+        <download class="clearfix"/>
+        <div v-show="!loadstate" class="channelList">
             <p class="title">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_live_channelnumber}}</p>
-            <channel v-for="(item,index) in channelList" :key="index" class="piece" :channel-name="item.name" :description="item.describesShow" :state="item.channel.billingType" :rate="item.rate" @onLive="liveDetail(item)" />
+            <channel
+                v-for="(item,index) in channelList"
+                :key="index"
+                class="piece"
+                :channel-name="item.name"
+                :description="item.describesShow"
+                :state="item.channel.billingType"
+                :rate="item.rate"
+                @onLive="liveDetail(item)"
+            />
         </div>
+        <loading v-show="loadstate"/>
     </div>
 </template>
-
 <script>
 import channel from '~/components/web/channel'
 import download from '~/components/web/download'
+import loading from '~/components/loading'
 export default {
     layout: 'default',
     data() {
         return {
-            channelList: []
+            channelList: [],
+            loadstate: true
         }
     },
     mounted() {
         this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
+            this.loadstate = false
             let data = res.data
             if (data.length > 0) {
                 data.forEach(ele => {
@@ -32,7 +44,7 @@ export default {
                             let totalTime = item.programVO.endDate - item.programVO.startDate
                             let nowTime = new Date().getTime() - item.programVO.startDate
                             if (totalTime >= nowTime) {
-                                item.rate = Math.floor(nowTime / totalTime * 100)
+                                item.rate = Math.floor((nowTime / totalTime) * 100)
                             } else {
                                 item.rate = Math.floor(Math.random() * 100)
                             }
@@ -76,7 +88,8 @@ export default {
     },
     components: {
         channel,
-        download
+        download,
+        loading
     },
     head() {
         return {
@@ -85,7 +98,6 @@ export default {
     }
 }
 </script>
-
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .wrapper {
