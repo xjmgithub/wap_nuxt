@@ -57,7 +57,6 @@ export default {
             -webkit-line-clamp: 2;
             /* autoprefixer: off */
             -webkit-box-orient: vertical;
-             /* autoprefixer: on */
         }
     }
     .total {

@@ -17,16 +17,16 @@
             </h3>
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
-                <li v-for="(item,index) in dishList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url"/>
-                    <p class="money">{{currency}} {{item.price}}/M</p>
+                <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
-                <li v-for="(item,index) in antennaList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url"/>
-                    <p class="money">{{currency}} {{item.price}}/M</p>
+                <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
         </div>
@@ -69,13 +69,11 @@ export default {
                 if (data.length > 0) {
                     data.forEach(ele => {
                         if (ele.tvPlatForm == 'DTT') {
-                            ele.show = this.$options.filters.dttImgUrl(ele.name)
-                            if (ele.show) {
+                            if (ele.type==1) {
                                 this.antennaList.push(ele)
                             }
                         } else if (ele.tvPlatForm == 'DTH') {
-                            ele.show = this.$options.filters.dthImgUrl(ele.name)
-                            if (ele.show) {
+                            if (ele.type==1) {
                                 this.dishList.push(ele)
                             }
                         }
@@ -207,11 +205,11 @@ export default {
             margin: 0 3% 0 0;
             display: block;
             &:nth-child(3n) {
-                margin: 0.2rem 0 0 0;
+                margin: 0 0 0 0;
             }
             .money {
                 color: #333333;
-                font-size: 0.7rem;
+                font-size: 0.8rem;
                 line-height: 1.4rem;
                 text-align: right;
                 margin-right: 0.3rem;

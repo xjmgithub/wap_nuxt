@@ -3,7 +3,7 @@
         <div class="bouquets clearfix" v-show="!loadstate">
             <p>{{tvPlatFormName}}</p>
             <div class="logo">
-                <bg-img-data :img-path="packageLogo"/>
+                <bg-img-data :img-path="packageLogo" :package-name="bouquetName"/>
             </div>
             <div class="info">
                 <p class="bouquetName">{{bouquetName}} Bouquet</p>
@@ -55,8 +55,8 @@ export default {
                     platformInfo.forEach(platform => {
                         packages = platform.packages
                         packages.forEach(detail => {
-                            if (detail.id == id) {
-                                this.packageLogo = detail.poster.resources[0].url
+                            if (detail.id == parseInt(id)) {
+                                this.packageLogo = detail.poster ? detail.poster.resources[0].url : ''
                                 this.bouquetName = detail.name
                                 this.tvPlatFormName = detail.tvPlatForm == 'DTH' ? 'Dish' : 'Antenna'
                                 this.tvPlatForm = detail.tvPlatForm
@@ -103,7 +103,7 @@ export default {
         .logo {
             width: 38%;
             float: left;
-            margin-right:0.5rem;
+            margin-right: 0.5rem;
             img {
                 display: block;
                 width: 100%;
