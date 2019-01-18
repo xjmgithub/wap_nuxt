@@ -82,13 +82,17 @@ export default {
             float: left;
             margin-left: 0.7rem;
             text-align: center;
+            max-width:2.2rem;
             &:first-of-type{
                 margin-left: 0;
             }
             .nav_title {
                 font-size: 0.7rem;
                 color: white;
-                transform: scale(0.9)
+                transform: scale(0.9);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             img {
                 height: 1.6rem;
