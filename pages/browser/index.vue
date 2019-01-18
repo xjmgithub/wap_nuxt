@@ -3,7 +3,7 @@
         <div class="selfService">
             <h3>
                 <div class="dot">‧</div>
-                <div>StarTimes Decoder Selfservice</div>
+                <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
             </h3>
             <div class="recharge">
                 <span>$</span>
@@ -13,7 +13,7 @@
         <div class="bouquets">
             <h3>
                 <div class="dot">‧</div>
-                <div>Decoder Bouquets</div>
+                <div>{{$store.state.lang.officialwebsitemobile_bouquet_section}}</div>
             </h3>
             <span>Dish</span>
             <ul class="dish clearfix">
@@ -32,7 +32,7 @@
         </div>
         <div class="startimes">
             <h3 class="flytitle">
-                <div>StarTimes ON</div>
+                <div>{{$store.state.lang.officialwebsitemobile_startimeson_section}}</div>
             </h3>
             <img src="~assets/img/web/pic_show.jpg" class="bigPic">
             <div class="download clearfix">

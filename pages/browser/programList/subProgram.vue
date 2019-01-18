@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="clips">
-            <p>Clips</p>
+            <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
             <ul class="clearfix">
                 <li>
                     <img src="~assets/img/web/pic2.jpg" alt="">
