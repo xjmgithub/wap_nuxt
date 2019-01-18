@@ -6,7 +6,7 @@
                 <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
             </h3>
             <div class="recharge">
-                <nuxt-link to="/hybrid/dvb/index">
+                <nuxt-link to="/hybrid/dvb/bind">
                     <span>$</span>
                     <div>RECHARGE</div>
                 </nuxt-link>
