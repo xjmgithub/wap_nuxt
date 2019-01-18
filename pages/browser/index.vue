@@ -18,14 +18,14 @@
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster.resources[0].url"/>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url"/>
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster.resources[0].url"/>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url"/>
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>

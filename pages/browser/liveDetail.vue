@@ -235,7 +235,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scope>
+<style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .wrapper{
     .poster{
@@ -246,7 +246,7 @@ export default {
         }
     }
     .container{
-        width:95%;
+        width:93%;
         margin:.5rem auto;
         .views{
             color:#999999;
@@ -273,7 +273,7 @@ export default {
                     padding-bottom: .5rem;
                 }
                 img{
-                    width:2rem;
+                    width:1.8rem;
                 }
             }
         }

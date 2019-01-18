@@ -9,10 +9,9 @@
 <style lang="less" scoped>
 .link-to-download {
     .download {
-        padding: 0.5rem 0.8rem;
+        padding: 0.6rem 0.8rem;
         background-color: #ffbe19;
         font-weight: bold;
-        font-size: 0.8rem;
         color:#333333;
         overflow: hidden;
         zoom:1;

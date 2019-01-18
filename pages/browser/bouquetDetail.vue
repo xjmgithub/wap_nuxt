@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper">
-        <div class="bouquets clearfix">
+        <div class="bouquets clearfix" v-show="!loadstate">
             <p>{{tvPlatFormName}}</p>
             <div class="logo">
-                <bgImg :bouquet-name="bouquetName" :tv-plat-form="tvPlatForm" />
+                <bg-img-data :img-path="packageLogo"/>
             </div>
             <div class="info">
                 <p class="bouquetName">{{bouquetName}} Bouquet</p>
@@ -13,7 +13,7 @@
                 </p>
             </div>
         </div>
-        <p class="title">{{detailList.length}} TV Channels inclued</p>
+        <p class="title" v-show="!loadstate">{{detailList.length}} TV Channels inclued</p>
         <ul class="channelList">
             <li v-for="(item,index) in detailList" :key="index">
                 <div class="lasy_bg">
@@ -22,11 +22,12 @@
                 <img src="~assets/img/web/channelsOn.png" v-show="item.liveStatus" class="imgOn">
             </li>
         </ul>
+        <loading v-show="loadstate"/>
     </div>
 </template>
-
 <script>
-import bgImg from '~/components/web/bgImg'
+import bgImgData from '~/components/web/bgImgData'
+import loading from '~/components/loading'
 export default {
     layout: 'default',
     data() {
@@ -34,8 +35,10 @@ export default {
             detailList: [],
             price: '',
             bouquetName: '',
+            packageLogo: '',
             tvPlatFormName: '',
-            tvPlatForm: ''
+            tvPlatForm: '',
+            loadstate: true
         }
     },
     mounted() {
@@ -43,6 +46,7 @@ export default {
         let id = this.$route.query.id
         this.price = this.$route.query.price
         this.$axios.get(`/cms/v2/vup/snapshot/channels?count=500&platformTypes=1&platformTypes=0&packageCode=${packageCode}`).then(res => {
+            this.loadstate = false
             let countChannel = res.data
             let platformInfo, packages, detail
             if (countChannel.length > 0) {
@@ -52,6 +56,7 @@ export default {
                         packages = platform.packages
                         packages.forEach(detail => {
                             if (detail.id == id) {
+                                this.packageLogo = detail.poster.resources[0].url
                                 this.bouquetName = detail.name
                                 this.tvPlatFormName = detail.tvPlatForm == 'DTH' ? 'Dish' : 'Antenna'
                                 this.tvPlatForm = detail.tvPlatForm
@@ -71,7 +76,8 @@ export default {
         }
     },
     components: {
-        bgImg
+        bgImgData,
+        loading
     },
     head() {
         return {
@@ -80,7 +86,6 @@ export default {
     }
 }
 </script>
-
 <style lang="less">
 @import '~assets/less/browser/index.less';
 .wrapper {
@@ -96,13 +101,17 @@ export default {
             font-size: 1.1rem;
         }
         .logo {
-            width: 32%;
+            width: 38%;
             float: left;
-            margin-right: 1rem;
+            margin-right:0.5rem;
+            img {
+                display: block;
+                width: 100%;
+            }
         }
         .info {
             float: right;
-            width: 60%;
+            width: 58%;
             .bouquetName {
                 font-weight: bold;
             }
@@ -115,7 +124,7 @@ export default {
             }
             .money {
                 font-size: 0.9rem;
-                line-height: 1.9rem;
+                line-height: 1.6rem;
             }
         }
     }
@@ -136,9 +145,8 @@ export default {
             .lasy_bg {
                 width: 100%;
                 padding-top: 100%;
-                background: #ccc;
+                background: white;
                 position: relative;
-                border-radius: 6px;
                 img {
                     width: 100%;
                     position: absolute;
