@@ -10,25 +10,25 @@
             <div>
                 <nuxt-link to="/browser/">
                     <img src="~assets/img/web/ic_home_def_g.png">
-                    <div class="nav_title">Home</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_home}}</div>
                 </nuxt-link>
             </div>
             <div>
                 <a href="https://m.startimestv.com/TVguide_list.php">
                     <img src="~assets/img/web/ic_tvguide.png">
-                    <div class="nav_title">Guide</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_tvguide}}</div>
                 </a>
             </div>
             <div>
                 <nuxt-link to="/browser/programlist">
                     <img src="~assets/img/web/ic_menu_def_w.png">
-                    <div class="nav_title">List</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_list}}</div>
                 </nuxt-link>
             </div>
             <div>
                 <nuxt-link to="/browser/live">
                     <img src="~assets/img/web/ic_phoneplay_def_w.png">
-                    <div class="nav_title">Live</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_live}}</div>
                 </nuxt-link>
             </div>
         </div>

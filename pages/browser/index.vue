@@ -1,13 +1,13 @@
 <template>
     <div class="wrapper">
         <div class="selfService">
-            <h3>StarTimes Decoder Selfservice</h3>
+            <h3>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</h3>
             <div class="recharge">
                 <span>$</span>RECHARGE
             </div>
         </div>
         <div class="bouquets">
-            <h3>Decoder Bouquets</h3>
+            <h3>{{$store.state.lang.officialwebsitemobile_bouquet_section}}</h3>
             <span>Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div class="startimes">
-            <h3><img src="~assets/img/web/ON-RIGHT.png" alt=""> StarTimes ON</h3>
+            <h3><img src="~assets/img/web/ON-RIGHT.png" alt=""> {{$store.state.lang.officialwebsitemobile_startimeson_section}}</h3>
             <img src="~assets/img/web/pic_show.jpg" class="bigPic">
             <div class="download clearfix">
                 <a href="https://m.startimestv.com/DownloadAPP.php">

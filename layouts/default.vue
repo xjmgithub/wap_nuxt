@@ -23,10 +23,10 @@
                     <nuxt-link to="/browser/language">{{language}}</nuxt-link>
                 </li>
                 <li>
-                    <a href="https://m.startimestv.com/faq.php">FAQ</a>
+                    <a href="https://m.startimestv.com/faq.php">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
                 </li>
                 <li>
-                    <a href="https://m.startimestv.com/business.php">Contact Us</a>
+                    <a href="https://m.startimestv.com/business.php">{{$store.state.lang.officialwebsitemobile_slidenav_contactus}}</a>
                 </li>
             </ul>
         </div>
