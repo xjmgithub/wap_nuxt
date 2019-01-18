@@ -10,28 +10,32 @@
         <div class="regtext">Don't have an account?
             <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
         </div>
+        <div class="loading-layer" v-show="loadStatus">
+            <loading/>
+        </div>
     </div>
 </template>
 <script>
 import { setCookie, initUser, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
+import loading from '~/components/loading'
 export default {
     layout: 'base',
     data() {
         return {
             pre: this.$route.query.pre,
             twitter_oauth_token: this.$route.query.oauth_token,
-            twitter_oauth_verifier: this.$route.query.oauth_verifier
+            twitter_oauth_verifier: this.$route.query.oauth_verifier,
+            loadStatus: false
         }
     },
     mounted() {
-        // TODO pre
         if (this.pre) {
-            localStorage.setItem('login_prefer', this.pre)
+            sessionStorage.setItem('login_prefer', this.pre)
         }
 
-        // twitter login
+        // twitter callback
         if (this.twitter_oauth_token && this.twitter_oauth_verifier) {
-            //TODO loading to login
+            this.loadStatus = true
             this.$axios
                 .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
                 .then(res => {
@@ -62,7 +66,7 @@ export default {
                 if (res.data.code == 0) {
                     window.location.href = `https://api.twitter.com/oauth/authenticate?oauth_token=${res.data.data.oauth_token}`
                 } else {
-                    // LOGIN ERROR
+                    this.$alert(res.data.message)
                 }
             })
         },
@@ -80,16 +84,20 @@ export default {
                 .then(res => {
                     if (res.data.code == 0) {
                         initUser(res.data.data.token, res.data.data.userId, res.data.data)
-                        if (this.pre) {
-                            window.location.href = this.pre
+                        let pre = sessionStorage.getItem('login_prefer') || ''
+                        if (pre) {
+                            window.location.href = pre
                         } else {
-                            window.location.href = '/hybrid/payment/wallet/payto'
+                            window.location.href = '/browser/'
                         }
                     } else {
                         this.$alert(res.datea.message)
                     }
                 })
         }
+    },
+    components: {
+        loading: loading
     },
     head() {
         return {
@@ -101,8 +109,8 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     position: static;
-    min-height:100%;
-    padding-top:25%;
+    min-height: 100%;
+    padding-top: 25%;
     img {
         display: block;
         height: 2.3rem;
@@ -136,6 +144,13 @@ export default {
         font-size: 0.8rem;
         color: #424242;
         margin-top: 2.5rem;
+    }
+    .loading-layer {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        position: fixed;
+        top: 0;
     }
 }
 </style>
