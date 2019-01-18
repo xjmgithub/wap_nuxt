@@ -18,20 +18,22 @@
             <span>Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.name" tv-plat-form="DTH" />
+                    <bgImg :bouquet-name="item.name" tv-plat-form="DTH"/>
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
             <span>Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.name" tv-plat-form="DTT" />
+                    <bgImg :bouquet-name="item.name" tv-plat-form="DTT"/>
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
         </div>
         <div class="startimes">
-            <h3><img src="~assets/img/web/ON-RIGHT.png" alt=""> StarTimes ON</h3>
+            <h3>
+                <img src="~assets/img/web/ON-RIGHT.png" alt> StarTimes ON
+            </h3>
             <img src="~assets/img/web/pic_show.jpg" class="bigPic">
             <div class="download clearfix">
                 <a href="https://m.startimestv.com/DownloadAPP.php">
@@ -91,26 +93,20 @@ export default {
     filters: {
         dttImgUrl(name) {
             let data = name.toLowerCase()
-            if (data == 'sport plus' 
-                || data == 'unique'  
-                || data == 'classique'
-                || data == 'nova'
-                || data == 'basique'
-                ||data == 'sport play'
-            ){
-                 return true
+            if (data == 'sport plus' || data == 'unique' || data == 'classique' || data == 'nova' || data == 'basique' || data == 'sport play') {
+                return true
             }
-           
         },
         dthImgUrl(name) {
             let data = name.toLowerCase()
-            if (data == 'sport plus' 
-                || data == 'super'
-                || data == 'smart'
-                || data == 'engilsh'
-                || data == 'indian'
-                || data == 'chinese'
-                || data == 'sport play'
+            if (
+                data == 'sport plus' ||
+                data == 'super' ||
+                data == 'smart' ||
+                data == 'engilsh' ||
+                data == 'indian' ||
+                data == 'chinese' ||
+                data == 'sport play'
             ) {
                 return true
             }
@@ -121,9 +117,8 @@ export default {
             return this.$store.state.country.currencySymbol
         }
     },
-    components:{
-       bgImg 
-               
+    components: {
+        bgImg
     },
     head() {
         return {
@@ -132,7 +127,6 @@ export default {
     }
 }
 </script>
-
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .boxStyle {
@@ -140,17 +134,17 @@ export default {
     margin: 0 auto;
     border-bottom: 1px solid #d8d8d8;
     h3 {
-        margin-bottom:0.2rem;
+        margin-bottom: 0.2rem;
         color: #333333;
         font-weight: bold;
-        div{
-            margin-right:0.3rem;
-            font-size:1rem;
-            &.dot{
-                font-size:2.5rem;
-                height:1rem;
-                line-height:1.7rem;
-                float:left;
+        div {
+            margin-right: 0.3rem;
+            font-size: 1rem;
+            &.dot {
+                font-size: 2.5rem;
+                height: 1rem;
+                line-height: 1.7rem;
+                float: left;
             }
         }
     }
@@ -173,14 +167,14 @@ export default {
             line-height: 1.45rem;
             border: 2px solid #0087eb;
             border-radius: 50%;
-            margin:0.35rem 0.7rem 0.3rem 0.9rem;
+            margin: 0.35rem 0.7rem 0.3rem 0.9rem;
             font-size: 1.3rem;
-            float:left;
+            float: left;
         }
-        div{
+        div {
             text-align: left;
-            line-height:2.45rem;
-            font-weight:bold;
+            line-height: 2.45rem;
+            font-weight: bold;
         }
     }
 }
@@ -191,19 +185,19 @@ export default {
         font-size: 0.95rem;
         color: #333333;
         font-weight: 600;
-        margin-top:0.4rem;
-        clear:both;
-        display:block;
+        clear: both;
+        display: block;
     }
     ul {
         width: 100%;
+        margin:0.3rem 0;
         li {
             float: left;
             width: 31%;
             margin: 0.2rem 3% 0 0;
             display: block;
             &:nth-child(3n) {
-                margin:0.2rem 0 0 0;
+                margin: 0.2rem 0 0 0;
             }
             .money {
                 color: #333333;
