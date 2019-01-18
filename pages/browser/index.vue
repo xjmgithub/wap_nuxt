@@ -18,21 +18,21 @@
             <span>Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.name" tv-plat-form="DTH"/>
+                    <bg-img-data :img-path="item.poster.resources[0].url"/>
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
             <span>Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.name" tv-plat-form="DTT"/>
+                    <bg-img-data :img-path="item.poster.resources[0].url"/>
                     <p class="money">{{currency}} {{item.price}}/M</p>
                 </li>
             </ul>
         </div>
         <div class="startimes">
-            <h3>
-                <img src="~assets/img/web/ON-RIGHT.png" alt> StarTimes ON
+            <h3 class="flytitle">
+                <div>StarTimes ON</div>
             </h3>
             <img src="~assets/img/web/pic_show.jpg" class="bigPic">
             <div class="download clearfix">
@@ -50,7 +50,7 @@
     </div>
 </template>
 <script>
-import bgImg from '~/components/web/bgImg'
+import bgImgData from '~/components/web/bgImgData'
 export default {
     layout: 'default',
     data() {
@@ -118,7 +118,7 @@ export default {
         }
     },
     components: {
-        bgImg
+        bgImgData
     },
     head() {
         return {
@@ -147,33 +147,43 @@ export default {
                 float: left;
             }
         }
+        img {
+            width: auto;
+            float: left;
+            display: block;
+        }
+        &.flytitle {
+            background: url('~assets/img/web/ON-RIGHT.png') no-repeat left center;
+            background-size: 0.8rem;
+            padding-left: 1.2rem;
+        }
     }
 }
 .selfService {
     .boxStyle;
     padding: 0.5rem 0 1rem 0.2rem;
     .recharge {
-        width: 46%;
+        width: 45%;
         border: 2px solid #0087eb;
         border-radius: 4px;
         color: #0087eb;
         text-align: center;
-        height: 2.7rem;
+        height: 2.5rem;
         font-size: 0.85rem;
         span {
             display: block;
-            width: 1.7rem;
-            height: 1.7rem;
-            line-height: 1.45rem;
+            width: 1.6rem;
+            height: 1.6rem;
+            line-height: 1.44rem;
             border: 2px solid #0087eb;
             border-radius: 50%;
-            margin: 0.35rem 0.7rem 0.3rem 0.9rem;
-            font-size: 1.3rem;
+            margin: 0.3rem 0.7rem 0.3rem 1rem;
+            font-size: 1.2rem;
             float: left;
         }
         div {
             text-align: left;
-            line-height: 2.45rem;
+            line-height: 2.3rem;
             font-weight: bold;
         }
     }
@@ -190,21 +200,22 @@ export default {
     }
     ul {
         width: 100%;
-        margin:0.3rem 0;
+        margin: 0.3rem 0;
         li {
             float: left;
             width: 31%;
-            margin: 0.2rem 3% 0 0;
+            margin: 0 3% 0 0;
             display: block;
             &:nth-child(3n) {
                 margin: 0.2rem 0 0 0;
             }
             .money {
                 color: #333333;
-                font-size: 0.85rem;
+                font-size: 0.7rem;
+                line-height: 1.4rem;
                 text-align: right;
-                line-height: 1.5rem;
                 margin-right: 0.3rem;
+                font-weight: bold;
             }
             img {
                 width: 100%;
@@ -214,27 +225,23 @@ export default {
 }
 .startimes {
     .boxStyle;
-    padding: 0.5rem 0 1rem 0.2rem;
-    margin-bottom: 1.5rem;
-    h3 {
-        display: block;
-        list-style-type: none;
-        margin-left: 0;
-        img {
-            height: 1.2rem;
-        }
-    }
+    padding: 0.3rem 0 1.5rem;
+    margin-bottom: 1rem;
     .bigPic {
         width: 100%;
     }
     .download {
-        img {
-            display: block;
-            width: 48%;
-            margin-top: 5%;
-            float: left;
+        a {
+            img {
+                display: block;
+                width: 48%;
+                margin-top: 4%;
+                float: left;
+            }
             &:nth-child(2n) {
-                float: right;
+                img {
+                    float: right;
+                }
             }
         }
     }
