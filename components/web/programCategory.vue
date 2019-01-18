@@ -15,7 +15,7 @@ export default {
     data() {
         let choosedId = this.$route.params.id || 0
         return {
-            showAll: false,
+            showAll: true,
             choosedId: choosedId,
             list: [
                 {
@@ -113,6 +113,17 @@ export default {
                 return this.list.slice(0, 7)
             }
         }
+    },
+    mounted() {
+        this.showList.forEach((item, index) => {
+            if (item.id == this.choosedId) {
+                if (index > 6) {
+                    this.showAll = true
+                } else {
+                    this.showAll = false
+                }
+            }
+        })
     },
     methods: {
         toggleAll() {
