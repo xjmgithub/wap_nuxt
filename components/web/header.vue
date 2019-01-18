@@ -58,9 +58,9 @@ export default {
 </script>
 <style lang="less" scope>
 .m_header {
-    padding: 0.6rem 0.8rem 0.6rem 0.3rem;
+    padding: 0.4rem 0.5rem;
     background: #222527;
-    height: 3.7rem;
+    height: 3.45rem;
     position: fixed;
     top: 0;
     width: 100%;
@@ -70,7 +70,7 @@ export default {
         float: left;
         height:100%;
         img {
-            height: 1.8rem;
+            height: 1.6rem;
             &.logo_img{
                 height:2.2rem;
             }
@@ -80,7 +80,7 @@ export default {
         float: right;
         & > div {
             float: left;
-            margin-left: 0.6rem;
+            margin-left: 0.7rem;
             text-align: center;
             &:first-of-type{
                 margin-left: 0;
@@ -88,6 +88,7 @@ export default {
             .nav_title {
                 font-size: 0.7rem;
                 color: white;
+                transform: scale(0.9)
             }
             img {
                 height: 1.6rem;

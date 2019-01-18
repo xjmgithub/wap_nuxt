@@ -1,13 +1,20 @@
 <template>
     <div class="wrapper">
         <div class="selfService">
-            <h3>StarTimes Decoder Selfservice</h3>
+            <h3>
+                <div class="dot">‧</div>
+                <div>StarTimes Decoder Selfservice</div>
+            </h3>
             <div class="recharge">
-                <span>$</span>RECHARGE
+                <span>$</span>
+                <div>RECHARGE</div>
             </div>
         </div>
         <div class="bouquets">
-            <h3>Decoder Bouquets</h3>
+            <h3>
+                <div class="dot">‧</div>
+                <div>Decoder Bouquets</div>
+            </h3>
             <span>Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" v-show="item.show" @click="goToBouquetDetail(item)">
@@ -133,42 +140,53 @@ export default {
     margin: 0 auto;
     border-bottom: 1px solid #d8d8d8;
     h3 {
-        font-size: 1rem;
-        display: list-item;
-        list-style-type: disc;
-        margin-left: 1em;
+        margin-bottom:0.2rem;
         color: #333333;
         font-weight: bold;
+        div{
+            margin-right:0.3rem;
+            font-size:1rem;
+            &.dot{
+                font-size:2.5rem;
+                height:1rem;
+                line-height:1.7rem;
+                float:left;
+            }
+        }
     }
 }
 .selfService {
     .boxStyle;
     padding: 0.5rem 0 1rem 0.2rem;
     .recharge {
-        width: 48%;
+        width: 46%;
         border: 2px solid #0087eb;
         border-radius: 4px;
         color: #0087eb;
         text-align: center;
         height: 2.7rem;
-        line-height: 2.7rem;
         font-size: 0.85rem;
         span {
-            display: inline-block;
-            width: 1.8rem;
-            height: 1.8rem;
-            line-height: 1.6rem;
+            display: block;
+            width: 1.7rem;
+            height: 1.7rem;
+            line-height: 1.45rem;
             border: 2px solid #0087eb;
             border-radius: 50%;
-            margin-right: 0.8rem;
-            margin-top: 0.3rem;
-            font-size: 1.2rem;
+            margin:0.35rem 0.7rem 0.3rem 0.9rem;
+            font-size: 1.3rem;
+            float:left;
+        }
+        div{
+            text-align: left;
+            line-height:2.45rem;
+            font-weight:bold;
         }
     }
 }
 .bouquets {
     .boxStyle;
-    padding: 0.5rem 0 0.5rem 0.2rem;
+    padding: 0.3rem 0;
     & > span {
         font-size: 0.95rem;
         color: #333333;
