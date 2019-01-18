@@ -1,7 +1,7 @@
 <template>
     <div class="channel" @click="toLive">
         <p>{{channelName}}</p>
-        <p>{{description}}</p>
+        <div>{{description}}</div>
         <div class="total">
             <div class="now" :style="{ width: rate + '%'}"/>
         </div>
@@ -47,17 +47,17 @@ export default {
     & > p {
         font-size: 0.85rem;
         font-weight: bold;
-        & + p {
+        & + div {
             font-weight: normal;
             font-size: 0.8rem;
             color: #aaaaaa;
-            height: 2.6rem;
-            // overflow:hidden;
-            // text-overflow:ellipsis;
             display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
             overflow: hidden;
+            height:2.6rem;
+            -webkit-line-clamp: 2;
+            /* autoprefixer: off */
+            -webkit-box-orient: vertical;
+             /* autoprefixer: on */
         }
     }
     .total {
