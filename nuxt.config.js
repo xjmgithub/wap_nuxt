@@ -90,7 +90,7 @@ module.exports = {
 
     serverMiddleware: [
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
-        { path: '/hybrid/api/twitter/oauth/authenticate', handler: '~/api/twitter/authenticate.js' }
+        { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
     ],
 
     /*

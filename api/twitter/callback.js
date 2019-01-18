@@ -1,22 +1,24 @@
 const axios = require('axios')
-const https = require('https')
-const auth = require('./auth1.0a')
 const url = require('url')
 const queryString = require('querystring')
+const auth = require('./auth1.0a')
+const https = require('https')
 const oauth_secret = 'zc3RWN8Jp58CowGZm8wjxstMQHspDxpC9EVcmHdW82gZnVpIfN'
 const request_data = {
-    url: 'https://api.twitter.com/oauth/request_token',
+    url: 'https://api.twitter.com/oauth/access_token',
     method: 'POST'
 }
 
 export default function(req, res, next) {
     let args = url.parse(req.url).query
     let query = queryString.parse(args)
+
     let oauth_data = {
         oauth_consumer_key: 'JdwbwCJH1XF4kspuF3Qoz03PI',
         oauth_nonce: auth.getNonce(),
-        oauth_callback: `${query.back}/hybrid/account/login`,
+        oauth_token: query.oauth_token,
         oauth_signature_method: 'HMAC-SHA1',
+        oauth_verifier: query.oauth_verifier,
         oauth_timestamp: parseInt(new Date().getTime() / 1000, 10),
         oauth_version: '1.0'
     }
@@ -34,6 +36,7 @@ export default function(req, res, next) {
                 let s = item.split('=')
                 json[s[0]] = s[1]
             })
+
             res.end(
                 JSON.stringify({
                     code: 0,
@@ -45,8 +48,8 @@ export default function(req, res, next) {
         .catch(err => {
             res.end(
                 JSON.stringify({
-                    code: 101,
-                    message: 'request token from twitter error!',
+                    code: 104,
+                    message: 'access_token get error',
                     data: null
                 })
             )

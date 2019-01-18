@@ -18,12 +18,28 @@ export default {
     layout: 'base',
     data() {
         return {
-            pre: this.$route.query.pre
+            pre: this.$route.query.pre,
+            twitter_oauth_token: this.$route.query.oauth_token,
+            twitter_oauth_verifier: this.$route.query.oauth_verifier
         }
     },
     mounted() {
+        // TODO pre
         if (this.pre) {
             localStorage.setItem('login_prefer', this.pre)
+        }
+
+        if (this.twitter_oauth_token && this.twitter_oauth_verifier) {
+            //TODO loading to login
+            this.$axios
+                .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
+                .then(res => {
+                    if (res.data.code == 0) {
+                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name)
+                    } else {
+                        this.$alert(res.data.message)
+                    }
+                })
         }
 
         var googleUser = {}
@@ -73,15 +89,16 @@ export default {
             })
         },
         bytwitter() {
-            this.$axios.get('/hybrid/api/twitter/oauth/request_token').then(res => {
+            
+            this.$axios.get(`/hybrid/api/twitter/oauth/request_token?back=${location.origin}`).then(res => {
                 if (res.data.code == 0) {
-                    window.location.href=`https://api.twitter.com/oauth/authenticate?oauth_token=${res.data.data.oauth_token}`
-                }else{
+                    window.location.href = `https://api.twitter.com/oauth/authenticate?oauth_token=${res.data.data.oauth_token}`
+                } else {
                     // LOGIN ERROR
                 }
             })
         },
-        loginByThird(userkey) {
+        loginByThird(userkey, nickname) {
             this.$axios
                 .post('/ums/v1/user/login', {
                     applicationId: 2,
