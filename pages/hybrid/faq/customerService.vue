@@ -483,7 +483,6 @@ export default {
             this.$nextTick(() => {
                 let h1 = document.querySelector('.wrapper').offsetHeight
                 let h2 = document.querySelector('.content').offsetHeight
-                console.log(h1,h2)
                 this.scroll.scrollTo(0, h1 - h2, 300)
             })
         },
