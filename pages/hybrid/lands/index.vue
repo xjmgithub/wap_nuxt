@@ -11,7 +11,7 @@
                     <img v-else src="~assets/img/landpage/ios_appstore_bg.png">
                 </div>
                 <div class="download-app-wrapper" v-if="appType==1">
-                    <div class="download-app-btn" onclick="downApk()">
+                    <div class="download-app-btn" @click="downApk()">
                         <div style="padding:0px 0.8rem">{{$store.state.lang.download_apk}}</div>
                     </div>
                 </div>
