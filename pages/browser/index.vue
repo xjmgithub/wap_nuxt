@@ -8,7 +8,7 @@
             <div class="recharge">
                 <nuxt-link to="/hybrid/dvb/bind">
                     <span>$</span>
-                    <div>RECHARGE</div>
+                    <span>RECHARGE</span>
                 </nuxt-link>
             </div>
         </div>
@@ -71,11 +71,11 @@ export default {
                 if (data.length > 0) {
                     data.forEach(ele => {
                         if (ele.tvPlatForm == 'DTT') {
-                            if (ele.type==1) {
+                            if (ele.type == 1) {
                                 this.antennaList.push(ele)
                             }
                         } else if (ele.tvPlatForm == 'DTH') {
-                            if (ele.type==1) {
+                            if (ele.type == 1) {
                                 this.dishList.push(ele)
                             }
                         }
@@ -169,22 +169,22 @@ export default {
         color: #0087eb;
         text-align: center;
         height: 2.5rem;
-        font-size: 0.85rem;
-        span {
-            display: block;
+        line-height: 2.3rem;
+        span:first-child {
             width: 1.6rem;
             height: 1.6rem;
-            line-height: 1.44rem;
+            line-height: 1.4rem;
+            font-size: 1.2rem;
             border: 2px solid #0087eb;
             border-radius: 50%;
-            margin: 0.3rem 0.7rem 0.3rem 1rem;
-            font-size: 1.2rem;
-            float: left;
+            display: inline-block;
+            margin-right:-0.72rem;
         }
-        div {
-            text-align: left;
-            line-height: 2.3rem;
-            font-weight: bold;
+        span:last-child {
+            font-size: 1.2rem;
+            display: inline-block;
+            font-weight:bold;
+            transform: perspective(1px) scale(0.8);
         }
     }
 }
