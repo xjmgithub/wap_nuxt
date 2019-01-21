@@ -68,7 +68,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @font-face {
     font-family: Roboto;
     src: url('~assets/fonts/Roboto-Regular.ttf');

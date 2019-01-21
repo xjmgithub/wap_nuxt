@@ -1,7 +1,7 @@
 <template>
     <div class="m_header">
         <div class="logo">
-            <img @click="showNav" src="~assets/img/web/ic_guidelist.png">
+            <img @click="toggleNav" src="~assets/img/web/ic_guidelist.png">
             <img class="logo_img" v-if="logo==0" src="~assets/img/startimes.png" alt="Startimes">
             <img class="logo_img" v-if="logo==1" src="~assets/img/topstar_white.png" alt="Startimes">
             <img class="logo_img" v-if="logo==2" src="~assets/img/starsat_white.png" alt="Startimes">
@@ -49,9 +49,9 @@ export default {
         }
     },
     methods: {
-        showNav() {
-            // let state = this.$store.state.navState
-            this.$store.commit('SET_NAV_STATE', true)
+        toggleNav() {
+            let state = this.$store.state.navState
+            this.$store.commit('SET_NAV_STATE', !state)
         }
     }
 }

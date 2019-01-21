@@ -1,8 +1,9 @@
 <template>
-    <div class="frame" :class="{shownav:showNav}" style="overflow:visible;height:auto;">
+    <div style="overflow:visible;height:auto;">
         <mheader/>
         <nuxt/>
-        <div class="slide-bar">
+        <div class="nav-layer" v-show="showNav" @click="closeNav"/>
+        <div class="slide-bar" :class="{'nav-show':showNav}">
             <ul>
                 <li>
                     <div v-if="user">
@@ -38,9 +39,10 @@ export default {
     computed: {
         user() {
             let userInfo = this.$store.state.user
-            return userInfo.roleName != 'ANONYMOUS' ? userInfo : null
+            return userInfo.roleName && userInfo.roleName != 'ANONYMOUS' ? userInfo : null
         },
         showNav() {
+            // return true
             return this.$store.state.navState
         },
         country() {
@@ -63,6 +65,11 @@ export default {
     components: {
         mheader
     },
+    methods: {
+        closeNav() {
+            this.$store.commit('SET_NAV_STATE', false)
+        }
+    },
     created() {
         this.$axios.setHeader('token', this.$store.state.token)
     }
@@ -80,24 +87,31 @@ body {
     margin: 0;
     font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Sans-serif;
 }
-
-.frame {
-    transition: transform 0.3s;
-}
-.frame.shownav {
-    transform: translateX(10rem);
+.nav-layer {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .slide-bar {
-    position: absolute;
-    left: -10rem;
+    position: fixed;
+    left: 0rem;
     top: 0;
     width: 10rem;
     background: #222527;
+    z-index: 1001;
+    display: none;
+    &.nav-show {
+        position: fixed;
+        display: block;
+    }
     ul {
         padding: 1rem;
         color: white;
-        line-height: 2rem;
+        line-height: 2.5rem;
         font-size: 0.9rem;
         a {
             color: white;
@@ -105,12 +119,11 @@ body {
     }
 }
 .user_info {
-    text-align: center;
-    padding: 1rem;
+    color:#BDBDBD;
     img {
         width: 3rem;
-        margin: 0 auto;
         border-radius: 3rem;
+        border:1px #BDBDBD solid;
         display: block;
     }
 }
