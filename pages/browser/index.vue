@@ -6,10 +6,11 @@
                 <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
             </h3>
             <div class="recharge">
-                <nuxt-link to="/hybrid/dvb/bind">
+                <!-- <nuxt-link to="/hybrid/dvb/bind"> -->
+                <a href="https://m.startimestv.com/DVB/binding.php">
                     <span>$</span>
                     <span>RECHARGE</span>
-                </nuxt-link>
+                </a>
             </div>
         </div>
         <div class="bouquets">

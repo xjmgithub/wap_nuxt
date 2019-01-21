@@ -128,7 +128,6 @@ body {
     }
 }
 .wrapper {
-    box-shadow: -10rem 0 0 0px #222527;
     background: white;
 }
 .country {
