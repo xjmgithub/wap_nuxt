@@ -601,7 +601,7 @@ export const getOnlineCategory = () => {
             id: 79,
             name: 'Entertainment',
             fk_tag_type_id: 5,
-            weight: 79,
+            weight: 1,
             description: null,
             delete_flag: '1',
             version: 3,
