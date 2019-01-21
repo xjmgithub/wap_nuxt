@@ -80,16 +80,15 @@ export default {
         float: right;
         & > div {
             float: left;
-            margin-left: 0.7rem;
+            margin-left: 0.4rem;
             text-align: center;
-            max-width:2.2rem;
+            width:2.3rem;
             &:first-of-type{
                 margin-left: 0;
             }
             .nav_title {
                 font-size: 0.7rem;
                 color: white;
-                transform: scale(0.9);
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;

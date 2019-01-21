@@ -140,11 +140,12 @@ export default {
         font-weight: bold;
         div {
             margin-right: 0.3rem;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            line-height:2.5rem;
             &.dot {
                 font-size: 2.5rem;
                 height: 1rem;
-                line-height: 1.7rem;
+                line-height: 2.3rem;
                 float: left;
             }
         }
@@ -155,7 +156,7 @@ export default {
         }
         &.flytitle {
             background: url('~assets/img/web/ON-RIGHT.png') no-repeat left center;
-            background-size: 0.8rem;
+            background-size: 1rem;
             padding-left: 1.2rem;
         }
     }
@@ -169,8 +170,8 @@ export default {
         border-radius: 4px;
         color: #0087eb;
         text-align: center;
-        height: 2.5rem;
-        line-height: 2.3rem;
+        height: 2.8rem;
+        line-height: 2.6rem;
         span:first-child {
             width: 1.6rem;
             height: 1.6rem;
@@ -205,7 +206,7 @@ export default {
         li {
             float: left;
             width: 31%;
-            margin: 0 3% 0 0;
+            margin: 0 3% 1.5% 0;
             display: block;
             &:nth-child(3n) {
                 margin: 0 0 0 0;
