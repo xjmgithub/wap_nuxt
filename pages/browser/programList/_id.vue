@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <program-category />
+        <program-category ref="category" />
         <div>
             <program-item v-for="item in list" :item="item" :key="item.id" />
         </div>
@@ -44,6 +44,8 @@ export default {
         programItem
     },
     mounted(){
+        this.$refs.category.choosedId
+        console.log(this.$refs.category.choosedId)
         if(this.tagId==62){
             this.list = [
                 {

@@ -23,6 +23,7 @@ export default {
         list.sort((a, b) => {
             return a.weight - b.weight
         })
+        choosedId = choosedId || list[0].id
         return {
             showAll: true,
             choosedId: choosedId,
