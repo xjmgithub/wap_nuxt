@@ -43,14 +43,14 @@ export default {
                     let data = res.data
                     if (data && data.code == 0) {
                         this.$store.commit('SET_TOKEN', data.data)
-                        window.history.go(-1)
+                        this.$router.replace('/browser')
                     } else {
                         this.$alert('update user country error')
                     }
                 })
             } else {
                 this.$store.commit('SET_TOKEN', tokenMap[item.country])
-                window.history.go(-1)
+                this.$router.replace('/browser')
             }
         }
     },
