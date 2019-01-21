@@ -60,6 +60,9 @@ export default {
                 default:
                     return 'English'
             }
+        },
+        token() {
+            return this.$store.state.token
         }
     },
     components: {
@@ -72,6 +75,12 @@ export default {
     },
     created() {
         this.$axios.setHeader('token', this.$store.state.token)
+    },
+    watch: {
+        token(nv, ov) {
+            // 更新token
+            this.$axios.setHeader('token', nv)
+        }
     }
 }
 </script>
@@ -119,11 +128,11 @@ body {
     }
 }
 .user_info {
-    color:#BDBDBD;
+    color: #bdbdbd;
     img {
         width: 3rem;
         border-radius: 3rem;
-        border:1px #BDBDBD solid;
+        border: 1px #bdbdbd solid;
         display: block;
     }
 }
