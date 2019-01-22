@@ -73,7 +73,7 @@ export default {
         },
         toSubProgramDetail(item){
             sessionStorage.setItem('subprogram',JSON.stringify(item))
-            this.$router.push('/browser/programlist/subProgram')
+            this.$router.go(0)
         }
     },
     components:{
