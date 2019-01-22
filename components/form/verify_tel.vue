@@ -127,7 +127,7 @@ export default {
     display: -webkit-box;
     display: flex;
     padding-bottom: 5px;
-    margin: 1rem 0 2rem;
+    margin: 1rem 0 2.5rem;
     position: relative;
     &.focus {
         border-bottom: #0087eb solid 1px;
@@ -169,7 +169,7 @@ export default {
     }
     .error {
         position: absolute;
-        bottom: -1.4rem;
+        bottom: -2.4rem;
         font-size: 0.8rem;
         color: red;
     }
@@ -214,7 +214,7 @@ export default {
     }
     .error_code {
         position: absolute;
-        bottom: -1.4rem;
+        bottom: -2.4rem;
         font-size: 0.8rem;
         color: red;
     }
