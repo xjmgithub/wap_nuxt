@@ -96,6 +96,7 @@ export default {
         padding-bottom: .5rem;
         .cover{
             width:100%;
+            height:11rem;
         }
         .program-name{
             font-weight: bold;
@@ -122,6 +123,7 @@ export default {
                 display: block;
                 width:38%;
                 float:right;
+                height:5rem;
             }
         }
     }
@@ -145,6 +147,7 @@ export default {
                 img{
                     width:100%;
                     display: block;
+                    height:5rem;
                 }
                 span{
                     font-size: .85rem;
