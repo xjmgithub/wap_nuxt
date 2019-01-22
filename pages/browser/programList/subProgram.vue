@@ -18,7 +18,7 @@
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
             <ul class="clearfix">
-                <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item)">
+                <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item.id)">
                     <div>
                         <img :src="item.poster.resources[0].url">
                         <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
@@ -40,7 +40,7 @@ export default {
             pName: '',
             pDescription: '',
             sPoster: '',
-            sId: '',
+            sId: this.$route.query.subId,
             sName: '',
             sDescription: '',
             subProgram: []
@@ -48,7 +48,6 @@ export default {
     },
     mounted() {
         let program = sessionStorage.getItem('program')
-        let subprogram = sessionStorage.getItem('subprogram')
         if (program) {
             let info = JSON.parse(program)
             this.pPoster = info.poster
@@ -57,13 +56,6 @@ export default {
             this.pDescription = info.description
             this.getSubProgram()
         }
-        if (subprogram) {
-            let info = JSON.parse(subprogram)
-            this.sPoster = info.poster.resources[0].url
-            this.sId = info.id
-            this.sName = info.name
-            this.sDescription = info.description
-        }
     },
     methods: {
         getSubProgram() {
@@ -71,12 +63,18 @@ export default {
                 let data = res.data.data
                 if (data && data.length > 0) {
                     this.subProgram = data
+                    this.toSubProgramDetail(this.sId)
                 }
             })
         },
-        toSubProgramDetail(item) {
-            sessionStorage.setItem('subprogram', JSON.stringify(item))
-            this.$router.go(0)
+        toSubProgramDetail(id) {
+            this.subProgram.forEach(ele => {
+                if(ele.id == id){
+                    this.sPoster = ele.poster.resources[0].url
+                    this.sName = ele.name
+                    this.sDescription = ele.description
+                }
+            });
         }
     },
     filters:{

@@ -9,7 +9,7 @@
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
             <ul class="clearfix">
-                <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item)">
+                <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item.id)">
                     <div>
                         <img :src="item.poster.resources[0].url">
                         <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
@@ -53,9 +53,8 @@ export default {
                 }
             })
         },
-        toSubProgramDetail(item) {
-            sessionStorage.setItem('subprogram', JSON.stringify(item))
-            this.$router.push('/browser/programlist/subProgram')
+        toSubProgramDetail(id) {
+            this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         }
     },
     filters:{
