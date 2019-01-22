@@ -24,10 +24,10 @@
                     <nuxt-link to="/browser/language">{{language}}</nuxt-link>
                 </li>
                 <li>
-                    <a href="https://m.startimestv.com/faq.php">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
+                    <a :href="faq_url">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
                 </li>
                 <li>
-                    <a href="https://m.startimestv.com/business.php">{{$store.state.lang.officialwebsitemobile_slidenav_contactus}}</a>
+                    <a :href="contact_url">{{$store.state.lang.officialwebsitemobile_slidenav_contactus}}</a>
                 </li>
             </ul>
         </div>
@@ -37,6 +37,12 @@
 import mheader from '~/components/web/header.vue'
 import { setCookie } from '~/functions/utils'
 export default {
+    data() {
+        return {
+            faq_url: 'https://m.startimestv.com/faq.php',
+            contact_url: 'https://m.startimestv.com/business.php'
+        }
+    },
     computed: {
         user() {
             let userInfo = this.$store.state.user
@@ -76,6 +82,13 @@ export default {
     },
     created() {
         this.$axios.setHeader('token', this.$store.state.token)
+    },
+    mounted() {
+        let host = window.location.host
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
+            this.faq_url = 'http://qa.upms.startimestv.com/wap/faq.php'
+            this.contact_url = 'http://qa.upms.startimestv.com/wap/business.php'
+        }
     },
     watch: {
         token(nv, ov) {
