@@ -53,6 +53,9 @@ export default {
         let packageCode = this.$route.query.packageCode
         let id = this.$route.query.id
         this.price = this.$route.query.price
+        this.packageLogo  = this.$route.query.logo
+        this.bouquetName = this.$route.query.name
+        this.tvPlatFormName = this.$route.query.plat == 'DTH' ? 'Dish' : 'Antenna'
         this.$axios.get(`/cms/v2/vup/snapshot/channels?count=500&platformTypes=1&platformTypes=0&packageCode=${packageCode}`).then(res => {
             this.loadstate = false
             let countChannel = res.data
