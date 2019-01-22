@@ -1,9 +1,6 @@
 <template>
     <div class="wrapper">
         <program-category ref="category"/>
-        <!-- <div>
-            <program-item v-for="item in list" :item="item" :key="item.id"/>
-        </div>-->
         <div class="program-list">
             <div class="program" v-for="(item,index) in programList" :key="index">
                 <div class="title" @click="toProgramDetail(item)">
@@ -17,6 +14,9 @@
                     </li>
                 </ul>
             </div>
+            <div class="loading-end" v-show="!endedState">
+                loading…
+            </div>
         </div>
     </div>
 </template>
@@ -27,10 +27,11 @@ export default {
     data() {
         return {
             tagId: this.$route.params.id,
-            list: [],
             programList: [],
             perIndex: 1,
-            perSize: 10
+            perSize: 10,
+            endedState: false,
+            loadstate:false
         }
     },
     components: {
@@ -38,32 +39,46 @@ export default {
         programItem
     },
     mounted() {
-        if (this.tagId == 62) {
-            this.list = [
-                {
-                    id: 4274,
-                    name: 'Nigeria News'
+        this.loadData()
+        this.$nextTick(() => {
+            let contain = document.querySelector('#__layout')
+            let scroll = document.querySelector('#__layout>div')
+            let _this = this
+            contain.addEventListener('scroll', function() {
+                if (scroll.offsetHeight - contain.offsetHeight - contain.scrollTop < 200) {
+                    if(_this.loadstate) return false
+                    _this.loadstate = true
+                    _this.loadData()
                 }
-            ]
-        }
-        let choosedId = this.$refs.category.choosedId
-        this.$axios.get(`/vup/v1/programs/tag/${choosedId}?perIndex=${this.perIndex}&perSize=${this.perSize}`).then(res => {
-            let data = res.data.data
-            if (data && data.length > 0) {
-                this.programList = data
-            }
+            })
         })
     },
     methods: {
         toProgramDetail(item) {
             sessionStorage.setItem('program', JSON.stringify(item))
             this.$router.push('/browser/programlist/program')
+        },
+        loadData() {
+            let choosedId = this.$refs.category.choosedId
+            this.$axios.get(`/vup/v1/programs/tag/${choosedId}?pageNumber=${this.perIndex}&perSize=${this.perSize}`).then(res => {
+                let data = res.data.data
+                this.loadstate = false
+                if (data && data.length > 0) {
+                    this.programList = this.programList.concat(data)
+                    this.perIndex += 1
+                } else {
+                    this.endedState = true
+                }
+            })
         }
     }
 }
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
+#__layout {
+    overflow: auto;
+}
 .wrapper {
     .program {
         width: 94%;
@@ -115,6 +130,13 @@ export default {
                 }
             }
         }
+    }
+    .loading-end{
+        height:2.8rem;
+        line-height:3rem;
+        text-align: center;
+        font-size:0.8rem;
+        color:#666666;
     }
 }
 </style>

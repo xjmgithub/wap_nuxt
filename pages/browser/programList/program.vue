@@ -76,11 +76,13 @@ export default {
         img{
             width:100%;
             height:11rem;
+            margin-bottom:0.5rem;
         }
         .program-name{
             font-weight: bold;
             color:#333333;
             margin:.5rem 0;
+            line-height:2rem;
         }
         p{
             color:#666666;
@@ -88,6 +90,7 @@ export default {
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             overflow: hidden;
+            font-size:0.9rem;
         }
     }
     .clips{
