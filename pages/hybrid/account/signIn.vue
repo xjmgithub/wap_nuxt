@@ -93,7 +93,7 @@ export default {
             } else {
                 let tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
                 params = {
-                    applicationId: 1,
+                    applicationId: 2,
                     phoneCc: this.country['phonePrefix'],
                     phone: tel,
                     pwd: this.password,
@@ -107,7 +107,7 @@ export default {
                     if (this.pre) {
                         window.location.href = this.pre
                     } else {
-                        window.location.href = '../payment/wallet/payto'
+                        window.location.href = '/browser/'
                     }
                 } else {
                     this.$alert(res.data.message)
