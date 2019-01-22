@@ -14,13 +14,13 @@
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" @click="countryDialogStatus=true">
-                <img :src="areaInfo.nationalFlag">
-                <span>{{areaInfo.name}}</span>
+                <img :src="country.nationalFlag">
+                <span>{{country.name}}</span>
             </div>
             <verifyTel
                 ref="telpicker"
-                type="1"
-                :prefix="areaInfo.phonePrefix"
+                :type="1"
+                :prefix="country.phonePrefix"
                 @pass="changePhoneCanNext"
             />
         </div>
@@ -44,7 +44,7 @@
         <div class="country-choose-dialog" v-show="countryDialogStatus">
             <div class="dialog-title">Country List</div>
             <ul>
-                <li v-for="(item,index) in countrys" :key="index" @click="chooseeCountry(item)">
+                <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
                     <img :src="item.nationalFlag">
                     <span>{{item.name}}</span>
                 </li>
@@ -57,23 +57,14 @@
 import verifyTel from '~/components/form/verify_tel'
 import shadowLayer from '~/components/shadow-layer'
 import mButton from '~/components/button'
+import countrArr from '~/functions/countrys.json'
 export default {
     layout: 'base',
-    async asyncData({ app, store, redirect }) {
-        app.$axios.setHeader('token', store.state.token)
-        let res = await app.$axios.get('/cms/vup/v2/areas?versionCode=5300')
-        let countrys = {}
-        res.data.forEach((item, index) => {
-            countrys[item.id] = item
-        })
-        return {
-            countrys: countrys
-        }
-    },
     data() {
         return {
             type: 0,
-            country: this.$store.state.user.areaID,
+            country: this.$store.state.country,
+            countrys: countrArr,
             countryDialogStatus: false,
             phoneCanNext: false,
             email: '',
@@ -82,9 +73,6 @@ export default {
         }
     },
     computed: {
-        areaInfo() {
-            return this.countrys[this.country]
-        },
         canNext() {
             if (this.type == 1) {
                 return this.emailCanNext
@@ -110,10 +98,7 @@ export default {
             this.type = type
         },
         chooseCountry(country) {
-            this.country = {
-                id: country.id,
-                short: country.country
-            }
+            this.country = country
             this.countryDialogStatus = false
         },
         nextStep() {
@@ -140,7 +125,7 @@ export default {
             } else {
                 let phone = this.$refs.telpicker.tel
                 let code = this.$refs.telpicker.vscode
-                let phoneCc = this.areaInfo.phonePrefix
+                let phoneCc = this.country.phonePrefix
                 let countryId = this.country.id
                 this.$router.push(`/hybrid/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
             }

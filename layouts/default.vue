@@ -1,8 +1,9 @@
 <template>
-    <div class="frame" :class="{shownav:showNav}" style="overflow:visible;height:auto;">
+    <div style="overflow:visible;height:auto;">
         <mheader/>
         <nuxt/>
-        <div class="slide-bar">
+        <div class="nav-layer" v-show="showNav" @click="closeNav"/>
+        <div class="slide-bar" :class="{'nav-show':showNav}">
             <ul>
                 <li>
                     <div v-if="user">
@@ -23,10 +24,10 @@
                     <nuxt-link to="/browser/language">{{language}}</nuxt-link>
                 </li>
                 <li>
-                    <a href="https://m.startimestv.com/faq.php">FAQ</a>
+                    <a :href="faq_url">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
                 </li>
                 <li>
-                    <a href="https://m.startimestv.com/business.php">Contact Us</a>
+                    <a :href="contact_url">{{$store.state.lang.officialwebsitemobile_slidenav_contactus}}</a>
                 </li>
             </ul>
         </div>
@@ -34,13 +35,21 @@
 </template>
 <script>
 import mheader from '~/components/web/header.vue'
+import { setCookie } from '~/functions/utils'
 export default {
+    data() {
+        return {
+            faq_url: 'https://m.startimestv.com/faq.php',
+            contact_url: 'https://m.startimestv.com/business.php'
+        }
+    },
     computed: {
         user() {
             let userInfo = this.$store.state.user
-            return userInfo.roleName != 'ANONYMOUS' ? userInfo : null
+            return userInfo.roleName && userInfo.roleName != 'ANONYMOUS' ? userInfo : null
         },
         showNav() {
+            // return true
             return this.$store.state.navState
         },
         country() {
@@ -58,31 +67,35 @@ export default {
                 default:
                     return 'English'
             }
+        },
+        token() {
+            return this.$store.state.token
         }
     },
     components: {
         mheader
     },
     methods: {
-        goToPage(url) {
-            switch (url) {
-                case 'home':
-                    this.$router.push('/browser')
-                    break
-                case 'menu':
-                    this.$router.push('/browser/menu')
-                    break
-                case 'tvguide':
-                    this.$router.push('/browser/tvguide')
-                    break
-                case 'phoneplay':
-                    this.$router.push('/browser/phoneplay')
-                    break
-            }
+        closeNav() {
+            this.$store.commit('SET_NAV_STATE', false)
         }
     },
     created() {
         this.$axios.setHeader('token', this.$store.state.token)
+    },
+    mounted() {
+        let host = window.location.host
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
+            this.faq_url = 'http://qa.upms.startimestv.com/wap/faq.php'
+            this.contact_url = 'http://qa.upms.startimestv.com/wap/business.php'
+        }
+    },
+    watch: {
+        token(nv, ov) {
+            // 更新token
+            setCookie('token', nv)
+            this.$axios.setHeader('token', nv)
+        }
     }
 }
 </script>
@@ -98,24 +111,31 @@ body {
     margin: 0;
     font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Sans-serif;
 }
-
-.frame {
-    transition: transform 0.3s;
-}
-.frame.shownav {
-    transform: translateX(10rem);
+.nav-layer {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .slide-bar {
-    position: absolute;
-    left: -10rem;
+    position: fixed;
+    left: 0rem;
     top: 0;
     width: 10rem;
     background: #222527;
+    z-index: 1001;
+    display: none;
+    &.nav-show {
+        position: fixed;
+        display: block;
+    }
     ul {
         padding: 1rem;
         color: white;
-        line-height: 2rem;
+        line-height: 2.5rem;
         font-size: 0.9rem;
         a {
             color: white;
@@ -123,17 +143,15 @@ body {
     }
 }
 .user_info {
-    text-align: center;
-    padding: 1rem;
+    color: #bdbdbd;
     img {
         width: 3rem;
-        margin: 0 auto;
         border-radius: 3rem;
+        border: 1px #bdbdbd solid;
         display: block;
     }
 }
 .wrapper {
-    box-shadow: -10rem 0 0 0px #222527;
     background: white;
 }
 .country {

@@ -1,18 +1,17 @@
 <template>
     <nuxt-link class="link-to-download" to="/hybrid/lands">
         <div class="download">
-            <div class="max-width">Download StarTimes On App to watch!</div>
-            <span>GO &gt;</span>
+            <div class="max-width">{{$store.state.lang.officialwebsitemobile_downloadpromo}}</div>
+            <span>{{$store.state.lang.officialwebsitemobile_go}} &gt;</span>
         </div>
     </nuxt-link>
 </template>
 <style lang="less" scoped>
 .link-to-download {
     .download {
-        padding: 0.5rem 0.8rem;
+        padding: 0.6rem 0.8rem;
         background-color: #ffbe19;
         font-weight: bold;
-        font-size: 0.9rem;
         color:#333333;
         overflow: hidden;
         zoom:1;

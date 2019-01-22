@@ -10,102 +10,94 @@
         <div class="regtext">Don't have an account?
             <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
         </div>
+        <div class="loading-layer" v-show="loadStatus">
+            <loading/>
+        </div>
     </div>
 </template>
 <script>
-import { setCookie, initUser } from '~/functions/utils'
+import { setCookie, initUser, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
+import loading from '~/components/loading'
 export default {
     layout: 'base',
     data() {
         return {
-            pre: this.$route.query.pre
+            pre: this.$route.query.pre,
+            twitter_oauth_token: this.$route.query.oauth_token,
+            twitter_oauth_verifier: this.$route.query.oauth_verifier,
+            loadStatus: false
         }
     },
     mounted() {
         if (this.pre) {
-            localStorage.setItem('login_prefer', this.pre)
+            sessionStorage.setItem('login_prefer', this.pre)
         }
 
-        var googleUser = {}
-        let _this = this
-        var script = document.createElement('script')
-        script.src = 'https://apis.google.com/js/platform.js'
-
-        script.onload = function() {
-            gapi.load('auth2', function() {
-                var auth2 = gapi.auth2.init({
-                    client_id: '461626275431-sngbv2nv2bmecefaiu01r67cu1n88rja.apps.googleusercontent.com',
-                    cookiepolicy: 'single_host_origin'
-                })
-                auth2.attachClickHandler(
-                    document.getElementById('google-btn'),
-                    {},
-                    function(googleUser) {
-                        _this.loginByThird(googleUser.getBasicProfile().getId())
-                    },
-                    function(error) {
-                        console.log(JSON.stringify(error, undefined, 2))
+        // twitter callback
+        if (this.twitter_oauth_token && this.twitter_oauth_verifier) {
+            this.loadStatus = true
+            this.$axios
+                .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
+                .then(res => {
+                    if (res.data.code == 0) {
+                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name)
+                    } else {
+                        this.$alert(res.data.message)
                     }
-                )
-            })
+                })
         }
-        document.getElementsByTagName('head')[0].appendChild(script)
 
-        // facebook登录初始化
-        FB.init({
-            appId: '159785064477978', // 和app公用
-            xfbml: true,
-            cookie: true,
-            version: 'v3.1'
+        let _this = this
+        initGoogleLogin(document.getElementById('google-btn'), function(userId, nickname) {
+            _this.loginByThird(userId, nickname, 3)
         })
+
+        initFacebookLogin()
     },
     methods: {
         byfacebook() {
             let _this = this
-            FB.getLoginStatus(function(response) {
-                if (response.status == 'connected') {
-                    _this.loginByThird(response.authResponse.userID)
-                } else {
-                    FB.login(function(res) {
-                        _this.loginByThird(res.authResponse.userID)
-                    })
-                }
+            FB.login(function(res) {
+                _this.loginByThird(res.authResponse.userID, '', 1)
             })
         },
         bytwitter() {
-            // let _this = this
-            // hello.login(
-            //     'twitter',
-            //     {
-            //         response_type: 'code'
-            //     },
-            //     function(res) {
-            //         _this.loginByThird(res.authResponse.user_id)
-            //     }
-            // )
+            this.$axios.get(`/hybrid/api/twitter/oauth/request_token?back=${location.origin}`).then(res => {
+                if (res.data.code == 0) {
+                    window.location.href = `https://api.twitter.com/oauth/authenticate?oauth_token=${res.data.data.oauth_token}`
+                } else {
+                    this.$alert(res.data.message)
+                }
+            })
         },
-        loginByThird(userkey) {
+        loginByThird(userkey, nickname, type) {
+            // http://gitlab.startimes.me/startimesapp/ums/blob/develop/ums-api/src/main/java/com/star/ums/api/model/LoginRequest.java
             this.$axios
-                .post('/ums/v1/user/login', {
+                .post('/ums/v3/user/login', {
                     applicationId: 2,
                     deviceId: this.$store.state.deviceId,
-                    timeZoneId: 'Asia/Shanghai',
-                    type: 1,
-                    thirdPartyToken: 'THIRD#' + userkey
+                    type: type || 1, // 1:Facebook 2:Twitter 3:Google
+                    thirdPartyToken: 'THIRD#' + userkey,
+                    platform: 3, // WEB
+                    nickname: nickname || ''
                 })
                 .then(res => {
                     if (res.data.code == 0) {
                         initUser(res.data.data.token, res.data.data.userId, res.data.data)
-                        if (this.pre) {
-                            window.location.href = this.pre
+                        let pre = sessionStorage.getItem('login_prefer') || ''
+                        if (pre) {
+                            window.location.href = pre
                         } else {
-                            window.location.href = '/hybrid/payment/wallet/payto'
+                            window.location.href = '/browser/'
                         }
                     } else {
                         this.$alert(res.datea.message)
                     }
                 })
         }
+    },
+    components: {
+        loading: loading
     },
     head() {
         return {
@@ -117,6 +109,8 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     position: static;
+    min-height: 100%;
+    padding-top: 25%;
     img {
         display: block;
         height: 2.3rem;
@@ -130,7 +124,6 @@ export default {
         height: auto;
         width: 11rem;
         margin-bottom: 2.5rem;
-        margin-top: 4.5rem;
     }
 
     .login_btn {
@@ -151,6 +144,13 @@ export default {
         font-size: 0.8rem;
         color: #424242;
         margin-top: 2.5rem;
+    }
+    .loading-layer {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        position: fixed;
+        top: 0;
     }
 }
 </style>

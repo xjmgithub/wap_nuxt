@@ -1,30 +1,42 @@
 <template>
     <div class="wrapper">
         <div class="selfService">
-            <h3>StarTimes Decoder Selfservice</h3>
+            <h3>
+                <div class="dot">‧</div>
+                <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
+            </h3>
             <div class="recharge">
-                <span>$</span>RECHARGE
+                <!-- <nuxt-link to="/hybrid/dvb/bind"> -->
+                <a :href="recharge_url">
+                    <span>$</span>
+                    <span>RECHARGE</span>
+                </a>
             </div>
         </div>
         <div class="bouquets">
-            <h3>Decoder Bouquets</h3>
-            <span>Dish</span>
+            <h3>
+                <div class="dot">‧</div>
+                <div>{{$store.state.lang.officialwebsitemobile_bouquet_section}}</div>
+            </h3>
+            <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
-                <li v-for="(item,index) in dishList" :key="index" v-show="item.className" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.className" />
-                    <p class="money">{{currency}} {{item.price}}/M</p>
+                <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
-            <span>Antenna</span>
+            <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
-                <li v-for="(item,index) in antennaList" :key="index" v-show="item.className" @click="goToBouquetDetail(item)">
-                    <bgImg :bouquet-name="item.className" />
-                    <p class="money">{{currency}} {{item.price}}/M</p>
+                <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
         </div>
         <div class="startimes">
-            <h3><img src="~assets/img/web/ON-RIGHT.png" alt=""> StarTimes ON</h3>
+            <h3 class="flytitle">
+                <div>{{$store.state.lang.officialwebsitemobile_startimeson_section}}</div>
+            </h3>
             <img src="~assets/img/web/pic_show.jpg" class="bigPic">
             <div class="download clearfix">
                 <a href="https://m.startimestv.com/DownloadAPP.php">
@@ -41,16 +53,21 @@
     </div>
 </template>
 <script>
-import bgImg from '~/components/web/bgImg'
+import bgImgData from '~/components/web/bgImgData'
 export default {
     layout: 'default',
     data() {
         return {
             dishList: [], //DTH
-            antennaList: [] //DTT
+            antennaList: [], //DTT
+            recharge_url: 'https://m.startimestv.com/DVB/binding.php'
         }
     },
     mounted() {
+        let host = window.location.host
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0||host.indexOf('localhost') >= 0) {
+            this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
+        }
         this.getBouquets()
     },
     methods: {
@@ -60,13 +77,11 @@ export default {
                 if (data.length > 0) {
                     data.forEach(ele => {
                         if (ele.tvPlatForm == 'DTT') {
-                            ele.className = this.$options.filters.dttImgUrl(ele.name)
-                            if (ele.className) {
+                            if (ele.type == 1) {
                                 this.antennaList.push(ele)
                             }
                         } else if (ele.tvPlatForm == 'DTH') {
-                            ele.className = this.$options.filters.dthImgUrl(ele.name)
-                            if (ele.className) {
+                            if (ele.type == 1) {
                                 this.dishList.push(ele)
                             }
                         }
@@ -77,34 +92,33 @@ export default {
         goToBouquetDetail(item) {
             let packageCode = item.code
             let bouId = item.id
-            let className = item.className
             let price = item.price
-            this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}&className=${className}&price=${price}`)
+            let logo = encodeURI(item.poster&&item.poster.resources[0].url || '')
+            let name = item.name
+            let plat = item.tvPlatForm
+            this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         }
     },
     filters: {
         dttImgUrl(name) {
             let data = name.toLowerCase()
-            let className = ''
-            if (data == 'sport plus') className = 'dtt-sportsplus'
-            else if (data == 'unique') className = 'dtt-unique'
-            else if (data == 'classique') className = 'dtt-classique'
-            else if (data == 'nova') className = 'dtt-nova'
-            else if (data == 'basique') className = 'dtt-basique'
-            else if (data == 'sport play') className = 'dtt-sportsplay'
-            return className
+            if (data == 'sport plus' || data == 'unique' || data == 'classique' || data == 'nova' || data == 'basique' || data == 'sport play') {
+                return true
+            }
         },
         dthImgUrl(name) {
             let data = name.toLowerCase()
-            let className = ''
-            if (data == 'sport plus') className = 'dth-sportsplus'
-            else if (data == 'super') className = 'dth-super'
-            else if (data == 'smart') className = 'dth-smart'
-            else if (data == 'engilsh') className = 'dth-engilsh'
-            else if (data == 'indian') className = 'dth-indian'
-            else if (data == 'chinese') className = 'dth-chinese'
-            else if (data == 'sport play') className = 'dth-sportsplay'
-            return className
+            if (
+                data == 'sport plus' ||
+                data == 'super' ||
+                data == 'smart' ||
+                data == 'engilsh' ||
+                data == 'indian' ||
+                data == 'chinese' ||
+                data == 'sport play'
+            ) {
+                return true
+            }
         }
     },
     computed: {
@@ -112,8 +126,8 @@ export default {
             return this.$store.state.country.currencySymbol
         }
     },
-    components:{
-        bgImg
+    components: {
+        bgImgData
     },
     head() {
         return {
@@ -122,7 +136,6 @@ export default {
     }
 }
 </script>
-
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .boxStyle {
@@ -130,66 +143,89 @@ export default {
     margin: 0 auto;
     border-bottom: 1px solid #d8d8d8;
     h3 {
-        font-size: 1rem;
-        display: list-item;
-        list-style-type: disc;
-        margin-left: 1em;
+        margin-bottom: 0.2rem;
         color: #333333;
         font-weight: bold;
+        div {
+            margin-right: 0.3rem;
+            font-size: 1.1rem;
+            line-height: 2.5rem;
+            &.dot {
+                font-size: 2.5rem;
+                height: 1rem;
+                line-height: 2.3rem;
+                float: left;
+            }
+        }
+        img {
+            width: auto;
+            float: left;
+            display: block;
+        }
+        &.flytitle {
+            background: url('~assets/img/web/ON-RIGHT.png') no-repeat left center;
+            background-size: 1rem;
+            padding-left: 1.2rem;
+        }
     }
 }
 .selfService {
     .boxStyle;
     padding: 0.5rem 0 1rem 0.2rem;
     .recharge {
-        width: 48%;
+        width: 45%;
         border: 2px solid #0087eb;
         border-radius: 4px;
         color: #0087eb;
         text-align: center;
-        height: 2.7rem;
-        line-height: 2.7rem;
-        font-size: 0.85rem;
-        span {
-            display: inline-block;
-            width: 1.8rem;
-            height: 1.8rem;
-            line-height: 1.6rem;
+        height: 2.8rem;
+        line-height: 2.6rem;
+        span:first-child {
+            width: 1.6rem;
+            height: 1.6rem;
+            line-height: 1.4rem;
+            font-size: 1.2rem;
             border: 2px solid #0087eb;
             border-radius: 50%;
-            margin-right: 0.8rem;
-            margin-top: 0.3rem;
+            display: inline-block;
+            margin-right: -0.72rem;
+        }
+        span:last-child {
             font-size: 1.2rem;
+            display: inline-block;
+            font-weight: bold;
+            transform: perspective(1px) scale(0.8);
         }
     }
 }
 .bouquets {
     .boxStyle;
-    padding: 0.5rem 0 0.5rem 0.2rem;
+    padding: 0.3rem 0;
     & > span {
         font-size: 0.95rem;
         color: #333333;
         font-weight: 600;
-        margin-top:0.4rem;
-        clear:both;
-        display:block;
+        clear: both;
+        display: block;
     }
     ul {
         width: 100%;
+        margin: 0.3rem 0;
         li {
             float: left;
             width: 31%;
-            margin: 0.2rem 3% 0 0;
+            margin: 0 3% 1.5% 0;
             display: block;
             &:nth-child(3n) {
-                margin:0.2rem 0 0 0;
+                margin: 0 0 0 0;
             }
             .money {
                 color: #333333;
-                font-size: 0.85rem;
+                font-size: 0.8rem;
+                line-height: 1.4rem;
                 text-align: right;
-                line-height: 1.5rem;
                 margin-right: 0.3rem;
+                font-weight: bold;
             }
             img {
                 width: 100%;
@@ -199,27 +235,23 @@ export default {
 }
 .startimes {
     .boxStyle;
-    padding: 0.5rem 0 1rem 0.2rem;
-    margin-bottom: 1.5rem;
-    h3 {
-        display: block;
-        list-style-type: none;
-        margin-left: 0;
-        img {
-            height: 1.2rem;
-        }
-    }
+    padding: 0.3rem 0 1.5rem;
+    margin-bottom: 1rem;
     .bigPic {
         width: 100%;
     }
     .download {
-        img {
-            display: block;
-            width: 48%;
-            margin-top: 5%;
-            float: left;
+        a {
+            img {
+                display: block;
+                width: 48%;
+                margin-top: 4%;
+                float: left;
+            }
             &:nth-child(2n) {
-                float: right;
+                img {
+                    float: right;
+                }
             }
         }
     }

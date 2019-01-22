@@ -11,98 +11,23 @@
     </div>
 </template>
 <script>
+import { getQaCategory, getOnlineCategory } from '~/functions/program/category'
+import conf from '~/env'
 export default {
     data() {
         let choosedId = this.$route.params.id || 0
+        let list = getOnlineCategory()
+        if (conf.ms_host.indexOf('qa') > 0 || conf.ms_host.indexOf('dev') > 0) {
+            list = getQaCategory()
+        }
+        list.sort((a, b) => {
+            return a.weight - b.weight
+        })
+        choosedId = choosedId || list[0].id
         return {
-            showAll: false,
+            showAll: true,
             choosedId: choosedId,
-            list: [
-                {
-                    id: 0,
-                    name: 'All'
-                },
-                {
-                    id: 62,
-                    name: 'Politics'
-                },
-                {
-                    id: 63,
-                    name: 'Law'
-                },
-                {
-                    id: 64,
-                    name: 'Military'
-                },
-                {
-                    id: 65,
-                    name: 'Economy'
-                },
-                {
-                    id: 66,
-                    name: 'Cultural'
-                },
-                {
-                    id: 67,
-                    name: 'Education'
-                },
-                {
-                    id: 68,
-                    name: 'Philosophy'
-                },
-                {
-                    id: 69,
-                    name: 'Religion'
-                },
-                {
-                    id: 70,
-                    name: 'Sports'
-                },
-                {
-                    id: 71,
-                    name: 'Literature and Art'
-                },
-                {
-                    id: 72,
-                    name: 'History'
-                },
-                {
-                    id: 73,
-                    name: 'Geography'
-                },
-                {
-                    id: 74,
-                    name: 'Science'
-                },
-                {
-                    id: 75,
-                    name: 'Technology'
-                },
-                {
-                    id: 76,
-                    name: 'Healthy'
-                },
-                {
-                    id: 77,
-                    name: 'Environment'
-                },
-                {
-                    id: 78,
-                    name: 'Civil Life'
-                },
-                {
-                    id: 79,
-                    name: 'Entertainment'
-                },
-                {
-                    id: 204,
-                    name: 'Other'
-                },
-                {
-                    id: 397,
-                    name: 'Agriculture'
-                }
-            ]
+            list: list
         }
     },
     computed: {
@@ -113,6 +38,17 @@ export default {
                 return this.list.slice(0, 7)
             }
         }
+    },
+    mounted() {
+        this.showList.forEach((item, index) => {
+            if (item.id == this.choosedId) {
+                if (index > 6) {
+                    this.showAll = true
+                } else {
+                    this.showAll = false
+                }
+            }
+        })
     },
     methods: {
         toggleAll() {

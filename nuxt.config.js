@@ -85,8 +85,14 @@ module.exports = {
         '/ocs/': env.ms_host,
         '/css/': env.ms_host,
         '/voting/': env.ms_host,
-        '/adm/': env.ms_host
+        '/adm/': env.ms_host,
+        '/self/': env.ms_host
     },
+
+    serverMiddleware: [
+        { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
+        { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
+    ],
 
     /*
     ** Build configuration

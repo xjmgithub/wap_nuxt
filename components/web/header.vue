@@ -1,7 +1,7 @@
 <template>
     <div class="m_header">
         <div class="logo">
-            <img @click="toggleNav" src="~assets/img/web/ic_guidelist.png">
+            <img @click="showNav" src="~assets/img/web/ic_guidelist.png">
             <img class="logo_img" v-if="logo==0" src="~assets/img/startimes.png" alt="Startimes">
             <img class="logo_img" v-if="logo==1" src="~assets/img/topstar_white.png" alt="Startimes">
             <img class="logo_img" v-if="logo==2" src="~assets/img/starsat_white.png" alt="Startimes">
@@ -10,25 +10,25 @@
             <div>
                 <nuxt-link to="/browser/">
                     <img src="~assets/img/web/ic_home_def_g.png">
-                    <div class="nav_title">Home</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_home}}</div>
                 </nuxt-link>
             </div>
             <div>
-                <a href="https://m.startimestv.com/TVguide_list.php">
+                <a :href="tvguide_url">
                     <img src="~assets/img/web/ic_tvguide.png">
-                    <div class="nav_title">Guide</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_tvguide}}</div>
                 </a>
             </div>
             <div>
                 <nuxt-link to="/browser/programlist">
                     <img src="~assets/img/web/ic_menu_def_w.png">
-                    <div class="nav_title">List</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_list}}</div>
                 </nuxt-link>
             </div>
             <div>
-                <nuxt-link to="/browser/phoneplay">
+                <nuxt-link to="/browser/live">
                     <img src="~assets/img/web/ic_phoneplay_def_w.png">
-                    <div class="nav_title">Live</div>
+                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_live}}</div>
                 </nuxt-link>
             </div>
         </div>
@@ -36,43 +36,54 @@
 </template>
 <script>
 export default {
-    computed:{
-        logo(){
+    data() {
+        return {
+            tvguide_url: 'https://m.startimestv.com/TVguide_list.php'
+        }
+    },
+    mounted() {
+        let host = window.location.host
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0||host.indexOf('localhost') >= 0) {
+            this.tvguide_url = 'http://qa.upms.startimestv.com/wap/TVguide_list.php'
+        }
+    },
+    computed: {
+        logo() {
             let country = this.$store.state.country
-            if(country.id==6){
+            if (country.id == 6) {
                 return 1
-            }else if(country.id==7){
+            } else if (country.id == 7) {
                 return 2
-            }else{
+            } else {
                 return 0
             }
         }
     },
     methods: {
-        toggleNav() {
-            let state = this.$store.state.navState
-            this.$store.commit('SET_NAV_STATE', !state)
+        showNav() {
+            // let state = this.$store.state.navState
+            this.$store.commit('SET_NAV_STATE', true)
         }
     }
 }
 </script>
 <style lang="less" scope>
 .m_header {
-    padding: 0.6rem 0.8rem 0.6rem 0.3rem;
+    padding: 0.4rem 0.5rem;
     background: #222527;
-    height: 3.7rem;
+    height: 3.45rem;
     position: fixed;
     top: 0;
     width: 100%;
     box-sizing: border-box;
     z-index: 999;
-    .logo{
+    .logo {
         float: left;
-        height:100%;
+        height: 100%;
         img {
-            height: 1.8rem;
-            &.logo_img{
-                height:2.2rem;
+            height: 1.6rem;
+            &.logo_img {
+                height: 2.2rem;
             }
         }
     }
@@ -80,14 +91,18 @@ export default {
         float: right;
         & > div {
             float: left;
-            margin-left: 0.6rem;
+            margin-left: 0.4rem;
             text-align: center;
-            &:first-of-type{
+            width: 2.3rem;
+            &:first-of-type {
                 margin-left: 0;
             }
             .nav_title {
                 font-size: 0.7rem;
                 color: white;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             img {
                 height: 1.6rem;

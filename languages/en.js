@@ -3,5 +3,81 @@ export default {
     today:'Today',
     leave_msg_btn:'Leave a Message',
     live_chat_btn:'Live Chat',
-    download_apk:'Download Now'
+    download_apk:'Download Now',
+
+    // 官网
+    officialwebsitemobile_selfservice_section:'Decoder Self-service',
+    officialwebsitemobile_bouquet_section:'Decoder Bouquets',
+    officialwebsitemobile_startimeson_section:'StarTimes ON',
+    officialwebsitemobile_slidenav_faq:'FAQ',
+    officialwebsitemobile_slidenav_contactus:'Contact us',
+    officialwebsitemobile_subprogramdetails_clips:'All Clips',
+    officialwebsitemobile_downloadpromo:'Download StarTimes ON App to watch. ',
+    officialwebsitemobile_go:'go',
+    officialwebsitemobile_topnav_home:'Home',
+    officialwebsitemobile_topnav_list:'List',
+    officialwebsitemobile_topnav_tvguide:'Guide',
+    officialwebsitemobile_topnav_live:'Live',
+    officialwebsitemobile_live_channelnumber:' live channels on StarTimes ON app',
+    officialwebsitemobile_list_more:'More',
+
+    // dvb recharge
+    //bind
+    dvb_bind_title:'Recharge SmartCard',
+    please_input_smartcard:'Please input 11 digits Smart Card number.',
+    dormant:'Dormant',
+    link_suspend:'Suspended',
+    dvb_acitve_to:'Active to:',
+    active_:'Active',
+    h5_input_card_wrong:'Invalid Smart Card number, please re-check.',
+    input_your_smartcard_number:'Input your StarTimes SmartCard Number',
+    recharge_your_decoder_account:'Recharge your Decoder Account and Enjoy the MEGA BONUS !',
+    Tips_check_your_Balance:'Tips: You can also check your Balance',
+    if_you_are_not_a_startimes_tv_user:'If you are not a StarTimes TV user yet,',
+    click_here:' click here ',
+    if_you_are_not_a_startimes_tv_user2:'to get a Decoder Now!',
+    topup_bouquet:'Bouquet',
+    select_:'Select:',
+    first_recharge_detail:'DETAILS',
+    results_recharge_amount:'Amount', 
+    next_:'NEXT',
+    more_recharge_method:'More Top-up Service',
+    membership_all:'ALL',
+    besure_input_ewallet:"What you've input seems like not a Smart Card Number but an eWallet account. Will you recharge the eWallet now?",
+    agree_tip:"Yes,I'll try",
+    refuse_tip:'No,Thanks',
+    besure_have_card: "What you've input can't match with any Smart Card Number. Contact us to enjoy StarTimes TV show and get the help.",
+    account_signed_elsewhere:'Your account is signed in elsewhere',
+    error_network:'Internet server unavailable, please try later.',
+
+    //order
+    my_order_details: 'Order Details',
+    smart_card_no_content: 'Card No.',
+    dormant: 'Dormant',
+    dvb_acitve_to: 'Active to:',
+    active_: 'Active',
+    link_suspend: 'Suspended',
+    smart_card_balance: 'Balance:',
+    dvb_recharge_link_recharge: 'Recharge', 
+    payment_details_promation: 'Promotion',
+    recharge_no_promotion: 'No Promotion',
+    payment_details_method: 'Payment Method',
+    monthly_billing: 'Due to the monthly system billing, your recharge may be delayed. In case of problems, please call the customer service.',
+    refresh_wallet: 'Please check your eWallet balance. Then use it to recharge for your TV account.',
+    continue_to_pay: 'CONTINUE',
+    error_network: 'Internet server unavailable, please try later.',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

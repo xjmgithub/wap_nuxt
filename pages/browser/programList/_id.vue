@@ -1,17 +1,22 @@
 <template>
     <div class="wrapper">
-        <program-category />
-        <div>
-            <program-item v-for="item in list" :item="item" :key="item.id" />
-        </div>
-        <div class="program">
-            <p class="title">King Kong <span class="more" v-show="programList.length>3">MORE</span></p>
-            <ul>
-                <li v-for="(item,index) in programList" :key="index" >
-                    {{item.title}}
-                    <span class="arrows">&gt;&gt;</span>
-                </li>
-            </ul>
+        <program-category ref="category"/>
+        <div class="program-list">
+            <div class="program" v-for="(item,index) in programList" :key="index">
+                <div class="title" @click="toProgramDetail(item)">
+                    <span>{{item.name}}</span>
+                    <span class="more" v-show="item.subPrograms.length>3">MORE</span>
+                </div>
+                <ul>
+                    <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3" @click="toSubProgramDetail(subPro.id)">
+                        <span>{{item.name}}</span>
+                        <span class="arrows">&gt;&gt;</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="loading-end" v-show="!endedState">
+                loading…
+            </div>
         </div>
     </div>
 </template>
@@ -19,75 +24,122 @@
 import programCategory from '~/components/web/programCategory'
 import programItem from '~/components/web/programItem'
 export default {
-    data(){
+    data() {
         return {
-            tagId:this.$route.params.id,
-            list:[],
-            programList:[
-                {
-                    id:1,
-                    title:'King Kong Mc Dancing to One Rand S2'
-                },
-                {
-                    id:2,
-                    title:'King Kong walking on street S2'
-                },
-                {
-                    id:3,
-                    title:'King kong won the champion finally'
-                }
-            ]
+            tagId: this.$route.params.id,
+            programList: [],
+            perIndex: 1,
+            perSize: 10,
+            endedState: false,
+            loadstate:false
         }
     },
-    components:{
+    components: {
         programCategory,
         programItem
     },
-    mounted(){
-        if(this.tagId==62){
-            this.list = [
-                {
-                    id:4274,
-                    name:'Nigeria News'
+    mounted() {
+        this.loadData()
+        this.$nextTick(() => {
+            let contain = document.querySelector('#__layout')
+            let scroll = document.querySelector('#__layout>div')
+            let _this = this
+            contain.addEventListener('scroll', function() {
+                if (scroll.offsetHeight - contain.offsetHeight - contain.scrollTop < 200) {
+                    if(_this.loadstate) return false
+                    _this.loadstate = true
+                    _this.loadData()
                 }
-            ]
+            })
+        })
+    },
+    methods: {
+        toProgramDetail(item) {
+            sessionStorage.setItem('program', JSON.stringify(item))
+            this.$router.push('/browser/programlist/program')
+        },
+        loadData() {
+            let choosedId = this.$refs.category.choosedId
+            this.$axios.get(`/vup/v1/programs/tag/${choosedId}?pageNumber=${this.perIndex}&perSize=${this.perSize}`).then(res => {
+                let data = res.data.data
+                this.loadstate = false
+                if (data && data.length > 0) {
+                    this.programList = this.programList.concat(data)
+                    this.perIndex += 1
+                } else {
+                    this.endedState = true
+                }
+            })
+        },
+        toSubProgramDetail(id){
+            this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         }
     }
 }
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
-.wrapper{
-    .program{
+#__layout {
+    overflow: auto;
+}
+.wrapper {
+    .program {
         width: 94%;
         margin: 0 auto;
-        .title{
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #d8d8d8;
+        .title {
             font-weight: bold;
-            padding-top:.5rem;
-            color:#111111;
+            color: #111111;
             position: relative;
-            .more{
+            line-height: 2.3rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            span:first-child {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 90%;
+                display: block;
+            }
+            .more {
                 position: absolute;
-                right:0;
-                color:#0087EB;
-                font-size: .8rem;
+                right: 0;
+                color: #0087eb;
+                font-size: 0.8rem;
             }
         }
-        ul{
-            border-bottom:1px solid #D8D8D8;
-            li{
+        ul {
+            li {
                 list-style: none;
-                padding:.5rem 0 ;
+                line-height: 2.3rem;
                 position: relative;
-                color:#0087EB;
+                color: #0087eb;
                 font-weight: bold;
-                font-size: .9rem;
-                .arrows{
+                font-size: 0.9rem;
+
+                span:first-child {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    width: 94%;
+                    display: block;
+                }
+                .arrows {
                     position: absolute;
-                    right:0;
+                    right: 0;
+                    bottom: 0;
                 }
             }
         }
+    }
+    .loading-end{
+        height:2.8rem;
+        line-height:3rem;
+        text-align: center;
+        font-size:0.8rem;
+        color:#666666;
     }
 }
 </style>

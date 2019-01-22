@@ -1,19 +1,21 @@
 <template>
     <div class="wrapper">
-        <div class="bouquets clearfix">
-            <p>{{tvPlatForm}}</p>
+        <div class="bouquets clearfix" v-show="!loadstate">
+            <p>{{tvPlatFormName}}</p>
             <div class="logo">
-                <bgImg :bouquet-name="className"/>
+                <bg-img-data :img-path="packageLogo" :package-name="bouquetName"/>
             </div>
             <div class="info">
                 <p class="bouquetName">{{bouquetName}} Bouquet</p>
                 <p class="money">{{currency}} {{price}}</p>
                 <p class="recharge">
-                    <img src="~assets/img/web/Group.png" alt> Recharge
+                    <a :href="recharge_url">
+                        <img src="~assets/img/web/Group.png" alt> Recharge
+                    </a>
                 </p>
             </div>
         </div>
-        <p class="title">{{detailList.length}} TV Channels inclued</p>
+        <p class="title" v-show="!loadstate">{{detailList.length}} TV Channels inclued</p>
         <ul class="channelList">
             <li v-for="(item,index) in detailList" :key="index">
                 <div class="lasy_bg">
@@ -22,28 +24,40 @@
                 <img src="~assets/img/web/channelsOn.png" v-show="item.liveStatus" class="imgOn">
             </li>
         </ul>
+        <loading v-show="loadstate"/>
     </div>
 </template>
-
 <script>
-import bgImg from '~/components/web/bgImg'
+import bgImgData from '~/components/web/bgImgData'
+import loading from '~/components/loading'
 export default {
     layout: 'default',
     data() {
         return {
             detailList: [],
-            className: '',
             price: '',
             bouquetName: '',
-            tvPlatForm: ''
+            packageLogo: '',
+            tvPlatFormName: '',
+            tvPlatForm: '',
+            loadstate: true,
+            recharge_url: 'https://m.startimestv.com/DVB/binding.php'
         }
     },
     mounted() {
+        let host = window.location.host
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
+            this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
+        }
+
         let packageCode = this.$route.query.packageCode
         let id = this.$route.query.id
-        this.className = this.$route.query.className
         this.price = this.$route.query.price
+        this.packageLogo  = this.$route.query.logo
+        this.bouquetName = this.$route.query.name
+        this.tvPlatFormName = this.$route.query.plat == 'DTH' ? 'Dish' : 'Antenna'
         this.$axios.get(`/cms/v2/vup/snapshot/channels?count=500&platformTypes=1&platformTypes=0&packageCode=${packageCode}`).then(res => {
+            this.loadstate = false
             let countChannel = res.data
             let platformInfo, packages, detail
             if (countChannel.length > 0) {
@@ -52,9 +66,11 @@ export default {
                     platformInfo.forEach(platform => {
                         packages = platform.packages
                         packages.forEach(detail => {
-                            if (detail.id == id) {
+                            if (detail.id == parseInt(id)) {
+                                this.packageLogo = detail.poster ? detail.poster.resources[0].url : ''
                                 this.bouquetName = detail.name
-                                this.tvPlatForm = detail.tvPlatForm == 'DTH' ? 'Dish' : 'Antenna'
+                                this.tvPlatFormName = detail.tvPlatForm == 'DTH' ? 'Dish' : 'Antenna'
+                                this.tvPlatForm = detail.tvPlatForm
                                 detail.logo = channel.logo.resources[0].url
                                 detail.liveStatus = channel.liveStatus
                                 this.detailList.push(detail)
@@ -71,7 +87,8 @@ export default {
         }
     },
     components: {
-        bgImg
+        bgImgData,
+        loading
     },
     head() {
         return {
@@ -80,7 +97,6 @@ export default {
     }
 }
 </script>
-
 <style lang="less">
 @import '~assets/less/browser/index.less';
 .wrapper {
@@ -96,18 +112,25 @@ export default {
             font-size: 1.1rem;
         }
         .logo {
-            width: 32%;
+            width: 38%;
             float: left;
-            margin-right: 1rem;
+            margin-right: 0.5rem;
+            img {
+                display: block;
+                width: 100%;
+            }
         }
         .info {
             float: right;
-            width: 60%;
+            width: 58%;
             .bouquetName {
                 font-weight: bold;
             }
             .recharge {
                 font-size: 0.9rem;
+                a {
+                    color: #333333;
+                }
                 img {
                     width: 1rem;
                     vertical-align: top;
@@ -115,7 +138,7 @@ export default {
             }
             .money {
                 font-size: 0.9rem;
-                line-height: 1.9rem;
+                line-height: 1.6rem;
             }
         }
     }
@@ -136,9 +159,8 @@ export default {
             .lasy_bg {
                 width: 100%;
                 padding-top: 100%;
-                background: #ccc;
+                background: white;
                 position: relative;
-                border-radius: 6px;
                 img {
                     width: 100%;
                     position: absolute;

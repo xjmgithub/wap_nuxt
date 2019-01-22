@@ -111,7 +111,7 @@ export default {
                     let params = {}
                     if (this.phone) {
                         params = {
-                            applicationId: 1,
+                            applicationId: 2,
                             phoneCc: this.phoneCc,
                             phone: this.phone,
                             pwd: this.pass,
@@ -120,7 +120,7 @@ export default {
                         }
                     } else {
                         params = {
-                            applicationId: 1,
+                            applicationId: 2,
                             deviceId: this.$store.state.deviceId,
                             type: 0,
                             email: this.email,
@@ -134,7 +134,7 @@ export default {
                             if (this.pre) {
                                 window.location.href = this.pre
                             } else {
-                                window.location.href = '/hybrid/payment/wallet/payto'
+                                window.location.href = '/browser/'
                             }
                         } else {
                             this.$alert(res.data.message)
