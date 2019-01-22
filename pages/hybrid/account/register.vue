@@ -14,10 +14,10 @@
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" @click="countryDialogStatus=true">
-                <img :src="areaInfo.nationalFlag">
-                <span>{{areaInfo.name}}</span>
+                <img :src="country.nationalFlag">
+                <span>{{country.name}}</span>
             </div>
-            <verifyTel ref="telpicker" :prefix="areaInfo.phonePrefix" @pass="changePhoneCanNext"/>
+            <verifyTel ref="telpicker" :prefix="country.phonePrefix" @pass="changePhoneCanNext"/>
         </div>
         <div v-show="type==1" class="by_email">
             <verifyEmail ref="emailpicker" @pass="changeEmailCanNext"/>
@@ -52,15 +52,13 @@ export default {
         return {
             type: 0,
             countrys:countrys,
+            country: this.$store.state.country,
             countryDialogStatus: false,
             phoneCanNext: false,
             emailCanNext: false
         }
     },
     computed: {
-        areaInfo() {
-            return this.$store.state.country
-        },
         canNext() {
             if (this.type == 1) {
                 return this.emailCanNext
@@ -80,7 +78,7 @@ export default {
             this.type = type
         },
         chooseCountry(country) {
-            this.country = country.id
+            this.country = country
             this.countryDialogStatus = false
         },
         nextStep() {
@@ -92,8 +90,8 @@ export default {
             } else {
                 let phone = this.$refs.telpicker.tel
                 let code = this.$refs.telpicker.vscode
-                let phoneCc = this.areaInfo.phonePrefix
-                let countryId = this.country
+                let phoneCc = this.country.phonePrefix
+                let countryId = this.country.id
                 this.$router.push(`/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
             }
         }

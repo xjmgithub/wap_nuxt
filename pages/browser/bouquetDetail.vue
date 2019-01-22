@@ -9,7 +9,9 @@
                 <p class="bouquetName">{{bouquetName}} Bouquet</p>
                 <p class="money">{{currency}} {{price}}</p>
                 <p class="recharge">
-                    <img src="~assets/img/web/Group.png" alt> Recharge
+                    <a :href="recharge_url">
+                        <img src="~assets/img/web/Group.png" alt> Recharge
+                    </a>
                 </p>
             </div>
         </div>
@@ -38,10 +40,16 @@ export default {
             packageLogo: '',
             tvPlatFormName: '',
             tvPlatForm: '',
-            loadstate: true
+            loadstate: true,
+            recharge_url: 'https://m.startimestv.com/DVB/binding.php'
         }
     },
     mounted() {
+        let host = window.location.host
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
+            this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
+        }
+
         let packageCode = this.$route.query.packageCode
         let id = this.$route.query.id
         this.price = this.$route.query.price
@@ -117,6 +125,9 @@ export default {
             }
             .recharge {
                 font-size: 0.9rem;
+                a {
+                    color: #333333;
+                }
                 img {
                     width: 1rem;
                     vertical-align: top;
