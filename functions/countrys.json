@@ -1019,23 +1019,5 @@
         "dvbStatus": 0,
         "phonePrefix": "222",
         "smartCardType": "DTT"
-    },
-    {
-        "id": 56,
-        "name": "US",
-        "code": "ks",
-        "createDate": 1544496672000,
-        "updateDate": 1544496672000,
-        "appFBConfigs": [],
-        "country": "US",
-        "onLine": true,
-        "nationalFlag": "undefined",
-        "countryMap": "undefined",
-        "currencySymbol": "$",
-        "currencyCode": "USD",
-        "portalStatus": false,
-        "ottStatus": 0,
-        "dvbStatus": 0,
-        "smartCardType": "DTT"
     }
 ]
