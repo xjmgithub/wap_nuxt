@@ -7,7 +7,7 @@
             </h3>
             <div class="recharge">
                 <!-- <nuxt-link to="/hybrid/dvb/bind"> -->
-                <a href="https://m.startimestv.com/DVB/binding.php">
+                <a :href="recharge_url">
                     <span>$</span>
                     <span>RECHARGE</span>
                 </a>
@@ -59,10 +59,15 @@ export default {
     data() {
         return {
             dishList: [], //DTH
-            antennaList: [] //DTT
+            antennaList: [], //DTT
+            recharge_url: 'https://m.startimestv.com/DVB/binding.php'
         }
     },
     mounted() {
+        let host = window.location.host
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0||host.indexOf('localhost') >= 0) {
+            this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
+        }
         this.getBouquets()
     },
     methods: {
@@ -141,7 +146,7 @@ export default {
         div {
             margin-right: 0.3rem;
             font-size: 1.1rem;
-            line-height:2.5rem;
+            line-height: 2.5rem;
             &.dot {
                 font-size: 2.5rem;
                 height: 1rem;
@@ -180,12 +185,12 @@ export default {
             border: 2px solid #0087eb;
             border-radius: 50%;
             display: inline-block;
-            margin-right:-0.72rem;
+            margin-right: -0.72rem;
         }
         span:last-child {
             font-size: 1.2rem;
             display: inline-block;
-            font-weight:bold;
+            font-weight: bold;
             transform: perspective(1px) scale(0.8);
         }
     }
