@@ -2,16 +2,16 @@
     <div class="wrapper">
         <download class="clearfix"/>
         <div class="poster">
-            <img :src="sPoster" alt="" class="cover">
+            <img :src="sPoster" alt class="cover">
             <span class="program-name">{{sName}}</span>
             <p>{{sDescription}}</p>
         </div>
-        <div class="poster father ">
+        <div class="poster father">
             <nuxt-link to="/browser/programlist/program">
                 <span class="program-name">{{pName}}</span>
                 <div class="clearfix">
                     <p>{{pDescription}}</p>
-                    <img :src="pPoster" alt="">
+                    <img :src="pPoster" alt>
                 </div>
             </nuxt-link>
         </div>
@@ -32,33 +32,33 @@
 <script>
 import download from '~/components/web/download'
 export default {
-    layout:'default',
-    data(){
-      return{
-            pPoster:'',
-            pId:'',
-            pName:'',
-            pDescription:'',
-            sPoster:'',
-            sId:'',
-            sName:'',
-            sDescription:'',
-            subProgram:[]
-      } 
+    layout: 'default',
+    data() {
+        return {
+            pPoster: '',
+            pId: '',
+            pName: '',
+            pDescription: '',
+            sPoster: '',
+            sId: '',
+            sName: '',
+            sDescription: '',
+            subProgram: []
+        }
     },
     mounted() {
         let program = sessionStorage.getItem('program')
         let subprogram = sessionStorage.getItem('subprogram')
-        if(program){
-            let info = JSON.parse(program) 
+        if (program) {
+            let info = JSON.parse(program)
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
             this.pDescription = info.description
             this.getSubProgram()
         }
-        if(subprogram){
-            let info = JSON.parse(subprogram) 
+        if (subprogram) {
+            let info = JSON.parse(subprogram)
             this.sPoster = info.poster.resources[0].url
             this.sId = info.id
             this.sName = info.name
@@ -66,16 +66,16 @@ export default {
         }
     },
     methods: {
-        getSubProgram(){
+        getSubProgram() {
             this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
                 let data = res.data.data
-                if(data && data.length > 0){
+                if (data && data.length > 0) {
                     this.subProgram = data
                 }
             })
         },
-        toSubProgramDetail(item){
-            sessionStorage.setItem('subprogram',JSON.stringify(item))
+        toSubProgramDetail(item) {
+            sessionStorage.setItem('subprogram', JSON.stringify(item))
             this.$router.go(0)
         }
     },
@@ -108,60 +108,65 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
-.wrapper{
-    .poster{
+.wrapper {
+    img {
+        border-radius:2px;
+    }
+    .poster {
         width: 94%;
-        margin: .5rem auto;
-        border-bottom: 1px solid #D8D8D8;
-        padding-bottom: .5rem;
-        .cover{
-            width:100%;
-            height:11rem;
+        margin: 0.5rem auto;
+        border-bottom: 1px solid #d8d8d8;
+        padding-bottom: 0.5rem;
+        .cover {
+            width: 100%;
+            height: 11rem;
+            margin-bottom:0.5rem;
         }
-        .program-name{
+        .program-name {
             font-weight: bold;
-            color:#333333;
-            margin:.5rem 0;
-        } 
-        p{
-            color:#666666;
+            color: #333333;
+            margin: 0.5rem 0;
+            line-height:2rem;
+        }
+        p {
+            color: #666666;
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             overflow: hidden;
-            font-size:.9rem;
+            font-size: 0.9rem;
         }
-        &.father{
-            padding-bottom:.5rem;
-            p{
-                width:60%;
+        &.father {
+            padding-bottom: 0.5rem;
+            p {
+                width: 60%;
                 float: left;
-                font-size: .85rem;
-                height:auto;
+                font-size: 0.85rem;
+                height: auto;
             }
-            img{
+            img {
                 display: block;
-                width:38%;
-                float:right;
-                height:5rem;
+                width: 38%;
+                float: right;
+                height: 5rem;
             }
         }
     }
-    .clips{
+    .clips {
         width: 94%;
-        margin: .5rem auto;
-        p{
-            color:#111111;
-            margin:.5rem 0;
+        margin: 0.5rem auto;
+        p {
+            color: #111111;
+            margin: 0.5rem 0;
             font-weight: bold;
         }
-        ul{
-            li{
+        ul {
+            li {
                 list-style: none;
                 float: left;
                 width: 48%;
                 line-height: 1.1rem;
-                &:nth-child(2n){
+                &:nth-child(2n) {
                     float: right;
                 }
                 div {
@@ -181,9 +186,9 @@ export default {
                     height:5rem;
                     }
                 }
-                span{
-                    font-size: .85rem;
-                    color:#666666;
+                span {
+                    font-size: 0.85rem;
+                    color: #666666;
                 }
             }
         }

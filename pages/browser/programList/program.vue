@@ -1,8 +1,8 @@
 <template>
-    <div class="wrapper ">
+    <div class="wrapper">
         <download class="clearfix"/>
         <div class="poster">
-            <img :src="pPoster" alt="">
+            <img :src="pPoster" alt>
             <span class="program-name">{{pName}}</span>
             <p>{{pDescription}}</p>
         </div>
@@ -23,20 +23,20 @@
 <script>
 import download from '~/components/web/download'
 export default {
-    layout:'default',
-    data(){
-      return{
-            pPoster:'',
-            pId:'',
-            pName:'',
-            pDescription:'',
-            subProgram:[]
-      } 
+    layout: 'default',
+    data() {
+        return {
+            pPoster: '',
+            pId: '',
+            pName: '',
+            pDescription: '',
+            subProgram: []
+        }
     },
     mounted() {
         let msg = sessionStorage.getItem('program')
-        if(msg){
-            let info = JSON.parse(msg) 
+        if (msg) {
+            let info = JSON.parse(msg)
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
@@ -45,16 +45,16 @@ export default {
         }
     },
     methods: {
-        getSubProgram(){
+        getSubProgram() {
             this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
                 let data = res.data.data
-                if(data && data.length > 0){
+                if (data && data.length > 0) {
                     this.subProgram = data
                 }
             })
         },
-        toSubProgramDetail(item){
-            sessionStorage.setItem('subprogram',JSON.stringify(item))
+        toSubProgramDetail(item) {
+            sessionStorage.setItem('subprogram', JSON.stringify(item))
             this.$router.push('/browser/programlist/subProgram')
         }
     },
@@ -87,47 +87,50 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
-.wrapper{
-    .poster{
+.wrapper {
+    img {
+        border-radius: 2px;
+    }
+    .poster {
         width: 94%;
-        margin: .5rem auto;
-        border-bottom: 1px solid #D8D8D8;
-        padding-bottom: .5rem;
-        img{
-            width:100%;
-            height:11rem;
-            margin-bottom:0.5rem;
+        margin: 0.5rem auto;
+        border-bottom: 1px solid #d8d8d8;
+        padding-bottom: 0.5rem;
+        img {
+            width: 100%;
+            height: 11rem;
+            margin-bottom: 0.5rem;
         }
-        .program-name{
+        .program-name {
             font-weight: bold;
-            color:#333333;
-            margin:.5rem 0;
-            line-height:2rem;
+            color: #333333;
+            margin: 0.5rem 0;
+            line-height: 2rem;
         }
-        p{
-            color:#666666;
+        p {
+            color: #666666;
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             overflow: hidden;
-            font-size:0.9rem;
+            font-size: 0.9rem;
         }
     }
-    .clips{
+    .clips {
         width: 94%;
-        margin: .5rem auto;
-        p{
-            color:#111111;
-            margin:.5rem 0;
+        margin: 0.5rem auto;
+        p {
+            color: #111111;
+            margin: 0.5rem 0;
             font-weight: bold;
         }
-        ul{
-            li{
+        ul {
+            li {
                 list-style: none;
                 float: left;
                 width: 48%;
                 line-height: 1.1rem;
-                &:nth-child(2n){
+                &:nth-child(2n) {
                     float: right;
                 }
                 div {
@@ -147,9 +150,9 @@ export default {
                     height:5rem;
                     }
                 }
-                span{
-                    font-size: .85rem;
-                    color:#666666;
+                span {
+                    font-size: 0.85rem;
+                    color: #666666;
                 }
             }
         }
