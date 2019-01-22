@@ -35,6 +35,7 @@
 </template>
 <script>
 import mheader from '~/components/web/header.vue'
+import { setCookie } from '~/functions/utils'
 export default {
     computed: {
         user() {
@@ -79,6 +80,7 @@ export default {
     watch: {
         token(nv, ov) {
             // 更新token
+            setCookie('token', nv)
             this.$axios.setHeader('token', nv)
         }
     }
