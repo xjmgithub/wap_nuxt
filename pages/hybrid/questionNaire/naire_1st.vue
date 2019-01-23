@@ -41,7 +41,7 @@ export default {
     layout: 'base',
     data() {
         return {
-            appType:this.$store.state.appType,
+            appType: this.$store.state.appType,
             naireList: [
                 {
                     question: '1. Your Gender please?',
@@ -265,6 +265,13 @@ export default {
         }
     },
     mounted() {
+        this.sendEvLog({
+            category: 'questionnaire',
+            action: 'init',
+            label: 6,
+            value: 1
+        })
+
         this.openTime = new Date().getTime()
         let s = navigator.userAgent.indexOf('Android')
         let w = navigator.userAgent.substr(s + 8).split(';')[0]
@@ -300,18 +307,48 @@ export default {
             url: `/voting/v1/questionnaire/has_submitted?questionnaire_id=6`,
             method: 'get',
             data: {}
-        }).then(res => {
-            if (res.data.code == 0) {
-                this.isDone = res.data.data
-                this.initLoading = true
+        })
+            .then(res => {
+                if (res.data.code == 0) {
+                    this.isDone = res.data.data
+                    this.initLoading = true
+                    this.sendEvLog({
+                        category: 'questionnaire',
+                        action: 'show',
+                        label: 6,
+                        value: res.data.data ? 1 : 0
+                    })
+                } else {
+                    this.$alert(
+                        'Load error,please try reload',
+                        () => {
+                            window.location.reload()
+                        },
+                        'RELOAD'
+                    )
+                    this.sendEvLog({
+                        category: 'questionnaire',
+                        action: 'error',
+                        label: 6,
+                        value: res.data.code
+                    })
+                }
+            })
+            .catch(err => {
+                this.$alert(
+                    'Load error,please try reload',
+                    () => {
+                        window.location.reload()
+                    },
+                    'RELOAD'
+                )
                 this.sendEvLog({
                     category: 'questionnaire',
-                    action: 'show',
+                    action: 'error',
                     label: 6,
-                    value: res.data.data ? 1 : 0
+                    value: 'voting api error'
                 })
-            }
-        })
+            })
     },
     methods: {
         changeItem(data, index) {
@@ -494,7 +531,7 @@ export default {
             p {
                 color: #333333;
                 margin-top: 0.8rem;
-                font-weight:bold;
+                font-weight: bold;
             }
             span {
                 color: #666666;
