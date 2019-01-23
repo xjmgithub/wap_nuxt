@@ -1,7 +1,7 @@
 <template>
     <div>
-        <loading/>
-        <nuxt/>
+        <loading v-if="!showPageComp"/>
+        <nuxt v-if="showPageComp"/>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
         <shadowLayer v-show="layer"/>
@@ -13,7 +13,13 @@ import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import shadowLayer from '~/components/shadow-layer'
 import loading from '~/components/loading'
+import { toNativePage } from '~/functions/utils'
 export default {
+    data() {
+        return {
+            showPageComp: false // 是否显示页面组件
+        }
+    },
     components: {
         alert,
         confirm,
@@ -23,6 +29,9 @@ export default {
     computed: {
         layer() {
             return this.$store.state.shadowStatus
+        },
+        needLoginAlert() {
+            return this.$store.state.needLoginAlert
         }
     },
     created() {
@@ -36,6 +45,31 @@ export default {
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
         this.$axios.setHeader('token', this.$store.state.token)
+    },
+    mounted() {
+        if (this.needLoginAlert) {
+            this.loginAlert()
+        } else {
+            this.showPageComp = true
+        }
+    },
+    watch: {
+        needLoginAlert(nv, ov) {
+            if (nv) {
+                this.loginAlert()
+            }
+        }
+    },
+    methods: {
+        loginAlert() {
+            this.$alert('Your account is signed in elsewhere. Please Login again', () => {
+                if (this.$store.state.appType == 1) {
+                    toNativePage('com.star.mobile.video.account.LoginActivity')
+                } else {
+                    toNativePage('startimes://login')
+                }
+            })
+        }
     }
 }
 </script>

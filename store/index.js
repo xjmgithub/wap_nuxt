@@ -19,7 +19,7 @@ export const state = () => ({
     appVersionCode: '-1',
     gaClientId: '',
     lang: {},
-    langType:'en',
+    langType: 'en',
     shadowStatus: false,
     payToken: '',
     user: null,
@@ -31,9 +31,10 @@ export const state = () => ({
     phoneModel: '',
     intervalTimer: null,
     appInitTime: new Date().getTime(),
-    rankList:[],
-    serverTime:new Date(),
-    navState:false
+    rankList: [],
+    serverTime: new Date(),
+    navState: false,
+    needLoginAlert: false
 })
 
 export const mutations = {
@@ -104,11 +105,14 @@ export const mutations = {
         let [...arr] = val
         state.rankList = arr
     },
-    SET_SERVER_TIME:function(state,val){
+    SET_SERVER_TIME: function(state, val) {
         state.serverTime = val
     },
-    SET_NAV_STATE:function(state,val){
+    SET_NAV_STATE: function(state, val) {
         state.navState = val
+    },
+    SET_NEED_LOGIN: function(state, val) {
+        state.needLoginAlert = val
     }
 }
 
@@ -124,16 +128,16 @@ export const actions = {
         // set language
         let language = req.headers['lncode'] || req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
-            commit('SET_LANG_TYPE',language)
+            commit('SET_LANG_TYPE', language)
             commit('SET_LANG', LANG.fy)
         } else if (language.indexOf('sw') >= 0) {
-            commit('SET_LANG_TYPE',language)
+            commit('SET_LANG_TYPE', language)
             commit('SET_LANG', LANG.sy)
         } else if (language.indexOf('pt') >= 0) {
-            commit('SET_LANG_TYPE',language)
+            commit('SET_LANG_TYPE', language)
             commit('SET_LANG', LANG.py)
         } else {
-            commit('SET_LANG_TYPE',language)
+            commit('SET_LANG_TYPE', language)
             commit('SET_LANG', LANG.en)
         }
 

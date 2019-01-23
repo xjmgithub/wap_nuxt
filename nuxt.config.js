@@ -48,13 +48,7 @@ module.exports = {
     /*
     ** Plugins to load before mounting the App
     */
-    plugins: [
-        { src: '~plugins/analysis.js', ssr: false },
-        { src: '~plugins/auth.js', ssr: false },
-        { src: '~plugins/clearTimer.js', ssr: false },
-        { src: '~plugins/cookie.js', ssr: false },
-        { src: '~plugins/axios.js', ssr: false }
-    ],
+    plugins: [{ src: '~plugins/analysis.js', ssr: false }, { src: '~plugins/axios.js', ssr: false }, { src: '~plugins/others.js', ssr: false }],
 
     /*
   ** Nuxt.js modules
@@ -88,7 +82,9 @@ module.exports = {
         '/adm/': env.ms_host,
         '/self/': env.ms_host
     },
-
+    router: {
+        middleware: 'auth'
+    },
     serverMiddleware: [
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
