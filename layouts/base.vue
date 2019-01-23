@@ -1,7 +1,14 @@
 <template>
     <div>
-        <loading v-if="!showPageComp"/>
-        <nuxt v-if="showPageComp"/>
+        <loading/>
+        <nuxt v-if="!needLoginAlert"/>
+        <div v-if="needLoginAlert" class="authfail">
+            <img src="~assets/img/pay/img_failed_def_b.png">
+            <p class="fail">
+                Please
+                <a href="javascript:void(0)" @click="toNativeLogin">Log in First.</a>
+            </p>
+        </div>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
         <shadowLayer v-show="layer"/>
@@ -17,7 +24,7 @@ import { toNativePage } from '~/functions/utils'
 export default {
     data() {
         return {
-            showPageComp: false // 是否显示页面组件
+            needLoginAlert: this.$store.state.needLoginAlert // 是否显示页面组件
         }
     },
     components: {
@@ -29,9 +36,6 @@ export default {
     computed: {
         layer() {
             return this.$store.state.shadowStatus
-        },
-        needLoginAlert() {
-            return this.$store.state.needLoginAlert
         }
     },
     created() {
@@ -47,28 +51,26 @@ export default {
         this.$axios.setHeader('token', this.$store.state.token)
     },
     mounted() {
-        if (this.needLoginAlert) {
-            this.loginAlert()
-        } else {
-            this.showPageComp = true
-        }
-    },
-    watch: {
-        needLoginAlert(nv, ov) {
-            if (nv) {
-                this.loginAlert()
-            }
-        }
+        this.sendEvLog({
+            category: 'h5_open',
+            action: 'layout_mounted',
+            label: window.location.href,
+            value: this.needLoginAlert ? 0 : 1
+        })
     },
     methods: {
-        loginAlert() {
-            this.$confirm('Please sign in first.', () => {
-                if (this.$store.state.appType == 1) {
-                    toNativePage('com.star.mobile.video.account.LoginActivity')
-                } else {
-                    toNativePage('startimes://login')
-                }
+        toNativeLogin() {
+            this.sendEvLog({
+                category: 'h5_jump',
+                action: 'toLogin',
+                label: window.location.href,
+                value: 1
             })
+            if (this.$store.state.appType == 1) {
+                toNativePage('com.star.mobile.video.account.LoginActivity')
+            } else {
+                toNativePage('startimes://login')
+            }
         }
     }
 }
@@ -102,5 +104,21 @@ body {
     z-index: 2;
     position: absolute;
     background: white;
+}
+.authfail {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 4rem;
+    background: white;
+}
+img {
+    width: 15rem;
+    height: 13rem;
+}
+.fail {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 1rem;
 }
 </style>

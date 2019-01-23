@@ -2,7 +2,6 @@ import { toNativePage } from '~/functions/utils'
 const auth_ignore = [
     /^\/hybrid\/account\/login/,
     /^\/hybrid\/account\/logout/,
-    /^\/hybrid\/account\/authfail/,
     /^\/hybrid\/account\/signin/,
     /^\/hybrid\/account\/register/,
     /^\/hybrid\/account\/setpass/,
