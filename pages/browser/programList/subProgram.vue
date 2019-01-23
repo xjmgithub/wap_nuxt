@@ -36,7 +36,7 @@ export default {
     data() {
         return {
             pPoster: '',
-            pId: '',
+            pId: this.$route.query.proId,
             pName: '',
             pDescription: '',
             sPoster: '',
@@ -48,12 +48,15 @@ export default {
     },
     mounted() {
         let program = sessionStorage.getItem('program')
+        console.log(this.pId)
         if (program) {
             let info = JSON.parse(program)
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
             this.pDescription = info.description
+        }
+        if(this.pId){
             this.getSubProgram()
         }
     },
