@@ -62,7 +62,7 @@ export default {
     },
     methods: {
         loginAlert() {
-            this.$alert('Your account is signed in elsewhere. Please Login again', () => {
+            this.$confirm('Please sign in first.', () => {
                 if (this.$store.state.appType == 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
                 } else {
