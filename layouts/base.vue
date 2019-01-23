@@ -1,7 +1,14 @@
 <template>
     <div>
         <loading/>
-        <nuxt/>
+        <nuxt v-if="!needLoginAlert"/>
+        <div v-if="needLoginAlert" class="authfail">
+            <img src="~assets/img/pay/img_failed_def_b.png">
+            <p class="fail">
+                Please
+                <a href="javascript:void(0)" @click="toNativeLogin">Log in First.</a>
+            </p>
+        </div>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
         <shadowLayer v-show="layer"/>
@@ -13,7 +20,13 @@ import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import shadowLayer from '~/components/shadow-layer'
 import loading from '~/components/loading'
+import { toNativePage } from '~/functions/utils'
 export default {
+    data() {
+        return {
+            needLoginAlert: this.$store.state.needLoginAlert // 是否显示页面组件
+        }
+    },
     components: {
         alert,
         confirm,
@@ -36,7 +49,29 @@ export default {
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
         this.$axios.setHeader('token', this.$store.state.token)
-        // this.$axios.setHeader('timeout', 2000)
+    },
+    mounted() {
+        this.sendEvLog({
+            category: 'h5_open',
+            action: 'layout_mounted',
+            label: window.location.href,
+            value: this.needLoginAlert ? 0 : 1
+        })
+    },
+    methods: {
+        toNativeLogin() {
+            this.sendEvLog({
+                category: 'h5_jump',
+                action: 'toLogin',
+                label: window.location.href,
+                value: 1
+            })
+            if (this.$store.state.appType == 1) {
+                toNativePage('com.star.mobile.video.account.LoginActivity')
+            } else {
+                toNativePage('startimes://login')
+            }
+        }
     }
 }
 </script>
@@ -69,5 +104,21 @@ body {
     z-index: 2;
     position: absolute;
     background: white;
+}
+.authfail {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 4rem;
+    background: white;
+}
+img {
+    width: 15rem;
+    height: 13rem;
+}
+.fail {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 1rem;
 }
 </style>

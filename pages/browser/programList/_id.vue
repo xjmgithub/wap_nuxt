@@ -8,7 +8,7 @@
                     <span class="more" v-show="item.subPrograms.length>3">MORE</span>
                 </div>
                 <ul>
-                    <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3" @click="toSubProgramDetail(subPro.id)">
+                    <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3" @click="toSubProgramDetail(subPro.id,item)">
                         <span>{{item.name}}</span>
                         <span class="arrows">&gt;&gt;</span>
                     </li>
@@ -71,8 +71,9 @@ export default {
                 }
             })
         },
-        toSubProgramDetail(id){
-            this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
+        toSubProgramDetail(sId,pro){
+            sessionStorage.setItem('program', JSON.stringify(pro))
+            this.$router.push(`/browser/programlist/subProgram?proId=${pro.id}&subId=${sId}`)
         }
     }
 }

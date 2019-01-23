@@ -40,10 +40,9 @@ export const delCookie = name => {
 }
 
 export const initUser = (token, id, obj) => {
-    // browser surport server unsurport
+    // browser surport server not
     if (!token || !id || !obj) return false
     setCookie('token', token)
-    setCookie('userid', id)
     window.localStorage.setItem('user', JSON.stringify(obj))
 }
 

@@ -52,27 +52,27 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .dialog {
     position: fixed;
     top: 50%;
     left: 50%;
     background: white;
-    border-radius: 3px;
+    border-radius: 2px;
     overflow: hidden;
     zoom: 1;
     z-index: 1001;
-    width: 16rem;
+    width: 17rem;
     padding: 1.2rem;
     .pop-default {
-        font-size: 0.9rem;
         line-height: 1.4rem;
+        padding:0.8rem 0;
+        min-height:4.5rem;
     }
     .dialog-footer .btn {
         width: 3rem;
         float: right;
         color: #0087eb;
-        font-size: 0.9rem;
         font-weight: bold;
     }
 }
