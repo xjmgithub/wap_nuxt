@@ -165,7 +165,7 @@ export default ({ app: { router, $axios }, store, query }) => {
     sendPvLog({
         category: 'h5_open',
         action: 'page_init_start',
-        label: location.href,
+        label: location.pathname,
         value: now - store.state.appInitTime,
         native_time: store.state.appInitTime,
         browser_time: now
@@ -176,7 +176,7 @@ export default ({ app: { router, $axios }, store, query }) => {
         sendPvLog({
             category: 'page_view',
             action: 'show',
-            label: location.href
+            label: location.pathname
         })
     })
 }

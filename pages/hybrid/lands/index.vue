@@ -37,7 +37,7 @@ export default {
         this.sendEvLog({
             category: 'langingpage',
             action: 'show',
-            label: window.location.href
+            label: window.location.pathname
         })
 
 
@@ -62,14 +62,14 @@ export default {
                 this.sendEvLog({
                     category: 'langingpage',
                     action: 'jump_googleplay',
-                    label: window.location.href
+                    label: window.location.pathname
                 })
             }
             if (this.appType == 2) {
                 this.sendEvLog({
                     category: 'langingpage',
                     action: 'jump_appstore',
-                    label: window.location.href
+                    label: window.location.pathname
                 })
             }
         }
@@ -85,7 +85,7 @@ export default {
             this.sendEvLog({
                 category: 'langingpage',
                 action: 'appstore_click',
-                label: window.location.href
+                label: window.location.pathname
             })
             window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
         },
@@ -93,7 +93,7 @@ export default {
             this.sendEvLog({
                 category: 'langingpage',
                 action: 'download_click',
-                label: window.location.href
+                label: window.location.pathname
             })
             window.open('https://m.startimestv.com/DownloadAPP.php')
         }

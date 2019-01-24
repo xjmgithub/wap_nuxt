@@ -54,7 +54,7 @@ export default {
         this.sendEvLog({
             category: 'h5_open',
             action: 'layout_mounted',
-            label: window.location.href,
+            label: window.location.pathname,
             value: this.needLoginAlert ? 0 : 1
         })
     },
@@ -63,7 +63,7 @@ export default {
             this.sendEvLog({
                 category: 'h5_jump',
                 action: 'toLogin',
-                label: window.location.href,
+                label: window.location.pathname,
                 value: 1
             })
             if (this.$store.state.appType == 1) {
