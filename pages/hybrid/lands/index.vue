@@ -20,6 +20,7 @@
     </div>
 </template>
 <script>
+import { downloadApk } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -95,23 +96,7 @@ export default {
                 label: window.location.pathname
             })
 
-            this.$axios
-                .get('/cms/public/app')
-                .then(res => {
-                    let url = res.data.apkUrl
-                    if (url) {
-                        if (url.indexOf('google') > 0) {
-                            url = url.replace('google', 'officialWap')
-                        }
-
-                        window.location.href = url
-                    } else {
-                        this.$alert('Download error.Please retry.')
-                    }
-                })
-                .catch(err => {
-                    this.$alert('Download error.Please retry.')
-                })
+            downloadApk(this)
         }
     },
     head() {

@@ -39,7 +39,7 @@
             </h3>
             <img src="~assets/img/web/pic_show.jpg" class="bigPic">
             <div class="download clearfix">
-                <a href="https://m.startimestv.com/DownloadAPP.php">
+                <a href="javascript:void(0)" @click="downloadApk">
                     <img src="~assets/img/web/pic_downloadapk.png">
                 </a>
                 <a href="market://details?id=com.star.mobile.video" target="_blank">
@@ -54,6 +54,7 @@
 </template>
 <script>
 import bgImgData from '~/components/web/bgImgData'
+import { downloadApk } from '~/functions/utils'
 export default {
     layout: 'default',
     data() {
@@ -65,7 +66,7 @@ export default {
     },
     mounted() {
         let host = window.location.host
-        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0||host.indexOf('localhost') >= 0) {
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
         }
         this.getBouquets()
@@ -93,10 +94,13 @@ export default {
             let packageCode = item.code
             let bouId = item.id
             let price = item.price
-            let logo = encodeURI(item.poster&&item.poster.resources[0].url || '')
+            let logo = encodeURI((item.poster && item.poster.resources[0].url) || '')
             let name = item.name
             let plat = item.tvPlatForm
             this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
+        },
+        downloadApk(){
+            downloadApk(this)
         }
     },
     filters: {

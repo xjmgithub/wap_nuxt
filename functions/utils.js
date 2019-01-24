@@ -163,3 +163,23 @@ export const initFacebookLogin = () => {
     })
     FB.AppEvents.logPageView()
 }
+
+export const downloadApk = app =>{
+    app.$axios
+        .get('/cms/public/app')
+        .then(res => {
+            let url = res.data.apkUrl
+            if (url) {
+                if (url.indexOf('google') > 0) {
+                    url = url.replace('google', 'officialWap')
+                }
+
+                window.location.href = url
+            } else {
+                this.$alert('Download error.Please retry.')
+            }
+        })
+        .catch(err => {
+            this.$alert('Download error.Please retry.')
+        })
+}
