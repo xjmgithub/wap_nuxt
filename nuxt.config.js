@@ -80,7 +80,8 @@ module.exports = {
         '/css/': env.ms_host,
         '/voting/': env.ms_host,
         '/adm/': env.ms_host,
-        '/self/': env.ms_host
+        '/self/': env.ms_host,
+        '/channel/': env.ms_host
     },
     router: {
         middleware: 'auth'

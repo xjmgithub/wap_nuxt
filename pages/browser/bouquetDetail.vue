@@ -19,7 +19,7 @@
         <ul class="channelList">
             <li v-for="(item,index) in detailList" :key="index">
                 <div class="lasy_bg">
-                    <img :src="item.logo" alt>
+                    <img :src="item.logo.resources[0].url" alt>
                 </div>
                 <img src="~assets/img/web/channelsOn.png" v-show="item.liveStatus" class="imgOn">
             </li>
@@ -35,11 +35,10 @@ export default {
     data() {
         return {
             detailList: [],
-            price: '',
-            bouquetName: '',
-            packageLogo: '',
-            tvPlatFormName: '',
-            tvPlatForm: '',
+            price: this.$route.query.price,
+            bouquetName: this.$route.query.name,
+            packageLogo: this.$route.query.logo,
+            tvPlatFormName: this.$route.query.plat == 'DTH' ? 'Dish' : 'Antenna',
             loadstate: true,
             recharge_url: 'https://m.startimestv.com/DVB/binding.php'
         }
@@ -50,36 +49,23 @@ export default {
             this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
         }
 
-        let packageCode = this.$route.query.packageCode
         let id = this.$route.query.id
-        this.price = this.$route.query.price
-        this.packageLogo  = this.$route.query.logo
-        this.bouquetName = this.$route.query.name
-        this.tvPlatFormName = this.$route.query.plat == 'DTH' ? 'Dish' : 'Antenna'
-        this.$axios.get(`/cms/v2/vup/snapshot/channels?count=500&platformTypes=1&platformTypes=0&packageCode=${packageCode}`).then(res => {
-            this.loadstate = false
-            let countChannel = res.data
-            let platformInfo, packages, detail
-            if (countChannel.length > 0) {
-                countChannel.forEach(channel => {
-                    platformInfo = channel.ofAreaTVPlatforms[0].platformInfos
-                    platformInfo.forEach(platform => {
-                        packages = platform.packages
-                        packages.forEach(detail => {
-                            if (detail.id == parseInt(id)) {
-                                this.packageLogo = detail.poster ? detail.poster.resources[0].url : ''
-                                this.bouquetName = detail.name
-                                this.tvPlatFormName = detail.tvPlatForm == 'DTH' ? 'Dish' : 'Antenna'
-                                this.tvPlatForm = detail.tvPlatForm
-                                detail.logo = channel.logo.resources[0].url
-                                detail.liveStatus = channel.liveStatus
-                                this.detailList.push(detail)
-                            }
-                        })
-                    })
-                })
-            }
-        })
+        let countryCode = this.$store.state.country.country
+        let packageId = this.$route.query.id
+
+        this.$axios
+            .get(
+                `/channel/v1/channels/broadcast/channels/package-id?country_code=${countryCode}&platform_type=1&platform_type=0&package_id=${packageId}&include_lower_code=true`
+            )
+            .then(res => {
+                this.loadstate = false
+                let countChannel = res.data.data
+                if (res.data && res.data.code == 200) {
+                    this.detailList = res.data.data
+                } else {
+                    this.detailList = []
+                }
+            })
     },
     computed: {
         currency() {

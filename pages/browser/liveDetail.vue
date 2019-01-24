@@ -139,7 +139,7 @@ export default {
             let logo = encodeURI((item.poster && item.poster.resources[0].url) || '')
             let name = item.name
             let plat = item.tvPlatForm
-            this.$router.push(`/browser/bouquetDetail?packageCode=${packageCode}&id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
+            this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         getEpgTime() {
             // 获取当前时间 前三后四天
