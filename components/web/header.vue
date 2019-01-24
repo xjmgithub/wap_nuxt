@@ -50,7 +50,7 @@ export default {
     computed: {
         logo() {
             let country = this.$store.state.country
-            if (country.id == 6) {
+            if (country.id == 18) {
                 return 1
             } else if (country.id == 7) {
                 return 2
@@ -61,7 +61,6 @@ export default {
     },
     methods: {
         showNav() {
-            // let state = this.$store.state.navState
             this.$store.commit('SET_NAV_STATE', true)
         }
     }
