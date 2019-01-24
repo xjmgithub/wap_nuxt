@@ -99,7 +99,7 @@ body {
 .clearfix {
     zoom: 1;
 }
-#wrapper {
+.wrapper {
     min-height: 100%;
     z-index: 2;
     position: absolute;
