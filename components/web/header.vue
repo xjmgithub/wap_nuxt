@@ -9,8 +9,12 @@
         <div class="navigator">
             <div>
                 <nuxt-link to="/browser/">
-                    <img src="~assets/img/web/ic_home_def_g.png">
-                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_home}}</div>
+                    <img v-if="$route.path=='/browser/'||$route.path=='/browser'" src="~assets/img/web/ic_home_def_yellow.png">
+                    <img v-else src="~assets/img/web/ic_home_def_g.png">
+                    <div
+                        class="nav_title"
+                        :class="{checked:$route.path=='/browser/'||$route.path=='/browser'}"
+                    >{{$store.state.lang.officialwebsitemobile_topnav_home}}</div>
                 </nuxt-link>
             </div>
             <div>
@@ -21,14 +25,16 @@
             </div>
             <div>
                 <nuxt-link to="/browser/programlist">
-                    <img src="~assets/img/web/ic_menu_def_w.png">
-                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_list}}</div>
+                    <img v-if="$route.path=='/browser/programlist'" src="~assets/img/web/ic_menu_def_yellow.png">
+                    <img v-else src="~assets/img/web/ic_menu_def_w.png">
+                    <div class="nav_title" :class="{checked:$route.path=='/browser/programlist'}">{{$store.state.lang.officialwebsitemobile_topnav_list}}</div>
                 </nuxt-link>
             </div>
             <div>
                 <nuxt-link to="/browser/live">
-                    <img src="~assets/img/web/ic_phoneplay_def_w.png">
-                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_live}}</div>
+                    <img v-if="$route.path=='/browser/live'" src="~assets/img/web/ic_phoneplay_def_yellow.png">
+                    <img v-else src="~assets/img/web/ic_phoneplay_def_w.png">
+                    <div class="nav_title" :class="{checked:$route.path=='/browser/live'}">{{$store.state.lang.officialwebsitemobile_topnav_live}}</div>
                 </nuxt-link>
             </div>
         </div>
@@ -42,8 +48,9 @@ export default {
         }
     },
     mounted() {
+        console.log(this.$route.path)
         let host = window.location.host
-        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0||host.indexOf('localhost') >= 0) {
+        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.tvguide_url = 'http://qa.upms.startimestv.com/wap/TVguide_list.php'
         }
     },
@@ -102,6 +109,9 @@ export default {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                &.checked {
+                    color: #ffbc2e;
+                }
             }
             img {
                 height: 1.6rem;
