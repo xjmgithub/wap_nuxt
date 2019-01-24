@@ -126,7 +126,8 @@ export const actions = {
             })
 
         // set language
-        let language = req.headers['lncode'] || req.headers['accept-language']
+        
+        let language = req.headers['lncode'] || _COOKIE['lang'] ||req.headers['accept-language']
         if (language.indexOf('fr') >= 0) {
             commit('SET_LANG_TYPE', language)
             commit('SET_LANG', LANG.fy)

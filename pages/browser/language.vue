@@ -14,6 +14,7 @@
 </template>
 <script>
 import LANG from '~/languages/'
+import {setCookie } from '~/functions/utils'
 export default {
     layout:'default',
     data(){
@@ -53,6 +54,7 @@ export default {
                 this.$store.commit('SET_LANG_TYPE',lang)
                 this.$store.commit('SET_LANG', LANG.en)
             }
+            setCookie('lang',lang)
             window.history.go(-1)
         }
     },
