@@ -6,13 +6,15 @@
         <div class="slide-bar" :class="{'nav-show':showNav}">
             <ul>
                 <li>
-                    <div v-if="user">
+                    <div>
                         <div class="user_info">
-                            <img :src="user.head">
-                            <div>{{user.nickName}}</div>
+                            <nuxt-link to="/hybrid/account/login">
+                                <img v-if="user" :src="user.head">
+                                <img v-else src="http://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
+                            </nuxt-link>
+                            <div v-if="user">{{user.nickName}}</div>
                         </div>
                     </div>
-                    <nuxt-link v-else to="/hybrid/account/login">Signin / Register</nuxt-link>
                 </li>
                 <li class="country">
                     <nuxt-link to="/browser/country">
