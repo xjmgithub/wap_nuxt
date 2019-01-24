@@ -111,14 +111,14 @@ body {
     text-align: center;
     padding-top: 4rem;
     background: white;
-}
-img {
-    width: 15rem;
-    height: 13rem;
-}
-.fail {
-    width: 80%;
-    margin: 0 auto;
-    margin-top: 1rem;
+    img {
+        width: 15rem;
+        height: 13rem;
+    }
+    .fail {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 1rem;
+    }
 }
 </style>

@@ -40,7 +40,6 @@ export default {
             label: window.location.pathname
         })
 
-
         if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
             this.appType = 2
             appStoreLink = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
@@ -95,7 +94,24 @@ export default {
                 action: 'download_click',
                 label: window.location.pathname
             })
-            window.open('https://m.startimestv.com/DownloadAPP.php')
+
+            this.$axios
+                .get('/cms/public/app')
+                .then(res => {
+                    let url = res.data.apkUrl
+                    if (url) {
+                        if (url.indexOf('google') > 0) {
+                            url = url.replace('google', 'officialWap')
+                        }
+
+                        window.location.href = url
+                    } else {
+                        this.$alert('Download error.Please retry.')
+                    }
+                })
+                .catch(err => {
+                    this.$alert('Download error.Please retry.')
+                })
         }
     },
     head() {
@@ -114,7 +130,7 @@ export default {
     max-width: 1300px;
     margin: 0 auto;
     position: relative;
-    padding-top:0;
+    padding-top: 0;
 }
 .page-top img {
     width: 100%;
