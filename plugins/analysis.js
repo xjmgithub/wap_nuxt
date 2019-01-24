@@ -126,7 +126,7 @@ export default ({ app: { router, $axios }, store, query }) => {
             .catch(err => {})
     }
 
-    Vue.prototype.sendEvLog = msg => {
+    let sendEvLog = msg => {
         for (let i in msg) {
             msg[i] = '' + msg[i]
         }
@@ -160,9 +160,11 @@ export default ({ app: { router, $axios }, store, query }) => {
         })
     }
 
+    Vue.prototype.sendEvLog = sendEvLog
+
     let now = new Date().getTime()
 
-    sendPvLog({
+    sendEvLog({
         category: 'h5_open',
         action: 'page_init_start',
         label: location.pathname,
