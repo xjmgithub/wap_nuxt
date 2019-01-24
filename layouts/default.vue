@@ -17,13 +17,13 @@
                     </div>
                 </li>
                 <li class="country">
-                    <nuxt-link to="/browser/country">
+                    <nuxt-link :class="{checked:$route.path=='/browser/country'}" to="/browser/country">
                         <span>{{country.name}}</span>
                         <img :src="country.nationalFlag">
                     </nuxt-link>
                 </li>
                 <li>
-                    <nuxt-link to="/browser/language">{{language}}</nuxt-link>
+                    <nuxt-link :class="{checked:$route.path=='/browser/language'}" to="/browser/language">{{language}}</nuxt-link>
                 </li>
                 <li>
                     <a :href="faq_url">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
@@ -141,6 +141,9 @@ body {
         font-size: 0.9rem;
         a {
             color: white;
+            &.checked{
+                color:#ffbc2e;
+            }
         }
     }
 }
