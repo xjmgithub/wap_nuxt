@@ -4,7 +4,7 @@
         <div class="program-list">
             <div class="program" v-for="(item,index) in programList" :key="index">
                 <div class="title" @click="toProgramDetail(item)">
-                    <span>{{item.name}}</span>
+                    <span>{{item.name}}{{item.subPrograms.length}}</span>
                     <span class="more" v-show="item.subPrograms.length>3">MORE</span>
                 </div>
                 <ul>
@@ -103,6 +103,7 @@ export default {
                 white-space: nowrap;
                 width: 90%;
                 display: block;
+                float:left;
             }
             .more {
                 position: absolute;
