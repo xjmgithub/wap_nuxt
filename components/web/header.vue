@@ -25,9 +25,9 @@
             </div>
             <div>
                 <nuxt-link to="/browser/programlist">
-                    <img v-if="$route.path=='/browser/programlist'" src="~assets/img/web/ic_menu_def_yellow.png">
+                    <img v-if="$route.path.indexOf('/browser/programlist')>=0" src="~assets/img/web/ic_menu_def_yellow.png">
                     <img v-else src="~assets/img/web/ic_menu_def_w.png">
-                    <div class="nav_title" :class="{checked:$route.path=='/browser/programlist'}">{{$store.state.lang.officialwebsitemobile_topnav_list}}</div>
+                    <div class="nav_title" :class="{checked:$route.path.indexOf('/browser/programlist')>=0}">{{$store.state.lang.officialwebsitemobile_topnav_list}}</div>
                 </nuxt-link>
             </div>
             <div>
