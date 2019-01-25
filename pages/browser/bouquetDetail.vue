@@ -52,10 +52,10 @@ export default {
         let id = this.$route.query.id
         let countryCode = this.$store.state.country.country
         let packageId = this.$route.query.id
-
+        let plat = this.$route.query.plat == 'DTH' ? '1' : '0'
         this.$axios
             .get(
-                `/channel/v1/channels/broadcast/channels/package-id?country_code=${countryCode}&platform_type=1&platform_type=0&package_id=${packageId}&include_lower_code=true`
+                `/channel/v1/channels/broadcast/channels/package-id?country_code=${countryCode}&platform_type=${plat}&package_id=${packageId}&include_lower_code=true`
             )
             .then(res => {
                 this.loadstate = false
