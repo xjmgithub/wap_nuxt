@@ -4,7 +4,7 @@
         <div class="program-list">
             <div class="program" v-for="(item,index) in programList" :key="index">
                 <div class="title" @click="toProgramDetail(item)">
-                    <span>{{item.name}}{{item.subPrograms.length}}</span>
+                    <span>{{item.name}}</span>
                     <span class="more" v-show="item.subPrograms.length>3">MORE</span>
                 </div>
                 <ul>

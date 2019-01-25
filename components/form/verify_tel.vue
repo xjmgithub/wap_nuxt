@@ -105,8 +105,8 @@ export default {
             // TODO 防止多次点击
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
-            let url = this.type ? '/ums/v1/user/code/sms' : '/ums/v1/register/code/sms'
-            this.$axios.get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}`).then(res => {
+            let url = this.type ? '/ums/v1/user/code/sms' : '/ums/v2/register/code/sms'
+            this.$axios.get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}&index=1`).then(res => {
                 this.waiting_res = false
                 if (res.data.code == 0) {
                     this.codeDuring = 60

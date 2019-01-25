@@ -94,7 +94,10 @@ export default {
             let options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
-                invitedId: this.inviteCode
+                invitedId: this.inviteCode,
+                invitedChannel:0,
+                deviceId:this.$store.state.deviceId,
+                countryId:2
             }
             if (this.phone) {
                 options.phoneCc = this.phoneCc
@@ -106,7 +109,7 @@ export default {
                 options.type = 0
             }
 
-            this.$axios.post('/ums/v1/register', options).then(res => {
+            this.$axios.post('/ums/v3/register', options).then(res => {
                 if (res.data.code == 0) {
                     let params = {}
                     if (this.phone) {

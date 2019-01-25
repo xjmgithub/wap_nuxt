@@ -158,6 +158,7 @@ body {
 }
 .wrapper {
     background: white;
+    width:100%;
 }
 .country {
     img {
