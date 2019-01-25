@@ -8,9 +8,9 @@
                 <li>
                     <div>
                         <div class="user_info">
-                            <nuxt-link to="/hybrid/account/login">
-                                <img v-if="user" :src="user.head">
-                                <img v-else src="http://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
+                            <img v-if="user" :src="user.head">
+                            <nuxt-link v-else to="/hybrid/account/login">
+                                <img src="http://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
                             </nuxt-link>
                             <div v-if="user">{{user.nickName}}</div>
                         </div>
