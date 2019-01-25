@@ -176,6 +176,7 @@ export default {
     background: white;
     height: 100%;
     display: -webkit-box;
+    width:100%;
     /* 
     autoprefixer: off 
     https://github.com/Fyrd/caniuse/issues/3429
