@@ -4,9 +4,6 @@ const env = require('./env.js')
 module.exports = {
     mode: 'universal',
 
-    /*
-    ** Headers of the page
-    */
     head: {
         title: 'StarTimes',
         meta: [
@@ -28,9 +25,6 @@ module.exports = {
         ]
     },
 
-    /*
-    ** Customize the progress-bar color
-    */
     loading: false,
 
     /*
@@ -38,7 +32,6 @@ module.exports = {
     */
     css: [
         '~assets/css/normalize.css'
-        // '~assets/css/animate.min.css'
     ],
     transition: {
         name: 'page',

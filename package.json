@@ -1,7 +1,7 @@
 {
-    "name": "wap_nuxt",
+    "name": "StarTimes",
     "version": "1.0.0",
-    "description": "My phenomenal Nuxt.js project",
+    "description": "StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment",
     "author": "shangxinbo",
     "private": true,
     "config": {
