@@ -41,27 +41,24 @@ export default {
     },
     methods: {
         chooseLang(lang){
+            console.log(lang)
             if (lang.indexOf('fr') >= 0) {
-                this.$store.commit('SET_LANG_TYPE',lang)
-                this.$store.commit('SET_LANG', LANG.fy)
+                this.$store.commit('SET_LANG', lang)
             } else if (lang.indexOf('sw') >= 0) {
-                this.$store.commit('SET_LANG_TYPE',lang)
-                this.$store.commit('SET_LANG', LANG.sy)
+                this.$store.commit('SET_LANG', lang)
             } else if (lang.indexOf('pt') >= 0) {
-                this.$store.commit('SET_LANG_TYPE',lang)
-                this.$store.commit('SET_LANG', LANG.py)
+                this.$store.commit('SET_LANG', lang)
             } else {
-                this.$store.commit('SET_LANG_TYPE',lang)
-                this.$store.commit('SET_LANG', LANG.en)
+                this.$store.commit('SET_LANG', lang)
             }
             setCookie('lang',lang)
             window.history.go(-1)
         }
     },
     head() {
-    return {
-        title: 'Language'
-    }
+        return {
+            title: 'Language'
+        }
     }
 }
 </script>
