@@ -86,7 +86,7 @@ body {
     margin: 0px;
     padding: 0px;
     height: 100%;
-    overflow-y: auto;
+    overflow-y: hidden;
     font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Sans-serif;
 }
 .clearfix:after {

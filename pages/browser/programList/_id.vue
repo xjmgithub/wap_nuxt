@@ -14,9 +14,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="loading-end" v-show="!endedState">
-                loading…
-            </div>
+            <div class="loading-end" v-show="!endedState">loading…</div>
         </div>
     </div>
 </template>
@@ -31,7 +29,7 @@ export default {
             perIndex: 1,
             perSize: 10,
             endedState: false,
-            loadstate:false
+            loadstate: false
         }
     },
     components: {
@@ -41,12 +39,13 @@ export default {
     mounted() {
         this.loadData()
         this.$nextTick(() => {
-            let contain = document.querySelector('#__layout')
-            let scroll = document.querySelector('#__layout>div')
+            let contain = document.querySelector('.wrapper')
+            let navContain = document.querySelector('.wrapper .navContain')
+            let list = document.querySelector('.wrapper .program-list')
             let _this = this
             contain.addEventListener('scroll', function() {
-                if (scroll.offsetHeight - contain.offsetHeight - contain.scrollTop < 200) {
-                    if(_this.loadstate) return false
+                if (navContain.offsetHeight + list.offsetHeight - contain.offsetHeight - contain.scrollTop < 200) {
+                    if (_this.loadstate||_this.endedState) return false
                     _this.loadstate = true
                     _this.loadData()
                 }
@@ -71,7 +70,7 @@ export default {
                 }
             })
         },
-        toSubProgramDetail(sId,pro){
+        toSubProgramDetail(sId, pro) {
             sessionStorage.setItem('program', JSON.stringify(pro))
             this.$router.push(`/browser/programlist/subProgram?proId=${pro.id}&subId=${sId}`)
         }
@@ -80,15 +79,14 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
-#__layout {
-    overflow: auto;
-}
 .wrapper {
+    overflow-y: auto;
     .program {
         width: 94%;
         margin: 0 auto;
         padding: 0.5rem 0;
         border-bottom: 1px solid #d8d8d8;
+        overflow: visible;
         .title {
             font-weight: bold;
             color: #111111;
@@ -103,7 +101,7 @@ export default {
                 white-space: nowrap;
                 width: 90%;
                 display: block;
-                float:left;
+                float: left;
             }
             .more {
                 position: absolute;
@@ -136,12 +134,12 @@ export default {
             }
         }
     }
-    .loading-end{
-        height:2.8rem;
-        line-height:3rem;
+    .loading-end {
+        height: 2.8rem;
+        line-height: 3rem;
         text-align: center;
-        font-size:0.8rem;
-        color:#666666;
+        font-size: 0.8rem;
+        color: #666666;
     }
 }
 </style>

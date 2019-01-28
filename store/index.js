@@ -12,25 +12,26 @@ countryArr.forEach(item => {
 })
 
 export const state = () => ({
+    appType: 0, // 0 others 1 android 2 ios
     deviceId: '',
-    token: '',
-    appType: 0, // 0 others 1 android_app 2 ios_app
-    appVersion: '-1',
-    appVersionCode: '-1',
-    gaClientId: '',
     lang: {},
     langType: 'en',
-    shadowStatus: false,
-    payToken: '',
-    user: null,
-    txNo: '',
-    country: {},
-    selectCompId: 0,
+    gaClientId: '',
+    appVersionCode: '-1',
+    appVersion: '-1',
     netType: 0,
     carrier: '',
+    appInitTime: new Date().getTime(),
+    token: '',
+    gtoken: '', // 匿名token，用于网关验证
+    user: null,
+    country: {},
+    txNo: '',
+    shadowStatus: false,
+    payToken: '',
+    selectCompId: 0,
     phoneModel: '',
     intervalTimer: null,
-    appInitTime: new Date().getTime(),
     rankList: [],
     serverTime: new Date(),
     navState: false,
@@ -38,29 +39,65 @@ export const state = () => ({
 })
 
 export const mutations = {
-    SET_LANG: function(state, lang) {
-        state.lang = lang
-    },
-    SET_LANG_TYPE: function(state, type) {
-        state.langType = type
+    SET_APPTYPE: function(state, type) {
+        switch (type) {
+            case 'android':
+                state.appType = 1
+                break
+            case 'ios':
+                state.appType = 2
+                break
+            default:
+                state.appType = 0
+        }
     },
     SET_DEVICE: function(state, deviceId) {
-        state.deviceId = deviceId
+        state.deviceId = deviceId || ''
+    },
+    SET_LANG: function(state, lang) {
+        state.langType = lang
+        if (lang.indexOf('fr') >= 0) {
+            state.lang = LANG.fy
+        } else if (lang.indexOf('sw') >= 0) {
+            state.lang = LANG.sy
+        } else if (lang.indexOf('pt') >= 0) {
+            state.lang = LANG.py
+        } else {
+            state.lang = LANG.en
+        }
+    },
+    SET_GA_CLIENT: function(state, id) {
+        state.gaClientId = id || ''
+    },
+    SET_APP_VERSION_CODE: function(state, v) {
+        state.appVersionCode = v || -99
+    },
+    SET_APP_VERSION: function(state, v) {
+        state.appVersion = v || 'unknown'
+    },
+    SET_NET_TYPE: function(state, val) {
+        state.netType = val || 0
+    },
+    SET_CARRIER: function(state, val) {
+        state.carrier = val || ''
+    },
+    SET_PHONE_MODEL: function(state, val) {
+        state.phoneModel = val || ''
+    },
+    SET_INIT_TIME: function(state, val) {
+        state.appInitTime = val || new Date().getTime()
     },
     SET_TOKEN: function(state, token) {
         state.token = token
     },
-    SET_APPTYPE: function(state, type) {
-        state.appType = type
+    SET_GTOKEN: function(state, token) {
+        state.gtoken = token
     },
-    SET_GA_CLIENT: function(state, id) {
-        state.gaClientId = id
+    SET_USER: function(state, user) {
+        state.user = user
     },
-    SET_APP_VERSION: function(state, v) {
-        state.appVersion = v
-    },
-    SET_APP_VERSION_CODE: function(state, v) {
-        state.appVersionCode = v
+    SET_AREA_INFO: function(state, conf) {
+        state.country = conf
     },
     SHOW_SHADOW_LAYER: function(state) {
         state.shadowStatus = true
@@ -71,35 +108,14 @@ export const mutations = {
     SET_PAYTOKEN: function(state, token) {
         state.payToken = token
     },
-    SET_USER: function(state, user) {
-        state.user = user
-    },
-    SET_PAYTOKEN: function(state, payToken) {
-        state.payToken = payToken
-    },
     SET_TXNO: function(state, txNo) {
         state.txNo = txNo
-    },
-    SET_AREA_INFO: function(state, conf) {
-        state.country = conf
     },
     ADD_SELECT_COMP: function(state, val) {
         state.selectCompId = val
     },
-    SET_NET_TYPE: function(state, val) {
-        state.netType = val
-    },
-    SET_CARRIER: function(state, val) {
-        state.carrier = val
-    },
-    SET_PHONE_MODEL: function(state, val) {
-        state.phoneModel = val
-    },
     SET_TIMER: function(state, val) {
         state.intervalTimer = val
-    },
-    SET_INIT_TIME: function(state, val) {
-        state.appInitTime = val || new Date().getTime()
     },
     SET_RANKLIST: function(state, val) {
         let [...arr] = val
@@ -117,140 +133,95 @@ export const mutations = {
 }
 
 export const actions = {
-    async nuxtServerInit({ commit }, { req, res, query }) {
+    async nuxtServerInit({ commit, state }, { req, res, query }) {
         let _COOKIE = {}
-        req.headers.cookie &&
-            req.headers.cookie.split(';').forEach(Cookie => {
-                var parts = Cookie.split('=')
+        let _HEADER = req.headers
+
+        _HEADER.cookie &&
+            _HEADER.cookie.split(';').forEach(Cookie => {
+                let parts = Cookie.split('=')
                 _COOKIE[parts[0].trim()] = (parts[1] || '').trim()
             })
 
-        // set language
-        
-        let language = req.headers['lncode'] || _COOKIE['lang'] ||req.headers['accept-language']
-        if (language.indexOf('fr') >= 0) {
-            commit('SET_LANG_TYPE', language)
-            commit('SET_LANG', LANG.fy)
-        } else if (language.indexOf('sw') >= 0) {
-            commit('SET_LANG_TYPE', language)
-            commit('SET_LANG', LANG.sy)
-        } else if (language.indexOf('pt') >= 0) {
-            commit('SET_LANG_TYPE', language)
-            commit('SET_LANG', LANG.py)
-        } else {
-            commit('SET_LANG_TYPE', language)
-            commit('SET_LANG', LANG.en)
-        }
+        let language = _HEADER['lncode'] || _COOKIE['lang'] || _HEADER['accept-language']
 
-        // set deviceId plugins to set cookie
-        if (req.headers['deviceid']) {
-            commit('SET_DEVICE', req.headers['deviceid'])
-        } else {
-            if (_COOKIE['deviceId']) {
-                commit('SET_DEVICE', _COOKIE['deviceId'])
-            } else {
-                let md5 = crypto.createHash('md5')
-                let str =
-                    req.connection['remoteAddress'] +
-                    req.connection['remotePort'] +
-                    req.headers['user-agent'] +
-                    req.headers['accept-encoding'] +
-                    req.headers['accept-language']
-                let result = md5.update(str).digest('hex')
-                commit('SET_DEVICE', result)
-            }
-        }
+        let str =
+            req.connection['remoteAddress'] +
+            req.connection['remotePort'] +
+            _HEADER['user-agent'] +
+            _HEADER['accept-encoding'] +
+            _HEADER['accept-language']
+        let newDevice = crypto
+            .createHash('md5')
+            .update(str)
+            .digest('hex')
 
-        if (req.headers['client'] == 'android') {
-            commit('SET_APPTYPE', 1)
-        } else if (req.headers['client'] == 'ios') {
-            commit('SET_APPTYPE', 2)
-        } else {
-            commit('SET_APPTYPE', 0)
-        }
+        // com.star.mobile.video/src/com/star/mobile/video/activity/BrowserActivity.java
+        commit('SET_APPTYPE', _HEADER['client'])
+        commit('SET_DEVICE', _HEADER['deviceid'] || _COOKIE['deviceId'] || newDevice)
+        commit('SET_LANG', language)
+        commit('SET_GA_CLIENT', _HEADER['cid'])
+        commit('SET_APP_VERSION_CODE', _HEADER['versioncode'])
+        commit('SET_NET_TYPE', _HEADER['network'])
+        commit('SET_CARRIER', _HEADER['operator'])
+        commit('SET_PHONE_MODEL', _HEADER['phonemodel'])
+        commit('SET_INIT_TIME', _HEADER['startTime'])
+        commit('SET_APP_VERSION', _HEADER['versionname'] || (_HEADER['versioncode'] && versionMap[_HEADER['versioncode']]))
 
-        if (req.headers['cid']) {
-            commit('SET_GA_CLIENT', req.headers['cid'])
-        }
-
-        if (req.headers['versioncode']) {
-            commit('SET_APP_VERSION_CODE', req.headers['versioncode'])
-        } else {
-            commit('SET_APP_VERSION_CODE', -99)
-        }
-
-        if (req.headers['versionname']) {
-            commit('SET_APP_VERSION', req.headers['versionname'])
-        } else {
-            if (req.headers['versioncode'] && versionMap[req.headers['versioncode']]) {
-                commit('SET_APP_VERSION', versionMap[req.headers['versioncode']])
-            }
-        }
-
-        if (req.headers['network']) {
-            commit('SET_NET_TYPE', req.headers['network'])
-        }
-
-        if (req.headers['x_carrier']) {
-            commit('SET_CARRIER', req.headers['x_carrier'])
-        }
-
-        if (req.headers['phonemodel']) {
-            commit('SET_PHONE_MODEL', req.headers['phonemodel'])
-        }
-
-        if (req.headers['startTime']) {
-            commit('SET_INIT_TIME', req.headers['startTime'])
-        }
-
+        // TODO 是否可以只加载一次
         preload()
         preload6()
         let country = 'NG'
-        if (query.sarea) {
-            country = query.sarea.toUpperCase()
+        let ip = _HEADER['x-forwarded-for']
+        let geo = lookup(ip)
+        if (_COOKIE['country']) {
+            country = _COOKIE['country']
         } else {
-            let ip = req.headers['x-forwarded-for']
-            let geo = lookup(ip)
             if (geo) {
-                country = geo.country
+                country = countryMap[geo.country] ? geo.country : 'NG'
             }
         }
 
-        if (!countryMap[country]) {
-            country = 'NG'
+        const getMe = async token => {
+            await this.$axios
+                .get('/cms/users/me', {
+                    headers: {
+                        token: token
+                    }
+                })
+                .then(res => {
+                    if (res.status == 200) {
+                        commit('SET_USER', res.data)
+                    } else {
+                        commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
+                    }
+                })
+                .catch(error => {
+                    commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
+                })
         }
 
-        if (req.headers['token']) {
-            commit('SET_TOKEN', req.headers['token'])
+        if (_HEADER['token']) {
+            // app embedded
+            commit('SET_TOKEN', _HEADER['token'])
+            commit('SET_GTOKEN', _HEADER['token'])
+            await getMe(_HEADER['token'])
+            commit('SET_AREA_INFO', countryMap[state.user.countryCode])
         } else {
             if (_COOKIE['token']) {
                 commit('SET_TOKEN', _COOKIE['token'])
             } else {
                 commit('SET_TOKEN', tokenMap[country])
             }
-        }
-        await this.$axios
-            .get('/cms/users/me', {
-                headers: {
-                    token: this.state.token
-                }
-            })
-            .then(res => {
-                if (res.status == 200) {
-                    commit('SET_USER', res.data)
-                    countryArr.forEach(item => {
-                        if (item.id == res.data.areaID) {
-                            country = item.country
-                        }
-                    })
-                } else {
-                    commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
-                }
-            })
-            .catch(error => {
-                commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
-            })
 
-        commit('SET_AREA_INFO', countryMap[country])
+            await getMe(state.token)
+
+            if (_COOKIE['gtoken']) {
+                commit('SET_GTOKEN', _COOKIE['gtoken'])
+            } else {
+                commit('SET_GTOKEN', tokenMap[country])
+            }
+            commit('SET_AREA_INFO', countryMap[country])
+        }
     }
 }

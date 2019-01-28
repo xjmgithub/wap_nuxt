@@ -16,6 +16,7 @@
 import countrys from '~/functions/countrys.json'
 import tokenMap from '~/functions/token.json'
 import qs from 'qs'
+import { setCookie } from '~/functions/utils'
 export default {
     layout: 'default',
     data() {
@@ -26,32 +27,11 @@ export default {
     },
     methods: {
         chooseCountry(item) {
+            setCookie('country', item.country)
             this.$store.commit('SET_AREA_INFO', item)
 
-            // TODO COOKIE
-            // TODO 更新用户国家
-            // 更换 token
-            if (this.user.role) {
-                this.$axios({
-                    url: '/ums/v1/user/country',
-                    method: 'PUT',
-                    data: qs.stringify({
-                        countryId: item.id
-                    }),
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                }).then(res => {
-                    let data = res.data
-                    if (data && data.code == 0) {
-                        this.$store.commit('SET_TOKEN', data.data)
-                        this.$router.replace('/browser')
-                    } else {
-                        this.$alert('update user country error')
-                    }
-                })
-            } else {
-                this.$store.commit('SET_TOKEN', tokenMap[item.country])
-                this.$router.replace('/browser')
-            }
+            this.$store.commit('SET_GTOKEN', tokenMap[item.country])
+            this.$router.replace('/browser')
         }
     },
     head() {

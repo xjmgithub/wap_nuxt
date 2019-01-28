@@ -32,9 +32,9 @@
             </div>
             <div>
                 <nuxt-link to="/browser/live">
-                    <img v-if="$route.path=='/browser/live'" src="~assets/img/web/ic_phoneplay_def_yellow.png">
+                    <img v-if="$route.path.indexOf('/browser/live')>=0" src="~assets/img/web/ic_phoneplay_def_yellow.png">
                     <img v-else src="~assets/img/web/ic_phoneplay_def_w.png">
-                    <div class="nav_title" :class="{checked:$route.path=='/browser/live'}">{{$store.state.lang.officialwebsitemobile_topnav_live}}</div>
+                    <div class="nav_title" :class="{checked:$route.path.indexOf('/browser/live')>=0}">{{$store.state.lang.officialwebsitemobile_topnav_live}}</div>
                 </nuxt-link>
             </div>
         </div>
@@ -48,7 +48,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$route.path)
         let host = window.location.host
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.tvguide_url = 'http://qa.upms.startimestv.com/wap/TVguide_list.php'

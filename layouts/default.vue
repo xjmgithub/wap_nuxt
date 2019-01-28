@@ -1,5 +1,5 @@
 <template>
-    <div style="overflow:visible;height:auto;">
+    <div style="overflow-y:auto;">
         <mheader/>
         <nuxt/>
         <div class="nav-layer" v-show="showNav" @click="closeNav"/>
@@ -83,7 +83,7 @@ export default {
         }
     },
     created() {
-        this.$axios.setHeader('token', this.$store.state.token)
+        this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {
         let host = window.location.host
