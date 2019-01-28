@@ -159,6 +159,7 @@ body {
 .wrapper {
     background: white;
     width:100%;
+    overflow-y: auto;
 }
 .country {
     img {

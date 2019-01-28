@@ -101,6 +101,7 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .wrapper {
+    overflow-y: auto;
     .channelList {
         padding: 0.8rem;
         .title {
