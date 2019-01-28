@@ -137,12 +137,12 @@ export default {
     },
     methods: {
         goToBouquetDetail(item) {
-            let packageCode = item.code
-            let bouId = item.id
-            let price = item.price
-            let logo = encodeURI((item.poster && item.poster.resources[0].url) || '')
-            let name = item.name
-            let plat = item.tvPlatForm
+            let pack = item.ofPackage
+            let bouId = pack.id
+            let price = pack.price
+            let logo = encodeURI((pack.poster && pack.poster.resources[0].url) || '')
+            let name = pack.name
+            let plat = pack.tvPlatForm
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         getDateStr(date) {
