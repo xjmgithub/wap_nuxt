@@ -10,7 +10,7 @@
             <nuxt-link to="/browser/programlist/program">
                 <span class="program-name">{{pName}}</span>
                 <div class="clearfix">
-                    <p>{{pDescription}}</p>
+                    <p v-html="pDescription"/>
                     <img :src="pPoster" alt>
                 </div>
             </nuxt-link>
@@ -53,7 +53,7 @@ export default {
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
-            this.pDescription = info.description
+            this.pDescription = info.programAbstract
         }
         if(this.pId){
             this.getSubProgram()
@@ -74,7 +74,7 @@ export default {
                 if(ele.id == id){
                     this.sPoster = ele.poster.resources[0].url
                     this.sName = ele.name
-                    this.sDescription = ele.description
+                    this.sDescription = ele.summary
                 }
             });
         }
@@ -143,6 +143,7 @@ export default {
                 float: left;
                 font-size: 0.85rem;
                 height: auto;
+                word-break: break-all;
             }
             img {
                 display: block;

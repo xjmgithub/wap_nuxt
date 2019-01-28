@@ -4,7 +4,7 @@
         <div class="poster">
             <img :src="pPoster" alt>
             <span class="program-name">{{pName}}</span>
-            <p>{{pDescription}}</p>
+            <p v-html="pDescription"/>
         </div>
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
@@ -40,7 +40,7 @@ export default {
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
-            this.pDescription = info.description
+            this.pDescription = info.programAbstract
             this.getSubProgram()
         }
     },
@@ -57,24 +57,24 @@ export default {
             this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         }
     },
-    filters:{
-        formatShowTime(val){
-            if(val<60){
-                let tmp = val < 10 ? '0'+val : val
-                return '00:'+ val
-            }else if(val>=60 && val<360){
-                let min = Math.floor(val / 60) < 10 ? '0'+ Math.floor(val / 60) : Math.floor(val / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0'+ Math.floor(val % 60) : Math.floor(val % 60)
+    filters: {
+        formatShowTime(val) {
+            if (val < 60) {
+                let tmp = val < 10 ? '0' + val : val
+                return '00:' + val
+            } else if (val >= 60 && val < 360) {
+                let min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
+                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
                 return min + ':' + sec
-            }else if(val>=360){
-                let hour = Math.floor(val / 360) < 10 ? '0'+ Math.floor(val / 360) : Math.floor(val / 360)
-                let min = Math.floor(val % 360 / 60) < 10 ? '0'+ Math.floor(val % 360 / 60) : Math.floor(val % 360 / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0'+ Math.floor(val % 60) : Math.floor(val % 60)
-                return hour +':' + min + ':' + sec
+            } else if (val >= 360) {
+                let hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
+                let min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
+                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return hour + ':' + min + ':' + sec
             }
         }
     },
-    components:{
+    components: {
         download
     },
     head() {
@@ -113,6 +113,7 @@ export default {
             -webkit-line-clamp: 2;
             overflow: hidden;
             font-size: 0.9rem;
+            word-break: break-all;
         }
     }
     .clips {
@@ -134,19 +135,19 @@ export default {
                 }
                 div {
                     position: relative;
-                    .show-time{
+                    .show-time {
                         position: absolute;
-                        bottom:0;
-                        right:0;
-                        padding:0 .2rem;
-                        background:rgba(0,0,0,1);
-                        color:#FFFFFF;
-                        font-size: .8rem;
+                        bottom: 0;
+                        right: 0;
+                        padding: 0 0.2rem;
+                        background: rgba(0, 0, 0, 1);
+                        color: #ffffff;
+                        font-size: 0.8rem;
                     }
-                    img{
-                    width:100%;
-                    display: block;
-                    height:5rem;
+                    img {
+                        width: 100%;
+                        display: block;
+                        height: 5rem;
                     }
                 }
                 span {
