@@ -4,9 +4,9 @@
         <div v-if="channel.poster" class="poster">
             <img :src="channel.poster.resources[0].url" alt>
         </div>
-        <div class="container" v-if="channel.id">
-            <p class="views">{{channel.liveOnlineUserNumber | formatViewCount}} views</p>
-            <div class="base-info clearfix">
+        <div class="container">
+            <p class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views</p>
+            <div class="base-info clearfix" v-if="channel.id">
                 <div class="logo">
                     <img :src="channel.logo.resources[0].url" alt>
                 </div>
@@ -30,7 +30,7 @@
                     <img src="~assets/img/web/ic_categary1.png" class="arrows">
                 </div>
             </div>
-            <div class="tv-guide" v-show="showEPG">
+            <div class="tv-guide" v-if="showEPG">
                 <p>TV Guide</p>
                 <ul class="clearfix">
                     <li v-for="(item,index) in epgTime" :key="index" @click="getTvGuide(item,index)">
@@ -83,17 +83,16 @@ export default {
         epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 2)))
         epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 3)))
         epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 4)))
-        
+
         return {
             channelID: this.$route.query.channelId,
-            showEPG:this.$route.query.epg,
+            showEPG: this.$route.query.epg,
             channel: {},
             platformInfos: [],
             epgTime: epgTime,
             epgList: [],
             progress: 0,
-            currentIndex: 3,
-            channelList: []
+            currentIndex: 3
         }
     },
     computed: {
@@ -117,8 +116,6 @@ export default {
         }
     },
     mounted() {
-        // let msg = sessionStorage.getItem('liveMsg')
-
         if (this.channelID) {
             this.$axios
                 .get(`/cms/vup/v6/channels/${this.channelID}`)
@@ -137,10 +134,9 @@ export default {
             this.$alert('Channel id can not be null')
         }
 
-        if(this.showEPG){
+        if (this.showEPG) {
             this.getTvGuide(this.epgTime[3], 3)
         }
-
     },
     methods: {
         goToBouquetDetail(item) {
@@ -187,13 +183,13 @@ export default {
                         }
                     })
                     this.epgList = data
-
-                    // this.$nextTick(() => {
-                    //     //TODO scroll
-                    //     let current = document.querySelector('.epg .current').parentElement.offsetTop
-                    //     let h = document.querySelector('.epg .current').parentElement.offsetHeight
-                    //     document.querySelector('.epg-contain').scrollTop = current
-                    // })
+                    this.$nextTick(() => {
+                        if (document.querySelector('.epg .current')) {
+                            let current = document.querySelector('.epg .current').parentElement.offsetTop
+                            let h = document.querySelector('.epg .current').parentElement.offsetHeight
+                            document.querySelector('.epg-contain').scrollTop = current
+                        }
+                    })
                 }
             })
         },

@@ -48,7 +48,6 @@ export default {
     },
     mounted() {
         let program = sessionStorage.getItem('program')
-        console.log(this.pId)
         if (program) {
             let info = JSON.parse(program)
             this.pPoster = info.poster

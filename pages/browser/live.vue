@@ -3,16 +3,7 @@
         <download class="clearfix"/>
         <div v-show="!loadstate" class="channelList">
             <p class="title">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_live_channelnumber}}</p>
-            <channel
-                v-for="(item,index) in channelList"
-                :key="index"
-                class="piece"
-                :channel-name="item.name"
-                :description="item.describesShow"
-                :state="item.channel.billingType"
-                :rate="item.rate"
-                @onLive="liveDetail(item)"
-            />
+            <channel v-for="(item,index) in channelList" :key="index" class="piece" :channel="item"/>
         </div>
         <loading v-show="loadstate"/>
     </div>
@@ -57,34 +48,6 @@ export default {
                 })
             }
         })
-    },
-    methods: {
-        liveDetail(item) {
-            let packages
-            if (
-                item.channel &&
-                item.channel.ofAreaTVPlatforms[0] &&
-                item.channel.ofAreaTVPlatforms[0].platformInfos[0] &&
-                item.channel.ofAreaTVPlatforms[0].platformInfos[0].packages
-            ) {
-                packages = item.channel.ofAreaTVPlatforms[0].platformInfos[0].packages
-            } else {
-                packages = []
-            }
-            let liveMsg = {
-                channelId: item.channelId,
-                name: item.name,
-                describes: item.describes,
-                logo: item.channel.logo.resources[0].url,
-                poster: item.channel.poster.resources[0].url,
-                liveOnlineUserNumber: item.channel.liveOnlineUserNumber,
-                liveStatus: item.channel.liveStatus || false,
-                programVO: item.programVO || {},
-                packages: packages
-            }
-            sessionStorage.setItem('liveMsg', JSON.stringify(liveMsg))
-            this.$router.push(`/browser/liveDetail?channelId=${item.channelId}`)
-        }
     },
     components: {
         channel,

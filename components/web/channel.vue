@@ -1,39 +1,27 @@
 <template>
-    <div class="channel" @click="toLive">
-        <p>{{channelName}}</p>
-        <div>{{description}}</div>
-        <div class="total">
-            <div class="now" :style="{ width: rate + '%'}"/>
-        </div>
-        <div class="state">
-            <p v-show="state==1" class="trial">TRIAL</p>
-            <p v-show="state==2" class="vip">VIP</p>
-        </div>
+    <div class="channel">
+        <nuxt-link :to="`/browser/liveDetail?channelId=${channel.channelId}&epg=${channel.programVO&&channel.programVO.id||''}`">
+            <div class="title">{{channel.name}}</div>
+            <div>{{channel.describesShow}}</div>
+            <div class="total">
+                <div class="now" :style="{ width: channel.rate + '%'}"/>
+            </div>
+            <div class="state">
+                <p v-show="channel.channel.billingType==1" class="trial">TRIAL</p>
+                <p v-show="channel.channel.billingType==2" class="vip">VIP</p>
+            </div>
+        </nuxt-link>
     </div>
 </template>
 <script>
 export default {
     props: {
-        channelName: {
-            type: String,
-            default: ''
-        },
-        description: {
-            type: String,
-            default: ''
-        },
-        state: {
-            type: Number,
-            default: 0
-        },
-        rate: {
-            type: Number,
-            default: 30
-        }
-    },
-    methods:{
-        toLive(){
-            this.$emit('onLive')
+        channel: {
+            type: Object,
+            default: () => {
+                return {}
+            },
+            required: true
         }
     }
 }
@@ -44,7 +32,10 @@ export default {
     position: relative;
     padding: 0.5rem;
     box-shadow: 1px 2px 4px -1px rgba(0, 0, 0, 0.4);
-    & > p {
+    a {
+        color: #333333;
+    }
+    .title {
         font-size: 0.85rem;
         font-weight: bold;
         & + div {
@@ -53,7 +44,7 @@ export default {
             color: #aaaaaa;
             display: -webkit-box;
             overflow: hidden;
-            height:2.6rem;
+            height: 2.6rem;
             -webkit-line-clamp: 2;
             /* autoprefixer: off */
             -webkit-box-orient: vertical;
@@ -64,7 +55,7 @@ export default {
         height: 4px;
         background-color: #dbdbdb;
         border-radius: 2px;
-        margin-top:0.2rem;
+        margin-top: 0.2rem;
         .now {
             background-color: #0087eb;
             width: 30%;

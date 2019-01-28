@@ -41,7 +41,6 @@ export default {
     },
     methods: {
         chooseLang(lang){
-            console.log(lang)
             if (lang.indexOf('fr') >= 0) {
                 this.$store.commit('SET_LANG', lang)
             } else if (lang.indexOf('sw') >= 0) {
