@@ -29,7 +29,6 @@ export default {
         chooseCountry(item) {
             setCookie('country', item.country)
             this.$store.commit('SET_AREA_INFO', item)
-
             this.$store.commit('SET_GTOKEN', tokenMap[item.country])
             this.$router.replace('/browser')
         }
