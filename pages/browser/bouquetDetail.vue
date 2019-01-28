@@ -19,7 +19,9 @@
         <ul class="channelList">
             <li v-for="(item,index) in detailList" :key="index">
                 <div class="lasy_bg">
-                    <img :src="item.logo.resources[0].url" alt>
+                    <nuxt-link :to="`/browser/liveDetail?channelId=${item.channel_id}`">
+                        <img :src="item.logo.resources[0].url" alt>
+                    </nuxt-link>
                 </div>
                 <img src="~assets/img/web/channelsOn.png" v-show="item.liveStatus" class="imgOn">
             </li>

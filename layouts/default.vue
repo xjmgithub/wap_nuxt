@@ -72,6 +72,9 @@ export default {
         },
         token() {
             return this.$store.state.token
+        },
+        gtoken() {
+            return this.$store.state.gtoken
         }
     },
     components: {
@@ -94,8 +97,11 @@ export default {
     },
     watch: {
         token(nv, ov) {
-            // 更新token
             setCookie('token', nv)
+            //this.$axios.setHeader('token', nv)
+        },
+        gtoken(nv, ov) {
+            setCookie('gtoken', nv)
             this.$axios.setHeader('token', nv)
         }
     }
@@ -141,8 +147,8 @@ body {
         font-size: 0.9rem;
         a {
             color: white;
-            &.checked{
-                color:#ffbc2e;
+            &.checked {
+                color: #ffbc2e;
             }
         }
     }
@@ -158,7 +164,7 @@ body {
 }
 .wrapper {
     background: white;
-    width:100%;
+    width: 100%;
     overflow-y: auto;
 }
 .country {

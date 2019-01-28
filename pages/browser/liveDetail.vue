@@ -30,7 +30,7 @@
                     <img src="~assets/img/web/ic_categary1.png" class="arrows">
                 </div>
             </div>
-            <div class="tv-guide" v-if="showEPG">
+            <div class="tv-guide" v-if="epgList.length>0">
                 <p>TV Guide</p>
                 <ul class="clearfix">
                     <li v-for="(item,index) in epgTime" :key="index" @click="getTvGuide(item,index)">
@@ -86,7 +86,6 @@ export default {
 
         return {
             channelID: this.$route.query.channelId,
-            showEPG: this.$route.query.epg,
             channel: {},
             platformInfos: [],
             epgTime: epgTime,
@@ -134,9 +133,7 @@ export default {
             this.$alert('Channel id can not be null')
         }
 
-        if (this.showEPG) {
-            this.getTvGuide(this.epgTime[3], 3)
-        }
+        this.getTvGuide(this.epgTime[3], 3)
     },
     methods: {
         goToBouquetDetail(item) {
