@@ -1,36 +1,36 @@
 <template>
     <div class="wrapper">
         <download class="clearfix"/>
-        <div class="poster">
-            <img :src="poster" alt>
+        <div v-if="channel.poster" class="poster">
+            <img :src="channel.poster.resources[0].url" alt>
         </div>
-        <div class="container">
-            <p class="views">{{liveOnlineUserNumber | formatViewCount}} views</p>
+        <div class="container" v-if="channel.id">
+            <p class="views">{{channel.liveOnlineUserNumber | formatViewCount}} views</p>
             <div class="base-info clearfix">
                 <div class="logo">
-                    <img :src="logo" alt>
+                    <img :src="channel.logo.resources[0].url" alt>
                 </div>
                 <div class="info">
-                    <p class="info-name">{{name}}</p>
-                    <img src="~assets/img/web/online.png" v-show="liveStatus">
+                    <p class="info-name">{{channel.name}}</p>
+                    <img src="~assets/img/web/online.png" v-show="channel.liveStatus">
                     <img src="~assets/img/web/ic_TERRESTRIAL.png" v-show="isDTT">
                     <img src="~assets/img/web/ic_dth.png" v-show="isDTH">
                 </div>
             </div>
             <div class="describes">
-                <p>introduction: {{describes}}</p>
+                <p>{{channel.description}}</p>
             </div>
-            <div class="watch" v-show="packages.length > 0">
+            <div class="watch" v-show="platformInfos.length>0">
                 <p>Watch it on TV</p>
-                <div v-for="(item,index) in packages" :key="index" class="watchList" @click="goToBouquetDetail(item)">
-                    <img src="~assets/img/web/DTT.png" class="sign" v-show="item.tvPlatForm=='DTT'">
-                    <img src="~assets/img/web/DTH.png" class="sign" v-show="item.tvPlatForm=='DTH'">
-                    <span :class="{isDtt:item.tvPlatForm=='DTT',isDth:item.tvPlatForm=='DTH'}">{{item.id}}</span>
-                    <span class="name">{{item.name}}</span>
+                <div v-for="(item,index) in platformInfos" :key="index" class="watchList" @click="goToBouquetDetail(item)">
+                    <img src="~assets/img/web/DTT.png" class="sign" v-if="item.tvPlatForm=='DTT'">
+                    <img src="~assets/img/web/DTH.png" class="sign" v-if="item.tvPlatForm=='DTH'">
+                    <span :class="{isDtt:item.tvPlatForm=='DTT',isDth:item.tvPlatForm=='DTH'}">{{item.channelNumber}}</span>
+                    <span class="name">{{item.ofPackage.name}}</span>
                     <img src="~assets/img/web/ic_categary1.png" class="arrows">
                 </div>
             </div>
-            <div class="tv-guide" v-show="epgList.length > 0">
+            <div class="tv-guide" v-show="showEPG">
                 <p>TV Guide</p>
                 <ul class="clearfix">
                     <li v-for="(item,index) in epgTime" :key="index" @click="getTvGuide(item,index)">
@@ -73,63 +73,74 @@ import download from '~/components/web/download'
 export default {
     layout: 'default',
     data() {
+        let now = new Date()
+        let epgTime = []
+        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 3)))
+        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 2)))
+        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 1)))
+        epgTime.push(this.getDateStr(now))
+        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 1)))
+        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 2)))
+        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 3)))
+        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 4)))
+        
         return {
-            poster: '',
-            liveOnlineUserNumber: '',
-            logo: '',
-            name: '',
-            describes: '',
-            liveStatus: false,
-            packages: [],
-            programVO: {},
-            isDTT: false,
-            isDTH: false,
             channelID: this.$route.query.channelId,
-            epgTime: [],
+            showEPG:this.$route.query.epg,
+            channel: {},
+            platformInfos: [],
+            epgTime: epgTime,
             epgList: [],
             progress: 0,
             currentIndex: 3,
             channelList: []
         }
     },
-    mounted() {
-        let msg = sessionStorage.getItem('liveMsg')
-        if (msg) {
-            let info = JSON.parse(msg)
-            this.poster = info.poster
-            this.liveOnlineUserNumber = info.liveOnlineUserNumber
-            this.logo = info.logo
-            this.name = info.name
-            this.liveStatus = info.liveStatus
-            this.describes = info.describes
-            this.packages = info.packages
-            this.programVO = info.programVO
-        } else {
-            this.getChannelsList()
+    computed: {
+        isDTH() {
+            let t = false
+            this.platformInfos.forEach(item => {
+                if (item.tvPlatForm == 'DTH') {
+                    t = true
+                }
+            })
+            return t
+        },
+        isDTT() {
+            let t = false
+            this.platformInfos.forEach(item => {
+                if (item.tvPlatForm == 'DTT') {
+                    t = true
+                }
+            })
+            return t
         }
     },
-    watch: {
-        packages: {
-            handler(val) {
-                if (val.length > 0) {
-                    val.forEach(ele => {
-                        if (ele.tvPlatForm == 'DTT') this.isDTT = true
-                        else if (ele.tvPlatForm == 'DTH') this.isDTH = true
-                    })
-                }
-            },
-            immediate: true,
-            deep: true
-        },
-        programVO: {
-            handler(val) {
-                if (JSON.stringify(val) != '{}') {
-                    this.getEpgTime()
-                }
-            },
-            immediate: true,
-            deep: true
+    mounted() {
+        // let msg = sessionStorage.getItem('liveMsg')
+
+        if (this.channelID) {
+            this.$axios
+                .get(`/cms/vup/v6/channels/${this.channelID}`)
+                .then(res => {
+                    if (res.data.id) {
+                        this.channel = res.data
+                        this.platformInfos = res.data.ofAreaTVPlatforms[0].platformInfos
+                    } else {
+                        this.$alert('Channel id is incorrect')
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        } else {
+            this.$alert('Channel id can not be null')
         }
+
+        if(this.showEPG){
+            this.getTvGuide(this.epgTime[3], 3)
+        }
+
     },
     methods: {
         goToBouquetDetail(item) {
@@ -140,19 +151,6 @@ export default {
             let name = item.name
             let plat = item.tvPlatForm
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
-        },
-        getEpgTime() {
-            // 获取当前时间 前三后四天
-            let today = new Date()
-            this.epgTime.push(this.getDateStr(new Date().setDate(new Date().getDate() - 3)))
-            this.epgTime.push(this.getDateStr(new Date().setDate(new Date().getDate() - 2)))
-            this.epgTime.push(this.getDateStr(new Date().setDate(new Date().getDate() - 1)))
-            this.epgTime.push(this.getDateStr(new Date()))
-            this.epgTime.push(this.getDateStr(new Date().setDate(new Date().getDate() + 1)))
-            this.epgTime.push(this.getDateStr(new Date().setDate(new Date().getDate() + 2)))
-            this.epgTime.push(this.getDateStr(new Date().setDate(new Date().getDate() + 3)))
-            this.epgTime.push(this.getDateStr(new Date().setDate(new Date().getDate() + 4)))
-            this.getTvGuide(this.epgTime[3], 3)
         },
         getDateStr(date) {
             let tmp = new Date(date).toLocaleDateString()
@@ -190,55 +188,14 @@ export default {
                     })
                     this.epgList = data
 
-                    this.$nextTick(() => {
-                        //TODO scroll
-                        let current = document.querySelector('.epg .current').parentElement.offsetTop
-                        let h = document.querySelector('.epg .current').parentElement.offsetHeight
-                        document.querySelector('.epg-contain').scrollTop = current 
-                    })
+                    // this.$nextTick(() => {
+                    //     //TODO scroll
+                    //     let current = document.querySelector('.epg .current').parentElement.offsetTop
+                    //     let h = document.querySelector('.epg .current').parentElement.offsetHeight
+                    //     document.querySelector('.epg-contain').scrollTop = current
+                    // })
                 }
             })
-        },
-        getChannelsList() {
-            this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
-                let data = res.data
-                if (data.length > 0) {
-                    data.forEach(ele => {
-                        let disparkChannel = ele.disparkChannel
-                        disparkChannel.forEach(item => {
-                            this.channelList.push(item)
-                        })
-                    })
-                    this.getChannelDetail()
-                }
-            })
-        },
-        getChannelDetail() {
-            try {
-                this.channelList.forEach(ele => {
-                    if (this.channelID == ele.channelId) {
-                        ;(this.poster = ele.channel.poster.resources[0].url),
-                            (this.liveOnlineUserNumber = ele.channel.liveOnlineUserNumber),
-                            (this.logo = ele.channel.logo.resources[0].url),
-                            (this.name = ele.name)
-                        ;(this.liveStatus = ele.channel.liveStatus || false), (this.describes = ele.describes)
-                        this.programVO = ele.programVO || {}
-                        if (
-                            ele.channel &&
-                            ele.channel.ofAreaTVPlatforms[0] &&
-                            ele.channel.ofAreaTVPlatforms[0].platformInfos[0] &&
-                            ele.channel.ofAreaTVPlatforms[0].platformInfos[0].packages
-                        ) {
-                            this.packages = ele.channel.ofAreaTVPlatforms[0].platformInfos[0].packages
-                        } else {
-                            this.packages = []
-                        }
-                        throw new Error('EndIterative')
-                    }
-                })
-            } catch (e) {
-                if (e.message != 'EndIterative') throw e
-            }
         },
         toggleDetail(program) {
             if (program.showDetail == true) {
