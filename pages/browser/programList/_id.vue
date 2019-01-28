@@ -9,7 +9,7 @@
                 </div>
                 <ul>
                     <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3" @click="toSubProgramDetail(subPro.id,item)">
-                        <span>{{item.name}}</span>
+                        <span>{{subPro.name}}</span>
                         <span class="arrows">&gt;&gt;</span>
                     </li>
                 </ul>
