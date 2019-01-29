@@ -8,9 +8,9 @@
                 <li>
                     <div>
                         <div class="user_info">
-                            <img v-if="user" :src="user.head">
+                            <img v-if="user" :src="user.head.replace('http:','https:')">
                             <nuxt-link v-else to="/hybrid/account/login">
-                                <img src="http://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
+                                <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
                             </nuxt-link>
                             <div v-if="user">{{user.nickName}}</div>
                         </div>
@@ -19,7 +19,7 @@
                 <li class="country">
                     <nuxt-link :class="{checked:$route.path=='/browser/country'}" to="/browser/country">
                         <span>{{country.name}}</span>
-                        <img :src="country.nationalFlag">
+                        <img :src="country.nationalFlag.replace('http:','https:')">
                     </nuxt-link>
                 </li>
                 <li>

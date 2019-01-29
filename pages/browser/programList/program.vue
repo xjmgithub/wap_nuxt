@@ -2,7 +2,7 @@
     <div class="wrapper">
         <download class="clearfix"/>
         <div class="poster">
-            <img :src="pPoster" alt>
+            <img :src="pPoster.replace('http:','https:')" alt>
             <span class="program-name">{{pName}}</span>
             <p>{{pDescription}}</p>
         </div>
@@ -11,7 +11,7 @@
             <ul class="clearfix">
                 <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item.id)">
                     <div>
-                        <img :src="item.poster.resources[0].url">
+                        <img :src="item.poster.resources[0].url.replace('http:','https:')">
                         <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                     </div>
                     <span>{{item.name}}</span>

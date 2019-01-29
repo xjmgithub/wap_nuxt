@@ -1,6 +1,6 @@
 <template>
     <div class="package">
-        <img v-if="imgPath" :src="imgPath">
+        <img v-if="imgPath" :src="imgPath.replace('http:','https:')">
         <div v-else class="nopic">
             <div>{{packageName}}</div>
         </div>

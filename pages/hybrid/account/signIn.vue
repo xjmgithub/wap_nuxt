@@ -12,7 +12,7 @@
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" v-if="country" @click="countryDialogStatus=true">
-                <img :src="country.nationalFlag">
+                <img :src="country.nationalFlag.replace('http:','https:')">
                 <span>{{country.name}}</span>
             </div>
             <div class="img-box">
@@ -42,7 +42,7 @@
             <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag">
+                    <img :src="item.nationalFlag.replace('http:','https:')">
                     <span>{{item.name}}</span>
                 </li>
             </ul>

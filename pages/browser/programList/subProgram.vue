@@ -2,7 +2,7 @@
     <div class="wrapper">
         <download class="clearfix"/>
         <div class="poster">
-            <img :src="sPoster" alt class="cover">
+            <img :src="sPoster.replace('http:','https:')" alt class="cover">
             <span class="program-name">{{sName}}</span>
             <p>{{sDescription}}</p>
         </div>
@@ -11,7 +11,7 @@
                 <span class="program-name">{{pName}}</span>
                 <div class="clearfix">
                     <p>{{pDescription}}</p>
-                    <img :src="pPoster" alt>
+                    <img :src="pPoster.replace('http:','https:')" alt>
                 </div>
             </nuxt-link>
         </div>
@@ -20,7 +20,7 @@
             <ul class="clearfix">
                 <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item.id)">
                     <div>
-                        <img :src="item.poster.resources[0].url">
+                        <img :src="item.poster.resources[0].url.replace('http:','https:')">
                         <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                     </div>
                     <span>{{item.name}}</span>

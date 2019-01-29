@@ -10,9 +10,6 @@
                     :checked="item.checked?true:false"
                 >
                 <i/>
-                <!-- <div class="img-box" v-show="item.imgUrl">
-          <img :src="item.imgUrl" alt=""> 
-                </div>-->
                 <span :class="{ml15:item.imgUrl!=''}" id="labelValue">{{item.value}}</span>
             </label>
         </div>

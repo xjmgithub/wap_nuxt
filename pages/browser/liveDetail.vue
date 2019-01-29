@@ -2,13 +2,13 @@
     <div class="wrapper">
         <download class="clearfix"/>
         <div v-if="channel.poster" class="poster">
-            <img :src="channel.poster.resources[0].url" alt>
+            <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
         </div>
         <div class="container">
             <p class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views</p>
             <div class="base-info clearfix" v-if="channel.id">
                 <div class="logo">
-                    <img :src="channel.logo.resources[0].url" alt>
+                    <img :src="channel.logo.resources[0].url.replace('http:','https:')" alt>
                 </div>
                 <div class="info">
                     <p class="info-name">{{channel.name}}</p>
