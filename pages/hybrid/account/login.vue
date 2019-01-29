@@ -40,7 +40,7 @@ export default {
                 .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
                 .then(res => {
                     if (res.data.code == 0) {
-                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name)
+                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name,2)
                     } else {
                         this.$alert(res.data.message)
                     }
