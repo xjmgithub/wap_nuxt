@@ -148,15 +148,8 @@ export const initGoogleLogin = (elm, callback) => {
 }
 
 export const initFacebookLogin = () => {
-    let host = window.location.host
-    let appId
-    if (host.indexOf('m.startimestv.com') > 0) {
-        appId = '494015374414113'
-    } else {
-        appId = '159785064477978'
-    }
     FB.init({
-        appId: appId,
+        appId: '159785064477978',
         xfbml: true,
         cookie: true,
         version: 'v3.1'

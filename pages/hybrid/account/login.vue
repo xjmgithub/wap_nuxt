@@ -59,11 +59,8 @@ export default {
             let _this = this
             FB.login(function(res) {
                 FB.api('/me', function(response) {
-                    console.log(response)
-                    return false
                     _this.loginByThird(response.id, response.name, 1)
                 })
-                // _this.loginByThird(res.authResponse.userID, '', 1)
             })
         },
         bytwitter() {
