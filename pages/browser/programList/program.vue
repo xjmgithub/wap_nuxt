@@ -14,7 +14,7 @@
                         <img :src="item.poster.resources[0].url.replace('http:','https:')">
                         <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                     </div>
-                    <span>{{item.name}}</span>
+                    <span class="title">{{item.name}}</span>
                 </li>
             </ul>
         </div>
@@ -147,12 +147,19 @@ export default {
                     img {
                         width: 100%;
                         display: block;
-                        height: 5rem;
                     }
                 }
                 span {
                     font-size: 0.85rem;
                     color: #666666;
+                    &.title {
+                        display: -webkit-box;
+                        overflow: hidden;
+                        height: 2.6rem;
+                        -webkit-line-clamp: 2;
+                        /* autoprefixer: off */
+                        -webkit-box-orient: vertical;
+                    }
                 }
             }
         }

@@ -45,7 +45,7 @@ export default {
             let _this = this
             contain.addEventListener('scroll', function() {
                 if (navContain.offsetHeight + list.offsetHeight - contain.offsetHeight - contain.scrollTop < 200) {
-                    if (_this.loadstate||_this.endedState) return false
+                    if (_this.loadstate || _this.endedState) return false
                     _this.loadstate = true
                     _this.loadData()
                 }
@@ -65,7 +65,9 @@ export default {
                 if (data && data.length > 0) {
                     this.programList = this.programList.concat(data)
                     this.perIndex += 1
-                } else {
+                }
+
+                if (!data || data.length < 10) {
                     this.endedState = true
                 }
             })

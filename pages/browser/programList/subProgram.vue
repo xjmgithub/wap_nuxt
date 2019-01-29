@@ -23,7 +23,7 @@
                         <img :src="item.poster.resources[0].url.replace('http:','https:')">
                         <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                     </div>
-                    <span>{{item.name}}</span>
+                    <span class="title">{{item.name}}</span>
                 </li>
             </ul>
         </div>
@@ -55,7 +55,7 @@ export default {
             this.pName = info.name
             this.pDescription = info.programSummary
         }
-        if(this.pId){
+        if (this.pId) {
             this.getSubProgram()
         }
     },
@@ -71,32 +71,32 @@ export default {
         },
         toSubProgramDetail(id) {
             this.subProgram.forEach(ele => {
-                if(ele.id == id){
+                if (ele.id == id) {
                     this.sPoster = ele.poster.resources[0].url
                     this.sName = ele.name
                     this.sDescription = ele.summary
                 }
-            });
+            })
         }
     },
-    filters:{
-        formatShowTime(val){
-            if(val<60){
-                let tmp = val < 10 ? '0'+val : val
-                return '00:'+ val
-            }else if(val>=60 && val<360){
-                let min = Math.floor(val / 60) < 10 ? '0'+ Math.floor(val / 60) : Math.floor(val / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0'+ Math.floor(val % 60) : Math.floor(val % 60)
+    filters: {
+        formatShowTime(val) {
+            if (val < 60) {
+                let tmp = val < 10 ? '0' + val : val
+                return '00:' + val
+            } else if (val >= 60 && val < 360) {
+                let min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
+                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
                 return min + ':' + sec
-            }else if(val>=360){
-                let hour = Math.floor(val / 360) < 10 ? '0'+ Math.floor(val / 360) : Math.floor(val / 360)
-                let min = Math.floor(val % 360 / 60) < 10 ? '0'+ Math.floor(val % 360 / 60) : Math.floor(val % 360 / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0'+ Math.floor(val % 60) : Math.floor(val % 60)
-                return hour +':' + min + ':' + sec
+            } else if (val >= 360) {
+                let hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
+                let min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
+                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return hour + ':' + min + ':' + sec
             }
         }
     },
-    components:{
+    components: {
         download
     },
     head() {
@@ -110,7 +110,7 @@ export default {
 @import '~assets/less/browser/index.less';
 .wrapper {
     img {
-        border-radius:2px;
+        border-radius: 2px;
     }
     .poster {
         width: 94%;
@@ -120,13 +120,13 @@ export default {
         .cover {
             width: 100%;
             height: 11rem;
-            margin-bottom:0.5rem;
+            margin-bottom: 0.5rem;
         }
         .program-name {
             font-weight: bold;
             color: #333333;
             margin: 0.5rem 0;
-            line-height:2rem;
+            line-height: 2rem;
         }
         p {
             color: #666666;
@@ -172,24 +172,31 @@ export default {
                 }
                 div {
                     position: relative;
-                    .show-time{
+                    .show-time {
                         position: absolute;
-                        bottom:0;
-                        right:0;
-                        padding:0 .2rem;
-                        background:rgba(0,0,0,1);
-                        color:#FFFFFF;
-                        font-size: .8rem;
+                        bottom: 0;
+                        right: 0;
+                        padding: 0 0.2rem;
+                        background: rgba(0, 0, 0, 1);
+                        color: #ffffff;
+                        font-size: 0.8rem;
                     }
-                    img{
-                    width:100%;
-                    display: block;
-                    height:5rem;
+                    img {
+                        width: 100%;
+                        display: block;
                     }
                 }
                 span {
                     font-size: 0.85rem;
                     color: #666666;
+                    &.title {
+                        display: -webkit-box;
+                        overflow: hidden;
+                        height: 2.6rem;
+                        -webkit-line-clamp: 2;
+                        /* autoprefixer: off */
+                        -webkit-box-orient: vertical;
+                    }
                 }
             }
         }
