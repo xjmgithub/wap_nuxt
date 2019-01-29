@@ -39,9 +39,9 @@ export const delCookie = name => {
     document.cookie = name + '=; Max-Age=-99999999;'
 }
 
-export const initUser = (token, id, obj) => {
+export const initUser = (token, obj) => {
     // browser surport server not
-    if (!token || !id || !obj) return false
+    if (!token || !obj) return false
     setCookie('token', token)
     window.localStorage.setItem('user', JSON.stringify(obj))
 }
@@ -157,7 +157,7 @@ export const initFacebookLogin = () => {
     FB.AppEvents.logPageView()
 }
 
-export const downloadApk = app =>{
+export const downloadApk = app => {
     app.$axios
         .get('/cms/public/app')
         .then(res => {

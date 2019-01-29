@@ -4,7 +4,7 @@
         <img class="third_login facebook" @click="byfacebook" src="~assets/img/users/btn_facebook_def.png">
         <img class="third_login twitter" @click="bytwitter" src="~assets/img/users/btn_twitter_def.png">
         <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
-        <nuxt-link to="/hybrid/account/signin">
+        <nuxt-link to="/hybrid/account/signin" replace>
             <div class="login_btn">SIGN IN</div>
         </nuxt-link>
         <div class="regtext">Don't have an account?
@@ -85,12 +85,16 @@ export default {
                 })
                 .then(res => {
                     if (res.data.code == 0) {
-                        initUser(res.data.data.token, res.data.data.userId, res.data.data)
+                        this.$store.commit('SET_TOKEN', res.data.data.token)
+                        this.$store.commit('SET_USER', res.data.data)
+                        setCookie('token', res.data.data.token)
+                        window.localStorage.setItem('user', JSON.stringify(res.data.data))
+
                         let pre = sessionStorage.getItem('login_prefer') || ''
                         if (pre) {
                             window.location.href = pre
                         } else {
-                            window.location.href = '/browser/'
+                            this.$router.replace('/browser')
                         }
                     } else {
                         this.$alert(res.datea.message)

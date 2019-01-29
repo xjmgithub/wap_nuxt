@@ -61,15 +61,11 @@ export default {
             type: 0, // 0 tel 1 email
             country: this.$store.state.country,
             countryDialogStatus: false,
-            pre: '',
             phoneNum: '',
             password: '',
             email: '',
             countrys: countrArr
         }
-    },
-    mounted() {
-        this.pre = localStorage.getItem('login_prefer')
     },
     methods: {
         changetype(type) {
@@ -103,11 +99,15 @@ export default {
             }
             this.$axios.post('/ums/v1/user/login', params).then(res => {
                 if (res.data.code == 0) {
-                    initUser(res.data.data.token, res.data.data.userId, res.data.data)
-                    if (this.pre) {
-                        window.location.href = this.pre
+                    this.$store.commit('SET_TOKEN', res.data.data.token)
+                    this.$store.commit('SET_USER', res.data.data)
+                    setCookie('token', res.data.data.token)
+                    window.localStorage.setItem('user', JSON.stringify(res.data.data))
+                    let pre = sessionStorage.getItem('login_prefer') || ''
+                    if (pre) {
+                        window.location.href = pre
                     } else {
-                        window.location.href = '/browser/'
+                        this.$router.replace('/browser')
                     }
                 } else {
                     this.$alert(res.data.message)

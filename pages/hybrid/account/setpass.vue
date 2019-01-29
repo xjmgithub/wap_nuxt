@@ -77,12 +77,8 @@ export default {
             inviteCode: '',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
-            pre: '',
             disabled: true
         }
-    },
-    mounted() {
-        this.pre = localStorage.getItem('login_prefer')
     },
     methods: {
         checkpass() {
@@ -133,11 +129,15 @@ export default {
 
                     this.$axios.post('/ums/v1/user/login', params).then(res => {
                         if (res.data.code == 0) {
-                            initUser(res.data.data.token, res.data.data.userId, res.data.data)
+                            this.$store.commit('SET_TOKEN', res.data.data.token)
+                            this.$store.commit('SET_USER', res.data.data)
+                            setCookie('token', res.data.data.token)
+                            window.localStorage.setItem('user', JSON.stringify(res.data.data))
+                            let pre = sessionStorage.getItem('login_prefer') || ''
                             if (this.pre) {
                                 window.location.href = this.pre
                             } else {
-                                window.location.href = '/browser/'
+                                this.$router.replace('/browser')
                             }
                         } else {
                             this.$alert(res.data.message)

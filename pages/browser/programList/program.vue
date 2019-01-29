@@ -4,7 +4,7 @@
         <div class="poster">
             <img :src="pPoster" alt>
             <span class="program-name">{{pName}}</span>
-            <p v-html="pDescription"/>
+            <p>{{pDescription}}</p>
         </div>
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
@@ -40,7 +40,7 @@ export default {
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
-            this.pDescription = info.programAbstract
+            this.pDescription = info.programSummary
             this.getSubProgram()
         }
     },
