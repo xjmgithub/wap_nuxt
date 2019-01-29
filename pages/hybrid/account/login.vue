@@ -58,6 +58,11 @@ export default {
         byfacebook() {
             let _this = this
             FB.login(function(res) {
+                // console.log(res)
+                // FB.api('/me', function(response) {
+                // console.log(response)
+                // })
+                
                 _this.loginByThird(res.authResponse.userID, '', 1)
             })
         },
