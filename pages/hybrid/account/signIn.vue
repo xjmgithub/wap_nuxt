@@ -3,11 +3,11 @@
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
-                <a href="#" class="sign-way">Use phone number sign in</a>
+                <a href="javascript:void(0)" class="sign-way">Use phone number sign in</a>
             </div>
             <div v-show="type==0" @click="changetype(1)">
                 <img class="gray" src="~assets/img/users/ic_email_def_gray.svg">
-                <a href="#" class="sign-way">Use Email sign in</a>
+                <a href="javascript:void(0)" class="sign-way">Use Email sign in</a>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
