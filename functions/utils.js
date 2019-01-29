@@ -150,7 +150,7 @@ export const initGoogleLogin = (elm, callback) => {
 export const initFacebookLogin = () => {
     let host = window.location.host
     let appId
-    if (host.indexOf('m.startimestv.com') > 0) {
+    if (host.indexOf('m.startimestv.com') >= 0) {
         appId = '494015374414113'
     } else {
         appId = '2114714418552116'
