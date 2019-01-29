@@ -40,7 +40,7 @@ export default {
                 .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
                 .then(res => {
                     if (res.data.code == 0) {
-                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name,2)
+                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name, 2)
                     } else {
                         this.$alert(res.data.message)
                     }
@@ -58,12 +58,12 @@ export default {
         byfacebook() {
             let _this = this
             FB.login(function(res) {
-                // console.log(res)
-                // FB.api('/me', function(response) {
-                // console.log(response)
-                // })
-                
-                _this.loginByThird(res.authResponse.userID, '', 1)
+                FB.api('/me', function(response) {
+                    console.log(response)
+                    return false
+                    _this.loginByThird(response.id, response.name, 1)
+                })
+                // _this.loginByThird(res.authResponse.userID, '', 1)
             })
         },
         bytwitter() {

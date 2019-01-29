@@ -153,7 +153,7 @@ export const initFacebookLogin = () => {
     if (host.indexOf('m.startimestv.com') > 0) {
         appId = '494015374414113'
     } else {
-        appId = '2114714418552116'
+        appId = '159785064477978'
     }
     FB.init({
         appId: appId,
