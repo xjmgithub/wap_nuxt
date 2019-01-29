@@ -47,12 +47,12 @@
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
     </div>
 </template>
 <script>
 import shadowLayer from '~/components/shadow-layer'
-import { setCookie, initUser } from '~/functions/utils'
+import { setCookie, login } from '~/functions/utils'
 import countrArr from '~/functions/countrys.json'
 export default {
     layout: 'base',
@@ -97,22 +97,8 @@ export default {
                     type: 10
                 }
             }
-            this.$axios.post('/ums/v1/user/login', params).then(res => {
-                if (res.data.code == 0) {
-                    this.$store.commit('SET_TOKEN', res.data.data.token)
-                    this.$store.commit('SET_USER', res.data.data)
-                    setCookie('token', res.data.data.token)
-                    window.localStorage.setItem('user', JSON.stringify(res.data.data))
-                    let pre = sessionStorage.getItem('login_prefer') || ''
-                    if (pre) {
-                        window.location.href = pre
-                    } else {
-                        this.$router.replace('/browser')
-                    }
-                } else {
-                    this.$alert(res.data.message)
-                }
-            })
+
+            login(this, params)
         }
     },
     components: {
@@ -128,7 +114,7 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     padding: 1rem 0.8rem;
-    width:100%;
+    width: 100%;
 
     .tab {
         div {

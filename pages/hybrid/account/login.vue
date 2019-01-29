@@ -16,7 +16,7 @@
     </div>
 </template>
 <script>
-import { setCookie, initUser, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
+import { setCookie, login, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
 import loading from '~/components/loading'
 export default {
     layout: 'base',
@@ -74,32 +74,14 @@ export default {
         },
         loginByThird(userkey, nickname, type) {
             // http://gitlab.startimes.me/startimesapp/ums/blob/develop/ums-api/src/main/java/com/star/ums/api/model/LoginRequest.java
-            this.$axios
-                .post('/ums/v3/user/login', {
-                    applicationId: 2,
-                    deviceId: this.$store.state.deviceId,
-                    type: type || 1, // 1:Facebook 2:Twitter 3:Google
-                    thirdPartyToken: 'THIRD#' + userkey,
-                    platform: 3, // WEB
-                    nickname: nickname || ''
-                })
-                .then(res => {
-                    if (res.data.code == 0) {
-                        this.$store.commit('SET_TOKEN', res.data.data.token)
-                        this.$store.commit('SET_USER', res.data.data)
-                        setCookie('token', res.data.data.token)
-                        window.localStorage.setItem('user', JSON.stringify(res.data.data))
-
-                        let pre = sessionStorage.getItem('login_prefer') || ''
-                        if (pre) {
-                            window.location.href = pre
-                        } else {
-                            this.$router.replace('/browser')
-                        }
-                    } else {
-                        this.$alert(res.datea.message)
-                    }
-                })
+            login(this, {
+                applicationId: 2,
+                deviceId: this.$store.state.deviceId,
+                type: type || 1, // 1:Facebook 2:Twitter 3:Google
+                thirdPartyToken: 'THIRD#' + userkey,
+                platform: 3, // WEB
+                nickname: nickname || ''
+            })
         }
     },
     components: {
