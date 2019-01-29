@@ -10,7 +10,7 @@
             <nuxt-link to="/browser/programlist/program">
                 <span class="program-name">{{pName}}</span>
                 <div class="clearfix">
-                    <p v-html="pDescription"/>
+                    <p>{{pDescription}}</p>
                     <img :src="pPoster" alt>
                 </div>
             </nuxt-link>
@@ -53,7 +53,7 @@ export default {
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
-            this.pDescription = info.programAbstract
+            this.pDescription = info.programSummary
         }
         if(this.pId){
             this.getSubProgram()

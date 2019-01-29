@@ -4,7 +4,7 @@
         <img class="third_login facebook" @click="byfacebook" src="~assets/img/users/btn_facebook_def.png">
         <img class="third_login twitter" @click="bytwitter" src="~assets/img/users/btn_twitter_def.png">
         <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
-        <nuxt-link to="/hybrid/account/signin">
+        <nuxt-link to="/hybrid/account/signin" replace>
             <div class="login_btn">SIGN IN</div>
         </nuxt-link>
         <div class="regtext">Don't have an account?
@@ -16,7 +16,7 @@
     </div>
 </template>
 <script>
-import { setCookie, initUser, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
+import { setCookie, login, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
 import loading from '~/components/loading'
 export default {
     layout: 'base',
@@ -40,7 +40,7 @@ export default {
                 .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
                 .then(res => {
                     if (res.data.code == 0) {
-                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name,2)
+                        this.loginByThird(res.data.data.user_id, res.data.data.screen_name, 2)
                     } else {
                         this.$alert(res.data.message)
                     }
@@ -58,12 +58,9 @@ export default {
         byfacebook() {
             let _this = this
             FB.login(function(res) {
-                // console.log(res)
-                // FB.api('/me', function(response) {
-                // console.log(response)
-                // })
-                
-                _this.loginByThird(res.authResponse.userID, '', 1)
+                FB.api('/me', function(response) {
+                    _this.loginByThird(response.id, response.name, 1)
+                })
             })
         },
         bytwitter() {
@@ -77,28 +74,14 @@ export default {
         },
         loginByThird(userkey, nickname, type) {
             // http://gitlab.startimes.me/startimesapp/ums/blob/develop/ums-api/src/main/java/com/star/ums/api/model/LoginRequest.java
-            this.$axios
-                .post('/ums/v3/user/login', {
-                    applicationId: 2,
-                    deviceId: this.$store.state.deviceId,
-                    type: type || 1, // 1:Facebook 2:Twitter 3:Google
-                    thirdPartyToken: 'THIRD#' + userkey,
-                    platform: 3, // WEB
-                    nickname: nickname || ''
-                })
-                .then(res => {
-                    if (res.data.code == 0) {
-                        initUser(res.data.data.token, res.data.data.userId, res.data.data)
-                        let pre = sessionStorage.getItem('login_prefer') || ''
-                        if (pre) {
-                            window.location.href = pre
-                        } else {
-                            window.location.href = '/browser/'
-                        }
-                    } else {
-                        this.$alert(res.datea.message)
-                    }
-                })
+            login(this, {
+                applicationId: 2,
+                deviceId: this.$store.state.deviceId,
+                type: type || 1, // 1:Facebook 2:Twitter 3:Google
+                thirdPartyToken: 'THIRD#' + userkey,
+                platform: 3, // WEB
+                nickname: nickname || ''
+            })
         }
     },
     components: {

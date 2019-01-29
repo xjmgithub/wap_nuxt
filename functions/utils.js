@@ -39,13 +39,6 @@ export const delCookie = name => {
     document.cookie = name + '=; Max-Age=-99999999;'
 }
 
-export const initUser = (token, id, obj) => {
-    // browser surport server not
-    if (!token || !id || !obj) return false
-    setCookie('token', token)
-    window.localStorage.setItem('user', JSON.stringify(obj))
-}
-
 export const updateWalletAccount = (v, callback) => {
     v.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
         if (res.data) {
@@ -148,15 +141,8 @@ export const initGoogleLogin = (elm, callback) => {
 }
 
 export const initFacebookLogin = () => {
-    let host = window.location.host
-    let appId
-    if (host.indexOf('m.startimestv.com') >= 0) {
-        appId = '494015374414113'
-    } else {
-        appId = '2114714418552116'
-    }
     FB.init({
-        appId: appId,
+        appId: '159785064477978',
         xfbml: true,
         cookie: true,
         version: 'v3.1'
@@ -164,7 +150,7 @@ export const initFacebookLogin = () => {
     FB.AppEvents.logPageView()
 }
 
-export const downloadApk = app =>{
+export const downloadApk = app => {
     app.$axios
         .get('/cms/public/app')
         .then(res => {
@@ -182,4 +168,36 @@ export const downloadApk = app =>{
         .catch(err => {
             this.$alert('Download error.Please retry.')
         })
+}
+
+export const login = (v, opt) => {
+    v.$axios.post('/ums/v3/user/login', opt).then(res => {
+        res.data.code != 0 && v.$alert(res.data.message)
+        let token = res.data.data.token
+        v.$axios
+            .get('/cms/users/me', {
+                headers: {
+                    token: token
+                }
+            })
+            .then(res => {
+                res.status != 200 && v.$alert(res.data.message)
+
+                let user = res.data
+                v.$store.commit('SET_TOKEN', token)
+                v.$store.commit('SET_USER', user)
+
+                setCookie('token', token)
+                localStorage.setItem('user', JSON.stringify(user))
+                let pre = sessionStorage.getItem('login_prefer') || ''
+                if (pre) {
+                    window.location.href = pre
+                } else {
+                    v.$router.replace('/browser')
+                }
+            })
+            .catch(error => {
+                v.$alert('Get user info error.')
+            })
+    })
 }

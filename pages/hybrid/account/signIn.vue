@@ -3,11 +3,11 @@
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
-                <a href="#" class="sign-way">Use phone number sign in</a>
+                <a href="javascript:void(0)" class="sign-way">Use phone number sign in</a>
             </div>
             <div v-show="type==0" @click="changetype(1)">
                 <img class="gray" src="~assets/img/users/ic_email_def_gray.svg">
-                <a href="#" class="sign-way">Use Email sign in</a>
+                <a href="javascript:void(0)" class="sign-way">Use Email sign in</a>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
@@ -47,12 +47,12 @@
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
     </div>
 </template>
 <script>
 import shadowLayer from '~/components/shadow-layer'
-import { setCookie, initUser } from '~/functions/utils'
+import { setCookie, login } from '~/functions/utils'
 import countrArr from '~/functions/countrys.json'
 export default {
     layout: 'base',
@@ -61,15 +61,11 @@ export default {
             type: 0, // 0 tel 1 email
             country: this.$store.state.country,
             countryDialogStatus: false,
-            pre: '',
             phoneNum: '',
             password: '',
             email: '',
             countrys: countrArr
         }
-    },
-    mounted() {
-        this.pre = localStorage.getItem('login_prefer')
     },
     methods: {
         changetype(type) {
@@ -101,18 +97,8 @@ export default {
                     type: 10
                 }
             }
-            this.$axios.post('/ums/v1/user/login', params).then(res => {
-                if (res.data.code == 0) {
-                    initUser(res.data.data.token, res.data.data.userId, res.data.data)
-                    if (this.pre) {
-                        window.location.href = this.pre
-                    } else {
-                        window.location.href = '/browser/'
-                    }
-                } else {
-                    this.$alert(res.data.message)
-                }
-            })
+
+            login(this, params)
         }
     },
     components: {
@@ -128,7 +114,7 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     padding: 1rem 0.8rem;
-    width:100%;
+    width: 100%;
 
     .tab {
         div {

@@ -2,7 +2,7 @@
     <div class="package">
         <img v-if="imgPath" :src="imgPath">
         <div v-else class="nopic">
-            {{packageName}}
+            <div>{{packageName}}</div>
         </div>
     </div>
 </template>
@@ -31,16 +31,23 @@ export default {
         width:100%;
     }
     .nopic{
-        background:#e6e6e6;
+        background:url('~assets/img/web/wap_ccard.png');
+        background-size:100% 100%;
         border-radius: 3px;
         text-align: center;
         font-size:0.9rem;
+        position: relative;
         &::before{
             content: '';
             display: inline-block;
             padding-bottom: 56%;
             width: 0.1px;
             vertical-align: middle;
+        }
+        &>div{
+            position: absolute;
+            top:0.4rem;
+            left:0.6rem;
         }
     }
 }

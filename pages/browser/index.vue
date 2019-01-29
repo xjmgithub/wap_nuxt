@@ -37,7 +37,7 @@
             <h3 class="flytitle">
                 <div>{{$store.state.lang.officialwebsitemobile_startimeson_section}}</div>
             </h3>
-            <img src="~assets/img/web/pic_show.jpg" class="bigPic">
+            <img src="~assets/img/web/wap pic.jpg" class="bigPic">
             <div class="download clearfix">
                 <a href="javascript:void(0)" @click="downloadApk">
                     <img src="~assets/img/web/pic_downloadapk.png">
