@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper wide">
         <div class="bouquets clearfix" v-show="!loadstate">
             <p>{{tvPlatFormName}}</p>
             <div class="logo">
@@ -86,84 +86,81 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
-.wrapper {
-    .bouquets {
-        width: 94%;
-        margin: 0 auto;
-        border-bottom: 1px solid #d8d8d8;
-        padding: 0.5rem 0 0.5rem 0.2rem;
-        & > p {
-            color: #333333;
-            font-weight: 600;
-            margin-bottom: 0.7rem;
-            font-size: 1.1rem;
+.bouquets {
+    margin: 0 0.8rem;
+    border-bottom: 1px solid #d8d8d8;
+    padding: 0.5rem 0 0.5rem 0.2rem;
+    & > p {
+        color: #333333;
+        font-weight: 600;
+        margin-bottom: 0.7rem;
+        font-size: 1.1rem;
+    }
+    .logo {
+        width: 38%;
+        float: left;
+        margin-right: 0.5rem;
+        img {
+            display: block;
+            width: 100%;
         }
-        .logo {
-            width: 38%;
-            float: left;
-            margin-right: 0.5rem;
+    }
+    .info {
+        float: right;
+        width: 58%;
+        .bouquetName {
+            font-weight: bold;
+        }
+        .recharge {
+            font-size: 0.9rem;
+            a {
+                color: #333333;
+            }
             img {
-                display: block;
-                width: 100%;
+                width: 1rem;
+                vertical-align: top;
             }
         }
-        .info {
-            float: right;
-            width: 58%;
-            .bouquetName {
-                font-weight: bold;
-            }
-            .recharge {
-                font-size: 0.9rem;
-                a {
-                    color: #333333;
-                }
-                img {
-                    width: 1rem;
-                    vertical-align: top;
-                }
-            }
-            .money {
-                font-size: 0.9rem;
-                line-height: 1.6rem;
-            }
+        .money {
+            font-size: 0.9rem;
+            line-height: 1.6rem;
         }
     }
-    .title {
-        padding: 0.5rem 0 0.5rem 0.5rem;
-        font-weight: bold;
-    }
-    .channelList {
-        border-top: 1px solid #d8d8d8;
-        li {
-            width: 25%;
-            float: left;
-            padding: 0.3rem;
-            box-sizing: border-box;
-            border-bottom: 1px solid #d8d8d8;
-            border-right: 1px solid #d8d8d8;
+}
+.title {
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    font-weight: bold;
+}
+.channelList {
+    border-top: 1px solid #d8d8d8;
+    li {
+        width: 25%;
+        float: left;
+        padding: 0.3rem;
+        box-sizing: border-box;
+        border-bottom: 1px solid #d8d8d8;
+        border-right: 1px solid #d8d8d8;
+        position: relative;
+        .lasy_bg {
+            width: 100%;
+            padding-top: 100%;
+            background: white;
             position: relative;
-            .lasy_bg {
+            img {
                 width: 100%;
-                padding-top: 100%;
-                background: white;
-                position: relative;
-                img {
-                    width: 100%;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    z-index: 2;
-                }
-            }
-
-            .imgOn {
                 position: absolute;
-                width: 1.5rem;
                 top: 0;
-                right: 0;
-                z-index: 3;
+                left: 0;
+                z-index: 2;
             }
+        }
+
+        .imgOn {
+            position: absolute;
+            width: 1.5rem;
+            top: 0;
+            right: 0;
+            z-index: 3;
         }
     }
 }

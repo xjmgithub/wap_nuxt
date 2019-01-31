@@ -1,5 +1,5 @@
 <template>
-    <div style="overflow-y:auto;">
+    <div>
         <mheader/>
         <nuxt/>
         <div class="nav-layer" v-show="showNav" @click="closeNav"/>
@@ -113,12 +113,6 @@ export default {
     src: url('~assets/fonts/Roboto-Regular.ttf');
     font-style: 'normal';
 }
-html,
-body {
-    padding: 0;
-    margin: 0;
-    font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Sans-serif;
-}
 .nav-layer {
     width: 100%;
     height: 100%;
@@ -127,7 +121,6 @@ body {
     left: 0;
     z-index: 1000;
 }
-
 .slide-bar {
     position: fixed;
     left: 0rem;

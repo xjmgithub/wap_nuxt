@@ -143,11 +143,10 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .boxStyle {
-    width: 94%;
     margin: 0 auto;
     border-bottom: 1px solid #d8d8d8;
     h3 {
-        margin-bottom: 0.2rem;
+        margin: 0.4rem 0;
         color: #333333;
         font-weight: bold;
         div {
@@ -169,13 +168,13 @@ export default {
         &.flytitle {
             background: url('~assets/img/web/ON-RIGHT.png') no-repeat left center;
             background-size: 1rem;
-            padding-left: 1.2rem;
+            padding-left: 1.5rem;
         }
     }
 }
 .selfService {
     .boxStyle;
-    padding: 0.5rem 0 1rem 0.2rem;
+    padding-bottom: 1.2rem;
     .recharge {
         width: 45%;
         border: 2px solid #0087eb;
@@ -186,6 +185,7 @@ export default {
         line-height: 2.6rem;
         span:first-child {
             width: 1.6rem;
+            color: #0087eb;
             height: 1.6rem;
             line-height: 1.4rem;
             font-size: 1.2rem;
@@ -196,6 +196,7 @@ export default {
         }
         span:last-child {
             font-size: 1.2rem;
+            color: #0087eb;
             display: inline-block;
             font-weight: bold;
             transform: perspective(1px) scale(0.8);
@@ -206,7 +207,6 @@ export default {
     .boxStyle;
     padding: 0.3rem 0;
     & > span {
-        font-size: 0.95rem;
         color: #333333;
         font-weight: 600;
         clear: both;

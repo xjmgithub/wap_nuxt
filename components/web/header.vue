@@ -72,7 +72,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scope>
+<style lang="less" scoped>
 .m_header {
     padding: 0.4rem 0.5rem;
     background: #222527;

@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper wide">
         <download class="clearfix"/>
         <div v-if="channel.poster" class="poster">
             <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
@@ -229,166 +229,162 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
-.wrapper {
-    .poster {
+.poster {
+    img {
         width: 100%;
-        img {
-            width: 100%;
-            height: 12rem;
+        height: 12rem;
+    }
+}
+.container {
+    margin: 0.8rem;
+    .views {
+        color: #999999;
+        border-bottom: 1px solid #eeeeee;
+        padding-bottom: 0.5rem;
+    }
+    .base-info {
+        padding: 0.5rem;
+        border-bottom: 1px solid #eeeeee;
+        .logo {
+            width: 23%;
+            border: 1px solid #cccccc;
+            float: left;
+            img {
+                width: 100%;
+            }
+        }
+        .info {
+            float: right;
+            width: 73%;
+            margin-left: 0.5rem;
+            .info-name {
+                font-weight: bold;
+                padding-bottom: 0.5rem;
+            }
+            img {
+                width: 1.8rem;
+            }
         }
     }
-    .container {
-        width: 93%;
-        margin: 0.5rem auto;
-        .views {
-            color: #999999;
-            border-bottom: 1px solid #eeeeee;
-            padding-bottom: 0.5rem;
+    .describes {
+        font-size: 0.9rem;
+        color: #666666;
+        border-bottom: 1px solid #eeeeee;
+        padding: 0.5rem 0;
+        line-height: 1.1rem;
+    }
+    .watch {
+        padding: 0.5rem 0;
+        p {
+            color: #212121;
+            font-weight: bold;
         }
-        .base-info {
-            padding: 0.5rem;
+        .watchList {
             border-bottom: 1px solid #eeeeee;
-            .logo {
-                width: 23%;
-                border: 1px solid #cccccc;
-                float: left;
-                img {
-                    width: 100%;
-                }
+            padding: 0.6rem 0;
+            .sign {
+                width: 3.5rem;
             }
-            .info {
+            .isDtt {
+                color: #5eb108;
+                margin: 0 0.5rem;
+            }
+            .isDth {
+                color: #e7336e;
+                margin: 0 0.5rem;
+            }
+            .name {
+                font-weight: bold;
+            }
+            .arrows {
                 float: right;
-                width: 73%;
-                margin-left: 0.5rem;
-                .info-name {
-                    font-weight: bold;
-                    padding-bottom: 0.5rem;
-                }
-                img {
-                    width: 1.8rem;
-                }
+                width: 1.5rem;
             }
         }
-        .describes {
-            font-size: 0.9rem;
-            color: #666666;
-            border-bottom: 1px solid #eeeeee;
-            padding: 0.5rem 0;
-            line-height: 1.1rem;
+    }
+    .tv-guide {
+        padding: 0.5rem 0;
+        p {
+            color: #111111;
+            font-weight: bold;
         }
-        .watch {
-            padding: 0.5rem 0;
-            p {
+        ul {
+            margin-bottom: 1rem;
+            li {
+                list-style: none;
+                float: left;
+                width: 22%;
+                margin-right: 4%;
+                margin-top: 0.4rem;
+                background-color: #eeeeee;
+                border-radius: 4px;
+                text-align: center;
                 color: #212121;
                 font-weight: bold;
-            }
-            .watchList {
-                border-bottom: 1px solid #eeeeee;
-                padding: 0.6rem 0;
-                .sign {
-                    width: 3.5rem;
+                &:nth-child(4n) {
+                    margin-right: 0;
                 }
-                .isDtt {
-                    color: #5eb108;
-                    margin: 0 0.5rem;
-                }
-                .isDth {
-                    color: #e7336e;
-                    margin: 0 0.5rem;
-                }
-                .name {
-                    font-weight: bold;
-                }
-                .arrows {
-                    float: right;
-                    width: 1.5rem;
+                .today {
+                    color: #0084e5;
                 }
             }
         }
-        .tv-guide {
-            padding: 0.5rem 0;
-            p {
-                color: #111111;
-                font-weight: bold;
+        .epg-contain {
+            max-height: 20rem;
+            overflow: auto;
+            position: relative;
+        }
+        .epg {
+            position: relative;
+            .playTime {
+                font-size: 0.95rem;
+                color: #000000;
+                width: 15%;
+                display: inline-block;
+                vertical-align: top;
             }
-            ul {
-                margin-bottom: 1rem;
-                li {
-                    list-style: none;
-                    float: left;
-                    width: 22%;
-                    margin-right: 4%;
-                    margin-top: 0.4rem;
-                    background-color: #eeeeee;
+            .playTitle {
+                font-size: 0.95rem;
+                color: #333333;
+                border-left: 1px dashed #979797;
+                display: inline-block;
+                width: 82%;
+                padding-left: 0.8rem;
+                vertical-align: top;
+                .total {
+                    width: 100%;
+                    height: 4px;
+                    background-color: #dddddd;
                     border-radius: 4px;
-                    text-align: center;
-                    color: #212121;
-                    font-weight: bold;
-                    &:nth-child(4n) {
-                        margin-right: 0;
-                    }
-                    .today {
-                        color: #0084e5;
-                    }
-                }
-            }
-            .epg-contain {
-                max-height: 20rem;
-                overflow: auto;
-                position: relative;
-            }
-            .epg {
-                position: relative;
-                .playTime {
-                    font-size: 0.95rem;
-                    color: #000000;
-                    width: 15%;
-                    display: inline-block;
-                    vertical-align: top;
-                }
-                .playTitle {
-                    font-size: 0.95rem;
-                    color: #333333;
-                    border-left: 1px dashed #979797;
-                    display: inline-block;
-                    width: 82%;
-                    padding-left: 0.8rem;
-                    vertical-align: top;
-                    .total {
-                        width: 100%;
+                    margin: 0.3rem 0;
+                    .progress {
+                        background-color: #0084e5;
                         height: 4px;
-                        background-color: #dddddd;
                         border-radius: 4px;
-                        margin: 0.3rem 0;
-                        .progress {
-                            background-color: #0084e5;
-                            height: 4px;
-                            border-radius: 4px;
-                        }
-                    }
-                    .more-info {
-                        font-size: 0.9rem;
-                        padding-bottom: 0.8rem;
-                        span {
-                            color: black;
-                        }
                     }
                 }
-                .circle {
-                    background-color: #ffffff;
-                    display: inline-block;
-                    width: 0.5rem;
-                    height: 0.5rem;
-                    border: 1px solid #979797;
-                    border-radius: 50%;
-                    position: absolute;
-                    left: 15%;
-                    top: 0.6rem;
-                    margin-top: -0.25rem;
-                    margin-left: 0;
-                    &.current {
-                        border: 1px solid #0084e5;
+                .more-info {
+                    font-size: 0.9rem;
+                    padding-bottom: 0.8rem;
+                    span {
+                        color: black;
                     }
+                }
+            }
+            .circle {
+                background-color: #ffffff;
+                display: inline-block;
+                width: 0.5rem;
+                height: 0.5rem;
+                border: 1px solid #979797;
+                border-radius: 50%;
+                position: absolute;
+                left: 15%;
+                top: 0.6rem;
+                margin-top: -0.25rem;
+                margin-left: 0;
+                &.current {
+                    border: 1px solid #0084e5;
                 }
             }
         }

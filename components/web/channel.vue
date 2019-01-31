@@ -36,15 +36,17 @@ export default {
         color: #333333;
     }
     .title {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         font-weight: bold;
+        line-height: 1.3rem;
         & + div {
             font-weight: normal;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #aaaaaa;
             display: -webkit-box;
             overflow: hidden;
             height: 2.6rem;
+            line-height: 1.3rem;
             -webkit-line-clamp: 2;
             /* autoprefixer: off */
             -webkit-box-orient: vertical;

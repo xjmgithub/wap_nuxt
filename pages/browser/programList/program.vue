@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper wide">
         <download class="clearfix"/>
         <div class="poster">
             <img :src="pPoster.replace('http:','https:')" alt>
@@ -23,7 +23,6 @@
 <script>
 import download from '~/components/web/download'
 export default {
-    layout: 'default',
     data() {
         return {
             pPoster: '',
@@ -85,80 +84,77 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
-.wrapper {
+img {
+    border-radius: 2px;
+}
+.poster {
+    border-bottom: 1px solid #d8d8d8;
+    margin: 0.8rem;
+    padding-bottom: 0.8rem;
     img {
-        border-radius: 2px;
+        width: 100%;
+        height: 11rem;
+        margin-bottom: 0.5rem;
     }
-    .poster {
-        width: 94%;
-        margin: 0.5rem auto;
-        border-bottom: 1px solid #d8d8d8;
-        padding-bottom: 0.5rem;
-        img {
-            width: 100%;
-            height: 11rem;
-            margin-bottom: 0.5rem;
-        }
-        .program-name {
-            font-weight: bold;
-            color: #333333;
-            margin: 0.5rem 0;
-            line-height: 2rem;
-        }
-        p {
-            color: #666666;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-            font-size: 0.9rem;
-            word-break: break-all;
-        }
+    .program-name {
+        font-weight: bold;
+        color: #333333;
+        margin: 0.5rem 0;
+        line-height: 2rem;
     }
-    .clips {
-        width: 94%;
-        margin: 0.5rem auto;
-        p {
-            color: #111111;
-            margin: 0.5rem 0;
-            font-weight: bold;
-        }
-        ul {
-            li {
-                list-style: none;
-                float: left;
-                width: 48%;
-                line-height: 1.1rem;
-                &:nth-child(2n) {
-                    float: right;
+    p {
+        color: #666666;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        font-size: 0.9rem;
+        word-break: break-all;
+    }
+}
+.clips {
+    margin: 0.8rem;
+    p {
+        color: #111111;
+        margin: 0.5rem 0;
+        font-weight: bold;
+    }
+    ul {
+        li {
+            list-style: none;
+            float: left;
+            width: 48%;
+            line-height: 1.1rem;
+            &:nth-child(2n) {
+                float: right;
+            }
+            div {
+                position: relative;
+                .show-time {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    padding: 0 0.2rem;
+                    background: rgba(0, 0, 0, 1);
+                    color: #ffffff;
+                    font-size: 0.8rem;
                 }
-                div {
-                    position: relative;
-                    .show-time {
-                        position: absolute;
-                        bottom: 0;
-                        right: 0;
-                        padding: 0 0.2rem;
-                        background: rgba(0, 0, 0, 1);
-                        color: #ffffff;
-                        font-size: 0.8rem;
-                    }
-                    img {
-                        width: 100%;
-                        display: block;
-                    }
+                img {
+                    width: 100%;
+                    display: block;
                 }
-                span {
-                    font-size: 0.85rem;
-                    color: #666666;
-                    &.title {
-                        display: -webkit-box;
-                        overflow: hidden;
-                        height: 2.6rem;
-                        -webkit-line-clamp: 2;
-                        /* autoprefixer: off */
-                        -webkit-box-orient: vertical;
-                    }
+            }
+            span {
+                font-size: 0.85rem;
+                color: #666666;
+                &.title {
+                    display: -webkit-box;
+                    overflow: hidden;
+                    height: 2.6rem;
+                    padding-top: 0.4rem;
+                    -webkit-line-clamp: 2;
+                    /* autoprefixer: off */
+                    -webkit-box-orient: vertical;
                 }
             }
         }

@@ -57,8 +57,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
-@import '~assets/less/browser/index.less';
+<style lang="less" scoped>
 .navContain {
     background: #222527;
     overflow: hidden;

@@ -12,11 +12,11 @@
         padding: 0.6rem 0.8rem;
         background-color: #ffbe19;
         font-weight: bold;
-        color:#333333;
+        color: #333333;
         overflow: hidden;
-        zoom:1;
-        div{
-            width:auto;
+        zoom: 1;
+        div {
+            width: auto;
             float: left;
         }
         span {

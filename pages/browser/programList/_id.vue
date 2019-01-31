@@ -83,66 +83,69 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .wrapper {
-    overflow-y: auto;
-    .program {
-        width: 94%;
-        margin: 0 auto;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #d8d8d8;
-        overflow: visible;
-        .title {
-            font-weight: bold;
-            color: #111111;
-            position: relative;
-            line-height: 2.3rem;
+    padding-left: 0;
+    padding-right: 0;
+}
+.program-list {
+    padding: 0 0.8rem;
+}
+.program {
+    margin: 0 auto;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #d8d8d8;
+    overflow: visible;
+    .title {
+        font-weight: bold;
+        color: #111111;
+        position: relative;
+        line-height: 2.3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        span:first-child {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            width: 90%;
+            display: block;
+            float: left;
+        }
+        .more {
+            position: absolute;
+            right: 0;
+            color: #0087eb;
+            font-size: 0.8rem;
+        }
+    }
+    ul {
+        li {
+            list-style: none;
+            line-height: 2.3rem;
+            position: relative;
+            color: #0087eb;
+            font-weight: bold;
+            font-size: 0.9rem;
+
             span:first-child {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                width: 90%;
+                width: 94%;
                 display: block;
-                float: left;
             }
-            .more {
+            .arrows {
                 position: absolute;
                 right: 0;
-                color: #0087eb;
-                font-size: 0.8rem;
-            }
-        }
-        ul {
-            li {
-                list-style: none;
-                line-height: 2.3rem;
-                position: relative;
-                color: #0087eb;
-                font-weight: bold;
-                font-size: 0.9rem;
-
-                span:first-child {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    width: 94%;
-                    display: block;
-                }
-                .arrows {
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
-                }
+                bottom: 0;
             }
         }
     }
-    .loading-end {
-        height: 2.8rem;
-        line-height: 3rem;
-        text-align: center;
-        font-size: 0.8rem;
-        color: #666666;
-    }
+}
+.loading-end {
+    height: 2.8rem;
+    line-height: 3rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #666666;
 }
 </style>
