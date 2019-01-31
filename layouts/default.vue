@@ -51,7 +51,6 @@ export default {
             return userInfo.roleName && userInfo.roleName != 'ANONYMOUS' ? userInfo : null
         },
         showNav() {
-            // return true
             return this.$store.state.navState
         },
         country() {
@@ -86,6 +85,7 @@ export default {
         }
     },
     created() {
+        this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {

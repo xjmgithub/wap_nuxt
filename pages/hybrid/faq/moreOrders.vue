@@ -3,26 +3,23 @@
         <div class="wrapper">
             <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item"/>
         </div>
-        <loading v-show="loadStatus" />
     </div>
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
-import loading from '~/components/loading'
 export default {
     layout: 'base',
     data: function() {
         return {
-            serviceList: [],
-            loadStatus: true
+            serviceList: []
         }
     },
     components: {
-        serviceBlock,
-        loading
+        serviceBlock
     },
     mounted() {
         let entranceId = this.$route.query.entrance_id || ''
+        this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios
             .get(`/ocs/v1/service/module/moreOrder?entranceId=${entranceId}`, {
                 headers: {
@@ -31,7 +28,7 @@ export default {
                 }
             })
             .then(res => {
-                this.loadStatus = false
+                this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (res.data) {
                     this.serviceList = res.data.data
                 }

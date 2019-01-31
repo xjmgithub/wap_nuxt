@@ -5,7 +5,7 @@ module.exports = {
     mode: 'universal',
 
     head: {
-        title: 'StarTimes',
+        title: 'StarTimes ON',
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -28,14 +28,12 @@ module.exports = {
         ]
     },
 
-    loading: false,
+    loading: '~/components/loading.vue',
 
     /*
     ** Global CSS
     */
-    css: [
-        '~assets/css/normalize.css'
-    ],
+    css: ['~assets/css/normalize.css'],
     transition: {
         name: 'page',
         mode: 'out-in'
@@ -47,15 +45,15 @@ module.exports = {
     plugins: [{ src: '~plugins/analysis.js', ssr: false }, { src: '~plugins/axios.js', ssr: false }, { src: '~plugins/others.js', ssr: false }],
 
     /*
-  ** Nuxt.js modules
-  */
+    ** Nuxt.js modules
+    */
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
         '@nuxtjs/axios'
     ],
     /*
-  ** Axios module configuration
-  */
+    ** Axios module configuration
+    */
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
         proxy: true, // Can be also an object with default options

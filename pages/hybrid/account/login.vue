@@ -10,22 +10,17 @@
         <div class="regtext">Don't have an account?
             <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
         </div>
-        <div class="loading-layer" v-show="loadStatus">
-            <loading/>
-        </div>
     </div>
 </template>
 <script>
 import { setCookie, login, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
-import loading from '~/components/loading'
 export default {
     layout: 'base',
     data() {
         return {
             pre: this.$route.query.pre,
             twitter_oauth_token: this.$route.query.oauth_token,
-            twitter_oauth_verifier: this.$route.query.oauth_verifier,
-            loadStatus: false
+            twitter_oauth_verifier: this.$route.query.oauth_verifier
         }
     },
     mounted() {
@@ -35,7 +30,7 @@ export default {
 
         // twitter callback
         if (this.twitter_oauth_token && this.twitter_oauth_verifier) {
-            this.loadStatus = true
+            this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios
                 .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
                 .then(res => {
@@ -84,9 +79,6 @@ export default {
             })
         }
     },
-    components: {
-        loading: loading
-    },
     head() {
         return {
             title: 'Login'
@@ -132,13 +124,6 @@ export default {
         font-size: 0.8rem;
         color: #424242;
         margin-top: 2.5rem;
-    }
-    .loading-layer {
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        position: fixed;
-        top: 0;
     }
 }
 </style>

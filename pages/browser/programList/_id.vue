@@ -39,6 +39,7 @@ export default {
     mounted() {
         this.loadData()
         this.$nextTick(() => {
+            this.$nuxt.$loading.finish()
             let contain = document.querySelector('.wrapper')
             let navContain = document.querySelector('.wrapper .navContain')
             let list = document.querySelector('.wrapper .program-list')

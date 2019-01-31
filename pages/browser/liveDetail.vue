@@ -116,9 +116,11 @@ export default {
     },
     mounted() {
         if (this.channelID) {
+            this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios
                 .get(`/cms/vup/v6/channels/${this.channelID}`)
                 .then(res => {
+                    this.$nextTick(() => this.$nuxt.$loading.finish())
                     if (res.data.id) {
                         this.channel = res.data
                         this.platformInfos = res.data.ofAreaTVPlatforms[0].platformInfos

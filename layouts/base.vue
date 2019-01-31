@@ -1,6 +1,5 @@
 <template>
     <div>
-        <loading/>
         <nuxt v-if="!needLoginAlert"/>
         <div v-if="needLoginAlert" class="authfail">
             <img src="~assets/img/pay/img_failed_def_b.png">
@@ -19,7 +18,6 @@ import Vue from 'vue'
 import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import shadowLayer from '~/components/shadow-layer'
-import loading from '~/components/loading'
 import { toNativePage } from '~/functions/utils'
 export default {
     data() {
@@ -30,8 +28,7 @@ export default {
     components: {
         alert,
         confirm,
-        shadowLayer,
-        loading
+        shadowLayer
     },
     computed: {
         layer() {
@@ -39,6 +36,7 @@ export default {
         }
     },
     created() {
+        this.$nextTick(() => this.$nuxt.$loading.start())
         let _this = this
         Vue.prototype.$alert = (msg, callback) => {
             _this.$refs.alert.show(msg, callback)
@@ -51,11 +49,16 @@ export default {
         this.$axios.setHeader('token', this.$store.state.token)
     },
     mounted() {
+        this.$nextTick(() => this.$nuxt.$loading.finish())
         this.sendEvLog({
             category: 'h5_open',
             action: 'layout_mounted',
             label: window.location.pathname,
             value: this.needLoginAlert ? 0 : 1
+        })
+
+        this.$nextTick(() => {
+            this.$nuxt.$loading.finish()
         })
     },
     methods: {
@@ -101,8 +104,6 @@ body {
 }
 .wrapper {
     min-height: 100%;
-    z-index: 2;
-    position: absolute;
     background: white;
 }
 .authfail {

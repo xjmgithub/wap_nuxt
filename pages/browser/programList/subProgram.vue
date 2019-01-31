@@ -56,7 +56,15 @@ export default {
             this.pDescription = info.programSummary
         }
         if (this.pId) {
-            this.getSubProgram()
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
+                let data = res.data.data
+                this.$nextTick(() => this.$nuxt.$loading.finish())
+                if (data && data.length > 0) {
+                    this.subProgram = data
+                    this.toSubProgramDetail(this.sId)
+                }
+            })
         }
     },
     methods: {

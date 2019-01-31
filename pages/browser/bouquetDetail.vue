@@ -26,12 +26,10 @@
                 <img src="~assets/img/web/channelsOn.png" v-show="item.liveStatus" class="imgOn">
             </li>
         </ul>
-        <loading v-show="loadstate"/>
     </div>
 </template>
 <script>
 import bgImgData from '~/components/web/bgImgData'
-import loading from '~/components/loading'
 export default {
     layout: 'default',
     data() {
@@ -46,6 +44,7 @@ export default {
         }
     },
     mounted() {
+        this.$nextTick(() => this.$nuxt.$loading.start())
         let host = window.location.host
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
@@ -60,6 +59,7 @@ export default {
                 `/channel/v1/channels/broadcast/channels/package-id?country_code=${countryCode}&platform_type=${plat}&package_id=${packageId}&include_lower_code=true`
             )
             .then(res => {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
                 this.loadstate = false
                 let countChannel = res.data.data
                 if (res.data && res.data.code == 200) {
@@ -75,8 +75,7 @@ export default {
         }
     },
     components: {
-        bgImgData,
-        loading
+        bgImgData
     },
     head() {
         return {

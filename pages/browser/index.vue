@@ -6,7 +6,6 @@
                 <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
             </h3>
             <div class="recharge">
-                <!-- <nuxt-link to="/hybrid/dvb/bind"> -->
                 <a :href="recharge_url">
                     <span>$</span>
                     <span>RECHARGE</span>
@@ -88,6 +87,7 @@ export default {
                         }
                     })
                 }
+                this.$nextTick(() => this.$nuxt.$loading.finish())
             })
         },
         goToBouquetDetail(item) {
@@ -99,7 +99,7 @@ export default {
             let plat = item.tvPlatForm
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
-        downloadApk(){
+        downloadApk() {
             downloadApk(this)
         }
     },

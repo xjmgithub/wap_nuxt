@@ -16,12 +16,10 @@
             <img src="~assets/img/faq/Group5.png" alt>
             <p>No Orders.</p>
         </div>
-        <loading v-show="!loaded" />
     </div>
 </template>
 <script>
 import orderBlock from '~/components/faq/order'
-import loading from '~/components/loading'
 export default {
     layout: 'base',
     data: function() {
@@ -39,6 +37,7 @@ export default {
     },
     mounted() {
         let cachedOrder = sessionStorage.getItem('orderMsg')
+        this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios
             .get(`/ocs/v1/service/module/moreOrder?entranceId=${this.entranceId}`, {
                 headers: {
@@ -47,6 +46,7 @@ export default {
                 }
             })
             .then(res => {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (res.data) {
                     let obj = {}
                     res.data.data.forEach((item, index) => {
@@ -78,8 +78,7 @@ export default {
         }
     },
     components: {
-        orderBlock: orderBlock,
-        loading:loading
+        orderBlock: orderBlock
     },
     head() {
         return {

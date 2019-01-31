@@ -41,18 +41,17 @@ export default {
             this.pId = info.id
             this.pName = info.name
             this.pDescription = info.programSummary
-            this.getSubProgram()
-        }
-    },
-    methods: {
-        getSubProgram() {
+            this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
                 let data = res.data.data
+                this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (data && data.length > 0) {
                     this.subProgram = data
                 }
             })
-        },
+        }
+    },
+    methods: {
         toSubProgramDetail(id) {
             this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         }

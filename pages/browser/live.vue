@@ -5,13 +5,11 @@
             <p class="title">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_live_channelnumber}}</p>
             <channel v-for="(item,index) in channelList" :key="index" class="piece" :channel="item"/>
         </div>
-        <loading v-show="loadstate"/>
     </div>
 </template>
 <script>
 import channel from '~/components/web/channel'
 import download from '~/components/web/download'
-import loading from '~/components/loading'
 export default {
     layout: 'default',
     data() {
@@ -21,8 +19,10 @@ export default {
         }
     },
     mounted() {
+        this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
             this.loadstate = false
+            this.$nextTick(() => this.$nuxt.$loading.finish())
             let data = res.data
             if (data.length > 0) {
                 data.forEach(ele => {
@@ -51,8 +51,7 @@ export default {
     },
     components: {
         channel,
-        download,
-        loading
+        download
     },
     head() {
         return {
