@@ -1,14 +1,10 @@
 <template>
     <div>
         <p class="label">{{input_label}}</p>
-        <div class="input-tel" >
+        <div class="input-tel">
             <div class="prefix">{{prefix}}</div>
             <div class="number">
-                <input
-                    type="Number"
-                    v-model="tel"
-                    placeholder="9 digits total"
-                >
+                <input type="Number" v-model="tel" placeholder="9 digits total">
             </div>
             <div class="error" v-show="show_error">{{error_tel}}</div>
         </div>
@@ -23,34 +19,34 @@ export default {
         },
         input_label: {
             type: String,
-            default: ""
+            default: ''
         }
     },
     data() {
         return {
-            tel:'',
-            show_error:false,
-            error_tel:''
+            tel: '',
+            show_error: false,
+            error_tel: ''
         }
     },
-    methods:{
-        setTel(tel){
-            this.tel = tel.substr(tel.length-9,9)
+    methods: {
+        setTel(tel) {
+            this.tel = tel.substr(tel.length - 9, 9)
         }
     },
-    watch:{
-        tel(nv ,ov) {
+    watch: {
+        tel(nv, ov) {
             this.show_error = false
-            if( nv.length > 9) {
-                this.tel = nv.slice(0,9)
+            if (nv.length > 9) {
+                this.tel = nv.slice(0, 9)
             }
         }
     }
 }
 </script>
 <style lang="less" scoped>
-.label{
-    font-size:1.2rem;
+.label {
+    font-size: 1.2rem;
 }
 .input-tel {
     border-bottom: #dddddd solid 1px;

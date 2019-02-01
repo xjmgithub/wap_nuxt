@@ -28,7 +28,7 @@ export default {
         },
         default: {
             require: false,
-            type: [Object,Number,String],
+            type: [Object, Number, String],
             default: null
         },
         placeholder: {

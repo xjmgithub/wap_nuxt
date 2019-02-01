@@ -1,7 +1,7 @@
 <template>
     <div id="about">
         <div class="word">
-            <div class=" title clearfix">
+            <div class="title clearfix">
                 <span class="vote-title">{{share.voteName}}</span>
                 <span class="invited" v-show="app==1" @click="handleInvite">invite friends to vote</span>
             </div>
@@ -11,7 +11,6 @@
 </template>
 <script>
 export default {
-    layout: 'base',
     props: {
         document: {
             type: Array,
@@ -40,7 +39,7 @@ export default {
     methods: {
         handleInvite() {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'share_click',
                 label: '',
                 value: 10

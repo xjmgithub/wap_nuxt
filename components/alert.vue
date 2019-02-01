@@ -21,7 +21,7 @@ export default {
             callback: '',
             offsetLeft: 0,
             offsetTop: 0,
-            text:''
+            text: ''
         }
     },
     methods: {
@@ -66,8 +66,8 @@ export default {
     padding: 1.2rem;
     .pop-default {
         line-height: 1.4rem;
-        padding:0.8rem 0;
-        min-height:4.5rem;
+        padding: 0.8rem 0;
+        min-height: 4.5rem;
     }
     .dialog-footer .btn {
         width: 3rem;

@@ -3,13 +3,7 @@
         <div class="input-tel" :class="{focus:focus_tel,error:error_tel}">
             <div class="prefix">+{{prefix}}</div>
             <div class="number">
-                <input
-                    type="tel"
-                    v-model="tel"
-                    @focus="focus_tel=true"
-                    @blur="focus_tel=false"
-                    placeholder="Enter your Phone Number"
-                >
+                <input type="tel" v-model="tel" @focus="focus_tel=true" @blur="focus_tel=false" placeholder="Enter your Phone Number">
             </div>
             <div class="error" v-show="error_tel">{{error_tel}}</div>
         </div>
@@ -23,11 +17,7 @@
                 @blur="focus_code=false"
                 placeholder="Click to get verification code"
             >
-            <div
-                class="btn"
-                :class="{disabled:!canGetCode}"
-                @click="getCode"
-            >{{codeDuring>0?`${codeDuring}s`:'Get code'}}</div>
+            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get code'}}</div>
             <div class="error_code" v-show="error_code">{{error_code}}</div>
         </div>
     </div>

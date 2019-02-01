@@ -1,7 +1,7 @@
 <template>
     <Swiper :auto-play="false" v-if="bannerList.length > 0">
-        <Slide v-for="(item,index) in bannerList" :key="index" @click="clickBanner(item)" >
-            <img :src="item.materials.replace('http:','https:')" alt="">
+        <Slide v-for="(item,index) in bannerList" :key="index" @click="clickBanner(item)">
+            <img :src="item.materials.replace('http:','https:')" alt>
         </Slide>
     </Swiper>
 </template>
@@ -15,9 +15,9 @@ export default {
             default: 2
         }
     },
-    data(){
-        return{
-            bannerList:[]
+    data() {
+        return {
+            bannerList: []
         }
     },
     mounted() {
@@ -59,14 +59,14 @@ export default {
                 }
             })
         },
-        clickBanner(banner){
+        clickBanner(banner) {
             let href = banner.link
-            let bannerName =banner.name
+            let bannerName = banner.name
             this.sendEvLog({
-                category:'vote_Bongostar',
-                action:'banner_click',
-                label:'banner_'+ bannerName,
-                value:10
+                category: 'vote_Bongostar',
+                action: 'banner_click',
+                label: 'banner_' + bannerName,
+                value: 10
             })
             if (href.indexOf('com.star.mobile') == 0) {
                 if (this.appType == 1) {
@@ -78,9 +78,9 @@ export default {
             }
         }
     },
-     components: {
+    components: {
         Swiper,
         Slide
-    }, 
+    }
 }
 </script>

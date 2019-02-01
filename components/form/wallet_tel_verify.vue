@@ -15,11 +15,7 @@
                 >
             </div>
             <div class="get-code">
-                <div
-                    class="btn"
-                    :class="{disabled:!canGetCode}"
-                    @click="getCode"
-                >{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
             </div>
         </div>
         <div class="error" v-show="error_tel">{{error_tel}}</div>

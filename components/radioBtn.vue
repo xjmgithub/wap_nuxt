@@ -2,13 +2,7 @@
     <div class="radio-box">
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
-                <input
-                    type="radio"
-                    name="pay-options"
-                    value="item.code"
-                    @click="checkThis(item.code)"
-                    :checked="item.checked?true:false"
-                >
+                <input type="radio" name="pay-options" value="item.code" @click="checkThis(item.code)" :checked="item.checked?true:false">
                 <i/>
                 <span :class="{ml15:item.imgUrl!=''}" id="labelValue">{{item.value}}</span>
             </label>

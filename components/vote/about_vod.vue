@@ -7,12 +7,18 @@
             </div>
             <p>{{vod_msg.programdetails}}</p>
             <div class="video-play">
-                <div class="line" />
+                <div class="line"/>
                 <ul class="video-play clearfix">
                     <li :class="item.className" v-for="(item,index) in vodDetails" :key="index">
-                        <span v-show="item.className =='review'"><img src="~assets/img/vote/ic_replay_green.png"></span>
-                        <span v-show="item.className =='live'"><img src="~assets/img/vote/ic_play_sl_blue.png"></span>
-                        <span v-show="item.className =='coming'"><img src="~assets/img/vote/ic-round.png"></span>
+                        <span v-show="item.className =='review'">
+                            <img src="~assets/img/vote/ic_replay_green.png">
+                        </span>
+                        <span v-show="item.className =='live'">
+                            <img src="~assets/img/vote/ic_play_sl_blue.png">
+                        </span>
+                        <span v-show="item.className =='coming'">
+                            <img src="~assets/img/vote/ic-round.png">
+                        </span>
                         <span>{{item.date}}</span>
                         <span>{{item.time}}</span>
                         <span>{{item.title}}</span>
@@ -25,13 +31,12 @@
 </template>
 <script>
 export default {
-    created(){
-        if(process.server){
+    created() {
+        if (process.server) {
             let serverTime = new Date()
-            this.$store.commit('SET_SERVER_TIME',serverTime)
+            this.$store.commit('SET_SERVER_TIME', serverTime)
         }
     },
-    layout: 'base',
     props: {
         vod_msg: {
             type: Object,
@@ -68,7 +73,7 @@ export default {
     methods: {
         handleInvite() {
             this.sendEvLog({
-                category: 'vote_'+ this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'share_click',
                 label: '',
                 value: 10

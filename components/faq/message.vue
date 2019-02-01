@@ -3,9 +3,7 @@
         <div class="order-msg" @click="toDetail">
             <p class="time">
                 {{message.orderCreateTime | formatDate}}
-                <span
-                    class="wait-result"
-                >{{replied? 'Replied': 'Waiting For Result'}}</span>
+                <span class="wait-result">{{replied? 'Replied': 'Waiting For Result'}}</span>
             </p>
             <div class="order-type clearfix">
                 <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>

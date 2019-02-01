@@ -1,20 +1,8 @@
 <template>
     <div class="password-box">
         <p class="pwd-type">{{placeholder}}</p>
-        <img
-            class="open-close"
-            src="~assets/img/ic_hide_def_g.png"
-            v-if="toggleView&&isCiphertext==1"
-            alt
-            @click="isCiphertext=2"
-        >
-        <img
-            class="open-close"
-            src="~assets/img/ic_show_def_g.png"
-            v-if="toggleView&&isCiphertext==2"
-            alt
-            @click="isCiphertext=1"
-        >
+        <img class="open-close" src="~assets/img/ic_hide_def_g.png" v-if="toggleView&&isCiphertext==1" alt @click="isCiphertext=2">
+        <img class="open-close" src="~assets/img/ic_show_def_g.png" v-if="toggleView&&isCiphertext==2" alt @click="isCiphertext=1">
         <div class="pwd-input">
             <!-- TODO 支持自定义化数量 -->
             <div class="input-item" v-html="N1"/>

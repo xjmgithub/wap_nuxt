@@ -30,7 +30,7 @@ export default {
     left: 50%;
     top: 50%;
     position: absolute;
-    z-index:1001;
+    z-index: 1001;
     margin-left: -2rem;
     margin-top: -2rem;
 }

@@ -11,17 +11,20 @@
                     <img src="~assets/img/vote/ic_play_sl_t.png" v-show="item.link_vod_code!=''" class="playbutton">
                 </div>
                 <span class="player-name">{{item.name}}</span>
-                <span class="vote-state" :class="item.state | canVoteState(item.user_ballot_num)[0]" @click="handleVote(item)">{{item.state | canVoteState(item.user_ballot_num)[1]}}</span>
+                <span
+                    class="vote-state"
+                    :class="item.state | canVoteState(item.user_ballot_num)[0]"
+                    @click="handleVote(item)"
+                >{{item.state | canVoteState(item.user_ballot_num)[1]}}</span>
             </li>
         </ul>
-        <loading v-show="playerList.length<=0" />
+        <loading v-show="playerList.length<=0"/>
     </div>
 </template>
 <script>
 import loading from '~/components/loading'
 import { toNativePage, shareInvite } from '~/functions/utils'
 export default {
-    layout: 'base',
     props: {
         tab_msg: {
             type: Object,
@@ -51,7 +54,7 @@ export default {
     methods: {
         handleVote(player) {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'votebtn_click',
                 label: 'tab_' + player.name,
                 value: 10
@@ -92,7 +95,7 @@ export default {
         },
         handleInvite() {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'share_click',
                 label: '',
                 value: 10
@@ -102,7 +105,7 @@ export default {
         },
         handlePlayVod(vod, name) {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'votepic_click',
                 label: 'tab_' + name,
                 value: 10
@@ -134,7 +137,8 @@ export default {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.tab_msg.vote_id}`).then(res => {
                 if (res.data.code == 0) {
                     this.playerList = res.data.data
-                    if(this.tab_msg.main_vote){ // 是否是需要排行的投票
+                    if (this.tab_msg.main_vote) {
+                        // 是否是需要排行的投票
                         this.$store.commit('SET_RANKLIST', res.data.data)
                     }
                 }
@@ -157,7 +161,7 @@ export default {
         },
         gotoMarket() {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'downloadpopup_show',
                 label: '',
                 value: 10
@@ -168,7 +172,7 @@ export default {
                     'Download StarTimes ON to vote! Go to App Store now',
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'go',
                             value: 10
@@ -177,7 +181,7 @@ export default {
                     },
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'not now',
                             value: 10
@@ -191,7 +195,7 @@ export default {
                     'Download StarTimes ON to vote! Go to Google Play now',
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'go',
                             value: 10
@@ -210,7 +214,7 @@ export default {
                     },
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'not now',
                             value: 10

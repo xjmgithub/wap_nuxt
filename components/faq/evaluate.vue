@@ -16,18 +16,8 @@
         <div class="gave-star">
             <p>Please evaluate for us? THX.</p>
             <template v-for="(item,index) in 5">
-                <img
-                    :key="index"
-                    v-if="index<score"
-                    src="~assets/img/faq/ic_favoritez_blue_evl.png"
-                    @click="starToBlue(index)"
-                >
-                <img
-                    :key="index"
-                    v-if="index>=score"
-                    src="~assets/img/faq/ic_favorite_def_evl.png"
-                    @click="starToBlue(index)"
-                >
+                <img :key="index" v-if="index<score" src="~assets/img/faq/ic_favoritez_blue_evl.png" @click="starToBlue(index)">
+                <img :key="index" v-if="index>=score" src="~assets/img/faq/ic_favorite_def_evl.png" @click="starToBlue(index)">
             </template>
         </div>
         <mbutton :disabled="!canSubmit" v-show="!ended" @click="submit"/>

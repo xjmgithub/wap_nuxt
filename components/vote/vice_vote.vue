@@ -1,7 +1,7 @@
 <template>
     <div id="show-advisor">
         <div class="clearfix">
-            <span class="leftflower"> left flower：{{leftflower}}</span>
+            <span class="leftflower">left flower：{{leftflower}}</span>
             <span class="invited" v-show="app==1" @click="handleInvite">invite friends to vote</span>
         </div>
         <ul class="clearfix">
@@ -16,17 +16,20 @@
                     <span class="flower-count">{{item.ballot_num }}</span>
                     <span>flowers</span>
                 </div>
-                <span class="flower-state" @click="handleViceVote(item)" :class="{'send':item.state == 1,'sent':item.state <=0}">{{item.state | canVoteState}}</span>
+                <span
+                    class="flower-state"
+                    @click="handleViceVote(item)"
+                    :class="{'send':item.state == 1,'sent':item.state <=0}"
+                >{{item.state | canVoteState}}</span>
             </li>
         </ul>
-        <loading v-show="advisorList.length<=0" />
+        <loading v-show="advisorList.length<=0"/>
     </div>
 </template>
 <script>
 import loading from '~/components/loading'
 import { toNativePage } from '~/functions/utils'
 export default {
-    layout: 'base',
     props: {
         tab_msg: {
             type: Object,
@@ -56,7 +59,7 @@ export default {
     methods: {
         handleViceVote(advisor) {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'flowerbtn_click',
                 label: 'flower_' + advisor.name,
                 value: 10
@@ -95,7 +98,7 @@ export default {
         },
         handleInvite() {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'share_click',
                 label: '',
                 value: 10
@@ -142,7 +145,7 @@ export default {
         },
         gotoMarket() {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'downloadpopup_show',
                 label: '',
                 value: 10
@@ -153,7 +156,7 @@ export default {
                     'Download StarTimes ON to vote! Go to App Store now',
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'go',
                             value: 10
@@ -162,7 +165,7 @@ export default {
                     },
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'not now',
                             value: 10
@@ -176,7 +179,7 @@ export default {
                     'Download StarTimes ON to vote! Go to Google Play now',
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'go',
                             value: 10
@@ -195,7 +198,7 @@ export default {
                     },
                     () => {
                         this.sendEvLog({
-                            category: 'vote_'+this.share.voteName,
+                            category: 'vote_' + this.share.voteName,
                             action: 'downloadpopup_click',
                             label: 'not now',
                             value: 10

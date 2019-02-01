@@ -8,13 +8,12 @@
             <span class="ranking-name">{{item.name}}</span>
             <span class="ranking-poll">{{item.ballot_num}}</span>
         </div>
-        <loading v-show="rankListData.length<=0" />
+        <loading v-show="rankListData.length<=0"/>
     </div>
 </template>
 <script>
 import loading from '~/components/loading'
 export default {
-    layout: 'base',
     props: {
         tab_msg: {
             type: Object,
@@ -37,7 +36,7 @@ export default {
     methods: {
         handleInvite() {
             this.sendEvLog({
-                category: 'vote_'+this.share.voteName,
+                category: 'vote_' + this.share.voteName,
                 action: 'share_click',
                 label: '',
                 value: 10

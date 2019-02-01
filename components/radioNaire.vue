@@ -2,12 +2,7 @@
     <div class="radio-box">
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
-                <input
-                    type="radio"
-                    :name="item.name"
-                    :value="item.code"
-                    @click="checkThis(item.code)"
-                >
+                <input type="radio" :name="item.name" :value="item.code" @click="checkThis(item.code)">
                 <i/>
                 <span>{{item.value}}</span>
             </label>
@@ -37,7 +32,6 @@ export default {
 .radio-box .radio {
     position: relative;
     cursor: pointer;
-    /* display: block; */
 }
 .radio-box input {
     position: absolute;
@@ -78,5 +72,4 @@ export default {
     font-size: 0.9rem;
     margin-left: 1.5rem;
 }
-
 </style>
