@@ -80,12 +80,14 @@ export default {
                         this.$alert('Your account has redeemed once.')
                     } else if (data.code == '203') {
                         this.$alert('Your phone has redeemed once.')
+                    } else if (data.code == '403') {
+                        this.$alert('Smartcard exception, please contact call center.')
                     } else {
-                        this.$alert('Get reward error')
+                        this.$alert('Network erro, please try again. Or contact call center.')
                     }
                 })
                 .catch(err => {
-                    this.$alert('Get reward error')
+                    this.$alert('Network erro, please try again. Or contact call center.')
                 })
         }
     },
@@ -135,7 +137,7 @@ export default {
             background-color: #ffffff;
             font-size: 0.8rem;
             width: 100%;
-            display:block;
+            display: block;
             border-bottom-right-radius: 5px;
             border-bottom-left-radius: 5px;
             tr {
