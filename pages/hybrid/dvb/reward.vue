@@ -63,8 +63,8 @@ export default {
             toNativePage('com.star.mobile.video.dvbservice.DvbServiceActivity')
         },
         getReward() {
-            this.getRewarding = true
             if (this.getRewarding) return false
+            this.getRewarding = true
             this.$axios
                 .post('/self/v1/gift-award/after-link')
                 .then(res => {
