@@ -116,7 +116,6 @@ body {
 .ok {
     width: 100%;
     text-align: center;
-    color: #0087eb;
     border-top: 1px solid #eeeeee;
     padding: 1rem 0;
     background: #fff;
@@ -129,7 +128,8 @@ body {
         border: 1px solid #0087eb;
         border-radius: 2px;
         background: #fff;
-        padding: 0.3rem;
+        padding: 0.6rem;
+        color: #0087eb;
         font-weight: bold;
         width: 60%;
         outline: none;
