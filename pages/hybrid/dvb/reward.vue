@@ -7,23 +7,33 @@
             <p class="title">Reward Policy</p>
             <table>
                 <tr>
-                    <th class="status">Decoder  Status</th>
-                    <th>Bouquet  Subscribed</th>
-                    <th>Reward  After 'LINK'</th>
+                    <th class="status">Decoder Status</th>
+                    <th>Bouquet Subscribed</th>
+                    <th>Reward After 'LINK'</th>
                 </tr>
                 <tr>
                     <td>Dormant</td>
                     <td>Any Bouquet</td>
-                    <td><span>7 days </span> Classic/Super bouquet free experience</td>
+                    <td>
+                        <span>7 days</span> Classic/Super bouquet free experience
+                    </td>
                 </tr>
                 <tr>
                     <td rowspan="2">Active</td>
-                    <td><p>NOVA/Basic on DTT </p>NOVA/Smart on DTH</td>
-                    <td><span>8 days </span> free subscription for current bouquet</td>
+                    <td>
+                        <p>NOVA/Basic on DTT</p>NOVA/Smart on DTH
+                    </td>
+                    <td>
+                        <span>8 days</span> free subscription for current bouquet
+                    </td>
                 </tr>
-                <tr >
-                    <td><p>Classic on DTT</p>Super/French/Chinese on DTH</td>
-                    <td><span>10 days </span>free subscription for current bouquet</td>
+                <tr>
+                    <td>
+                        <p>Classic on DTT</p>Super/French/Chinese on DTH
+                    </td>
+                    <td>
+                        <span>10 days</span>free subscription for current bouquet
+                    </td>
                 </tr>
                 <tr class="remarks">
                     <td>Remarks</td>
@@ -34,117 +44,143 @@
                 </tr>
             </table>
         </div>
-        <mButton :text="'GO TO LINK'" @click="goToLink" class="btn" />
-        <mButton :text="'GET REWARD'" @click="getReward" class="btn" />
+        <mButton :text="'GO TO LINK'" @click="goToLink" class="btn"/>
+        <mButton :text="'GET REWARD'" @click="getReward" class="btn"/>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
+import { toNativePage, shareInvite } from '~/functions/utils'
 export default {
-    layout:"base",
-    methods:{
-        goToLink(){
-
+    layout: 'base',
+    data() {
+        return {
+            getRewarding: false
+        }
+    },
+    methods: {
+        goToLink() {
+            toNativePage('com.star.mobile.video.dvbservice.DvbServiceActivity')
         },
-        getReward(){
-
+        getReward() {
+            this.getRewarding = true
+            if (this.getRewarding) return false
+            this.$axios
+                .post('/self/v1/gift-award/after-link')
+                .then(res => {
+                    this.getRewarding = false
+                    let data = res.data
+                    if (data.code == 200) {
+                        this.$alert('Congratulations! Redeem succesfully.')
+                    } else if (data.code == '402') {
+                        this.$alert('You need link first.')
+                    } else if (data.code == '202') {
+                        this.$alert('Your account has redeemed once.')
+                    } else if (data.code == '201') {
+                        this.$alert('Your account has redeemed once.')
+                    } else if (data.code == '203') {
+                        this.$alert('Your phone has redeemed once.')
+                    } else {
+                        this.$alert('Get reward error')
+                    }
+                })
+                .catch(err => {
+                    this.$alert('Get reward error')
+                })
         }
     },
     components: {
-       mButton 
+        mButton
     },
-    head(){
-        return{
-            title:"Reward"
+    head() {
+        return {
+            title: 'Reward'
         }
     }
 }
 </script>
 <style lang="less" scoped>
-.wrapper{
+.wrapper {
     background: url('~assets/img/dvb/bg_color.png') no-repeat;
-    background-size:100%;
-    .top{
+    background-size: 100%;
+    .top {
         background: url('~assets/img/dvb/head.png') no-repeat;
-        height:7rem;
-        padding-top:1.7rem;
+        height: 7rem;
+        padding-top: 1.7rem;
         background-size: 100%;
-        p{
-            width:90%;
-            margin:0 auto;
-            color:#ffffff;
+        p {
+            width: 90%;
+            margin: 0 auto;
+            color: #ffffff;
             font-weight: bold;
-
         }
     }
-    .policy{
-        width:90%;
-        margin:0 auto;
-        .title{
-            color:#05528B;
-            font-size: .9rem;
+    .policy {
+        width: 90%;
+        margin: 0 auto;
+        .title {
+            color: #05528b;
+            font-size: 0.9rem;
             font-weight: bold;
             text-align: center;
-            background-color: #D5E4FF;
-            height:2.5rem;
+            background-color: #d5e4ff;
+            height: 2.5rem;
             line-height: 2.5rem;
             width: 100%;
             border-top-right-radius: 5px;
             border-top-left-radius: 5px;
         }
-        table{
-            background-color:#ffffff; 
+        table {
+            background-color: #ffffff;
             word-break: break-all;
-            font-size: .8rem;
+            font-size: 0.8rem;
             width: 100%;
             border-bottom-right-radius: 5px;
             border-bottom-left-radius: 5px;
-            tr{
-                border-bottom:2px solid rgba(0,135,235,0.1);
+            tr {
+                border-bottom: 2px solid rgba(0, 135, 235, 0.1);
                 &.last {
-                    border-bottom:none;
-                    td{
-                        padding-bottom:1.5rem;
+                    border-bottom: none;
+                    td {
+                        padding-bottom: 1.5rem;
                         font-weight: normal;
                     }
                 }
-                &.remarks{
-                    td{
-                        color:#05528B;
+                &.remarks {
+                    td {
+                        color: #05528b;
                         font-weight: bold;
                     }
                 }
-                th{
-                    padding:.4rem;
-                    color:#05528B;
-                    &.status{
-                        width:20%;
+                th {
+                    padding: 0.4rem;
+                    color: #05528b;
+                    &.status {
+                        width: 20%;
                     }
-                    & + th{
-                        width:40%;
-                        border-left:2px solid rgba(0,135,235,0.1);
+                    & + th {
+                        width: 40%;
+                        border-left: 2px solid rgba(0, 135, 235, 0.1);
                     }
                 }
-                td{
-                    padding:.4rem ;
-                    color:#333333;
-                    span{
-                        font-size: .9rem;
-                        color:#05528B;
+                td {
+                    padding: 0.4rem;
+                    color: #333333;
+                    span {
+                        font-size: 0.9rem;
+                        color: #05528b;
                         font-weight: bold;
                     }
-                    & + td{
-                        border-left:2px solid rgba(0,135,235,0.1);
+                    & + td {
+                        border-left: 2px solid rgba(0, 135, 235, 0.1);
                     }
                 }
             }
-           
         }
-        
     }
-    .btn{
-        width:75%;
-        margin:1.5rem auto;
+    .btn {
+        width: 75%;
+        margin: 1.5rem auto;
     }
 }
 </style>
