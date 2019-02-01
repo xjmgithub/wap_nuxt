@@ -77,7 +77,7 @@ export default {
                     } else if (data.code == '202') {
                         this.$alert('Your account has redeemed once.')
                     } else if (data.code == '201') {
-                        this.$alert('Your account has redeemed once.')
+                        this.$alert('Your smartcard has redeemed once.')
                     } else if (data.code == '203') {
                         this.$alert('Your phone has redeemed once.')
                     } else if (data.code == '403') {
