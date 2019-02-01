@@ -54,7 +54,6 @@ export default {
                 let type = this.order.order_type_id
                 if ([1, 2, 3].indexOf(type) >= 0) {
                     // bouquet,link,charge
-
                     switch (this.order.order_status) {
                         case '0':
                             return 'UNPAID'
@@ -77,7 +76,6 @@ export default {
                     }
                 } else {
                     // ott
-
                     switch (this.order.order_status) {
                         case '1':
                         case '10':
@@ -120,7 +118,7 @@ export default {
         color: #aaaaaa;
         font-size: 0.8rem;
         border-bottom: 1px solid #eeeeee;
-        padding: 0.2rem 0;
+        padding: 0.4rem 0;
         img {
             position: absolute;
             display: block;

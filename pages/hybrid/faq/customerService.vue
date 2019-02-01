@@ -673,10 +673,10 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-
 .wrapper {
     overflow: hidden;
     height:88%;
+    min-height:88%;
     background:#eeeeee;
 }
 .order-contain {

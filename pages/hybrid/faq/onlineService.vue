@@ -278,16 +278,16 @@ export default {
 .costomer {
     width: 100%;
     text-align: center;
-    color: #0087eb;
     border-top: 1px solid #eeeeee;
     padding: 0.7rem 0;
     background: #fff;
     button {
         margin: 0 auto;
         border: 1px solid #0087eb;
+        color: #0087eb;
         border-radius: 2px;
         background: #fff;
-        padding: 0.3rem;
+        padding: 0.6rem;
         font-weight: bold;
         width: 60%;
         outline: none;

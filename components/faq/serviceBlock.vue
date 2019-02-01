@@ -59,7 +59,7 @@ export default {
 <style lang="less" scoped>
 .b-order-msg {
     box-shadow: 0px 1px 3px 1px #dddddd;
-    border-radius: 5px;
+    border-radius: 2px;
     margin-bottom: 0.8rem;
 
     .gap {
@@ -86,12 +86,14 @@ export default {
             white-space: nowrap;
         }
         .btn {
-            color: #0087eb;
             font-size: 0.8rem;
             margin-top: 0.3rem;
             float: right;
             margin-left: 0.7rem;
             font-weight: bold;
+            a {
+                color: #0087eb;
+            }
         }
     }
     .more {
@@ -99,7 +101,7 @@ export default {
         font-size: 0.8rem;
         font-weight: bold;
         text-align: center;
-        padding: 0.5rem 0;
+        padding: 0.7rem 0;
     }
 }
 </style>
