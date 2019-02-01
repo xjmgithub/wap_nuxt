@@ -46,17 +46,11 @@
     var s = d.createElement('img')
     s.height = 1
     s.width = 1
-
-    s.setAttribute(
-        'src',
+    s.src =
         url +
-            '/i?logtype=event&app_key=cd58cfb3e81658905d802cbe44b04683effbc7ed&events=' +
-            JSON.stringify([commonLog]) +
-            '&device_id=81be4cbc7b66cdbe06a61174170a8634' +
-            '&timestamp=' +
-            new Date().getTime()
-    )
-    w.onload = function() {
-        d.body.appendChild(s)
-    }
+        '/i?logtype=event&app_key=cd58cfb3e81658905d802cbe44b04683effbc7ed&events=' +
+        JSON.stringify([commonLog]) +
+        '&device_id=81be4cbc7b66cdbe06a61174170a8634' +
+        '&timestamp=' +
+        new Date().getTime()
 })(window, document)

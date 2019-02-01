@@ -15,18 +15,16 @@ import Vue from 'vue'
     m.parentNode.insertBefore(a, m)
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
 // countly
-;(function(d) {
-    let s = d.createElement('img')
+function sendMsg(url) {
+    let s = document.createElement('img')
     s.height = 1
     s.width = 1
-    s.setAttribute('id', 'log-transfer')
-    d.body.appendChild(s)
-})(document)
+    s.src = url
+}
 
 export default ({ app: { router, $axios }, store, query }) => {
     const appType = store.state.appType
     const ua = navigator.userAgent
-    const transfer = document.querySelector('#log-transfer')
     let deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
     let swidth = screen.width * window.devicePixelRatio
     let sheight = screen.height * window.devicePixelRatio
@@ -111,8 +109,7 @@ export default ({ app: { router, $axios }, store, query }) => {
 
     let sendPvLog = msg => {
         let result = serializeMsg(msg, 'pv')
-        transfer.setAttribute(
-            'src',
+        sendMsg(
             env.pv_countly_server +
                 '/i?logtype=pv&app_key=' +
                 env.countly_appKey +
@@ -127,8 +124,7 @@ export default ({ app: { router, $axios }, store, query }) => {
 
     let sendEvLog = msg => {
         let result = serializeMsg(msg, 'pv')
-        transfer.setAttribute(
-            'src',
+        sendMsg(
             env.ev_countly_server +
                 '/i?logtype=event&app_key=' +
                 env.countly_appKey +
