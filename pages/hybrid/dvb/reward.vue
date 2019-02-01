@@ -7,9 +7,9 @@
             <p class="title">Reward Policy</p>
             <table>
                 <tr>
-                    <th class="status">Decoder Status</th>
-                    <th>Bouquet Subscribed</th>
-                    <th>Reward After 'LINK'</th>
+                    <th width="30%" class="status">Decoder Status</th>
+                    <th width="40%">Bouquet Subscribed</th>
+                    <th width="30%">Reward After 'LINK'</th>
                 </tr>
                 <tr>
                     <td>Dormant</td>
@@ -29,10 +29,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>Classic on DTT</p>Super/French/Chinese on DTH
+                        <p>Classic on DTT</p>Super / French / Chinese on DTH
                     </td>
                     <td>
-                        <span>10 days</span>free subscription for current bouquet
+                        <span>10 days</span> free subscription for current bouquet
                     </td>
                 </tr>
                 <tr class="remarks">
@@ -103,6 +103,7 @@ export default {
 .wrapper {
     background: url('~assets/img/dvb/bg_color.png') no-repeat;
     background-size: 100%;
+    position: static;
     .top {
         background: url('~assets/img/dvb/head.png') no-repeat;
         height: 7rem;
@@ -132,9 +133,9 @@ export default {
         }
         table {
             background-color: #ffffff;
-            word-break: break-all;
             font-size: 0.8rem;
             width: 100%;
+            display:block;
             border-bottom-right-radius: 5px;
             border-bottom-left-radius: 5px;
             tr {
