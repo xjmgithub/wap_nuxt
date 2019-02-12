@@ -20,10 +20,12 @@ module.exports = {
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         script: [
             {
-                src: '/res_nuxt/open.min.js'
+                src: '/res_nuxt/open.min.js',
+                async: true
             },
             {
-                src: '/res_nuxt/sdk.js'
+                src: '/res_nuxt/sdk.js',
+                async: true
             }
         ]
     },
@@ -33,9 +35,7 @@ module.exports = {
     /*
     ** Global CSS
     */
-    css: [
-        '~assets/css/normalize.css'
-    ],
+    css: ['~assets/css/normalize.css'],
     transition: {
         name: 'page',
         mode: 'out-in'
