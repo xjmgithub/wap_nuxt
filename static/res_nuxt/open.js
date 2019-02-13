@@ -1,4 +1,4 @@
-;(function() {
+;(function(w, d) {
     var host = window.location.host
     var url = 'https://event.startimestv.com'
     if (host.indexOf('localhost') >= 0 || host.indexOf('qa') >= 0) {
@@ -43,15 +43,14 @@
         }
     }
 
-    var xhr = new XMLHttpRequest()
-    xhr.open(
-        'GET',
+    var s = d.createElement('img')
+    s.height = 1
+    s.width = 1
+    s.src =
         url +
-            '/i?logtype=event&app_key=cd58cfb3e81658905d802cbe44b04683effbc7ed&events=' +
-            JSON.stringify([commonLog]) +
-            '&device_id=81be4cbc7b66cdbe06a61174170a8634' +
-            '&timestamp=' +
-            new Date().getTime()
-    )
-    xhr.send(null)
-})()
+        '/i?logtype=event&app_key=cd58cfb3e81658905d802cbe44b04683effbc7ed&events=' +
+        JSON.stringify([commonLog]) +
+        '&device_id=81be4cbc7b66cdbe06a61174170a8634' +
+        '&timestamp=' +
+        new Date().getTime()
+})(window, document)

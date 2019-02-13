@@ -1,5 +1,6 @@
 import env from '~/env.js'
 import Vue from 'vue'
+// ga
 ;(function(i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r
     ;(i[r] =
@@ -13,47 +14,30 @@ import Vue from 'vue'
     a.src = g
     m.parentNode.insertBefore(a, m)
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
+// countly
+function sendMsg(url) {
+    let s = document.createElement('img')
+    s.height = 1
+    s.width = 1
+    s.src = url
+}
 
 export default ({ app: { router, $axios }, store, query }) => {
-    let ga_key = env.ga_wap_key
-    if (store.state.appType == 1) {
-        ga_key = env.ga_android_key
-    } else if (store.state.appType == 2) {
-        ga_key = env.ga_ios_key
-    } else {
-        ga_key = env.ga_wap_key
-    }
-
-    if (store.state.gaClientId) {
-        ga('create', ga_key, 'auto', {
-            clientId: store.state.gaClientId
-        })
-    } else {
-        ga('create', ga_key, 'auto')
-    }
-    let deviceInfo = navigator.userAgent.match(/\(([^)]*)\)/)[1].split(';')
+    const appType = store.state.appType
+    const ua = navigator.userAgent
+    let deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
     let swidth = screen.width * window.devicePixelRatio
     let sheight = screen.height * window.devicePixelRatio
-
-    let os = ''
-    if (store.state.appType == 1) {
-        os = 'Android'
-    } else if (store.state.appType == 2) {
-        os = 'IOS'
-    } else {
-        if (navigator.userAgent.indexOf('iPhone') >= 0 || navigator.userAgent.indexOf('iPad') >= 0) {
-            os = 'IOS'
-        } else {
-            os = 'Android'
-        }
-    }
-
+    let os = (appType == 1 && 'Android') || (appType == 2 && 'IOS') || (ua.includes('iPhone') && 'IOS') || (ua.includes('iPad') && 'IOS') || 'Android'
+    let ga_key = (appType == 1 && env.ga_android_key) || (appType == 2 && env.ga_ios_key) || env.ga_wap_key
     let utm_source = ''
     let utm_medium = ''
     let utm_campaign = ''
-
     let referrer = query.referrer
+    let now = new Date().getTime()
+
     if (referrer) {
+        // TODO COMMONT
         let t1 = referrer.match(new RegExp('(^|&)utm_source=([^&]*)(&|$)', 'i'))
         let t2 = referrer.match(new RegExp('(^|&)utm_medium=([^&]*)(&|$)', 'i'))
         let t3 = referrer.match(new RegExp('(^|&)utm_campaign=([^&]*)(&|$)', 'i'))
@@ -67,6 +51,15 @@ export default ({ app: { router, $axios }, store, query }) => {
             utm_campaign = query.utm_campaign
         }
     }
+
+    if (store.state.gaClientId) {
+        ga('create', ga_key, 'auto', {
+            clientId: store.state.gaClientId
+        })
+    } else {
+        ga('create', ga_key, 'auto')
+    }
+
     let commonLog = {
         al: store.state.langType, // App语言
         bst: store.state.user && store.state.user.smartCartCount, // 用户绑卡状态
@@ -96,11 +89,11 @@ export default ({ app: { router, $axios }, store, query }) => {
         sim: store.state.carrier, // 手机卡运营商
         srcp: document.referrer,
         ver: store.state.appVersion,
-        tt: new Date().getTime(),
+        tt: now,
         uid: parseInt(store.state.user.id) || 0
     }
 
-    let sendPvLog = msg => {
+    const serializeMsg = (msg, type) => {
         for (let i in msg) {
             msg[i] = '' + msg[i]
         }
@@ -110,46 +103,38 @@ export default ({ app: { router, $axios }, store, query }) => {
         for (let i in commonLog) {
             param[i] = commonLog[i]
         }
-        param.lt = 'pv'
-        $axios
-            .get(
-                env.pv_countly_server +
-                    '/i?logtype=pv&app_key=' +
-                    env.countly_appKey +
-                    '&events=' +
-                    JSON.stringify([param]) +
-                    '&device_id=' +
-                    store.state.deviceId +
-                    '&timestamp=' +
-                    new Date().getTime()
-            )
-            .catch(err => {})
+        param.lt = type || 'event' || 'pv'
+        return JSON.stringify([param])
+    }
+
+    let sendPvLog = msg => {
+        let result = serializeMsg(msg, 'pv')
+        sendMsg(
+            env.pv_countly_server +
+                '/i?logtype=pv&app_key=' +
+                env.countly_appKey +
+                '&events=' +
+                result +
+                '&device_id=' +
+                store.state.deviceId +
+                '&timestamp=' +
+                now
+        )
     }
 
     let sendEvLog = msg => {
-        for (let i in msg) {
-            msg[i] = '' + msg[i]
-        }
-        let param = {
-            msg: msg
-        }
-        for (let i in commonLog) {
-            param[i] = commonLog[i]
-        }
-        param.lt = 'event'
-        $axios
-            .get(
-                env.ev_countly_server +
-                    '/i?logtype=event&app_key=' +
-                    env.countly_appKey +
-                    '&events=' +
-                    JSON.stringify([param]) +
-                    '&device_id=' +
-                    store.state.deviceId +
-                    '&timestamp=' +
-                    new Date().getTime()
-            )
-            .catch(err => {})
+        let result = serializeMsg(msg, 'pv')
+        sendMsg(
+            env.ev_countly_server +
+                '/i?logtype=event&app_key=' +
+                env.countly_appKey +
+                '&events=' +
+                result +
+                '&device_id=' +
+                store.state.deviceId +
+                '&timestamp=' +
+                now
+        )
 
         ga('send', {
             hitType: 'event',
@@ -161,8 +146,6 @@ export default ({ app: { router, $axios }, store, query }) => {
     }
 
     Vue.prototype.sendEvLog = sendEvLog
-
-    let now = new Date().getTime()
 
     sendEvLog({
         category: 'h5_open',
