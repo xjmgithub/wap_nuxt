@@ -1,6 +1,6 @@
 <template>
     <div class="container" :class="{'grey-back':result==2}">
-        <loading v-show="loadStatus" />
+        <loading v-show="loadStatus"/>
         <template v-if="result=='1'&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
             <p class="success">Payment Successful</p>
@@ -18,14 +18,15 @@
             <p class="msg">{{fail_message}}</p>
         </template>
         <div class="footer" v-show="!loadStatus">
-            <mButton text="REFRESH" @click="refresh" />
-            <mButton text="OK" @click="back" />
+            <mButton text="REFRESH" @click="refresh"/>
+            <mButton text="OK" @click="back"/>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
+import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -66,21 +67,27 @@ export default {
                     _this.money = res.data.totalAmount
                     _this.currency = res.data.currency
                     clearInterval(timer)
+                    window.getChannelId && window.getChannelId.returnRechargeResult(true)
                 } else if (res.data && (res.data.tradeState == 'NOTPAY' || res.data.tradeState == 'PAYING')) {
                     // 正在支付
                 } else if (res.data && res.data.tradeState == 'FAIL') {
                     clearInterval(timer)
                     _this.result = 2
                     _this.loadStatus = false
+                    window.getChannelId && window.getChannelId.returnRechargeResult(false)
                 }
             })
         }, 4000)
     },
     methods: {
         back() {
-            if (this.redirect) window.location.href = this.redirect || 'https://m.startimestv.com'
+            if (this.$store.state.appType) {
+                toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
+            } else {
+                if (this.redirect) window.location.href = this.redirect || 'https://m.startimestv.com'
+            }
         },
-        refresh(){
+        refresh() {
             window.location.reload()
         }
     }
