@@ -378,7 +378,7 @@ export default {
                 },
                 data: qs.stringify(
                     Object.assign({}, param, {
-                        orderSource: 1,
+                        orderSource: 2,
                         fcmToken: this.fcmToken || '',
                         promotion: !this.isLogin ? 'l1' : 'lalala'
                     })
