@@ -226,7 +226,7 @@ export default {
                 },
                 this.$store.state.lang.continue_to_pay
             )
-            //window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
+            window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
         },
         payNow() {
             let param = JSON.parse(sessionStorage.getItem('order-info'))
@@ -295,7 +295,7 @@ export default {
                     data: {}
                 }).then(res => {
                     if (res.data) {
-                        this.wallet_account = data
+                        this.wallet_account = res.data
                     }
                 })
             }
