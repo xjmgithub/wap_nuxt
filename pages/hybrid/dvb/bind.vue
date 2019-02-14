@@ -133,7 +133,6 @@
     </div>
 </template>
 <script>
-import loading from '~/components/loading'
 import dayjs from 'dayjs'
 export default {
     layout: 'base',
@@ -716,9 +715,6 @@ export default {
             }
             this.checkedValue = this.countList[0]
         }
-    },
-    components: {
-        loading
     },
     head() {
         return {

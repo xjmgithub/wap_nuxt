@@ -96,13 +96,11 @@
                 <span class="total">{{ currency }}{{ paymentAmount | formatMoney }}</span>
                 <div class="pay-btn" :class="{disabled:!canPay}" @click="payNow">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
             </div>
-            <loading v-show="isLoading"/>
             <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
         </div>
     </div>
 </template>
 <script>
-import loading from '~/components/loading'
 import dayjs from 'dayjs'
 export default {
     layout: 'base',
@@ -200,18 +198,14 @@ export default {
                     this.methodsList = res.data
                     this.selectMethod = this.methodsList[0]
                 } else {
-                    this.$nextTick(() => {
-                        this.$alert(this.$store.state.lang.error_network, () => {
-                            this.$router.go(0)
-                        })
+                    this.$alert(this.$store.state.lang.error_network, () => {
+                        this.$router.go(0)
                     })
                 }
             })
             .catch(err => {
-                this.$nextTick(() => {
-                    this.$alert(this.$store.state.lang.error_network, () => {
-                        this.$router.go(0)
-                    })
+                this.$alert(this.$store.state.lang.error_network, () => {
+                    this.$router.go(0)
                 })
             })
         this.getWalletAccount()
@@ -276,9 +270,7 @@ export default {
                     })
                     .catch(err => {
                         this.isLoading = false
-                        this.$nextTick(() => {
-                            this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
-                        })
+                        this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                     })
             } else {
                 this.toPay()
@@ -371,9 +363,7 @@ export default {
                                 })
                                 .catch(err => {
                                     this.isLoading = false
-                                    this.$nextTick(() => {
-                                        this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
-                                    })
+                                    this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                                 })
                         }
                     } else {
@@ -383,9 +373,7 @@ export default {
                 })
                 .catch(err => {
                     this.isLoading = false
-                    this.$nextTick(() => {
-                        this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
-                    })
+                    this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                 })
         }
     },
@@ -420,8 +408,15 @@ export default {
             }
         }
     },
-    components: {
-        loading
+    watch: {
+        isLoading(val, oldVal) {
+            if (val) {
+                this.$nuxt.$loading.start()
+                this.$store.commit('SHOW_SHADOW_LAYER')
+            } else {
+                this.$nuxt.$loading.finish()
+            }
+        }
     },
     head() {
         return {
