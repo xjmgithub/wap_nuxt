@@ -215,13 +215,12 @@ export const actions = {
             }
 
             await getMe(state.token)
-
             if (_COOKIE['gtoken']) {
                 commit('SET_GTOKEN', _COOKIE['gtoken'])
             } else {
                 commit('SET_GTOKEN', tokenMap[country])
             }
-            commit('SET_AREA_INFO', countryMap[country])
+            commit('SET_AREA_INFO', countryMap[state.user.countryCode])
         }
     }
 }

@@ -102,6 +102,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
+import qs from 'qs'
 export default {
     layout: 'base',
     data() {
@@ -129,7 +130,8 @@ export default {
             fcmToken: '',
             serverTime: this.$store.state.serverTime,
             isYueMo: false,
-            cardHaveCharged: 0
+            cardHaveCharged: 0,
+            dstr:''
         }
     },
     created() {
@@ -154,6 +156,79 @@ export default {
         if (threeHoursBefore <= now && threeHoursAfter >= now) {
             this.isYueMo = true
         }
+        
+        // 支付统计用
+        if (this.isApp == 1 || this.isApp == 2) {
+            let system = this.isApp == 1 ? 'android' : 'ios'
+            var dstr = 'APP(' + system + ',<?php echo $appVersionCode; ?>)'
+            dstr += ';H5(' + system
+            if (this.isApp == 1) {
+                let s = navigator.userAgent.indexOf('Android')
+                if (s > 0) {
+                    dstr += '_' + navigator.userAgent.substr(s + 8).split(';')[0]
+                }
+            } else {
+                let s = navigator.userAgent.indexOf('iPhone OS')
+                if (s > 0) {
+                    dstr += '_' + navigator.userAgent.substr(s + 10).split(' ')[0]
+                }
+            }
+            dstr += ', Chrome'
+            let b = navigator.userAgent.indexOf('Version')
+            let c = navigator.userAgent.indexOf('Chrome')
+            if (b > 0) {
+                let s = navigator.userAgent
+                    .substr(b)
+                    .split(' ')[1]
+                    .split('/')[1]
+                if (s) {
+                    dstr += '_' + s
+                }
+            } else {
+                if (c > 0) {
+                    let s = navigator.userAgent
+                        .substr(c)
+                        .split(' ')[0]
+                        .split('/')[1]
+                    if (s) {
+                        dstr += '_' + s
+                    }
+                }
+            }
+            dstr += ')'
+        } else {
+            let plat = 'others'
+            if (navigator.userAgent.indexOf('Android') > 0) {
+                plat = 'android'
+            } else if (navigator.userAgent.indexOf('iPhone') > 0) {
+                plat = 'ios'
+            }
+            var dstr = 'H5(' + plat + ', MQQBrowser'
+            let b = navigator.userAgent.indexOf('Version')
+            let c = navigator.userAgent.indexOf('Chrome')
+            if (b > 0) {
+                let s = navigator.userAgent
+                    .substr(b)
+                    .split(' ')[1]
+                    .split('/')[1]
+                if (s) {
+                    dstr += '_' + s
+                }
+            } else {
+                if (c > 0) {
+                    let s = navigator.userAgent
+                        .substr(c)
+                        .split(' ')[0]
+                        .split('/')[1]
+                    if (s) {
+                        dstr += '_' + s
+                    }
+                }
+            }
+            dstr += ')'
+        }
+        
+        this.dstr = dstr
 
         this.fcmToken = (window.getChannelId && getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
 
@@ -297,37 +372,38 @@ export default {
             this.$axios({
                 url: `/wxorder/v1/geneOrder4OnlinePay`,
                 method: 'post',
-                data: Object.assign({}, param, {
-                    orderSource: 1,
-                    fcmToken: this.fcmToken || '',
-                    promotion: !this.isLogin ? 'l1' : 'lalala'
-                })
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    token: this.$store.state.token
+                },
+                data: qs.stringify(
+                    Object.assign({}, param, {
+                        orderSource: 1,
+                        fcmToken: this.fcmToken || '',
+                        promotion: !this.isLogin ? 'l1' : 'lalala'
+                    })
+                )
             })
                 .then(res => {
                     if (res.data && res.data.orderNo && this.selectMethod.fkPayChannelId) {
                         if (this.selectMethod.formConfigExist) {
-                            window.location.href =
-                                'payment-form.php?payChannelId=' +
-                                this.selectMethod.fkPayChannelId +
-                                '&payType=' +
-                                this.selectMethod.payType +
-                                '&payToken=' +
-                                res.data.paymentToken +
-                                '&appInterfaceMode=' +
-                                this.selectMethod.appInterfaceMode
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            this.$router.push(
+                                `/hybrid/payment/form?payToken=${res.data.paymentToken}&payChannelId=${this.selectMethod.fkPayChannelId}`
+                            )
                         } else {
-                            if (this.selectMethod.payType != 1 && $.inArray(this.selectMethod.appInterfaceMode, [2, 3]) < 0) {
+                            if (this.selectMethod.payType != 1 && [2, 3].indexOf(this.selectMethod.appInterfaceMode) < 0) {
                                 return false
                             }
                             this.$axios({
                                 url: `/payment/api/v2/invoke-payment`,
                                 method: 'post',
                                 data: {
-                                    payToken: data.paymentToken,
+                                    payToken: res.data.paymentToken,
                                     payChannelId: this.selectMethod.fkPayChannelId,
                                     tradeType: 'JSAPI',
                                     signType: 'MD5',
-                                    deviceInfo: dstr,
+                                    deviceInfo: this.dstr,
                                     extendInfo: {}
                                 }
                             })
@@ -335,9 +411,8 @@ export default {
                                     if (res.data.resultCode == 0) {
                                         if (this.selectMethod.payType == 1) {
                                             // 钱包支付
-                                            sessionStorage.setItem('wallet_account', JSON.stringify(this.wallet_account))
                                             window.location.href =
-                                                'walletpay.php?txNo=' +
+                                                '/wap/payment/walletpay.php?txNo=' +
                                                 res.data.txNo +
                                                 '&channelId=' +
                                                 res.data.extendInfo.payeeAccountNo +
