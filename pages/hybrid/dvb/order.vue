@@ -386,6 +386,12 @@ export default {
             })
                 .then(res => {
                     if (res.data && res.data.orderNo && this.selectMethod.fkPayChannelId) {
+                        this.sendEvLog({
+                            category: 'dvbservice',
+                            action: 'order_history',
+                            label: res.data.orderNo,
+                            value: this.rechargeAmount
+                        })
                         if (this.selectMethod.formConfigExist) {
                             this.$store.commit('HIDE_SHADOW_LAYER')
                             this.$router.push(
