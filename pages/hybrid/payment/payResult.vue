@@ -18,6 +18,7 @@
             <p class="msg">{{fail_message}}</p>
         </template>
         <div class="footer" v-show="!loadStatus">
+            <mButton text="REFRESH" @click="refresh" />
             <mButton text="OK" @click="back" />
         </div>
     </div>
@@ -31,7 +32,7 @@ export default {
         return {
             result: 0, // 0 支付查询中， 1 支付成功，2 支付失败
             loadStatus: true,
-            fail_message: '',
+            fail_message: 'Your request was not accepted. Please refresh the current page or try again the payment.',
             money: '',
             currency: '',
             payToken: this.$route.query.payToken,
@@ -78,6 +79,9 @@ export default {
     methods: {
         back() {
             if (this.redirect) window.location.href = this.redirect || 'https://m.startimestv.com'
+        },
+        refresh(){
+            window.location.reload()
         }
     }
 }

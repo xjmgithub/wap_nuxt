@@ -423,9 +423,9 @@ export default {
                                         } else if (this.selectMethod.payType == 3 || this.selectMethod.payType == 4) {
                                             // 第三方在线支付 订阅
                                             if (this.selectMethod.appInterfaceMode == 2) {
-                                                window.location.href = data.tppRedirectUrl
+                                                window.location.href = res.data.tppRedirectUrl
                                             } else if (this.paymethod.appInterfaceMode == 3) {
-                                                window.location.href = 'proccess.php?seqNo=' + res.data.paySeqNo
+                                                window.location.href = '/DVB/proccess.php?seqNo=' + res.data.paySeqNo
                                             } else {
                                                 this.$alert('The payment method is not supported for the time being')
                                             }

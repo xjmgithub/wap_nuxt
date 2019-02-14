@@ -220,7 +220,11 @@ export const actions = {
             } else {
                 commit('SET_GTOKEN', tokenMap[country])
             }
-            commit('SET_AREA_INFO', countryMap[state.user.countryCode])
+            if (state.user.countryCode) {
+                commit('SET_AREA_INFO', countryMap[state.user.countryCode])
+            } else {
+                commit('SET_AREA_INFO', countryMap[country])
+            }
         }
     }
 }
