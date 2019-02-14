@@ -7,28 +7,28 @@
                         <span>{{$store.state.lang.smart_card_no_content}}</span>
                         {{ cardNum }}
                     </p>
-                    <p class="state" v-if=" state === 'PUNISH_STOP'">
-                        <img src="~assets/img/dvb/ic_dormant.png" alt>
+                    <p class="state" v-if="state === 'PUNISH_STOP'">
+                        <img src="~assets/img/dvb/ic_dormant.png">
                         {{$store.state.lang.dormant}}
                     </p>
                     <p class="state" v-else-if="state === 'VALID'">
-                        <img src="~assets/img/dvb/ic_active.png" alt>
+                        <img src="~assets/img/dvb/ic_active.png">
                         <span style="font-size:1rem;" v-if="stop_days">{{$store.state.lang.dvb_acitve_to}} {{stop_days}}</span>
                         <span style="font-size:1rem;" v-if="!stop_days">{{$store.state.lang.active_}}</span>
                     </p>
-                    <p class="state" v-else-if=" state === 'PAUSE'">
-                        <img src="~assets/img/dvb/ic_suspended_def_y.png" alt>
+                    <p class="state" v-else-if="state === 'PAUSE'">
+                        <img src="~assets/img/dvb/ic_suspended_def_y.png">
                         {{$store.state.lang.link_suspend}}
                     </p>
                     <p class="state" v-else-if="money">{{$store.state.lang.smart_card_balance}} {{money | formatMoney}}</p>
                 </div>
                 <div class="card-type">
                     <p class="platform" v-show="tv_platform == 'DTH'">
-                        <img src="~assets/img/dvb/ic_dth.png" alt>
+                        <img src="~assets/img/dvb/ic_dth.png">
                         {{ program }}
                     </p>
                     <p class="platform" v-show="tv_platform == 'DTT'">
-                        <img src="~assets/img/dvb/ic_dtt.png" alt>
+                        <img src="~assets/img/dvb/ic_dtt.png">
                         {{ program }}
                     </p>
                 </div>

@@ -524,6 +524,7 @@ export default {
             }
             this.isLoading = true
             let timetr = new Date().getTime()
+
             this.$axios({
                 url: `/self/v1/user/smartcardinfo/sync4h5?smartcard=${this.oriCardNum}&is_bind_card=${this.isLogin ? true : false}`,
                 method: 'get',
@@ -696,6 +697,15 @@ export default {
                 } else {
                     this.$refs.input.blur()
                 }
+            }
+        },
+        isLoading(val, oldVal) {
+            if (val) {
+                this.$nextTick(() => this.$nuxt.$loading.start())
+                this.$store.commit('SHOW_SHADOW_LAYER')
+            } else {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
+                this.$store.commit('HIDE_SHADOW_LAYER')
             }
         },
         chargeItemIndex(val, oldVal) {
