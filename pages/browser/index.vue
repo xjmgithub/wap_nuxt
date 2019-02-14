@@ -135,7 +135,11 @@ export default {
     },
     head() {
         return {
-            title: 'StarTimes'
+            title: this.$store.state.lang.seo_title_browser,
+            meta: [
+                { hid: 'description', name: 'description', content: this.$store.state.lang.seo_desc_browser },
+                { hid: 'keywords', name: 'keywords', content: this.$store.state.lang.seo_keywords_browser }
+            ]
         }
     }
 }

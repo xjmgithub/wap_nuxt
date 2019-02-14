@@ -54,7 +54,11 @@ export default {
     },
     head() {
         return {
-            title: 'Live'
+            title: this.$store.state.lang.seo_title_live,
+            meta: [
+                { hid: 'description', name: 'description', content: this.$store.state.lang.seo_desc_live },
+                { hid: 'keywords', name: 'keywords', content: this.$store.state.lang.seo_keywords_live }
+            ]
         }
     }
 }
