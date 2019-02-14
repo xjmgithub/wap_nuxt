@@ -66,6 +66,7 @@ export default {
     monthly_billing: 'Kutokana na bili ya kila mwezi ya mfumo, recharge yako inaweza kuchelewa. Ikiwa kuna matatizo, tafadhali piga huduma ya wateja.',
     refresh_wallet: 'Tafadhali angalia uwiano wako wa eWallet. Kisha uitumie kurejesha kwa akaunti yako ya TV.',
     continue_to_pay: 'ENDELEA',
-    error_network:  'Seva ya wavuti haipatikani ,tafadhali jaribu baadae',
+    payment_details_total:'Jumla',
+    dvb_recharge_btn_pay:'LIPA'
 
 }

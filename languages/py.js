@@ -67,6 +67,7 @@ export default {
     monthly_billing:  'Devido ao faturamento mensal do sistema, sua recarga pode ser atrasada. Em caso de problemas, ligue para o serviço de atendimento ao cliente.',
     refresh_wallet:'Por favor, verifique o seu saldo de eWallet. Em seguida, use-o para recarregar sua conta de TV.',
     continue_to_pay:'CONTINUAR',
-    error_network:'rede de servidor não disponível, por favor tente mais tarde.',
+    payment_details_total:'Total',
+    dvb_recharge_btn_pay:'PAGAR'
 
 }

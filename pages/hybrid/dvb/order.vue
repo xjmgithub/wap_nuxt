@@ -3,123 +3,113 @@
         <div class="container">
             <div class="card-box">
                 <div class="card-msg">
-                    <p><span>{{$store.state.lang.smart_card_no_content}}</span>{{ cardNum }}</p>
+                    <p>
+                        <span>{{$store.state.lang.smart_card_no_content}}</span>
+                        {{ cardNum }}
+                    </p>
                     <p class="state" v-if=" state === 'PUNISH_STOP'">
-                        <img src="~assets/img/dvb/ic_dormant.png" alt=""> {{$store.state.lang.dormant}}
+                        <img src="~assets/img/dvb/ic_dormant.png" alt>
+                        {{$store.state.lang.dormant}}
                     </p>
                     <p class="state" v-else-if="state === 'VALID'">
-                        <img src="~assets/img/dvb/ic_active.png" alt="">
-                        <span style="font-size:1rem;" v-if="stop_days">
-                            {{$store.state.lang.dvb_acitve_to}} {{stop_days}}
-                        </span>
-                        <span style="font-size:1rem;" v-if="!stop_days">
-                            {{$store.state.lang.active_}}
-                        </span>
+                        <img src="~assets/img/dvb/ic_active.png" alt>
+                        <span style="font-size:1rem;" v-if="stop_days">{{$store.state.lang.dvb_acitve_to}} {{stop_days}}</span>
+                        <span style="font-size:1rem;" v-if="!stop_days">{{$store.state.lang.active_}}</span>
                     </p>
                     <p class="state" v-else-if=" state === 'PAUSE'">
-                        <img src="~assets/img/dvb/ic_suspended_def_y.png" alt=""> {{$store.state.lang.link_suspend}}
+                        <img src="~assets/img/dvb/ic_suspended_def_y.png" alt>
+                        {{$store.state.lang.link_suspend}}
                     </p>
-                    <p class="state" v-else-if="money">
-                        {{$store.state.lang.smart_card_balance}} {{money | formatMoney}}
-                    </p>
+                    <p class="state" v-else-if="money">{{$store.state.lang.smart_card_balance}} {{money | formatMoney}}</p>
                 </div>
                 <div class="card-type">
                     <p class="platform" v-show="tv_platform == 'DTH'">
-                        <img src="~assets/img/dvb/ic_dth.png" alt="">{{ program }}
+                        <img src="~assets/img/dvb/ic_dth.png" alt>
+                        {{ program }}
                     </p>
                     <p class="platform" v-show="tv_platform == 'DTT'">
-                        <img src="~assets/img/dvb/ic_dtt.png" alt="">{{ program }}
+                        <img src="~assets/img/dvb/ic_dtt.png" alt>
+                        {{ program }}
                     </p>
                 </div>
             </div>
-            <div class="gap" />
-            <div class="order-msg ">
+            <div class="gap"/>
+            <div class="order-msg">
                 <div class="clearfix">
-                    <span>
-                        {{$store.state.lang.dvb_recharge_link_recharge}}
-                    </span>
+                    <span>{{$store.state.lang.dvb_recharge_link_recharge}}</span>
                     <span class="fr declare">{{rechargeExplanation}}</span>
                 </div>
                 <hr class="line">
                 <div class="clearfix">
-                    <span>
-                        {{$store.state.lang.payment_details_promation}}
-                    </span>
-                    <span v-if="!cardHaveCharged&&firstChargeTip" class="fr" style="max-width:67%; font-size:0.9rem;">
-                        {{firstChargeTip}}
-                    </span>
-                    <span v-else class="fr no-time">
-                        {{$store.state.lang.recharge_no_promotion}}
-                    </span>
+                    <span>{{$store.state.lang.payment_details_promation}}</span>
+                    <span v-if="!cardHaveCharged&&firstChargeTip" class="fr" style="max-width:67%; font-size:0.9rem;">{{firstChargeTip}}</span>
+                    <span v-else class="fr no-time">{{$store.state.lang.recharge_no_promotion}}</span>
                 </div>
             </div>
-            <div class="gap" />
+            <div class="gap"/>
             <div class="order-msg">
                 <div class="clearfix">
-                    <span>
-                        {{$store.state.lang.results_recharge_amount}}
-                    </span>
+                    <span>{{$store.state.lang.results_recharge_amount}}</span>
                     <span class="fr">{{ currency }} {{ rechargeAmount | formatMoney }}</span>
                 </div>
                 <div class="clearfix">
-                    <span>
-                        {{$store.state.lang.payment_discount}}
-                    </span>
+                    <span>{{$store.state.lang.payment_details_promation}}</span>
                     <span class="fr">- {{ currency }} {{(rechargeAmount-paymentAmount) | formatMoney}}</span>
                 </div>
                 <div class="clearfix total">
-                    <span>
-                        {{$store.state.lang.payment_details_total}}
-                    </span>
+                    <span>{{$store.state.lang.payment_details_total}}</span>
                     <span class="fr">{{ currency }} {{ paymentAmount | formatMoney }}</span>
                 </div>
             </div>
-            <div class="gap" />
+            <div class="gap"/>
             <div class="pay-methods">
                 <div class="methods">
                     <p>{{$store.state.lang.payment_details_method}}：</p>
                     <ul class="choose clearfix">
-                        <li v-for="(item,index) in methodsList" :key="index" v-if="item.fkPayChannelId<9002||item.fkPayChannelId>9034||isLogin">
+                        <li v-for="(item,index) in methodsList" :key="index" v-show="item.fkPayChannelId<9002||item.fkPayChannelId>9034||isLogin">
                             <label class="radio" @click="changeMethod(item)">
                                 <input type="radio" name="methods" :value="item.name" v-model="selectMethod.name">
                                 <i/>
-                                <span>{{ item.name }}</span><br>
-                                <span v-if="item.fkPayChannelId >= 9002 && item.fkPayChannelId <= 9034 && wallet_account.accountNo" class="balance" :class="{red:wallet_account.amount < paymentAmount}">
-                                    (Balance:{{wallet_account.currencySymbol}}{{wallet_account.amount}} )
-                                </span>
+                                <span>{{ item.name }}</span>
+                                <br>
+                                <span
+                                    v-if="item.fkPayChannelId >= 9002 && item.fkPayChannelId <= 9034 && wallet_account.accountNo"
+                                    class="balance"
+                                    :class="{red:wallet_account.amount < paymentAmount}"
+                                >(Balance:{{wallet_account.currencySymbol}}{{wallet_account.amount}} )</span>
                             </label>
-                            <div class="recharge" @click="chargeWallet" v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet_account.accountNo&&wallet_account.amount<paymentAmount">RECHARGE</div>
+                            <div
+                                class="recharge"
+                                @click="chargeWallet"
+                                v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet_account.accountNo&&wallet_account.amount<paymentAmount"
+                            >RECHARGE</div>
                         </li>
                     </ul>
                     <div class="note" v-show="selectMethod.description">
                         <p>Note:</p>
-                        <p v-html="selectMethod.description" />
+                        <p v-html="selectMethod.description"/>
                     </div>
                 </div>
             </div>
             <div class="btn-box">
-                <span class="total">
-                    {{$store.state.lang.payment_details_total}}:
-                </span>
+                <span class="total">{{$store.state.lang.payment_details_total}}:</span>
                 <span class="total">{{ currency }}{{ paymentAmount | formatMoney }}</span>
-                <div class="pay-btn" :class="{disabled:!canPay}" @click="payNow">
-                    {{$store.state.lang.dvb_recharge_btn_pay}}
-                </div>
+                <div class="pay-btn" :class="{disabled:!canPay}" @click="payNow">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
             </div>
-            <loading v-show="isLoading" />
-            <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">
-                {{$store.state.lang.monthly_billing}}:
-            </div>
+            <loading v-show="isLoading"/>
+            <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
         </div>
     </div>
 </template>
 <script>
 import loading from '~/components/loading'
+import dayjs from 'dayjs'
 export default {
     layout: 'base',
     data() {
+        let user = this.$store.state.user
         return {
-            isLogin: this.$store.state.user.type || false,
+            isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS',
             isApp: this.$store.state.appType,
             cardNum: '',
             cardNo: '',
@@ -138,9 +128,10 @@ export default {
             selectMethod: {},
             countryCode: '',
             wallet_account: {},
-            fcmToken: (window.getChannelId && getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || '',
+            fcmToken: '',
             serverTime: this.$store.state.serverTime,
-            isYueMo: false
+            isYueMo: false,
+            cardHaveCharged: 0
         }
     },
     created() {
@@ -162,9 +153,11 @@ export default {
         let threeHoursBefore = nextMonthFirstDay - 3 * 60 * 60 * 1000
         let threeHoursAfter = nextMonthFirstDay + 3 * 60 * 60 * 1000
         let now = this.serverTime.getTime()
-        if ( threeHoursBefore <= now && threeHoursAfter >= now){
+        if (threeHoursBefore <= now && threeHoursAfter >= now) {
             this.isYueMo = true
         }
+
+        this.fcmToken = (window.getChannelId && getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
 
         let param = JSON.parse(sessionStorage.getItem('order-info'))
         this.sendEvLog({
@@ -200,19 +193,16 @@ export default {
                 this.cardNum += ' '
             }
         }
-        this.$axios({
-            url: `/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.countryCode}`,
-            method: 'get',
-            data: {}
-        })
+        this.$axios
+            .get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.countryCode}`)
             .then(res => {
                 if (res.data && res.data.length > 0) {
-                    this.methodsList = data
+                    this.methodsList = res.data
                     this.selectMethod = this.methodsList[0]
                 } else {
                     this.$nextTick(() => {
                         this.$alert(this.$store.state.lang.error_network, () => {
-                            window.location.reload()
+                            this.$router.go(0)
                         })
                     })
                 }
@@ -220,7 +210,7 @@ export default {
             .catch(err => {
                 this.$nextTick(() => {
                     this.$alert(this.$store.state.lang.error_network, () => {
-                        window.location.reload()
+                        this.$router.go(0)
                     })
                 })
             })
@@ -236,7 +226,7 @@ export default {
                 },
                 this.$store.state.lang.continue_to_pay
             )
-            window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
+            //window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
         },
         payNow() {
             let param = JSON.parse(sessionStorage.getItem('order-info'))
@@ -298,22 +288,24 @@ export default {
             this.selectMethod = item
         },
         getWalletAccount() {
-            this.$axios({
-                url: `/mobilewallet/v1/accounts/me`,
-                method: 'get',
-                data: {}
-            }).then(res => {
-                if (res.data) {
-                    this.wallet_account = data
-                }
-            })
+            if (this.isLogin) {
+                this.$axios({
+                    url: `/mobilewallet/v1/accounts/me`,
+                    method: 'get',
+                    data: {}
+                }).then(res => {
+                    if (res.data) {
+                        this.wallet_account = data
+                    }
+                })
+            }
         },
         toPay() {
             let param = JSON.parse(sessionStorage.getItem('order-info'))
             this.$axios({
                 url: `/wxorder/v1/geneOrder4OnlinePay`,
                 method: 'post',
-                data: $.extend({}, param, {
+                data: Object.assign({}, param, {
                     orderSource: 1,
                     fcmToken: this.fcmToken || '',
                     promotion: !this.isLogin ? 'l1' : 'lalala'
@@ -385,7 +377,8 @@ export default {
                                 })
                         }
                     } else {
-                        this.$alert(res.data.message)
+                        this.isLoading = false
+                        this.$alert(res.data.msg)
                     }
                 })
                 .catch(err => {
@@ -427,83 +420,15 @@ export default {
             }
         }
     },
+    components: {
+        loading
+    },
     head() {
         return {
             title: this.$store.state.lang.my_order_details
         }
     }
 }
-// sessionStorage.setItem('step2', 1)
-// // invoke deviceInfo
-// if (this.isApp == 1 || this.isApp == 2) {
-//     let system = this.isApp == 1 ? 'android' : 'ios'
-//     let dstr = 'APP(' + system + ',<?php echo $appVersionCode; ?>)'
-//     dstr += ';H5(' + system
-//     if (this.isApp == 1) {
-//         let s = navigator.userAgent.indexOf('Android')
-//         if (s > 0) {
-//             dstr += '_' + navigator.userAgent.substr(s + 8).split(';')[0]
-//         }
-//     } else {
-//         let s = navigator.userAgent.indexOf('iPhone OS')
-//         if (s > 0) {
-//             dstr += '_' + navigator.userAgent.substr(s + 10).split(' ')[0]
-//         }
-//     }
-//     dstr += ', Chrome'
-//     let b = navigator.userAgent.indexOf('Version')
-//     let c = navigator.userAgent.indexOf('Chrome')
-//     if (b > 0) {
-//         let s = navigator.userAgent
-//             .substr(b)
-//             .split(' ')[1]
-//             .split('/')[1]
-//         if (s) {
-//             dstr += '_' + s
-//         }
-//     } else {
-//         if (c > 0) {
-//             let s = navigator.userAgent
-//                 .substr(c)
-//                 .split(' ')[0]
-//                 .split('/')[1]
-//             if (s) {
-//                 dstr += '_' + s
-//             }
-//         }
-//     }
-//     dstr += ')'
-// } else {
-//     let plat = 'others'
-//     if (navigator.userAgent.indexOf('Android') > 0) {
-//         plat = 'android'
-//     } else if (navigator.userAgent.indexOf('iPhone') > 0) {
-//         plat = 'ios'
-//     }
-//     let dstr = 'H5(' + plat + ', MQQBrowser'
-//     let b = navigator.userAgent.indexOf('Version')
-//     let c = navigator.userAgent.indexOf('Chrome')
-//     if (b > 0) {
-//         let s = navigator.userAgent
-//             .substr(b)
-//             .split(' ')[1]
-//             .split('/')[1]
-//         if (s) {
-//             dstr += '_' + s
-//         }
-//     } else {
-//         if (c > 0) {
-//             let s = navigator.userAgent
-//                 .substr(c)
-//                 .split(' ')[0]
-//                 .split('/')[1]
-//             if (s) {
-//                 dstr += '_' + s
-//             }
-//         }
-//     }
-//     dstr += ')'
-// }
 </script>
 <style lang="less">
 @import '~assets/less/dvb/index.less';

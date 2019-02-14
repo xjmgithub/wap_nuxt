@@ -65,7 +65,8 @@ export default {
     monthly_billing:  'En raison de la facturation mensuelle du système, votre recharge peut être retardée. En cas de problème, veuillez contacter le service clientèle.',
     refresh_wallet: 'Veuillez vérifier votre solde de portefeuille électronique. Ensuite, utilisez-le pour recharger votre compte TV.',
     continue_to_pay: 'CONTINUER',
-    error_network: 'Serveur internet indisponible, veuillez réessayer plus tard.',
+    payment_details_total:'Total',
+    dvb_recharge_btn_pay:'PAYER'
 
 
 

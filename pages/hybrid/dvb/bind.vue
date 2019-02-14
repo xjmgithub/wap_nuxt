@@ -1,146 +1,140 @@
 <template>
     <div id="wrapper">
-        <div class="container">
-            <div class="wrapper">
-                <div class="card-input">
-                    <div class="contains clearfix">
-                        <input
-                            class="card"
-                            v-model="cardNum"
-                            :class="{error:isErrorCard}"
-                            ref="input"
-                            @input="changeNum"
-                            @focus="canBuy=false"
-                            @blur="checkout"
-                            :placeholder="$store.state.lang.please_input_smartcard"
-                            type="tel"
-                            maxlength="13"
-                        >
-                        <span v-show="canBuy" class="card_state" :class="card_state == 'VALID' ? 'program-state-valid' : 'program-state'">
-                            <span v-if="card_state=='PUNISH_STOP'">{{$store.state.lang.dormant}}</span>
-                            <span v-if="card_state=='PAUSE'">{{$store.state.lang.link_suspend}}</span>
-                            <span v-if="card_state=='VALID'&&stop_days">{{$store.state.lang.dvb_acitve_to}} {{stop_days | formatStopDays}}</span>
-                            <span v-if="card_state=='VALID'&&!stop_days">{{$store.state.lang.active_}}</span>
-                        </span>
-                        <span class="error-card" :class="{showError:isErrorCard}">{{$store.state.lang.h5_input_card_wrong}}</span>
-                        <p class="count">
-                            <span>{{current}}</span> /
-                            <span>11</span>
-                        </p>
-                        <div class="operate">
-                            <img @click="clearInput" v-show="oriCardNum!=''" src="~assets/img/dvb/delete.png">
-                        </div>
-                        <ul class="history" v-show="showHistoryList">
-                            <li v-for="(item,index) in historyList" @click="chooseCard(index)" :key="index">{{ formatCard(item) }}</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="demoDialog" v-show="!loaded&&historyLoaded&&historyList.length<=0">
-                    <div @click="focusInput">
-                        <p>{{$store.state.lang.input_your_smartcard_number}}</p>
-                        <div>
-                            <img src="~assets/img/dvb/icon_smart_card.png">
-                        </div>
-                        <p>{{$store.state.lang.recharge_your_decoder_account}}</p>
-                        <p class="tips">{{$store.state.lang.Tips_check_your_Balance}}</p>
-                    </div>
-                    <p>
-                        {{$store.state.lang.if_you_are_not_a_startimes_tv_user}}
-                        <a
-                            href="javascript:void(0)"
-                            @click="toLoadurl"
-                        >{{$store.state.lang.click_here}}</a>
-                        {{$store.state.lang.if_you_are_not_a_startimes_tv_user2}} 
+        <div class="untrim">
+            <div class="card-input">
+                <div class="contains clearfix">
+                    <input
+                        class="card"
+                        v-model="cardNum"
+                        :class="{error:isErrorCard}"
+                        ref="input"
+                        @input="changeNum"
+                        @focus="canBuy=false"
+                        @blur="checkout"
+                        :placeholder="$store.state.lang.please_input_smartcard"
+                        type="tel"
+                        maxlength="13"
+                    >
+                    <span v-show="canBuy" class="card_state" :class="card_state == 'VALID' ? 'program-state-valid' : 'program-state'">
+                        <span v-if="card_state=='PUNISH_STOP'">{{$store.state.lang.dormant}}</span>
+                        <span v-if="card_state=='PAUSE'">{{$store.state.lang.link_suspend}}</span>
+                        <span v-if="card_state=='VALID'&&stop_days">{{$store.state.lang.dvb_acitve_to}} {{stop_days | formatStopDays}}</span>
+                        <span v-if="card_state=='VALID'&&!stop_days">{{$store.state.lang.active_}}</span>
+                    </span>
+                    <span class="error-card" :class="{showError:isErrorCard}">{{$store.state.lang.h5_input_card_wrong}}</span>
+                    <p class="count">
+                        <span>{{current}}</span> /
+                        <span>11</span>
                     </p>
-                </div>
-                <div class="program-box" v-show="loaded">
-                    <p v-show="canBuy">
-                        {{$store.state.lang.topup_bouquet}}:
-                        <span class="program-name">{{ program_name }}</span>
-                    </p>
-                </div>
-                <div class="money-box clearfix" :class="{disabled:!canBuy}" v-show="loaded&&recharge_items.length>0">
-                    <p>{{$store.state.lang.select_}}</p>
-                    <ul class="recharge-style">
-                        <li
-                            v-for="(item,index) in recharge_items" 
-                            :key="index"
-                            @click="selected(index)"
-                            :class="{selected:index == chargeItemIndex,'center-text':!(item.preferentialPlanVo&&item.preferentialPlanVo.exclusivePrice>0&&item.rate_amount!=item.preferentialPlanVo.exclusivePrice)}"
-                        >
-                            <p>{{ item.rate_display_name | formatDate }}</p>
-                            <p>
-                                <span>{{ currency }}</span>
-                                {{ item | discountAmount }}
-                            </p>
-                            <p
-                                v-if="item.preferentialPlanVo&&item.preferentialPlanVo.exclusivePrice>0&&item.rate_amount!=item.preferentialPlanVo.exclusivePrice"
-                            >
-                                <del>{{ currency }}{{ item.rate_amount | formatRateAmount }}</del>
-                            </p>
-                            <img
-                                v-if="item.preferentialPlanVo&&item.preferentialPlanVo.firstRechargeGiveMoney>0"
-                                class="first-charge-img"
-                                src="~assets/img/dvb/ic_gift_def.png"
-                            >
-                            <div v-if="item.preferentialPlanVo&&item.preferentialPlanVo.type==100" class="christmas">
-                                <img src="~assets/img/dvb/img_christmaslogo.png" class="christmaslogo">
-                                <span>{{((item.rate_amount-item.preferentialPlanVo.exclusivePrice)*100/item.rate_amount).toFixed(0)}}% OFF</span>
-                            </div>
-                        </li>
+                    <div class="operate">
+                        <img @click="clearInput" v-show="oriCardNum!=''" src="~assets/img/dvb/delete.png">
+                    </div>
+                    <ul class="history" v-show="showHistoryList">
+                        <li v-for="(item,index) in historyList" @click="chooseCard(index)" :key="index">{{ formatCard(item) }}</li>
                     </ul>
-                </div>
-                <div class="first-charge" v-show="firstChargeTip">
-                    <img src="~assets/img/dvb/ic_gift_def.png">
-                    <div style="width:65%;float:left;">{{firstChargeTip}}</div>
-                    <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails"> {{$store.state.lang.first_recharge_detail}}</div>
-                </div>
-                <div class="count-box clearfix" :class="{disabled:!canBuy}">
-                    <p v-show="loaded&&countList.length>1">{{$store.state.lang.results_recharge_amount}}</p>
-                    <ul class="choose clearfix" v-show="loaded&&countList.length>1">
-                        <li v-for="(item,index) in countList" :key="index">
-                            <label class="radio">
-                                {{ item }}
-                                <input
-                                    type="radio"
-                                    name="count"
-                                    :disabled="canBuy?false:'disabled'"
-                                    :value="item"
-                                    :checked="index == chargeNumIndex"
-                                    v-model="checkedValue"
-                                >
-                                <i/>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                <div class="pay-btn" @click="buyNow" :class="{disabled:!canBuy}" v-show="loaded">
-                    <span class="need-pay">{{ currency }}{{ paymentAmount | formatRateAmount }}</span>
-                    {{$store.state.lang.next_}}
                 </div>
             </div>
-            <img
-                v-show="loaded&&(countryCode=='NG'||countryCode=='TZ')"
-                @click="buyNow"
-                src="~assets/img/dvb/dvb_ug_off.png"
-                style="width:100%"
-            >
-            <div class="blank_bottom" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">&nbsp;</div>
-            <div class="more-services" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">
-                <p @click="showAllWays">
-                    {{$store.state.lang.more_recharge_method}}
-                    <span class="all">
-                        {{$store.state.lang.membership_all}}
-                        <img src="~assets/img/dvb/ic_right_def_r.png" alt>
-                    </span>
+            <div class="program-box" v-show="loaded">
+                <p v-show="canBuy">
+                    {{$store.state.lang.topup_bouquet}}:
+                    <span class="program-name">{{ program_name }}</span>
                 </p>
             </div>
+            <div class="money-box clearfix" :class="{disabled:!canBuy}" v-show="loaded&&recharge_items.length>0">
+                <p>{{$store.state.lang.select_}}</p>
+                <ul>
+                    <li
+                        v-for="(item,index) in recharge_items"
+                        :key="index"
+                        @click="selected(index)"
+                        :class="{selected:index == chargeItemIndex,'center-text':!(item.preferentialPlanVo&&item.preferentialPlanVo.exclusivePrice>0&&item.rate_amount!=item.preferentialPlanVo.exclusivePrice)}"
+                    >
+                        <p>{{ item.rate_display_name | formatDate }}</p>
+                        <p>
+                            <span>{{ currency }}</span>
+                            {{ item | discountAmount }}
+                        </p>
+                        <p
+                            v-if="item.preferentialPlanVo&&item.preferentialPlanVo.exclusivePrice>0&&item.rate_amount!=item.preferentialPlanVo.exclusivePrice"
+                        >
+                            <del>{{ currency }}{{ item.rate_amount | formatRateAmount }}</del>
+                        </p>
+                        <img
+                            v-if="item.preferentialPlanVo&&item.preferentialPlanVo.firstRechargeGiveMoney>0"
+                            class="first-charge-img"
+                            src="~assets/img/dvb/ic_gift_def.png"
+                        >
+                        <div v-if="item.preferentialPlanVo&&item.preferentialPlanVo.type==100" class="christmas">
+                            <img src="~assets/img/dvb/img_christmaslogo.png" class="christmaslogo">
+                            <span>{{((item.rate_amount-item.preferentialPlanVo.exclusivePrice)*100/item.rate_amount).toFixed(0)}}% OFF</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="first-charge" v-show="firstChargeTip">
+                <img src="~assets/img/dvb/ic_gift_def.png">
+                <div style="width:65%;float:left;">{{firstChargeTip}}</div>
+                <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails">{{$store.state.lang.first_recharge_detail}}</div>
+            </div>
+            <div class="count-box clearfix" :class="{disabled:!canBuy}">
+                <p v-show="loaded&&countList.length>1">{{$store.state.lang.results_recharge_amount}}</p>
+                <ul class="choose clearfix" v-show="loaded&&countList.length>1">
+                    <li v-for="(item,index) in countList" :key="index">
+                        <label class="radio">
+                            {{ item }}
+                            <input
+                                type="radio"
+                                name="count"
+                                :disabled="canBuy?false:'disabled'"
+                                :value="item"
+                                :checked="index == chargeNumIndex"
+                                v-model="checkedValue"
+                            >
+                            <i/>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <div class="pay-btn" @click="buyNow" :class="{disabled:!canBuy}" v-show="loaded">
+                <span class="need-pay">{{ currency }}{{ paymentAmount | formatRateAmount }}</span>
+                {{$store.state.lang.next_}}
+            </div>
         </div>
-        <loading v-show="isLoading"/>
+        <img v-show="loaded&&(countryCode=='NG'||countryCode=='TZ')" @click="buyNow" src="~assets/img/dvb/dvb_ug_off.png" style="width:100%">
+        <div class="blank_bottom" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">&nbsp;</div>
+        <div class="more-services untrim" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">
+            <p @click="showAllWays">
+                {{$store.state.lang.more_recharge_method}}
+                <span class="all">
+                    {{$store.state.lang.membership_all}}
+                    <img src="~assets/img/dvb/ic_right_def_r.png" alt>
+                </span>
+            </p>
+        </div>
+        <div class="demoDialog" v-show="!loaded&&historyLoaded&&historyList.length<=0">
+            <div @click="focusInput">
+                <p>{{$store.state.lang.input_your_smartcard_number}}</p>
+                <div>
+                    <img src="~assets/img/dvb/icon_smart_card.png">
+                </div>
+                <p>{{$store.state.lang.recharge_your_decoder_account}}</p>
+                <p class="tips">{{$store.state.lang.Tips_check_your_Balance}}</p>
+            </div>
+            <p>
+                {{$store.state.lang.if_you_are_not_a_startimes_tv_user}}
+                <a
+                    href="javascript:void(0)"
+                    @click="toLoadurl"
+                    style="color:#0087EB;text-decoration:underline"
+                >{{$store.state.lang.click_here}}</a>
+                {{$store.state.lang.if_you_are_not_a_startimes_tv_user2}}
+            </p>
+        </div>
     </div>
 </template>
 <script>
 import loading from '~/components/loading'
+import dayjs from 'dayjs'
 export default {
     layout: 'base',
     data() {
@@ -163,7 +157,7 @@ export default {
             chargeItemIndex: 0,
             checkedValue: 1,
             chargeNumIndex: 0,
-            countryCode: this.$store.state.country.country, 
+            countryCode: this.$store.state.country.country,
             currency: this.$store.state.country.currencySymbol,
             currencyCode: this.$store.state.country.currencyCode,
             stop_days: '',
@@ -172,20 +166,14 @@ export default {
             cardHaveCharged: false,
             user_status: false,
             isLogin: this.$store.state.user.type || false,
-            isApp: this.$store.state.appType,
-
+            isApp: this.$store.state.appType
         }
     },
     computed: {
-        oriCardNum:{
-            get(){
-                let reg = /^[0-9]*$/
-                let tmp = this.cardNum.replace(/\s/g, '')
-                return reg.test(tmp) ? tmp : ''
-            },
-            set(){
-
-            }
+        oriCardNum() {
+            let reg = /^[0-9]*$/
+            let tmp = this.cardNum.replace(/\s/g, '')
+            return reg.test(tmp) ? tmp : ''
         },
         rechargeAmount() {
             let item = this.recharge_items[this.chargeItemIndex]
@@ -252,8 +240,6 @@ export default {
             }
         },
         formatRateAmount(val) {
-            // let tmp = String(str).split('').reverse().join('').match(/(\d{1,3})/g)
-            // return tmp.join(',').split('').reverse().join('')
             if (!isNaN(val)) {
                 let arr = val.toString().split('.')
                 if (arr[1]) {
@@ -317,13 +303,13 @@ export default {
             } else if (this.countryCode.toLowerCase() == 'gh') {
                 window.location.href = 'https://goo.gl/YWzd1m'
             } else if (this.countryCode.toLowerCase() == 'ng') {
-                window.location.href = 'http://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=136&dir_id=0'
+                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=136&dir_id=0'
             } else if (this.countryCode.toLowerCase() == 'ug') {
-                window.location.href = 'http://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=137&dir_id=0'
+                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=137&dir_id=0'
             } else if (this.countryCode.toLowerCase() == 'mg') {
-                window.location.href = 'http://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=138&dir_id=0'
+                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=138&dir_id=0'
             } else {
-                window.location.href = 'http://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=139&dir_id=0'
+                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=139&dir_id=0'
             }
         },
         showDetails() {
@@ -334,7 +320,7 @@ export default {
                 value: 10,
                 service_type: 'Recharge'
             })
-            this.$alert(this.firstChargeDetails,()=>{
+            this.$alert(this.firstChargeDetails, () => {
                 this.sendEvLog({
                     category: 'dvbservice',
                     action: 'promotion_detail_back',
@@ -349,22 +335,20 @@ export default {
             this.oriCardNum = ''
         },
         getHistoryBindCard(callback) {
-            this.$axios({
-                    url: `/self/v1/user/all_smartcard_basic_info_4wx`,
-                    method: 'get',
-                    data: {}
-                }).then(res => {
+            this.$axios
+                .get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+                .then(res => {
                     this.historyLoaded = true
                     if (res.data && res.data.length > 0) {
                         let arr = []
-                        res.data.forEach((item, index) =>{
+                        res.data.forEach((item, index) => {
                             arr.push(item.smardcard_no)
                         })
                         this.historyList = arr
                         this.user_status = true
                         if (callback) callback()
                     } else {
-                         this.sendEvLog({
+                        this.sendEvLog({
                             category: 'dvbservice',
                             action: 'onlineServiceBtn_show',
                             label: 'dvb_recharge_empty_decoder',
@@ -373,7 +357,7 @@ export default {
                         })
                     }
                 })
-                .catch(err=> {
+                .catch(err => {
                     this.historyLoaded = true
                     this.sendEvLog({
                         category: 'dvbservice',
@@ -382,7 +366,7 @@ export default {
                         value: 1,
                         service_type: 'Recharge'
                     })
-                });
+                })
         },
         chooseCard(index) {
             this.cardNum = this.formatCard(this.historyList[index])
@@ -449,7 +433,7 @@ export default {
             }
 
             sessionStorage.setItem('order-info', JSON.stringify(params))
-            window.location.href = 'order.php'
+            this.$router.push('/hybrid/dvb/order')
         },
         selected(index) {
             if (this.canBuy) {
@@ -514,7 +498,7 @@ export default {
                                 SmartCardNo: this.oriCardNum,
                                 errorMsg: 'Decoder'
                             })
-                             this.$confirm(
+                            this.$confirm(
                                 this.$store.state.lang.besure_have_card,
                                 () => {
                                     this.toLoadurl()
@@ -544,12 +528,13 @@ export default {
                 url: `/self/v1/user/smartcardinfo/sync4h5?smartcard=${this.oriCardNum}&is_bind_card=${this.isLogin ? true : false}`,
                 method: 'get',
                 data: {}
-            }).then(res => {
-                let n_timetr = new Date().getTime()
-                this.isLoading = false
-
-                if (res.data && res.data.program_name) {
-                    this.loaded = true
+            })
+                .then(res => {
+                    let data = res.data
+                    let n_timetr = new Date().getTime()
+                    this.isLoading = false
+                    if (data && data.program_name) {
+                        this.loaded = true
                         this.canBuy = true
                         this.countLists = []
                         this.chargeItemIndex = 0
@@ -564,10 +549,10 @@ export default {
                             this.recharge_items = data.recharge_items || []
                             // 默认选中最大值
                             let maxMoney = 0
-                            this.recharge_items.sort(function(a, b) {
+                            this.recharge_items.sort((a, b) => {
                                 return a.rate_amount - b.rate_amount
                             })
-                            this.recharge_items.forEach(function(item, index) {
+                            this.recharge_items.forEach((item, index) => {
                                 if (item.rate_amount > maxMoney) {
                                     maxMoney = item.rate_amount
                                     this.chargeItemIndex = index
@@ -577,20 +562,6 @@ export default {
                                 }
                             })
 
-                            // 默认选中最小值
-                            // let minMoney = 0
-                            // this.recharge_items.sort(function (a, b) {
-                            //     return a.rate_amount - b.rate_amount;
-                            // })
-                            // this.recharge_items.forEach(function (item, index) {
-                            //     if (item.rate_amount < minMoney) {
-                            //         minMoney = item.rate_amount
-                            //         this.chargeItemIndex = index
-                            //     }
-                            //     if (item.recharge_fee_numbers) {
-                            //         this.countLists[this.countLists.length] = item.recharge_fee_numbers
-                            //     }
-                            // })
                             this.sendEvLog({
                                 category: 'dvbservice',
                                 action: 'load_recharge_item',
@@ -618,7 +589,7 @@ export default {
                             })
                             this.canBuy = false
                             this.$nextTick(function() {
-                                malert("This bouquet can't be recharged for now, please contact the local center")
+                                this.$alert("This bouquet can't be recharged for now, please contact the local center")
                             })
                         }
                         if (this.countLists.length > 0) {
@@ -627,7 +598,25 @@ export default {
                             this.countList = [1]
                         }
                         this.checkedValue = this.countList[0]
-                }else{
+                    } else {
+                        this.sendEvLog({
+                            category: 'dvbservice',
+                            action: 'load_recharge_item',
+                            label: this.user_status ? 'AddCardUser' : 'NewCardUser',
+                            value: -1,
+                            SmartCardNo: this.oriCardNum,
+                            BouquetName: this.program_name,
+                            CardState: this.card_state,
+                            PauseDate: this.stop_days,
+                            service_type: 'Recharge',
+                            errorMsg: data.message,
+                            timeAlong: n_timetr - timetr
+                        })
+                        this.isErrorCard = true
+                    }
+                })
+                .catch(err => {
+                    let n_timetr = new Date().getTime()
                     this.sendEvLog({
                         category: 'dvbservice',
                         action: 'load_recharge_item',
@@ -638,46 +627,29 @@ export default {
                         CardState: this.card_state,
                         PauseDate: this.stop_days,
                         service_type: 'Recharge',
-                        errorMsg: data.message,
+                        errorMsg: err.status + '~' + err.statusText,
                         timeAlong: n_timetr - timetr
                     })
-                    this.isErrorCard = true
-                }
-            }).catch(err=>{
-                let n_timetr = new Date().getTime()
-                this.sendEvLog({
-                    category: 'dvbservice',
-                    action: 'load_recharge_item',
-                    label: this.user_status ? 'AddCardUser' : 'NewCardUser',
-                    value: -1,
-                    SmartCardNo: this.oriCardNum,
-                    BouquetName: this.program_name,
-                    CardState: this.card_state,
-                    PauseDate: this.stop_days,
-                    service_type: 'Recharge',
-                    errorMsg: err.status + '~' + err.statusText,
-                    timeAlong: n_timetr - timetr
-                })
-                this.isLoading = false
+                    this.isLoading = false
 
-                this.$nextTick(()=> {
-                    if (err.status == 401) {
-                        this.$alert(this.$store.state.lang.account_signed_elsewhere,()=>{
-                               if (this.isApp == 1) {
-                                window.getChannelId.toAppPage(
-                                    3,
-                                    'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
-                                        encodeURIComponent(window.location.href),
-                                    ''
-                                )
-                            }
-                        })
-                        return false
-                    } else {
-                        this.$alert( this.$store.state.lang.error_network)
-                    }
+                    this.$nextTick(() => {
+                        if (err.status == 401) {
+                            this.$alert(this.$store.state.lang.account_signed_elsewhere, () => {
+                                if (this.isApp == 1) {
+                                    window.getChannelId.toAppPage(
+                                        3,
+                                        'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
+                                            encodeURIComponent(window.location.href),
+                                        ''
+                                    )
+                                }
+                            })
+                            return false
+                        } else {
+                            this.$alert(this.$store.state.lang.error_network)
+                        }
+                    })
                 })
-            })
         }
     },
     mounted() {
@@ -699,7 +671,7 @@ export default {
             })
         }
 
-        this.getHistoryBindCard(()=> {
+        this.getHistoryBindCard(() => {
             if (this.historyList.length > 0) {
                 this.cardNum = this.formatCard(this.historyList[0])
             }
@@ -735,7 +707,7 @@ export default {
             this.checkedValue = this.countList[0]
         }
     },
-    components:{
+    components: {
         loading
     },
     head() {

@@ -65,7 +65,8 @@ export default {
     monthly_billing: 'Due to the monthly system billing, your recharge may be delayed. In case of problems, please call the customer service.',
     refresh_wallet: 'Please check your eWallet balance. Then use it to recharge for your TV account.',
     continue_to_pay: 'CONTINUE',
-    error_network: 'Internet server unavailable, please try later.',
+    payment_details_total:'Total',
+    dvb_recharge_btn_pay:'PAY'
 
 
 
