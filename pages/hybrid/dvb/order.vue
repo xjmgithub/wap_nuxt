@@ -242,7 +242,8 @@ export default {
             BouquetName: param.program_name,
             CardState: param.smartcard_status,
             PauseDate: param.stop_days,
-            service_type: 'Recharge'
+            service_type: 'Recharge',
+            page_from: 'new'
         })
 
         this.cardNo = param.cardNo
@@ -305,6 +306,7 @@ export default {
                 label: this.selectMethod.name,
                 value: this.rechargeAmount,
                 service_type: 'Recharge',
+                page_from: 'new',
                 recharge_config: param.rechargeItemSelectedName,
                 recharge_amount: param.rechargeItemSelectedQuantity,
                 SmartCardNo: param.cardNo,
@@ -420,10 +422,9 @@ export default {
                                     if (res.data.resultCode == 0) {
                                         if (this.selectMethod.payType == 1) {
                                             // 钱包支付
-                                            
+
                                             sessionStorage.setItem('payObj', JSON.stringify(res.data))
                                             this.$router.push(`/hybrid/payment/wallet/paybyPass?product=${this.rechargeExplanation}`)
-
                                         } else if (this.selectMethod.payType == 3 || this.selectMethod.payType == 4) {
                                             // 第三方在线支付 订阅
                                             if (this.selectMethod.appInterfaceMode == 2) {

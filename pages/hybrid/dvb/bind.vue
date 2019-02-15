@@ -281,7 +281,8 @@ export default {
                 action: 'other_paymentWay_click',
                 label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                 value: 10,
-                service_type: 'Recharge'
+                service_type: 'Recharge',
+                page_from: 'new'
             })
             if (this.isApp == '1') {
                 window.getChannelId.toAppPage(3, 'com.star.mobile.video.smartcard.recharge.RechargeActivity?fromNewRecharge=true', '')
@@ -293,7 +294,8 @@ export default {
                 action: 'onlineServiceBtn_click',
                 label: 'dvb_recharge_empty_decoder',
                 value: 1,
-                service_type: 'Recharge'
+                service_type: 'Recharge',
+                page_from: 'new'
             })
             if (this.countryCode.toLowerCase() == 'ke') {
                 window.location.href = 'https://goo.gl/forms/AUlQ9ECJs0XC7zd72'
@@ -317,7 +319,8 @@ export default {
                 action: 'promotion_detail_click',
                 label: 'DVB_H5',
                 value: 10,
-                service_type: 'Recharge'
+                service_type: 'Recharge',
+                page_from: 'new'
             })
             this.$alert(this.firstChargeDetails, () => {
                 this.sendEvLog({
@@ -325,7 +328,8 @@ export default {
                     action: 'promotion_detail_back',
                     label: 'DVB_H5',
                     value: 10,
-                    service_type: 'Recharge'
+                    service_type: 'Recharge',
+                    page_from: 'new'
                 })
             })
         },
@@ -352,7 +356,8 @@ export default {
                             action: 'onlineServiceBtn_show',
                             label: 'dvb_recharge_empty_decoder',
                             value: 1,
-                            service_type: 'Recharge'
+                            service_type: 'Recharge',
+                            page_from: 'new'
                         })
                     }
                 })
@@ -363,7 +368,8 @@ export default {
                         action: 'onlineServiceBtn_show',
                         label: 'dvb_recharge_empty_decoder',
                         value: 1,
-                        service_type: 'Recharge'
+                        service_type: 'Recharge',
+                        page_from: 'new'
                     })
                 })
         },
@@ -386,6 +392,7 @@ export default {
                 label: 'DVB_H5',
                 value: this.rechargeAmount || 0,
                 service_type: 'Recharge',
+                page_from: 'new',
                 recharge_config: rechargeItem.rate_display_name,
                 recharge_amount: this.checkedValue,
                 BouquetName: this.program_name,
@@ -451,6 +458,7 @@ export default {
                     label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                     value: -1,
                     service_type: 'Recharge',
+                    page_from: 'new',
                     SmartCardNo: this.oriCardNum
                 })
                 return false
@@ -462,6 +470,7 @@ export default {
                         label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                         value: -1,
                         service_type: 'Recharge',
+                        page_from: 'new',
                         SmartCardNo: this.oriCardNum
                     })
                     this.isErrorCard = true
@@ -475,6 +484,7 @@ export default {
                                 label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                                 value: 0,
                                 service_type: 'Recharge',
+                                page_from: 'new',
                                 SmartCardNo: this.oriCardNum,
                                 errorMsg: 'eWallet'
                             })
@@ -494,6 +504,7 @@ export default {
                                 label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                                 value: 0,
                                 service_type: 'Recharge',
+                                page_from: 'new',
                                 SmartCardNo: this.oriCardNum,
                                 errorMsg: 'Decoder'
                             })
@@ -517,6 +528,7 @@ export default {
                         label: this.user_status ? 'AddCardUser' : 'NewCardUser',
                         value: 1,
                         service_type: 'Recharge',
+                        page_from: 'new',
                         SmartCardNo: this.oriCardNum
                     })
                 }
@@ -572,6 +584,7 @@ export default {
                                 CardState: this.card_state,
                                 PauseDate: this.stop_days,
                                 service_type: 'Recharge',
+                                page_from: 'new',
                                 timeAlong: n_timetr - timetr
                             })
                         } else {
@@ -585,6 +598,7 @@ export default {
                                 CardState: this.card_state,
                                 PauseDate: this.stop_days,
                                 service_type: 'Recharge',
+                                page_from: 'new',
                                 timeAlong: n_timetr - timetr
                             })
                             this.canBuy = false
@@ -609,6 +623,7 @@ export default {
                             CardState: this.card_state,
                             PauseDate: this.stop_days,
                             service_type: 'Recharge',
+                            page_from: 'new',
                             errorMsg: data.message,
                             timeAlong: n_timetr - timetr
                         })
@@ -627,6 +642,7 @@ export default {
                         CardState: this.card_state,
                         PauseDate: this.stop_days,
                         service_type: 'Recharge',
+                        page_from: 'new',
                         errorMsg: err.status + '~' + err.statusText,
                         timeAlong: n_timetr - timetr
                     })
@@ -658,7 +674,8 @@ export default {
             action: 'recharge_show',
             label: 'DVB_H5',
             value: 10,
-            service_type: 'Recharge'
+            service_type: 'Recharge',
+            page_from: 'new'
         })
         let step2 = sessionStorage.getItem('step2')
         if (step2) {
@@ -667,7 +684,8 @@ export default {
                 action: 'back_history',
                 label: 'DVB_H5',
                 value: 10,
-                service_type: 'Recharge'
+                service_type: 'Recharge',
+                page_from: 'new'
             })
         }
 
