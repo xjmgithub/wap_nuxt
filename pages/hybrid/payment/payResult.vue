@@ -84,7 +84,7 @@ export default {
         click() {
             if (this.isApp == 1) {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
-                finish()
+                window.getChannelId.finish()
             } else if (this.isApp == 2) {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
@@ -101,6 +101,8 @@ export default {
 .container {
     padding: 5rem 1rem 0;
     text-align: center;
+    min-height:100%;
+    background:white;
     &.grey-back {
         height: 100vh;
         background: #eeeeee;
