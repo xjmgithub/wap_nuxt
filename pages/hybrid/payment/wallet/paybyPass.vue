@@ -72,6 +72,7 @@ export default {
 .container {
     padding: 6rem 1rem 0 1rem;
     background:white;
+    min-height:100%;
 }
 
 .forgot-pwd {
