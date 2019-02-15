@@ -1,5 +1,5 @@
 <template>
-    <div id="wapper">
+    <div id="wrapper">
         <div class="container">
             <div class="card-box">
                 <div class="card-msg">
