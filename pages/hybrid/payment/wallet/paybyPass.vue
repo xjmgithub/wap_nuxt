@@ -2,27 +2,23 @@
     <div class="container">
         <Password ref="pass" :placeholder="pwdType" :toggle-view="true" @endinput="setPassword"/>
         <div class="forgot-pwd">
-            <nuxt-link :to="forgetUrl">Forgot payment password?</nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/resetPhone">Forgot payment password?</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
+            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"/>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
-import { updateWalletAccount, updateWalletConf } from '~/functions/utils'
 export default {
     data() {
         return {
             pwdType: 'Enter Payment Password',
-            payToken: '',
-            payChannelId: '',
             password: '',
             canPay: false,
-            forgetUrl: '/hybrid/payment/wallet/resetPhone',
-            signature: ''
+            product: this.$route.query.product
         }
     },
     layout: 'base',
@@ -30,96 +26,34 @@ export default {
         mButton,
         Password
     },
-    mounted() {
-        this.payChannelId = JSON.parse(window.localStorage.getItem('payChannelId'))
-        this.payToken = localStorage.getItem('payToken')
-        updateWalletAccount(this, account => {
-            updateWalletConf(this, account.accountNo, walletConf => {
-                this.$axios
-                    .get('/vup/v1/ums/user/area', {
-                        headers: {
-                            versionCode: '5300',
-                            clientType: 'android'
-                        }
-                    })
-                    .then(res => {
-                        let configs = res.data && res.data.appFBConfigs
-                        let type = true
-                        configs.forEach(item => {
-                            if (item.functionBlockType == 91) {
-                                if (item.validType == 2) {
-                                    type = true
-                                } else {
-                                    type = false
-                                }
-                            }
-                        })
-                        if (type == false && walletConf.email == 'false') {
-                            this.$router.replace('/hybrid/payment/wallet/validEmail?init=true')
-                        }
-                    })
-
-                if (walletConf.phone == 'true') {
-                    this.forgetUrl = '/hybrid/payment/wallet/validPhone'
-                } else {
-                    this.forgetUrl = '/hybrid/payment/wallet/validEmail'
-                }
-            })
-        })
-    },
     methods: {
         setPassword(data) {
             this.password = this.$refs.pass.password
         },
         nextStep() {
-            let payObject = JSON.parse(localStorage.getItem('payObject'))
-            let ewallet = JSON.parse(localStorage.getItem('wallet_account'))
-            let order = localStorage.getItem('txNo')
+            let ewallet = JSON.parse(sessionStorage.getItem('wallet_account'))
+            let payObj = JSON.parse(sessionStorage.getItem('payObj'))
 
             this.$axios
-                .post('/payment/api/v2/invoke-payment', {
-                    payToken: this.payToken,
-                    payChannelId: this.payChannelId,
-                    tradeType: 'JSAPI',
-                    signType: "MD5",
-                    deviceInfo: 'H5(others%2C+MQQBrowser_71.0.3578.98)', // TODO 
-                    extendInfo: {} // 没有动态表单收集信息的传空对象
+                .post('/mobilewallet/v1/balance-payments', {
+                    amount: payObj.totalAmount,
+                    currency: payObj.currency,
+                    note: this.product,
+                    orderId: payObj.txNo,
+                    payeeAccountNo: payObj.extendInfo.payeeAccountNo,
+                    payerAccountNo: ewallet.accountNo,
+                    payerPayPassword: this.password,
+                    subject: payObj.paySubject,
+                    signature: payObj.extendInfo.signature,
+                    extensionInfo: {
+                        paySeqNo: payObj.extendInfo.paySeqNo
+                    }
                 })
                 .then(res => {
-                    let data = res.data
-                    let redirect = res.data.merchantPayRedirectUrl || 'https://m.startimestv.com'
-                    if (data && data.resultCode == 0) {
-                        this.$axios
-                            .post('/mobilewallet/v1/balance-payments', {
-                                amount: payObject.totalAmount,
-                                currency: payObject.currency,
-                                note: payObject.payNote,
-                                orderId: order,
-                                payeeAccountNo: data.extendInfo.payeeAccountNo,
-                                payerAccountNo: ewallet.accountNo,
-                                payerPayPassword: this.password,
-                                subject: payObject.paySubject,
-                                signature: data.extendInfo.signature,
-                                extensionInfo: {
-                                    paySeqNo: data.extendInfo.paySeqNo
-                                }
-                            })
-                            .then(res => {
-                                if (res.data && res.data.resultCode == 0) {
-                                    this.$router.push(
-                                        `/hybrid/payment/wallet/payResult?result=1&amount=${payObject.totalAmount}&currency=${
-                                            payObject.currency
-                                        }&currensySymbol=${payObject.currency}&redirect=${redirect}`
-                                    )
-                                } else {
-                                    this.$router.push(
-                                        `/hybrid/payment/wallet/payResult?result=2&message=${res.data.resultMessage}&redirect=${redirect}`
-                                    )
-                                }
-                            })
-                    } else {
-                        this.$alert(data.resultMessage)
-                    }
+                    this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
+                })
+                .catch(err => {
+                    this.$alert(err)
                 })
         }
     },
