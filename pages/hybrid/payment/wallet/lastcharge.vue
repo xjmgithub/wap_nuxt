@@ -76,6 +76,7 @@ export default {
 .container {
     padding: 5rem 1rem 0;
     text-align: center;
+    background:white;
 }
 .container img {
     width: 12rem;

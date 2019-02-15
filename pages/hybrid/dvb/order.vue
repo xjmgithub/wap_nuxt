@@ -131,7 +131,7 @@ export default {
             serverTime: this.$store.state.serverTime,
             isYueMo: false,
             cardHaveCharged: 0,
-            dstr:''
+            dstr: ''
         }
     },
     created() {
@@ -156,7 +156,7 @@ export default {
         if (threeHoursBefore <= now && threeHoursAfter >= now) {
             this.isYueMo = true
         }
-        
+
         // 支付统计用
         if (this.isApp == 1 || this.isApp == 2) {
             let system = this.isApp == 1 ? 'android' : 'ios'
@@ -227,7 +227,7 @@ export default {
             }
             dstr += ')'
         }
-        
+
         this.dstr = dstr
 
         this.fcmToken = (window.getChannelId && getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
@@ -363,6 +363,7 @@ export default {
                 }).then(res => {
                     if (res.data) {
                         this.wallet_account = res.data
+                        sessionStorage.setItem('wallet_account', JSON.stringify(res.data))
                     }
                 })
             }
@@ -414,18 +415,15 @@ export default {
                                 }
                             })
                                 .then(res => {
+                                    this.isLoading = false
+                                    this.$store.commit('HIDE_SHADOW_LAYER')
                                     if (res.data.resultCode == 0) {
                                         if (this.selectMethod.payType == 1) {
                                             // 钱包支付
-                                            window.location.href =
-                                                '/wap/payment/walletpay.php?txNo=' +
-                                                res.data.txNo +
-                                                '&channelId=' +
-                                                res.data.extendInfo.payeeAccountNo +
-                                                '&sign=' +
-                                                res.data.extendInfo.signature +
-                                                '&seqNo=' +
-                                                res.data.paySeqNo
+                                            
+                                            sessionStorage.setItem('payObj', JSON.stringify(res.data))
+                                            this.$router.push(`/hybrid/payment/wallet/paybyPass?product=${this.rechargeExplanation}`)
+
                                         } else if (this.selectMethod.payType == 3 || this.selectMethod.payType == 4) {
                                             // 第三方在线支付 订阅
                                             if (this.selectMethod.appInterfaceMode == 2) {

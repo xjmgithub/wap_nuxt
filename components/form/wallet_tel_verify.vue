@@ -77,7 +77,7 @@ export default {
                     this.$emit('canNext')
                     this.codeDuring = 60
                 } else {
-                    this.error_tel = 'Please confirm you have entered the right number.'
+                    this.error_tel = res.data.message
                 }
             })
         }

@@ -19,7 +19,7 @@
         </template>
         <div class="footer" v-show="!loadStatus">
             <mButton text="REFRESH" @click="refresh"/>
-            <mButton text="OK" @click="back"/>
+            <mButton text="OK" @click="click"/>
         </div>
     </div>
 </template>
@@ -36,8 +36,9 @@ export default {
             fail_message: 'Your request was not accepted. Please refresh the current page or try again the payment.',
             money: '',
             currency: '',
-            payToken: this.$route.query.payToken,
-            redirect: ''
+            redirect: '',
+            seqNo: this.$route.query.seqNo,
+            isApp: this.$store.state.appType
         }
     },
     components: {
@@ -45,8 +46,8 @@ export default {
         loading
     },
     mounted() {
-        if (!this.payToken) {
-            this.$alert('Query payToken needed! please check request')
+        if (!this.seqNo) {
+            this.$alert('Query seqNo needed! please check request')
             return false
         }
         let _this = this
@@ -59,36 +60,39 @@ export default {
                 _this.result = 2
                 _this.loadStatus = false
             }
-            _this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${_this.payToken}`).then(res => {
-                _this.redirect = res.data.merchantPayRedirectUrl
-                if (res.data && res.data.tradeState == 'SUCCESS') {
+
+            _this.$axios.get(`/payment/v2/order-pay-bills/${this.seqNo}`).then(res => {
+                let data = res.data
+
+                if (data && data.state == 3) {
                     _this.result = 1
                     _this.loadStatus = false
-                    _this.money = res.data.totalAmount
-                    _this.currency = res.data.currency
+                    _this.money = data.amount
+                    _this.currency = data.currencySymbol
                     clearInterval(timer)
                     window.getChannelId && window.getChannelId.returnRechargeResult(true)
-                } else if (res.data && (res.data.tradeState == 'NOTPAY' || res.data.tradeState == 'PAYING')) {
-                    // 正在支付
-                } else if (res.data && res.data.tradeState == 'FAIL') {
-                    clearInterval(timer)
+                } else {
                     _this.result = 2
                     _this.loadStatus = false
+                    clearInterval(timer)
                     window.getChannelId && window.getChannelId.returnRechargeResult(false)
                 }
             })
         }, 4000)
     },
     methods: {
-        back() {
-            if (this.$store.state.appType) {
+        click() {
+            if (this.isApp == 1) {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
+                window.getChannelId.finish()
+            } else if (this.isApp == 2) {
+                window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
-                if (this.redirect) window.location.href = this.redirect || 'https://m.startimestv.com'
+                this.$router.push('/browser')
             }
         },
         refresh() {
-            window.location.reload()
+            this.$router.go(0)
         }
     }
 }
@@ -97,6 +101,8 @@ export default {
 .container {
     padding: 5rem 1rem 0;
     text-align: center;
+    min-height:100%;
+    background:white;
     &.grey-back {
         height: 100vh;
         background: #eeeeee;

@@ -5,7 +5,7 @@
             <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"/>
         </div>
         <div v-show="step==2" class="step2">
-            <passInput />
+            <passInput placeholder="Enter your msg code" @endinput="codeEnd"/>
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)" />
             </div>
@@ -111,6 +111,8 @@ export default {
 <style lang="less" scoped>
 .container {
     padding: 3rem 1rem;
+    min-height:100%;
+    background:white;
     .step2 {
         width: 100%;
         height: 100%;
