@@ -123,7 +123,7 @@ export default ({ app: { router, $axios }, store, query }) => {
     }
 
     let sendEvLog = msg => {
-        let result = serializeMsg(msg, 'pv')
+        let result = serializeMsg(msg, 'event')
         sendMsg(
             env.ev_countly_server +
                 '/i?logtype=event&app_key=' +
