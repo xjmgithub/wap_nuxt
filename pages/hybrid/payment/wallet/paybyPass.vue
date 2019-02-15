@@ -71,6 +71,7 @@ export default {
 <style scoped>
 .container {
     padding: 6rem 1rem 0 1rem;
+    background:white;
 }
 
 .forgot-pwd {

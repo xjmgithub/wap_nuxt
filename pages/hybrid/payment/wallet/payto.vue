@@ -122,6 +122,7 @@ export default {
 <style lang="less" scoped>
 .container {
     padding-top: 6rem;
+    background:white;
 }
 .container .amount {
     color: #333333;

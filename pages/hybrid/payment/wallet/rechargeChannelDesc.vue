@@ -62,6 +62,7 @@ export default {
     padding: 5rem 1rem 0;
     font-size: 0.9rem;
     color: #333;
+    background:white;
 }
 .container h3 {
     text-align: center;
