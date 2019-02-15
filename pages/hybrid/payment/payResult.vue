@@ -38,7 +38,7 @@ export default {
             currency: '',
             redirect: '',
             seqNo: this.$route.query.seqNo,
-            isApp: this.$store.state.isApp
+            isApp: this.$store.state.appType
         }
     },
     components: {
