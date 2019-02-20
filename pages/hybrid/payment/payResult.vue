@@ -70,12 +70,12 @@ export default {
                     _this.money = data.amount
                     _this.currency = data.currencySymbol
                     clearInterval(timer)
-                    window.getChannelId && window.getChannelId.returnRechargeResult(true)
+                    window.getChannelId&& window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
                 } else {
                     _this.result = 2
                     _this.loadStatus = false
                     clearInterval(timer)
-                    window.getChannelId && window.getChannelId.returnRechargeResult(false)
+                    window.getChannelId&& window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
                 }
             })
         }, 4000)

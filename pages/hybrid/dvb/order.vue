@@ -141,6 +141,7 @@ export default {
         }
     },
     mounted() {
+        sessionStorage.setItem('step2',1)
         // 判断是否是月末
         let isBeyondYear = new Date(this.serverTime).getMonth() + 1 >= 12 ? true : false
         let nextMonthFirstDay
