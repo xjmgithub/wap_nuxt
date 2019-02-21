@@ -678,7 +678,7 @@ export default {
             page_from: 'new'
         })
         let step2 = sessionStorage.getItem('step2')
-        if (!step2 && this.isApp&& this.$store.state.appVersionCode>5290) {
+        if (!step2 && this.isApp && this.$store.state.appVersionCode>5820) {
             this.sendEvLog({
                 category: 'dvbservice',
                 action: 'first_in',
