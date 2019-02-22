@@ -49,8 +49,7 @@ export default {
         this.$axios.setHeader('token', this.$store.state.token)
     },
     mounted() {
-        this.$nextTick(() => this.$nuxt.$loading.finish())
-        if (this.$store.state.appVersionCode > 5820) {
+        if (this.$store.state.appVersionCode >= 50900) {
             this.sendEvLog({
                 category: 'h5_open',
                 action: 'layout_mounted',
