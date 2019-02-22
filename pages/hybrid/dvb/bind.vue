@@ -677,17 +677,6 @@ export default {
             service_type: 'Recharge',
             page_from: 'new'
         })
-        let step2 = sessionStorage.getItem('step2')
-        if (!step2 && this.isApp && this.$store.state.appVersionCode>5820) {
-            this.sendEvLog({
-                category: 'dvbservice',
-                action: 'first_in',
-                label: 'DVB_H5',
-                value: 10,
-                service_type: 'Recharge',
-                page_from: 'new'
-            })
-        }
 
         this.getHistoryBindCard(() => {
             if (this.historyList.length > 0) {

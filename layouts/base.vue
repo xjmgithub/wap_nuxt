@@ -50,13 +50,14 @@ export default {
     },
     mounted() {
         this.$nextTick(() => this.$nuxt.$loading.finish())
-        this.sendEvLog({
-            category: 'h5_open',
-            action: 'layout_mounted',
-            label: window.location.pathname,
-            value: this.needLoginAlert ? 0 : 1
-        })
-
+        if (this.$store.state.appVersionCode > 5820) {
+            this.sendEvLog({
+                category: 'h5_open',
+                action: 'layout_mounted',
+                label: window.location.pathname,
+                value: this.needLoginAlert ? 0 : 1
+            })
+        }
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
         })
