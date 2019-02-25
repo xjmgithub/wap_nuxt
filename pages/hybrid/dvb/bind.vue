@@ -88,7 +88,6 @@
                                 :disabled="canBuy?false:'disabled'"
                                 :value="item"
                                 :checked="index == chargeNumIndex"
-                                v-model="checkedValue"
                             >
                             <i/>
                         </label>
