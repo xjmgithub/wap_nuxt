@@ -20,10 +20,6 @@ module.exports = {
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         script: [
             {
-                src: '/res_nuxt/open.min.js',
-                async: true
-            },
-            {
                 src: '/res_nuxt/sdk.js',
                 async: true
             }
