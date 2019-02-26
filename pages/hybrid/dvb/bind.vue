@@ -670,14 +670,6 @@ export default {
     mounted() {
         this.sendEvLog({
             category: 'dvbservice',
-            action: 'test',
-            label: 'DVB_H5',
-            value: 10,
-            service_type: 'Recharge',
-            page_from: 'new'
-        })
-        this.sendEvLog({
-            category: 'dvbservice',
             action: 'recharge_show',
             label: 'DVB_H5',
             value: 10,
