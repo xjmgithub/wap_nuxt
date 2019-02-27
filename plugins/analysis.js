@@ -158,7 +158,7 @@ export default ({ app: { router, $axios }, store, query }) => {
 
     router.afterEach((to, from) => {
         ga('send', 'pageview')
-        sendPvLog({
+        sendEvLog({
             category: 'page_view',
             action: 'show',
             label: location.pathname
