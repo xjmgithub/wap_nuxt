@@ -3,7 +3,6 @@ const env = require('./env.js')
 
 module.exports = {
     mode: 'universal',
-
     head: {
         title: 'StarTimes ON',
         meta: [
