@@ -35,6 +35,7 @@ button {
     color: white;
     border-radius: 3px;
     outline-style: none;
+    font-weight: bold;
     &.disabled {
         background: #dddddd;
         color: #aaaaaa;

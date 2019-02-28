@@ -12,7 +12,7 @@
                     <th width="30%">Reward After 'LINK'</th>
                 </tr>
                 <tr>
-                    <td>Dormant</td>
+                    <td>Dormant</td> 
                     <td>Any Bouquet</td>
                     <td>
                         <span>7 days</span> Classic/Super bouquet free experience
@@ -103,9 +103,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
-    background: url('~assets/img/dvb/bg_color.png') no-repeat;
-    background-size: 100%;
-    position: static;
+    // background: url('~assets/img/dvb/bg_color.png') no-repeat;
+    // background-size: 100%;
+    // position: static;
+    background: linear-gradient( #0007ac 20%,#0007ac 0,#ffffff 100%);
     .top {
         background: url('~assets/img/dvb/head.png') no-repeat;
         height: 7rem;
