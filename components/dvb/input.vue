@@ -13,11 +13,8 @@
                 @focus="typing"
                 @blur="inputOver"
             >
-            <span v-show="cardState" class="card_state" :class="cardState == 'VALID' ? 'program-state-valid' : 'program-state'">
-                <span v-if="cardState=='PUNISH_STOP'">{{LANG.dormant}}</span>
-                <span v-if="cardState=='PAUSE'">{{LANG.link_suspend}}</span>
-                <span v-if="cardState=='VALID'&&stopDays">{{LANG.dvb_acitve_to}} {{stopDays | formatStopDays}}</span>
-                <span v-if="cardState=='VALID'&&!stopDays">{{LANG.active_}}</span>
+            <span class="card_state" :class="cardState == 'VALID' ? 'program-state-valid' : 'program-state'">
+                <span>{{cardStateDes}}</span>
             </span>
             <span class="error-card" :class="{showError:error}">{{LANG.h5_input_card_wrong}}</span>
             <p class="count">
@@ -65,6 +62,19 @@ export default {
             let tmp = this.cardNum.replace(/\s/g, '')
             return reg.test(tmp) ? tmp : ''
         },
+        cardStateDes() {
+            if (this.oriCardNum.length < 11) return ''
+            switch (this.cardState) {
+                case 'VALID':
+                    return this.stopDays ? this.LANG.dvb_acitve_to + this.formatStopDays(this.stopDays) : this.LANG.active_
+                case 'PUNISH_STOP':
+                    return this.LANG.dormant
+                case 'PAUSE':
+                    return this.LANG.link_suspend
+                default:
+                    return ''
+            }
+        },
         LANG() {
             return this.$store.state.lang
         },
@@ -91,7 +101,6 @@ export default {
             this.cardNum = ''
         },
         typing() {
-            this.cardState = ''
             this.$emit('typing')
         },
         choose(index) {
@@ -105,6 +114,9 @@ export default {
             this.$nextTick(function() {
                 document.querySelector('input.card').focus()
             })
+        },
+        formatStopDays(str) {
+            return dayjs(str).format('MMM DD YYYY') || ''
         }
     },
     watch: {
@@ -119,11 +131,6 @@ export default {
             }
 
             if (val.length >= 11) this.inputOver()
-        }
-    },
-    filters: {
-        formatStopDays(str) {
-            return dayjs(str).format('MMM DD YYYY') || ''
         }
     }
 }

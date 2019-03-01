@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <div class="money-box clearfix" v-show="goodsList.length>0">
+    <div v-show="list.length>0" :class="{disabled:disabled}">
+        <div class="money-box clearfix">
             <p>{{LANG.select_}}</p>
             <ul>
                 <li
-                    v-for="(item,index) in goodsList"
+                    v-for="(item,index) in list"
                     :key="index"
                     :class="{
                         selected:index == goodIndex,
@@ -15,12 +15,12 @@
                     <p>{{ formatName(item.rate_display_name) }}</p>
                     <p>
                         <span>{{ currency }}</span>
-                        {{ discount(item) | formatAmount }}
+                        {{ formatAmount(discount(item)) }}
                     </p>
                     <p
                         v-if="item.preferentialPlanVo&&item.preferentialPlanVo.exclusivePrice>0&&item.rate_amount!=item.preferentialPlanVo.exclusivePrice"
                     >
-                        <del>{{ currency }}{{ item.rate_amount | formatAmount }}</del>
+                        <del>{{ currency }}{{ formatAmount(item.rate_amount) }}</del>
                     </p>
                     <img
                         v-if="item.preferentialPlanVo&&item.preferentialPlanVo.firstRechargeGiveMoney>0"
@@ -50,13 +50,14 @@
     </div>
 </template>
 <script>
+import { formatAmount } from '~/functions/utils'
 export default {
     props: {
         goodsList: {
             type: Array,
             default: new Array()
         },
-        canBuy: {
+        disabled: {
             type: Boolean,
             default: false
         }
@@ -69,12 +70,9 @@ export default {
         }
     },
     watch: {
-        goodsList(nv, ov) {
+        list(nv, ov) {
             let maxMoney = 0
             let list = [...nv]
-            list.sort((a, b) => {
-                return a.rate_amount - b.rate_amount
-            })
             list.forEach((item, index) => {
                 if (item.rate_amount > maxMoney) {
                     maxMoney = item.rate_amount
@@ -90,48 +88,47 @@ export default {
         LANG() {
             return this.$store.state.lang
         },
+        list() {
+            let list = [...this.goodsList]
+            list.sort((a, b) => {
+                return a.rate_amount - b.rate_amount
+            })
+            return list
+        },
         countList() {
-            if (this.goodsList.length > 0) {
-                return this.goodsList[this.goodIndex].recharge_fee_numbers || []
-            } else {
+            try {
+                return this.list[this.goodIndex].recharge_fee_numbers || []
+            } catch (err) {
                 return []
             }
         },
         firstChargeTip() {
-            let item = this.goodsList[this.goodIndex]
-            if (item) {
-                if (item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
-                    return item.preferentialPlanVo.description
-                } else {
-                    return ''
-                }
+            let item = this.list[this.goodIndex]
+            if (item && item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
+                return item.preferentialPlanVo.description
             } else {
                 return ''
             }
         },
         firstChargeDetails() {
-            let item = this.goodsList[this.goodIndex]
-            if (item) {
-                if (item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
-                    return item.preferentialPlanVo.descDetail
-                } else {
-                    return ''
-                }
+            let item = this.list[this.goodIndex]
+            if (item && item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
+                return item.preferentialPlanVo.descDetail
             } else {
                 return ''
             }
         },
         payAmount() {
-            let item = this.goodsList[this.goodIndex]
+            let item = this.list[this.goodIndex]
             return Number(this.discount(item)) * Number(this.num)
         },
         rechargeAmount() {
-            let item = this.goodsList[this.goodIndex]
+            let item = this.list[this.goodIndex]
             return Number(item.rate_amount) * Number(this.checkedValue) || 0
         },
         rechargeDes() {
-            let name = this.goodsList[this.goodIndex].rate_display_name
-            return this.formatName + ' x ' + this.num
+            let name = this.list[this.goodIndex].rate_display_name
+            return this.formatName(name) + ' x ' + this.num
         }
     },
     updated() {
@@ -157,16 +154,8 @@ export default {
                 service_type: 'Recharge',
                 page_from: 'new'
             })
-            this.$alert(this.firstChargeDetails, () => {
-                this.sendEvLog({
-                    category: 'dvbservice',
-                    action: 'promotion_detail_back',
-                    label: 'DVB_H5',
-                    value: 10,
-                    service_type: 'Recharge',
-                    page_from: 'new'
-                })
-            })
+
+            this.$alert(this.firstChargeDetails)
         },
         discount(item) {
             if (item.preferentialPlanVo && item.preferentialPlanVo.exclusivePrice > 0) {
@@ -181,20 +170,9 @@ export default {
             } else {
                 return str
             }
-        }
-    },
-    filters: {
-        formatAmount(val) {
-            if (!isNaN(val)) {
-                let arr = val.toString().split('.')
-                if (arr[1]) {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
-                } else {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
-                }
-            } else {
-                return ''
-            }
+        },
+        formatAmount(num) {
+            return formatAmount(num)
         }
     }
 }
@@ -280,20 +258,6 @@ export default {
     .christmas {
         display: none;
     }
-    &.disabled {
-        li {
-            border: 1px solid #bdbdbd;
-            &.selected {
-                border: 1px solid #bdbdbd;
-                p {
-                    color: #bdbdbd;
-                }
-            }
-            p {
-                color: #bdbdbd;
-            }
-        }
-    }
 }
 .count-box {
     position: relative;
@@ -365,28 +329,44 @@ export default {
             font-weight: bold;
         }
     }
-    &.disabled {
-        .choose {
-            .radio {
-                i {
-                    border: 1px solid #bdbdbd;
-                }
-                input {
-                    &:checked {
-                        & + i {
-                            border: 1px solid #bdbdbd;
-                        }
-                    }
+}
+
+.disabled.money-box,
+.disabled.count-box {
+    li {
+        border: 1px solid #bdbdbd;
+        &.selected {
+            border: 1px solid #bdbdbd;
+            p {
+                color: #bdbdbd;
+            }
+        }
+        p {
+            color: #bdbdbd;
+        }
+    }
+
+    .choose {
+        .radio {
+            i {
+                border: 1px solid #bdbdbd;
+            }
+            input {
+                &:checked {
                     & + i {
-                        &:after {
-                            background-color: #bdbdbd;
-                        }
+                        border: 1px solid #bdbdbd;
+                    }
+                }
+                & + i {
+                    &:after {
+                        background-color: #bdbdbd;
                     }
                 }
             }
         }
     }
 }
+
 .first-charge {
     font-size: 0.9rem;
     overflow: hidden;

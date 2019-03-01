@@ -1,47 +1,52 @@
 <template>
     <div id="wrapper">
         <div class="untrim">
-            <card-input ref="cardInput" :list="list" @endInput="checkout" :stop-days="stopDays" :card-state="cardState"/>
-            <div class="program-box" v-show="loaded">
+            <card-input ref="cardInput" :list="cardList" @endInput="checkout" @typing="canBuy=false" :stop-days="stopDays" :card-state="cardState"/>
+            <div class="program-box" v-if="recharge_items.length>0">
                 <p v-show="canBuy">
-                    {{$store.state.lang.topup_bouquet}}:
+                    {{LANG.topup_bouquet}}:
                     <span class="program-name">{{ program_name }}</span>
                 </p>
             </div>
-            <goods ref="goodsCon" :goods-list="recharge_items" @update="changeNorm" v-show="loaded"/>
-            <div class="pay-btn" @click="buyNow" :class="{disabled:!canBuy}" v-show="loaded">
-                <span class="need-pay">{{ currency }}{{ payAmount | formatAmount }}</span>
-                {{$store.state.lang.next_}}
+            <goods ref="goodsPicker" v-if="recharge_items.length>0" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm"/>
+            <div class="pay-btn" v-if="recharge_items.length>0" @click="buyNow" :class="{disabled:!canBuy}">
+                <span class="need-pay">{{ currency }}{{ formatAmount(payAmount) }}</span>
+                {{LANG.next_}}
             </div>
         </div>
-        <img v-show="loaded&&(countryCode=='NG'||countryCode=='TZ')" @click="buyNow" src="~assets/img/dvb/dvb_ug_off.png" style="width:100%">
-        <more-methods v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1"/>
-        <div class="demoDialog" v-show="!loaded&&list.length<=0">
+        <img
+            v-show="recharge_items.length>0&&(countryCode=='NG'||countryCode=='TZ')"
+            @click="buyNow"
+            src="~assets/img/dvb/dvb_ug_off.png"
+            style="width:100%"
+        >
+        <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'&&isApp==1"/>
+        <div class="demoDialog" v-if="!recharge_items.length>0&&cardList.length<=0">
             <div @click="focusInput">
-                <p>{{$store.state.lang.input_your_smartcard_number}}</p>
+                <p>{{LANG.input_your_smartcard_number}}</p>
                 <div>
                     <img src="~assets/img/dvb/icon_smart_card.png">
                 </div>
-                <p>{{$store.state.lang.recharge_your_decoder_account}}</p>
-                <p class="tips">{{$store.state.lang.Tips_check_your_Balance}}</p>
+                <p>{{LANG.recharge_your_decoder_account}}</p>
+                <p class="tips">{{LANG.Tips_check_your_Balance}}</p>
             </div>
             <p>
-                {{$store.state.lang.if_you_are_not_a_startimes_tv_user}}
+                {{LANG.if_you_are_not_a_startimes_tv_user}}
                 <a
                     href="javascript:void(0)"
                     @click="toLoadurl"
                     style="color:#0087EB;text-decoration:underline"
-                >{{$store.state.lang.click_here}}</a>
-                {{$store.state.lang.if_you_are_not_a_startimes_tv_user2}}
+                >{{LANG.click_here}}</a>
+                {{LANG.if_you_are_not_a_startimes_tv_user2}}
             </p>
         </div>
     </div>
 </template>
 <script>
-import dayjs from 'dayjs'
 import cardInput from '~/components/dvb/input'
 import goods from '~/components/dvb/goods'
 import moreMethods from '~/components/dvb/moreMethods'
+import { formatAmount } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -52,7 +57,10 @@ export default {
     async asyncData({ app: { $axios }, store }) {
         $axios.setHeader('token', store.state.token)
         let { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
-        return { list: Array.from(data, x => x.smardcard_no) || [] }
+        return {
+            cardList: Array.from(data, x => x.smardcard_no) || [],
+            newUser: data.length > 0
+        }
     },
     data() {
         return {
@@ -61,7 +69,6 @@ export default {
             program_name: '',
             tv_platform: '',
             canBuy: false,
-            loaded: false,
             money: '',
             recharge_items: [],
             countryCode: this.$store.state.country.country,
@@ -74,6 +81,11 @@ export default {
             payAmount: 0,
             rechargeDes: '',
             rechargeAmount: 0
+        }
+    },
+    computed:{
+        LANG() {
+            return this.$store.state.lang
         }
     },
     methods: {
@@ -113,10 +125,9 @@ export default {
             }
         },
         buyNow() {
-            let rechargeItem = this.recharge_items[this.chargeItemIndex]
-            let ref = this.$refs.goodsCon
+            let ref = this.$refs.goodsPicker
             let index = ref.goodIndex
-            let item = ref.goodsList[index]
+            let rechargeItem = ref.list[index]
             let num = ref.num
             let card = this.$refs.cardInput.cardNum
 
@@ -127,7 +138,7 @@ export default {
                 value: this.rechargeAmount || 0,
                 service_type: 'Recharge',
                 page_from: 'new',
-                recharge_config: item.rate_display_name,
+                recharge_config: rechargeItem.rate_display_name,
                 recharge_amount: num,
                 BouquetName: this.program_name,
                 CardState: this.cardState,
@@ -154,21 +165,21 @@ export default {
                 rechargeExplanation: this.rechargeExplanation,
                 promotionAmount: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.firstRechargeGiveMoney) || 0,
                 rechargeAmount: new Number(this.rechargeAmount).toFixed(2),
-                paymentAmount: new Number(this.paymentAmount).toFixed(2),
+                paymentAmount: new Number(this.payAmount).toFixed(2),
                 exclusivePrice: new Number(
                     (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.exclusivePrice) || rechargeItem.rate_amount
                 ).toFixed(2),
                 preferentialPlanId: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.id) || 0,
                 listingPrice: new Number(rechargeItem.rate_amount).toFixed(2), // 原始单价
-                rechargeItemSelectedQuantity: this.checkedValue,
+                rechargeItemSelectedQuantity: num,
                 rechargeItemSelectedName: rechargeItem.rate_display_name,
                 tv_platform: this.tv_platform,
                 smartcard_status: this.cardState,
-                stop_days: this.stop_days,
+                stop_days: this.stopDays,
                 program_name: this.program_name,
                 money: this.money,
                 rechargeAmount: this.rechargeAmount,
-                firstChargeTip: this.firstChargeTip,
+                firstChargeTip: ref.firstChargeTip,
                 cardHaveCharged: this.cardHaveCharged
             }
 
@@ -260,11 +271,7 @@ export default {
                         this.$refs.cardInput.showError()
                         return false
                     }
-                    this.loaded = true
                     this.canBuy = true
-                    this.countLists = []
-                    this.chargeItemIndex = 0
-
                     this.program_name = data.program_name
                     this.tv_platform = data.tv_platform
                     this.cardState = data.smartcard_status
@@ -304,6 +311,9 @@ export default {
                         }
                     })
                 })
+        },
+        formatAmount(num) {
+            return formatAmount(num)
         }
     },
     watch: {
@@ -314,20 +324,6 @@ export default {
             } else {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 this.$store.commit('HIDE_SHADOW_LAYER')
-            }
-        }
-    },
-    filters: {
-        formatAmount(val) {
-            if (!isNaN(val)) {
-                let arr = val.toString().split('.')
-                if (arr[1]) {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
-                } else {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
-                }
-            } else {
-                return ''
             }
         }
     },
