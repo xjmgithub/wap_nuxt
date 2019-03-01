@@ -330,7 +330,7 @@ export default {
                             if (res.data.payPassword == 'true') {
                                 this.toPay()
                             } else {
-                                this.$alert('For your security,please set up your password for eWallet and register your phone number.', '', () => {
+                                this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
                                     this.isLoading = false
                                     window.getChannelId &&
                                         window.getChannelId.toAppPage(
