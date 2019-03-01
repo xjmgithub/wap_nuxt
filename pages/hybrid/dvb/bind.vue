@@ -8,29 +8,15 @@
                     <span class="program-name">{{ program_name }}</span>
                 </p>
             </div>
-            <goods :goods-list="recharge_items" v-show="loaded" />
-            <div class="first-charge" v-show="firstChargeTip">
-                <img src="~assets/img/dvb/ic_gift_def.png">
-                <div style="width:65%;float:left;">{{firstChargeTip}}</div>
-                <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails">{{$store.state.lang.first_recharge_detail}}</div>
-            </div>
+            <goods ref="goodsCon" :goods-list="recharge_items" @update="changeNorm" v-show="loaded"/>
             <div class="pay-btn" @click="buyNow" :class="{disabled:!canBuy}" v-show="loaded">
-                <span class="need-pay">{{ currency }}{{ paymentAmount | formatRateAmount }}</span>
+                <span class="need-pay">{{ currency }}{{ payAmount | formatAmount }}</span>
                 {{$store.state.lang.next_}}
             </div>
         </div>
         <img v-show="loaded&&(countryCode=='NG'||countryCode=='TZ')" @click="buyNow" src="~assets/img/dvb/dvb_ug_off.png" style="width:100%">
-        <div class="blank_bottom" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">&nbsp;</div>
-        <div class="more-services untrim" v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1">
-            <p @click="showAllWays">
-                {{$store.state.lang.more_recharge_method}}
-                <span class="all">
-                    {{$store.state.lang.membership_all}}
-                    <img src="~assets/img/dvb/ic_right_def_r.png" alt>
-                </span>
-            </p>
-        </div>
-        <!-- <div class="demoDialog" v-show="!loaded&&historyLoaded&&historyList.length<=0">
+        <more-methods v-show="canBuy&&loaded&&countryCode=='NG'&&isApp==1"/>
+        <div class="demoDialog" v-show="!loaded&&list.length<=0">
             <div @click="focusInput">
                 <p>{{$store.state.lang.input_your_smartcard_number}}</p>
                 <div>
@@ -48,18 +34,20 @@
                 >{{$store.state.lang.click_here}}</a>
                 {{$store.state.lang.if_you_are_not_a_startimes_tv_user2}}
             </p>
-        </div>-->
+        </div>
     </div>
 </template>
 <script>
 import dayjs from 'dayjs'
 import cardInput from '~/components/dvb/input'
 import goods from '~/components/dvb/goods'
+import moreMethods from '~/components/dvb/moreMethods'
 export default {
     layout: 'base',
     components: {
         cardInput,
-        goods
+        goods,
+        moreMethods
     },
     async asyncData({ app: { $axios }, store }) {
         $axios.setHeader('token', store.state.token)
@@ -74,132 +62,30 @@ export default {
             tv_platform: '',
             canBuy: false,
             loaded: false,
-            card_state: '',
             money: '',
             recharge_items: [],
-            countLists: [],
-            countList: [],
-            chargeItemIndex: 0,
-            checkedValue: 1,
-            chargeNumIndex: 0,
             countryCode: this.$store.state.country.country,
             currency: this.$store.state.country.currencySymbol,
             currencyCode: this.$store.state.country.currencyCode,
-            stop_days: '',
             isLoading: false,
-            init: true,
             cardHaveCharged: false,
-            user_status: false,
-            isLogin: this.$store.state.user.type || false,
-            isApp: this.$store.state.appType
-        }
-    },
-    computed: {
-        rechargeAmount() {
-            let item = this.recharge_items[this.chargeItemIndex]
-            if (item) {
-                return Number(item.rate_amount) * Number(this.checkedValue)
-            } else {
-                return 0
-            }
-        },
-        rechargeExplanation() {
-            let name = this.recharge_items[this.chargeItemIndex].rate_display_name
-            if (name.indexOf('/') >= 0) {
-                return name.split('/')[1] + ' x ' + this.checkedValue
-            } else {
-                return name + ' x ' + this.checkedValue
-            }
-        },
-        paymentAmount() {
-            let item = this.recharge_items[this.chargeItemIndex]
-            let count = 0
-            if (item) {
-                if (item.preferentialPlanVo && item.preferentialPlanVo.exclusivePrice > 0) {
-                    count = item.preferentialPlanVo.exclusivePrice
-                } else {
-                    count = item.rate_amount
-                }
-            }
-            return Number(count) * Number(this.checkedValue)
-        },
-        firstChargeTip() {
-            let item = this.recharge_items[this.chargeItemIndex]
-            if (item) {
-                if (item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
-                    return item.preferentialPlanVo.description
-                } else {
-                    return ''
-                }
-            } else {
-                return ''
-            }
-        },
-        firstChargeDetails() {
-            let item = this.recharge_items[this.chargeItemIndex]
-            if (item) {
-                if (item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
-                    return item.preferentialPlanVo.descDetail
-                } else {
-                    return ''
-                }
-            } else {
-                return ''
-            }
-        }
-    },
-    filters: {
-        formatDate(str) {
-            if (str.indexOf('/') >= 0) {
-                return str.split('/')[1]
-            } else {
-                return str
-            }
-        },
-        formatRateAmount(val) {
-            if (!isNaN(val)) {
-                let arr = val.toString().split('.')
-                if (arr[1]) {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
-                } else {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
-                }
-            } else {
-                return ''
-            }
-        },
-        discountAmount(item) {
-            let count = 0
-            if (item.preferentialPlanVo && item.preferentialPlanVo.exclusivePrice > 0) {
-                count = item.preferentialPlanVo.exclusivePrice
-            } else {
-                count = item.rate_amount
-            }
-            if (!isNaN(count)) {
-                let arr = count.toString().split('.')
-                if (arr[1]) {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
-                } else {
-                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
-                }
-            } else {
-                return ''
-            }
+            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() != 'ANONYMOUS',
+            isApp: this.$store.state.appType,
+            payAmount: 0,
+            rechargeDes: '',
+            rechargeAmount: 0
         }
     },
     methods: {
-        showAllWays() {
-            this.sendEvLog({
-                category: 'dvbservice',
-                action: 'other_paymentWay_click',
-                label: this.user_status ? 'AddCardUser' : 'NewCardUser',
-                value: 10,
-                service_type: 'Recharge',
-                page_from: 'new'
+        changeNorm(obj) {
+            this.payAmount = obj.payAmount
+            this.rechargeAmount = obj.rechargeAmount
+            this.rechargeDes = obj.rechargeDes
+        },
+        focusInput() {
+            this.$nextTick(function() {
+                document.querySelector('input.card').focus()
             })
-            if (this.isApp == '1') {
-                window.getChannelId.toAppPage(3, 'com.star.mobile.video.smartcard.recharge.RechargeActivity?fromNewRecharge=true', '')
-            }
         },
         toLoadurl() {
             this.sendEvLog({
@@ -226,28 +112,13 @@ export default {
                 window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=139&dir_id=0'
             }
         },
-        showDetails() {
-            this.sendEvLog({
-                category: 'dvbservice',
-                action: 'promotion_detail_click',
-                label: 'DVB_H5',
-                value: 10,
-                service_type: 'Recharge',
-                page_from: 'new'
-            })
-            this.$alert(this.firstChargeDetails, () => {
-                this.sendEvLog({
-                    category: 'dvbservice',
-                    action: 'promotion_detail_back',
-                    label: 'DVB_H5',
-                    value: 10,
-                    service_type: 'Recharge',
-                    page_from: 'new'
-                })
-            })
-        },
         buyNow() {
             let rechargeItem = this.recharge_items[this.chargeItemIndex]
+            let ref = this.$refs.goodsCon
+            let index = ref.goodIndex
+            let item = ref.goodsList[index]
+            let num = ref.num
+            let card = this.$refs.cardInput.cardNum
 
             this.sendEvLog({
                 category: 'dvbservice',
@@ -256,12 +127,12 @@ export default {
                 value: this.rechargeAmount || 0,
                 service_type: 'Recharge',
                 page_from: 'new',
-                recharge_config: rechargeItem.rate_display_name,
-                recharge_amount: this.checkedValue,
+                recharge_config: item.rate_display_name,
+                recharge_amount: num,
                 BouquetName: this.program_name,
-                CardState: this.card_state,
-                PauseDate: this.stop_days,
-                SmartCardNo: this.cardNum
+                CardState: this.cardState,
+                PauseDate: this.stopDays,
+                SmartCardNo: card
             })
 
             if (!this.canBuy) return false
@@ -292,7 +163,7 @@ export default {
                 rechargeItemSelectedQuantity: this.checkedValue,
                 rechargeItemSelectedName: rechargeItem.rate_display_name,
                 tv_platform: this.tv_platform,
-                smartcard_status: this.card_state,
+                smartcard_status: this.cardState,
                 stop_days: this.stop_days,
                 program_name: this.program_name,
                 money: this.money,
@@ -303,11 +174,6 @@ export default {
 
             sessionStorage.setItem('order-info', JSON.stringify(params))
             this.$router.push('/hybrid/dvb/order')
-        },
-        selected(index) {
-            if (this.canBuy) {
-                this.chargeItemIndex = index
-            }
         },
         logSmartInput(card, val) {
             let newUser = this.$refs.cardInput.newUser
@@ -405,23 +271,8 @@ export default {
                     this.stopDays = data.penalty_stop
                     this.money = data.money
                     this.cardHaveCharged = data.have_rechareged
-                    
                     if (data.recharge_items && data.recharge_items.length > 0) {
                         this.recharge_items = data.recharge_items || []
-                        // 默认选中最大值
-                        let maxMoney = 0
-                        this.recharge_items.sort((a, b) => {
-                            return a.rate_amount - b.rate_amount
-                        })
-                        this.recharge_items.forEach((item, index) => {
-                            if (item.rate_amount > maxMoney) {
-                                maxMoney = item.rate_amount
-                                this.chargeItemIndex = index
-                            }
-                            if (item.recharge_fee_numbers) {
-                                this.countLists[this.countLists.length] = item.recharge_fee_numbers
-                            }
-                        })
                         this.logloadItem(card, 1)
                     } else {
                         this.logloadItem(card, 0)
@@ -430,12 +281,6 @@ export default {
                             this.$alert("This bouquet can't be recharged for now, please contact the local center")
                         })
                     }
-                    if (this.countLists.length > 0) {
-                        this.countList = this.countLists[this.chargeItemIndex]
-                    } else {
-                        this.countList = [1]
-                    }
-                    this.checkedValue = this.countList[0]
                 })
                 .catch(err => {
                     this.logloadItem(card, 1)
@@ -470,14 +315,20 @@ export default {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 this.$store.commit('HIDE_SHADOW_LAYER')
             }
-        },
-        chargeItemIndex(val, oldVal) {
-            if (this.countLists.length > 0) {
-                this.countList = this.countLists[val]
+        }
+    },
+    filters: {
+        formatAmount(val) {
+            if (!isNaN(val)) {
+                let arr = val.toString().split('.')
+                if (arr[1]) {
+                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
+                } else {
+                    return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
+                }
             } else {
-                this.countList = [1]
+                return ''
             }
-            this.checkedValue = this.countList[0]
         }
     },
     head() {

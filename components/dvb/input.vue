@@ -128,3 +128,83 @@ export default {
     }
 }
 </script>
+<style lang="less" scoped>
+.card-input {
+    padding-top: 2rem;
+    .contains {
+        position: relative;
+    }
+    input {
+        &.card {
+            width: 100%;
+            outline-style: none;
+            border: none;
+            border-bottom: 2px solid #dddddd;
+            font-size: 1.3rem;
+            padding-bottom: 1.2rem;
+            margin-bottom: 0.3rem;
+            background-color: transparent;
+            font-weight: bold;
+            &.error {
+                border-bottom: 2px solid red;
+            }
+        }
+        &::-webkit-input-placeholder {
+            font-size: 0.95rem;
+            color: #bdbdbd;
+            font-weight: normal;
+        }
+    }
+    .card_state {
+        font-size: 0.8rem;
+        font-weight: bold;
+        position: absolute;
+        top: 1.7rem;
+        left: 0;
+        &.program-state-valid {
+            color: #008be9;
+        }
+        &.program-state {
+            color: #f00;
+        }
+    }
+    .error-card {
+        color: red;
+        font-size: 0.9rem;
+        display: none;
+        &.showError {
+            display: block;
+        }
+    }
+    .count {
+        color: #9b9b9b;
+        float: right;
+        font-size: 0.9rem;
+    }
+    .operate {
+        position: absolute;
+        width: 1.6rem;
+        right: 0;
+        top: 0;
+        img {
+            width: 100%;
+        }
+    }
+    .history {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        position: absolute;
+        background: white;
+        z-index: 100;
+        box-shadow: 0px 2px 2px #909090;
+        padding-left: 0.3rem;
+        top: 2.8rem;
+        li {
+            list-style: none;
+            padding: 0.4rem 0;
+            font-size: 1.1rem;
+        }
+    }
+}
+</style>

@@ -312,26 +312,7 @@ export default {
                 window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=139&dir_id=0'
             }
         },
-        showDetails() {
-            this.sendEvLog({
-                category: 'dvbservice',
-                action: 'promotion_detail_click',
-                label: 'DVB_H5',
-                value: 10,
-                service_type: 'Recharge',
-                page_from: 'new'
-            })
-            this.$alert(this.firstChargeDetails, () => {
-                this.sendEvLog({
-                    category: 'dvbservice',
-                    action: 'promotion_detail_back',
-                    label: 'DVB_H5',
-                    value: 10,
-                    service_type: 'Recharge',
-                    page_from: 'new'
-                })
-            })
-        },
+        
         clearInput() {
             this.cardNum = ''
             this.oriCardNum = ''
