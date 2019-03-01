@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="gap"/>
-            <div class="pay-methods">
+            <div class="pay-methods" v-show="false">
                 <div class="methods">
                     <p>{{$store.state.lang.payment_details_method}}：</p>
                     <ul class="choose clearfix">
@@ -91,10 +91,12 @@
                     </div>
                 </div>
             </div>
+            <NG class="ng-pay" :currency="currency" :amount="wallet_account.amount" @doAdd="toAddCard"/>
             <div class="btn-box">
                 <span class="total">{{$store.state.lang.payment_details_total}}:</span>
                 <span class="total">{{ currency }}{{ paymentAmount | formatMoney }}</span>
-                <div class="pay-btn" :class="{disabled:!canPay}" @click="payNow">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
+                <!-- <div class="pay-btn" :class="{disabled:!canPay}" @click="payNow">{{$store.state.lang.dvb_recharge_btn_pay}}</div> -->
+                <div class="pay-btn" :class="{disabled:!canPay}" @click="payNG">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
             </div>
             <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
         </div>
@@ -103,6 +105,7 @@
 <script>
 import dayjs from 'dayjs'
 import qs from 'qs'
+import NG from '~/components/pay/NG'
 export default {
     layout: 'base',
     data() {
@@ -298,6 +301,9 @@ export default {
             )
             window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
         },
+        payNG(){
+            
+        },
         payNow() {
             let param = JSON.parse(sessionStorage.getItem('order-info'))
             this.sendEvLog({
@@ -455,6 +461,10 @@ export default {
                     this.isLoading = false
                     this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                 })
+        },
+        toAddCard(){
+            // TODO
+            console.log('toAddCard')
         }
     },
     computed: {
@@ -498,6 +508,9 @@ export default {
             }
         }
     },
+    components:{
+        NG
+    },
     head() {
         return {
             title: this.$store.state.lang.my_order_details
@@ -507,4 +520,9 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/dvb/index.less';
+.ng-pay{
+    width: 90%;
+    margin: 0 auto;
+    padding-bottom: 5.5rem;
+}
 </style>
