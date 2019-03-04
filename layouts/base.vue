@@ -36,7 +36,6 @@ export default {
         }
     },
     created() {
-        // this.$nextTick(() => this.$nuxt.$loading.start()) 
         let _this = this
         Vue.prototype.$alert = (msg, callback) => {
             _this.$refs.alert.show(msg, callback)
@@ -57,8 +56,14 @@ export default {
                 value: this.needLoginAlert ? 0 : 1
             })
         }
+        let user = this.$store.state.user
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
+            if(!user.roleName&&this.$store.state.appType){
+                this.$alert('Your user authentication has expired. Please log in again.',()=>{
+                    this.toNativeLogin()
+                })
+            }
         })
     },
     methods: {

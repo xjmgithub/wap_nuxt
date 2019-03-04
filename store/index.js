@@ -204,26 +204,24 @@ export const actions = {
         if (_HEADER['token']) {
             commit('SET_TOKEN', _HEADER['token'])
             commit('SET_GTOKEN', _HEADER['token'])
-            await getMe(_HEADER['token'])
-            commit('SET_AREA_INFO', countryMap[state.user.countryCode])
         } else {
             if (_COOKIE['token']) {
                 commit('SET_TOKEN', _COOKIE['token'])
             } else {
                 commit('SET_TOKEN', tokenMap[country])
             }
-
-            await getMe(state.token)
             if (_COOKIE['gtoken']) {
                 commit('SET_GTOKEN', _COOKIE['gtoken'])
             } else {
                 commit('SET_GTOKEN', tokenMap[country])
             }
-            if (state.user.countryCode) {
-                commit('SET_AREA_INFO', countryMap[state.user.countryCode])
-            } else {
-                commit('SET_AREA_INFO', countryMap[country])
-            }
+        }
+
+        await getMe(state.token)
+        if (state.user.countryCode) {
+            commit('SET_AREA_INFO', countryMap[state.user.countryCode])
+        } else {
+            commit('SET_AREA_INFO', countryMap[country])
         }
     }
 }
