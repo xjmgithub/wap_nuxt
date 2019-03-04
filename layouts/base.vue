@@ -36,7 +36,7 @@ export default {
         }
     },
     created() {
-        this.$nextTick(() => this.$nuxt.$loading.start())
+        // this.$nextTick(() => this.$nuxt.$loading.start()) 
         let _this = this
         Vue.prototype.$alert = (msg, callback) => {
             _this.$refs.alert.show(msg, callback)
