@@ -214,3 +214,76 @@ export const formatAmount = num => {
         return ''
     }
 }
+
+// client 端使用
+export const parseUA = isApp => {
+    if (isApp == 1 || isApp == 2) {
+        let system = isApp == 1 ? 'android' : 'ios'
+        var dstr = 'APP(' + system + ',<?php echo $appVersionCode; ?>)'
+        dstr += ';H5(' + system
+        if (isApp == 1) {
+            let s = navigator.userAgent.indexOf('Android')
+            if (s > 0) {
+                dstr += '_' + navigator.userAgent.substr(s + 8).split(';')[0]
+            }
+        } else {
+            let s = navigator.userAgent.indexOf('iPhone OS')
+            if (s > 0) {
+                dstr += '_' + navigator.userAgent.substr(s + 10).split(' ')[0]
+            }
+        }
+        dstr += ', Chrome'
+        let b = navigator.userAgent.indexOf('Version')
+        let c = navigator.userAgent.indexOf('Chrome')
+        if (b > 0) {
+            let s = navigator.userAgent
+                .substr(b)
+                .split(' ')[1]
+                .split('/')[1]
+            if (s) {
+                dstr += '_' + s
+            }
+        } else {
+            if (c > 0) {
+                let s = navigator.userAgent
+                    .substr(c)
+                    .split(' ')[0]
+                    .split('/')[1]
+                if (s) {
+                    dstr += '_' + s
+                }
+            }
+        }
+        dstr += ')'
+    } else {
+        let plat = 'others'
+        if (navigator.userAgent.indexOf('Android') > 0) {
+            plat = 'android'
+        } else if (navigator.userAgent.indexOf('iPhone') > 0) {
+            plat = 'ios'
+        }
+        var dstr = 'H5(' + plat + ', MQQBrowser'
+        let b = navigator.userAgent.indexOf('Version')
+        let c = navigator.userAgent.indexOf('Chrome')
+        if (b > 0) {
+            let s = navigator.userAgent
+                .substr(b)
+                .split(' ')[1]
+                .split('/')[1]
+            if (s) {
+                dstr += '_' + s
+            }
+        } else {
+            if (c > 0) {
+                let s = navigator.userAgent
+                    .substr(c)
+                    .split(' ')[0]
+                    .split('/')[1]
+                if (s) {
+                    dstr += '_' + s
+                }
+            }
+        }
+        dstr += ')'
+    }
+}
