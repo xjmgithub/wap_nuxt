@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="untrim">
             <card-input ref="cardInput" :list="cardList" @endInput="checkout" @typing="canBuy=false" :stop-days="stopDays" :card-state="cardState"/>
             <div class="program-box" v-if="recharge_items.length>0">
@@ -129,7 +129,7 @@ export default {
             let index = ref.goodIndex
             let rechargeItem = ref.list[index]
             let num = ref.num
-            let card = this.$refs.cardInput.cardNum
+            let card = this.$refs.cardInput.oriCardNum
 
             this.sendEvLog({
                 category: 'dvbservice',
@@ -156,13 +156,14 @@ export default {
             }
 
             let preferentialPlanId = rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo
+            
 
             let params = {
-                cardNo: this.oriCardNum,
+                cardNo: card,
                 countryCode: this.countryCode,
                 currencyCode: currencyCode,
                 currency: this.currency,
-                rechargeExplanation: this.rechargeExplanation,
+                rechargeExplanation: this.rechargeDes,
                 promotionAmount: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.firstRechargeGiveMoney) || 0,
                 rechargeAmount: new Number(this.rechargeAmount).toFixed(2),
                 paymentAmount: new Number(this.payAmount).toFixed(2),
@@ -178,7 +179,6 @@ export default {
                 stop_days: this.stopDays,
                 program_name: this.program_name,
                 money: this.money,
-                rechargeAmount: this.rechargeAmount,
                 firstChargeTip: ref.firstChargeTip,
                 cardHaveCharged: this.cardHaveCharged
             }
@@ -334,7 +334,75 @@ export default {
     }
 }
 </script>
-<style lang="less">
-@import '~assets/less/dvb/index.less';
+<style lang="less" scoped>
+.wrapper {
+    min-height:100%;
+    background:white;
+    .untrim{
+        padding: 0 1rem;
+        position: relative;
+    }
+    
+}
+.demoDialog {
+    width: 85%;
+    margin: 1.5rem auto 0;
+    font-size: 0.8rem;
+    & > div {
+        border-radius: 5px;
+        padding: 1rem;
+        background: #eeeeee;
+        color: #424242;
+        margin-bottom: 2rem;
+        img {
+            width: 95%;
+            display: block;
+            margin: 1rem auto;
+            border-radius: 7px;
+        }
+    }
+    & > p {
+        width: 80%;
+        margin: 0 auto;
+    }
+    .tips {
+        margin-top: 1.5rem;
+    }
+}
+.program-box {
+    font-size: 0.9rem;
+    p {
+        padding: 0;
+        margin: 0;
+        font-weight: bold;
+        color: #424242;
+    }
+    span {
+        &.program-name {
+            font-weight: 400;
+        }
+    }
+}
+
+
+
+.pay-btn {
+    background-color: #008be9;
+    color: #fff;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0 auto;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    &.disabled {
+        background-color: #bdbdbd;
+    }
+    .need-pay {
+        margin-right: 0.5rem;
+    }
+}
 </style>
 

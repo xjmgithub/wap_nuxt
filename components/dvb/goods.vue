@@ -124,7 +124,7 @@ export default {
         },
         rechargeAmount() {
             let item = this.list[this.goodIndex]
-            return Number(item.rate_amount) * Number(this.checkedValue) || 0
+            return Number(item.rate_amount) * Number(this.num) || 0
         },
         rechargeDes() {
             let name = this.list[this.goodIndex].rate_display_name
@@ -133,6 +133,13 @@ export default {
     },
     updated() {
         this.$emit('update', {
+            payAmount: this.payAmount,
+            rechargeAmount: this.rechargeAmount,
+            rechargeDes: this.rechargeDes
+        })
+    },
+    mounted() {
+        this.$emit('update', {  // TODO 待优化
             payAmount: this.payAmount,
             rechargeAmount: this.rechargeAmount,
             rechargeDes: this.rechargeDes

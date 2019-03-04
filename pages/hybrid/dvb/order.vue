@@ -507,4 +507,22 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/dvb/index.less';
+.pay-btn {
+    background-color: #008be9;
+    color: #fff;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0 auto;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    &.disabled {
+        background-color: #bdbdbd;
+    }
+    .need-pay {
+        margin-right: 0.5rem;
+    }
+}
 </style>
