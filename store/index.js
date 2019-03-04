@@ -202,7 +202,6 @@ export const actions = {
         }
 
         if (_HEADER['token']) {
-            // app embedded
             commit('SET_TOKEN', _HEADER['token'])
             commit('SET_GTOKEN', _HEADER['token'])
             await getMe(_HEADER['token'])
