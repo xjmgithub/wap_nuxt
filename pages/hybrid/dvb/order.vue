@@ -524,5 +524,22 @@ export default {
     width: 90%;
     margin: 0 auto;
     padding-bottom: 5.5rem;
+.pay-btn {
+    background-color: #008be9;
+    color: #fff;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0 auto;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    &.disabled {
+        background-color: #bdbdbd;
+    }
+    .need-pay {
+        margin-right: 0.5rem;
+    }
 }
 </style>

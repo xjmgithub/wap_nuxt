@@ -201,3 +201,16 @@ export const login = (v, opt) => {
             })
     })
 }
+
+export const formatAmount = num => {
+    if (!isNaN(num)) {
+        let arr = num.toString().split('.')
+        if (arr[1]) {
+            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
+        } else {
+            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
+        }
+    } else {
+        return ''
+    }
+}

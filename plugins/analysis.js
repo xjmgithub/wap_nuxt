@@ -1,4 +1,4 @@
-import env from '~/env.js'
+import { pv_countly_server, ev_countly_server, countly_appKey, ga_android_key, ga_ios_key, ga_wap_key } from '~/env.js'
 import Vue from 'vue'
 // ga
 ;(function(i, s, o, g, r, a, m) {
@@ -29,7 +29,7 @@ export default ({ app: { router, $axios }, store, query }) => {
     let swidth = screen.width * window.devicePixelRatio
     let sheight = screen.height * window.devicePixelRatio
     let os = (appType == 1 && 'Android') || (appType == 2 && 'IOS') || (ua.includes('iPhone') && 'IOS') || (ua.includes('iPad') && 'IOS') || 'Android'
-    let ga_key = (appType == 1 && env.ga_android_key) || (appType == 2 && env.ga_ios_key) || env.ga_wap_key
+    let ga_key = (appType == 1 && ga_android_key) || (appType == 2 && ga_ios_key) || ga_wap_key
     let utm_source = ''
     let utm_medium = ''
     let utm_campaign = ''
@@ -110,9 +110,9 @@ export default ({ app: { router, $axios }, store, query }) => {
     let sendPvLog = msg => {
         let result = serializeMsg(msg, 'pv')
         sendMsg(
-            env.pv_countly_server +
+            pv_countly_server +
                 '/i?logtype=pv&app_key=' +
-                env.countly_appKey +
+                countly_appKey +
                 '&events=' +
                 result +
                 '&device_id=' +
@@ -125,9 +125,9 @@ export default ({ app: { router, $axios }, store, query }) => {
     let sendEvLog = msg => {
         let result = serializeMsg(msg, 'event')
         sendMsg(
-            env.ev_countly_server +
+            ev_countly_server +
                 '/i?logtype=event&app_key=' +
-                env.countly_appKey +
+                countly_appKey +
                 '&events=' +
                 result +
                 '&device_id=' +
