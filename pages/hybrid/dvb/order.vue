@@ -302,7 +302,40 @@ export default {
             window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
         },
         payNG(){
-            
+            let param = JSON.parse(sessionStorage.getItem('order-info'))
+            this.$axios({
+                url: `/wxorder/v1/geneOrder4OnlinePay`,
+                method: 'post',
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    token: this.$store.state.token
+                },
+                data: qs.stringify(
+                    Object.assign({}, param, {
+                        orderSource: 2,
+                        fcmToken: this.fcmToken || '',
+                        promotion: !this.isLogin ? 'l1' : 'lalala'
+                    })
+                )
+            })
+                .then(res => {
+                    this.$axios({
+                        url: `/payment/api/v2/invoke-payment`,
+                        method: 'post',
+                        data: {
+                            payToken: res.data.paymentToken,
+                            payChannelId: 993101,
+                            tradeType: 'JSAPI',
+                            signType: 'MD5',
+                            deviceInfo: this.dstr,
+                            extendInfo: {}
+                        }
+                    })
+                    .then(res=>{
+                        console.log(res.data)
+                        //window.location.href = res.data.tppRedirectUrl
+                    })
+                })
         },
         payNow() {
             let param = JSON.parse(sessionStorage.getItem('order-info'))
@@ -524,6 +557,7 @@ export default {
     width: 90%;
     margin: 0 auto;
     padding-bottom: 5.5rem;
+}
 .pay-btn {
     background-color: #008be9;
     color: #fff;

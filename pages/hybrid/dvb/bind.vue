@@ -83,7 +83,7 @@ export default {
             rechargeAmount: 0
         }
     },
-    computed:{
+    computed: {
         LANG() {
             return this.$store.state.lang
         }
@@ -156,7 +156,6 @@ export default {
             }
 
             let preferentialPlanId = rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo
-            
 
             let params = {
                 cardNo: card,
@@ -336,13 +335,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
-    min-height:100%;
-    background:white;
-    .untrim{
+    min-height: 100%;
+    background: white;
+    .untrim {
         padding: 0 1rem;
         position: relative;
     }
-    
 }
 .demoDialog {
     width: 85%;
@@ -383,8 +381,6 @@ export default {
         }
     }
 }
-
-
 
 .pay-btn {
     background-color: #008be9;
