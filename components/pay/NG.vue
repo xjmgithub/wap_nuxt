@@ -2,7 +2,12 @@
     <div class="wrapper">
         <p>Pay with eWallet</p>
         <mLine />
-        <radioBtnRight :radio-list="radioList" @pick="changeItem" :balance="balance" :payment-amount="paymentAmount"/>
+        <radioBtnRight 
+            :radio-list="radioList" 
+            :balance="balance" 
+            :payment-amount="paymentAmount"
+            @pick="changeItem" 
+            @charge="chargeWallet"/>
         <div class="addCard" @click="pay('add')">
             <div class="img-box" />
             <span>Add a card to pay</span>
@@ -78,13 +83,16 @@ export default {
         changeItem(index) {
             this.selected = index
         },
+        chargeWallet() {
+            this.$emit('charge')
+        },
         addCard() {
             this.$emit('doAdd')
         },
         pay(method) {
-            let useForm = false
             let payType = this.selected == 0 ?  1 : 3
             let apiType = this.selected == 0 ?  1 : 2
+            let useForm = false
             let checkPass = false
             let channel
             if(method == 'bank'){
@@ -99,8 +107,6 @@ export default {
                 heckPass = channel ==  9002 ? true : channel == 993102 && this.radioList.length > 1 ? true : false
                 if (this.canPay) this.$emit('pay', channel, payType, apiType, useForm, checkPass)
             }
-            
-            if (this.canPay) this.$emit('pay', channel, payType, apiType, useForm, checkPass)
         },
         formatAmount(num) {
             return formatAmount(num)

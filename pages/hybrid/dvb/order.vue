@@ -162,6 +162,7 @@ export default {
             // })
         },
         createOrder(callback) {
+            let param = JSON.parse(sessionStorage.getItem('order-info'))
             this.$axios({
                 url: `/wxorder/v1/geneOrder4OnlinePay`,
                 method: 'post',
@@ -273,7 +274,7 @@ export default {
         },
         toAddCard(){
            // TODO 添加新卡逻辑
-           
+
         }
     },
     watch: {
