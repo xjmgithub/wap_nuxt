@@ -2,12 +2,16 @@
     <div class="radio-box">
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
-                <div class="img-box" :class="item.className"/>
-                <span v-if="i==0" >{{item.value}} {{ balance }}</span>
-                <span v-else>{{item.value}} </span>
+                <div class="img-box" :class="item.brand"/>
+                <span v-if="i==0" >{{item.cardType}} {{currency}} {{ balance }}</span>
+                <span v-else>{{item.cardType}}({{item.last4}}) </span>
                 <input type="radio" name="pay-options" value="item.code" @click="checkThis(i)" :checked="item.checked?true:false">
                 <i/>
-                
+                <div
+                    class="recharge"
+                    @click="chargeWallet"
+                    v-if="i==0 &&balance < paymentAmount&& canRecharge"
+                >RECHARGE</div>
             </label>
         </div>
     </div>
@@ -24,12 +28,27 @@ export default {
             type: String,
             required: true,
             default: ''
+        },
+        paymentAmount:{
+            type: String,
+            required: true,
+            default: ''
+        }
+    },
+    data(){
+        return{
+            currency: this.$store.state.country.currencySymbol,
+            canRecharge:true
         }
     },
     methods: {
-        checkThis(code) {
-            this.$emit('pick', code)
-        }
+        checkThis(index) {
+            this.$emit('pick', index)
+            this.canRecharge = index == 0? true :false
+        },
+        chargeWallet() {
+            this.$emit('charge')
+        },
     }
 }
 </script>
@@ -37,11 +56,23 @@ export default {
 .radio-box .img-box {
     display: inline-block;
     vertical-align: middle;
-    height: 1.3rem;
-    width:1.3rem;
+    height: 1.4rem;
+    width:1.4rem;
     background-size: 100% !important;
     &.balance{
         background: url("~assets/img/dvb/ic_ewallet_balance.png") no-repeat ;
+    }
+    &.visa{
+        background: url("~assets/img/dvb/ic_visa.png") no-repeat ;
+    }
+    &.verve{
+        background: url("~assets/img/dvb/ic_verve.png") no-repeat ;
+    }
+    &.master {
+        background: url("~assets/img/dvb/ic_mastercard.png") no-repeat ;
+    }
+    &.default{
+        background: url("~assets/img/dvb/ic_no_logo_card.png") no-repeat ;
     }
    
 }
@@ -94,5 +125,13 @@ export default {
 .radio-box span {
     font-size: 0.9rem;
     margin-left: .5rem;
+}
+.recharge {
+    color: #008be9;
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: absolute;
+    top: 0.1rem;
+    right: 2rem;
 }
 </style>

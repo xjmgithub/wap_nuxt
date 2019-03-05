@@ -3,13 +3,8 @@
         <div class="container">
             <card-info/>
             <order-info/>
-            <pay-methods :wallet="wallet" @charge="chargeWallet" @pay="pay"/>
-            <!-- <NG class="ng-pay" :currency="currency" :amount="wallet_account.amount" @doAdd="toAddCard"/>
-            <div class="btn-box">
-                <span class="total">{{$store.state.lang.payment_details_total}}:</span>
-                <span class="total">{{ currency }}{{ paymentAmount | formatMoney }}</span>
-                <div class="pay-btn" :class="{disabled:!canPay}" @click="payNG">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
-            </div>-->
+            <pay-methods :wallet="wallet" @charge="chargeWallet" @pay="pay" v-show="false"/>
+            <NG class="ng-pay" :wallet="wallet" @charge="chargeWallet" @pay="pay" @doAdd="toAddCard"/>
             <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
         </div>
     </div>
@@ -40,7 +35,7 @@ export default {
         let user = this.$store.state.user
         return {
             isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS',
-            isApp: this.$store.state.appType,
+            isApp: this.$store.state.appType, 
             cardNum: '',
             cardNo: '',
             program: '',
@@ -129,9 +124,9 @@ export default {
             toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
         },
         payNG() {
-            this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
-                console.log(res.data)
-            })
+            // this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
+            //     console.log(res.data)
+            // })
 
             // let param = JSON.parse(sessionStorage.getItem('order-info'))
             // this.$axios({
