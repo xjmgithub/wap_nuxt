@@ -201,3 +201,19 @@ export const login = (v, opt) => {
             })
     })
 }
+
+export const getFaqBlockLogLabel = ins => {
+    return (
+        (ins.$store.state.country.id || '') +
+        '_' +
+        (ins.$store.state.user.id || '') +
+        '_' +
+        ((ins.service && ins.service.order_info && ins.service.order_info.order_type) || '') +
+        '_' +
+        ((ins.service && ins.service.order_info && ins.service.order_info.id) || '') +
+        '_' +
+        (ins.$store.state.user.smartCartCount?1:0) +
+        '_' +
+        ((ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus)?1:0)
+    )
+}

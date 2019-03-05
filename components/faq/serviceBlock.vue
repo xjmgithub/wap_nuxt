@@ -1,5 +1,5 @@
 <template>
-    <div class="b-order-msg" v-if="service.order_info">
+    <div class="b-order-msg" v-show="service.order_info">
         <orderBlock :order="service.order_info"/>
         <div class="gap"/>
         <div class="bottom clearfix">
@@ -15,24 +15,26 @@
             </div>
         </div>
         <div v-if="showMore" class="gap"/>
-        <nuxt-link v-if="showMore" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}">
+        <nuxt-link v-if="showMore" @click="moreOrders" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}">
             <div class="more">MORE ORDERS</div>
         </nuxt-link>
     </div>
 </template>
 <script>
 import orderBlock from '~/components/faq/order'
+import { getFaqBlockLogLabel } from '~/functions/utils'
 export default {
     props: {
-        service: {
-            type: Object,
-            require: true,
-            default: null
-        },
         showMore: {
             require: false,
             type: Boolean,
             default: false
+        }
+    },
+    data() {
+        return {
+            entranceId: this.$route.query.entrance_id,
+            service: {}
         }
     },
     components: {
@@ -48,11 +50,54 @@ export default {
         },
         moreQues(item) {
             sessionStorage.setItem('morefaqs', 1)
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `block_${this.entranceId || ''}_more_click`,
+                label: getFaqBlockLogLabel(this),
+                value: 1
+            })
             this.$router.push({
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
             })
+        },
+        moreOrders() {
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `block_moreorders_${this.entranceId || ''}_click`,
+                label: getFaqBlockLogLabel(this),
+                value: 1
+            })
         }
+    },
+    mounted() {
+        this.$axios
+            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`, {
+                headers: {
+                    'x-clientType': 1,
+                    'x-appVersion': '5300'
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.data) {
+                    this.service = res.data.data
+                    sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
+                    sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
+
+                    this.sendEvLog({
+                        category: 'onlineService',
+                        action: `block_${this.entranceId || ''}_show`,
+                        label: getFaqBlockLogLabel(this),
+                        value: 1
+                    })
+                    this.sendEvLog({
+                        category: 'onlineService',
+                        action: `block_moreorders_${this.entranceId || ''}_show`,
+                        label: getFaqBlockLogLabel(this),
+                        value: 1
+                    })
+                }
+            })
     }
 }
 </script>

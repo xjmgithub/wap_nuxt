@@ -24,7 +24,9 @@ import dayjs from 'dayjs'
 export default {
     props: {
         order: {
-            default: null,
+            default:()=>{
+                return {}
+            },
             require: true,
             type: Object
         }

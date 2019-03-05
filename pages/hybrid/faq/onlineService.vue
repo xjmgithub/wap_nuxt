@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <serviceBlock :service="serviceData" :show-more="true"/>
+            <serviceBlock :show-more="true"/>
             <div class="service" v-if="faqTagsData">
                 <div id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
@@ -30,7 +30,6 @@ export default {
     layout: 'base',
     data: function() {
         return {
-            serviceData: {},
             faqTagsData: [],
             faqsByTag: {},
             pageSize: 20,
@@ -41,30 +40,7 @@ export default {
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
 
-        // this.sendEvLog({
-        //     category:'dvbservice',
-        //     action:'smartcard_input',
-        //     value:1,
-        //     service_type:'Recharge',
-        // })
-
         let entranceId = this.$route.query.entrance_id || ''
-        // 服务块
-        this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`, {
-                headers: {
-                    'x-clientType': 1,
-                    'x-appVersion': '5300'
-                }
-            })
-            .then(res => {
-                if (res.data && res.data.data) {
-                    this.serviceData = res.data.data
-                    sessionStorage.setItem('serviceModuleId', this.serviceData.service_module.id)
-
-                    sessionStorage.setItem('orderMsg', JSON.stringify(this.serviceData.order_info))
-                }
-            })
 
         this.$axios.get('/ocs/v1/faqs/Tags').then(res => {
             if (res.data) {
