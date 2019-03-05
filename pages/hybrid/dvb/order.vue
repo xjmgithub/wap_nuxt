@@ -64,7 +64,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.wallet)
         // 判断是否是月末
         let isBeyondYear = new Date(this.serverTime).getMonth() + 1 >= 12 ? true : false
         let nextMonthFirstDay
@@ -122,15 +121,10 @@ export default {
     },
     methods: {
         chargeWallet() {
-            // TODO IOS
-            this.$alert(
-                this.$store.state.lang.refresh_wallet,
-                () => {
-                    this.getWalletAccount()
-                },
-                this.$store.state.lang.continue_to_pay
-            )
-            window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
+            this.$alert(this.$store.state.lang.refresh_wallet,() => {
+                //TODO refresh this.getWalletAccount()
+            })
+            toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
         },
         payNG() {
             this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
