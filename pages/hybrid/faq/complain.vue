@@ -76,6 +76,7 @@
 <script>
 import mselect from '~/components/select'
 import orderBlock from '~/components/faq/order'
+import {getFaqAnswerLabel} from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -179,6 +180,13 @@ export default {
                         })
                     }
                 })
+
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `stdservice_${this.$route.query.entrance_id || ''}_submit`,
+                label: getFaqAnswerLabel(this, this.$route.query.question),
+                value: 1
+            })
         }
     },
     mounted() {
