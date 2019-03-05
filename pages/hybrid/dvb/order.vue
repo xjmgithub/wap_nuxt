@@ -118,6 +118,8 @@ export default {
                 this.cardNum += ' '
             }
         }
+
+        this.payNG()
     },
     methods: {
         chargeWallet() {
@@ -131,38 +133,38 @@ export default {
                 console.log(res.data)
             })
 
-            let param = JSON.parse(sessionStorage.getItem('order-info'))
-            this.$axios({
-                url: `/wxorder/v1/geneOrder4OnlinePay`,
-                method: 'post',
-                headers: {
-                    'content-type': 'application/x-www-form-urlencoded',
-                    token: this.$store.state.token
-                },
-                data: qs.stringify(
-                    Object.assign({}, param, {
-                        orderSource: 2,
-                        fcmToken: this.fcmToken || '',
-                        promotion: !this.isLogin ? 'l1' : 'lalala'
-                    })
-                )
-            }).then(res => {
-                this.$axios({
-                    url: `/payment/api/v2/invoke-payment`,
-                    method: 'post',
-                    data: {
-                        payToken: res.data.paymentToken,
-                        payChannelId: 993102,
-                        tradeType: 'JSAPI',
-                        signType: 'MD5',
-                        deviceInfo: this.dstr,
-                        extendInfo: {}
-                    }
-                }).then(res => {
-                    //console.log(res.data)
-                    window.location.href = res.data.tppRedirectUrl
-                })
-            })
+            // let param = JSON.parse(sessionStorage.getItem('order-info'))
+            // this.$axios({
+            //     url: `/wxorder/v1/geneOrder4OnlinePay`,
+            //     method: 'post',
+            //     headers: {
+            //         'content-type': 'application/x-www-form-urlencoded',
+            //         token: this.$store.state.token
+            //     },
+            //     data: qs.stringify(
+            //         Object.assign({}, param, {
+            //             orderSource: 2,
+            //             fcmToken: this.fcmToken || '',
+            //             promotion: !this.isLogin ? 'l1' : 'lalala'
+            //         })
+            //     )
+            // }).then(res => {
+            //     this.$axios({
+            //         url: `/payment/api/v2/invoke-payment`,
+            //         method: 'post',
+            //         data: {
+            //             payToken: res.data.paymentToken,
+            //             payChannelId: 993102,
+            //             tradeType: 'JSAPI',
+            //             signType: 'MD5',
+            //             deviceInfo: this.dstr,
+            //             extendInfo: {}
+            //         }
+            //     }).then(res => {
+            //         //console.log(res.data)
+            //         window.location.href = res.data.tppRedirectUrl
+            //     })
+            // })
         },
         createOrder(callback) {
             this.$axios({
@@ -206,6 +208,13 @@ export default {
                     this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                 })
         },
+        /* 
+            channel 支付渠道号，width card 993102 ,with bank 993101, 9002
+            payType 支付方式 ewallet 1, width card/bank 3 
+            apiType 接口模型 ewallet 1, width card/bank 2
+            form   是否需要表单 false
+            byPass ewallet true,  width card(list true/ add false), with bank false
+        */
         pay(channel, payType, apiType, form, byPass) {
             if (byPass) {
                 this.checkPass(() => {
