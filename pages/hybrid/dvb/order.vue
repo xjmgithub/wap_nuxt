@@ -160,7 +160,7 @@ export default {
         // 支付统计用
         if (this.isApp == 1 || this.isApp == 2) {
             let system = this.isApp == 1 ? 'android' : 'ios'
-            var dstr = 'APP(' + system + ',<?php echo $appVersionCode; ?>)'
+            var dstr = 'APP(' + system + ','+ this.$store.state.appVersionCode +')'
             dstr += ';H5(' + system
             if (this.isApp == 1) {
                 let s = navigator.userAgent.indexOf('Android')
