@@ -9,7 +9,7 @@
                 <img src="~assets/img/dvb/ic_dormant.png">
                 {{LANG.dormant}}
             </p>
-            <p class="state" v-else-if="state === 'VALID'">
+            <p class="state" v-else-if="state==='VALID'">
                 <img src="~assets/img/dvb/ic_active.png">
                 <span style="font-size:1rem;" v-if="stopDays">{{LANG.dvb_acitve_to}} {{stopDays}}</span>
                 <span style="font-size:1rem;" v-if="!stopDays">{{LANG.active_}}</span>
@@ -18,7 +18,7 @@
                 <img src="~assets/img/dvb/ic_suspended_def_y.png">
                 {{LANG.link_suspend}}
             </p>
-            <p class="state" v-else-if="money">{{LANG.smart_card_balance}} {{money | formatMoney}}</p>
+            <p class="state" v-else-if="money">{{LANG.smart_card_balance}} {{money | formatAmount}}</p>
         </div>
         <div class="card-type">
             <p class="platform" v-show="tv_platform == 'DTH'">
@@ -34,6 +34,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
+import { formatAmount } from '~/functions/utils'
 export default {
     data() {
         return {
@@ -59,6 +60,9 @@ export default {
         this.cardNum = param.cardNo
     },
     filters: {
+        formatAmount(num) {
+            return formatAmount(num)
+        },
         formatCard(val) {
             let len = val.length
             let result = ''

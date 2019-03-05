@@ -130,7 +130,7 @@ export default {
         },
         payNG() {
             this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
-                console.log(res.data)
+                //console.log(res.data)
             })
 
             // let param = JSON.parse(sessionStorage.getItem('order-info'))
@@ -275,10 +275,6 @@ export default {
                     this.isLoading = false
                     this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                 })
-        },
-        toAddCard() {
-            // TODO
-            console.log('toAddCard')
         }
     },
     watch: {
