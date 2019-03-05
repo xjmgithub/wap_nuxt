@@ -13,13 +13,13 @@
                             <span
                                 v-if="item.fkPayChannelId >= 9002 && item.fkPayChannelId <= 9034 && wallet.accountNo"
                                 class="balance"
-                                :class="{red:wallet.amount < paymentAmount}"
+                                :class="{red:wallet.amount < payAmount}"
                             >(Balance:{{wallet.currencySymbol}}{{wallet.amount}} )</span>
                         </label>
                         <div
                             class="recharge"
                             @click="chargeWallet"
-                            v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet.accountNo&&wallet.amount<paymentAmount"
+                            v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet.accountNo&&wallet.amount<payAmount"
                         >RECHARGE</div>
                     </li>
                 </ul>
@@ -31,7 +31,7 @@
         </div>
         <div class="btn-box">
             <span class="total">{{LANG.payment_details_total}}:</span>
-            <span class="total">{{ currency }}{{ paymentAmount | formatAmount }}</span>
+            <span class="total">{{ currency }}{{formatAmount(payAmount) }}</span>
             <div class="pay-btn" :class="{disabled:!canPay}" @click="pay">{{LANG.dvb_recharge_btn_pay}}</div>
         </div>
     </div>
@@ -52,7 +52,8 @@ export default {
             currency: this.$store.state.country.currencySymbol,
             methodsList: [],
             selectMethod: {},
-            isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS'
+            isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS',
+            payAmount:0
         }
     },
     computed: {
@@ -62,7 +63,7 @@ export default {
         canPay() {
             if (this.selectMethod.fkPayChannelId) {
                 if (this.selectMethod.fkPayChannelId >= 9002 && this.selectMethod.fkPayChannelId <= 9034) {
-                    if (this.wallet.amount >= this.paymentAmount) {
+                    if (this.wallet.amount >= this.payAmount) {
                         return true
                     } else {
                         return false
@@ -76,6 +77,8 @@ export default {
         }
     },
     beforeMount() {
+        let param = JSON.parse(sessionStorage.getItem('order-info'))
+        this.payAmount = param.paymentAmount
         this.$axios
             .get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.countryCode}`)
             .then(res => {

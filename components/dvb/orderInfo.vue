@@ -32,6 +32,7 @@
     </div>
 </template>
 <script>
+import { formatAmount } from '~/functions/utils'
 export default {
     data() {
         return {
@@ -55,6 +56,11 @@ export default {
         this.firstChargeTip = param.firstChargeTip
         this.rechargeAmount = param.rechargeAmount
         this.paymentAmount = param.paymentAmount
+    },
+    filters: {
+        formatMoney(val) {
+            return formatAmount(val)
+        }
     }
 }
 </script>
