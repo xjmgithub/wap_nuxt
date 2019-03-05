@@ -26,7 +26,7 @@
     </div>
 </template>
 <script>
-import { toNativePage } from '~/functions/utils'
+import { toNativePage, getFaqAnswerLabel } from '~/functions/utils'
 export default {
     data() {
         return {
@@ -86,7 +86,7 @@ export default {
             }
             this.sendEvLog({
                 category: 'onlineService',
-                action: type ? `answer_${this.question}_yes_click` : `answer_${this.question}_yes_click`,
+                action: type ? `answer_${this.question}_yes_click` : `answer_${this.question}_no_click`,
                 label: getFaqAnswerLabel(this, this.question) + '_1',
                 value: 1
             })

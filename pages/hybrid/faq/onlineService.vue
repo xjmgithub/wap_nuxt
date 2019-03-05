@@ -26,7 +26,7 @@
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
-import { getFaqLogLabel } from '~/functions/utils'
+import { getFaqLogLabel,getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     data: function() {

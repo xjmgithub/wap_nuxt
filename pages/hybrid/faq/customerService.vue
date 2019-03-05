@@ -59,7 +59,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage, setCookie, getCookie } from '~/functions/utils'
+import { toNativePage, setCookie, getCookie,getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -258,7 +258,7 @@ export default {
             }
             this.sendEvLog({
                 category: 'onlineService',
-                action: `answer_${this.entranceId || ''}_click`,
+                action: `answer_${this.entrance_id || ''}_click`,
                 label: getFaqAnswerLabel(this,item.id) + '_2',
                 value: 1
             })

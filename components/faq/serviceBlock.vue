@@ -22,7 +22,7 @@
 </template>
 <script>
 import orderBlock from '~/components/faq/order'
-import { getFaqBlockLogLabel, getFaqLogLabel } from '~/functions/utils'
+import { getFaqBlockLogLabel, getFaqLogLabel,getFaqAnswerLabel } from '~/functions/utils'
 export default {
     props: {
         showMore: {
@@ -47,6 +47,7 @@ export default {
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
             })
+            console.log(123)
             this.sendEvLog({
                 category: 'onlineService',
                 action: `answer_${this.entranceId || ''}_click`,
