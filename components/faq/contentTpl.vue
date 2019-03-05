@@ -26,7 +26,7 @@
     </div>
 </template>
 <script>
-import { toNativePage } from '~/functions/utils'
+import { toNativePage, getFaqAnswerLabel } from '~/functions/utils'
 export default {
     data() {
         return {
@@ -84,8 +84,20 @@ export default {
                     }
                 })
             }
+            this.sendEvLog({
+                category: 'onlineService',
+                action: type ? `answer_${this.question}_yes_click` : `answer_${this.question}_no_click`,
+                label: getFaqAnswerLabel(this, this.question) + '_1',
+                value: 1
+            })
         },
         tocomplain() {
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `answer_${this.question}_complain`,
+                label: getFaqAnswerLabel(this, this.question) + '_1',
+                value: 1
+            })
             if (!this.isLogin) {
                 if (this.$store.state.appType == 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')

@@ -85,7 +85,7 @@ export default {
         }
     },
     created() {
-        this.$nextTick(() => this.$nuxt.$loading.start())
+        //this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {

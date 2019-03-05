@@ -216,10 +216,10 @@ export const formatAmount = num => {
 }
 
 // client 端使用
-export const parseUA = isApp => {
+export const parseUA = (isApp, appversion) => {
     if (isApp == 1 || isApp == 2) {
         let system = isApp == 1 ? 'android' : 'ios'
-        var dstr = 'APP(' + system + ',<?php echo $appVersionCode; ?>)'
+        var dstr = 'APP(' + system + ',' + appversion + ')'
         dstr += ';H5(' + system
         if (isApp == 1) {
             let s = navigator.userAgent.indexOf('Android')
@@ -286,4 +286,45 @@ export const parseUA = isApp => {
         }
         dstr += ')'
     }
+}
+export const getFaqBlockLogLabel = ins => {
+    return (
+        (ins.$store.state.country.id || '') +
+        '_' +
+        (ins.$store.state.user.id || '') +
+        '_' +
+        ((ins.service && ins.service.order_info && ins.service.order_info.order_type) || '') +
+        '_' +
+        ((ins.service && ins.service.order_info && ins.service.order_info.order_no) || '') +
+        '_' +
+        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        '_' +
+        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+    )
+}
+
+export const getFaqLogLabel = ins => {
+    return (
+        (ins.$store.state.country.id || '') +
+        '_' +
+        (ins.$store.state.user.id || '') +
+        '_' +
+        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        '_' +
+        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+    )
+}
+
+export const getFaqAnswerLabel = (ins, question) => {
+    return (
+        (ins.$store.state.country.id || '') +
+        '_' +
+        (ins.$store.state.user.id || '') +
+        '_' +
+        (question || '') +
+        '_' +
+        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        '_' +
+        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+    )
 }

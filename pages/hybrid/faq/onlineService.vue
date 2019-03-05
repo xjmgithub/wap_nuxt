@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <serviceBlock :service="serviceData" :show-more="true"/>
+            <serviceBlock :show-more="true"/>
             <div class="service" v-if="faqTagsData">
                 <div id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
@@ -26,45 +26,28 @@
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
+import { getFaqLogLabel,getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     data: function() {
         return {
-            serviceData: {},
             faqTagsData: [],
             faqsByTag: {},
             pageSize: 20,
-            isLoading: false
+            isLoading: false,
+            entranceId: this.$route.query.entrance_id || ''
         }
     },
     mounted() {
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
 
-        // this.sendEvLog({
-        //     category:'dvbservice',
-        //     action:'smartcard_input',
-        //     value:1,
-        //     service_type:'Recharge',
-        // })
-
-        let entranceId = this.$route.query.entrance_id || ''
-        // 服务块
-        this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${entranceId}`, {
-                headers: {
-                    'x-clientType': 1,
-                    'x-appVersion': '5300'
-                }
-            })
-            .then(res => {
-                if (res.data && res.data.data) {
-                    this.serviceData = res.data.data
-                    sessionStorage.setItem('serviceModuleId', this.serviceData.service_module.id)
-
-                    sessionStorage.setItem('orderMsg', JSON.stringify(this.serviceData.order_info))
-                }
-            })
+        this.sendEvLog({
+            category: 'onlineService',
+            action: `dialog_${this.entranceId || ''}_show`,
+            label: getFaqLogLabel(this),
+            value: 1
+        })
 
         this.$axios.get('/ocs/v1/faqs/Tags').then(res => {
             if (res.data) {
@@ -133,6 +116,13 @@ export default {
                 }
             })
 
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `cat_${tagId || ''}_click`,
+                label: getFaqLogLabel(this),
+                value: 1
+            })
+
             this.getfaqsByTag(tagId)
         },
         handleScroll(evt) {
@@ -159,6 +149,12 @@ export default {
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
             })
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `answer_${this.entranceId || ''}_click`,
+                label: getFaqAnswerLabel(this, item.id) + '_0',
+                value: 1
+            })
         }
     },
     components: {
@@ -176,7 +172,7 @@ export default {
     background: white;
     height: 100%;
     display: -webkit-box;
-    width:100%;
+    width: 100%;
     /* 
     autoprefixer: off 
     https://github.com/Fyrd/caniuse/issues/3429

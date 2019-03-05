@@ -54,7 +54,7 @@ export const mutations = {
     SET_DEVICE: function(state, deviceId) {
         state.deviceId = deviceId || ''
     },
-    SET_LANG: function(state, lang) {
+    SET_LANG: function(state, lang='en') {
         state.langType = lang
         if (lang.indexOf('fr') >= 0) {
             state.lang = LANG.fy
@@ -202,28 +202,29 @@ export const actions = {
         }
 
         if (_HEADER['token']) {
-            // app embedded
             commit('SET_TOKEN', _HEADER['token'])
             commit('SET_GTOKEN', _HEADER['token'])
-            await getMe(_HEADER['token'])
-            commit('SET_AREA_INFO', countryMap[state.user.countryCode])
         } else {
             if (_COOKIE['token']) {
                 commit('SET_TOKEN', _COOKIE['token'])
             } else {
                 commit('SET_TOKEN', tokenMap[country])
             }
-
-            await getMe(state.token)
             if (_COOKIE['gtoken']) {
                 commit('SET_GTOKEN', _COOKIE['gtoken'])
             } else {
                 commit('SET_GTOKEN', tokenMap[country])
             }
-            if (state.user.countryCode) {
-                commit('SET_AREA_INFO', countryMap[state.user.countryCode])
-            } else {
+        }
+
+        await getMe(state.token)
+        if (state.user.countryCode&&countryMap[state.user.countryCode]) {
+            commit('SET_AREA_INFO', countryMap[state.user.countryCode])
+        } else {
+            if(countryMap[country]){
                 commit('SET_AREA_INFO', countryMap[country])
+            }else{
+                commit('SET_AREA_INFO', countryMap['NG'])
             }
         }
     }

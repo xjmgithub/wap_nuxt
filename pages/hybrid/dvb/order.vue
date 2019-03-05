@@ -75,7 +75,7 @@ export default {
             this.isYueMo = true
         }
 
-        this.dstr = parseUA(this.isApp) // 支付统计用
+        this.dstr = parseUA(this.isApp,this.$store.state.appVersionCode) // 支付统计用
         this.fcmToken = (window.getChannelId && getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
         let param = JSON.parse(sessionStorage.getItem('order-info'))
 

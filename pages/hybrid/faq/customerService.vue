@@ -7,34 +7,16 @@
                     <span class="refresh_text" v-show="historyEnd">No more history</span>
                 </div>
                 <div>
-                    <img
-                        class="refresh_img"
-                        v-show="loadHistoryState"
-                        src="~assets/img/spinner.gif"
-                    >
+                    <img class="refresh_img" v-show="loadHistoryState" src="~assets/img/spinner.gif">
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <questionListTpl
-                    v-if="item.tpl=='list'"
-                    :key="index"
-                    :dtype="item.type"
-                    :list="item.contents"
-                    @ask="askQuest"
-                />
+                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest"/>
                 <div class="order-contain" v-if="item.tpl=='order'" :key="index">
                     <orderBlockTpl :order="item.order"/>
                 </div>
-                <askTpl
-                    v-if="item.tpl=='ask'||item.tpl=='chatask'"
-                    :key="index"
-                    :question="item.name"
-                />
-                <answerTpl
-                    v-if="item.tpl=='chatanswer' || item.tpl=='welcome'"
-                    :key="index"
-                    :answer="item.name"
-                />
+                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"/>
+                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"/>
                 <contentTpl
                     v-if="item.tpl=='content'"
                     :noevaluate="item.noEvaluate"
@@ -47,17 +29,8 @@
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
-                <evaluate
-                    v-if="item.tpl=='evaluate'"
-                    :key="index"
-                    :service-record="item.serviceRecord"
-                />
-                <msgTpl
-                    v-if="item.tpl=='message'"
-                    :key="index"
-                    :message="item"
-                    :replied="item.replied"
-                />
+                <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord"/>
+                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied"/>
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
@@ -67,11 +40,7 @@
         <div class="live-chat-input" v-show="showLiveChatBtn&&connectState==2">
             <div class="user-control-w">
                 <div class="user-edit-w">
-                    <textarea
-                        class="form-control user-edit"
-                        v-model="chatMsg"
-                        placeholder="Enter your question"
-                    />
+                    <textarea class="form-control user-edit" v-model="chatMsg" placeholder="Enter your question"/>
                 </div>
                 <div class="user-submit-w">
                     <button type="submit" class="user-submit-btn" @click="sendChatMsg">SEND</button>
@@ -90,7 +59,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage, setCookie, getCookie } from '~/functions/utils'
+import { toNativePage, setCookie, getCookie,getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -287,6 +256,12 @@ export default {
             } else {
                 this.getfaqDirectory(item.id)
             }
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `answer_${this.entrance_id || ''}_click`,
+                label: getFaqAnswerLabel(this,item.id) + '_2',
+                value: 1
+            })
         },
         getAnswer(id) {
             this.$axios.get(`/ocs/v1/faqs/answer/${id}`).then(res => {
@@ -420,13 +395,10 @@ export default {
         renderFromCacheQueue() {
             // 恢复对话
             this.renderQueue = JSON.parse(getCookie('renderQueue'))
-            // this.renderQueue = JSON.parse(sessionStorage.getItem('renderQueue'))
 
             // 更新历史记录
             let historys = JSON.parse(getCookie('historys'))
             let serviceIds = JSON.parse(getCookie('serviceRecords'))
-            // let historys = JSON.parse(sessionStorage.getItem('historys'))
-            // let serviceIds = JSON.parse(sessionStorage.getItem('serviceRecords'))
 
             if (historys) {
                 historys.forEach(item => {
@@ -668,16 +640,16 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/faq/common.less';
-#__layout>div{
-    background:#eeeeee;
+#__layout > div {
+    background: #eeeeee;
 }
 </style>
 <style lang="less" scoped>
 .wrapper {
     overflow: hidden;
-    height:88%;
-    min-height:88%;
-    background:#eeeeee;
+    height: 88%;
+    min-height: 88%;
+    background: #eeeeee;
 }
 .order-contain {
     box-shadow: 0px 1px 3px 1px #dddddd;
