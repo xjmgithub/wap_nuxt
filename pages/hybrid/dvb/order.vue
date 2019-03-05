@@ -270,6 +270,10 @@ export default {
                     this.isLoading = false
                     this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                 })
+        },
+        toAddCard(){
+           // TODO 添加新卡逻辑
+           
         }
     },
     watch: {
