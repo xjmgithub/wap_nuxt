@@ -3,7 +3,7 @@
         <p>Pay with eWallet</p>
         <mLine />
         <radioBtnRight :radio-list="radioList" @pick="changeItem" :balance="balance" :payment-amount="paymentAmount"/>
-        <div class="addCard" @click="addCard">
+        <div class="addCard" @click="pay('add')">
             <div class="img-box" />
             <span>Add a card to pay</span>
             <img src="~assets/img/dvb/ic_right_def_r.png">
@@ -82,20 +82,24 @@ export default {
             this.$emit('doAdd')
         },
         pay(method) {
-            let channel, payType, apiType
+            let useForm = false
+            let payType = this.selected == 0 ?  1 : 3
+            let apiType = this.selected == 0 ?  1 : 2
+            let checkPass = false
+            let channel
             if(method == 'bank'){
                 channel = 993101
-                payType = 3
-                apiType = 2
-                console.log(method)
+                this.$emit('pay', channel, payType, apiType, useForm, checkPass)
+            }else if(method == 'add'){
+                channel = 993102
+                this.$emit('pay', channel, payType, apiType, useForm, checkPass)
             }else{
                 channel = this.selected == 0 ?  9002 : 993102
-                payType = this.selected == 0 ?  1 : 3
-                apiType = this.selected == 0 ?  1 : 2
+                // byPass ewallet true,  width card(list true/ add false), with bank false
+                heckPass = channel ==  9002 ? true : channel == 993102 && this.radioList.length > 1 ? true : false
+                if (this.canPay) this.$emit('pay', channel, payType, apiType, useForm, checkPass)
             }
-            let useForm = false
-            // byPass ewallet true,  width card(list true/ add false), with bank false
-            let checkPass = channel ==  9002 ? true : channel == 993102 && this.radioList.length > 1 ? true : false
+            
             if (this.canPay) this.$emit('pay', channel, payType, apiType, useForm, checkPass)
         },
         formatAmount(num) {
