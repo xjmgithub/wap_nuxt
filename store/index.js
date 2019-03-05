@@ -218,10 +218,14 @@ export const actions = {
         }
 
         await getMe(state.token)
-        if (state.user.countryCode) {
+        if (state.user.countryCode&&countryMap[state.user.countryCode]) {
             commit('SET_AREA_INFO', countryMap[state.user.countryCode])
         } else {
-            commit('SET_AREA_INFO', countryMap[country])
+            if(countryMap[country]){
+                commit('SET_AREA_INFO', countryMap[country])
+            }else{
+                commit('SET_AREA_INFO', countryMap['NG'])
+            }
         }
     }
 }
