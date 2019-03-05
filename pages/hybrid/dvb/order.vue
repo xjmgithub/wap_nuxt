@@ -124,9 +124,9 @@ export default {
             toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
         },
         payNG() {
-            // this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
-            //     console.log(res.data)
-            // })
+            this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
+                //console.log(res.data)
+            })
 
             // let param = JSON.parse(sessionStorage.getItem('order-info'))
             // this.$axios({
@@ -270,10 +270,6 @@ export default {
                     this.isLoading = false
                     this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
                 })
-        },
-        toAddCard() {
-            // TODO
-            console.log('toAddCard')
         }
     },
     watch: {

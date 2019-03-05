@@ -65,6 +65,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.fr {
+    float: right;
+}
 .gap {
     width: 100%;
     height: 0.5rem;
