@@ -26,6 +26,7 @@
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
+import { getFaqLogLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     data: function() {
@@ -33,14 +34,20 @@ export default {
             faqTagsData: [],
             faqsByTag: {},
             pageSize: 20,
-            isLoading: false
+            isLoading: false,
+            entranceId: this.$route.query.entrance_id || ''
         }
     },
     mounted() {
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
 
-        let entranceId = this.$route.query.entrance_id || ''
+        this.sendEvLog({
+            category: 'onlineService',
+            action: `dialog_${this.entranceId || ''}_show`,
+            label: getFaqLogLabel(this),
+            value: 1
+        })
 
         this.$axios.get('/ocs/v1/faqs/Tags').then(res => {
             if (res.data) {
@@ -109,6 +116,13 @@ export default {
                 }
             })
 
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `cat_${this.tagId || ''}_click`,
+                label: getFaqLogLabel(this),
+                value: 1
+            })
+
             this.getfaqsByTag(tagId)
         },
         handleScroll(evt) {
@@ -135,6 +149,12 @@ export default {
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
             })
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `answer_${this.entranceId || ''}_click`,
+                label: getFaqAnswerLabel(this, item.id) + '_0',
+                value: 1
+            })
         }
     },
     components: {
@@ -152,7 +172,7 @@ export default {
     background: white;
     height: 100%;
     display: -webkit-box;
-    width:100%;
+    width: 100%;
     /* 
     autoprefixer: off 
     https://github.com/Fyrd/caniuse/issues/3429

@@ -210,10 +210,36 @@ export const getFaqBlockLogLabel = ins => {
         '_' +
         ((ins.service && ins.service.order_info && ins.service.order_info.order_type) || '') +
         '_' +
-        ((ins.service && ins.service.order_info && ins.service.order_info.id) || '') +
+        ((ins.service && ins.service.order_info && ins.service.order_info.order_no) || '') +
         '_' +
-        (ins.$store.state.user.smartCartCount?1:0) +
+        (ins.$store.state.user.smartCartCount ? 1 : 0) +
         '_' +
-        ((ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus)?1:0)
+        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+    )
+}
+
+export const getFaqLogLabel = ins => {
+    return (
+        (ins.$store.state.country.id || '') +
+        '_' +
+        (ins.$store.state.user.id || '') +
+        '_' +
+        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        '_' +
+        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+    )
+}
+
+export const getFaqAnswerLabel = (ins, question) => {
+    return (
+        (ins.$store.state.country.id || '') +
+        '_' +
+        (ins.$store.state.user.id || '') +
+        '_' +
+        (question || '') +
+        '_' +
+        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        '_' +
+        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
     )
 }
