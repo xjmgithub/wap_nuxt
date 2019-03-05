@@ -50,7 +50,7 @@ export default {
     },
      beforeMount() {
         let param = JSON.parse(sessionStorage.getItem('order-info'))
-        this.paymentAmount = param.paymentAmount
+        this.paymentAmount = Math.floor(param.paymentAmount)
     },
     mounted() {
         this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
@@ -63,11 +63,11 @@ export default {
     },
     computed: {
         balance() {
-            // return this.formatAmount(this.wallet.amount)
-            return "0"
+            // return this.wallet.amount
+            return 0
         },
         canPay() {
-            if (this.selected==0 && this.wallet.amount < this.paymentAmount ) {
+            if (this.selected==0 && this.balance < this.paymentAmount ) {
                 return false
             } else {
                 return true

@@ -3,7 +3,7 @@
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
                 <div class="img-box" :class="item.brand"/>
-                <span v-if="i==0" >{{item.cardType}} {{currency}} {{ balance }}</span>
+                <span v-if="i==0" >{{item.cardType}} {{currency}} {{ formatAmount(balance) }}</span>
                 <span v-else>{{item.cardType}}({{item.last4}}) </span>
                 <input type="radio" name="pay-options" value="item.code" @click="checkThis(i)" :checked="item.checked?true:false">
                 <i/>
@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+import { formatAmount } from '~/functions/utils'
 export default {
     props: {
         radioList: {
@@ -25,14 +26,14 @@ export default {
             default: new Array()
         },
         balance:{
-            type: String,
+            type: Number,
             required: true,
-            default: ''
+            default: 0
         },
         paymentAmount:{
-            type: String,
+            type: Number,
             required: true,
-            default: ''
+            default: 0
         }
     },
     data(){
@@ -48,6 +49,9 @@ export default {
         },
         chargeWallet() {
             this.$emit('charge')
+        },
+        formatAmount(num) {
+            return formatAmount(num)
         },
     }
 }
