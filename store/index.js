@@ -54,7 +54,7 @@ export const mutations = {
     SET_DEVICE: function(state, deviceId) {
         state.deviceId = deviceId || ''
     },
-    SET_LANG: function(state, lang) {
+    SET_LANG: function(state, lang='en') {
         state.langType = lang
         if (lang.indexOf('fr') >= 0) {
             state.lang = LANG.fy
