@@ -256,6 +256,12 @@ export default {
             } else {
                 this.getfaqDirectory(item.id)
             }
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `answer_${this.entranceId || ''}_click`,
+                label: getFaqAnswerLabel(this,item.id) + '_2',
+                value: 1
+            })
         },
         getAnswer(id) {
             this.$axios.get(`/ocs/v1/faqs/answer/${id}`).then(res => {

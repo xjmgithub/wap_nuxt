@@ -118,7 +118,7 @@ export default {
 
             this.sendEvLog({
                 category: 'onlineService',
-                action: `cat_${this.tagId || ''}_click`,
+                action: `cat_${tagId || ''}_click`,
                 label: getFaqLogLabel(this),
                 value: 1
             })
