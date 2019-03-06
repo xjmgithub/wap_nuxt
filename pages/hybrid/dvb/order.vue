@@ -51,8 +51,9 @@ export default {
         if (threeHoursBefore <= now && threeHoursAfter >= now) {
             this.isYueMo = true
         }
-
+        
         let param = JSON.parse(sessionStorage.getItem('order-info'))
+        sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
 
         this.sendEvLog({
             category: 'dvbservice',

@@ -3,12 +3,12 @@
         <p>Pay with eWallet</p>
         <mLine/>
         <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet"/>
-        <div class="addCard" @click="paywithCard()">
+        <div class="addCard" @click="payHandle(993102, 3, 2)">
             <div class="img-box"/>
             <span>Add a card to pay</span>
             <img src="~assets/img/dvb/ic_right_def_r.png">
         </div>
-        <p @click="payWithBank" class="bb1">Pay with Bank</p>
+        <p @click="payHandle(993101, 3, 2)" class="bb1">Pay with Bank</p>
         <p class="bb1" v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)">{{item.name}}</p>
         <div class="note" v-show="showDes">
             <p>Note:</p>
@@ -103,9 +103,6 @@ export default {
         chargeWallet() {
             chargeWallet(this)
         },
-        addCard() {
-            this.$emit('doAdd')
-        },
         /* 
             channel 支付渠道号，width card 993102 ,with bank 993101, 钱包9002
             payType 支付方式 ewallet 1, width card/bank 3 
@@ -113,19 +110,6 @@ export default {
             form   是否需要表单 false
             byPass ewallet true,  width card(list true/ add false), with bank false
         */
-        payWithBank() {
-            this.payHandle(993101, 3, 2)
-        },
-        paywithCard(card) {
-            if (card) {
-                checkPass(this, this.wallet.accountNo, () => {
-                    // TODO 跳支付密码
-                    this.payHandle(993102, 3, 2, card)
-                })
-            } else {
-                this.payHandle(993102, 3, 2)
-            }
-        },
         payHandle(channel, payType, apiType, card) {
             let order = JSON.parse(sessionStorage.getItem('order-info'))
             this.$nuxt.$loading.start()
@@ -140,13 +124,14 @@ export default {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         commonPayAfter(this, data, payType, apiType)
-                    },opt
+                    },
+                    opt
                 )
             })
         },
         pay() {
             if (this.selected) {
-                this.paywithCard(this.radioList[this.selected].authorizationCode)
+                this.$router.push(`/hybrid/payment/wallet/paybyPass?card=${this.radioList[this.selected].authorizationCode}`)
             } else {
                 this.payHandle(9002, 1, 1)
             }
