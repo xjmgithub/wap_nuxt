@@ -10,10 +10,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .line {
-    height:1px;
+    height:2px;
     width: 100%;
     position: relative;
-    // border:1px solid #eeeeee;
     .arrows {
        width: .8rem;
        height:.8rem;

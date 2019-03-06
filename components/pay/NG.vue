@@ -43,6 +43,9 @@ export default {
                     node: 'to Pay with an eWallet Balance'
                 }
             ],
+            walletDes:'',
+            payStackDes:'',
+            normalMethods: [],
             selected: 0,
             paymentAmount: '',
             currency: this.$store.state.country.currencySymbol
@@ -51,8 +54,14 @@ export default {
     beforeMount() {
         let param = JSON.parse(sessionStorage.getItem('order-info'))
         this.paymentAmount = Math.floor(param.paymentAmount)
-    },
-    mounted() {
+
+        this.$axios.get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.$store.state.country.countryCode}`).then(res => {
+            if (res.data && res.data.length > 0) {
+                // 993102 ， 993101,9002
+                this.normalMethods = res.data
+            }
+        })
+
         this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
             if (res.data && res.data.length > 0) {
                 res.data.forEach(ele => {
@@ -92,37 +101,38 @@ export default {
             byPass ewallet true,  width card(list true/ add false), with bank false
         */
         payWithBank() {
-            let order = JSON.parse(sessionStorage.getItem('order-info'))
-            createDVBOrder(this, order, data => {
-                invoke(this, data.paymentToken, 993101, data => {
-                    commonPayAfter(this, data, 3, 2)
-                })
-            })
+            this.payHandle(993101, 3, 2)
         },
         paywithCard(card) {
             if (card) {
                 checkPass(this, this.wallet.accountNo, () => {
                     // TODO 跳支付密码
-                    this.payHandle(993102, 3, 2,card)
+                    this.payHandle(993102, 3, 2, card)
                 })
             } else {
                 this.payHandle(993102, 3, 2)
             }
         },
-        payHandle(channel, payType, apiType,card) {
+        payHandle(channel, payType, apiType, card) {
             let order = JSON.parse(sessionStorage.getItem('order-info'))
             createDVBOrder(this, order, data => {
-                invoke(this, data.paymentToken, channel, data => {
-                    commonPayAfter(this, data, payType, apiType)
-                },{
-                    authorization_code:card
-                })
+                invoke(
+                    this,
+                    data.paymentToken,
+                    channel,
+                    data => {
+                        commonPayAfter(this, data, payType, apiType)
+                    },
+                    {
+                        authorization_code: card
+                    }
+                )
             })
         },
         pay() {
-            if(this.selected){
+            if (this.selected) {
                 this.paywithCard(this.radioList[this.selected].authorizationCode)
-            }else{
+            } else {
                 this.payHandle(9002, 1, 1)
             }
         },
@@ -138,7 +148,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
-    color: #333333;
     width: 90%;
     margin: 0 auto;
     padding-bottom: 5.5rem;

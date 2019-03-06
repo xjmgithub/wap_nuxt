@@ -3,15 +3,11 @@
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
                 <div class="img-box" :class="item.brand"/>
-                <span v-if="i==0" >{{item.cardType}} {{currency}} {{ formatAmount(balance) }}</span>
-                <span v-else>{{item.cardType}}({{item.last4}}) </span>
+                <span v-if="i==0">{{item.cardType}} {{currency}} {{ formatAmount(balance) }}</span>
+                <span v-else>{{item.cardType}}({{item.last4}})</span>
                 <input type="radio" name="pay-options" value="item.code" @click="checkThis(i)" :checked="item.checked?true:false">
                 <i/>
-                <div
-                    class="recharge"
-                    @click="chargeWallet"
-                    v-if="i==0 &&balance < paymentAmount&& canRecharge"
-                >RECHARGE</div>
+                <div class="recharge" @click="chargeWallet" v-if="i==0 &&balance < paymentAmount&& canRecharge">RECHARGE</div>
             </label>
         </div>
     </div>
@@ -25,34 +21,34 @@ export default {
             required: true,
             default: new Array()
         },
-        balance:{
+        balance: {
             type: Number,
             required: true,
             default: 0
         },
-        paymentAmount:{
+        paymentAmount: {
             type: Number,
             required: true,
             default: 0
         }
     },
-    data(){
-        return{
+    data() {
+        return {
             currency: this.$store.state.country.currencySymbol,
-            canRecharge:true
+            canRecharge: true
         }
     },
     methods: {
         checkThis(index) {
             this.$emit('pick', index)
-            this.canRecharge = index == 0? true :false
+            this.canRecharge = index == 0 ? true : false
         },
         chargeWallet() {
             this.$emit('charge')
         },
         formatAmount(num) {
             return formatAmount(num)
-        },
+        }
     }
 }
 </script>
@@ -60,25 +56,24 @@ export default {
 .radio-box .img-box {
     display: inline-block;
     vertical-align: middle;
-    height: 1.4rem;
-    width:1.4rem;
+    height: 1.3rem;
+    width: 1.3rem;
     background-size: 100% !important;
-    &.balance{
-        background: url("~assets/img/dvb/ic_ewallet_balance.png") no-repeat ;
+    &.balance {
+        background: url('~assets/img/dvb/ic_ewallet_balance.png') no-repeat;
     }
-    &.visa{
-        background: url("~assets/img/dvb/ic_visa.png") no-repeat ;
+    &.visa {
+        background: url('~assets/img/dvb/ic_visa.png') no-repeat;
     }
-    &.verve{
-        background: url("~assets/img/dvb/ic_verve.png") no-repeat ;
+    &.verve {
+        background: url('~assets/img/dvb/ic_verve.png') no-repeat;
     }
     &.master {
-        background: url("~assets/img/dvb/ic_mastercard.png") no-repeat ;
+        background: url('~assets/img/dvb/ic_mastercard.png') no-repeat;
     }
-    &.default{
-        background: url("~assets/img/dvb/ic_no_logo_card.png") no-repeat ;
+    &.default {
+        background: url('~assets/img/dvb/ic_no_logo_card.png') no-repeat;
     }
-   
 }
 .radio-box > div {
     margin-top: 0.4rem;
@@ -87,8 +82,8 @@ export default {
     position: relative;
     cursor: pointer;
     display: block;
-    line-height: 1.65rem;
-    height: 1.65rem;
+    line-height: 1.8rem;
+    height: 1.8rem;
 }
 .radio-box input {
     position: absolute;
@@ -102,9 +97,9 @@ export default {
     border: 2px solid #ddd;
     background: #ffffff;
     border-radius: 50%;
-    float:right;
+    float: right;
     position: relative;
-    top:.35rem;
+    top: 0.35rem;
 }
 
 .radio-box i:after {
@@ -128,7 +123,7 @@ export default {
 }
 .radio-box span {
     font-size: 0.9rem;
-    margin-left: .5rem;
+    margin-left: 0.5rem;
 }
 .recharge {
     color: #008be9;
