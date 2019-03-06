@@ -103,7 +103,7 @@ export default {
             this.selectMethod = item
         },
         chargeWallet() {
-            chargeWallet
+            chargeWallet(this)
         },
         formatAmount(num) {
             return formatAmount(num)

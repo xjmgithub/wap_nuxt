@@ -79,7 +79,7 @@ export const invoke = (ins, payToken, channel, callback, extend) => {
             tradeType: 'JSAPI',
             signType: 'MD5',
             deviceInfo: dstr,
-            extendInfo: {}
+            extendInfo: extend || {}
         }
     })
         .then(res => {

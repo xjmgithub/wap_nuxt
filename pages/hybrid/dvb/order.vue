@@ -3,8 +3,8 @@
         <div class="container">
             <card-info/>
             <order-info/>
-            <pay-methods :wallet="wallet" />
-            <!-- <NG class="ng-pay" :wallet="wallet" v-show="false"/> -->
+            <!-- <pay-methods :wallet="wallet" /> -->
+            <NG class="ng-pay" :wallet="wallet"/>
             <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
         </div>
     </div>

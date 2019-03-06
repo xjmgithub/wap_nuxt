@@ -1,20 +1,15 @@
 <template>
     <div class="wrapper">
         <p>Pay with eWallet</p>
-        <mLine />
-        <radioBtnRight 
-            :radio-list="radioList" 
-            :balance="balance" 
-            :payment-amount="paymentAmount"
-            @pick="changeItem" 
-            @charge="chargeWallet"/>
-        <div class="addCard" @click="pay('add')">
-            <div class="img-box" />
+        <mLine/>
+        <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet"/>
+        <div class="addCard" @click="paywithCard">
+            <div class="img-box"/>
             <span>Add a card to pay</span>
             <img src="~assets/img/dvb/ic_right_def_r.png">
         </div>
-        <p @click="pay('bank')">Pay with Bank</p>
-        <p>Pay with GTB 737</p>
+        <p @click="payWithBank">Pay with Bank</p>
+        <!-- <p>Pay with GTB 737</p> -->
         <div class="note">
             <p>Note:</p>
             <p>{{radioList[selected].node}}</p>
@@ -30,7 +25,7 @@
 import mLine from '~/components/pay/line'
 import radioBtnRight from '~/components/radioBtnRight'
 import { formatAmount } from '~/functions/utils'
-
+import { createDVBOrder, checkPass, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
 export default {
     props: {
         wallet: {
@@ -49,30 +44,30 @@ export default {
                 }
             ],
             selected: 0,
-            paymentAmount:'',
-            currency: this.$store.state.country.currencySymbol,
+            paymentAmount: '',
+            currency: this.$store.state.country.currencySymbol
         }
     },
-     beforeMount() {
+    beforeMount() {
         let param = JSON.parse(sessionStorage.getItem('order-info'))
         this.paymentAmount = Math.floor(param.paymentAmount)
     },
     mounted() {
         this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
-            if(res.data && res.data.length > 0){
+            if (res.data && res.data.length > 0) {
                 res.data.forEach(ele => {
                     this.radioList.push(ele)
-                });
+                })
             }
         })
     },
     computed: {
         balance() {
-            // return this.wallet.amount
-            return 0
+            return this.wallet.amount
+            // return 0
         },
         canPay() {
-            if (this.selected==0 && this.balance < this.paymentAmount ) {
+            if (this.selected == 0 && this.balance < this.paymentAmount) {
                 return false
             } else {
                 return true
@@ -84,33 +79,77 @@ export default {
             this.selected = index
         },
         chargeWallet() {
-            this.$emit('charge')
+            chargeWallet(this)
         },
         addCard() {
             this.$emit('doAdd')
         },
+        /* 
+            channel 支付渠道号，width card 993102 ,with bank 993101, 钱包9002
+            payType 支付方式 ewallet 1, width card/bank 3 
+            apiType 接口模型 ewallet 1, width card/bank 2
+            form   是否需要表单 false
+            byPass ewallet true,  width card(list true/ add false), with bank false
+        */
+        payWithBank() {
+            let order = JSON.parse(sessionStorage.getItem('order-info'))
+            createDVBOrder(this, order, data => {
+                invoke(this, data.paymentToken, 993101, data => {
+                    commonPayAfter(this, data, 3, 2)
+                })
+            })
+        },
+        paywithCard(card) {
+            if (card) {
+                checkPass(this, this.wallet.accountNo, () => {
+                    // TODO 跳支付密码
+                    this.payHandle(993102, 3, 2,card)
+                })
+            } else {
+                this.payHandle(993102, 3, 2)
+            }
+        },
+        payHandle(channel, payType, apiType,card) {
+            let order = JSON.parse(sessionStorage.getItem('order-info'))
+            createDVBOrder(this, order, data => {
+                invoke(this, data.paymentToken, channel, data => {
+                    commonPayAfter(this, data, payType, apiType)
+                },{
+                    authorization_code:card
+                })
+            })
+        },
         pay(method) {
-            let payType = this.selected == 0 ?  1 : 3
-            let apiType = this.selected == 0 ?  1 : 2
+            if(this.selected){
+                this.paywithCard('AUTH_9wubyetg4d')
+            }else{
+                this.payHandle(9002, 1, 1)
+            }
+            
+            return false
+
+
+            let payType = this.selected == 0 ? 1 : 3
+            let apiType = this.selected == 0 ? 1 : 2
             let useForm = false
             let checkPass = false
             let channel
-            if(method == 'bank'){
+            if (method == 'bank') {
                 channel = 993101
                 this.$emit('pay', channel, payType, apiType, useForm, checkPass)
-            }else if(method == 'add'){
+            } else if (method == 'add') {
                 channel = 993102
                 this.$emit('pay', channel, payType, apiType, useForm, checkPass)
-            }else{
-                channel = this.selected == 0 ?  9002 : 993102
+            } else {
+                channel = this.selected == 0 ? 9002 : 993102
                 // byPass ewallet true,  width card(list true/ add false), with bank false
-                heckPass = channel ==  9002 ? true : channel == 993102 && this.radioList.length > 1 ? true : false
+                heckPass = channel == 9002 ? true : channel == 993102 && this.radioList.length > 1 ? true : false
                 if (this.canPay) this.$emit('pay', channel, payType, apiType, useForm, checkPass)
             }
         },
         formatAmount(num) {
             return formatAmount(num)
-        },
+        }
     },
     components: {
         mLine,
