@@ -35,7 +35,7 @@ export default {
             let ewallet = JSON.parse(sessionStorage.getItem('wallet'))
             let payObj = JSON.parse(sessionStorage.getItem('payObj'))
             let order = JSON.parse(sessionStorage.getItem('order-info'))
-            let opt = card ? { authorization_code: card } : null
+            let opt = this.card ? { authorization_code: this.card } : null
 
             if (this.card) {
                 this.$axios.get(`/mobilewallet/v1/accounts/${ewallet.accountNo}/pay-password?password=${this.password}`).then(res => {
