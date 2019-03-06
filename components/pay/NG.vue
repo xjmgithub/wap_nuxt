@@ -3,13 +3,12 @@
         <p>Pay with eWallet</p>
         <mLine/>
         <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet"/>
-        <div class="addCard" @click="paywithCard">
+        <div class="addCard" @click="paywithCard()">
             <div class="img-box"/>
             <span>Add a card to pay</span>
             <img src="~assets/img/dvb/ic_right_def_r.png">
         </div>
         <p @click="payWithBank" class="bb1">Pay with Bank</p>
-        <!-- <p>Pay with GTB 737</p> -->
         <p class="bb1" v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)">{{item.name}}</p>
         <div class="note" v-show="showDes">
             <p>Note:</p>
@@ -43,8 +42,8 @@ export default {
                     checked: true
                 }
             ],
-            walletDes:'',
-            payStackDes:'',
+            walletDes: '',
+            payStackDes: '',
             normalMethods: [],
             selected: 0,
             paymentAmount: '',
@@ -59,11 +58,11 @@ export default {
             if (res.data && res.data.length > 0) {
                 // 993102 ， 993101,9002
                 res.data.forEach(ele => {
-                    if(ele.id != 993102 && ele.id != 993101 && ele.id != 9002){
+                    if (ele.id != 993102 && ele.id != 993101 && ele.id != 9002) {
                         this.normalMethods.push(ele)
-                    }else if(ele.id == 993102){
+                    } else if (ele.id == 993102) {
                         this.payStackDes = ele.description
-                    }else if(ele.id == 9002){
+                    } else if (ele.id == 9002) {
                         this.walletDes = ele.description
                     }
                 })
@@ -81,7 +80,6 @@ export default {
     computed: {
         balance() {
             return this.wallet.amount
-            // return 0
         },
         canPay() {
             if (this.selected == 0 && this.balance < this.paymentAmount) {
@@ -90,10 +88,10 @@ export default {
                 return true
             }
         },
-        showDes(){
-            if(this.selected){
+        showDes() {
+            if (this.selected) {
                 return this.payStackDes
-            }else{
+            } else {
                 return this.walletDes
             }
         }
@@ -130,17 +128,19 @@ export default {
         },
         payHandle(channel, payType, apiType, card) {
             let order = JSON.parse(sessionStorage.getItem('order-info'))
+            this.$nuxt.$loading.start()
+            this.$store.commit('SHOW_SHADOW_LAYER')
+            let opt = card ? { authorization_code: card } : null
             createDVBOrder(this, order, data => {
                 invoke(
                     this,
                     data.paymentToken,
                     channel,
                     data => {
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
                         commonPayAfter(this, data, payType, apiType)
-                    },
-                    {
-                        authorization_code: card
-                    }
+                    },opt
                 )
             })
         },
@@ -169,7 +169,7 @@ export default {
     & > p {
         padding: 1rem 0;
     }
-    .bb1{
+    .bb1 {
         border-bottom: 1px solid #e0e0e0;
     }
     .addCard {
