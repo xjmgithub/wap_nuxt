@@ -1,21 +1,19 @@
 <template>
-    <div id="wrapper">
+    <div class="wrapper">
         <div class="container">
             <card-info/>
             <order-info/>
             <!-- <pay-methods :wallet="wallet" /> -->
-            <NG class="ng-pay" :wallet="wallet"/>
+            <NG :wallet="wallet"/>
             <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
         </div>
     </div>
 </template>
 <script>
-import qs from 'qs'
 import NG from '~/components/pay/NG'
 import cardInfo from '~/components/dvb/cardInfo'
 import orderInfo from '~/components/dvb/orderInfo'
 import payMethods from '~/components/dvb/payMethods'
-import { parseUA, toNativePage } from '~/functions/utils.js'
 export default {
     layout: 'base',
     async asyncData({ app: { $axios }, store }) {
@@ -32,30 +30,9 @@ export default {
         }
     },
     data() {
-        let user = this.$store.state.user
         return {
-            isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS',
-            isApp: this.$store.state.appType,
-            cardNum: '',
-            cardNo: '',
-            program: '',
-            state: '',
             isLoading: false,
-            money: '',
-            tv_platform: '',
-            stop_days: '',
-            rechargeExplanation: '',
-            paymentAmount: '',
-            rechargeAmount: '',
-            firstChargeTip: '',
-            currency: '',
-            methodsList: [],
-            selectMethod: {},
-            countryCode: '',
-            fcmToken: '',
-            isYueMo: false,
-            cardHaveCharged: 0,
-            dstr: ''
+            isYueMo: false
         }
     },
     mounted() {
@@ -75,8 +52,6 @@ export default {
             this.isYueMo = true
         }
 
-        this.dstr = parseUA(this.isApp, this.$store.state.appVersionCode) // 支付统计用
-        this.fcmToken = (window.getChannelId && getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
         let param = JSON.parse(sessionStorage.getItem('order-info'))
 
         this.sendEvLog({
@@ -91,37 +66,6 @@ export default {
             service_type: 'Recharge',
             page_from: 'new'
         })
-
-        this.cardNo = param.cardNo
-        this.program = param.program_name
-        this.state = param.smartcard_status
-        this.money = param.money
-        this.tv_platform = param.tv_platform
-        this.rechargeExplanation = param.rechargeExplanation
-        this.paymentAmount = param.paymentAmount
-        this.rechargeAmount = param.rechargeAmount
-        this.firstChargeTip = param.firstChargeTip
-        this.cardHaveCharged = param.cardHaveCharged
-        this.currency = param.currency
-        this.countryCode = param.countryCode
-        this.stop_days = param.stop_days
-        let tmp = param.cardNo
-        let len = tmp.length
-        for (let i = 0; i < len; i++) {
-            this.cardNum += tmp[i]
-            if (i == 2 || i == 6) {
-                this.cardNum += ' '
-            }
-        }
-    },
-    methods: {
-        /* 
-            channel 支付渠道号，width card 993102 ,with bank 993101, 9002
-            payType 支付方式 ewallet 1, width card/bank 3 
-            apiType 接口模型 ewallet 1, width card/bank 2
-            form   是否需要表单 false
-            byPass ewallet true,  width card(list true/ add false), with bank false
-        */
     },
     watch: {
         isLoading(val, oldVal) {
@@ -146,5 +90,3 @@ export default {
     }
 }
 </script>
-<style />
-
