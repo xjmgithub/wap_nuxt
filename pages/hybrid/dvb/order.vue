@@ -3,8 +3,8 @@
         <div class="container">
             <card-info/>
             <order-info/>
-            <pay-methods :wallet="wallet" @charge="chargeWallet" @pay="pay" v-show="false"/>
-            <NG class="ng-pay" :wallet="wallet" @charge="chargeWallet" @pay="pay" @doAdd="toAddCard"/>
+            <pay-methods :wallet="wallet" />
+            <!-- <NG class="ng-pay" :wallet="wallet" v-show="false"/> -->
             <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
         </div>
     </div>
@@ -35,7 +35,7 @@ export default {
         let user = this.$store.state.user
         return {
             isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS',
-            isApp: this.$store.state.appType, 
+            isApp: this.$store.state.appType,
             cardNum: '',
             cardNo: '',
             program: '',
@@ -75,7 +75,7 @@ export default {
             this.isYueMo = true
         }
 
-        this.dstr = parseUA(this.isApp,this.$store.state.appVersionCode) // 支付统计用
+        this.dstr = parseUA(this.isApp, this.$store.state.appVersionCode) // 支付统计用
         this.fcmToken = (window.getChannelId && getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
         let param = JSON.parse(sessionStorage.getItem('order-info'))
 
@@ -113,97 +113,8 @@ export default {
                 this.cardNum += ' '
             }
         }
-
-        this.payNG()
     },
     methods: {
-        chargeWallet() {
-            this.$alert(this.$store.state.lang.refresh_wallet,() => {
-                //TODO refresh this.getWalletAccount()
-            })
-            toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
-        },
-        payNG() {
-            this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
-                //console.log(res.data)
-            })
-
-            // let param = JSON.parse(sessionStorage.getItem('order-info'))
-            // this.$axios({
-            //     url: `/wxorder/v1/geneOrder4OnlinePay`,
-            //     method: 'post',
-            //     headers: {
-            //         'content-type': 'application/x-www-form-urlencoded',
-            //         token: this.$store.state.token
-            //     },
-            //     data: qs.stringify(
-            //         Object.assign({}, param, {
-            //             orderSource: 2,
-            //             fcmToken: this.fcmToken || '',
-            //             promotion: !this.isLogin ? 'l1' : 'lalala'
-            //         })
-            //     )
-            // }).then(res => {
-            //     this.$axios({
-            //         url: `/payment/api/v2/invoke-payment`,
-            //         method: 'post',
-            //         data: {
-            //             payToken: res.data.paymentToken,
-            //             payChannelId: 993102,
-            //             tradeType: 'JSAPI',
-            //             signType: 'MD5',
-            //             deviceInfo: this.dstr,
-            //             extendInfo: {}
-            //         }
-            //     }).then(res => {
-            //         //console.log(res.data)
-            //         window.location.href = res.data.tppRedirectUrl
-            //     })
-            // })
-        },
-        createOrder(callback) {
-            let param = JSON.parse(sessionStorage.getItem('order-info'))
-            this.$axios({
-                url: `/wxorder/v1/geneOrder4OnlinePay`,
-                method: 'post',
-                headers: {
-                    'content-type': 'application/x-www-form-urlencoded',
-                    token: this.$store.state.token
-                },
-                data: qs.stringify(
-                    Object.assign({}, param, {
-                        orderSource: 2,
-                        fcmToken: this.fcmToken || '',
-                        promotion: !this.isLogin ? 'l1' : 'lalala'
-                    })
-                )
-            }).then(res => {
-                callback(res.data)
-            })
-        },
-        checkPass(callback) {
-            this.$axios
-                .get(`/mobilewallet/v1/accounts/${this.wallet.accountNo}/prop-details`)
-                .then(res => {
-                    if (res.data) {
-                        if (res.data.payPassword == 'true') {
-                            callback()
-                        } else {
-                            this.$alert('For your security,please set up your password for eWallet and register your phone number.', '', () => {
-                                this.isLoading = false
-                                toNativePage('com.star.mobile.video.wallet.WalletPwdSettingActivity?EXTRA_KEY_SMS_CODE=StarT1mes$PaY')
-                            })
-                        }
-                    } else {
-                        this.isLoading = false
-                        this.$alert('ewallet config error')
-                    }
-                })
-                .catch(err => {
-                    this.isLoading = false
-                    this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
-                })
-        },
         /* 
             channel 支付渠道号，width card 993102 ,with bank 993101, 9002
             payType 支付方式 ewallet 1, width card/bank 3 
@@ -211,71 +122,6 @@ export default {
             form   是否需要表单 false
             byPass ewallet true,  width card(list true/ add false), with bank false
         */
-        pay(channel, payType, apiType, form, byPass) {
-            if (byPass) {
-                this.checkPass(() => {
-                    this.payHandle(channel, payType, apiType, form)
-                })
-            } else {
-                this.payHandle(channel, payType, apiType, form)
-            }
-        },
-        payHandle(channel, payType, apiType, form) {
-            this.createOrder(data => {
-                if (form) {
-                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}`)
-                } else {
-                    this.invoke(data, channel, () => {
-                        if (payType == 1) {
-                            // 钱包支付
-                            sessionStorage.setItem('payObj', JSON.stringify(res.data))
-                            this.$router.push(`/hybrid/payment/wallet/paybyPass?product=${this.rechargeExplanation}`)
-                        } else if (payType == 3 || payType == 4) {
-                            // 第三方在线支付 订阅
-                            if (apiType == 2) {
-                                window.location.href = res.data.tppRedirectUrl
-                            } else if (apiType == 3) {
-                                window.location.href = '/DVB/proccess.php?seqNo=' + res.data.paySeqNo
-                            } else {
-                                this.$alert('The payment method is not supported for the time being')
-                            }
-                        } else {
-                            this.$alert('The payment method is not supported for the time being')
-                        }
-                    })
-                }
-            })
-        },
-        invoke(data, channel, callback) {
-            this.$axios({
-                url: `/payment/api/v2/invoke-payment`,
-                method: 'post',
-                data: {
-                    payToken: data.paymentToken,
-                    payChannelId: channel,
-                    tradeType: 'JSAPI',
-                    signType: 'MD5',
-                    deviceInfo: this.dstr,
-                    extendInfo: {}
-                }
-            })
-                .then(res => {
-                    this.isLoading = false
-                    if (res.data.resultCode == 0) {
-                        callback()
-                    } else {
-                        this.$alert(res.data.resultMessage)
-                    }
-                })
-                .catch(err => {
-                    this.isLoading = false
-                    this.$alert(this.$store.state.lang.error_network, () => {}, 'Retry')
-                })
-        },
-        toAddCard(){
-           // TODO 添加新卡逻辑
-
-        }
     },
     watch: {
         isLoading(val, oldVal) {

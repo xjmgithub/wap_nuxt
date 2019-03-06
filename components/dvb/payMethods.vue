@@ -38,6 +38,7 @@
 </template>
 <script>
 import { formatAmount } from '~/functions/utils'
+import { createDVBOrder, checkPass, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
 export default {
     props: {
         wallet: {
@@ -53,7 +54,7 @@ export default {
             methodsList: [],
             selectMethod: {},
             isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS',
-            payAmount:0
+            payAmount: 0
         }
     },
     computed: {
@@ -102,18 +103,38 @@ export default {
             this.selectMethod = item
         },
         chargeWallet() {
-            this.$emit('charge')
+            chargeWallet
         },
         formatAmount(num) {
             return formatAmount(num)
         },
         pay() {
             let channel = this.selectMethod.fkPayChannelId
+            let checkPass = channel > 9002 && channel < 9034
+            if (!this.canPay) return false
+            if (checkPass) {
+                checkPass(this, this.wallet.accountNo, () => {
+                    this.payHandle()
+                })
+            } else {
+                this.payHandle()
+            }
+        },
+        payHandle() {
+            let order = JSON.parse(sessionStorage.getItem('order-info'))
+            let useForm = this.selectMethod.formConfigExist
+            let channel = this.selectMethod.fkPayChannelId
             let payType = this.selectMethod.payType
             let apiType = this.selectMethod.appInterfaceMode
-            let useForm = this.selectMethod.formConfigExist
-            let checkPass = channel > 9002 && channel < 9034
-            if (this.canPay) this.$emit('pay', channel, payType, apiType, useForm, checkPass)
+            createDVBOrder(this, order, data => {
+                if (useForm) {
+                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}`)
+                } else {
+                    invoke(this, data.paymentToken, channel, data => {
+                        commonPayAfter(this, data, payType, apiType)
+                    })
+                }
+            })
         }
     }
 }
