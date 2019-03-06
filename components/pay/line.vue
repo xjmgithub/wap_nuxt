@@ -13,6 +13,7 @@ export default {
     height:2px;
     width: 100%;
     position: relative;
+    background-color: #eeeeee;
     .arrows {
        width: .8rem;
        height:.8rem;
@@ -21,7 +22,7 @@ export default {
        position: absolute;
        top:0;
        left:50%;
-       margin-top:-.45rem;
+       margin-top:-.3rem;
        background-color: #ffffff;
        transform: rotate(45deg);
     }

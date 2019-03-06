@@ -8,11 +8,12 @@
             <span>Add a card to pay</span>
             <img src="~assets/img/dvb/ic_right_def_r.png">
         </div>
-        <p @click="payWithBank">Pay with Bank</p>
+        <p @click="payWithBank" class="bb1">Pay with Bank</p>
         <!-- <p>Pay with GTB 737</p> -->
-        <div class="note">
+        <p class="bb1" v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)">{{item.name}}</p>
+        <div class="note" v-show="showDes">
             <p>Note:</p>
-            <p>{{radioList[selected].node}}</p>
+            <p v-html="showDes"/>
         </div>
         <div class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
@@ -39,8 +40,7 @@ export default {
                 {
                     brand: 'balance',
                     cardType: 'Balance: ',
-                    checked: true,
-                    node: 'to Pay with an eWallet Balance'
+                    checked: true
                 }
             ],
             walletDes:'',
@@ -58,7 +58,15 @@ export default {
         this.$axios.get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.$store.state.country.countryCode}`).then(res => {
             if (res.data && res.data.length > 0) {
                 // 993102 ， 993101,9002
-                this.normalMethods = res.data
+                res.data.forEach(ele => {
+                    if(ele.id != 993102 && ele.id != 993101 && ele.id != 9002){
+                        this.normalMethods.push(ele)
+                    }else if(ele.id == 993102){
+                        this.payStackDes = ele.description
+                    }else if(ele.id == 9002){
+                        this.walletDes = ele.description
+                    }
+                })
             }
         })
 
@@ -80,6 +88,13 @@ export default {
                 return false
             } else {
                 return true
+            }
+        },
+        showDes(){
+            if(this.selected){
+                return this.payStackDes
+            }else{
+                return this.walletDes
             }
         }
     },
@@ -153,9 +168,9 @@ export default {
     padding-bottom: 5.5rem;
     & > p {
         padding: 1rem 0;
-        &:nth-child(n + 1) {
-            border-bottom: 1px solid #e0e0e0;
-        }
+    }
+    .bb1{
+        border-bottom: 1px solid #e0e0e0;
     }
     .addCard {
         border-bottom: 1px solid #e0e0e0;
