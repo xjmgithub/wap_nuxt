@@ -119,32 +119,11 @@ export default {
                 })
             })
         },
-        pay(method) {
+        pay() {
             if(this.selected){
-                this.paywithCard('AUTH_9wubyetg4d')
+                this.paywithCard(this.radioList[this.selected].authorizationCode)
             }else{
                 this.payHandle(9002, 1, 1)
-            }
-            
-            return false
-
-
-            let payType = this.selected == 0 ? 1 : 3
-            let apiType = this.selected == 0 ? 1 : 2
-            let useForm = false
-            let checkPass = false
-            let channel
-            if (method == 'bank') {
-                channel = 993101
-                this.$emit('pay', channel, payType, apiType, useForm, checkPass)
-            } else if (method == 'add') {
-                channel = 993102
-                this.$emit('pay', channel, payType, apiType, useForm, checkPass)
-            } else {
-                channel = this.selected == 0 ? 9002 : 993102
-                // byPass ewallet true,  width card(list true/ add false), with bank false
-                heckPass = channel == 9002 ? true : channel == 993102 && this.radioList.length > 1 ? true : false
-                if (this.canPay) this.$emit('pay', channel, payType, apiType, useForm, checkPass)
             }
         },
         formatAmount(num) {
@@ -160,6 +139,9 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     color: #333333;
+    width: 90%;
+    margin: 0 auto;
+    padding-bottom: 5.5rem;
     & > p {
         padding: 1rem 0;
         &:nth-child(n + 1) {
@@ -210,10 +192,20 @@ export default {
         line-height: 2.3rem;
         background: #fff;
         .pay-btn {
-            margin-bottom: 0;
+            background-color: #008be9;
+            color: #fff;
+            height: 2.4rem;
             width: 7rem;
+            line-height: 2.4rem;
+            text-align: center;
+            font-size: 0.9rem;
             float: right;
-            margin-top: 0;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            &.disabled {
+                background-color: #bdbdbd;
+            }
         }
         .total {
             font-size: 1.15rem;
