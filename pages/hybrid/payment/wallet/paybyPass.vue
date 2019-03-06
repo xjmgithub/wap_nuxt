@@ -13,6 +13,7 @@
 import mButton from '~/components/button'
 import Password from '~/components/password'
 export default {
+    layout: 'base',
     data() {
         return {
             pwdType: 'Enter Payment Password',
@@ -21,7 +22,6 @@ export default {
             product: this.$route.query.product
         }
     },
-    layout: 'base',
     components: {
         mButton,
         Password
