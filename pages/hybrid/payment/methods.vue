@@ -13,7 +13,7 @@ import dayjs from 'dayjs'
 import crypto from 'crypto'
 import mButton from '~/components/button'
 import RadioBtn from '~/components/radioBtn'
-import {mechant_request_url} from '~/env.js'
+import env from '~/env.js'
 import axios from 'axios'
 export default {
     layout: 'base',
@@ -47,7 +47,7 @@ export default {
             return false
         }
         let res = await axios.post(
-            `${mechant_request_url}payment/platform/v1/oauth/token?grant_type=client_credentials`,
+            `${env.mechant_request_url}payment/platform/v1/oauth/token?grant_type=client_credentials`,
             {},
             {
                 auth: {
@@ -147,7 +147,7 @@ export default {
             let up = hmac.update(str)
             let result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
-            let res2 = await axios.post(`${mechant_request_url}payment/platform/v1/create-payment`, paramObj, {
+            let res2 = await axios.post(`${env.mechant_request_url}payment/platform/v1/create-payment`, paramObj, {
                 headers: {
                     Authorization: 'Bearer ' + res.data.access_token
                 }

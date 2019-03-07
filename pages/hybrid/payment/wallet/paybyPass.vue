@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Password ref="pass" placeholder="Enter Payment Password" :toggle-view="true" @endinput="setPassword"/>
+        <Password ref="pass" :placeholder="pwdType" :toggle-view="true" @endinput="setPassword"/>
         <div class="forgot-pwd">
             <nuxt-link to="/hybrid/payment/wallet/resetPhone">Forgot payment password?</nuxt-link>
         </div>
@@ -12,17 +12,16 @@
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
-import { createDVBOrder, invoke, commonPayAfter } from '~/functions/pay'
 export default {
-    layout: 'base',
     data() {
         return {
+            pwdType: 'Enter Payment Password',
             password: '',
             canPay: false,
-            product: this.$route.query.product,
-            card: this.$route.query.card // paystack card
+            product: this.$route.query.product
         }
     },
+    layout: 'base',
     components: {
         mButton,
         Password
@@ -32,34 +31,8 @@ export default {
             this.password = this.$refs.pass.password
         },
         nextStep() {
-            let ewallet = JSON.parse(sessionStorage.getItem('wallet'))
+            let ewallet = JSON.parse(sessionStorage.getItem('wallet_account'))
             let payObj = JSON.parse(sessionStorage.getItem('payObj'))
-            let order = JSON.parse(sessionStorage.getItem('order-info'))
-            let opt = this.card ? { authorization_code: this.card } : null
-
-            if (this.card) {
-                this.$axios.get(`/mobilewallet/v1/accounts/${ewallet.accountNo}/pay-password?password=${this.password}`).then(res => {
-                    if (res.data.code == 0) {
-                        createDVBOrder(this, order, data => {
-                            invoke(
-                                this,
-                                data.paymentToken,
-                                993102,
-                                data => {
-                                    this.$nuxt.$loading.finish()
-                                    this.$store.commit('HIDE_SHADOW_LAYER')
-                                    commonPayAfter(this, data, 3, 2)
-                                },
-                                opt
-                            )
-                        })
-                    } else {
-                        this.$alert('Incorrect payment password.')
-                    }
-                })
-
-                return false
-            }
 
             this.$axios
                 .post('/mobilewallet/v1/balance-payments', {
@@ -98,8 +71,8 @@ export default {
 <style scoped>
 .container {
     padding: 6rem 1rem 0 1rem;
-    background: white;
-    min-height: 100%;
+    background:white;
+    min-height:100%;
 }
 
 .forgot-pwd {
