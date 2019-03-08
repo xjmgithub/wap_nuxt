@@ -7,8 +7,8 @@ export default {
     pvCountlyServer: 'https://pv.startimestv.com',
     evCountlyServer: 'https://event.startimestv.com',
     gtbankJdkHost: 'https://eu-gateway.mastercard.com',
-    proxyHost: 'http://upms.startimestv.com/',
-    apiURL: 'http://172.31.39.21',
-    apiBrowserURL: 'http://m.startimestv.com/',
+    proxyHost: '//upms.startimestv.com/',
+    apiURL: '//172.31.39.21',
+    apiBrowserURL: '//m.startimestv.com/',
     mechantRequestUrl: 'http://172.31.39.21:8010/'
 }
