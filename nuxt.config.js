@@ -1,7 +1,7 @@
-const pkg = require('./package')
-const env = require('./env.js')
+import pkg from './package'
+import env from './env.js'
 
-module.exports = {
+export default {
     mode: 'universal',
     head: {
         title: 'StarTimes ON',
@@ -58,23 +58,23 @@ module.exports = {
         retry: { retries: 0 }
     },
     proxy: {
-        '/ums/': env.ms_host,
-        '/vup/': env.ms_host,
-        '/cms/': env.ms_host,
-        '/genesys-proxy/v1/chats': env.ms_host,
-        '/membership/': env.ms_host,
-        '/mobilewallet/': env.ms_host,
-        '/payment/api': env.ms_host,
-        '/payment/v2': env.ms_host,
-        '/payment/platform/v1': env.mechant_request_url,
-        '/csms-service': env.ms_host,
-        '/ocs/': env.ms_host,
-        '/css/': env.ms_host,
-        '/voting/': env.ms_host,
-        '/adm/': env.ms_host,
-        '/self/': env.ms_host,
-        '/channel/': env.ms_host,
-        '/wxorder/': env.ms_host
+        '/ums/': env.msHost,
+        '/vup/': env.msHost,
+        '/cms/': env.msHost,
+        '/genesys-proxy/v1/chats': env.msHost,
+        '/membership/': env.msHost,
+        '/mobilewallet/': env.msHost,
+        '/payment/api': env.msHost,
+        '/payment/v2': env.msHost,
+        '/payment/platform/v1': env.mechantRequestUrl,
+        '/csms-service': env.msHost,
+        '/ocs/': env.msHost,
+        '/css/': env.msHost,
+        '/voting/': env.msHost,
+        '/adm/': env.msHost,
+        '/self/': env.msHost,
+        '/channel/': env.msHost,
+        '/wxorder/': env.msHost
     },
     router: {
         middleware: 'auth'

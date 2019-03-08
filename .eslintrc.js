@@ -7,9 +7,12 @@ module.exports = {
     parserOptions: {
         parser: 'babel-eslint'
     },
-    extends: ['plugin:vue/strongly-recommended', 'plugin:prettier/recommended'],
-    // required to lint *.vue files
-    plugins: ['vue', 'prettier'],
+    extends: [
+        '@nuxtjs',
+        'plugin:nuxt/recommended',
+        'plugin:prettier/recommended'
+    ],
+    plugins: ['prettier'],
     // add your custom rules here
     rules: {
         'vue/html-indent': ['error', 4],
