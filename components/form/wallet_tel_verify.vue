@@ -1,28 +1,35 @@
 <template>
     <div>
-        <div class="title">{{title}}</div>
+        <div class="title">
+            {{title}}
+        </div>
         <div class="input-tel">
-            <div class="prefix">+{{prefix}}</div>
+            <div class="prefix">
+                +{{prefix}}
+            </div>
             <div class="number">
                 <input
-                    type="tel"
                     :disabled="disabled"
                     :class="{focus:focus_tel,'input-error':error_tel}"
                     v-model="tel"
                     @focus="focus_tel=true"
                     @blur="focus_tel=false"
+                    type="tel"
                     placeholder="Cellphone number"
                 >
             </div>
             <div class="get-code">
-                <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                <div :class="{disabled:!canGetCode}" @click="getCode" class="btn">
+                    {{codeDuring>0?`${codeDuring}s`:'Get Code'}}
+                </div>
             </div>
         </div>
-        <div class="error" v-show="error_tel">{{error_tel}}</div>
+        <div v-show="error_tel" class="error">
+            {{error_tel}}
+        </div>
     </div>
 </template>
 <script>
-import qs from 'qs'
 export default {
     props: {
         prefix: {
@@ -38,17 +45,6 @@ export default {
             default: false
         }
     },
-    watch: {
-        tel(nv, ov) {
-            this.error_tel = ''
-        }
-    },
-    mounted() {
-        let _this = this
-        this.timer = setInterval(() => {
-            _this.codeDuring--
-        }, 1000)
-    },
     data() {
         return {
             tel: '',
@@ -63,6 +59,20 @@ export default {
             return this.tel.length >= 6 && this.codeDuring <= 0
         }
     },
+    watch: {
+        tel(nv, ov) {
+            this.error_tel = ''
+        }
+    },
+    mounted() {
+        const _this = this
+        this.timer = setInterval(() => {
+            _this.codeDuring--
+        }, 1000)
+    },
+    beforeDestroy() {
+        clearInterval(this.timer)
+    },
     methods: {
         setTel(tel) {
             this.tel = tel
@@ -70,10 +80,10 @@ export default {
         getCode() {
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
-            let accountNo = JSON.parse(localStorage.getItem('wallet_account')).accountNo
+            const accountNo = JSON.parse(localStorage.getItem('wallet_account')).accountNo
             this.$axios.post(`/mobilewallet/uc/v2/accounts/${accountNo}/verify-code?phone=${this.prefix + this.tel}&`).then(res => {
                 this.waiting_res = false
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     this.$emit('canNext')
                     this.codeDuring = 60
                 } else {
@@ -81,9 +91,6 @@ export default {
                 }
             })
         }
-    },
-    beforeDestroy() {
-        clearInterval(this.timer)
     }
 }
 </script>

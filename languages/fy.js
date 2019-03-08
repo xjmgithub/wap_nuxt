@@ -22,7 +22,7 @@ export default {
     officialwebsitemobile_list_more: 'Plus',
 
     // dvb recharge
-    //bind
+    // bind
     dvb_bind_title: 'Recharge de carte à puce',
     please_input_smartcard: "S'il vous plaît entrez les 11 chiffres de la carte à puce.",
     dormant: 'Suspendu',
@@ -52,13 +52,9 @@ export default {
     account_signed_elsewhere: 'Votre compte est connecté ailleurs',
     error_network: 'Serveur internet indisponible, veuillez réessayer plus tard.',
 
-    //order
+    // order
     my_order_details: 'Détails de la Commande',
     smart_card_no_content: 'N ° de carte.',
-    dormant: 'Suspendu',
-    dvb_acitve_to: "Activée jusqu'au :",
-    active_: 'Actif',
-    link_suspend: 'Suspendu',
     smart_card_balance: 'Balance:',
     dvb_recharge_link_recharge: 'Recharger',
     payment_details_promation: 'Promotion',

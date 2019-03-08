@@ -5,27 +5,29 @@
                 <span>{{LANG.smart_card_no_content}}</span>
                 {{ cardNum | formatCard }}
             </p>
-            <p class="state" v-if="state === 'PUNISH_STOP'">
+            <p v-if="state === 'PUNISH_STOP'" class="state">
                 <img src="~assets/img/dvb/ic_dormant.png">
                 {{LANG.dormant}}
             </p>
-            <p class="state" v-else-if="state==='VALID'">
+            <p v-else-if="state==='VALID'" class="state">
                 <img src="~assets/img/dvb/ic_active.png">
-                <span style="font-size:1rem;" v-if="stopDays">{{LANG.dvb_acitve_to}} {{stopDays}}</span>
-                <span style="font-size:1rem;" v-if="!stopDays">{{LANG.active_}}</span>
+                <span v-if="stopDays" style="font-size:1rem;">{{LANG.dvb_acitve_to}} {{stopDays}}</span>
+                <span v-if="!stopDays" style="font-size:1rem;">{{LANG.active_}}</span>
             </p>
-            <p class="state" v-else-if="state === 'PAUSE'">
+            <p v-else-if="state === 'PAUSE'" class="state">
                 <img src="~assets/img/dvb/ic_suspended_def_y.png">
                 {{LANG.link_suspend}}
             </p>
-            <p class="state" v-else-if="money">{{LANG.smart_card_balance}} {{money | formatAmount}}</p>
+            <p v-else-if="money" class="state">
+                {{LANG.smart_card_balance}} {{money | formatAmount}}
+            </p>
         </div>
         <div class="card-type">
-            <p class="platform" v-show="tv_platform == 'DTH'">
+            <p v-show="tv_platform === 'DTH'" class="platform">
                 <img src="~assets/img/dvb/ic_dth.png">
                 {{ program }}
             </p>
-            <p class="platform" v-show="tv_platform == 'DTT'">
+            <p v-show="tv_platform === 'DTT'" class="platform">
                 <img src="~assets/img/dvb/ic_dtt.png">
                 {{ program }}
             </p>
@@ -36,6 +38,22 @@
 import dayjs from 'dayjs'
 import { formatAmount } from '~/functions/utils'
 export default {
+    filters: {
+        formatAmount(num) {
+            return formatAmount(num)
+        },
+        formatCard(val) {
+            const len = val.length
+            let result = ''
+            for (let i = 0; i < len; i++) {
+                result += val[i]
+                if (i === 2 || i === 6) {
+                    result += ' '
+                }
+            }
+            return result
+        }
+    },
     data() {
         return {
             state: '',
@@ -52,28 +70,12 @@ export default {
         }
     },
     beforeMount() {
-        let param = JSON.parse(sessionStorage.getItem('order-info'))
+        const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.state = param.smartcard_status
         this.stopDays = param.stop_days ? dayjs(param.stop_days).format('MMM DD YYYY') : ''
         this.money = param.money
         this.program = param.program_name
         this.cardNum = param.cardNo
-    },
-    filters: {
-        formatAmount(num) {
-            return formatAmount(num)
-        },
-        formatCard(val) {
-            let len = val.length
-            let result = ''
-            for (let i = 0; i < len; i++) {
-                result += val[i]
-                if (i == 2 || i == 6) {
-                    result += ' '
-                }
-            }
-            return result
-        }
     }
 }
 </script>

@@ -1,29 +1,36 @@
 <template>
-    <div class="b-order-msg" v-show="service.order_info">
-        <orderBlock :order="service.order_info"/>
-        <div class="gap"/>
+    <div v-show="service.order_info" class="b-order-msg">
+        <orderBlock :order="service.order_info" />
+        <div class="gap" />
         <div class="bottom clearfix">
             <p class="clearfix">
                 Questions
                 <img @click="moreQues(service.id)" src="~assets/img/faq/ic_categary_copy41.png">
             </p>
             <ul v-if="service.questions">
-                <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">{{item.thema}}</li>
+                <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">
+                    {{item.thema}}
+                </li>
             </ul>
-            <div class="btn" v-for="(item,index) in service.service_components" :key="index">
+            <div v-for="(item,index) in service.service_components" :key="index" class="btn">
                 <a :href="item.service_address">{{item.presentation_name}}</a>
             </div>
         </div>
-        <div v-if="showMore" class="gap"/>
+        <div v-if="showMore" class="gap" />
         <nuxt-link v-if="showMore" @click="moreOrders" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}">
-            <div class="more">MORE ORDERS</div>
+            <div class="more">
+                MORE ORDERS
+            </div>
         </nuxt-link>
     </div>
 </template>
 <script>
 import orderBlock from '~/components/faq/order'
-import { getFaqBlockLogLabel, getFaqLogLabel,getFaqAnswerLabel } from '~/functions/utils'
+import { getFaqBlockLogLabel, getFaqAnswerLabel } from '~/functions/utils'
 export default {
+    components: {
+        orderBlock: orderBlock
+    },
     props: {
         showMore: {
             require: false,
@@ -37,8 +44,34 @@ export default {
             service: {}
         }
     },
-    components: {
-        orderBlock: orderBlock
+    mounted() {
+        this.$axios
+            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`, {
+                headers: {
+                    'x-clientType': 1,
+                    'x-appVersion': '5300'
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.data) {
+                    this.service = res.data.data
+                    sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
+                    sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
+
+                    this.sendEvLog({
+                        category: 'onlineService',
+                        action: `block_${this.entranceId || ''}_show`,
+                        label: getFaqBlockLogLabel(this),
+                        value: 1
+                    })
+                    this.sendEvLog({
+                        category: 'onlineService',
+                        action: `block_moreorders_${this.entranceId || ''}_show`,
+                        label: getFaqBlockLogLabel(this),
+                        value: 1
+                    })
+                }
+            })
     },
     methods: {
         clickQues(item) {
@@ -76,35 +109,6 @@ export default {
                 value: 1
             })
         }
-    },
-    mounted() {
-        this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`, {
-                headers: {
-                    'x-clientType': 1,
-                    'x-appVersion': '5300'
-                }
-            })
-            .then(res => {
-                if (res.data && res.data.data) {
-                    this.service = res.data.data
-                    sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
-                    sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
-
-                    this.sendEvLog({
-                        category: 'onlineService',
-                        action: `block_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel(this),
-                        value: 1
-                    })
-                    this.sendEvLog({
-                        category: 'onlineService',
-                        action: `block_moreorders_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel(this),
-                        value: 1
-                    })
-                }
-            })
     }
 }
 </script>

@@ -7,7 +7,7 @@
                     v-for="(item,index) in list"
                     :key="index"
                     :class="{
-                        selected:index == goodIndex,
+                        selected:index === goodIndex,
                         'center-text':!(item.preferentialPlanVo&&item.preferentialPlanVo.exclusivePrice>0&&item.rate_amount!=item.preferentialPlanVo.exclusivePrice)
                     }"
                     @click="selected(index)"
@@ -30,19 +30,32 @@
                 </li>
             </ul>
         </div>
-        <div class="first-charge" v-show="firstChargeTip">
+        <div v-show="firstChargeTip" class="first-charge">
             <img src="~assets/img/dvb/ic_gift_def.png">
-            <div style="width:65%;float:left;">{{firstChargeTip}}</div>
-            <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails">{{LANG.first_recharge_detail}}</div>
+            <div style="width:65%;float:left;">
+                {{firstChargeTip}}
+            </div>
+            <div
+                v-show="firstChargeDetails"
+                @click="showDetails"
+                class="first-charge-detail"
+            >
+                {{LANG.first_recharge_detail}}
+            </div>
         </div>
-        <div class="count-box clearfix" v-show="countList.length>1">
+        <div v-show="countList.length>1" class="count-box clearfix">
             <p>{{LANG.results_recharge_amount}}</p>
             <ul class="choose clearfix">
                 <li v-for="(item,index) in countList" :key="index" @click="numThis(item)">
                     <label class="radio">
                         {{ item }}
-                        <input type="radio" name="count" :value="item" :checked="item==num">
-                        <i/>
+                        <input
+                            :value="item"
+                            :checked="item==num"
+                            type="radio"
+                            name="count"
+                        >
+                        <i />
                     </label>
                 </li>
             </ul>
@@ -55,7 +68,9 @@ export default {
     props: {
         goodsList: {
             type: Array,
-            default: new Array()
+            default: () => {
+                return []
+            }
         },
         disabled: {
             type: Boolean,
@@ -69,27 +84,12 @@ export default {
             num: 1
         }
     },
-    watch: {
-        list(nv, ov) {
-            let maxMoney = 0
-            let list = [...nv]
-            list.forEach((item, index) => {
-                if (item.rate_amount > maxMoney) {
-                    maxMoney = item.rate_amount
-                    this.goodIndex = index
-                }
-            })
-        },
-        countList(nv, ov) {
-            this.num = 1
-        }
-    },
     computed: {
         LANG() {
             return this.$store.state.lang
         },
         list() {
-            let list = [...this.goodsList]
+            const list = [...this.goodsList]
             list.sort((a, b) => {
                 return a.rate_amount - b.rate_amount
             })
@@ -103,7 +103,7 @@ export default {
             }
         },
         firstChargeTip() {
-            let item = this.list[this.goodIndex]
+            const item = this.list[this.goodIndex]
             if (item && item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
                 return item.preferentialPlanVo.description
             } else {
@@ -111,7 +111,7 @@ export default {
             }
         },
         firstChargeDetails() {
-            let item = this.list[this.goodIndex]
+            const item = this.list[this.goodIndex]
             if (item && item.preferentialPlanVo && item.preferentialPlanVo.firstRechargeGiveMoney) {
                 return item.preferentialPlanVo.descDetail
             } else {
@@ -119,16 +119,31 @@ export default {
             }
         },
         payAmount() {
-            let item = this.list[this.goodIndex]
+            const item = this.list[this.goodIndex]
             return Number(this.discount(item)) * Number(this.num)
         },
         rechargeAmount() {
-            let item = this.list[this.goodIndex]
+            const item = this.list[this.goodIndex]
             return Number(item.rate_amount) * Number(this.num) || 0
         },
         rechargeDes() {
-            let name = this.list[this.goodIndex].rate_display_name
+            const name = this.list[this.goodIndex].rate_display_name
             return this.formatName(name) + ' x ' + this.num
+        }
+    },
+    watch: {
+        list(nv, ov) {
+            let maxMoney = 0
+            const list = [...nv]
+            list.forEach((item, index) => {
+                if (item.rate_amount > maxMoney) {
+                    maxMoney = item.rate_amount
+                    this.goodIndex = index
+                }
+            })
+        },
+        countList(nv, ov) {
+            this.num = 1
         }
     },
     updated() {
@@ -139,7 +154,8 @@ export default {
         })
     },
     mounted() {
-        this.$emit('update', {  // TODO 待优化
+        this.$emit('update', {
+            // TODO 待优化
             payAmount: this.payAmount,
             rechargeAmount: this.rechargeAmount,
             rechargeDes: this.rechargeDes

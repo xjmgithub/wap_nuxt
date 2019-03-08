@@ -5,17 +5,19 @@
         </div>
         <div class="content_show">
             <img class="arrow" src="~assets/img/faq/Triangle.png">
-            <div class="result-wraper" v-html="content"/>
+            <div v-html="content" class="result-wraper" />
             <div>
-                <div class="btn" @click="tocomplain">COMPLAIN</div>
-                <div class="clear"/>
-                <div class="attitude-container" v-if="!noevaluate">
-                    <div class="yes-item" @click="evaluate(1)">
+                <div @click="tocomplain" class="btn">
+                    COMPLAIN
+                </div>
+                <div class="clear" />
+                <div v-if="!noevaluate" class="attitude-container">
+                    <div @click="evaluate(1)" class="yes-item">
                         <img v-show="!agree" src="~assets/img/faq/ic_happy_def_g.png" alt>
                         <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt>
                         <span>YES</span>
                     </div>
-                    <div class="no-item" @click="evaluate(0)">
+                    <div @click="evaluate(0)" class="no-item">
                         <img v-show="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png" alt>
                         <img v-show="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png" alt>
                         <span>NO</span>
@@ -28,14 +30,6 @@
 <script>
 import { toNativePage, getFaqAnswerLabel } from '~/functions/utils'
 export default {
-    data() {
-        return {
-            agree: false,
-            disagree: false,
-            ended: false,
-            isLogin: this.$store.state.user.type || false
-        }
-    },
     props: {
         content: {
             require: true,
@@ -59,9 +53,17 @@ export default {
             default: -1
         }
     },
+    data() {
+        return {
+            agree: false,
+            disagree: false,
+            ended: false,
+            isLogin: this.$store.state.user.type || false
+        }
+    },
     mounted() {
         this.$nextTick(() => {
-            let s = document.querySelectorAll('.result-wraper img')
+            const s = document.querySelectorAll('.result-wraper img')
             for (let i = 0; i < s.length; i++) {
                 s[i].onload = () => {
                     this.$emit('imgloaded')
@@ -73,7 +75,7 @@ export default {
         evaluate(type) {
             if (!this.ended) {
                 this.$axios.post(`/css/v1/service/evaluation/${this.serviceRecord}?whether_to_solve=${type}&grade=${type ? 2 : 1}`).then(res => {
-                    if (res.data.code == 200) {
+                    if (res.data.code === 200) {
                         // 改变状态
                         if (type) {
                             this.agree = true
@@ -99,7 +101,7 @@ export default {
                 value: 1
             })
             if (!this.isLogin) {
-                if (this.$store.state.appType == 1) {
+                if (this.$store.state.appType === 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
                 } else {
                     toNativePage('startimes://login')

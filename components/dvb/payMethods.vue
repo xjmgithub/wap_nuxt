@@ -5,40 +5,44 @@
                 <p>{{LANG.payment_details_method}}：</p>
                 <ul class="choose clearfix">
                     <li v-for="(item,index) in methodsList" :key="index" v-show="item.fkPayChannelId<9002||item.fkPayChannelId>9034||wallet">
-                        <label class="radio" @click="changeMethod(item)">
-                            <input type="radio" name="methods" :value="item.name" v-model="selectMethod.name">
-                            <i/>
+                        <label @click="changeMethod(item)" class="radio">
+                            <input :value="item.name" v-model="selectMethod.name" type="radio" name="methods">
+                            <i />
                             <span>{{ item.name }}</span>
                             <br>
                             <span
                                 v-if="item.fkPayChannelId >= 9002 && item.fkPayChannelId <= 9034 && wallet.accountNo"
-                                class="balance"
                                 :class="{red:wallet.amount < payAmount}"
+                                class="balance"
                             >(Balance:{{wallet.currencySymbol}}{{wallet.amount}} )</span>
                         </label>
                         <div
-                            class="recharge"
                             @click="chargeWallet"
                             v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet.accountNo&&wallet.amount<payAmount"
-                        >RECHARGE</div>
+                            class="recharge"
+                        >
+                            RECHARGE
+                        </div>
                     </li>
                 </ul>
-                <div class="note" v-show="selectMethod.description">
+                <div v-show="selectMethod.description" class="note">
                     <p>Note:</p>
-                    <p v-html="selectMethod.description"/>
+                    <p v-html="selectMethod.description" />
                 </div>
             </div>
         </div>
         <div class="btn-box">
             <span class="total">{{LANG.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{formatAmount(payAmount) }}</span>
-            <div class="pay-btn" :class="{disabled:!canPay}" @click="pay">{{LANG.dvb_recharge_btn_pay}}</div>
+            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">
+                {{LANG.dvb_recharge_btn_pay}}
+            </div>
         </div>
     </div>
 </template>
 <script>
 import { formatAmount } from '~/functions/utils'
-import { createDVBOrder, checkPass, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
+import { createDVBOrder, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
 export default {
     props: {
         wallet: {
@@ -47,13 +51,13 @@ export default {
         }
     },
     data() {
-        let user = this.$store.state.user
+        const user = this.$store.state.user
         return {
             countryCode: this.$store.state.country.country,
             currency: this.$store.state.country.currencySymbol,
             methodsList: [],
             selectMethod: {},
-            isLogin: user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS',
+            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             payAmount: 0
         }
     },
@@ -78,7 +82,7 @@ export default {
         }
     },
     beforeMount() {
-        let param = JSON.parse(sessionStorage.getItem('order-info'))
+        const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.payAmount = param.paymentAmount
         this.$axios
             .get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.countryCode}`)
@@ -92,7 +96,7 @@ export default {
                     })
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 this.$alert(this.LANG.error_network, () => {
                     this.$router.go(0) // TODO 优化
                 })
@@ -109,8 +113,8 @@ export default {
             return formatAmount(num)
         },
         pay() {
-            let channel = this.selectMethod.fkPayChannelId
-            let checkPass = channel > 9002 && channel < 9034
+            const channel = this.selectMethod.fkPayChannelId
+            const checkPass = channel > 9002 && channel < 9034
             if (!this.canPay) return false
             if (checkPass) {
                 checkPass(this, this.wallet.accountNo, () => {
@@ -121,11 +125,11 @@ export default {
             }
         },
         payHandle() {
-            let order = JSON.parse(sessionStorage.getItem('order-info'))
-            let useForm = this.selectMethod.formConfigExist
-            let channel = this.selectMethod.fkPayChannelId
-            let payType = this.selectMethod.payType
-            let apiType = this.selectMethod.appInterfaceMode
+            const order = JSON.parse(sessionStorage.getItem('order-info'))
+            const useForm = this.selectMethod.formConfigExist
+            const channel = this.selectMethod.fkPayChannelId
+            const payType = this.selectMethod.payType
+            const apiType = this.selectMethod.appInterfaceMode
             createDVBOrder(this, order, data => {
                 if (useForm) {
                     this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}`)

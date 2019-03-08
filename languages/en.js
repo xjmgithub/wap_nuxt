@@ -22,7 +22,7 @@ export default {
     officialwebsitemobile_list_more: 'More',
 
     // dvb recharge
-    //bind
+    // bind
     dvb_bind_title: 'Recharge SmartCard',
     please_input_smartcard: 'Please input 11 digits Smart Card number.',
     dormant: 'Dormant',
@@ -50,13 +50,9 @@ export default {
     account_signed_elsewhere: 'Your account is signed in elsewhere',
     error_network: 'Internet server unavailable, please try later.',
 
-    //order
+    // order
     my_order_details: 'Order Details',
     smart_card_no_content: 'Card No.',
-    dormant: 'Dormant',
-    dvb_acitve_to: 'Active to:',
-    active_: 'Active',
-    link_suspend: 'Suspended',
     smart_card_balance: 'Balance:',
     dvb_recharge_link_recharge: 'Recharge',
     payment_details_promation: 'Promotion',

@@ -6,7 +6,7 @@
 const crypto = require('crypto')
 
 exports.getNonce = function() {
-    let word_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    const word_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     let result = ''
 
     for (let i = 0; i < 32; i++) {
@@ -17,7 +17,7 @@ exports.getNonce = function() {
 }
 
 exports.getSignature = function(request_data, oauth_data, oauth_secret) {
-    let baseString =
+    const baseString =
         request_data.method.toUpperCase() + '&' + percentEncode(request_data.url.split('?')[0]) + '&' + percentEncode(getParameterString(oauth_data))
     return crypto
         .createHmac('sha1', percentEncode(oauth_secret) + '&')
@@ -35,14 +35,14 @@ function percentEncode(str) {
 }
 
 function getParameterString(oauth_data) {
-    let base_string_data = sortObject(percentEncodeData(oauth_data))
+    const base_string_data = sortObject(percentEncodeData(oauth_data))
 
     let data_str = ''
 
-    //base_string_data to string
+    // base_string_data to string
     for (let i = 0; i < base_string_data.length; i++) {
-        let key = base_string_data[i].key
-        let value = base_string_data[i].value
+        const key = base_string_data[i].key
+        const value = base_string_data[i].value
         // check if the value is an array
         // this means that this key has multiple values
         if (value && Array.isArray(value)) {
@@ -57,7 +57,7 @@ function getParameterString(oauth_data) {
                     if (i < value.length) {
                         valString += '&'
                     }
-                }.bind(this)
+                }
             )
             data_str += valString
         } else {
@@ -70,18 +70,18 @@ function getParameterString(oauth_data) {
 }
 
 function percentEncodeData(data) {
-    let result = {}
+    const result = {}
 
-    for (let key in data) {
+    for (const key in data) {
         let value = data[key]
         // check if the value is an array
         if (value && Array.isArray(value)) {
-            let newValue = []
+            const newValue = []
             // percentEncode every value
             value.forEach(
                 function(val) {
                     newValue.push(percentEncode(val))
-                }.bind(this)
+                }
             )
             value = newValue
         } else {
@@ -94,7 +94,7 @@ function percentEncodeData(data) {
 }
 
 exports.toHeader = function(oauth_data) {
-    let sorted = sortObject(oauth_data)
+    const sorted = sortObject(oauth_data)
 
     let header_value = 'OAuth '
 
@@ -109,13 +109,13 @@ exports.toHeader = function(oauth_data) {
 }
 
 function sortObject(data) {
-    let keys = Object.keys(data)
-    let result = []
+    const keys = Object.keys(data)
+    const result = []
 
     keys.sort()
 
     for (let i = 0; i < keys.length; i++) {
-        let key = keys[i]
+        const key = keys[i]
         result.push({
             key: key,
             value: data[key]

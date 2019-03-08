@@ -2,7 +2,7 @@
     <div id="show-advisor">
         <div class="clearfix">
             <span class="leftflower">left flower：{{leftflower}}</span>
-            <span class="invited" v-show="app==1" @click="handleInvite">invite friends to vote</span>
+            <span v-show="app==1" @click="handleInvite" class="invited">invite friends to vote</span>
         </div>
         <ul class="clearfix">
             <li v-for="(item,index) in advisorList" :key="index" data-id="item.id">
@@ -17,21 +17,37 @@
                     <span>flowers</span>
                 </div>
                 <span
-                    class="flower-state"
                     @click="handleViceVote(item)"
-                    :class="{'send':item.state == 1,'sent':item.state <=0}"
+                    :class="{'send':item.state === 1,'sent':item.state <=0}"
+                    class="flower-state"
                 >{{item.state | canVoteState}}</span>
             </li>
         </ul>
-        <loading v-show="advisorList.length<=0"/>
+        <loading v-show="advisorList.length<=0" />
     </div>
 </template>
 <script>
 import loading from '~/components/loading'
 import { toNativePage } from '~/functions/utils'
 export default {
+    filters: {
+        canVoteState(state) {
+            if (state === -1) {
+                return 'UNSTART'
+            } else if (state === -2) {
+                return 'END'
+            } else if (state === 0) {
+                return 'SENT'
+            } else if (state === 1) {
+                return 'SEND'
+            }
+        }
+    },
+    components: {
+        loading
+    },
     props: {
-        tab_msg: {
+        tabMsg: {
             type: Object,
             default: () => {
                 return {}
@@ -64,37 +80,37 @@ export default {
                 label: 'flower_' + advisor.name,
                 value: 10
             })
-            if (!this.loginJudge()) return
-            if (data.state == -1) {
-                this.$alert('NOT START')
-                return
-            } else if (data.state == -2) {
-                this.$alert('END')
-                return
-            } else if (this.leftflower == 0) {
-                this.$alert('flower left: 0 \n Remember to vote tomorrow!')
-                return
-            }
-            this.$axios({
-                url: '/voting/v1/ballot',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: qs.stringify({
-                    candidate_id: advisor.id,
-                    vote_id: this.tab_msg.vote_id
-                })
-            }).then(res => {
-                if (res.data.code == 0) {
-                    if (this.leftvote == 0) {
-                        this.$alert('Vote success, vote left: 0 \n Remember to vote tomorrow! Now you can invite friends to vote')
-                    }
-                    this.getAdvisorList()
-                } else {
-                    this.$alert(res.data.message)
-                }
-            })
+            // if (!this.loginJudge()) return
+            // if (data.state === -1) {
+            //     this.$alert('NOT START')
+            //     return
+            // } else if (data.state === -2) {
+            //     this.$alert('END')
+            //     return
+            // } else if (this.leftflower === 0) {
+            //     this.$alert('flower left: 0 \n Remember to vote tomorrow!')
+            //     return
+            // }
+            // this.$axios({
+            //     url: '/voting/v1/ballot',
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/x-www-form-urlencoded'
+            //     },
+            //     data: qs.stringify({
+            //         candidate_id: advisor.id,
+            //         vote_id: this.tab_msg.vote_id
+            //     })
+            // }).then(res => {
+            //     if (res.data.code === 0) {
+            //         if (this.leftvote === 0) {
+            //             this.$alert('Vote success, vote left: 0 \n Remember to vote tomorrow! Now you can invite friends to vote')
+            //         }
+            //         this.getAdvisorList()
+            //     } else {
+            //         this.$alert(res.data.message)
+            //     }
+            // })
         },
         handleInvite() {
             this.sendEvLog({
@@ -103,12 +119,12 @@ export default {
                 label: '',
                 value: 10
             })
-            let link = window.location.href
-            shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
+            // const link = window.location.href
+            // shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
         },
         getAdvisorList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.tab_msg.vote_id}`).then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     this.advisorList = res.data.data
                 }
             })
@@ -120,7 +136,7 @@ export default {
                     method: 'get',
                     data: {}
                 }).then(res => {
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         this.leftflower = res.data.data + ''
                     } else {
                         this.leftflower = '-'
@@ -134,7 +150,7 @@ export default {
                 return
             }
             if (!this.isLogin) {
-                if (this.app == 1) {
+                if (this.app === 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
                 } else {
                     toNativePage('startimes://login')
@@ -150,7 +166,7 @@ export default {
                 label: '',
                 value: 10
             })
-            let ua = window.navigator.userAgent
+            const ua = window.navigator.userAgent
             if (ua.indexOf('iPhone') >= 0 || ua.indexOf('iPad') >= 0) {
                 this.$confirm(
                     'Download StarTimes ON to vote! Go to App Store now',
@@ -187,12 +203,10 @@ export default {
                         let s
                         if (location.href.indexOf('referrer') > 0) {
                             s = location.search
+                        } else if (location.href.indexOf('utm_source') > 0) {
+                            s = '&referrer=' + encodeURIComponent(location.search.substr(1))
                         } else {
-                            if (location.href.indexOf('utm_source') > 0) {
-                                s = '&referrer=' + encodeURIComponent(location.search.substr(1))
-                            } else {
-                                s = '&' + location.search.substr(1)
-                            }
+                            s = '&' + location.search.substr(1)
                         }
                         window.location.href = 'market://details?id=com.star.mobile.video' + s
                     },
@@ -209,22 +223,6 @@ export default {
                 )
             }
         }
-    },
-    filters: {
-        canVoteState(state) {
-            if (state == -1) {
-                return 'UNSTART'
-            } else if (state == -2) {
-                return 'END'
-            } else if (state == 0) {
-                return 'SENT'
-            } else if (state == 1) {
-                return 'SEND'
-            }
-        }
-    },
-    components: {
-        loading
     }
 }
 </script>

@@ -22,7 +22,7 @@ export default {
     officialwebsitemobile_list_more: 'Mais',
 
     // dvb recharge
-    //bind
+    // bind
     dvb_bind_title: 'Recarregue o seu Smartcard',
     please_input_smartcard: 'Por favor, insera 11 dígitos de número de Cartão Inteligente.',
     dormant: 'Suspendu',
@@ -52,13 +52,9 @@ export default {
     account_signed_elsewhere: 'Sua conta está activo em outro lugar',
     error_network: 'rede de servidor não disponível, por favor tente mais tarde.',
 
-    //order
+    // order
     my_order_details: 'Detalhes do Pedido',
     smart_card_no_content: 'Número de Cartão.',
-    dormant: 'Suspendu',
-    dvb_acitve_to: 'Ativo até:',
-    active_: 'Ativo',
-    link_suspend: 'Suspenso',
     smart_card_balance: 'Saldo:',
     dvb_recharge_link_recharge: 'Recarregar',
     payment_details_promation: 'Promoção',

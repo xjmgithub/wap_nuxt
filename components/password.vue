@@ -1,18 +1,20 @@
 <template>
     <div class="password-box">
-        <p class="pwd-type">{{placeholder}}</p>
-        <img class="open-close" src="~assets/img/ic_hide_def_g.png" v-if="toggleView&&isCiphertext==1" alt @click="isCiphertext=2">
-        <img class="open-close" src="~assets/img/ic_show_def_g.png" v-if="toggleView&&isCiphertext==2" alt @click="isCiphertext=1">
+        <p class="pwd-type">
+            {{placeholder}}
+        </p>
+        <img v-if="toggleView&&isCiphertext==1" @click="isCiphertext=2" class="open-close" src="~assets/img/ic_hide_def_g.png" alt>
+        <img v-if="toggleView&&isCiphertext==2" @click="isCiphertext=1" class="open-close" src="~assets/img/ic_show_def_g.png" alt>
         <div class="pwd-input">
             <!-- TODO 支持自定义化数量 -->
-            <div class="input-item" v-html="N1"/>
-            <div class="input-item" v-show="length>=2" v-html="N2"/>
-            <div class="input-item" v-show="length>=3" v-html="N3"/>
-            <div class="input-item" v-show="length>=4" v-html="N4"/>
-            <div class="input-item" v-show="length>=5" v-html="N5"/>
-            <div class="input-item" v-show="length>=6" v-html="N6"/>
+            <div v-html="N1" class="input-item" />
+            <div v-show="length>=2" v-html="N2" class="input-item" />
+            <div v-show="length>=3" v-html="N3" class="input-item" />
+            <div v-show="length>=4" v-html="N4" class="input-item" />
+            <div v-show="length>=5" v-html="N5" class="input-item" />
+            <div v-show="length>=6" v-html="N6" class="input-item" />
         </div>
-        <input type="tel" :maxlength="length" v-model="password" class="hidden-pwd">
+        <input :maxlength="length" v-model="password" type="tel" class="hidden-pwd">
     </div>
 </template>
 <script>
@@ -39,46 +41,45 @@ export default {
     },
     computed: {
         pwdType() {
-            return this.isCiphertext == 1 ? 'password' : 'text'
+            return this.isCiphertext === 1 ? 'password' : 'text'
         },
         N1() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(0, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(0, 1) || ''
             }
         },
         N2() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(1, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(1, 1) || ''
             }
-            return this.password.substr(1, 1) || ''
         },
         N3() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(2, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(2, 1) || ''
             }
         },
         N4() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(3, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(3, 1) || ''
             }
         },
         N5() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(4, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(4, 1) || ''
             }
         },
         N6() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(5, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(5, 1) || ''

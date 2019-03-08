@@ -1,18 +1,21 @@
 <template>
     <div class="email-cont">
-        <div class="input-email" :class="{focus:focus_email,error:error_email}">
+        <div :class="{focus:focus_email,error:error_email}" class="input-email">
             <div class="number">
-                <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email address">
+                <input v-model="email" @focus="focus_email=true" @blur="focus_email=false" type="email" placeholder="Enter your email address">
             </div>
-            <div class="error" v-show="error_email">{{error_email}}</div>
+            <div v-show="error_email" class="error">
+                {{error_email}}
+            </div>
         </div>
         <div class="get-code">
-            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+            <div :class="{disabled:!canGetCode}" @click="getCode" class="btn">
+                {{codeDuring>0?`${codeDuring}s`:'Get Code'}}
+            </div>
         </div>
     </div>
 </template>
 <script>
-import qs from 'qs'
 export default {
     props: {
         type: {
@@ -28,22 +31,25 @@ export default {
             codeDuring: 0
         }
     },
+    computed: {
+        canGetCode() {
+            const regEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
+            return regEmail.test(this.email) && this.codeDuring <= 0
+        }
+    },
     watch: {
         email(nv, ov) {
             this.error_email = ''
         }
     },
     mounted() {
-        let _this = this
+        const _this = this
         this.timer = setInterval(() => {
             _this.codeDuring--
         }, 1000)
     },
-    computed: {
-        canGetCode() {
-            let reg_email = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
-            return reg_email.test(this.email) && this.codeDuring <= 0
-        }
+    beforeDestroy() {
+        clearInterval(this.timer)
     },
     methods: {
         getCode() {
@@ -55,16 +61,13 @@ export default {
                     }
                 })
                 .then(res => {
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         this.codeDuring = 60
                     } else {
                         this.error_email = 'Please confirm you have entered the right email.'
                     }
                 })
         }
-    },
-    beforeDestroy() {
-        clearInterval(this.timer)
     }
 }
 </script>

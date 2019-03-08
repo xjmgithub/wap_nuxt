@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="gap"/>
+        <div class="gap" />
         <div class="order-msg">
             <div class="clearfix">
                 <span>{{LANG.dvb_recharge_link_recharge}}</span>
@@ -13,7 +13,7 @@
                 <span v-else class="fr no-time">{{LANG.recharge_no_promotion}}</span>
             </div>
         </div>
-        <div class="gap"/>
+        <div class="gap" />
         <div class="order-msg">
             <div class="clearfix">
                 <span>{{LANG.results_recharge_amount}}</span>
@@ -28,12 +28,17 @@
                 <span class="fr">{{ currency }} {{ paymentAmount | formatMoney }}</span>
             </div>
         </div>
-        <div class="gap"/>
+        <div class="gap" />
     </div>
 </template>
 <script>
 import { formatAmount } from '~/functions/utils'
 export default {
+    filters: {
+        formatMoney(val) {
+            return formatAmount(val)
+        }
+    },
     data() {
         return {
             rechargeExplanation: '',
@@ -50,17 +55,12 @@ export default {
         }
     },
     beforeMount() {
-        let param = JSON.parse(sessionStorage.getItem('order-info'))
+        const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.rechargeExplanation = param.rechargeExplanation
         this.cardHaveCharged = param.cardHaveCharged
         this.firstChargeTip = param.firstChargeTip
         this.rechargeAmount = param.rechargeAmount
         this.paymentAmount = param.paymentAmount
-    },
-    filters: {
-        formatMoney(val) {
-            return formatAmount(val)
-        }
     }
 }
 </script>

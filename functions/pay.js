@@ -8,9 +8,9 @@ import { parseUA, toNativePage } from '~/functions/utils.js'
 */
 export const createDVBOrder = (ins, order, callback) => {
     if (!order) return false
-    let fcmToken = (window.getChannelId && window.getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
-    let user = ins.$store.state.user
-    let isLogin = user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS'
+    const fcmToken = (window.getChannelId && window.getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
+    const user = ins.$store.state.user
+    const isLogin = user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
     ins.$axios({
         url: `/wxorder/v1/geneOrder4OnlinePay`,
         method: 'post',
@@ -40,7 +40,7 @@ export const checkPass = (ins, walletNo, callback) => {
         .get(`/mobilewallet/v1/accounts/${walletNo}/prop-details`)
         .then(res => {
             if (res.data) {
-                if (res.data.payPassword == 'true') {
+                if (res.data.payPassword === 'true') {
                     callback && callback()
                 } else {
                     ins.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
@@ -53,7 +53,7 @@ export const checkPass = (ins, walletNo, callback) => {
                 ins.$alert('ewallet config error')
             }
         })
-        .catch(err => {
+        .catch(() => {
             ins.isLoading = false
             ins.$alert(ins.$store.state.lang.error_network, () => {}, 'Retry')
         })
@@ -68,7 +68,7 @@ export const checkPass = (ins, walletNo, callback) => {
 export const invoke = (ins, payToken, channel, callback, extend) => {
     if (!payToken || !channel) return false
 
-    let dstr = parseUA(ins.$store.state.appType, ins.$store.state.appVersionCode)
+    const dstr = parseUA(ins.$store.state.appType, ins.$store.state.appVersionCode)
 
     ins.$axios({
         url: `/payment/api/v2/invoke-payment`,
@@ -84,7 +84,7 @@ export const invoke = (ins, payToken, channel, callback, extend) => {
     })
         .then(res => {
             ins.isLoading = false
-            if (res.data.resultCode == 0) {
+            if (res.data.resultCode === 0) {
                 callback && callback(res.data)
             } else {
                 ins.$alert(res.data.resultMessage)
@@ -104,15 +104,15 @@ export const invoke = (ins, payToken, channel, callback, extend) => {
     apiType 对接方式
 */
 export const commonPayAfter = (ins, data, payType, apiType, product) => {
-    if (payType == 1) {
+    if (payType === 1) {
         // 钱包支付
         sessionStorage.setItem('payObj', JSON.stringify(data))
         ins.$router.push(`/hybrid/payment/wallet/paybyPass`)
-    } else if (payType == 3 || payType == 4) {
+    } else if (payType === 3 || payType === 4) {
         // 第三方在线支付 订阅
-        if (apiType == 2) {
+        if (apiType === 2) {
             window.location.href = data.tppRedirectUrl
-        } else if (apiType == 3) {
+        } else if (apiType === 3) {
             window.location.href = '/DVB/proccess.php?seqNo=' + data.paySeqNo
         } else {
             ins.$alert('The payment method is not supported for the time being')
@@ -124,7 +124,7 @@ export const commonPayAfter = (ins, data, payType, apiType, product) => {
 
 export const chargeWallet = ins => {
     ins.$alert(ins.$store.state.lang.refresh_wallet, () => {
-        //TODO refresh this.getWalletAccount()
+        // TODO refresh this.getWalletAccount()
     })
     toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
 }

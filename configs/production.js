@@ -1,10 +1,12 @@
-export const ga_wap_key = 'UA-55969660-4';
-export const ga_android_key = 'UA-55969660-7';
-export const ga_ios_key = 'UA-55969660-5';
-export const countly_host = '//collect.startimestv.com';
-export const countly_appKey = 'cd58cfb3e81658905d802cbe44b04683effbc7ed';
-export const pv_countly_server = 'https://pv.startimestv.com';
-export const ev_countly_server = 'https://event.startimestv.com';
-export const gtbank_jdk_host = 'https://eu-gateway.mastercard.com';
-export const ms_host = 'http://upms.startimestv.com/';
-export const mechant_request_url = 'http://172.31.39.21:8010/';
+export default {
+    gaWapKey: 'UA-55969660-4',
+    gaAndroidKey: 'UA-55969660-7',
+    gaIosKey: 'UA-55969660-5',
+    countlyHost: '//collect.startimestv.com',
+    countlyAppKey: 'cd58cfb3e81658905d802cbe44b04683effbc7ed',
+    pvCountlyServer: 'https://pv.startimestv.com',
+    evCountlyServer: 'https://event.startimestv.com',
+    gtbankJdkHost: 'https://eu-gateway.mastercard.com',
+    msHost: 'http://upms.startimestv.com/',
+    mechantRequestUrl: 'http://172.31.39.21:8010/'
+}

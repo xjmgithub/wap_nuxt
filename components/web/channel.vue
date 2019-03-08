@@ -1,14 +1,20 @@
 <template>
     <div class="channel">
         <nuxt-link :to="`/browser/liveDetail?channelId=${channel.channelId}&epg=${channel.programVO&&channel.programVO.id||''}`">
-            <div class="title">{{channel.name}}</div>
+            <div class="title">
+                {{channel.name}}
+            </div>
             <div>{{channel.describesShow}}</div>
             <div class="total">
-                <div class="now" :style="{ width: channel.rate + '%'}"/>
+                <div :style="{ width: channel.rate + '%'}" class="now" />
             </div>
             <div class="state">
-                <p v-show="channel.channel.billingType==1" class="trial">TRIAL</p>
-                <p v-show="channel.channel.billingType==2" class="vip">VIP</p>
+                <p v-show="channel.channel.billingType==1" class="trial">
+                    TRIAL
+                </p>
+                <p v-show="channel.channel.billingType==2" class="vip">
+                    VIP
+                </p>
             </div>
         </nuxt-link>
     </div>

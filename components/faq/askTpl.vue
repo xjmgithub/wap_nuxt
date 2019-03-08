@@ -6,7 +6,9 @@
         </div>
         <div class="content_show fr">
             <img class="arrow" src="~assets/img/faq/Triangle_right.png">
-            <div class="faq_content">{{question}}</div>
+            <div class="faq_content">
+                {{question}}
+            </div>
         </div>
     </div>
 </template>

@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div class="blank_bottom">&nbsp;</div>
+        <div class="blank_bottom">
+&nbsp;
+        </div>
         <div class="more-services untrim">
             <p @click="showAllWays">
                 {{$store.state.lang.more_recharge_method}}
@@ -27,7 +29,7 @@ export default {
     },
     methods: {
         showAllWays() {
-            if (this.isApp == '1') {
+            if (this.isApp === '1') {
                 this.sendEvLog({
                     category: 'dvbservice',
                     action: 'other_paymentWay_click',

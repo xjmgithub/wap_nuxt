@@ -1,12 +1,14 @@
 <template>
-    <div class="container" v-if="list.length>0">
-        <div class="checked" @click="showList">
+    <div v-if="list.length>0" class="container">
+        <div @click="showList" class="checked">
             <span v-show="selected.id">{{selected.name}}</span>
             <span v-show="!selected.id" class="placeholder">{{placeholder}}</span>
             <img src="~assets/img/ic_sl_g.png">
         </div>
-        <ul class="list" v-show="$store.state.selectCompId==compSelectId">
-            <li v-for="(item,index) in list" :key="index" @click="choose(item)">{{item.name}}</li>
+        <ul v-show="$store.state.selectCompId==compSelectId" class="list">
+            <li v-for="(item,index) in list" :key="index" @click="choose(item)">
+                {{item.name}}
+            </li>
         </ul>
     </div>
 </template>
@@ -57,12 +59,12 @@ export default {
         init() {
             this.renderList = this.list
             // 处理default值
-            if (this.default || this.default == 0) {
+            if (this.default || this.default === 0) {
                 if (this.default instanceof Object) {
                     this.choose(this.default)
                 } else {
                     this.list.forEach(item => {
-                        if (item.id == this.default) {
+                        if (item.id === this.default) {
                             this.choose(item)
                         }
                     })
@@ -71,23 +73,23 @@ export default {
             this.initState = true
         },
         showList() {
-            let s = this.$store.state.selectCompId + 1
+            const s = this.$store.state.selectCompId + 1
             this.$store.commit('ADD_SELECT_COMP', s)
             this.compSelectId = this.$store.state.selectCompId
         },
         choose(obj) {
             if (this.list.length > 0) {
-                let tmp = this.selected
+                const tmp = this.selected
                 this.list.forEach(item => {
-                    if (item.id == obj.id) {
+                    if (item.id === obj.id) {
                         this.selected = item
                     }
                 })
-                if (tmp.id != this.selected.id) {
+                if (tmp.id !== this.selected.id) {
                     this.$emit('change', this.selected)
                 }
             }
-            let s = this.$store.state.selectCompId + 1
+            const s = this.$store.state.selectCompId + 1
             this.$store.commit('ADD_SELECT_COMP', s)
         }
     }

@@ -1,23 +1,29 @@
 <template>
     <div class="wrapper">
         <p>Pay with eWallet</p>
-        <mLine/>
-        <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet"/>
-        <div class="addCard" @click="payHandle(993102, 3, 2)">
-            <div class="img-box"/>
+        <mLine />
+        <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet" />
+        <div @click="payHandle(993102, 3, 2)" class="addCard">
+            <div class="img-box" />
             <span>Add a card to pay</span>
             <img src="~assets/img/dvb/ic_right_def_r.png">
         </div>
-        <p @click="payHandle(993101, 3, 2)" class="bb1">Pay with Bank</p>
-        <p class="bb1" v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)">{{item.name}}</p>
-        <div class="note" v-show="showDes">
+        <p @click="payHandle(993101, 3, 2)" class="bb1">
+            Pay with Bank
+        </p>
+        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">
+            {{item.name}}
+        </p>
+        <div v-show="showDes" class="note">
             <p>Note:</p>
-            <p v-html="showDes"/>
+            <p v-html="showDes" />
         </div>
         <div class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{ formatAmount(paymentAmount)}}</span>
-            <div class="pay-btn" :class="{disabled:!canPay}" @click="pay">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
+            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">
+                {{$store.state.lang.dvb_recharge_btn_pay}}
+            </div>
         </div>
     </div>
 </template>
@@ -25,8 +31,12 @@
 import mLine from '~/components/pay/line'
 import radioBtnRight from '~/components/radioBtnRight'
 import { formatAmount } from '~/functions/utils'
-import { createDVBOrder, checkPass, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
+import { createDVBOrder, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
 export default {
+    components: {
+        mLine,
+        radioBtnRight
+    },
     props: {
         wallet: {
             type: Object,
@@ -50,19 +60,38 @@ export default {
             currency: this.$store.state.country.currencySymbol
         }
     },
+    computed: {
+        balance() {
+            return this.wallet.amount
+        },
+        canPay() {
+            if (this.selected === 0 && this.balance < this.paymentAmount) {
+                return false
+            } else {
+                return true
+            }
+        },
+        showDes() {
+            if (this.selected) {
+                return this.payStackDes
+            } else {
+                return this.walletDes
+            }
+        }
+    },
     beforeMount() {
-        let param = JSON.parse(sessionStorage.getItem('order-info'))
+        const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.paymentAmount = Math.floor(param.paymentAmount)
 
         this.$axios.get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.$store.state.country.countryCode}`).then(res => {
             if (res.data && res.data.length > 0) {
                 // 993102 ， 993101,9002
                 res.data.forEach(ele => {
-                    if (ele.id != 993102 && ele.id != 993101 && ele.id != 9002) {
+                    if (ele.id !== 993102 && ele.id !== 993101 && ele.id !== 9002) {
                         this.normalMethods.push(ele)
-                    } else if (ele.id == 993102) {
+                    } else if (ele.id === 993102) {
                         this.payStackDes = ele.description
-                    } else if (ele.id == 9002) {
+                    } else if (ele.id === 9002) {
                         this.walletDes = ele.description
                     }
                 })
@@ -76,25 +105,6 @@ export default {
                 })
             }
         })
-    },
-    computed: {
-        balance() {
-            return this.wallet.amount
-        },
-        canPay() {
-            if (this.selected == 0 && this.balance < this.paymentAmount) {
-                return false
-            } else {
-                return true
-            }
-        },
-        showDes() {
-            if (this.selected) {
-                return this.payStackDes
-            } else {
-                return this.walletDes
-            }
-        }
     },
     methods: {
         changeItem(index) {
@@ -111,10 +121,10 @@ export default {
             byPass ewallet true,  width card(list true/ add false), with bank false
         */
         payHandle(channel, payType, apiType, card) {
-            let order = JSON.parse(sessionStorage.getItem('order-info'))
+            const order = JSON.parse(sessionStorage.getItem('order-info'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            let opt = card ? { authorization_code: card } : null
+            const opt = card ? { authorization_code: card } : null
             createDVBOrder(this, order, data => {
                 invoke(
                     this,
@@ -139,10 +149,6 @@ export default {
         formatAmount(num) {
             return formatAmount(num)
         }
-    },
-    components: {
-        mLine,
-        radioBtnRight
     }
 }
 </script>

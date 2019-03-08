@@ -1,9 +1,9 @@
 <template>
-    <div class="lds-ring" v-if="loading">
-        <div/>
-        <div/>
-        <div/>
-        <div/>
+    <div v-if="loading" class="lds-ring">
+        <div />
+        <div />
+        <div />
+        <div />
     </div>
 </template>
 <script>

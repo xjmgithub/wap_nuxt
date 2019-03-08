@@ -1,10 +1,13 @@
-export const ga_wap_key = 'UA-55969660-4';
-export const ga_android_key = 'UA-55969660-7';
-export const ga_ios_key = 'UA-55969660-5';
-export const countly_host = '//collect.startimestv.com';
-export const countly_appKey = 'cd58cfb3e81658905d802cbe44b04683effbc7ed';
-export const pv_countly_server = 'http://10.0.243.111:8080';
-export const ev_countly_server = 'http://10.0.243.111:8080';
-export const gtbank_jdk_host = 'https://eu-gateway.mastercard.com';
-export const ms_host = 'http://staging.upms.startimestv.com/';
-export const mechant_request_url = 'http://172.31.39.21:8010/';
+export default {
+    gaWapKey: 'UA-55969660-8',
+    gaAndroidKey: 'UA-55969660-8',
+    gaIosKey: 'UA-55969660-8',
+    countlyHost: '//10.0.63.102:32769',
+    countlyAppKey: 'cb95b4e9125098b99a7df2fbda4554eda982918b',
+    pvCountlyServer: 'http://10.0.243.111:8080',
+    evCountlyServer: 'http://10.0.243.111:8080',
+    gtbankJdkHost: 'https://test-gateway.mastercard.com',
+    msHost: 'http://qa.upms.startimestv.com/',
+    mechantRequestUrl: 'http://10.0.63.5:8010/'
+}
+

@@ -1,12 +1,12 @@
-let fs = require('fs')
-let net = require('net')
-let path = require('path')
+const fs = require('fs')
+const net = require('net')
+const path = require('path')
 
-let async = require('async')
+const async = require('async')
 
-let geodatadir = './functions/ipdb'
+const geodatadir = './functions/ipdb'
 
-let dataFiles = {
+const dataFiles = {
     city: path.join(geodatadir, 'geoip-city.dat'),
     city6: path.join(geodatadir, 'geoip-city6.dat'),
     cityNames: path.join(geodatadir, 'geoip-city-names.dat'),
@@ -14,7 +14,7 @@ let dataFiles = {
     country6: path.join(geodatadir, 'geoip-country6.dat')
 }
 
-let privateRange4 = [
+const privateRange4 = [
     [aton4('10.0.0.0'), aton4('10.255.255.255')],
     [aton4('172.16.0.0'), aton4('172.31.255.255')],
     [aton4('192.168.0.0'), aton4('192.168.255.255')]
@@ -38,8 +38,8 @@ let cache6 = {
     recordSize: 48
 }
 
-let RECORD_SIZE = 10
-let RECORD_SIZE6 = 34
+const RECORD_SIZE = 10
+const RECORD_SIZE6 = 34
 
 function lookup4(ip) {
     let fline = 0
@@ -49,15 +49,15 @@ function lookup4(ip) {
     let line
     let locId
 
-    let buffer = cache4.mainBuffer
-    let locBuffer = cache4.locationBuffer
-    let privateRange = privateRange4
-    let recordSize = cache4.recordSize
-    let locRecordSize = cache4.locationRecordSize
+    const buffer = cache4.mainBuffer
+    const locBuffer = cache4.locationBuffer
+    const privateRange = privateRange4
+    const recordSize = cache4.recordSize
+    const locRecordSize = cache4.locationRecordSize
 
     let i
 
-    let geodata = {
+    const geodata = {
         range: '',
         country: '',
         region: '',
@@ -91,13 +91,13 @@ function lookup4(ip) {
                 geodata.country = buffer.toString('utf8', line * recordSize + 8, line * recordSize + 10)
             } else {
                 locId = buffer.readUInt32BE(line * recordSize + 8)
-
+                /* eslint no-control-regex: 0 */
                 geodata.country = locBuffer.toString('utf8', locId * locRecordSize + 0, locId * locRecordSize + 2).replace(/\u0000.*/, '')
                 geodata.region = locBuffer.toString('utf8', locId * locRecordSize + 2, locId * locRecordSize + 4).replace(/\u0000.*/, '')
                 geodata.metro = locBuffer.readInt32BE(locId * locRecordSize + 4)
-                geodata.ll[0] = buffer.readInt32BE(line * recordSize + 12) / 10000 //latitude
-                geodata.ll[1] = buffer.readInt32BE(line * recordSize + 16) / 10000 //longitude
-                geodata.area = buffer.readUInt32BE(line * recordSize + 20) //longitude
+                geodata.ll[0] = buffer.readInt32BE(line * recordSize + 12) / 10000 // latitude
+                geodata.ll[1] = buffer.readInt32BE(line * recordSize + 16) / 10000 // longitude
+                geodata.area = buffer.readUInt32BE(line * recordSize + 20) // longitude
                 geodata.eu = locBuffer.toString('utf8', locId * locRecordSize + 8, locId * locRecordSize + 9).replace(/\u0000.*/, '')
                 geodata.timezone = locBuffer.toString('utf8', locId * locRecordSize + 9, locId * locRecordSize + 33).replace(/\u0000.*/, '')
                 geodata.city = locBuffer.toString('utf8', locId * locRecordSize + 33, locId * locRecordSize + locRecordSize).replace(/\u0000.*/, '')
@@ -121,12 +121,12 @@ function lookup4(ip) {
 }
 
 function lookup6(ip) {
-    let buffer = cache6.mainBuffer
-    let recordSize = cache6.recordSize
-    let locBuffer = cache4.locationBuffer
-    let locRecordSize = cache4.locationRecordSize
+    const buffer = cache6.mainBuffer
+    const recordSize = cache6.recordSize
+    const locBuffer = cache4.locationBuffer
+    const locRecordSize = cache4.locationRecordSize
 
-    let geodata = {
+    const geodata = {
         range: '',
         country: '',
         region: '',
@@ -135,7 +135,7 @@ function lookup6(ip) {
     }
     function readip(line, offset) {
         let ii = 0
-        let ip = []
+        const ip = []
 
         for (ii = 0; ii < 2; ii++) {
             ip.push(buffer.readUInt32BE(line * recordSize + offset * 16 + ii * 4))
@@ -166,14 +166,14 @@ function lookup6(ip) {
             if (recordSize === RECORD_SIZE6) {
                 geodata.country = buffer.toString('utf8', line * recordSize + 32, line * recordSize + 34).replace(/\u0000.*/, '')
             } else {
-                locId = buffer.readUInt32BE(line * recordSize + 32)
+                const locId = buffer.readUInt32BE(line * recordSize + 32)
 
                 geodata.country = locBuffer.toString('utf8', locId * locRecordSize + 0, locId * locRecordSize + 2).replace(/\u0000.*/, '')
                 geodata.region = locBuffer.toString('utf8', locId * locRecordSize + 2, locId * locRecordSize + 4).replace(/\u0000.*/, '')
                 geodata.metro = locBuffer.readInt32BE(locId * locRecordSize + 4)
-                geodata.ll[0] = buffer.readInt32BE(line * recordSize + 36) / 10000 //latitude
-                geodata.ll[1] = buffer.readInt32BE(line * recordSize + 40) / 10000 //longitude
-                geodata.area = buffer.readUInt32BE(line * recordSize + 44) //area
+                geodata.ll[0] = buffer.readInt32BE(line * recordSize + 36) / 10000 // latitude
+                geodata.ll[1] = buffer.readInt32BE(line * recordSize + 40) / 10000 // longitude
+                geodata.area = buffer.readUInt32BE(line * recordSize + 44) // area
                 geodata.eu = locBuffer.toString('utf8', locId * locRecordSize + 8, locId * locRecordSize + 9).replace(/\u0000.*/, '')
                 geodata.timezone = locBuffer.toString('utf8', locId * locRecordSize + 9, locId * locRecordSize + 33).replace(/\u0000.*/, '')
                 geodata.city = locBuffer.toString('utf8', locId * locRecordSize + 33, locId * locRecordSize + locRecordSize).replace(/\u0000.*/, '')
@@ -197,11 +197,11 @@ function lookup6(ip) {
 }
 
 function get4mapped(ip) {
-    let ipv6 = ip.toUpperCase()
-    let v6prefixes = ['0:0:0:0:0:FFFF:', '::FFFF:']
+    const ipv6 = ip.toUpperCase()
+    const v6prefixes = ['0:0:0:0:0:FFFF:', '::FFFF:']
     for (let i = 0; i < v6prefixes.length; i++) {
-        let v6prefix = v6prefixes[i]
-        if (ipv6.indexOf(v6prefix) == 0) {
+        const v6prefix = v6prefixes[i]
+        if (ipv6.indexOf(v6prefix) === 0) {
             return ipv6.substring(v6prefix.length)
         }
     }
@@ -211,7 +211,7 @@ function get4mapped(ip) {
 function preload(callback) {
     let datFile
     let datSize
-    let asyncCache = {
+    const asyncCache = {
         firstIP: null,
         lastIP: null,
         lastLine: 0,
@@ -221,7 +221,7 @@ function preload(callback) {
         recordSize: 12
     }
 
-    //when the preload function receives a callback, do the task asynchronously
+    // when the preload function receives a callback, do the task asynchronously
     if (typeof arguments[0] === 'function') {
         async.series([
             function(cb) {
@@ -273,8 +273,7 @@ function preload(callback) {
                                     fs.fstat(datFile, function(err, stats) {
                                         datSize = stats.size
                                         asyncCache.recordSize = RECORD_SIZE
-
-                                        cb()
+                                        cb(err)
                                     })
                                 }
                             })
@@ -298,7 +297,7 @@ function preload(callback) {
                     ],
                     function(err) {
                         if (err) {
-                            //keep old cache
+                            // keep old cache
                         } else {
                             asyncCache.lastLine = datSize / asyncCache.recordSize - 1
                             asyncCache.lastIP = asyncCache.mainBuffer.readUInt32BE(asyncCache.lastLine * asyncCache.recordSize + 4)
@@ -315,6 +314,7 @@ function preload(callback) {
             datSize = fs.fstatSync(datFile).size
 
             if (datSize === 0) {
+                // eslint-disable-next-line no-throw-literal
                 throw {
                     code: 'EMPTY_FILE'
                 }
@@ -350,7 +350,7 @@ function preload(callback) {
 function preload6(callback) {
     let datFile
     let datSize
-    let asyncCache6 = {
+    const asyncCache6 = {
         firstIP: null,
         lastIP: null,
         lastLine: 0,
@@ -358,7 +358,7 @@ function preload6(callback) {
         recordSize: 58
     }
 
-    //when the preload function receives a callback, do the task asynchronously
+    // when the preload function receives a callback, do the task asynchronously
     if (typeof arguments[0] === 'function') {
         async.series([
             function(cb) {
@@ -392,7 +392,7 @@ function preload6(callback) {
                                         datSize = stats.size
                                         asyncCache6.recordSize = RECORD_SIZE6
 
-                                        cb()
+                                        cb(err)
                                     })
                                 }
                             })
@@ -416,7 +416,7 @@ function preload6(callback) {
                     ],
                     function(err) {
                         if (err) {
-                            //keep old cache
+                            // keep old cache
                         } else {
                             asyncCache6.lastLine = datSize / asyncCache6.recordSize - 1
                             cache6 = asyncCache6
@@ -432,6 +432,7 @@ function preload6(callback) {
             datSize = fs.fstatSync(datFile).size
 
             if (datSize === 0) {
+                // eslint-disable-next-line no-throw-literal
                 throw {
                     code: 'EMPTY_FILE'
                 }
@@ -463,7 +464,7 @@ function lookup(ip) {
     } else if (net.isIP(ip) === 4) {
         return lookup4(aton4(ip))
     } else if (net.isIP(ip) === 6) {
-        let ipv4 = get4mapped(ip)
+        const ipv4 = get4mapped(ip)
         if (ipv4) {
             return lookup4(aton4(ipv4))
         } else {
@@ -482,7 +483,7 @@ function aton4(a) {
 function aton6(a) {
     a = a.replace(/"/g, '').split(/:/)
 
-    let l = a.length - 1
+    const l = a.length - 1
     let i
 
     if (a[l] === '') {
@@ -505,7 +506,7 @@ function aton6(a) {
         }
     }
 
-    let r = []
+    const r = []
     for (i = 0; i < 4; i++) {
         r.push(((a[2 * i] << 16) + a[2 * i + 1]) >>> 0)
     }

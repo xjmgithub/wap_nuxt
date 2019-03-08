@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow-layer" @click="click"/>
+    <div @click="click" class="shadow-layer" />
 </template>
 <script>
 export default {

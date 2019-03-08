@@ -1,6 +1,6 @@
 <template>
     <div class="line"> 
-        <div class="arrows"/> 
+        <div class="arrows" /> 
     </div>
 </template>
 <script>
