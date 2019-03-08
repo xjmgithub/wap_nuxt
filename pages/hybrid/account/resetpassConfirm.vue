@@ -4,18 +4,18 @@
             <div class="label">
                 Create a Password
                 <img
+                    v-if="isCiphertext==1"
+                    @click="isCiphertext=2"
                     class="open-close"
                     src="~assets/img/ic_hide_def_g.png"
-                    v-if="isCiphertext==1"
                     alt
-                    @click="isCiphertext=2"
                 >
                 <img
+                    v-if="isCiphertext==2"
+                    @click="isCiphertext=1"
                     class="open-close"
                     src="~assets/img/ic_show_def_g.png"
-                    v-if="isCiphertext==2"
                     alt
-                    @click="isCiphertext=1"
                 >
             </div>
             <input :type="pwdType" v-model="pass" @blur="checkpass">
@@ -24,18 +24,18 @@
             <div class="label">
                 Confirm New Password
                 <img
+                    v-if="isCiphertext_confirm==1"
+                    @click="isCiphertext_confirm=2"
                     class="open-close"
                     src="~assets/img/ic_hide_def_g.png"
-                    v-if="isCiphertext_confirm==1"
                     alt
-                    @click="isCiphertext_confirm=2"
                 >
                 <img
+                    v-if="isCiphertext_confirm==2"
+                    @click="isCiphertext_confirm=1"
                     class="open-close"
                     src="~assets/img/ic_show_def_g.png"
-                    v-if="isCiphertext_confirm==2"
                     alt
-                    @click="isCiphertext_confirm=1"
                 >
             </div>
             <input :type="pwdType_confirm" v-model="repass" @blur="checkpass">
@@ -50,6 +50,9 @@ import mButton from '~/components/button'
 import qs from 'qs'
 export default {
     layout: 'base',
+    components: {
+        mButton
+    },
     data() {
         return {
             phone: this.$route.query.phone || '',
@@ -63,14 +66,38 @@ export default {
             disabled: true
         }
     },
+    computed: {
+        pwdType() {
+            return this.isCiphertext === 1 ? 'password' : 'text'
+        },
+        pwdType_confirm() {
+            return this.isCiphertext_confirm === 1 ? 'password' : 'text'
+        }
+    },
+    watch: {
+        pass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val === this.repass) {
+                this.disabled = false
+            } else {
+                this.disabled = true
+            }
+        },
+        repass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val === this.pass) {
+                this.disabled = false
+            } else {
+                this.disabled = true
+            }
+        }
+    },
     methods: {
         checkpass() {
             // TODO 格式化
         },
         nextStep() {
             // TODO 校验
-            let url = '/ums/v1/user/phone/pwd/reset'
-            let options = {
+            const url = '/ums/v1/user/phone/pwd/reset'
+            const options = {
                 code: this.verifyCode,
                 newPassword: this.pass
             }
@@ -91,39 +118,12 @@ export default {
                 data: qs.stringify(options),
                 url: url
             }).then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     this.$router.push('/hybrid/account/login')
                 } else {
                     this.$alert('This code you entered is incorrect. Please try again.')
                 }
             })
-        }
-    },
-    components: {
-        mButton
-    },
-    computed: {
-        pwdType() {
-            return this.isCiphertext == 1 ? 'password' : 'text'
-        },
-        pwdType_confirm() {
-            return this.isCiphertext_confirm == 1 ? 'password' : 'text'
-        }
-    },
-    watch: {
-        pass: function(val, oldVal) {
-            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass) {
-                this.disabled = false
-            } else {
-                this.disabled = true
-            }
-        },
-        repass: function(val, oldVal) {
-            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.pass) {
-                this.disabled = false
-            } else {
-                this.disabled = true
-            }
         }
     }
 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="wrapper">
-            <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item"/>
+            <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item" />
         </div>
     </div>
 </template>
@@ -9,16 +9,16 @@
 import serviceBlock from '~/components/faq/serviceBlock'
 export default {
     layout: 'base',
+    components: {
+        serviceBlock
+    },
     data: function() {
         return {
             serviceList: []
         }
     },
-    components: {
-        serviceBlock
-    },
     mounted() {
-        let entranceId = this.$route.query.entrance_id || ''
+        const entranceId = this.$route.query.entrance_id || ''
         this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios
             .get(`/ocs/v1/service/module/moreOrder?entranceId=${entranceId}`, {

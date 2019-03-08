@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <loading v-show="loadStatus"/>
+        <loading v-show="loadStatus" />
         <!-- TODO SETPASSWORD -->
     </div>
 </template>
@@ -17,9 +17,6 @@ export default {
         }
     },
     mounted() {
-        let config = JSON.parse(window.localStorage.getItem('wallet_config'))
-        let phoneIsSet = config.phone
-        let emailIsSet = config.email
         this.$axios
             .get('/vup/v1/ums/user/area', {
                 headers: {
@@ -28,25 +25,21 @@ export default {
                 }
             })
             .then(res => {
-                let configs = res.data && res.data.appFBConfigs
+                const configs = res.data && res.data.appFBConfigs
                 let type = true
                 configs.forEach(item => {
-                    if (item.functionBlockType == 91) {
-                        if (item.validType == 2) {
+                    if (item.functionBlockType === 91) {
+                        if (item.validType === 2) {
                             type = true
                         } else {
                             type = false
                         }
                     }
                 })
-                if (type == true) {
-                    // if (phoneIsSet == 'false') {
+                if (type === true) {
                     this.$router.replace('/hybrid/payment/wallet/validPhone?init=true')
-                    // }
                 } else {
-                    // if (emailIsSet == 'false') {
                     this.$router.replace('/hybrid/payment/wallet/validEmail?init=true')
-                    // }
                 }
             })
     }

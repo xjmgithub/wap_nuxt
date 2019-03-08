@@ -2,14 +2,16 @@
     <div class="wrapper">
         <div v-show="loaded&&serviceList">
             <div class="orders" style="padding-bottom:5rem;">
-                <div class="order-contain" v-for="(item,index) in serviceList" :key="index" @click="check(item.id)">
+                <div v-for="(item,index) in serviceList" :key="index" @click="check(item.id)" class="order-contain">
                     <orderBlock :order="item">
-                        <input :checked="item.id==checkedId" type="radio" name="order"><i/>
+                        <input :checked="item.id==checkedId" type="radio" name="order"><i />
                     </orderBlock>
                 </div>
             </div>
             <div class="ok">
-                <button class="btn" @click="submit">OK</button>
+                <button @click="submit" class="btn">
+                    OK
+                </button>
             </div>
         </div>
         <div v-show="loaded&&!serviceList" class="no-orders">
@@ -22,6 +24,9 @@
 import orderBlock from '~/components/faq/order'
 export default {
     layout: 'base',
+    components: {
+        orderBlock: orderBlock
+    },
     data: function() {
         return {
             entranceId: this.$route.query.entrance_id || '',
@@ -36,7 +41,7 @@ export default {
         }
     },
     mounted() {
-        let cachedOrder = sessionStorage.getItem('orderMsg')
+        const cachedOrder = sessionStorage.getItem('orderMsg')
         this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios
             .get(`/ocs/v1/service/module/moreOrder?entranceId=${this.entranceId}`, {
@@ -48,10 +53,10 @@ export default {
             .then(res => {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (res.data) {
-                    let obj = {}
+                    const obj = {}
                     res.data.data.forEach((item, index) => {
                         obj[item.order_info.id] = item.order_info
-                        if (index == 0) {
+                        if (index === 0) {
                             this.checkedId = item.order_info.id
                         }
                     })
@@ -76,9 +81,6 @@ export default {
                 })
             }
         }
-    },
-    components: {
-        orderBlock: orderBlock
     },
     head() {
         return {

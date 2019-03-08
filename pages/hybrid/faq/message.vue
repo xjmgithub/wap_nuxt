@@ -1,17 +1,25 @@
 <template>
     <div class="wrapper">
         <div class="reply">
-            <div class="waiting" v-if="!msg.replyRecordDtoList||msg.replyRecordDtoList.length<=0">
-                <div class="waiting_btn">Waiting For Result…</div>
+            <div v-if="!msg.replyRecordDtoList||msg.replyRecordDtoList.length<=0" class="waiting">
+                <div class="waiting_btn">
+                    Waiting For Result…
+                </div>
             </div>
-            <div class="over" v-if="msg.replyRecordDtoList&&msg.replyRecordDtoList.length>0">
-                <div class="replied_txt">Replied</div>
-                <div class="replied_content" v-for="item in msg.replyRecordDtoList" :key="item.id">{{item.message}}</div>
+            <div v-if="msg.replyRecordDtoList&&msg.replyRecordDtoList.length>0" class="over">
+                <div class="replied_txt">
+                    Replied
+                </div>
+                <div v-for="item in msg.replyRecordDtoList" :key="item.id" class="replied_content">
+                    {{item.message}}
+                </div>
             </div>
         </div>
-        <div class="gap"/>
-        <div class="order-msg" v-if="msg.orderNo">
-            <p class="time">{{msg.orderCreateTime | formatDate }}</p>
+        <div class="gap" />
+        <div v-if="msg.orderNo" class="order-msg">
+            <p class="time">
+                {{msg.orderCreateTime | formatDate }}
+            </p>
             <div class="order-type clearfix">
                 <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
                 <div class="right">
@@ -26,19 +34,29 @@
                 </div>
             </div>
         </div>
-        <div class="order-contain" v-if="msg.orderNo">
+        <div v-if="msg.orderNo" class="order-contain">
             <orderBlock :order="msg.orderNo" />
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <div class="problem_txt">{{msg.problem}}</div>
-            <div class="problem_txt" v-if="msg.problemChannelTypeValue">{{msg.problemChannelTypeValue}}</div>
-            <div class="problem_txt" v-if="msg.problemChannelNameValue">{{msg.problemChannelNameValue}}</div>
-            <div class="problem_txt" v-if="msg.problemCountryCode">{{msg.problemCountryCode}}</div>
+            <div class="problem_txt">
+                {{msg.problem}}
+            </div>
+            <div v-if="msg.problemChannelTypeValue" class="problem_txt">
+                {{msg.problemChannelTypeValue}}
+            </div>
+            <div v-if="msg.problemChannelNameValue" class="problem_txt">
+                {{msg.problemChannelNameValue}}
+            </div>
+            <div v-if="msg.problemCountryCode" class="problem_txt">
+                {{msg.problemCountryCode}}
+            </div>
             <p>Detail Description</p>
-            <div class="msg_container">{{msg.message}}</div>
+            <div class="msg_container">
+                {{msg.message}}
+            </div>
         </div>
-        <div class="gap"/>
+        <div class="gap" />
         <div class="personal">
             <p>Personal Information</p>
             <ul>
@@ -47,21 +65,27 @@
                         Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{msg.userId}}</p>
+                    <p class="p-value">
+                        {{msg.userId}}
+                    </p>
                 </li>
                 <li v-if="msg.operatorInfo">
                     <p class="p-name">
                         Telecom Info
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{msg.operatorInfo}}</p>
+                    <p class="p-value">
+                        {{msg.operatorInfo}}
+                    </p>
                 </li>
                 <li v-if="msg.unitType">
                     <p class="p-name">
                         Device
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{msg.unitType}}</p>
+                    <p class="p-value">
+                        {{msg.unitType}}
+                    </p>
                 </li>
             </ul>
         </div>
@@ -71,32 +95,32 @@
 import orderBlock from '~/components/faq/order'
 export default {
     layout: 'base',
+    components: {
+        orderBlock: orderBlock
+    },
     data() {
         return {
             msg: {}
         }
     },
     mounted() {
-        let msg = sessionStorage.getItem('showMsg')
+        const msg = sessionStorage.getItem('showMsg')
         if (msg) {
             this.msg = JSON.parse(msg)
             // 设为已读状态
-            let messageids = []
+            const messageids = []
             if (this.msg.replyRecordDtoList) {
                 this.msg.replyRecordDtoList.forEach(item => {
                     messageids.push(item.id)
                 })
-                let messageStr = messageids.join('_')
+                const messageStr = messageids.join('_')
                 this.$axios.put(`/csms-service/v1/reply-records/update-have-read?replyIds=${messageStr}`).then(res => {
-                    if (res.data.code != 200) {
-                        //this.$alert('message readed set error')
+                    if (res.data.code !== 200) {
+                        // this.$alert('message readed set error')
                     }
                 })
             }
         }
-    },
-    components: {
-        orderBlock: orderBlock
     },
     head() {
         return {

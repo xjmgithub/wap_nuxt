@@ -1,14 +1,24 @@
-import { pv_countly_server, ev_countly_server, countly_appKey, ga_android_key, ga_ios_key, ga_wap_key } from '~/env.js'
+/* eslint-disable no-sequences */
+import env from '~/env.js'
 import Vue from 'vue'
+const pvCountlyServer = env.pvCountlyServer
+const evCountlyServer = env.evCountlyServer
+const countlyAppKey = env.countlyAppKey
+const gaIosKey = env.gaIosKey
+const gaWapKey = env.gaWapKey
+const gaAndroidKey = env.gaAndroidKey
 // ga
 ;(function(i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r
+    i.GoogleAnalyticsObject = r
+    // eslint-disable-next-line no-unused-expressions
     ;(i[r] =
         i[r] ||
         function() {
             ;(i[r].q = i[r].q || []).push(arguments)
+            // eslint-disable-next-line no-sequences
         }),
         (i[r].l = 1 * new Date())
+    // eslint-disable-next-line no-unused-expressions
     ;(a = s.createElement(o)), (m = s.getElementsByTagName(o)[0])
     a.async = 1
     a.src = g
@@ -16,7 +26,7 @@ import Vue from 'vue'
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
 // countly
 function sendMsg(url) {
-    let s = document.createElement('img')
+    const s = document.createElement('img')
     s.height = 1
     s.width = 1
     s.src = url
@@ -25,42 +35,43 @@ function sendMsg(url) {
 export default ({ app: { router, $axios }, store, query }) => {
     const appType = store.state.appType
     const ua = navigator.userAgent
-    let deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
-    let swidth = screen.width * window.devicePixelRatio
-    let sheight = screen.height * window.devicePixelRatio
-    let os = (appType == 1 && 'Android') || (appType == 2 && 'IOS') || (ua.includes('iPhone') && 'IOS') || (ua.includes('iPad') && 'IOS') || 'Android'
-    let ga_key = (appType == 1 && ga_android_key) || (appType == 2 && ga_ios_key) || ga_wap_key
-    let utm_source = ''
-    let utm_medium = ''
-    let utm_campaign = ''
-    let referrer = query.referrer
-    let now = new Date().getTime()
+    const deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
+    const swidth = screen.width * window.devicePixelRatio
+    const sheight = screen.height * window.devicePixelRatio
+    const os =
+        (appType === 1 && 'Android') || (appType === 2 && 'IOS') || (ua.includes('iPhone') && 'IOS') || (ua.includes('iPad') && 'IOS') || 'Android'
+    const gaKey = (appType === 1 && gaAndroidKey) || (appType === 2 && gaIosKey) || gaWapKey
+    let utmSource = ''
+    let utmMedium = ''
+    let utmCampaign = ''
+    const referrer = query.referrer
+    const now = new Date().getTime()
 
     if (referrer) {
         // TODO COMMONT
-        let t1 = referrer.match(new RegExp('(^|&)utm_source=([^&]*)(&|$)', 'i'))
-        let t2 = referrer.match(new RegExp('(^|&)utm_medium=([^&]*)(&|$)', 'i'))
-        let t3 = referrer.match(new RegExp('(^|&)utm_campaign=([^&]*)(&|$)', 'i'))
-        utm_source = t1 ? t1[2] : ''
-        utm_medium = t2 ? t2[2] : ''
-        utm_campaign = t3 ? t3[2] : ''
-    } else {
-        if (query.utm_source) {
-            utm_source = query.utm_source
-            utm_medium = query.utm_medium
-            utm_campaign = query.utm_campaign
-        }
+        const t1 = referrer.match(new RegExp('(^|&)utm_source=([^&]*)(&|$)', 'i'))
+        const t2 = referrer.match(new RegExp('(^|&)utm_medium=([^&]*)(&|$)', 'i'))
+        const t3 = referrer.match(new RegExp('(^|&)utm_campaign=([^&]*)(&|$)', 'i'))
+        utmSource = t1 ? t1[2] : ''
+        utmMedium = t2 ? t2[2] : ''
+        utmCampaign = t3 ? t3[2] : ''
+    } else if (query.utm_source) {
+        utmSource = query.utm_source
+        utmMedium = query.utm_medium
+        utmCampaign = query.utm_campaign
     }
 
     if (store.state.gaClientId) {
-        ga('create', ga_key, 'auto', {
+        // eslint-disable-next-line no-undef
+        ga('create', gaKey, 'auto', {
             clientId: store.state.gaClientId
         })
     } else {
-        ga('create', ga_key, 'auto')
+        // eslint-disable-next-line no-undef
+        ga('create', gaKey, 'auto')
     }
 
-    let commonLog = {
+    const commonLog = {
         al: store.state.langType, // App语言
         bst: store.state.user && store.state.user.smartCartCount, // 用户绑卡状态
         car: store.state.carrier,
@@ -75,7 +86,7 @@ export default ({ app: { router, $axios }, store, query }) => {
         did: store.state.deviceId, // 设备唯一标识
         dr: swidth + 'x' + sheight, // 屏幕分辨率
         iid: store.state.gaClientId, // 安装唯一标识
-        lst: store.state.user && store.state.user.roleName != 'ANONYMOUS' ? 'l' : 'a', // 用户登录状态
+        lst: store.state.user && store.state.user.roleName !== 'ANONYMOUS' ? 'l' : 'a', // 用户登录状态
         lt: 'pv', // 报数类型
         lv: '1.0.0',
         nt: '', // 网络类型
@@ -83,7 +94,7 @@ export default ({ app: { router, $axios }, store, query }) => {
         osl: navigator.language, // 系统语言
         osv: '', // 系统版本
         pid: '', //	播放ID
-        pro: utm_source + '/' + utm_medium + '_' + utm_campaign, // 推广渠道标识
+        pro: utmSource + '/' + utmMedium + '_' + utmCampaign, // 推广渠道标识
         pst: '', // 用户付费状态
         sid: '', // Session ID
         sim: store.state.carrier, // 手机卡运营商
@@ -94,25 +105,26 @@ export default ({ app: { router, $axios }, store, query }) => {
     }
 
     const serializeMsg = (msg, type) => {
-        for (let i in msg) {
+        for (const i in msg) {
             msg[i] = '' + msg[i]
         }
-        let param = {
+        const param = {
             msg: msg
         }
-        for (let i in commonLog) {
+        for (const i in commonLog) {
             param[i] = commonLog[i]
         }
         param.lt = type || 'event' || 'pv'
         return JSON.stringify([param])
     }
 
-    let sendPvLog = msg => {
-        let result = serializeMsg(msg, 'pv')
+    // eslint-disable-next-line no-unused-vars
+    const sendPvLog = msg => {
+        const result = serializeMsg(msg, 'pv')
         sendMsg(
-            pv_countly_server +
+            pvCountlyServer +
                 '/i?logtype=pv&app_key=' +
-                countly_appKey +
+                countlyAppKey +
                 '&events=' +
                 result +
                 '&device_id=' +
@@ -122,12 +134,12 @@ export default ({ app: { router, $axios }, store, query }) => {
         )
     }
 
-    let sendEvLog = msg => {
-        let result = serializeMsg(msg, 'event')
+    const sendEvLog = msg => {
+        const result = serializeMsg(msg, 'event')
         sendMsg(
-            ev_countly_server +
+            evCountlyServer +
                 '/i?logtype=event&app_key=' +
-                countly_appKey +
+                countlyAppKey +
                 '&events=' +
                 result +
                 '&device_id=' +
@@ -136,6 +148,7 @@ export default ({ app: { router, $axios }, store, query }) => {
                 now
         )
 
+        // eslint-disable-next-line no-undef
         ga('send', {
             hitType: 'event',
             eventCategory: msg.category,
@@ -157,6 +170,7 @@ export default ({ app: { router, $axios }, store, query }) => {
     })
 
     router.afterEach((to, from) => {
+        // eslint-disable-next-line no-undef
         ga('send', 'pageview')
         sendEvLog({
             category: 'page_view',

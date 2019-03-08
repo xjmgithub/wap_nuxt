@@ -3,40 +3,44 @@
         <div class="input-item">
             <div class="label">
                 Create a Password
-                <img class="open-close" src="~assets/img/ic_hide_def_g.png" v-if="isCiphertext==1" alt @click="isCiphertext=2">
-                <img class="open-close" src="~assets/img/ic_show_def_g.png" v-if="isCiphertext==2" alt @click="isCiphertext=1">
+                <img v-if="isCiphertext==1" @click="isCiphertext=2" class="open-close" src="~assets/img/ic_hide_def_g.png" alt>
+                <img v-if="isCiphertext==2" @click="isCiphertext=1" class="open-close" src="~assets/img/ic_show_def_g.png" alt>
             </div>
-            <input :type="pwdType" v-model="pass" placeholder="Password(6-18 digits or letters)" @blur="checkpass">
+            <input :type="pwdType" v-model="pass" @blur="checkpass" placeholder="Password(6-18 digits or letters)">
         </div>
         <div class="input-item">
             <div class="label">
                 Confirm New Password
                 <img
+                    v-if="isCiphertext_confirm==1"
+                    @click="isCiphertext_confirm=2"
                     class="open-close"
                     src="~assets/img/ic_hide_def_g.png"
-                    v-if="isCiphertext_confirm==1"
                     alt
-                    @click="isCiphertext_confirm=2"
                 >
-                <img class="open-close" src="~assets/img/ic_show_def_g.png" v-if="isCiphertext_confirm==2" alt @click="isCiphertext_confirm=1">
+                <img v-if="isCiphertext_confirm==2" @click="isCiphertext_confirm=1" class="open-close" src="~assets/img/ic_show_def_g.png" alt>
             </div>
-            <input :type="pwdType_confirm" placeholder="Password(6-18 digits or letters)" v-model="repass" @blur="checkpass">
+            <input :type="pwdType_confirm" v-model="repass" @blur="checkpass" placeholder="Password(6-18 digits or letters)">
         </div>
         <div class="input-item invite">
-            <div class="label">Invitation Code(Optional)</div>
-            <input type="text" v-model="inviteCode" @blur="checkpass">
+            <div class="label">
+                Invitation Code(Optional)
+            </div>
+            <input v-model="inviteCode" @blur="checkpass" type="text">
         </div>
         <div class="footer">
-            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep"/>
+            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep" />
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
-import qs from 'qs'
-import { setCookie, login } from '~/functions/utils'
+import { login } from '~/functions/utils'
 export default {
     layout: 'base',
+    components: {
+        mButton
+    },
     data() {
         return {
             countryId: this.$route.query.countryId || '',
@@ -52,6 +56,30 @@ export default {
             disabled: true
         }
     },
+    computed: {
+        pwdType() {
+            return this.isCiphertext === 1 ? 'password' : 'text'
+        },
+        pwdType_confirm() {
+            return this.isCiphertext_confirm === 1 ? 'password' : 'text'
+        }
+    },
+    watch: {
+        pass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val === this.repass) {
+                this.disabled = false
+            } else {
+                this.disabled = true
+            }
+        },
+        repass: function(val, oldVal) {
+            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val === this.pass) {
+                this.disabled = false
+            } else {
+                this.disabled = true
+            }
+        }
+    },
     methods: {
         checkpass() {
             // TODO 格式化
@@ -59,7 +87,7 @@ export default {
         nextStep() {
             // TODO 校验
 
-            let options = {
+            const options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
                 invitedId: this.inviteCode,
@@ -78,7 +106,7 @@ export default {
             }
 
             this.$axios.post('/ums/v3/register', options).then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     let params = {}
                     if (this.phone) {
                         params = {
@@ -103,33 +131,6 @@ export default {
                     this.error_code = 'This code you entered is incorrect. Please try again.'
                 }
             })
-        }
-    },
-    components: {
-        mButton
-    },
-    computed: {
-        pwdType() {
-            return this.isCiphertext == 1 ? 'password' : 'text'
-        },
-        pwdType_confirm() {
-            return this.isCiphertext_confirm == 1 ? 'password' : 'text'
-        }
-    },
-    watch: {
-        pass: function(val, oldVal) {
-            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.repass) {
-                this.disabled = false
-            } else {
-                this.disabled = true
-            }
-        },
-        repass: function(val, oldVal) {
-            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val == this.pass) {
-                this.disabled = false
-            } else {
-                this.disabled = true
-            }
         }
     }
 }

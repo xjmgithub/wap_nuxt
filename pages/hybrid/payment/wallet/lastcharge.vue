@@ -1,29 +1,45 @@
 <template>
     <div class="container">
-        <loading v-show="loadStatus"/>
+        <loading v-show="loadStatus" />
         <template v-if="result==1&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
-            <p class="success">Your lastest Recharge</p>
+            <p class="success">
+                Your lastest Recharge
+            </p>
             <p class="money">
                 {{amount}}
                 <span>{{currencySymbol}}</span>
             </p>
             <p
                 class="msg"
-            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            >
+                Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
+            </p>
             <br>
-            <p class="msg des">Recharge No.: {{accountNo}}</p>
-            <p class="msg des">Recharge amount: {{amount}} {{currencySymbol}}</p>
-            <p class="msg des">eWallet balance: {{balance}} {{currencySymbol}}</p>
-            <p class="msg des">recharge time: {{rechargeTime}}</p>
+            <p class="msg des">
+                Recharge No.: {{accountNo}}
+            </p>
+            <p class="msg des">
+                Recharge amount: {{amount}} {{currencySymbol}}
+            </p>
+            <p class="msg des">
+                eWallet balance: {{balance}} {{currencySymbol}}
+            </p>
+            <p class="msg des">
+                recharge time: {{rechargeTime}}
+            </p>
         </template>
         <template v-if="result==2&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt>
-            <p class="fail">Payment Failed</p>
-            <p class="msg">Thanks for your payment. But You have insufficent funds.</p>
+            <p class="fail">
+                Payment Failed
+            </p>
+            <p class="msg">
+                Thanks for your payment. But You have insufficent funds.
+            </p>
         </template>
-        <div class="footer" v-show="!loadStatus">
-            <mButton :disabled="false" text="REFRESH" @click="refresh"/>
+        <div v-show="!loadStatus" class="footer">
+            <mButton :disabled="false" @click="refresh" text="REFRESH" />
         </div>
     </div>
 </template>
@@ -31,6 +47,10 @@
 import mButton from '~/components/button'
 import loading from '~/components/loading'
 export default {
+    components: {
+        mButton,
+        loading
+    },
     data() {
         return {
             result: 0,
@@ -43,19 +63,15 @@ export default {
         }
     },
     layout: 'base',
-    components: {
-        mButton,
-        loading
-    },
     mounted() {
-        let ewallet = JSON.parse(localStorage.getItem('wallet_account'))
+        const ewallet = JSON.parse(localStorage.getItem('wallet_account'))
         this.accountNo = ewallet.accountNo
         this.refresh()
     },
     methods: {
         refresh() {
             this.loadStatus = true
-            let walletAccount = JSON.parse(localStorage.getItem('wallet_account')).accountNo
+            const walletAccount = JSON.parse(localStorage.getItem('wallet_account')).accountNo
             this.$axios.get(`/mobilewallet/v1/accounts/${walletAccount}/sub-account-seqs/latest?seqType=1`).then(res => {
                 this.loadStatus = false
                 if (res.data && res.data.amount) {

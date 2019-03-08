@@ -1,19 +1,32 @@
 <template>
     <div class="wrapper">
         <img class="st_logo" src="~assets/img/logo01.png">
-        <img class="third_login facebook" @click="byfacebook" src="~assets/img/users/btn_facebook_def.png">
-        <img class="third_login twitter" @click="bytwitter" src="~assets/img/users/btn_twitter_def.png">
+        <img
+            @click="byfacebook"
+            class="third_login facebook"
+            src="~assets/img/users/btn_facebook_def.png"
+        >
+        <img
+            @click="bytwitter"
+            class="third_login twitter"
+            src="~assets/img/users/btn_twitter_def.png"
+        >
         <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
         <nuxt-link to="/hybrid/account/signin" replace>
-            <div class="login_btn">SIGN IN</div>
+            <div class="login_btn">
+                SIGN IN
+            </div>
         </nuxt-link>
-        <div class="regtext">Don't have an account?
-            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
+        <div class="regtext">
+            Don't have an account?
+            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
+                Register
+            </nuxt-link>
         </div>
     </div>
 </template>
 <script>
-import { setCookie, login, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
+import { login, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -34,7 +47,7 @@ export default {
             this.$axios
                 .get(`/hybrid/api/twitter/callback?oauth_token=${this.twitter_oauth_token}&oauth_verifier=${this.twitter_oauth_verifier}`)
                 .then(res => {
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         this.loginByThird(res.data.data.user_id, res.data.data.screen_name, 2)
                     } else {
                         this.$alert(res.data.message)
@@ -42,7 +55,7 @@ export default {
                 })
         }
 
-        let _this = this
+        const _this = this
         initGoogleLogin(document.getElementById('google-btn'), function(userId, nickname) {
             _this.loginByThird(userId, nickname, 3)
         })
@@ -51,8 +64,10 @@ export default {
     },
     methods: {
         byfacebook() {
-            let _this = this
+            const _this = this
+            // eslint-disable-next-line no-undef
             FB.login(function(res) {
+                // eslint-disable-next-line no-undef
                 FB.api('/me', function(response) {
                     _this.loginByThird(response.id, response.name, 1)
                 })
@@ -60,7 +75,7 @@ export default {
         },
         bytwitter() {
             this.$axios.get(`/hybrid/api/twitter/oauth/request_token?back=${location.origin}`).then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     window.location.href = `https://api.twitter.com/oauth/authenticate?oauth_token=${res.data.data.oauth_token}`
                 } else {
                     this.$alert(res.data.message)

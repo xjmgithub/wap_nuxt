@@ -1,5 +1,7 @@
 <template>
-    <div @click="logout">logout</div>
+    <div @click="logout">
+        logout
+    </div>
 </template>
 <script>
 export default {

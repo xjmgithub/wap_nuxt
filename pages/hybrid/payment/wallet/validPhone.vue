@@ -1,29 +1,33 @@
 <template>
     <div class="container">
-        <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true"/>
+        <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true" />
         <div v-if="reset" class="change-phone-link">
-            <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/resetPhone">
+                Change cellphone number
+            </nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canStep1" text="NEXT" style="margin-bottom:0.5rem" @click="goStep(2)"/>
-            <nuxt-link v-if="!init&&wallet_email_config" to="/hybrid/payment/wallet/validEmail">RESET IT BY EMAIL</nuxt-link>
+            <mButton :disabled="!canStep1" @click="goStep(2)" text="NEXT" style="margin-bottom:0.5rem" />
+            <nuxt-link v-if="!init&&wallet_email_config" to="/hybrid/payment/wallet/validEmail">
+                RESET IT BY EMAIL
+            </nuxt-link>
         </div>
         <div v-show="step==2" class="step2">
-            <passInput/>
+            <passInput />
             <div class="footer">
-                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)"/>
+                <mButton :disabled="!canStep2" @click="goStep(3)" text="NEXT" />
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
-            <passInput/>
+            <passInput />
             <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"/>
+                <mButton :disabled="!canStep3" @click="goStep(4)" text="NEXT" />
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
-            <passInput/>
+            <passInput />
             <div class="footer">
-                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"/>
+                <mButton :disabled="!canStep4" @click="goStep(5)" text="OK" />
             </div>
         </div>
     </div>
@@ -59,7 +63,7 @@ export default {
         }
     },
     mounted() {
-        let walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
+        const walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
         this.accountNo = walletAccount.accountNo
         if (walletAccount.email) {
             this.wallet_email_config = true
@@ -81,15 +85,15 @@ export default {
     },
     methods: {
         goStep(num) {
-            if (num == 3) {
-                let vscode = this.$refs.vscode.password
-                let tel = this.$refs.phone.tel
+            if (num === 3) {
+                const vscode = this.$refs.vscode.password
+                const tel = this.$refs.phone.tel
                 if (this.reset) {
                     this.$axios
                         .get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${this.prefix + tel}&verifyCode=${vscode}`)
                         .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
+                            const data = res.data
+                            if (data && data.code === '0') {
                                 this.step = num
                             } else {
                                 this.$alert(data.message)
@@ -99,8 +103,8 @@ export default {
                     this.$axios
                         .put(`/mobilewallet/v1/accounts/${this.accountNo}/phone?phone=${this.prefix + tel}&verifyCode=${vscode}`, {})
                         .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
+                            const data = res.data
+                            if (data && data.code === '0') {
                                 this.$alert('Set phone successfully', () => {
                                     this.step = num
                                 })
@@ -109,11 +113,11 @@ export default {
                             }
                         })
                 }
-            } else if (num == 5) {
-                let vscode = this.$refs.vscode.password
-                let newpass = this.$refs.newpass.password
-                let confirmpass = this.$refs.confirmpass.password
-                if (newpass != confirmpass) {
+            } else if (num === 5) {
+                const vscode = this.$refs.vscode.password
+                const newpass = this.$refs.newpass.password
+                const confirmpass = this.$refs.confirmpass.password
+                if (newpass !== confirmpass) {
                     this.$confirm(
                         'Password do not match.Please try again.',
                         () => {
@@ -130,16 +134,16 @@ export default {
                 this.$axios
                     .put(`/mobilewallet/uc/v2/accounts/${this.accountNo}/pay-password?newPassword=${newpass}&verifyCode=${vscode}`, {})
                     .then(res => {
-                        let data = res.data
-                        if (data && data.code == '0') {
+                        const data = res.data
+                        if (data && data.code === '0') {
                             this.$alert(data.message, () => {
                                 this.$router.replace('/hybrid/payment/wallet/paybyPass')
                             })
                         }
                     })
-            } else if (num == 4) {
-                let newpass = this.$refs.newpass.password
-                let reg = /^[\d]+$/
+            } else if (num === 4) {
+                const newpass = this.$refs.newpass.password
+                const reg = /^[\d]+$/
                 if (!reg.test(newpass)) {
                     this.$alert('You must enter pure numbers.')
                     return false

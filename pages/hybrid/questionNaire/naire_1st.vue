@@ -9,25 +9,27 @@
             <div class="content">
                 <div class="question">
                     <div v-for="(item, index) in naireList" :key="index">
-                        <p :id="'question-'+index">{{item.question}}</p>
-                        <RadioNaire :radio-list="item.answer" @pick="changeItem($event,index)"/>
+                        <p :id="'question-'+index">
+                            {{item.question}}
+                        </p>
+                        <RadioNaire :radio-list="item.answer" @pick="changeItem($event,index)" />
                     </div>
                 </div>
-                <mButton @click="submit" :text="'SUBMIT'" class="submit"/>
+                <mButton @click="submit" :text="'SUBMIT'" class="submit" />
             </div>
-            <div class="loadlayer" v-show="loaded">
-                <loading/>
+            <div v-show="loaded" class="loadlayer">
+                <loading />
             </div>
         </div>
         <div v-show="isDone && initLoading " class="done">
             <img src="~assets/img/naire/done.png" alt>
             <p>You have already submitted. Thank you again.</p>
-            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok"/>
+            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok" />
         </div>
         <div v-show="isSucessed" class="success">
             <img src="~assets/img/naire/success.png" alt>
             <p>Thank you for your participation and have a nice day!</p>
-            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok"/>
+            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok" />
         </div>
     </div>
 </template>
@@ -39,6 +41,11 @@ import qs from 'qs'
 
 export default {
     layout: 'base',
+    components: {
+        RadioNaire,
+        loading,
+        mButton
+    },
     data() {
         return {
             appType: this.$store.state.appType,
@@ -264,6 +271,11 @@ export default {
             answers8: ''
         }
     },
+    computed: {
+        allAnswer() {
+            return [this.answers1, this.answers2, this.answers3, this.answers4, this.answers5, this.answers6, this.answers7, this.answers8]
+        }
+    },
     mounted() {
         this.sendEvLog({
             category: 'questionnaire',
@@ -273,18 +285,18 @@ export default {
         })
 
         this.openTime = new Date().getTime()
-        let s = navigator.userAgent.indexOf('Android')
-        let w = navigator.userAgent.substr(s + 8).split(';')[0]
+        const s = navigator.userAgent.indexOf('Android')
+        const w = navigator.userAgent.substr(s + 8).split(';')[0]
         let tag = 1
         history.pushState({}, 'Survey', '#')
         window.addEventListener('popstate', () => {
-            let submitTime = new Date().getTime()
+            const submitTime = new Date().getTime()
             if ('' + w < '4.5' && tag) {
                 tag = 0
                 return false
             }
             if (!this.isSucessed && !this.isDone) {
-                let timediff = submitTime - this.openTime
+                const timediff = submitTime - this.openTime
                 this.sendEvLog({
                     category: 'questionnaire',
                     action: 'back',
@@ -309,7 +321,7 @@ export default {
             data: {}
         })
             .then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     this.isDone = res.data.data
                     this.initLoading = true
                     this.sendEvLog({
@@ -334,7 +346,7 @@ export default {
                     })
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 this.$alert(
                     'Load error,please try reload',
                     () => {
@@ -383,7 +395,7 @@ export default {
             let canSubmit = true
             try {
                 this.allAnswer.forEach((ele, index) => {
-                    if (ele == '') {
+                    if (ele === '') {
                         canSubmit = false
                         this.$alert('Please answer all questions before you submit.', () => {
                             document.querySelector('#question-' + index).scrollIntoView(true)
@@ -392,12 +404,12 @@ export default {
                     }
                 })
             } catch (e) {
-                if (e.message != 'EndIterative') throw e
+                if (e.message !== 'EndIterative') throw e
             }
             if (!canSubmit) return
             this.loaded = true
-            let submitTime = new Date().getTime()
-            let timediff = submitTime - this.openTime
+            const submitTime = new Date().getTime()
+            const timediff = submitTime - this.openTime
             this.$axios({
                 url: `/voting/v1/questionnaire/submit_flag`,
                 method: 'POST',
@@ -410,7 +422,7 @@ export default {
                 })
             })
                 .then(res => {
-                    if (res.data.code == 0 && res.data.message == 'success') {
+                    if (res.data.code === 0 && res.data.message === 'success') {
                         this.isSucessed = true
                         this.loaded = false
                     }
@@ -430,7 +442,7 @@ export default {
                         answers8: this.answers8
                     })
                 })
-                .catch(err => {
+                .catch(() => {
                     this.sendEvLog({
                         category: 'questionnaire',
                         action: 'submit',
@@ -460,16 +472,6 @@ export default {
             })
             window.getChannelId && window.getChannelId.finish()
         }
-    },
-    computed: {
-        allAnswer() {
-            return [this.answers1, this.answers2, this.answers3, this.answers4, this.answers5, this.answers6, this.answers7, this.answers8]
-        }
-    },
-    components: {
-        RadioNaire,
-        loading,
-        mButton
     },
     head() {
         return {

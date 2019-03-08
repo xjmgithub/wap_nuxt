@@ -6,7 +6,7 @@ import tokenMap from '~/functions/token.json'
 import countryArr from '~/functions/countrys.json'
 import { getRandomInt } from '~/functions/utils.js'
 
-let countryMap = new Object()
+const countryMap = {}
 countryArr.forEach(item => {
     countryMap[item.country] = item
 })
@@ -118,7 +118,7 @@ export const mutations = {
         state.intervalTimer = val
     },
     SET_RANKLIST: function(state, val) {
-        let [...arr] = val
+        const [...arr] = val
         state.rankList = arr
     },
     SET_SERVER_TIME: function(state, val) {
@@ -134,53 +134,51 @@ export const mutations = {
 
 export const actions = {
     async nuxtServerInit({ commit, state }, { req, res, query }) {
-        let _COOKIE = {}
-        let _HEADER = req.headers
+        const _COOKIE = {}
+        const _HEADER = req.headers
 
         _HEADER.cookie &&
             _HEADER.cookie.split(';').forEach(Cookie => {
-                let parts = Cookie.split('=')
+                const parts = Cookie.split('=')
                 _COOKIE[parts[0].trim()] = (parts[1] || '').trim()
             })
 
-        let language = _HEADER['lncode'] || _COOKIE['lang'] || _HEADER['accept-language']
+        const language = _HEADER.lncode || _COOKIE.lang || _HEADER['accept-language']
 
-        let str =
-            req.connection['remoteAddress'] +
-            req.connection['remotePort'] +
+        const str =
+            req.connection.remoteAddress +
+            req.connection.remotePort +
             _HEADER['user-agent'] +
             _HEADER['accept-encoding'] +
             _HEADER['accept-language']
-        let newDevice = crypto
+        const newDevice = crypto
             .createHash('md5')
             .update(str)
             .digest('hex')
 
         // com.star.mobile.video/src/com/star/mobile/video/activity/BrowserActivity.java
-        commit('SET_APPTYPE', _HEADER['client'])
-        commit('SET_DEVICE', _HEADER['deviceid'] || _COOKIE['deviceId'] || newDevice)
+        commit('SET_APPTYPE', _HEADER.client)
+        commit('SET_DEVICE', _HEADER.deviceid || _COOKIE.deviceId || newDevice)
         commit('SET_LANG', language)
-        commit('SET_GA_CLIENT', _HEADER['cid'])
-        commit('SET_APP_VERSION_CODE', _HEADER['versioncode'])
-        commit('SET_NET_TYPE', _HEADER['network'])
-        commit('SET_CARRIER', _HEADER['operator'])
-        commit('SET_PHONE_MODEL', _HEADER['phonemodel'])
-        commit('SET_INIT_TIME', _HEADER['startTime'])
-        commit('SET_APP_VERSION', _HEADER['versionname'] || (_HEADER['versioncode'] && versionMap[_HEADER['versioncode']]))
+        commit('SET_GA_CLIENT', _HEADER.cid)
+        commit('SET_APP_VERSION_CODE', _HEADER.versioncode)
+        commit('SET_NET_TYPE', _HEADER.network)
+        commit('SET_CARRIER', _HEADER.operator)
+        commit('SET_PHONE_MODEL', _HEADER.phonemodel)
+        commit('SET_INIT_TIME', _HEADER.startTime)
+        commit('SET_APP_VERSION', _HEADER.versionname || (_HEADER.versioncode && versionMap[_HEADER.versioncode]))
 
         // TODO 是否可以只加载一次
         preload()
         preload6()
         let country = 'NG'
-        let ip = _HEADER['x-forwarded-for']
-        let geo = lookup(ip)
-        if (_COOKIE['country']) {
-            country = _COOKIE['country']
-        } else {
-            if (geo) {
+        const ip = _HEADER['x-forwarded-for']
+        const geo = lookup(ip)
+        if (_COOKIE.country) {
+            country = _COOKIE.country
+        } else if (geo) {
                 country = countryMap[geo.country] ? geo.country : 'NG'
             }
-        }
 
         const getMe = async token => {
             await this.$axios
@@ -190,28 +188,28 @@ export const actions = {
                     }
                 })
                 .then(res => {
-                    if (res.status == 200) {
+                    if (res.status === 200) {
                         commit('SET_USER', res.data)
                     } else {
                         commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
                     }
                 })
-                .catch(error => {
+                .catch(() => {
                     commit('SET_USER', { id: getRandomInt(1000000000, 2000000000) })
                 })
         }
 
-        if (_HEADER['token']) {
-            commit('SET_TOKEN', _HEADER['token'])
-            commit('SET_GTOKEN', _HEADER['token'])
+        if (_HEADER.token) {
+            commit('SET_TOKEN', _HEADER.token)
+            commit('SET_GTOKEN', _HEADER.token)
         } else {
-            if (_COOKIE['token']) {
-                commit('SET_TOKEN', _COOKIE['token'])
+            if (_COOKIE.token) {
+                commit('SET_TOKEN', _COOKIE.token)
             } else {
                 commit('SET_TOKEN', tokenMap[country])
             }
-            if (_COOKIE['gtoken']) {
-                commit('SET_GTOKEN', _COOKIE['gtoken'])
+            if (_COOKIE.gtoken) {
+                commit('SET_GTOKEN', _COOKIE.gtoken)
             } else {
                 commit('SET_GTOKEN', tokenMap[country])
             }
@@ -220,12 +218,10 @@ export const actions = {
         await getMe(state.token)
         if (state.user.countryCode&&countryMap[state.user.countryCode]) {
             commit('SET_AREA_INFO', countryMap[state.user.countryCode])
-        } else {
-            if(countryMap[country]){
+        } else if(countryMap[country]){
                 commit('SET_AREA_INFO', countryMap[country])
             }else{
-                commit('SET_AREA_INFO', countryMap['NG'])
+                commit('SET_AREA_INFO', countryMap.NG)
             }
-        }
     }
 }

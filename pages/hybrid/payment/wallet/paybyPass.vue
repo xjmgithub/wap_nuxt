@@ -1,11 +1,13 @@
 <template>
     <div class="container">
-        <Password ref="pass" placeholder="Enter Payment Password" :toggle-view="true" @endinput="setPassword"/>
+        <Password ref="pass" :toggle-view="true" @endinput="setPassword" placeholder="Enter Payment Password" />
         <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/payment/wallet/resetPhone">Forgot payment password?</nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/resetPhone">
+                Forgot payment password?
+            </nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"/>
+            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -15,6 +17,10 @@ import Password from '~/components/password'
 import { createDVBOrder, invoke, commonPayAfter } from '~/functions/pay'
 export default {
     layout: 'base',
+    components: {
+        mButton,
+        Password
+    },
     data() {
         return {
             password: '',
@@ -23,23 +29,28 @@ export default {
             card: this.$route.query.card // paystack card
         }
     },
-    components: {
-        mButton,
-        Password
+    watch: {
+        password(val, oldVal) {
+            if (val.length >= 6) {
+                this.canPay = true
+            } else {
+                this.canPay = false
+            }
+        }
     },
     methods: {
         setPassword(data) {
             this.password = this.$refs.pass.password
         },
         nextStep() {
-            let ewallet = JSON.parse(sessionStorage.getItem('wallet'))
-            let payObj = JSON.parse(sessionStorage.getItem('payObj'))
-            let order = JSON.parse(sessionStorage.getItem('order-info'))
-            let opt = this.card ? { authorization_code: this.card } : null
+            const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
+            const payObj = JSON.parse(sessionStorage.getItem('payObj'))
+            const order = JSON.parse(sessionStorage.getItem('order-info'))
+            const opt = this.card ? { authorization_code: this.card } : null
 
             if (this.card) {
                 this.$axios.get(`/mobilewallet/v1/accounts/${ewallet.accountNo}/pay-password?password=${this.password}`).then(res => {
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         createDVBOrder(this, order, data => {
                             invoke(
                                 this,
@@ -82,15 +93,6 @@ export default {
                 .catch(err => {
                     this.$alert(err)
                 })
-        }
-    },
-    watch: {
-        password(val, oldVal) {
-            if (val.length >= 6) {
-                this.canPay = true
-            } else {
-                this.canPay = false
-            }
         }
     }
 }

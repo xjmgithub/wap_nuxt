@@ -1,15 +1,15 @@
 <template>
     <div class="wrapper">
         <div class="untrim">
-            <card-input ref="cardInput" :list="cardList" @endInput="checkout" @typing="canBuy=false" :stop-days="stopDays" :card-state="cardState"/>
-            <div class="program-box" v-if="recharge_items.length>0">
+            <card-input ref="cardInput" :list="cardList" @endInput="checkout" @typing="canBuy=false" :stop-days="stopDays" :card-state="cardState" />
+            <div v-if="recharge_items.length>0" class="program-box">
                 <p v-show="canBuy">
                     {{LANG.topup_bouquet}}:
                     <span class="program-name">{{ program_name }}</span>
                 </p>
             </div>
-            <goods ref="goodsPicker" v-if="recharge_items.length>0" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm"/>
-            <div class="pay-btn" v-if="recharge_items.length>0" @click="buyNow" :class="{disabled:!canBuy}">
+            <goods ref="goodsPicker" v-if="recharge_items.length>0" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm" />
+            <div v-if="recharge_items.length>0" @click="buyNow" :class="{disabled:!canBuy}" class="pay-btn">
                 <span class="need-pay">{{ currency }}{{ formatAmount(payAmount) }}</span>
                 {{LANG.next_}}
             </div>
@@ -20,21 +20,23 @@
             src="~assets/img/dvb/dvb_ug_off.png"
             style="width:100%"
         >
-        <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'&&isApp==1"/>
-        <div class="demoDialog" v-if="!recharge_items.length>0&&cardList.length<=0">
+        <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'&&isApp==1" />
+        <div v-if="!recharge_items.length>0&&cardList.length<=0" class="demoDialog">
             <div @click="focusInput">
                 <p>{{LANG.input_your_smartcard_number}}</p>
                 <div>
                     <img src="~assets/img/dvb/icon_smart_card.png">
                 </div>
                 <p>{{LANG.recharge_your_decoder_account}}</p>
-                <p class="tips">{{LANG.Tips_check_your_Balance}}</p>
+                <p class="tips">
+                    {{LANG.Tips_check_your_Balance}}
+                </p>
             </div>
             <p>
                 {{LANG.if_you_are_not_a_startimes_tv_user}}
                 <a
-                    href="javascript:void(0)"
                     @click="toLoadurl"
+                    href="javascript:void(0)"
                     style="color:#0087EB;text-decoration:underline"
                 >{{LANG.click_here}}</a>
                 {{LANG.if_you_are_not_a_startimes_tv_user2}}
@@ -54,14 +56,6 @@ export default {
         goods,
         moreMethods
     },
-    async asyncData({ app: { $axios }, store }) {
-        $axios.setHeader('token', store.state.token)
-        let { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
-        return {
-            cardList: Array.from(data, x => x.smardcard_no) || [],
-            newUser: data.length > 0
-        }
-    },
     data() {
         return {
             cardState: '',
@@ -76,7 +70,7 @@ export default {
             currencyCode: this.$store.state.country.currencyCode,
             isLoading: false,
             cardHaveCharged: false,
-            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() != 'ANONYMOUS',
+            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             isApp: this.$store.state.appType,
             payAmount: 0,
             rechargeDes: '',
@@ -86,6 +80,25 @@ export default {
     computed: {
         LANG() {
             return this.$store.state.lang
+        }
+    },
+    watch: {
+        isLoading(val, oldVal) {
+            if (val) {
+                this.$nextTick(() => this.$nuxt.$loading.start())
+                this.$store.commit('SHOW_SHADOW_LAYER')
+            } else {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
+                this.$store.commit('HIDE_SHADOW_LAYER')
+            }
+        }
+    },
+    async asyncData({ app: { $axios }, store }) {
+        $axios.setHeader('token', store.state.token)
+        const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+        return {
+            cardList: Array.from(data, x => x.smardcard_no) || [],
+            newUser: data.length > 0
         }
     },
     methods: {
@@ -108,28 +121,28 @@ export default {
                 service_type: 'Recharge',
                 page_from: 'new'
             })
-            if (this.countryCode.toLowerCase() == 'ke') {
+            if (this.countryCode.toLowerCase() === 'ke') {
                 window.location.href = 'https://goo.gl/forms/AUlQ9ECJs0XC7zd72'
-            } else if (this.countryCode.toLowerCase() == 'tz') {
+            } else if (this.countryCode.toLowerCase() === 'tz') {
                 window.location.href = 'https://goo.gl/forms/dwtkLMqZZVRLgFZH3'
-            } else if (this.countryCode.toLowerCase() == 'gh') {
+            } else if (this.countryCode.toLowerCase() === 'gh') {
                 window.location.href = 'https://goo.gl/YWzd1m'
-            } else if (this.countryCode.toLowerCase() == 'ng') {
+            } else if (this.countryCode.toLowerCase() === 'ng') {
                 window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=136&dir_id=0'
-            } else if (this.countryCode.toLowerCase() == 'ug') {
+            } else if (this.countryCode.toLowerCase() === 'ug') {
                 window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=137&dir_id=0'
-            } else if (this.countryCode.toLowerCase() == 'mg') {
+            } else if (this.countryCode.toLowerCase() === 'mg') {
                 window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=138&dir_id=0'
             } else {
                 window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=139&dir_id=0'
             }
         },
         buyNow() {
-            let ref = this.$refs.goodsPicker
-            let index = ref.goodIndex
-            let rechargeItem = ref.list[index]
-            let num = ref.num
-            let card = this.$refs.cardInput.oriCardNum
+            const ref = this.$refs.goodsPicker
+            const index = ref.goodIndex
+            const rechargeItem = ref.list[index]
+            const num = ref.num
+            const card = this.$refs.cardInput.oriCardNum
 
             this.sendEvLog({
                 category: 'dvbservice',
@@ -150,27 +163,25 @@ export default {
 
             let currencyCode = this.currencyCode
             if (location.host.indexOf('qa.upms') >= 0 || location.host.indexOf('dev.upms') >= 0) {
-                if (this.countryCode.toLowerCase() == 'mg') {
+                if (this.countryCode.toLowerCase() === 'mg') {
                     currencyCode = 'OUV'
                 }
             }
 
-            let preferentialPlanId = rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo
-
-            let params = {
+            const params = {
                 cardNo: card,
                 countryCode: this.countryCode,
                 currencyCode: currencyCode,
                 currency: this.currency,
                 rechargeExplanation: this.rechargeDes,
                 promotionAmount: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.firstRechargeGiveMoney) || 0,
-                rechargeAmount: new Number(this.rechargeAmount).toFixed(2),
-                paymentAmount: new Number(this.payAmount).toFixed(2),
-                exclusivePrice: new Number(
+                rechargeAmount: Number(this.rechargeAmount).toFixed(2),
+                paymentAmount: Number(this.payAmount).toFixed(2),
+                exclusivePrice: Number(
                     (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.exclusivePrice) || rechargeItem.rate_amount
                 ).toFixed(2),
                 preferentialPlanId: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.id) || 0,
-                listingPrice: new Number(rechargeItem.rate_amount).toFixed(2), // 原始单价
+                listingPrice: Number(rechargeItem.rate_amount).toFixed(2), // 原始单价
                 rechargeItemSelectedQuantity: num,
                 rechargeItemSelectedName: rechargeItem.rate_display_name,
                 tv_platform: this.tv_platform,
@@ -186,7 +197,7 @@ export default {
             this.$router.push('/hybrid/dvb/order')
         },
         logSmartInput(card, val) {
-            let newUser = this.$refs.cardInput.newUser
+            const newUser = this.$refs.cardInput.newUser
             this.sendEvLog({
                 category: 'dvbservice',
                 action: 'smartcard_input',
@@ -198,7 +209,7 @@ export default {
             })
         },
         logloadItem(card, val) {
-            let newUser = this.$refs.cardInput.newUser
+            const newUser = this.$refs.cardInput.newUser
             this.sendEvLog({
                 category: 'dvbservice',
                 action: 'load_recharge_item',
@@ -213,20 +224,18 @@ export default {
             })
         },
         checkout(card) {
-            let reg = /^\d{11}$/g
-            let reg2 = /^(90|91|92|93)\d{9}$/g
-            let reg3 = /^(01|02)\d{9}$/g
+            const reg = /^\d{11}$/g
+            const reg2 = /^(90|91|92|93)\d{9}$/g
+            const reg3 = /^(01|02)\d{9}$/g
 
-            if (card == '') {
+            if (card === '') {
                 this.logSmartInput(card, -1)
                 return false
-            } else {
-                if (!reg.test(card)) {
+            } else if (!reg.test(card)) {
                     this.logSmartInput(card, -1)
                     this.$refs.cardInput.showError()
                     return false
-                } else {
-                    if (!reg3.test(card)) {
+                } else if (!reg3.test(card)) {
                         if (reg2.test(card)) {
                             this.logSmartInput(card, 0)
                             this.$confirm(
@@ -254,15 +263,13 @@ export default {
                     } else {
                         this.logSmartInput(card, 1)
                     }
-                }
-            }
 
             this.isLoading = true
 
             this.$axios
-                .get(`/self/v1/user/smartcardinfo/sync4h5?smartcard=${card}&is_bind_card=${this.isLogin ? true : false}`)
+                .get(`/self/v1/user/smartcardinfo/sync4h5?smartcard=${card}&is_bind_card=${!!this.isLogin}`)
                 .then(res => {
-                    let data = res.data
+                    const data = res.data
                     this.isLoading = false
 
                     if (!data || !data.program_name) {
@@ -293,9 +300,9 @@ export default {
                     this.isLoading = false
 
                     this.$nextTick(() => {
-                        if (err.status == 401) {
+                        if (err.status === 401) {
                             this.$alert(this.$store.state.lang.account_signed_elsewhere, () => {
-                                if (this.isApp == 1) {
+                                if (this.isApp === 1) {
                                     window.getChannelId.toAppPage(
                                         3,
                                         'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
@@ -313,17 +320,6 @@ export default {
         },
         formatAmount(num) {
             return formatAmount(num)
-        }
-    },
-    watch: {
-        isLoading(val, oldVal) {
-            if (val) {
-                this.$nextTick(() => this.$nuxt.$loading.start())
-                this.$store.commit('SHOW_SHADOW_LAYER')
-            } else {
-                this.$nextTick(() => this.$nuxt.$loading.finish())
-                this.$store.commit('HIDE_SHADOW_LAYER')
-            }
         }
     },
     head() {

@@ -4,12 +4,20 @@
             <p>You’ll get the reward once you link the decoder with App account. If you haven't linked, please LINK first.</p>
         </div>
         <div class="policy">
-            <p class="title">Reward Policy</p>
+            <p class="title">
+                Reward Policy
+            </p>
             <table>
                 <tr>
-                    <th width="30%" class="status">Decoder Status</th>
-                    <th width="40%">Bouquet Subscribed</th>
-                    <th width="30%">Reward After 'LINK'</th>
+                    <th width="30%" class="status">
+                        Decoder Status
+                    </th>
+                    <th width="40%">
+                        Bouquet Subscribed
+                    </th>
+                    <th width="30%">
+                        Reward After 'LINK'
+                    </th>
                 </tr>
                 <tr>
                     <td>Dormant</td> 
@@ -19,7 +27,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td rowspan="2">Active</td>
+                    <td rowspan="2">
+                        Active
+                    </td>
                     <td>
                         <p>NOVA/Basic on DTT</p>NOVA/Smart on DTH
                     </td>
@@ -37,22 +47,29 @@
                 </tr>
                 <tr class="remarks">
                     <td>Remarks</td>
-                    <td colspan="2">Each user(device/decoder) only has one chance to enjoy this reward.</td>
+                    <td colspan="2">
+                        Each user(device/decoder) only has one chance to enjoy this reward.
+                    </td>
                 </tr>
                 <tr class="last">
-                    <td colspan="3">Terms And Conditions Apply</td>
+                    <td colspan="3">
+                        Terms And Conditions Apply
+                    </td>
                 </tr>
             </table>
         </div>
-        <mButton :text="'GO TO LINK'" @click="goToLink" class="btn"/>
-        <mButton :text="'GET REWARD'" @click="getReward" class="btn"/>
+        <mButton :text="'GO TO LINK'" @click="goToLink" class="btn" />
+        <mButton :text="'GET REWARD'" @click="getReward" class="btn" />
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
-import { toNativePage, shareInvite } from '~/functions/utils'
+import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
+    components: {
+        mButton
+    },
     data() {
         return {
             getRewarding: false
@@ -69,30 +86,27 @@ export default {
                 .post('/self/v1/gift-award/after-link')
                 .then(res => {
                     this.getRewarding = false
-                    let data = res.data
-                    if (data.code == 200) {
+                    const data = res.data
+                    if (data.code === 200) {
                         this.$alert('Congratulations! Redeem succesfully.')
-                    } else if (data.code == '402') {
+                    } else if (data.code === '402') {
                         this.$alert('You need link first.')
-                    } else if (data.code == '201') {
+                    } else if (data.code === '201') {
                         this.$alert('Your account has redeemed once.')
-                    } else if (data.code == '202') {
+                    } else if (data.code === '202') {
                         this.$alert('Your smartcard has redeemed once.')
-                    } else if (data.code == '203') {
+                    } else if (data.code === '203') {
                         this.$alert('Your phone has redeemed once.')
-                    } else if (data.code == '403') {
+                    } else if (data.code === '403') {
                         this.$alert('Smartcard exception, please contact call center.')
                     } else {
                         this.$alert('Network erro, please try again. Or contact call center.')
                     }
                 })
-                .catch(err => {
+                .catch(() => {
                     this.$alert('Network erro, please try again. Or contact call center.')
                 })
         }
-    },
-    components: {
-        mButton
     },
     head() {
         return {

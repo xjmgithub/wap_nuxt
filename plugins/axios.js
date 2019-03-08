@@ -1,5 +1,4 @@
-import { setCookie } from '~/functions/utils'
-export default ({ $axios, redirect, store }) => {
+export default ({ $axios, redirect, store,route }) => {
     $axios.onError(error => {
         const code = parseInt(error.response && error.response.status)
         if (code === 401) {

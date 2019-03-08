@@ -1,22 +1,26 @@
 <template>
     <div style="padding:1rem;">
-        <RadioBtn :radio-list="radioList" class="radioBtn" @pick="changeItem"/>
-        <div style="height:0;border-bottom:solid 1px #E0E0E0;margin:1rem 0;"/>
-        <RadioBtn :radio-list="radioList2" class="radioBtn" @pick="changeItem"/>
+        <RadioBtn :radio-list="radioList" @pick="changeItem" class="radioBtn" />
+        <div style="height:0;border-bottom:solid 1px #E0E0E0;margin:1rem 0;" />
+        <RadioBtn :radio-list="radioList2" @pick="changeItem" class="radioBtn" />
         <div class="footer">
-            <mButton text="OK" @click="next()"/>
+            <mButton @click="next()" text="OK" />
         </div>
     </div>
 </template>
 <script>
-import dayjs from 'dayjs'
 import crypto from 'crypto'
+import dayjs from 'dayjs'
 import mButton from '~/components/button'
 import RadioBtn from '~/components/radioBtn'
-import {mechant_request_url} from '~/env.js'
+import env from '~/env.js'
 import axios from 'axios'
 export default {
     layout: 'base',
+    components: {
+        RadioBtn,
+        mButton
+    },
     data() {
         return {
             payToken: '',
@@ -26,28 +30,12 @@ export default {
             selected: null
         }
     },
-    components: {
-        RadioBtn,
-        mButton
-    },
-    methods: {
-        changeItem(code) {
-            this.selected = code
-        },
-        next() {
-            if (this.selected > 9001 && this.selected < 9029) {
-                this.$router.push(`/hybrid/payment/wallet/payto?payToken=${this.payToken}&payChannel=${this.selected}&txNo=${this.txNo}`)
-            } else {
-                this.$router.push(`/hybrid/payment/channelDesc?payToken=${this.payToken}&payChannel=${this.selected}`)
-            }
-        }
-    },
-    async asyncData({store, redirect,query }) {
+    async asyncData({ store, redirect, query }) {
         if (!process.server) {
             return false
         }
-        let res = await axios.post(
-            `${mechant_request_url}payment/platform/v1/oauth/token?grant_type=client_credentials`,
+        const res = await axios.post(
+            `${env.mechantRequestUrl}payment/platform/v1/oauth/token?grant_type=client_credentials`,
             {},
             {
                 auth: {
@@ -57,7 +45,7 @@ export default {
             }
         )
         if (res.data.access_token) {
-            let paramArr = [
+            const paramArr = [
                 {
                     key: 'redirectUrl',
                     value: query.redirectUrl || ''
@@ -132,10 +120,10 @@ export default {
                 return a.key < b.key ? -1 : 1
             })
             let str = ''
-            var paramObj = {}
+            const paramObj = {}
             paramArr.forEach((item, index) => {
-                if (item.value != '') {
-                    if (index == 0) {
+                if (item.value !== '') {
+                    if (index === 0) {
                         str += `${item.key}=${item.value}`
                     } else {
                         str += `&${item.key}=${item.value}`
@@ -143,11 +131,11 @@ export default {
                 }
                 paramObj[item.key] = item.value
             })
-            let hmac = crypto.createHmac('md5', query.key||'123456')
-            let up = hmac.update(str)
-            let result = up.digest('hex')
+            const hmac = crypto.createHmac('md5', query.key || '123456')
+            const up = hmac.update(str)
+            const result = up.digest('hex')
             paramObj.sign = result.toUpperCase()
-            let res2 = await axios.post(`${mechant_request_url}payment/platform/v1/create-payment`, paramObj, {
+            const res2 = await axios.post(`${env.mechantRequestUrl}payment/platform/v1/create-payment`, paramObj, {
                 headers: {
                     Authorization: 'Bearer ' + res.data.access_token
                 }
@@ -161,14 +149,12 @@ export default {
     mounted() {
         this.payToken = this.$store.state.payToken
         this.txNo = this.$store.state.txNo
-        let _this = this
+        const _this = this
         this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
-            let data = res.data
-            let list = []
-            let list2 = []
+            const data = res.data
+            const list = []
+            const list2 = []
             if (data && data.payChannels && data.payChannels.length > 0) {
-                let payChannels = {}
-
                 data.payChannels.forEach((item, index) => {
                     if (item.id > 9001 && item.id < 9029) {
                         list2.push({
@@ -200,6 +186,18 @@ export default {
                 _this.$alert('The merchant has not yet opened a supportable payment channel.')
             }
         })
+    },
+    methods: {
+        changeItem(code) {
+            this.selected = code
+        },
+        next() {
+            if (this.selected > 9001 && this.selected < 9029) {
+                this.$router.push(`/hybrid/payment/wallet/payto?payToken=${this.payToken}&payChannel=${this.selected}&txNo=${this.txNo}`)
+            } else {
+                this.$router.push(`/hybrid/payment/channelDesc?payToken=${this.payToken}&payChannel=${this.selected}`)
+            }
+        }
     }
 }
 </script>

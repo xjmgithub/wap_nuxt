@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper wide">
-        <download class="clearfix"/>
+        <download class="clearfix" />
         <div class="poster">
             <img :src="sPoster.replace('http:','https:')" alt class="cover">
             <span class="program-name">{{sName}}</span>
@@ -32,6 +32,25 @@
 <script>
 import download from '~/components/web/download'
 export default {
+    filters: {
+        formatShowTime(val) {
+            if (val < 60) {
+                return '00:' + val
+            } else if (val >= 60 && val < 360) {
+                const min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
+                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return min + ':' + sec
+            } else if (val >= 360) {
+                const hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
+                const min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
+                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return hour + ':' + min + ':' + sec
+            }
+        }
+    },
+    components: {
+        download
+    },
     data() {
         return {
             pPoster: '',
@@ -46,9 +65,9 @@ export default {
         }
     },
     mounted() {
-        let program = sessionStorage.getItem('program')
+        const program = sessionStorage.getItem('program')
         if (program) {
-            let info = JSON.parse(program)
+            const info = JSON.parse(program)
             this.pPoster = info.poster
             this.pId = info.id
             this.pName = info.name
@@ -57,7 +76,7 @@ export default {
         if (this.pId) {
             this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
-                let data = res.data.data
+                const data = res.data.data
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (data && data.length > 0) {
                     this.subProgram = data
@@ -69,7 +88,7 @@ export default {
     methods: {
         getSubProgram() {
             this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
-                let data = res.data.data
+                const data = res.data.data
                 if (data && data.length > 0) {
                     this.subProgram = data
                     this.toSubProgramDetail(this.sId)
@@ -78,33 +97,13 @@ export default {
         },
         toSubProgramDetail(id) {
             this.subProgram.forEach(ele => {
-                if (ele.id == id) {
+                if (ele.id === id) {
                     this.sPoster = ele.poster.resources[0].url
                     this.sName = ele.name
                     this.sDescription = ele.summary
                 }
             })
         }
-    },
-    filters: {
-        formatShowTime(val) {
-            if (val < 60) {
-                let tmp = val < 10 ? '0' + val : val
-                return '00:' + val
-            } else if (val >= 60 && val < 360) {
-                let min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return min + ':' + sec
-            } else if (val >= 360) {
-                let hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
-                let min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return hour + ':' + min + ':' + sec
-            }
-        }
-    },
-    components: {
-        download
     },
     head() {
         return {

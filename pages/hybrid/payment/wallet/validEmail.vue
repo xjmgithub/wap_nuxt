@@ -1,29 +1,33 @@
 <template>
     <div class="container">
-        <verifyEmail ref="emailCont" :disabled="reset"/>
+        <verifyEmail ref="emailCont" :disabled="reset" />
         <div v-if="reset" class="change-phone-link">
-            <nuxt-link to="/hybrid/payment/wallet/resetEmail">Change email</nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/resetEmail">
+                Change email
+            </nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" style="margin-bottom:0.5rem" @click="goStep(2)"/>
-            <nuxt-link v-if="!init&&wallet_phone_config" to="/hybrid/payment/wallet/validPhone">RESET IT BY CELLPHONE NUMBER</nuxt-link>
+            <mButton :disabled="false" @click="goStep(2)" text="NEXT" style="margin-bottom:0.5rem" />
+            <nuxt-link v-if="!init&&wallet_phone_config" to="/hybrid/payment/wallet/validPhone">
+                RESET IT BY CELLPHONE NUMBER
+            </nuxt-link>
         </div>
         <div v-show="step==2" class="step2">
-            <passInput/>
+            <passInput />
             <div class="footer">
-                <mButton :disabled="false" text="NEXT" @click="goStep(3)"/>
+                <mButton :disabled="false" @click="goStep(3)" text="NEXT" />
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
-            <passInput ref="newpass" :toggle-view="true" placeholder="Set payment password" @endinput="inputPass"/>
+            <passInput ref="newpass" :toggle-view="true" @endinput="inputPass" placeholder="Set payment password" />
             <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)"/>
+                <mButton :disabled="!canStep3" @click="goStep(4)" text="NEXT" />
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
-            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm Password" @endinput="confirmEnd"/>
+            <passInput ref="confirmpass" :toggle-view="true" @endinput="confirmEnd" placeholder="Confirm Password" />
             <div class="footer">
-                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)"/>
+                <mButton :disabled="!canStep4" @click="goStep(5)" text="OK" />
             </div>
         </div>
     </div>
@@ -53,7 +57,7 @@ export default {
         }
     },
     mounted() {
-        let walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
+        const walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
         this.accountNo = walletAccount.accountNo
 
         if (walletAccount.phone) {
@@ -67,8 +71,8 @@ export default {
     },
     methods: {
         goStep(num) {
-            if (num == 2) {
-                let email = this.$refs.emailCont.email
+            if (num === 2) {
+                const email = this.$refs.emailCont.email
                 this.$axios
                     .post(
                         `/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code-mail?email=${email}`,
@@ -80,14 +84,14 @@ export default {
                         }
                     )
                     .then(res => {
-                        if (res.data.code == 0) {
+                        if (res.data.code === 0) {
                             this.step = num
                         }
                     })
-            } else if (num == 3) {
-                let vscode = this.$refs.vscode.password
-                let email = this.$refs.emailCont.email
-                let wallet_config = JSON.parse(localStorage.getItem('wallet_config'))
+            } else if (num === 3) {
+                const vscode = this.$refs.vscode.password
+                const email = this.$refs.emailCont.email
+                const walletConfig = JSON.parse(localStorage.getItem('wallet_config'))
 
                 if (this.reset) {
                     // 验证邮箱
@@ -98,8 +102,8 @@ export default {
                             }
                         })
                         .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
+                            const data = res.data
+                            if (data && data.code === '0') {
                                 this.step = num
                             } else {
                                 this.$alert(data.message)
@@ -118,10 +122,10 @@ export default {
                             }
                         )
                         .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
+                            const data = res.data
+                            if (data && data.code === '0') {
                                 this.$alert('Set email successfully', () => {
-                                    if (wallet_config.payPassword == 'true') {
+                                    if (walletConfig.payPassword === 'true') {
                                         this.$router.replace('/hybrid/payment/wallet/paybyPass')
                                     } else {
                                         this.step = num
@@ -132,11 +136,11 @@ export default {
                             }
                         })
                 }
-            } else if (num == 5) {
-                let vscode = this.$refs.vscode.password
-                let newpass = this.$refs.newpass.password
-                let confirmpass = this.$refs.confirmpass.password
-                if (newpass != confirmpass) {
+            } else if (num === 5) {
+                const vscode = this.$refs.vscode.password
+                const newpass = this.$refs.newpass.password
+                const confirmpass = this.$refs.confirmpass.password
+                if (newpass !== confirmpass) {
                     this.$confirm(
                         'Password do not match.Please try again.',
                         () => {
@@ -161,16 +165,16 @@ export default {
                         }
                     )
                     .then(res => {
-                        let data = res.data
-                        if (data && data.code == '0') {
+                        const data = res.data
+                        if (data && data.code === '0') {
                             this.$alert(data.message, () => {
                                 window.location.href = './payto'
                             })
                         }
                     })
-            } else if (num == 4) {
-                let newpass = this.$refs.newpass.password
-                let reg = /^[\d]+$/
+            } else if (num === 4) {
+                const newpass = this.$refs.newpass.password
+                const reg = /^[\d]+$/
                 if (!reg.test(newpass)) {
                     this.$alert('You must enter pure numbers.')
                     return false

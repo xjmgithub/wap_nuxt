@@ -1,16 +1,18 @@
 <template>
     <div>
         <div class="eWallet">
-            <p class="cardNo">eWallet No. {{ walletAccount }}</p>
+            <p class="cardNo">
+                eWallet No. {{ walletAccount }}
+            </p>
             <div>
                 <span class="balance">Balance:</span>
                 <span class="currency">{{ currency }}</span>
                 <span class="money">{{ walletLeft | fixAmount }}</span>
             </div>
         </div>
-        <RadioBtn :radio-list="radioList" class="radioBtn" @pick="changeItem"/>
+        <RadioBtn :radio-list="radioList" @pick="changeItem" class="radioBtn" />
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="nextStep"/>
+            <mButton :disabled="false" @click="nextStep" text="NEXT" />
         </div>
     </div>
 </template>
@@ -19,6 +21,15 @@ import mButton from '~/components/button'
 import RadioBtn from '~/components/radioBtn'
 export default {
     layout: 'base',
+    components: {
+        mButton,
+        RadioBtn
+    },
+    filters: {
+        fixAmount(val) {
+            return Number(val).toFixed(2)
+        }
+    },
     data() {
         return {
             walletAccount: '',
@@ -31,10 +42,10 @@ export default {
     },
     computed: {
         selectedChannel() {
-            let _this = this
+            const _this = this
             let result = {}
             this.radioList.forEach((item, index) => {
-                if (item.code == _this.selected) {
+                if (item.code === _this.selected) {
                     result = item
                 }
             })
@@ -42,13 +53,13 @@ export default {
         }
     },
     mounted() {
-        let wallet = JSON.parse(localStorage.getItem('wallet_account'))
+        const wallet = JSON.parse(localStorage.getItem('wallet_account'))
         this.walletAccount = wallet.accountNo
         this.walletLeft = wallet.amount
         this.currency = JSON.parse(localStorage.getItem('payObject')).currency
 
         this.$axios.get('/mobilewallet/v1/recharge-channels').then(res => {
-            let list = []
+            const list = []
             if (res.data && res.data.length > 0) {
                 res.data.forEach((item, index) => {
                     list.push({
@@ -56,7 +67,7 @@ export default {
                         value: item.name,
                         imgUrl: item.logoUrl || '',
                         desc: item.description,
-                        checked: index ? false : true,
+                        checked: !index,
                         channelType: item.channelType,
                         ussd: item.shortUssdCode
                     })
@@ -66,15 +77,6 @@ export default {
                 this.selected = list[0].code
             }
         })
-    },
-    components: {
-        mButton,
-        RadioBtn
-    },
-    filters: {
-        fixAmount(val) {
-            return Number(val).toFixed(2)
-        }
     },
     methods: {
         nextStep() {

@@ -1,7 +1,9 @@
 <template>
     <div class="wrapper">
         <div class="country">
-            <p class="title">Choose your language</p>
+            <p class="title">
+                Choose your language
+            </p>
             <ul>
                 <li v-for="(item,index) in langList" :key="index" @click="chooseLang(item.lang)">
                     {{item.language}}
@@ -12,7 +14,6 @@
     </div>
 </template>
 <script>
-import LANG from '~/languages/'
 import { setCookie } from '~/functions/utils'
 export default {
     layout: 'default',

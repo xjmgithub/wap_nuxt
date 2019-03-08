@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="eWallet">
-            <p class="cardNo">eWallet No. {{walletAccount}}</p>
+            <p class="cardNo">
+                eWallet No. {{walletAccount}}
+            </p>
             <div>
                 <span class="balance">Balance：</span>
                 <span class="currency">{{currency}}</span>
@@ -13,19 +15,21 @@
             <div>
                 <span :class="{focus:isFocus}">Enter the 4-32 digits on Voucher Card</span>
                 <input
-                    type="tel"
-                    maxlength="39"
                     @focus="isFocus=true"
                     v-model="rechargePin"
                     @input="changePinNum"
+                    type="tel"
+                    maxlength="39"
                 >
             </div>
             <p
                 class="msg"
-            >Vocher PIN is on the StarTimes recharge card that you bought from StarTimes business hall or dealer</p>
+            >
+                Vocher PIN is on the StarTimes recharge card that you bought from StarTimes business hall or dealer
+            </p>
         </div>
         <div class="footer">
-            <mButton :disabled="!canNext" text="NEXT" @click="nextStep"/>
+            <mButton :disabled="!canNext" @click="nextStep" text="NEXT" />
         </div>
     </div>
 </template>
@@ -33,6 +37,14 @@
 import mButton from '~/components/button'
 export default {
     layout: 'base',
+    components: {
+        mButton
+    },
+    filters: {
+        fixAmount(val) {
+            return Number(val).toFixed(2)
+        }
+    },
     data() {
         return {
             walletAccount: '',
@@ -44,8 +56,8 @@ export default {
     },
     computed: {
         oriPinNum: function() {
-            var reg = /^[0-9]*$/
-            var tmp = this.rechargePin.replace(/-/g, '')
+            const reg = /^[0-9]*$/
+            const tmp = this.rechargePin.replace(/-/g, '')
             return reg.test(tmp) ? tmp : ''
         },
         canNext() {
@@ -53,18 +65,10 @@ export default {
         }
     },
     mounted() {
-        let wallet = JSON.parse(localStorage.getItem('wallet_account'))
+        const wallet = JSON.parse(localStorage.getItem('wallet_account'))
         this.walletAccount = wallet.accountNo
         this.walletLeft = wallet.amount
         this.currency = JSON.parse(localStorage.getItem('payObject')).currency
-    },
-    components: {
-        mButton
-    },
-    filters: {
-        fixAmount(val) {
-            return Number(val).toFixed(2)
-        }
     },
     methods: {
         nextStep() {
@@ -84,7 +88,7 @@ export default {
                             rechargeCardPin: this.oriPinNum
                         })
                         .then(res => {
-                            if (res.data && res.data.code == 0) {
+                            if (res.data && res.data.code === 0) {
                                 this.$router.push(
                                     `/hybrid/payment/wallet/rechargeResult?result=1&amount=${res.data.data.amount}&currency=${
                                         res.data.data.currency

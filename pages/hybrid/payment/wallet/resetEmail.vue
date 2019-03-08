@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <verifyEmail ref="emailCont" :disabled="!nocheck"/>
+        <verifyEmail ref="emailCont" :disabled="!nocheck" />
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="goStep(2)"/>
+            <mButton :disabled="false" @click="goStep(2)" text="NEXT" />
         </div>
         <div v-show="step==2" class="step2">
-            <passInput/>
+            <passInput />
             <div class="footer">
-                <mButton :disabled="false" text="NEXT" @click="goStep(3)"/>
+                <mButton :disabled="false" @click="goStep(3)" text="NEXT" />
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@ export default {
         }
     },
     mounted() {
-        let walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
+        const walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
         this.accountNo = walletAccount.accountNo
         if (!this.nocheck) {
             if (walletAccount.email) {
@@ -47,17 +47,17 @@ export default {
     },
     methods: {
         goStep(num) {
-            if (num == 2) {
+            if (num === 2) {
                 // TODO BUTTON按钮状态
-                let email = this.$refs.emailCont.email
+                const email = this.$refs.emailCont.email
                 this.$axios.post(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code-mail?email=${email}`).then(res => {
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         this.step = num
                     }
                 })
-            } else if (num == 3) {
-                let vscode = this.$refs.vscode.password
-                let email = this.$refs.emailCont.email
+            } else if (num === 3) {
+                const vscode = this.$refs.vscode.password
+                const email = this.$refs.emailCont.email
                 if (this.nocheck) {
                     this.$axios
                         .put(
@@ -66,8 +66,8 @@ export default {
                             }&verifyCode4Old=${this.vscode}`
                         )
                         .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
+                            const data = res.data
+                            if (data && data.code === '0') {
                                 this.$alert('Set email successfully.', () => {
                                     window.location.href = '/hybrid/payment/wallet/payto'
                                 })
@@ -77,8 +77,8 @@ export default {
                         })
                 } else {
                     this.$axios.get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${email}&verifyCode=${vscode}`).then(res => {
-                        let data = res.data
-                        if (data && data.code == '0') {
+                        const data = res.data
+                        if (data && data.code === '0') {
                             window.location.href = `/hybrid/payment/wallet/resetEmail?nocheck=1&oldemail=${email}&vscode=${vscode}`
                         } else {
                             this.$alert(data.message)

@@ -1,11 +1,13 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <card-info/>
-            <order-info/>
-            <!-- <pay-methods :wallet="wallet" /> -->
-            <NG :wallet="wallet"/>
-            <div style="color: white;padding:5%;position:absolute;bottom:12rem;" v-show="isYueMo">{{$store.state.lang.monthly_billing}}:</div>
+            <card-info />
+            <order-info />
+            <pay-methods :wallet="wallet" v-if="false" />
+            <NG :wallet="wallet" />
+            <div v-show="isYueMo" style="color: white;padding:5%;position:absolute;bottom:12rem;">
+                {{$store.state.lang.monthly_billing}}:
+            </div>
         </div>
     </div>
 </template>
@@ -16,18 +18,11 @@ import orderInfo from '~/components/dvb/orderInfo'
 import payMethods from '~/components/dvb/payMethods'
 export default {
     layout: 'base',
-    async asyncData({ app: { $axios }, store }) {
-        let user = store.state.user
-        let wallet = null
-        if (user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS') {
-            $axios.setHeader('token', store.state.token)
-            let { data } = await $axios.get(`/mobilewallet/v1/accounts/me`)
-            wallet = data
-        }
-        return {
-            wallet: wallet,
-            serverTime: new Date()
-        }
+    components: {
+        NG,
+        cardInfo,
+        orderInfo,
+        payMethods
     },
     data() {
         return {
@@ -35,9 +30,32 @@ export default {
             isYueMo: false
         }
     },
+    watch: {
+        isLoading(val, oldVal) {
+            if (val) {
+                this.$nuxt.$loading.start()
+                this.$store.commit('SHOW_SHADOW_LAYER')
+            } else {
+                this.$nuxt.$loading.finish()
+            }
+        }
+    },
+    async asyncData({ app: { $axios }, store }) {
+        const user = store.state.user
+        let wallet = null
+        if (user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS') {
+            $axios.setHeader('token', store.state.token)
+            const { data } = await $axios.get(`/mobilewallet/v1/accounts/me`)
+            wallet = data
+        }
+        return {
+            wallet: wallet,
+            serverTime: new Date()
+        }
+    },
     mounted() {
         // 判断是否是月末
-        let isBeyondYear = new Date(this.serverTime).getMonth() + 1 >= 12 ? true : false
+        const isBeyondYear = new Date(this.serverTime).getMonth() + 1 >= 12
         let nextMonthFirstDay
         if (isBeyondYear) {
             nextMonthFirstDay = new Date(new Date(this.serverTime).getFullYear() + 1 + '-01-01').getTime()
@@ -45,14 +63,14 @@ export default {
             nextMonthFirstDay = new Date(new Date(this.serverTime).getFullYear() + '-' + new Date(this.serverTime).getMonth() + 2 + '-01').getTime()
         }
 
-        let threeHoursBefore = nextMonthFirstDay - 3 * 60 * 60 * 1000
-        let threeHoursAfter = nextMonthFirstDay + 3 * 60 * 60 * 1000
-        let now = this.serverTime.getTime()
+        const threeHoursBefore = nextMonthFirstDay - 3 * 60 * 60 * 1000
+        const threeHoursAfter = nextMonthFirstDay + 3 * 60 * 60 * 1000
+        const now = this.serverTime.getTime()
         if (threeHoursBefore <= now && threeHoursAfter >= now) {
             this.isYueMo = true
         }
         
-        let param = JSON.parse(sessionStorage.getItem('order-info'))
+        const param = JSON.parse(sessionStorage.getItem('order-info'))
         sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
 
         this.sendEvLog({
@@ -67,22 +85,6 @@ export default {
             service_type: 'Recharge',
             page_from: 'new'
         })
-    },
-    watch: {
-        isLoading(val, oldVal) {
-            if (val) {
-                this.$nuxt.$loading.start()
-                this.$store.commit('SHOW_SHADOW_LAYER')
-            } else {
-                this.$nuxt.$loading.finish()
-            }
-        }
-    },
-    components: {
-        NG,
-        cardInfo,
-        orderInfo,
-        payMethods
     },
     head() {
         return {

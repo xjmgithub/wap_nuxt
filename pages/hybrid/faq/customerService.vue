@@ -2,21 +2,21 @@
     <div class="wrapper">
         <div class="content" style="min-height:101%">
             <div class="pull_refresh">
-                <div style="padding-top:1rem;" v-show="!loadHistoryState">
-                    <span class="refresh_text" v-show="!historyEnd">Pull down to see more history</span>
-                    <span class="refresh_text" v-show="historyEnd">No more history</span>
+                <div v-show="!loadHistoryState" style="padding-top:1rem;">
+                    <span v-show="!historyEnd" class="refresh_text">Pull down to see more history</span>
+                    <span v-show="historyEnd" class="refresh_text">No more history</span>
                 </div>
                 <div>
-                    <img class="refresh_img" v-show="loadHistoryState" src="~assets/img/spinner.gif">
+                    <img v-show="loadHistoryState" class="refresh_img" src="~assets/img/spinner.gif">
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest"/>
-                <div class="order-contain" v-if="item.tpl=='order'" :key="index">
-                    <orderBlockTpl :order="item.order"/>
+                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest" />
+                <div v-if="item.tpl=='order'" :key="index" class="order-contain">
+                    <orderBlockTpl :order="item.order" />
                 </div>
-                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"/>
-                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"/>
+                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name" />
+                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name" />
                 <contentTpl
                     v-if="item.tpl=='content'"
                     :noevaluate="item.noEvaluate"
@@ -29,21 +29,27 @@
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
-                <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord"/>
-                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied"/>
+                <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord" />
+                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied" />
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
-            <div class="btn" v-show="connectState==0" @click="connectLiveChat">LIVE CHAT</div>
-            <div class="btn" v-show="connectState==1">Connecting …</div>
+            <div v-show="connectState==0" @click="connectLiveChat" class="btn">
+                LIVE CHAT
+            </div>
+            <div v-show="connectState==1" class="btn">
+                Connecting …
+            </div>
         </div>
-        <div class="live-chat-input" v-show="showLiveChatBtn&&connectState==2">
+        <div v-show="showLiveChatBtn&&connectState==2" class="live-chat-input">
             <div class="user-control-w">
                 <div class="user-edit-w">
-                    <textarea class="form-control user-edit" v-model="chatMsg" placeholder="Enter your question"/>
+                    <textarea v-model="chatMsg" class="form-control user-edit" placeholder="Enter your question" />
                 </div>
                 <div class="user-submit-w">
-                    <button type="submit" class="user-submit-btn" @click="sendChatMsg">SEND</button>
+                    <button @click="sendChatMsg" type="submit" class="user-submit-btn">
+                        SEND
+                    </button>
                 </div>
             </div>
         </div>
@@ -62,6 +68,15 @@ import autosize from 'autosize'
 import { toNativePage, setCookie, getCookie,getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
+    components: {
+        questionListTpl,
+        orderBlockTpl,
+        askTpl,
+        answerTpl,
+        contentTpl,
+        msgTpl,
+        evaluate
+    },
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
@@ -85,32 +100,23 @@ export default {
             messageShowed: [] // 记录已经展示出来的
         }
     },
-    components: {
-        questionListTpl,
-        orderBlockTpl,
-        askTpl,
-        answerTpl,
-        contentTpl,
-        msgTpl,
-        evaluate
-    },
     mounted() {
-        let questions = JSON.parse(sessionStorage.getItem('faq_question'))
-        let serviceModuleId = sessionStorage.getItem('serviceModuleId')
-        let morefaqs = sessionStorage.getItem('morefaqs')
-        let renderQueue = JSON.parse(getCookie('renderQueue'))
-        let addMsg = sessionStorage.getItem('addMsg')
-        let _this = this
+        const questions = JSON.parse(sessionStorage.getItem('faq_question'))
+        const serviceModuleId = sessionStorage.getItem('serviceModuleId')
+        const morefaqs = sessionStorage.getItem('morefaqs')
+        const renderQueue = JSON.parse(getCookie('renderQueue'))
+        const addMsg = sessionStorage.getItem('addMsg')
+        const _this = this
         // LiveChat 按钮判断
         this.$store.state.country &&
             this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.$store.state.country.id}&entranceId=${this.entrance_id}`).then(res => {
-                if (res.data.code == 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
+                if (res.data.code === 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
                     this.showLiveChatBtn = true
                 }
             })
 
         this.$nextTick(() => {
-            let wrapper = document.querySelector('.wrapper')
+            const wrapper = document.querySelector('.wrapper')
             this.scroll = new BScroll(wrapper, {
                 pullDownRefresh: {
                     threshold: 100, // 下拉距离
@@ -159,8 +165,8 @@ export default {
                 this.renderOrder()
 
                 this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
-                    if (res.data.code == 200) {
-                        let list = []
+                    if (res.data.code === 200) {
+                        const list = []
                         res.data.data.forEach((item, index) => {
                             list.push({
                                 id: item.id,
@@ -186,7 +192,7 @@ export default {
                 })
 
                 this.$axios.get(`/ocs/v1/faqs/directory/${this.$store.state.country.id}`).then(res => {
-                    if (res.data.code == 200) {
+                    if (res.data.code === 200) {
                         this.categoryId = res.data.data
                         this.getfaqDirectory(res.data.data)
                     }
@@ -197,7 +203,7 @@ export default {
                 if (this.$store.state.intervalTimer) {
                     clearInterval(this.$store.state.intervalTimer)
                 }
-                let timer = setInterval(this.getLeaveMessage, 5 * 1000)
+                const timer = setInterval(this.getLeaveMessage, 5 * 1000)
                 this.$store.commit('SET_TIMER', timer)
             })
         })
@@ -230,7 +236,7 @@ export default {
         getfaqDirectory(id) {
             if (!id) return false
             this.$axios.get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`).then(res => {
-                if (res.data.code == 200) {
+                if (res.data.code === 200) {
                     this.addOperate(
                         Object.assign({}, res.data.data, {
                             tpl: 'list'
@@ -251,7 +257,7 @@ export default {
                 this.renderOrder()
             }
 
-            if (type == 1) {
+            if (type === 1) {
                 this.getAnswer(item.id)
             } else {
                 this.getfaqDirectory(item.id)
@@ -265,8 +271,7 @@ export default {
         },
         getAnswer(id) {
             this.$axios.get(`/ocs/v1/faqs/answer/${id}`).then(res => {
-                if (res.data.code == 200) {
-                    let serviceRecord = this.serviceRecord
+                if (res.data.code === 200) {
                     this.addOperate(
                         Object.assign({}, res.data.data, {
                             tpl: 'content',
@@ -278,7 +283,7 @@ export default {
             })
         },
         renderOrder() {
-            let order = JSON.parse(sessionStorage.getItem('orderMsg'))
+            const order = JSON.parse(sessionStorage.getItem('orderMsg'))
             if (order) {
                 this.addOperate({
                     tpl: 'order',
@@ -290,7 +295,7 @@ export default {
             this.$axios
                 .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
                 .then(res => {
-                    if (res.data.code == 200) {
+                    if (res.data.code === 200) {
                         this.serviceRecord = res.data.data
                         if (!this.isLogin) {
                             let cacheRecord = getCookie('serviceRecords')
@@ -323,21 +328,21 @@ export default {
                 // 发送历史记录
                 let serviceInfo = ''
                 let operator = 1 // 用户发起
-                if (obj.tpl == 'list') {
+                if (obj.tpl === 'list') {
                     serviceInfo = 'faqlist-'
                     obj.contents.forEach(item => {
                         serviceInfo += item.name + ' | '
                     })
-                } else if (obj.tpl == 'ask' || obj.tpl == 'chatask') {
+                } else if (obj.tpl === 'ask' || obj.tpl === 'chatask') {
                     serviceInfo = 'faqask-' + obj.name
-                } else if (obj.tpl == 'order') {
+                } else if (obj.tpl === 'order') {
                     serviceInfo = 'faqorder-' + obj.order.order_type
-                } else if (obj.tpl == 'content') {
+                } else if (obj.tpl === 'content') {
                     serviceInfo = 'faqanswer-' + obj.content
-                } else if (obj.tpl == 'chatanswer' || obj.tpl == 'welcome') {
+                } else if (obj.tpl === 'chatanswer' || obj.tpl === 'welcome') {
                     serviceInfo = 'chatanswer-' + obj.name
                     operator = 2 // 客服发起
-                } else if (obj.tpl == 'tips') {
+                } else if (obj.tpl === 'tips') {
                     return false
                 }
 
@@ -351,7 +356,7 @@ export default {
                         operator: operator
                     })
                     .then(res => {
-                        if (res.data.code == 200) {
+                        if (res.data.code === 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
                                 let cacheHisory = getCookie('historys')
@@ -369,14 +374,12 @@ export default {
                             // 最小historyId记录
                             if (!this.minHistoryId) {
                                 this.minHistoryId = res.data.data
-                            } else {
-                                if (res.data.data < this.minHistoryId) {
+                            } else if (res.data.data < this.minHistoryId) {
                                     this.minHistoryId = res.data.data
                                 }
-                            }
 
                             // 如果是回答则重新创建一条服务记录
-                            if (obj.tpl == 'content') {
+                            if (obj.tpl === 'content') {
                                 this.createServiceRecord()
                             }
                         }
@@ -397,8 +400,8 @@ export default {
             this.renderQueue = JSON.parse(getCookie('renderQueue'))
 
             // 更新历史记录
-            let historys = JSON.parse(getCookie('historys'))
-            let serviceIds = JSON.parse(getCookie('serviceRecords'))
+            const historys = JSON.parse(getCookie('historys'))
+            const serviceIds = JSON.parse(getCookie('serviceRecords'))
 
             if (historys) {
                 historys.forEach(item => {
@@ -412,7 +415,7 @@ export default {
                 })
                 if (historys && serviceIds) {
                     this.$axios.post(`/css/v1/history/updateUserId?historyIds=${historys.join(',')}&serviceIds=${serviceIds.join(',')}`).then(res => {
-                        if (res.data.code == 200) {
+                        if (res.data.code === 200) {
                             setCookie('serviceRecords', '')
                             setCookie('historys', '')
                             setCookie('renderQueue', '')
@@ -424,18 +427,18 @@ export default {
         loadHistory() {
             if (this.historyEnd) return
             this.loadHistoryState = true
-            let minHistoryId = this.minHistoryId || 999999999
+            const minHistoryId = this.minHistoryId || 999999999
             this.$axios.get(`/css/v1/history/app?pageSize=10&pageNum=${this.historyPage}&minId=${minHistoryId}`).then(res => {
-                if (res.data.code == 200 && res.data.data.rows.length > 0) {
+                if (res.data.code === 200 && res.data.data.rows.length > 0) {
                     this.historyPage++
-                    let rows = res.data.data.rows.sort((a, b) => {
+                    const rows = res.data.data.rows.sort((a, b) => {
                         return a.id - b.id
                     })
                     rows.reverse().forEach(item => {
-                        let data = JSON.parse(item.remark)
+                        const data = JSON.parse(item.remark)
 
                         // 历史记录里的答案不可评价
-                        if (data.tpl == 'content') {
+                        if (data.tpl === 'content') {
                             data.noEvaluate = true
                         }
                         this.renderQueue.unshift(data)
@@ -453,14 +456,14 @@ export default {
         },
         scrollToBottom() {
             this.$nextTick(() => {
-                let h1 = document.querySelector('.wrapper').offsetHeight
-                let h2 = document.querySelector('.content').offsetHeight
+                const h1 = document.querySelector('.wrapper').offsetHeight
+                const h2 = document.querySelector('.content').offsetHeight
                 this.scroll.scrollTo(0, h1 - h2, 300)
             })
         },
         connectLiveChat() {
             if (!this.isLogin) {
-                if (this.$store.state.appType == 1) {
+                if (this.$store.state.appType === 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
                 } else {
                     toNativePage('startimes://login')
@@ -481,7 +484,7 @@ export default {
                     }
                 })
                 .then(res => {
-                    if (res.data.statusCode == 0) {
+                    if (res.data.statusCode === 0) {
                         this.chatLink = res.data
                         this.$axios
                             .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}}/messages`, {
@@ -493,7 +496,7 @@ export default {
                             })
                             .then(res => {
                                 this.createServiceRecord(1)
-                                if (res.data.statusCode == 0 && !res.data.chatEnded) {
+                                if (res.data.statusCode === 0 && !res.data.chatEnded) {
                                     this.connectState = 2 // BUTTON 变成输入框
                                     autosize(document.querySelectorAll('textarea.form-control'))
 
@@ -501,7 +504,6 @@ export default {
                                         this.pullReply()
                                     }, 5000)
                                     this.nextPosition = res.data.nextPosition
-                                    let messages = res.data.messages
 
                                     this.createServiceRecord(1, () => {
                                         this.addOperate({
@@ -513,7 +515,7 @@ export default {
                                     this.connectLiveChat()
                                 }
                             })
-                    } else if (res.data.statusCode == -1) {
+                    } else if (res.data.statusCode === -1) {
                         // TODO 是否要只显示一次
                         this.renderOrder.push({
                             text: 'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
@@ -528,12 +530,12 @@ export default {
                 })
         },
         sendChatMsg() {
-            let msg = this.chatMsg
+            const msg = this.chatMsg
                 .replace(/\r\n/g, '<br/>')
                 .replace(/\n/g, '<br/>')
                 .replace(/\s/g, ' ')
                 .trim()
-            if (msg != '') {
+            if (msg !== '') {
                 this.addOperate({
                     tpl: 'chatask',
                     name: msg
@@ -554,14 +556,14 @@ export default {
                         text: msg
                     })
                     .then(res => {
-                        if (res.data.statusCode != 0 || res.data.chatEnded) {
+                        if (res.data.statusCode !== 0 || res.data.chatEnded) {
                             this.addOperate({
                                 text: 'Sending Failure',
                                 tpl: 'tips'
                             })
                         }
                     })
-                    .catch(err => {
+                    .catch(() => {
                         this.addOperate({
                             text: 'Sending Failure',
                             tpl: 'tips'
@@ -580,20 +582,20 @@ export default {
                     transcriptPosition: this.nextPosition
                 })
                 .then(res => {
-                    if (res.data.statusCode == 0 && !res.data.chatEnded) {
+                    if (res.data.statusCode === 0 && !res.data.chatEnded) {
                         this.nextPosition = res.data.nextPosition
-                        let messages = res.data.messages
+                        const messages = res.data.messages
                         if (messages.length > 0) {
                             messages.forEach(item => {
-                                if (item.from.type == 'Agent' && item.type == 'Message' && item.text) {
+                                if (item.from.type === 'Agent' && item.type === 'Message' && item.text) {
                                     this.addOperate({
                                         tpl: 'chatanswer',
                                         name: item.text
                                     })
                                 }
                                 // if (
-                                //     item.from.type == 'Client' &&
-                                //     item.type == 'Message' &&
+                                //     item.from.type === 'Client' &&
+                                //     item.type === 'Message' &&
                                 //     item.text
                                 // ) {
                                 //     this.addOperate({
@@ -603,7 +605,7 @@ export default {
                                 // }
                             })
                         }
-                    } else if (res.data.statusCode == -1) {
+                    } else if (res.data.statusCode === -1) {
                         this.addOperate({
                             text: 'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
                             tpl: 'tips'

@@ -1,8 +1,10 @@
 <template>
     <div style="width:1200px;margin:0 auto;padding:20px">
-        <textarea v-model="text"/>
-        <div class="button" @click="decode">Decode</div>
-        <textarea class="format" v-model="formatHTML" readonly="readonly"/>
+        <textarea v-model="text" />
+        <div @click="decode" class="button">
+            Decode
+        </div>
+        <textarea v-model="formatHTML" class="format" readonly="readonly" />
     </div>
 </template>
 <script>
@@ -16,10 +18,10 @@ export default {
     },
     methods: {
         decode() {
-            let decodeText = window.decodeURIComponent(this.text)
-            let start = decodeText.indexOf('=[') + 1
-            let end = decodeText.indexOf(']&') + 1
-            let jsonStr = decodeText.substring(start, end).replace(/\+{/g, '{')
+            const decodeText = window.decodeURIComponent(this.text)
+            const start = decodeText.indexOf('=[') + 1
+            const end = decodeText.indexOf(']&') + 1
+            const jsonStr = decodeText.substring(start, end).replace(/\+{/g, '{')
             this.formatHTML = JSON.stringify(JSON.parse(jsonStr), null, 4)
         }
     }

@@ -1,4 +1,4 @@
-import { setCookie, getCookie, toNativePage } from '~/functions/utils'
+import { setCookie, getCookie } from '~/functions/utils'
 export default ({ app: { router }, store }) => {
     
     // 缓存登录状态
