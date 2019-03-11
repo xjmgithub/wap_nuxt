@@ -25,7 +25,7 @@
 import mLine from '~/components/pay/line'
 import radioBtnRight from '~/components/radioBtnRight'
 import { formatAmount } from '~/functions/utils'
-import { createDVBOrder, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
+import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass } from '~/functions/pay'
 export default {
     components: {
         mLine,
@@ -134,11 +134,13 @@ export default {
             })
         },
         pay() {
-            if (this.selected) {
-                this.$router.push(`/hybrid/payment/wallet/paybyPass?card=${this.radioList[this.selected].authorizationCode}`)
-            } else {
-                this.payHandle(9002, 1, 1)
-            }
+            checkPass(this, this.wallet.accountNo, () => {
+                if (this.selected) {
+                    this.$router.push(`/hybrid/payment/wallet/paybyPass?card=${this.radioList[this.selected].authorizationCode}`)
+                } else {
+                    this.payHandle(9002, 1, 1)
+                }
+            })
         },
         formatAmount(num) {
             return formatAmount(num)
