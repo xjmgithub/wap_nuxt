@@ -88,7 +88,7 @@ export default {
                     }
                 })
                 .then(res => {
-                    if (res.data.resultCode === 200) {
+                    if (res.data.resultCode === 0) {
                         setCookie('lastpay','wallet')
                         this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
                     } else {

@@ -70,8 +70,7 @@ export default {
     mounted() {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.paymentAmount = Math.floor(param.paymentAmount)
-
-        this.$axios.get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.$store.state.country.countryCode}`).then(res => {
+        this.$axios.get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.$store.state.country.country}`).then(res => {
             if (res.data && res.data.length > 0) {
                 // 993102 ， 993101,9002
                 res.data.forEach(ele => {
@@ -90,7 +89,14 @@ export default {
             if (res.data && res.data.length > 0) {
                 const lastpay = getCookie('lastpay')
                 const list = [...res.data]
-                if (lastpay === 'wallet') {
+                if (lastpay === 'card') {
+                    this.radioList = list.concat([
+                        {
+                            brand: 'balance',
+                            cardType: 'Balance: '
+                        }
+                    ])
+                } else {
                     this.radioList = [
                         {
                             brand: 'balance',
@@ -98,13 +104,6 @@ export default {
                             checked: true
                         }
                     ].concat(list)
-                } else {
-                    this.radioList = list.concat([
-                        {
-                            brand: 'balance',
-                            cardType: 'Balance: '
-                        }
-                    ])
                 }
                 this.selected = this.radioList[0]
             }
