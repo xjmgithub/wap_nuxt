@@ -112,7 +112,7 @@ export const commonPayAfter = (ins, data, payType, apiType, product) => {
         if (apiType === 2) {
             window.location.href = data.tppRedirectUrl
         } else if (apiType === 3) {
-            window.location.href = '/DVB/proccess.php?seqNo=' + data.paySeqNo
+            ins.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
             ins.$alert('The payment method is not supported for the time being')
         }

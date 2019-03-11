@@ -59,7 +59,7 @@ export default {
                                 data => {
                                     this.$nuxt.$loading.finish()
                                     this.$store.commit('HIDE_SHADOW_LAYER')
-                                    commonPayAfter(this, data, 3, 2)
+                                    commonPayAfter(this, data, 3, 3)
                                 },
                                 opt
                             )
