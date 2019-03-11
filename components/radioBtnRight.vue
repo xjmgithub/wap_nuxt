@@ -2,22 +2,12 @@
     <div class="radio-box">
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
-                <div :class="item.brand" class="img-box" />
-                <span v-if="i==0">{{item.cardType}} {{currency}} {{ formatAmount(balance) }}</span>
+                <div :class="item.brand" class="img-box"/>
+                <span v-if="item.brand==='balance'">{{item.cardType}} {{currency}} {{ formatAmount(balance) }}</span>
                 <span v-else>{{item.cardType}}({{item.last4}})</span>
-                <input
-                    @click="checkThis(i)"
-                    :checked="item.checked?true:false"
-                    type="radio"
-                    name="pay-options"
-                    value="item.code"
-                >
-                <i />
-                <div
-                    @click="chargeWallet"
-                    v-if="i==0 &&balance < paymentAmount&& canRecharge"
-                    class="recharge"
-                >RECHARGE</div>
+                <input @click="checkThis(item)" :checked="i===0?true:false" type="radio" name="pay-options" value="item.code">
+                <i/>
+                <div @click="chargeWallet" v-if="item.brand==='balance'&&balance<paymentAmount&&canRecharge" class="recharge">RECHARGE</div>
             </label>
         </div>
     </div>
@@ -49,9 +39,9 @@ export default {
         }
     },
     methods: {
-        checkThis(index) {
-            this.$emit('pick', index)
-            this.canRecharge = index === 0
+        checkThis(item) {
+            this.$emit('pick', item)
+            this.canRecharge = item.brand === 'balance'
         },
         chargeWallet() {
             this.$emit('charge')

@@ -1,13 +1,11 @@
 <template>
     <div class="container">
-        <Password ref="pass" :toggle-view="true" @endinput="setPassword" placeholder="Enter Payment Password" />
+        <Password ref="pass" :toggle-view="true" @endinput="setPassword" placeholder="Enter Payment Password"/>
         <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/payment/wallet/resetPhone">
-                Forgot payment password?
-            </nuxt-link>
+            <nuxt-link to="/hybrid/payment/wallet/resetPhone">Forgot payment password?</nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
+            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"/>
         </div>
     </div>
 </template>
@@ -15,6 +13,7 @@
 import mButton from '~/components/button'
 import Password from '~/components/password'
 import { createDVBOrder, invoke, commonPayAfter } from '~/functions/pay'
+import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -59,6 +58,7 @@ export default {
                                 data => {
                                     this.$nuxt.$loading.finish()
                                     this.$store.commit('HIDE_SHADOW_LAYER')
+                                    setCookie('lastpay','card')
                                     commonPayAfter(this, data, 3, 3)
                                 },
                                 opt
@@ -88,7 +88,12 @@ export default {
                     }
                 })
                 .then(res => {
-                    this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
+                    if (res.data.resultCode === 200) {
+                        setCookie('lastpay','wallet')
+                        this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
+                    } else {
+                        this.$alert(res.data.resultMessage)
+                    }
                 })
                 .catch(err => {
                     this.$alert(err)

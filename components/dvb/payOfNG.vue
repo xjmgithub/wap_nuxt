@@ -24,7 +24,7 @@
 <script>
 import mLine from '~/components/pay/line'
 import radioBtnRight from '~/components/radioBtnRight'
-import { formatAmount } from '~/functions/utils'
+import { formatAmount, getCookie } from '~/functions/utils'
 import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass } from '~/functions/pay'
 export default {
     components: {
@@ -39,17 +39,11 @@ export default {
     },
     data() {
         return {
-            radioList: [
-                {
-                    brand: 'balance',
-                    cardType: 'Balance: ',
-                    checked: true
-                }
-            ],
+            radioList: [],
             walletDes: '',
             payStackDes: '',
             normalMethods: [],
-            selected: 0,
+            selected: {},
             paymentAmount: 0,
             currency: this.$store.state.country.currencySymbol
         }
@@ -59,14 +53,14 @@ export default {
             return (this.wallet && this.wallet.amount) || 0
         },
         canPay() {
-            if (this.selected === 0 && this.balance < this.paymentAmount) {
+            if (this.selected.brand === 'balance' && this.balance < this.paymentAmount) {
                 return false
             } else {
                 return true
             }
         },
         showDes() {
-            if (this.selected) {
+            if (this.selected.brand !== 'balance') {
                 return this.payStackDes
             } else {
                 return this.walletDes
@@ -94,15 +88,31 @@ export default {
 
         this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
             if (res.data && res.data.length > 0) {
-                res.data.forEach(ele => {
-                    this.radioList.push(ele)
-                })
+                const lastpay = getCookie('lastpay')
+                const list = [...res.data]
+                if (lastpay === 'wallet') {
+                    this.radioList = [
+                        {
+                            brand: 'balance',
+                            cardType: 'Balance: ',
+                            checked: true
+                        }
+                    ].concat(list)
+                } else {
+                    this.radioList = list.concat([
+                        {
+                            brand: 'balance',
+                            cardType: 'Balance: '
+                        }
+                    ])
+                }
+                this.selected = this.radioList[0]
             }
         })
     },
     methods: {
-        changeItem(index) {
-            this.selected = index
+        changeItem(item) {
+            this.selected = item
         },
         chargeWallet() {
             chargeWallet(this)
@@ -134,13 +144,14 @@ export default {
             })
         },
         pay() {
-            checkPass(this, this.wallet.accountNo, () => {
-                if (this.selected) {
-                    this.$router.push(`/hybrid/payment/wallet/paybyPass?card=${this.radioList[this.selected].authorizationCode}`)
-                } else {
-                    this.payHandle(9002, 1, 1)
-                }
-            })
+            this.canPay &&
+                checkPass(this, this.wallet.accountNo, () => {
+                    if (this.selected.brand !== 'balance') {
+                        this.$router.push(`/hybrid/payment/wallet/paybyPass?card=${this.selected.authorizationCode}`)
+                    } else {
+                        this.payHandle(9002, 1, 1)
+                    }
+                })
         },
         formatAmount(num) {
             return formatAmount(num)
