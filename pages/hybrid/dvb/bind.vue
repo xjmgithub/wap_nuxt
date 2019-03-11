@@ -20,7 +20,7 @@
             src="~assets/img/dvb/dvb_ug_off.png"
             style="width:100%"
         >
-        <more-methods :newUser="newUser" v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'&&isApp==1"/>
+        <more-methods :newUser="newUser" v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'"/>
         <div v-if="recharge_items.length<=0" class="demoDialog">
             <div @click="focusInput">
                 <p>{{LANG.input_your_smartcard_number}}</p>

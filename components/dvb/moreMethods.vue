@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="blank_bottom">&nbsp;</div>
-        <div @click="showAllWays" class="more-services untrim">
+        <div @click="showAllWays" class="more-services">
             <p>
                 {{$store.state.lang.more_recharge_method}}
                 <span class="all">
@@ -28,7 +28,7 @@ export default {
     },
     methods: {
         showAllWays() {
-            if (this.isApp === '1') {
+            if (this.isApp === 1) {
                 this.sendEvLog({
                     category: 'dvbservice',
                     action: 'other_paymentWay_click',
@@ -51,6 +51,7 @@ export default {
 .more-services {
     min-height: 3rem;
     color: #424242;
+    padding:0 1rem;
     & > p {
         font-weight: bold;
         position: relative;
