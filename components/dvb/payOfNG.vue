@@ -149,11 +149,11 @@ export default {
 <style lang="less" scoped>
 .pay-cont {
     margin: 0 auto;
-    padding:0 0.8rem;
+    padding: 0 0.8rem;
     padding-bottom: 5rem;
     & > p {
-        line-height:3.2rem;
-        font-size:1.1rem;
+        line-height: 3.2rem;
+        font-size: 1.1rem;
     }
     .bb1 {
         border-bottom: 1px solid #e0e0e0;
@@ -161,7 +161,7 @@ export default {
     .addCard {
         border-bottom: 1px solid #e0e0e0;
         font-size: 0.95rem;
-        height:2.7rem;
+        height: 2.7rem;
         line-height: 2.2rem;
         position: relative;
         .img-box {
@@ -197,8 +197,8 @@ export default {
         bottom: 0;
         position: fixed;
         padding: 0.8rem 0;
-        left:0.8rem;
-        right:0.8rem;
+        left: 0.8rem;
+        right: 0.8rem;
         border-top: 1px solid #e0e0e0;
         line-height: 2.3rem;
         background: #fff;

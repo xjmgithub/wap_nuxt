@@ -84,14 +84,13 @@ export const invoke = (ins, payToken, channel, callback, extend) => {
     })
         .then(res => {
             ins.isLoading = false
-            if (res.data.resultCode === 0) {
+            if (res.data.resultCode === '0') {
                 callback && callback(res.data)
             } else {
                 ins.$alert(res.data.resultMessage)
             }
         })
-        .catch(err => {
-            console.log(err)
+        .catch(() => {
             ins.isLoading = false
             ins.$alert(ins.$store.state.lang.error_network, () => {}, 'Retry')
         })
