@@ -7,7 +7,7 @@
                     <li v-for="(item,index) in methodsList" :key="index" v-show="item.fkPayChannelId<9002||item.fkPayChannelId>9034||wallet">
                         <label @click="changeMethod(item)" class="radio">
                             <input :value="item.name" v-model="selectMethod.name" type="radio" name="methods">
-                            <i />
+                            <i/>
                             <span>{{ item.name }}</span>
                             <br>
                             <span
@@ -20,23 +20,19 @@
                             @click="chargeWallet"
                             v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet.accountNo&&wallet.amount<payAmount"
                             class="recharge"
-                        >
-                            RECHARGE
-                        </div>
+                        >RECHARGE</div>
                     </li>
                 </ul>
                 <div v-show="selectMethod.description" class="note">
                     <p>Note:</p>
-                    <p v-html="selectMethod.description" />
+                    <p v-html="selectMethod.description"/>
                 </div>
             </div>
         </div>
         <div class="btn-box">
             <span class="total">{{LANG.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{formatAmount(payAmount) }}</span>
-            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">
-                {{LANG.dvb_recharge_btn_pay}}
-            </div>
+            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">{{LANG.dvb_recharge_btn_pay}}</div>
         </div>
     </div>
 </template>
@@ -240,19 +236,27 @@ export default {
     }
 }
 .btn-box {
-    width: 90%;
     bottom: 0;
     position: fixed;
-    left: 5%;
-    padding: 0.5rem 0;
+    padding: 0.8rem 0;
+    left: 0.8rem;
+    right: 0.8rem;
     border-top: 1px solid #e0e0e0;
     line-height: 2.3rem;
     background: #fff;
     .pay-btn {
-        margin-bottom: 0;
+        background-color: #008be9;
+        color: #fff;
+        height: 2.4rem;
         width: 7rem;
+        line-height: 2.4rem;
+        text-align: center;
+        font-size: 0.9rem;
         float: right;
-        margin-top: 0;
+        border-radius: 4px;
+        &.disabled {
+            background-color: #bdbdbd;
+        }
     }
     .total {
         font-size: 1.15rem;
