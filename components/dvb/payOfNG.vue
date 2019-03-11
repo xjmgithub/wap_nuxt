@@ -50,7 +50,7 @@ export default {
             payStackDes: '',
             normalMethods: [],
             selected: 0,
-            paymentAmount: '',
+            paymentAmount: 0,
             currency: this.$store.state.country.currencySymbol
         }
     },
