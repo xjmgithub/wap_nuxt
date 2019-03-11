@@ -10,19 +10,20 @@ export default {
 </script>
 <style lang="less" scoped>
 .line {
-    height:2px;
+    height:1px;
     width: 100%;
     position: relative;
     background-color: #eeeeee;
+    margin-bottom:0.8rem;
     .arrows {
        width: .8rem;
        height:.8rem;
-       border-bottom: 2px solid #eeeeee;
-       border-right:  2px solid #eeeeee;
+       border-bottom: 1px solid #eeeeee;
+       border-right:  1px solid #eeeeee;
        position: absolute;
        top:0;
        left:50%;
-       margin-top:-.3rem;
+       margin-top:-.35rem;
        background-color: #ffffff;
        transform: rotate(45deg);
     }

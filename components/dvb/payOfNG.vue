@@ -1,29 +1,23 @@
 <template>
-    <div class="wrapper">
+    <div class="pay-cont">
         <p>Pay with eWallet</p>
-        <mLine />
-        <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet" />
+        <mLine/>
+        <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet"/>
         <div @click="payHandle(993102, 3, 2)" class="addCard">
-            <div class="img-box" />
+            <div class="img-box"/>
             <span>Add a card to pay</span>
             <img src="~assets/img/dvb/ic_right_def_r.png">
         </div>
-        <p @click="payHandle(993101, 3, 2)" class="bb1">
-            Pay with Bank
-        </p>
-        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">
-            {{item.name}}
-        </p>
+        <p @click="payHandle(993101, 3, 2)" class="bb1">Pay with Bank</p>
+        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">{{item.name}}</p>
         <div v-show="showDes" class="note">
             <p>Note:</p>
-            <p v-html="showDes" />
+            <p v-html="showDes"/>
         </div>
         <div class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{ formatAmount(paymentAmount)}}</span>
-            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">
-                {{$store.state.lang.dvb_recharge_btn_pay}}
-            </div>
+            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
         </div>
     </div>
 </template>
@@ -62,7 +56,7 @@ export default {
     },
     computed: {
         balance() {
-            return this.wallet.amount
+            return (this.wallet && this.wallet.amount) || 0
         },
         canPay() {
             if (this.selected === 0 && this.balance < this.paymentAmount) {
@@ -153,20 +147,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.wrapper {
-    width: 90%;
+.pay-cont {
     margin: 0 auto;
-    padding-bottom: 5.5rem;
+    padding:0 0.8rem;
+    padding-bottom: 5rem;
     & > p {
-        padding: 1rem 0;
+        line-height:3.2rem;
+        font-size:1.1rem;
     }
     .bb1 {
         border-bottom: 1px solid #e0e0e0;
     }
     .addCard {
         border-bottom: 1px solid #e0e0e0;
-        padding: 0.45rem 0 0.7rem;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        height:2.7rem;
+        line-height: 2.2rem;
         position: relative;
         .img-box {
             display: inline-block;
@@ -198,11 +194,11 @@ export default {
         }
     }
     .btn-box {
-        width: 90%;
         bottom: 0;
         position: fixed;
-        left: 5%;
-        padding: 0.5rem 0;
+        padding: 0.8rem 0;
+        left:0.8rem;
+        right:0.8rem;
         border-top: 1px solid #e0e0e0;
         line-height: 2.3rem;
         background: #fff;
@@ -215,8 +211,6 @@ export default {
             text-align: center;
             font-size: 0.9rem;
             float: right;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
             border-radius: 4px;
             &.disabled {
                 background-color: #bdbdbd;

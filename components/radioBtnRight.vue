@@ -85,15 +85,12 @@ export default {
         background: url('~assets/img/dvb/ic_no_logo_card.png') no-repeat;
     }
 }
-.radio-box > div {
-    margin-top: 0.4rem;
-}
 .radio-box .radio {
     position: relative;
     cursor: pointer;
     display: block;
-    line-height: 1.8rem;
-    height: 1.8rem;
+    line-height: 2.2rem;
+    height: 2.2rem;
 }
 .radio-box input {
     position: absolute;
@@ -132,7 +129,7 @@ export default {
     opacity: 1;
 }
 .radio-box span {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     margin-left: 0.5rem;
 }
 .recharge {

@@ -1,25 +1,21 @@
 <template>
     <div class="wrapper">
-        <div class="container">
-            <card-info />
-            <order-info />
-            <pay-methods :wallet="wallet" v-if="false" />
-            <NG :wallet="wallet" />
-            <div v-show="isYueMo" style="color: white;padding:5%;position:absolute;bottom:12rem;">
-                {{$store.state.lang.monthly_billing}}:
-            </div>
-        </div>
+        <card-info/>
+        <order-info/>
+        <pay-of-NG :wallet="wallet" v-if="country==='NG'"/>
+        <pay-methods :wallet="wallet" v-else/>
+        <div v-show="isYueMo" style="color: white;padding:5%;position:absolute;bottom:12rem;">{{$store.state.lang.monthly_billing}}:</div>
     </div>
 </template>
 <script>
-import NG from '~/components/pay/NG'
+import payOfNG from '~/components/dvb/payOfNG'
 import cardInfo from '~/components/dvb/cardInfo'
 import orderInfo from '~/components/dvb/orderInfo'
 import payMethods from '~/components/dvb/payMethods'
 export default {
     layout: 'base',
     components: {
-        NG,
+        payOfNG,
         cardInfo,
         orderInfo,
         payMethods
@@ -27,7 +23,8 @@ export default {
     data() {
         return {
             isLoading: false,
-            isYueMo: false
+            isYueMo: false,
+            country: this.$store.state.country.country
         }
     },
     watch: {
@@ -69,7 +66,7 @@ export default {
         if (threeHoursBefore <= now && threeHoursAfter >= now) {
             this.isYueMo = true
         }
-        
+
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
 

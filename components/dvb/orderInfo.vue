@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="gap" />
+        <div class="gap"/>
         <div class="order-msg">
             <div class="clearfix">
                 <span>{{LANG.dvb_recharge_link_recharge}}</span>
@@ -13,7 +13,7 @@
                 <span v-else class="fr no-time">{{LANG.recharge_no_promotion}}</span>
             </div>
         </div>
-        <div class="gap" />
+        <div class="gap"/>
         <div class="order-msg">
             <div class="clearfix">
                 <span>{{LANG.results_recharge_amount}}</span>
@@ -28,7 +28,7 @@
                 <span class="fr">{{ currency }} {{ paymentAmount | formatMoney }}</span>
             </div>
         </div>
-        <div class="gap" />
+        <div class="gap"/>
     </div>
 </template>
 <script>
@@ -74,9 +74,8 @@ export default {
     background: #eee;
 }
 .order-msg {
-    width: 90%;
     margin: 0 auto;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.8rem;
     & > div {
         margin: 0.5rem 0;
         .declare {
