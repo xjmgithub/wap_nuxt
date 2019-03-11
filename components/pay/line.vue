@@ -26,6 +26,7 @@ export default {
        margin-top:-.35rem;
        background-color: #ffffff;
        transform: rotate(45deg);
+       margin-left: -.4rem;
     }
 }
 </style>
