@@ -118,14 +118,7 @@ export default {
     },
     watch: {
         list(nv, ov) {
-            let maxMoney = 0
-            const list = [...nv]
-            list.forEach((item, index) => {
-                if (item.rate_amount > maxMoney) {
-                    maxMoney = item.rate_amount
-                    this.goodIndex = index
-                }
-            })
+            this.setIndex()
         },
         countList(nv, ov) {
             this.num = 1
@@ -134,7 +127,19 @@ export default {
             this.$emit('update', nv)
         }
     },
+    mounted() {
+        this.setIndex()
+    },
     methods: {
+        setIndex() {
+            let maxMoney = 0
+            this.list.forEach((item, index) => {
+                if (item.rate_amount > maxMoney) {
+                    maxMoney = item.rate_amount
+                    this.goodIndex = index
+                }
+            })
+        },
         selected(index) {
             this.goodIndex = index
         },
