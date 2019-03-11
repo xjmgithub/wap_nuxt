@@ -7,8 +7,7 @@ export default {
     pvCountlyServer: 'http://10.0.243.111:8080',
     evCountlyServer: 'http://10.0.243.111:8080',
     gtbankJdkHost: 'https://test-gateway.mastercard.com',
-    proxyHost: 'http://dev.upms.startimestv.com/',
-    apiURL: 'http://dev.upms.startimestv.com/',
-    apiBrowserURL: 'http://dev.upms.startimestv.com/',
-    mechantRequestUrl: 'http://dev-appserver.bj.startimes.com.cn:8010/'
+    proxyHost: 'https://qa.upms.startimestv.com/',
+    apiURL: 'https://qa.upms.startimestv.com/',
+    mechantRequestUrl: 'test1-appserver.bj.startimes.com.cn:8010/'
 }

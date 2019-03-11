@@ -32,16 +32,8 @@
         </div>
         <div v-show="firstChargeTip" class="first-charge">
             <img src="~assets/img/dvb/ic_gift_def.png">
-            <div style="width:65%;float:left;">
-                {{firstChargeTip}}
-            </div>
-            <div
-                v-show="firstChargeDetails"
-                @click="showDetails"
-                class="first-charge-detail"
-            >
-                {{LANG.first_recharge_detail}}
-            </div>
+            <div style="width:65%;float:left;">{{firstChargeTip}}</div>
+            <div v-show="firstChargeDetails" @click="showDetails" class="first-charge-detail">{{LANG.first_recharge_detail}}</div>
         </div>
         <div v-show="countList.length>1" class="count-box clearfix">
             <p>{{LANG.results_recharge_amount}}</p>
@@ -49,13 +41,8 @@
                 <li v-for="(item,index) in countList" :key="index" @click="numThis(item)">
                     <label class="radio">
                         {{ item }}
-                        <input
-                            :value="item"
-                            :checked="item==num"
-                            type="radio"
-                            name="count"
-                        >
-                        <i />
+                        <input :value="item" :checked="item==num" type="radio" name="count">
+                        <i/>
                     </label>
                 </li>
             </ul>
@@ -118,17 +105,15 @@ export default {
                 return ''
             }
         },
-        payAmount() {
+        rechargeObj() {
             const item = this.list[this.goodIndex]
-            return Number(this.discount(item)) * Number(this.num)
-        },
-        rechargeAmount() {
-            const item = this.list[this.goodIndex]
-            return Number(item.rate_amount) * Number(this.num) || 0
-        },
-        rechargeDes() {
-            const name = this.list[this.goodIndex].rate_display_name
-            return this.formatName(name) + ' x ' + this.num
+            const obj = {
+                payAmount: Number(this.discount(item)) * Number(this.num),
+                rechargeAmount: Number(item.rate_amount) * Number(this.num) || 0,
+                rechargeDes: this.formatName(item.rate_display_name) + ' x ' + this.num
+            }
+            this.$emit('update', obj)
+            return obj
         }
     },
     watch: {
@@ -144,22 +129,10 @@ export default {
         },
         countList(nv, ov) {
             this.num = 1
+        },
+        rechargeObj(nv, ov) {
+            this.$emit('update', nv)
         }
-    },
-    updated() {
-        this.$emit('update', {
-            payAmount: this.payAmount,
-            rechargeAmount: this.rechargeAmount,
-            rechargeDes: this.rechargeDes
-        })
-    },
-    mounted() {
-        this.$emit('update', {
-            // TODO 待优化
-            payAmount: this.payAmount,
-            rechargeAmount: this.rechargeAmount,
-            rechargeDes: this.rechargeDes
-        })
     },
     methods: {
         selected(index) {
@@ -174,10 +147,8 @@ export default {
                 action: 'promotion_detail_click',
                 label: 'DVB_H5',
                 value: 10,
-                service_type: 'Recharge',
-                page_from: 'new'
+                service_type: 'Recharge'
             })
-
             this.$alert(this.firstChargeDetails)
         },
         discount(item) {

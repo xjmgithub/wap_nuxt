@@ -13,7 +13,7 @@
                 type="tel"
                 maxlength="13"
             >
-            <span :class="cardState === 'VALID' ? 'program-state-valid' : 'program-state'" class="card_state">
+            <span v-show="!error" :class="cardState === 'VALID' ? 'program-state-valid' : 'program-state'" class="card_state">
                 <span>{{cardStateDes}}</span>
             </span>
             <span :class="{showError:error}" class="error-card">{{LANG.h5_input_card_wrong}}</span>
@@ -25,9 +25,7 @@
                 <img @click="clearVal" v-show="oriCardNum!=''" src="~assets/img/dvb/delete.png">
             </div>
             <ul v-show="showList" class="history">
-                <li v-for="(item,index) in list" @click="choose(index)" :key="index">
-                    {{ formatCard(item) }}
-                </li>
+                <li v-for="(item,index) in list" @click="choose(index)" :key="index">{{ formatCard(item) }}</li>
             </ul>
         </div>
     </div>

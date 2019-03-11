@@ -1,10 +1,8 @@
 <template>
     <div>
-        <div class="blank_bottom">
-&nbsp;
-        </div>
-        <div class="more-services untrim">
-            <p @click="showAllWays">
+        <div class="blank_bottom">&nbsp;</div>
+        <div @click="showAllWays" class="more-services untrim">
+            <p>
                 {{$store.state.lang.more_recharge_method}}
                 <span class="all">
                     {{$store.state.lang.membership_all}}
@@ -15,11 +13,12 @@
     </div>
 </template>
 <script>
+import { toNativePage } from '~/functions/utils'
 export default {
     props: {
         newUser: {
             type: Boolean,
-            default: false
+            default: true
         }
     },
     data() {
@@ -38,7 +37,7 @@ export default {
                     service_type: 'Recharge',
                     page_from: 'new'
                 })
-                window.getChannelId.toAppPage(3, 'com.star.mobile.video.smartcard.recharge.RechargeActivity?fromNewRecharge=true', '')
+                toNativePage('com.star.mobile.video.smartcard.recharge.RechargeActivity?fromNewRecharge=true')
             }
         }
     }

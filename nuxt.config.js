@@ -1,4 +1,3 @@
-import pkg from './package'
 import env from './env'
 
 export default {
@@ -40,12 +39,11 @@ export default {
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
         '@nuxtjs/axios'
-        // ['@nuxtjs/pwa', { icon: false }],
     ],
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
-        baseURL: process.env.NODE_ENV == 'production' ? env.apiURL : '/',
-        browserBaseURL: process.env.NODE_ENV == 'production' ? env.apiBrowserURL : '/',
+        baseURL: process.env.NODE_ENV !== 'production' ? env.apiURL : '/',
+        browserBaseURL: '/',
         proxy: process.env.NODE_ENV !== 'production'
     },
     proxy: {

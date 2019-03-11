@@ -1,14 +1,14 @@
 <template>
     <div class="wrapper">
         <div class="untrim">
-            <card-input ref="cardInput" :list="cardList" @endInput="checkout" @typing="canBuy=false" :stop-days="stopDays" :card-state="cardState" />
+            <card-input ref="cardInput" :list="cardList" @endInput="checkout" @typing="canBuy=false" :stop-days="stopDays" :card-state="cardState"/>
             <div v-if="recharge_items.length>0" class="program-box">
                 <p v-show="canBuy">
                     {{LANG.topup_bouquet}}:
                     <span class="program-name">{{ program_name }}</span>
                 </p>
             </div>
-            <goods ref="goodsPicker" v-if="recharge_items.length>0" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm" />
+            <goods ref="goodsPicker" v-if="recharge_items.length>0" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm"/>
             <div v-if="recharge_items.length>0" @click="buyNow" :class="{disabled:!canBuy}" class="pay-btn">
                 <span class="need-pay">{{ currency }}{{ formatAmount(payAmount) }}</span>
                 {{LANG.next_}}
@@ -20,17 +20,15 @@
             src="~assets/img/dvb/dvb_ug_off.png"
             style="width:100%"
         >
-        <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'&&isApp==1" />
-        <div v-if="!recharge_items.length>0&&cardList.length<=0" class="demoDialog">
+        <more-methods :newUser="newUser" v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'&&isApp==1"/>
+        <div v-if="recharge_items.length<=0" class="demoDialog">
             <div @click="focusInput">
                 <p>{{LANG.input_your_smartcard_number}}</p>
                 <div>
                     <img src="~assets/img/dvb/icon_smart_card.png">
                 </div>
                 <p>{{LANG.recharge_your_decoder_account}}</p>
-                <p class="tips">
-                    {{LANG.Tips_check_your_Balance}}
-                </p>
+                <p class="tips">{{LANG.Tips_check_your_Balance}}</p>
             </div>
             <p>
                 {{LANG.if_you_are_not_a_startimes_tv_user}}
@@ -48,7 +46,7 @@
 import cardInput from '~/components/dvb/input'
 import goods from '~/components/dvb/goods'
 import moreMethods from '~/components/dvb/moreMethods'
-import { formatAmount } from '~/functions/utils'
+import { formatAmount, toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -94,12 +92,22 @@ export default {
         }
     },
     async asyncData({ app: { $axios }, store }) {
+        // TODO TRY catch
         $axios.setHeader('token', store.state.token)
         const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
         return {
             cardList: Array.from(data, x => x.smardcard_no) || [],
-            newUser: data.length > 0
+            newUser: data.length <= 0
         }
+    },
+    mounted() {
+        this.sendEvLog({
+            category: 'dvbservice',
+            action: 'recharge_show',
+            label: 'DVB_H5',
+            value: 10,
+            service_type: 'Recharge'
+        })
     },
     methods: {
         changeNorm(obj) {
@@ -118,8 +126,7 @@ export default {
                 action: 'onlineServiceBtn_click',
                 label: 'dvb_recharge_empty_decoder',
                 value: 1,
-                service_type: 'Recharge',
-                page_from: 'new'
+                service_type: 'Recharge'
             })
             if (this.countryCode.toLowerCase() === 'ke') {
                 window.location.href = 'https://goo.gl/forms/AUlQ9ECJs0XC7zd72'
@@ -201,7 +208,7 @@ export default {
             this.sendEvLog({
                 category: 'dvbservice',
                 action: 'smartcard_input',
-                label: newUser ? 'AddCardUser' : 'NewCardUser',
+                label: newUser ? 'NewCardUser' : 'AddCardUser',
                 value: val,
                 service_type: 'Recharge',
                 page_from: 'new',
@@ -213,7 +220,7 @@ export default {
             this.sendEvLog({
                 category: 'dvbservice',
                 action: 'load_recharge_item',
-                label: newUser ? 'AddCardUser' : 'NewCardUser',
+                label: newUser ? 'NewCardUser' : 'AddCardUser',
                 value: val,
                 SmartCardNo: card,
                 BouquetName: this.program_name,
@@ -232,40 +239,39 @@ export default {
                 this.logSmartInput(card, -1)
                 return false
             } else if (!reg.test(card)) {
-                    this.logSmartInput(card, -1)
-                    this.$refs.cardInput.showError()
-                    return false
-                } else if (!reg3.test(card)) {
-                        if (reg2.test(card)) {
-                            this.logSmartInput(card, 0)
-                            this.$confirm(
-                                this.$store.state.lang.besure_input_ewallet,
-                                () => {
-                                    window.getChannelId.toAppPage(3, 'com.star.mobile.video.wallet.WalletRechargeActivity', '')
-                                },
-                                () => {},
-                                this.$store.state.lang.agree_tip,
-                                this.$store.state.lang.refuse_tip
-                            )
-                        } else {
-                            this.logSmartInput(card, 0)
-                            this.$confirm(
-                                this.$store.state.lang.besure_have_card,
-                                () => {
-                                    this.toLoadurl()
-                                },
-                                () => {},
-                                this.$store.state.lang.agree_tip,
-                                this.$store.state.lang.refuse_tip
-                            )
-                        }
-                        return false
-                    } else {
-                        this.logSmartInput(card, 1)
-                    }
+                this.logSmartInput(card, -1)
+                this.$refs.cardInput.showError()
+                return false
+            } else if (!reg3.test(card)) {
+                if (reg2.test(card)) {
+                    this.logSmartInput(card, 0)
+                    this.$confirm(
+                        this.$store.state.lang.besure_input_ewallet,
+                        () => {
+                            toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
+                        },
+                        () => {},
+                        this.$store.state.lang.agree_tip,
+                        this.$store.state.lang.refuse_tip
+                    )
+                } else {
+                    this.logSmartInput(card, 0)
+                    this.$confirm(
+                        this.$store.state.lang.besure_have_card,
+                        () => {
+                            this.toLoadurl()
+                        },
+                        () => {},
+                        this.$store.state.lang.agree_tip,
+                        this.$store.state.lang.refuse_tip
+                    )
+                }
+                return false
+            } else {
+                this.logSmartInput(card, 1)
+            }
 
             this.isLoading = true
-
             this.$axios
                 .get(`/self/v1/user/smartcardinfo/sync4h5?smartcard=${card}&is_bind_card=${!!this.isLogin}`)
                 .then(res => {
@@ -277,16 +283,18 @@ export default {
                         this.$refs.cardInput.showError()
                         return false
                     }
-                    this.canBuy = true
+
                     this.program_name = data.program_name
                     this.tv_platform = data.tv_platform
                     this.cardState = data.smartcard_status
                     this.stopDays = data.penalty_stop
                     this.money = data.money
                     this.cardHaveCharged = data.have_rechareged
+                    this.recharge_items = data.recharge_items || []
+
                     if (data.recharge_items && data.recharge_items.length > 0) {
-                        this.recharge_items = data.recharge_items || []
                         this.logloadItem(card, 1)
+                        this.canBuy = true
                     } else {
                         this.logloadItem(card, 0)
                         this.canBuy = false
@@ -298,16 +306,14 @@ export default {
                 .catch(err => {
                     this.logloadItem(card, 1)
                     this.isLoading = false
-
+                    this.canBuy = false
                     this.$nextTick(() => {
                         if (err.status === 401) {
                             this.$alert(this.$store.state.lang.account_signed_elsewhere, () => {
                                 if (this.isApp === 1) {
-                                    window.getChannelId.toAppPage(
-                                        3,
+                                    toNativePage(
                                         'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
-                                            encodeURIComponent(window.location.href),
-                                        ''
+                                            encodeURIComponent(window.location.href)
                                     )
                                 }
                             })
