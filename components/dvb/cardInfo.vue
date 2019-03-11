@@ -64,7 +64,7 @@ export default {
             return this.$store.state.lang
         }
     },
-    beforeMount() {
+    mounted() {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.state = param.smartcard_status
         this.stopDays = param.stop_days ? dayjs(param.stop_days).format('MMM DD YYYY') : ''

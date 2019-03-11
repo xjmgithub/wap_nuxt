@@ -54,7 +54,7 @@ export default {
             return this.$store.state.lang
         }
     },
-    beforeMount() {
+    mounted() {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.rechargeExplanation = param.rechargeExplanation
         this.cardHaveCharged = param.cardHaveCharged

@@ -81,7 +81,7 @@ export default {
             }
         }
     },
-    beforeMount() {
+    mounted() {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.payAmount = param.paymentAmount
         this.$axios

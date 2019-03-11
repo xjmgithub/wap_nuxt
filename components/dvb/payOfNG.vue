@@ -73,7 +73,7 @@ export default {
             }
         }
     },
-    beforeMount() {
+    mounted() {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.paymentAmount = Math.floor(param.paymentAmount)
 
