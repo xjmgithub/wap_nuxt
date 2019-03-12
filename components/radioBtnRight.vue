@@ -88,29 +88,27 @@ export default {
 }
 
 .radio-box .radio i {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.3rem;
+    height: 1.3rem;
     outline: 0;
     border: 2px solid #ddd;
     background: #ffffff;
-    border-radius: 50%;
+    border-radius: 100%;
     float: right;
-    position: relative;
     top: 0.35rem;
+    display: flex;
 }
 
 .radio-box i:after {
-    position: absolute;
     content: '';
-    top: 0.13rem;
-    left: 0.13rem;
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 100%;
     background-color: #008be9;
     opacity: 0;
     transition: opacity 0.1s;
     -webkit-transition: opacity 0.1s;
+    margin:auto;
 }
 .radio-box input:checked + i {
     border: 2px solid #008be9;
