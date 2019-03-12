@@ -2,7 +2,7 @@
     <div class="container">
         <Password ref="pass" :toggle-view="true" @endinput="setPassword" placeholder="Enter Payment Password"/>
         <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/payment/wallet/resetPhone">Forgot payment password?</nuxt-link>
+            <a @click="forgetPass">Forgot payment password?</a>
         </div>
         <div class="footer">
             <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"/>
@@ -13,7 +13,7 @@
 import mButton from '~/components/button'
 import Password from '~/components/password'
 import { createDVBOrder, invoke, commonPayAfter } from '~/functions/pay'
-import { setCookie } from '~/functions/utils'
+import { setCookie, toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -41,6 +41,13 @@ export default {
         setPassword(data) {
             this.password = this.$refs.pass.password
         },
+        forgetPass() {
+            if (this.$store.state.appType === 1) {
+                toNativePage('com.star.mobile.video.wallet.WalletForgetPwdActivity')
+            } else {
+                this.$router.push('/hybrid/payment/wallet/resetPhone')
+            }
+        },
         nextStep() {
             const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
             const payObj = JSON.parse(sessionStorage.getItem('payObj'))
@@ -58,7 +65,7 @@ export default {
                                 data => {
                                     this.$nuxt.$loading.finish()
                                     this.$store.commit('HIDE_SHADOW_LAYER')
-                                    setCookie('lastpay','card')
+                                    setCookie('lastpay', 'card')
                                     commonPayAfter(this, data, 3, 3)
                                 },
                                 opt
@@ -89,7 +96,7 @@ export default {
                 })
                 .then(res => {
                     if (res.data.resultCode === 0) {
-                        setCookie('lastpay','wallet')
+                        setCookie('lastpay', 'wallet')
                         this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
                     } else {
                         this.$alert(res.data.resultMessage)

@@ -2,7 +2,7 @@
     <div class="wrapper">
         <card-info/>
         <order-info/>
-        <pay-of-NG :wallet="wallet" v-if="country==='1NG'"/>
+        <pay-of-NG :wallet="wallet" v-if="country==='NG'"/>
         <pay-methods :wallet="wallet" v-else/>
         <div v-show="isYueMo" style="color: white;padding:5%;position:absolute;bottom:12rem;">{{$store.state.lang.monthly_billing}}:</div>
     </div>

@@ -20,7 +20,9 @@
                             @click="chargeWallet"
                             v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet.accountNo&&wallet.amount<payAmount"
                             class="recharge"
-                        >RECHARGE</div>
+                        >
+                            RECHARGE
+                        </div>
                     </li>
                 </ul>
                 <div v-show="selectMethod.description" class="note">
