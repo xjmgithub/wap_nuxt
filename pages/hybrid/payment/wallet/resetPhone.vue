@@ -41,7 +41,7 @@ export default {
         }
     },
     mounted() {
-        const walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
+        const walletAccount = JSON.parse(sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
         if (!this.nocheck) {
             if (walletAccount.phone) {
