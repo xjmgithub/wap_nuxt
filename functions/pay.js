@@ -87,11 +87,13 @@ export const invoke = (ins, payToken, channel, callback, extend) => {
             if (res.data.resultCode === '0') {
                 callback && callback(res.data)
             } else {
+                ins.$nuxt.$loading.finish()
                 ins.$alert(res.data.resultMessage)
             }
         })
         .catch(() => {
             ins.isLoading = false
+            ins.$nuxt.$loading.finish()
             ins.$alert(ins.$store.state.lang.error_network, () => {}, 'Retry')
         })
 }

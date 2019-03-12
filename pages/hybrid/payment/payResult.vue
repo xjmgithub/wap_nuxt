@@ -1,33 +1,25 @@
 <template>
     <div :class="{'grey-back':result==2}" class="container">
-        <loading v-show="loadStatus" />
+        <loading v-show="loadStatus"/>
         <template v-if="result=='1'&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
-            <p class="success">
-                Payment Successful
-            </p>
+            <p class="success">Payment Successful</p>
             <p class="money">
                 {{money}}
                 <span>{{currency}}</span>
             </p>
             <p
                 class="msg lf"
-            >
-                Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
-            </p>
+            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt>
-            <p class="fail">
-                Payment Failed
-            </p>
-            <p class="msg">
-                {{fail_message}}
-            </p>
+            <p class="fail">Payment Failed</p>
+            <p class="msg">{{fail_message}}</p>
         </template>
         <div v-show="!loadStatus" class="footer">
-            <mButton @click="refresh" text="REFRESH" />
-            <mButton @click="click" text="OK" />
+            <mButton @click="refresh" text="REFRESH"/>
+            <mButton @click="click" text="OK"/>
         </div>
     </div>
 </template>
@@ -78,12 +70,12 @@ export default {
                     _this.money = data.amount
                     _this.currency = data.currencySymbol
                     clearInterval(timer)
-                    window.getChannelId&& window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
+                    window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
                 } else {
                     _this.result = 2
                     _this.loadStatus = false
                     clearInterval(timer)
-                    window.getChannelId&& window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
+                    window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
                 }
             })
         }, 4000)
@@ -92,7 +84,7 @@ export default {
         click() {
             if (this.isApp === 1) {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
-                window.getChannelId.finish()
+                window.getChannelId && window.getChannelId.finish()
             } else if (this.isApp === 2) {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
@@ -109,8 +101,8 @@ export default {
 .container {
     padding: 5rem 1rem 0;
     text-align: center;
-    min-height:100%;
-    background:white;
+    min-height: 100%;
+    background: white;
     &.grey-back {
         height: 100vh;
         background: #eeeeee;
