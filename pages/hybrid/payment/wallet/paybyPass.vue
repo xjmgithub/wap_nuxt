@@ -53,7 +53,8 @@ export default {
             const payObj = JSON.parse(sessionStorage.getItem('payObj'))
             const order = JSON.parse(sessionStorage.getItem('order-info'))
             const opt = this.card ? { authorization_code: this.card } : null
-
+            this.$nuxt.$loading.start()
+            this.$store.commit('SHOW_SHADOW_LAYER')
             if (this.card) {
                 this.$axios.get(`/mobilewallet/v1/accounts/${ewallet.accountNo}/pay-password?password=${this.password}`).then(res => {
                     if (res.data.code === 0) {
@@ -95,6 +96,8 @@ export default {
                     }
                 })
                 .then(res => {
+                    this.$nuxt.$loading.finish()
+                    this.$store.commit('HIDE_SHADOW_LAYER')
                     if (res.data.resultCode === 0) {
                         setCookie('lastpay', 'wallet')
                         this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
@@ -103,6 +106,8 @@ export default {
                     }
                 })
                 .catch(err => {
+                    this.$nuxt.$loading.finish()
+                    this.$store.commit('HIDE_SHADOW_LAYER')
                     this.$alert(err)
                 })
         }

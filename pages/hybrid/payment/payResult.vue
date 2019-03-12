@@ -5,8 +5,8 @@
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
             <p class="success">Payment Successful</p>
             <p class="money">
-                {{money}}
                 <span>{{currency}}</span>
+                {{money}}
             </p>
             <p
                 class="msg lf"

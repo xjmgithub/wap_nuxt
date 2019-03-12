@@ -7,7 +7,7 @@
                 <span v-else>{{item.cardType}}({{item.last4}})</span>
                 <input @click="checkThis(item)" :checked="i===0?true:false" type="radio" name="pay-options" value="item.code">
                 <i/>
-                <div @click="chargeWallet" v-if="item.brand==='balance'&&balance<paymentAmount&&canRecharge" class="recharge">RECHARGE</div>
+                <div @click="chargeWallet" v-if="item.brand==='balance'&&balance<paymentAmount" class="recharge">RECHARGE</div>
             </label>
         </div>
     </div>
@@ -34,14 +34,12 @@ export default {
     },
     data() {
         return {
-            currency: this.$store.state.country.currencySymbol,
-            canRecharge: true
+            currency: this.$store.state.country.currencySymbol
         }
     },
     methods: {
         checkThis(item) {
             this.$emit('pick', item)
-            this.canRecharge = item.brand === 'balance'
         },
         chargeWallet() {
             this.$emit('charge')
@@ -115,6 +113,12 @@ export default {
 }
 .radio-box input:checked + i:after {
     opacity: 1;
+}
+.radio-box input + i + .recharge {
+    display:none;
+}
+.radio-box input:checked + i + .recharge {
+    display:block
 }
 .radio-box span {
     font-size: 0.95rem;
