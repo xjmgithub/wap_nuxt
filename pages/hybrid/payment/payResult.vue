@@ -82,10 +82,10 @@ export default {
     },
     methods: {
         click() {
-            if (this.isApp === 1) {
+            if (this.isApp === 1||this.isApp === '1') {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 window.getChannelId && window.getChannelId.finish()
-            } else if (this.isApp === 2) {
+            } else if (this.isApp === 2||this.isApp === '2') {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
                 this.$router.push('/browser')

@@ -68,7 +68,10 @@ export default {
         }
 
         const param = JSON.parse(sessionStorage.getItem('order-info'))
-        sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
+        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res=>{
+            this.wallet = res.data
+            sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
+        })
 
         this.sendEvLog({
             category: 'dvbservice',
