@@ -40,12 +40,6 @@
 import { formatAmount } from '~/functions/utils'
 import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass } from '~/functions/pay'
 export default {
-    props: {
-        wallet: {
-            type: Object,
-            default: null
-        }
-    },
     data() {
         const user = this.$store.state.user
         return {
@@ -54,7 +48,8 @@ export default {
             methodsList: [],
             selectMethod: {},
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
-            payAmount: 0
+            payAmount: 0,
+            wallet:{}
         }
     },
     computed: {
@@ -80,6 +75,11 @@ export default {
     mounted() {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.payAmount = param.paymentAmount
+
+        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res=>{
+            this.wallet = res.data
+            sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
+        })
         this.$axios
             .get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.countryCode}`)
             .then(res => {

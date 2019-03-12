@@ -31,12 +31,6 @@ export default {
         mLine,
         radioBtnRight
     },
-    props: {
-        wallet: {
-            type: Object,
-            default: null
-        }
-    },
     data() {
         return {
             radioList: [],
@@ -45,6 +39,7 @@ export default {
             normalMethods: [],
             selected: {},
             paymentAmount: 0,
+            wallet:{},
             currency: this.$store.state.country.currencySymbol
         }
     },
@@ -84,6 +79,12 @@ export default {
                 })
             }
         })
+        
+        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res=>{
+            this.wallet = res.data
+            sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
+        })
+
 
         this.$axios
             .get('/payment/v2/pay-channels/993102/card-auth')
