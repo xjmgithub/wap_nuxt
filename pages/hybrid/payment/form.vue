@@ -9,19 +9,12 @@
                     :data-id="item.code"
                     :data-type="item.formType"
                 >
-                    <p class="network">
-                        {{item.name}}
-                    </p>
+                    <p class="network">{{item.name}}</p>
                     <div class="radio-box">
                         <div v-for="(radio,i) in item.optionArr" :key="i">
                             <label class="radio">
-                                <input
-                                    :name="item.name"
-                                    :value="radio"
-                                    :checked="radio === item.defaultValue ? 'checked' : false"
-                                    type="radio"
-                                >
-                                <i />
+                                <input :name="item.name" :value="radio" :checked="radio === item.defaultValue ? 'checked' : false" type="radio">
+                                <i/>
                                 <span>{{radio}}</span>
                             </label>
                         </div>
@@ -38,9 +31,7 @@
                     :data-name="item.name"
                     class="form-item input-tel"
                 >
-                    <div v-if="item.countryCallingCode" class="prefix">
-                        +{{item.countryCallingCode}}
-                    </div>
+                    <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
                         <input :placeholder="item.placeholder" type="tel">
                     </div>
@@ -65,14 +56,14 @@
             </div>
         </template>
         <div class="footer">
-            <mButton :disabled="false" class="next" text="NEXT" />
-            <!-- <mButton class="cancel" :disabled="false" text="CANCEL" /> -->
+            <mButton :disabled="false" class="next" text="NEXT"/>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import $ from 'jquery'
+import { invoke, commonPayAfter } from '~/functions/pay'
 export default {
     layout: 'base',
     components: {
@@ -178,33 +169,15 @@ export default {
                     optarr[id] = value
                 }
 
-                _this.$axios
-                    .post('/payment/api/v2/invoke-payment', {
-                        payToken: _this.payToken,
-                        payChannelId: _this.payChannelId,
-                        tradeType: 'JSAPI',
-                        signType: 'MD5',
-                        extendInfo: optarr
-                    })
-                    .then(res => {
-                        if (res.data && res.data.resultCode === 0) {
-                            if (_this.paymethod.appInterfaceMode === 2) {
-                                // open other payment
-                                window.open(res.data.tppRedirectUrl)
-                                _this.$router.push(`/hybrid/payment/payResult?payToken=${_this.payToken}`)
-                            } else if (_this.paymethod.appInterfaceMode === 3) {
-                                // processing
-                                _this.$router.push(`/hybrid/payment/payResult?payToken=${this.payToken}`)
-                            } else {
-                                // SDK 和 其他 不支持,
-                                // payType 1 钱包支付
-                                _this.$alert('The payment method is not supported for the time being')
-                            }
-                        } else {
-                            // TODO fail
-                            _this.$router.push(`/hybrid/payment/payResult?payToken=${_this.payToken}`)
-                        }
-                    })
+                invoke(
+                    _this,
+                    _this.payToken,
+                    _this.payChannelId,
+                    data => {
+                        commonPayAfter(_this, data, 3, _this.paymethod.appInterfaceMode)
+                    },
+                    optarr
+                )
             })
 
         function ifShow() {
@@ -250,6 +223,7 @@ export default {
 <style lang="less" scoped>
 .container {
     padding: 3rem 3rem 0;
+    background: white;
     .form-item {
         margin: 2rem 0;
     }
