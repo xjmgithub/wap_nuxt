@@ -224,6 +224,7 @@ export default {
 .container {
     padding: 3rem 3rem 0;
     background: white;
+    height:100%;
     .form-item {
         margin: 2rem 0;
     }
