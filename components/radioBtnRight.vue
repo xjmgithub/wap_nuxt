@@ -95,7 +95,7 @@ export default {
     background: #ffffff;
     border-radius: 100%;
     float: right;
-    top: 0.35rem;
+    margin-top: 0.45rem;
     display: flex;
 }
 
