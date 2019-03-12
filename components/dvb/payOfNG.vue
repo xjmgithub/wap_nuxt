@@ -85,29 +85,47 @@ export default {
             }
         })
 
-        this.$axios.get('/payment/v2/pay-channels/993102/card-auth').then(res => {
-            if (res.data && res.data.length > 0) {
+        this.$axios
+            .get('/payment/v2/pay-channels/993102/card-auth')
+            .then(res => {
                 const lastpay = getCookie('lastpay')
-                const list = [...res.data]
-                if (lastpay === 'card') {
-                    this.radioList = list.concat([
-                        {
-                            brand: 'balance',
-                            cardType: 'Balance: '
-                        }
-                    ])
+                if (res.data && res.data.length > 0) {
+                    const list = [...res.data]
+                    if (lastpay === 'card') {
+                        this.radioList = list.concat([
+                            {
+                                brand: 'balance',
+                                cardType: 'Balance: '
+                            }
+                        ])
+                    } else {
+                        this.radioList = [
+                            {
+                                brand: 'balance',
+                                cardType: 'Balance: '
+                            }
+                        ].concat(list)
+                    }
+                    this.selected = this.radioList[0]
                 } else {
                     this.radioList = [
                         {
                             brand: 'balance',
-                            cardType: 'Balance: ',
-                            checked: true
+                            cardType: 'Balance: '
                         }
-                    ].concat(list)
+                    ]
+                    this.selected = this.radioList[0]
                 }
+            })
+            .catch(() => {
+                this.radioList = [
+                    {
+                        brand: 'balance',
+                        cardType: 'Balance: '
+                    }
+                ]
                 this.selected = this.radioList[0]
-            }
-        })
+            })
     },
     methods: {
         changeItem(item) {
