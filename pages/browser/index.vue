@@ -2,9 +2,7 @@
     <div class="wrapper">
         <div class="selfService">
             <h3>
-                <div class="dot">
-                    ‧
-                </div>
+                <div class="dot">‧</div>
                 <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
             </h3>
             <div class="recharge">
@@ -14,29 +12,39 @@
                 </nuxt-link>
             </div>
         </div>
+        <div class="recommand">
+            <h3>
+                <div class="dot">‧</div>
+                <div>Recommand programs</div>
+            </h3>
+            <ul class="clearfix">
+                <li v-for="(item,index) in programs" :key="index" >
+                    <div>
+                        <!-- <img :src="item.poster.resources[0].url.replace('http:','https:')"> -->
+                        <img src="~assets/img/web/pic3.jpg">
+                        <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
+                    </div>
+                    <span class="title">{{item.name}}</span>
+                </li>
+            </ul>
+        </div>
         <div class="bouquets">
             <h3>
-                <div class="dot">
-                    ‧
-                </div>
+                <div class="dot">‧</div>
                 <div>{{$store.state.lang.officialwebsitemobile_bouquet_section}}</div>
             </h3>
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
-                    <p class="money">
-                        {{currency}} {{item.price}}
-                    </p>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
-                    <p class="money">
-                        {{currency}} {{item.price}}
-                    </p>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
         </div>
@@ -46,7 +54,7 @@
             </h3>
             <img src="~assets/img/web/wap_pic.jpg" class="bigPic">
             <div class="download clearfix">
-                <a @click="downloadApk" href="javascript:void(0)">
+                <a href="javascript:void(0)" @click="downloadApk">
                     <img src="~assets/img/web/pic_downloadapk.png">
                 </a>
                 <a href="market://details?id=com.star.mobile.video" target="_blank">
@@ -64,45 +72,25 @@ import bgImgData from '~/components/web/bgImgData'
 import { downloadApk } from '~/functions/utils'
 export default {
     layout: 'default',
-    filters: {
-        dttImgUrl(name) {
-            const data = name.toLowerCase()
-            if (data === 'sport plus' || data === 'unique' || data === 'classique' || data === 'nova' || data === 'basique' || data === 'sport play') {
-                return true
-            }
-        },
-        dthImgUrl(name) {
-            const data = name.toLowerCase()
-            if (
-                data === 'sport plus' ||
-                data === 'super' ||
-                data === 'smart' ||
-                data === 'engilsh' ||
-                data === 'indian' ||
-                data === 'chinese' ||
-                data === 'sport play'
-            ) {
-                return true
-            }
-        }
-    },
-    components: {
-        bgImgData
-    },
     data() {
         return {
-            dishList: [], // DTH
-            antennaList: [], // DTT
-            recharge_url: 'https://m.startimestv.com/DVB/binding.php'
-        }
-    },
-    computed: {
-        currency() {
-            return this.$store.state.country.currencySymbol
+            dishList: [], //DTH
+            antennaList: [], //DTT
+            recharge_url: 'https://m.startimestv.com/DVB/binding.php',
+            programs:[
+                {
+                    durationSecond:360,
+                    name:'wonderful cilps from game of hroones'
+                },
+                {
+                    durationSecond:360,
+                    name:'wonderful cilps from game of hroones'
+                }
+            ]
         }
     },
     mounted() {
-        const host = window.location.host
+        let host = window.location.host
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
         }
@@ -111,15 +99,15 @@ export default {
     methods: {
         getBouquets() {
             this.$axios.get(`/cms/packages?platformTypes=0&platformTypes=1`).then(res => {
-                const data = res.data
+                let data = res.data
                 if (data.length > 0) {
                     data.forEach(ele => {
-                        if (ele.tvPlatForm === 'DTT') {
-                            if (ele.type === 1) {
+                        if (ele.tvPlatForm == 'DTT') {
+                            if (ele.type == 1) {
                                 this.antennaList.push(ele)
                             }
-                        } else if (ele.tvPlatForm === 'DTH') {
-                            if (ele.type === 1) {
+                        } else if (ele.tvPlatForm == 'DTH') {
+                            if (ele.type == 1) {
                                 this.dishList.push(ele)
                             }
                         }
@@ -129,16 +117,62 @@ export default {
             })
         },
         goToBouquetDetail(item) {
-            const bouId = item.id
-            const price = item.price
-            const logo = encodeURI((item.poster && item.poster.resources[0].url) || '')
-            const name = item.name
-            const plat = item.tvPlatForm
+            let packageCode = item.code
+            let bouId = item.id
+            let price = item.price
+            let logo = encodeURI((item.poster && item.poster.resources[0].url) || '')
+            let name = item.name
+            let plat = item.tvPlatForm
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         downloadApk() {
             downloadApk(this)
         }
+    },
+    filters: {
+        dttImgUrl(name) {
+            let data = name.toLowerCase()
+            if (data == 'sport plus' || data == 'unique' || data == 'classique' || data == 'nova' || data == 'basique' || data == 'sport play') {
+                return true
+            }
+        },
+        dthImgUrl(name) {
+            let data = name.toLowerCase()
+            if (
+                data == 'sport plus' ||
+                data == 'super' ||
+                data == 'smart' ||
+                data == 'engilsh' ||
+                data == 'indian' ||
+                data == 'chinese' ||
+                data == 'sport play'
+            ) {
+                return true
+            }
+        },
+        formatShowTime(val) {
+            if (val < 60) {
+                let tmp = val < 10 ? '0' + val : val
+                return '00:' + val
+            } else if (val >= 60 && val < 360) {
+                let min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
+                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return min + ':' + sec
+            } else if (val >= 360) {
+                let hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
+                let min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
+                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return hour + ':' + min + ':' + sec
+            }
+        }
+    },
+    computed: {
+        currency() {
+            return this.$store.state.country.currencySymbol
+        }
+    },
+    components: {
+        bgImgData
     },
     head() {
         return {
@@ -211,6 +245,46 @@ export default {
             display: inline-block;
             font-weight: bold;
             transform: perspective(1px) scale(0.8);
+        }
+    }
+}
+.recommand{
+    .boxStyle;
+    li {
+        list-style: none;
+        float: left;
+        width: 48%;
+        line-height: 1.1rem;
+        &:nth-child(2n) {
+            float: right;
+        }
+        div {
+            position: relative;
+            .show-time {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                padding: 0 0.2rem;
+                background: rgba(0, 0, 0, 1);
+                color: #ffffff;
+                font-size: 0.8rem;
+            }
+            img {
+                width: 100%;
+                display: block;
+            }
+        }
+        span {
+            font-size: 0.85rem;
+            color: #666666;
+            &.title {
+                display: -webkit-box;
+                overflow: hidden;
+                height: 2.6rem;
+                padding-top: 0.4rem;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
         }
     }
 }

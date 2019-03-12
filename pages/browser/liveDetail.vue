@@ -1,40 +1,38 @@
 <template>
     <div class="wrapper wide">
-        <download class="clearfix" />
+        <download class="clearfix"/>
         <div v-if="channel.poster" class="poster">
             <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
+            <img src="~assets/img/web/ic_play.png">
+
         </div>
         <div class="container">
-            <p class="views">
-                {{channel.liveOnlineUserNumber||0 | formatViewCount}} views
-            </p>
-            <div v-if="channel.id" class="base-info clearfix">
+            <p class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views</p>
+            <div class="base-info clearfix" v-if="channel.id">
                 <div class="logo">
                     <img :src="channel.logo.resources[0].url.replace('http:','https:')" alt>
                 </div>
                 <div class="info">
-                    <p class="info-name">
-                        {{channel.name}}
-                    </p>
-                    <img v-show="channel.liveStatus" src="~assets/img/web/online.png">
-                    <img v-show="isDTT" src="~assets/img/web/ic_TERRESTRIAL.png">
-                    <img v-show="isDTH" src="~assets/img/web/ic_dth.png">
+                    <p class="info-name">{{channel.name}}</p>
+                    <img src="~assets/img/web/online.png" v-show="channel.liveStatus">
+                    <img src="~assets/img/web/ic_TERRESTRIAL.png" v-show="isDTT">
+                    <img src="~assets/img/web/ic_dth.png" v-show="isDTH">
                 </div>
             </div>
             <div class="describes">
                 <p>{{channel.description}}</p>
             </div>
-            <div v-show="platformInfos.length>0" class="watch">
+            <div class="watch" v-show="platformInfos.length>0">
                 <p>Watch it on TV</p>
-                <div v-for="(item,index) in platformInfos" :key="index" @click="goToBouquetDetail(item)" class="watchList">
-                    <img v-if="item.tvPlatForm=='DTT'" src="~assets/img/web/DTT.png" class="sign">
-                    <img v-if="item.tvPlatForm=='DTH'" src="~assets/img/web/DTH.png" class="sign">
+                <div v-for="(item,index) in platformInfos" :key="index" class="watchList" @click="goToBouquetDetail(item)">
+                    <img src="~assets/img/web/DTT.png" class="sign" v-if="item.tvPlatForm=='DTT'">
+                    <img src="~assets/img/web/DTH.png" class="sign" v-if="item.tvPlatForm=='DTH'">
                     <span :class="{isDtt:item.tvPlatForm=='DTT',isDth:item.tvPlatForm=='DTH'}">{{item.channelNumber}}</span>
                     <span class="name">{{item.ofPackage.name}}</span>
                     <img src="~assets/img/web/ic_categary1.png" class="arrows">
                 </div>
             </div>
-            <div v-if="epgList.length>0" class="tv-guide">
+            <div class="tv-guide" v-if="epgList.length>0">
                 <p>TV Guide</p>
                 <ul class="clearfix">
                     <li v-for="(item,index) in epgTime" :key="index" @click="getTvGuide(item,index)">
@@ -42,16 +40,16 @@
                     </li>
                 </ul>
                 <div class="epg-contain">
-                    <div v-for="(item,index) in epgList" :key="index" class="epg">
+                    <div class="epg" v-for="(item,index) in epgList" :key="index">
                         <span class="playTime">{{item.startDate | formatPlayTime}}</span>
-                        <span :class="{current:item.isCurrent}" class="circle" />
-                        <div @click="toggleDetail(item)" class="playTitle">
+                        <span class="circle" :class="{current:item.isCurrent}"/>
+                        <div class="playTitle" @click="toggleDetail(item)">
                             {{item.name}}
-                            <div style="height:0.8rem;" />
-                            <div v-show="item.isCurrent" class="total">
-                                <div :style="{ width: progress + '%'}" class="progress" />
+                            <div style="height:0.8rem;"/>
+                            <div class="total" v-show="item.isCurrent">
+                                <div class="progress" :style="{ width: progress + '%'}"/>
                             </div>
-                            <div v-show="item.showDetail" class="more-info">
+                            <div class="more-info" v-show="item.showDetail">
                                 <div>
                                     <span>Rate:</span>
                                     {{item.classification}}
@@ -76,23 +74,9 @@
 import download from '~/components/web/download'
 export default {
     layout: 'default',
-    filters: {
-        formatViewCount(count) {
-            return count.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
-        },
-        formatPlayTime(time) {
-            const tmp = new Date(time)
-            const hours = tmp.getHours() >= 10 ? tmp.getHours() : '0' + tmp.getHours()
-            const minutes = tmp.getMinutes() >= 10 ? tmp.getMinutes() : '0' + tmp.getMinutes()
-            return hours + ':' + minutes
-        }
-    },
-    components: {
-        download
-    },
     data() {
-        const now = new Date()
-        const epgTime = []
+        let now = new Date()
+        let epgTime = []
         epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 3)))
         epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 2)))
         epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 1)))
@@ -116,7 +100,7 @@ export default {
         isDTH() {
             let t = false
             this.platformInfos.forEach(item => {
-                if (item.tvPlatForm === 'DTH') {
+                if (item.tvPlatForm == 'DTH') {
                     t = true
                 }
             })
@@ -125,7 +109,7 @@ export default {
         isDTT() {
             let t = false
             this.platformInfos.forEach(item => {
-                if (item.tvPlatForm === 'DTT') {
+                if (item.tvPlatForm == 'DTT') {
                     t = true
                 }
             })
@@ -157,25 +141,25 @@ export default {
     },
     methods: {
         goToBouquetDetail(item) {
-            const pack = item.ofPackage
-            const bouId = pack.id
-            const price = pack.price
-            const logo = encodeURI((pack.poster && pack.poster.resources[0].url) || '')
-            const name = pack.name
-            const plat = pack.tvPlatForm
+            let pack = item.ofPackage
+            let bouId = pack.id
+            let price = pack.price
+            let logo = encodeURI((pack.poster && pack.poster.resources[0].url) || '')
+            let name = pack.name
+            let plat = pack.tvPlatForm
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         getDateStr(date) {
-            const tmp = new Date(date).toLocaleDateString()
-            const today = new Date().toLocaleDateString()
+            let tmp = new Date(date).toLocaleDateString()
+            let today = new Date().toLocaleDateString()
             let dateStr
-            if (tmp === today) {
+            if (tmp == today) {
                 dateStr = 'Today'
             } else {
                 dateStr = tmp.split('/')[1] + '/' + tmp.split('/')[2]
             }
-            const start = new Date(new Date(tmp)).getTime() // 00:00:00
-            const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
+            let start = new Date(new Date(tmp)).getTime() // 00:00:00
+            let end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
             return {
                 dateStr: dateStr,
                 start: start,
@@ -185,15 +169,15 @@ export default {
         getTvGuide(item, index) {
             this.currentIndex = index
             this.$axios.get(`/cms/programs?channelID=${this.channelID}&startDate=${item.start}&endDate=${item.end}&count=1000`).then(res => {
-                const data = res.data
+                let data = res.data
                 if (data.length > 0) {
-                    const now = new Date().getTime()
+                    let now = new Date().getTime()
                     data.forEach(ele => {
                         ele.showDetail = false
                         if (ele.startDate <= now && now <= ele.endDate) {
                             ele.isCurrent = true
-                            const totalTime = ele.endDate - ele.startDate
-                            const nowTime = now - ele.startDate
+                            let totalTime = ele.endDate - ele.startDate
+                            let nowTime = now - ele.startDate
                             this.progress = Math.floor((nowTime / totalTime) * 100)
                         } else {
                             ele.isCurrent = false
@@ -202,7 +186,8 @@ export default {
                     this.epgList = data
                     this.$nextTick(() => {
                         if (document.querySelector('.epg .current')) {
-                            const current = document.querySelector('.epg .current').parentElement.offsetTop
+                            let current = document.querySelector('.epg .current').parentElement.offsetTop
+                            let h = document.querySelector('.epg .current').parentElement.offsetHeight
                             document.querySelector('.epg-contain').scrollTop = current
                         }
                     })
@@ -210,11 +195,11 @@ export default {
             })
         },
         toggleDetail(program) {
-            if (program.showDetail === true) {
+            if (program.showDetail == true) {
                 program.showDetail = false
             } else {
                 this.epgList.forEach((item, index) => {
-                    if (item.id === program.id) {
+                    if (item.id == program.id) {
                         item.showDetail = true
                     } else {
                         item.showDetail = false
@@ -222,6 +207,20 @@ export default {
                 })
             }
         }
+    },
+    filters: {
+        formatViewCount(count) {
+            return count.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+        },
+        formatPlayTime(time) {
+            let tmp = new Date(time)
+            let hours = tmp.getHours() >= 10 ? tmp.getHours() : '0' + tmp.getHours()
+            let minutes = tmp.getMinutes() >= 10 ? tmp.getMinutes() : '0' + tmp.getMinutes()
+            return hours + ':' + minutes
+        }
+    },
+    components: {
+        download
     },
     head() {
         return {
@@ -233,9 +232,18 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/browser/index.less';
 .poster {
+    position: relative;
     img {
         width: 100%;
         height: 12rem;
+        &+img{
+            position: absolute;
+            width: 3rem;
+            top: 4.5rem;
+            height: 3rem;
+            left: 50%;
+            margin-left: -1.5rem;
+        }
     }
 }
 .container {
