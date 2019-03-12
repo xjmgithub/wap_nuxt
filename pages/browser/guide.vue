@@ -4,20 +4,20 @@
         <div class="guide">
             <div class="search">
                 <input type="text" placeholder="Search your favorite channels">
-                <img src="~assets/img/web/ic_search.png" @click="search">
+                <img @click="search" src="~assets/img/web/ic_search.png">
             </div>
-            <div class="channels" v-for="(item ,i) in 5" :key="i">
+            <div v-for="(item ,i) in 5" :key="i" class="channels">
                 <img src="~assets/img/web/fox.jpg" alt="">
                 <div class="celDetail">
                     <p>Fox news
                         <span class="dtt"><img src="~assets/img/web/ic_guide_dtt.png" alt="">135</span>
                         <span class="dth"><img src="~assets/img/web/ic_guide_dth.png" alt="">35</span>
                     </p>
-                    <div v-for="(item,i) in 3" :key="i">
-                        <span class="playTime" :class="{current:i==0}">14:00</span>
-                        <div class="playTitle" :class="{current:i==0}"> World Cup Goals 2019
-                            <div class="total" v-show="i==0">
-                                <div class="progress" :style="{ width: '50%'}"/>
+                    <div v-for="(item1,index) in 3" :key="index">
+                        <span :class="{current:index==0}" class="playTime">14:00</span>
+                        <div :class="{current:index==0}" class="playTitle"> World Cup Goals 2019
+                            <div v-show="index==0" class="total">
+                                <div :style="{ width: '50%'}" class="progress"/>
                             </div>
                         </div>
                     </div>
@@ -29,6 +29,17 @@
 <script>
 import download from '~/components/web/download'
 export default {
+    components: {
+        download
+    },
+    filters: {
+        formatPlayTime(time) {
+            const tmp = new Date(time)
+            const hours = tmp.getHours() >= 10 ? tmp.getHours() : '0' + tmp.getHours()
+            const minutes = tmp.getMinutes() >= 10 ? tmp.getMinutes() : '0' + tmp.getMinutes()
+            return hours + ':' + minutes
+        }
+    },
     data(){
         return{
             channelList:[]
@@ -37,17 +48,6 @@ export default {
     methods:{
         search(){
             
-        }
-    },
-    components: {
-        download
-    },
-    filters: {
-        formatPlayTime(time) {
-            let tmp = new Date(time)
-            let hours = tmp.getHours() >= 10 ? tmp.getHours() : '0' + tmp.getHours()
-            let minutes = tmp.getMinutes() >= 10 ? tmp.getMinutes() : '0' + tmp.getMinutes()
-            return hours + ':' + minutes
         }
     },
 }

@@ -18,6 +18,9 @@
 <script>
 import download from '~/components/web/download'
 export default {
+    components: {
+        download
+    },
     data(){
         return{
             hallList:[]
@@ -32,9 +35,6 @@ export default {
         toHallDetail(id){
             this.$router.push(`/browser/hall?regionId=${id}`)
         }
-    },
-    components: {
-        download
     },
 }
 </script>

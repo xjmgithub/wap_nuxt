@@ -54,7 +54,7 @@
             </h3>
             <img src="~assets/img/web/wap_pic.jpg" class="bigPic">
             <div class="download clearfix">
-                <a href="javascript:void(0)" @click="downloadApk">
+                <a @click="downloadApk" href="javascript:void(0)">
                     <img src="~assets/img/web/pic_downloadapk.png">
                 </a>
                 <a href="market://details?id=com.star.mobile.video" target="_blank">
@@ -72,10 +72,49 @@ import bgImgData from '~/components/web/bgImgData'
 import { downloadApk } from '~/functions/utils'
 export default {
     layout: 'default',
+    filters: {
+        dttImgUrl(name) {
+            const data = name.toLowerCase()
+            if (data == 'sport plus' || data == 'unique' || data == 'classique' || data == 'nova' || data == 'basique' || data == 'sport play') {
+                return true
+            }
+        },
+        dthImgUrl(name) {
+            const data = name.toLowerCase()
+            if (
+                data === 'sport plus' ||
+                data === 'super' ||
+                data === 'smart' ||
+                data === 'engilsh' ||
+                data === 'indian' ||
+                data === 'chinese' ||
+                data === 'sport play'
+            ) {
+                return true
+            }
+        },
+        formatShowTime(val) {
+            if (val < 60) {
+                return '00:' + val
+            } else if (val >= 60 && val < 360) {
+                const min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
+                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return min + ':' + sec
+            } else if (val >= 360) {
+                const hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
+                const min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
+                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
+                return hour + ':' + min + ':' + sec
+            }
+        }
+    },
+    components: {
+        bgImgData
+    },
     data() {
         return {
-            dishList: [], //DTH
-            antennaList: [], //DTT
+            dishList: [], // DTH
+            antennaList: [], // DTT
             recharge_url: 'https://m.startimestv.com/DVB/binding.php',
             programs:[
                 {
@@ -89,8 +128,13 @@ export default {
             ]
         }
     },
+    computed: {
+        currency() {
+            return this.$store.state.country.currencySymbol
+        }
+    },
     mounted() {
-        let host = window.location.host
+        const host = window.location.host
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
         }
@@ -99,15 +143,15 @@ export default {
     methods: {
         getBouquets() {
             this.$axios.get(`/cms/packages?platformTypes=0&platformTypes=1`).then(res => {
-                let data = res.data
+                const data = res.data
                 if (data.length > 0) {
                     data.forEach(ele => {
-                        if (ele.tvPlatForm == 'DTT') {
-                            if (ele.type == 1) {
+                        if (ele.tvPlatForm === 'DTT') {
+                            if (ele.type === 1) {
                                 this.antennaList.push(ele)
                             }
-                        } else if (ele.tvPlatForm == 'DTH') {
-                            if (ele.type == 1) {
+                        } else if (ele.tvPlatForm === 'DTH') {
+                            if (ele.type === 1) {
                                 this.dishList.push(ele)
                             }
                         }
@@ -117,62 +161,16 @@ export default {
             })
         },
         goToBouquetDetail(item) {
-            let packageCode = item.code
-            let bouId = item.id
-            let price = item.price
-            let logo = encodeURI((item.poster && item.poster.resources[0].url) || '')
-            let name = item.name
-            let plat = item.tvPlatForm
+            const bouId = item.id
+            const price = item.price
+            const logo = encodeURI((item.poster && item.poster.resources[0].url) || '')
+            const name = item.name
+            const plat = item.tvPlatForm
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         downloadApk() {
             downloadApk(this)
         }
-    },
-    filters: {
-        dttImgUrl(name) {
-            let data = name.toLowerCase()
-            if (data == 'sport plus' || data == 'unique' || data == 'classique' || data == 'nova' || data == 'basique' || data == 'sport play') {
-                return true
-            }
-        },
-        dthImgUrl(name) {
-            let data = name.toLowerCase()
-            if (
-                data == 'sport plus' ||
-                data == 'super' ||
-                data == 'smart' ||
-                data == 'engilsh' ||
-                data == 'indian' ||
-                data == 'chinese' ||
-                data == 'sport play'
-            ) {
-                return true
-            }
-        },
-        formatShowTime(val) {
-            if (val < 60) {
-                let tmp = val < 10 ? '0' + val : val
-                return '00:' + val
-            } else if (val >= 60 && val < 360) {
-                let min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return min + ':' + sec
-            } else if (val >= 360) {
-                let hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
-                let min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
-                let sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return hour + ':' + min + ':' + sec
-            }
-        }
-    },
-    computed: {
-        currency() {
-            return this.$store.state.country.currencySymbol
-        }
-    },
-    components: {
-        bgImgData
     },
     head() {
         return {

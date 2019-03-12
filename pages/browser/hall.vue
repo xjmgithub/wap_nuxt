@@ -15,19 +15,19 @@
 <script>
 import download from '~/components/web/download'
 export default {
+    components: {
+        download
+    },
     data(){
         return{
            hallList:[] 
         }
     },
     mounted() {
-        let id = this.$route.query.regionId
+        const id = this.$route.query.regionId
         this.$axios.get(`/cms/areas/callcenter?regionId=${id}`).then(res => {
            this.hallList = res.data
         })
-    },
-    components: {
-        download
     },
 }
 </script>
