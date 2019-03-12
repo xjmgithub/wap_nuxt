@@ -75,7 +75,7 @@ export default {
     filters: {
         dttImgUrl(name) {
             const data = name.toLowerCase()
-            if (data == 'sport plus' || data == 'unique' || data == 'classique' || data == 'nova' || data == 'basique' || data == 'sport play') {
+            if (data === 'sport plus' || data === 'unique' || data === 'classique' || data === 'nova' || data === 'basique' || data === 'sport play') {
                 return true
             }
         },

@@ -201,7 +201,6 @@ export default {
                     this.$nextTick(() => {
                         if (document.querySelector('.epg .current')) {
                             const current = document.querySelector('.epg .current').parentElement.offsetTop
-                            const h = document.querySelector('.epg .current').parentElement.offsetHeight
                             document.querySelector('.epg-contain').scrollTop = current
                         }
                     })
