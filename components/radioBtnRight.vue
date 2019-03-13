@@ -77,8 +77,8 @@ export default {
     position: relative;
     cursor: pointer;
     display: block;
-    line-height: 2.2rem;
-    height: 2.2rem;
+    line-height: 2rem;
+    height: 2.3rem;
 }
 .radio-box input {
     position: absolute;
@@ -131,5 +131,6 @@ export default {
     position: absolute;
     top: 0.1rem;
     right: 2rem;
+    text-decoration: underline;
 }
 </style>

@@ -6,10 +6,16 @@
         <div @click="payHandle(993102, 3, 2)" class="addCard">
             <div class="img-box"/>
             <span>Add a card to pay</span>
-            <img src="~assets/img/dvb/ic_right_def_r.png">
+            <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </div>
-        <p @click="payHandle(993101, 3, 2)" class="bb1">Pay with Bank</p>
-        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">{{item.name}}</p>
+        <p @click="payHandle(993101, 3, 2)" class="bb1">
+            Pay with Bank
+            <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
+        </p>
+        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">
+            {{item.name}}
+            <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
+        </p>
         <div v-show="showDes" class="note">
             <p>Note:</p>
             <p v-html="showDes"/>
@@ -183,14 +189,23 @@ export default {
     padding: 0 0.8rem;
     padding-bottom: 5rem;
     & > p {
-        line-height: 3.2rem;
+        line-height: 4rem;
         font-size: 1.1rem;
+        position: relative;
+        .arrows{
+            top: 1.6rem;
+        }
+    }
+    .arrows{
+        position: absolute;
+        right: 0.3rem;
+        top: 0.6rem;
     }
     .bb1 {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #eeeeee;
     }
     .addCard {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #eeeeee;
         font-size: 0.95rem;
         height: 2.7rem;
         line-height: 2.2rem;
@@ -206,19 +221,15 @@ export default {
         span {
             margin-left: 0.5rem;
         }
-        img {
-            position: absolute;
-            right: 0.3rem;
-            top: 0.6rem;
-        }
+        
     }
     .note {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         color: #666666;
-        line-height: 1.1rem;
+        line-height: 1.3rem;
         background: #fff;
         word-break: break-all;
-        padding-top: 0.5rem;
+        padding-top: 0.7rem;
         p {
             margin: 0;
             padding: 0;
