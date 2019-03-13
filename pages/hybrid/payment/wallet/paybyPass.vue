@@ -73,6 +73,8 @@ export default {
                             )
                         })
                     } else {
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
                         this.$alert('Incorrect payment password.')
                     }
                 })
