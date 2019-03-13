@@ -45,7 +45,7 @@ export const checkPass = (ins, walletNo, callback) => {
                 } else {
                     ins.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
                         ins.isLoading = false
-                        toNativePage('com.star.mobile.video.wallet.WalletPwdSettingActivity')
+                        toNativePage('com.star.mobile.video.wallet.WalletSetPhoneNumActivity')
                     })
                 }
             } else {
