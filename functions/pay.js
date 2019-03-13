@@ -123,9 +123,9 @@ export const commonPayAfter = (ins, data, payType, apiType, product) => {
     }
 }
 
-export const chargeWallet = ins => {
+export const chargeWallet = (ins,back) => {
     ins.$alert(ins.$store.state.lang.refresh_wallet, () => {
-        // TODO refresh this.getWalletAccount()
+        back && back()
     })
     toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
 }

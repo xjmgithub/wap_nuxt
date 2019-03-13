@@ -139,7 +139,12 @@ export default {
             this.selected = item
         },
         chargeWallet() {
-            chargeWallet(this)
+            chargeWallet(this,()=>{
+                this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res=>{
+                    this.wallet = res.data
+                    sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
+                })
+            })
         },
         /* 
             channel 支付渠道号，width card 993102 ,with bank 993101, 钱包9002
