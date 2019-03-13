@@ -26,7 +26,7 @@
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage, setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -70,18 +70,25 @@ export default {
         }
     },
     mounted() {
-        if (this.result > 0) return false
-        if (!this.seqNo) {
-            this.$alert('Query seqNo needed! please check request')
-            return false
+        if (this.result > 0) {
+            // 直接回调
+            if (this.$router.query.paytype === 'Paystack-NG') {
+                setCookie('lastpay', 'card')
+            }
+        } else {
+            // wait 模式
+            if (!this.seqNo) {
+                this.$alert('Query seqNo needed! please check request')
+                return false
+            }
+            const _this = this
+            let num = 10
+            this.getPayStatus(num)
+            this.timer = setInterval(() => {
+                num--
+                _this.getPayStatus(num)
+            }, 3000)
         }
-        const _this = this
-        let num = 10
-        this.getPayStatus(num)
-        this.timer = setInterval(() => {
-            num--
-            _this.getPayStatus(num)
-        }, 3000)
     },
     methods: {
         click() {
