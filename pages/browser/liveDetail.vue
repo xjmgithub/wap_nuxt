@@ -224,6 +224,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.wrapper{
+    padding: 2.95rem 0 0;
+}
 .poster {
     position: relative;
     img {
