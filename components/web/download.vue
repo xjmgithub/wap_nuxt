@@ -17,6 +17,10 @@
         color: #333333;
         overflow: hidden;
         zoom: 1;
+        top: 3.45rem;
+        position: fixed;
+        width: 100%;
+        z-index: 999;
         div {
             width: auto;
             float: left;

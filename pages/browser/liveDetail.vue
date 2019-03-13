@@ -1,6 +1,5 @@
 <template>
-    <div class="wrapper wide">
-        <download class="clearfix"/>
+    <div class="wrapper">
         <div v-if="channel.poster" class="poster">
             <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
             <img src="~assets/img/web/ic_play.png">
@@ -71,7 +70,6 @@
     </div>
 </template>
 <script>
-import download from '~/components/web/download'
 export default {
     layout: 'default',
     filters: {
@@ -84,9 +82,6 @@ export default {
             const minutes = tmp.getMinutes() >= 10 ? tmp.getMinutes() : '0' + tmp.getMinutes()
             return hours + ':' + minutes
         }
-    },
-    components: {
-        download
     },
     data() {
         const now = new Date()
@@ -229,7 +224,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 .poster {
     position: relative;
     img {

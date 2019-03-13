@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="wrapper wide">
         <mheader/>
+        <download class="clearfix"/>
         <nuxt/>
         <div v-show="showNav" @click="closeNav" class="nav-layer"/>
         <div :class="{'nav-show':showNav}" class="slide-bar">
@@ -39,10 +40,12 @@
 </template>
 <script>
 import mheader from '~/components/web/header.vue'
+import download from '~/components/web/download'
 import { setCookie } from '~/functions/utils'
 export default {
     components: {
-        mheader
+        mheader,
+        download
     },
     data() {
         return {
@@ -110,6 +113,7 @@ export default {
 }
 </script>
 <style lang="less">
+@import '~assets/less/browser/index.less';
 @font-face {
     font-family: Roboto;
     src: url('~assets/fonts/Roboto-Regular.ttf');
@@ -158,9 +162,14 @@ export default {
     }
 }
 .wrapper {
-    background: white;
     width: 100%;
+    padding: 3rem 0.8rem 0;
+    background: white;
     overflow-y: auto;
+    &.wide {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 .country {
     img {

@@ -11,16 +11,15 @@
                 <nuxt-link to="/browser/">
                     <img v-if="$route.path=='/browser/'||$route.path=='/browser'" src="~assets/img/web/ic_home_def_yellow.png">
                     <img v-else src="~assets/img/web/ic_home_def_g.png">
-                    <div
-                        :class="{checked:$route.path=='/browser/'||$route.path=='/browser'}"
-                        class="nav_title"
-                    >{{$store.state.lang.officialwebsitemobile_topnav_home}}</div>
+                    <div :class="{checked:$route.path=='/browser/'||$route.path=='/browser'}" class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_home}}</div>
                 </nuxt-link>
             </div>
             <div>
                 <nuxt-link to="/browser/guide">
-                    <img src="~assets/img/web/ic_tvguide.png">
-                    <div class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_tvguide}}</div>
+                    <img v-if="$route.path.indexOf('/browser/guide')>=0" src="~assets/img/web/ic_tvguide_yellow.png">
+                    <img v-else src="~assets/img/web/ic_tvguide.png">
+                    <div :class="{checked:$route.path.indexOf('/browser/guide')>=0}" class="nav_title">
+                        {{$store.state.lang.officialwebsitemobile_topnav_tvguide}}</div>
                 </nuxt-link>
             </div>
             <div>
