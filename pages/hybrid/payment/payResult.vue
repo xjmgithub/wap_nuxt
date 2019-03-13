@@ -72,7 +72,7 @@ export default {
     mounted() {
         if (this.result > 0) {
             // 直接回调
-            if (this.$router.query.paytype === 'Paystack-NG') {
+            if (this.$route.query.paytype === 'Paystack-NG') {
                 setCookie('lastpay', 'card')
             }
         } else {
