@@ -92,9 +92,16 @@ export default {
         }
     },
     async asyncData({ app: { $axios }, store }) {
-        // TODO TRY catch
         $axios.setHeader('token', store.state.token)
-        const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+        let data = []
+        try{
+            const res = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+            data = res.data
+        }catch(e){
+            data = []
+        }
+        // TODO 匿名登录状态 const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+        
         return {
             cardList: Array.from(data, x => x.smardcard_no) || [],
             newUser: data.length <= 0
