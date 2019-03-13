@@ -18,6 +18,7 @@ module.exports = {
                 singleline: 10
             }
         ],
+        'eqeqeq':'off',
         'vue/mustache-interpolation-spacing': 'off',
         'prettier/prettier': 0,
         'vue/singleline-html-element-content-newline': 'off',

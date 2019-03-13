@@ -47,7 +47,7 @@ export default {
                 $axios.setHeader('token', store.state.token)
                 const { data } = await $axios.post(`/payment/v2/third-party-payment-web-notify/${payType}`, route.query)
                 return {
-                    result: data.state === 3 ? 1 : 2,
+                    result: data.state == 3 ? 1 : 2,
                     money: data.amount,
                     currency: data.currencySymbol,
                     seqNo: data.seqNo
