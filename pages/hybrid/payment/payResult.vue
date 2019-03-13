@@ -88,7 +88,8 @@ export default {
             } else if (this.isApp === 2||this.isApp === '2') {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
-                this.$router.push('/browser')
+                toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
+                // TODO this.$router.push('/browser')
             }
         },
         refresh() {
