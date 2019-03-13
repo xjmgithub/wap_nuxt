@@ -45,11 +45,11 @@ export default {
             isApp: this.$store.state.appType
         }
     },
-    asyncData({ app: { $axios }, store }) {
+    async asyncData({ app: { $axios }, store,route }) {
         $axios.setHeader('token', store.state.token)
-        console.log(123)
-        // const payType = this.$router.query.paytype || 'InterSwitchPayDirectWeb-NG'
-        // const { data } = await $axios.post(`/payment/v2/third-party-payment-web-notify/${payType}`, this.router.query)
+        const payType = route.query.paytype || 'InterSwitchPayDirectWeb-NG'
+        const { data } = await $axios.post(`/payment/v2/third-party-payment-web-notify/${payType}`, route.query)
+        console.log(data)
         // return {
         //     cardList: Array.from(data, x => x.smardcard_no) || [],
         //     newUser: data.length <= 0
