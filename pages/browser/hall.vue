@@ -4,9 +4,9 @@
             <ul v-if="hallList">
                 <li v-for="(item,i) in hallList " :key="i">
                     <p>{{item.name}}</p>
-                    <p v-if="i==0"><a :href="'tel:'+item.phone">{{item.phone.split(',')[0]}}</a> {{item.phone.split(',')[1]}}</p>
+                    <p v-if="i==0"><a :href="'tel:'+item.phone">{{item.phone}}</a> {{item.des}}</p>
                     <p v-else><a :href="'tel:'+item.phone">{{item.phone}}</a></p>
-                    <p v-if="i==0"><a :href="'tel:'+item.phone1">{{item.phone1.split(',')[0]}}</a> {{item.phone1.split(',')[1]}}</p>
+                    <p v-if="i==0"><a :href="'tel:'+item.phone1">{{item.phone1}}</a> {{item.des1}}</p>
                     <p v-else>{{item.address}}</p>
                 </li>
             </ul>
@@ -26,8 +26,10 @@ export default {
         const national = this.country.phoneNumber.split('@')
         const nationalLine = {
             name:'National Service Hotline',
-            phone:national[0],
-            phone1:national[1]
+            phone:national[0].split(',')[0],
+            des:national[0].split(',')[1],
+            phone1:national[1].split(',')[0],
+            des1:national[1].split(',')[1]
         } 
         this.$axios.get(`/cms/areas/callcenter?regionId=${id}`).then(res => {
            this.hallList = res.data
