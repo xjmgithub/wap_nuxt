@@ -1,16 +1,12 @@
 <template>
     <div class="container">
-        <loading v-show="loadStatus" />
+        <verifyTel ref="phone" :disabled="reset" :title="title" :prefix="prefix" @canNext="canStep1=true" />
         <!-- TODO SETPASSWORD -->
     </div>
 </template>
 <script>
-import loading from '~/components/loading'
 export default {
     layout: 'base',
-    components: {
-        loading
-    },
     data() {
         return {
             loadStatus: true
