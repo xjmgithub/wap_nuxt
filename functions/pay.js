@@ -112,7 +112,8 @@ export const commonPayAfter = (ins, data, payType, apiType, product) => {
     } else if (payType === 3 || payType === 4) {
         // 第三方在线支付 订阅
         if (apiType === 2) {
-            window.location.href = data.tppRedirectUrl
+            toNativePage(`com.star.mobile.video.activity.BrowserActivity?loadUrl=${data.tppRedirectUrl}`)
+            // window.location.href = data.tppRedirectUrl
         } else if (apiType === 3) {
             ins.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
