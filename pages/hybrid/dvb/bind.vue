@@ -208,7 +208,13 @@ export default {
             }
 
             sessionStorage.setItem('order-info', JSON.stringify(params))
-            this.$router.push('/hybrid/dvb/order')
+            
+            if(this.$store.state.appType==1){ // TODO app内缓存有问题，莫名其妙，暂时解决方案, 貌似webview对spa支持不好
+                window.location.href = '/hybrid/dvb/order'
+            }else{
+                this.$router.push('/hybrid/dvb/order')
+            }
+            
         },
         logSmartInput(card, val) {
             const newUser = this.$refs.cardInput.newUser
