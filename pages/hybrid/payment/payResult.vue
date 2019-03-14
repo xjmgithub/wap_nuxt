@@ -37,7 +37,7 @@ export default {
         return {
             fail_message: 'Your request was not accepted. Please refresh the current page or try again the payment.',
             isApp: this.$store.state.appType,
-            timer: null
+            timer: 0
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -81,13 +81,8 @@ export default {
                 this.$alert('Query seqNo needed! please check request')
                 return false
             }
-            const _this = this
-            let num = 10
-            this.getPayStatus(num)
-            this.timer = setInterval(() => {
-                num--
-                _this.getPayStatus(num)
-            }, 3000)
+            this.getPayStatus()
+            
         }
     },
     methods: {
@@ -102,25 +97,26 @@ export default {
                 // TODO this.$router.push('/browser')
             }
         },
-        getPayStatus(num) {
-            if (num < 0) {
-                clearInterval(this.timer)
-                this.result = 2
-            }
-
+        getPayStatus() {
             this.$axios.get(`/payment/v2/order-pay-bills/${this.seqNo}`).then(res => {
                 const data = res.data
-
                 if (data && data.state === 3) {
                     this.result = 1
                     this.money = data.amount
                     this.currency = data.currencySymbol
-                    clearInterval(this.timer)
                     window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
-                } else {
+                }else if(data && data.state===4){
                     this.result = 2
-                    clearInterval(this.timer)
                     window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
+                } else {
+                    this.timer ++
+                    if(this.timer >10){
+                        this.result = 2
+                    }else{
+                        setTimeout(()=>{
+                            this.getPayStatus()
+                        },3000)
+                    }
                 }
             })
         },
