@@ -39,6 +39,7 @@
     </div>
 </template>
 <script>
+import Vue from 'vue'
 import mheader from '~/components/web/header.vue'
 import download from '~/components/web/download'
 import { setCookie } from '~/functions/utils'
@@ -96,6 +97,15 @@ export default {
     },
     created() {
         // this.$nextTick(() => this.$nuxt.$loading.start())
+        const _this = this
+        Vue.prototype.$alert = (msg, callback) => {
+            _this.$refs.alert.show(msg, callback)
+            this.$store.commit('SHOW_SHADOW_LAYER')
+        }
+        Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
+            _this.$refs.confirm.show(msg, callback, cancel, yes, no)
+            this.$store.commit('SHOW_SHADOW_LAYER')
+        }
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {
