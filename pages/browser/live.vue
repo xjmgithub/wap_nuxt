@@ -1,6 +1,5 @@
 <template>
-    <div class="wrapper wide">
-        <download class="clearfix" />
+    <div class="wrapper">
         <div v-show="!loadstate" class="channelList">
             <p class="title">
                 {{channelList.length}} {{$store.state.lang.officialwebsitemobile_live_channelnumber}}
@@ -11,11 +10,9 @@
 </template>
 <script>
 import channel from '~/components/web/channel'
-import download from '~/components/web/download'
 export default {
     components: {
         channel,
-        download
     },
     data() {
         return {
@@ -66,7 +63,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 .channelList {
     padding: 0.8rem;
     .title {

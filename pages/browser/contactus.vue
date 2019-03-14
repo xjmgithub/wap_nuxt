@@ -1,6 +1,5 @@
 <template>
-    <div class="wrapper wide">
-        <download class="clearfix"/>
+    <div class="wrapper">
         <div class="hall">
             <h3>
                 <div class="dot">‧</div>
@@ -16,11 +15,7 @@
     </div>
 </template>
 <script>
-import download from '~/components/web/download'
 export default {
-    components: {
-        download
-    },
     data(){
         return{
             hallList:[]
@@ -39,7 +34,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 .hall{
     width: 100%;
     padding: 0 0.8rem;

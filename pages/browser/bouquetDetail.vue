@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper wide">
+    <div class="wrapper">
         <div v-show="!loadstate" class="bouquets clearfix">
             <p>{{tvPlatFormName}}</p>
             <div class="logo">
@@ -93,7 +93,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 .bouquets {
     margin: 0 0.8rem;
     border-bottom: 1px solid #d8d8d8;

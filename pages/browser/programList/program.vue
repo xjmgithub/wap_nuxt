@@ -1,6 +1,5 @@
 <template>
-    <div class="wrapper wide">
-        <download class="clearfix" />
+    <div class="wrapper">
         <div class="poster">
             <img :src="pPoster.replace('http:','https:')" alt>
             <img v-show="pPoster" src="~assets/img/web/ic_play.png" alt="">
@@ -22,7 +21,6 @@
     </div>
 </template>
 <script>
-import download from '~/components/web/download'
 export default {
     filters: {
         formatShowTime(val) {
@@ -39,9 +37,6 @@ export default {
                 return hour + ':' + min + ':' + sec
             }
         }
-    },
-    components: {
-        download
     },
     data() {
         return {
@@ -83,7 +78,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 img {
     border-radius: 2px;
 }

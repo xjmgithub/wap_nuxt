@@ -1,6 +1,5 @@
 <template>
-    <div class="wrapper wide">
-        <download class="clearfix"/>
+    <div class="wrapper">
         <div class="guide">
             <div class="search">
                 <input type="text" placeholder="Search your favorite channels">
@@ -27,11 +26,7 @@
     </div>
 </template>
 <script>
-import download from '~/components/web/download'
 export default {
-    components: {
-        download
-    },
     filters: {
         formatPlayTime(time) {
             const tmp = new Date(time)
@@ -53,7 +48,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 .guide{
     width: 100%;
     padding: 0 0.8rem;

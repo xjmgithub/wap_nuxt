@@ -11,12 +11,18 @@
 <style lang="less" scoped>
 .link-to-download {
     .download {
-        padding: 0.6rem 0.8rem;
+        padding: 0rem 0.8rem;
         background-color: #ffbe19;
         font-weight: bold;
         color: #333333;
         overflow: hidden;
         zoom: 1;
+        top: 3.45rem;
+        position: fixed;
+        width: 100%;
+        z-index: 999;
+        height:2.5rem;
+        line-height: 2.5rem;
         div {
             width: auto;
             float: left;
