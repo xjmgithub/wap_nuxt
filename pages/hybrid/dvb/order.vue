@@ -51,6 +51,7 @@ export default {
     },
     mounted() {
         // 判断是否是月末
+        alert('test cache')
         const isBeyondYear = new Date(this.serverTime).getMonth() + 1 >= 12
         let nextMonthFirstDay
         if (isBeyondYear) {
