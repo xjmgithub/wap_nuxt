@@ -1,3 +1,5 @@
+import CallApp from 'callapp-lib'
+
 export const setCookie = (name, value, end, path, domain, secure) => {
     if (!name) {
         return false
@@ -249,14 +251,14 @@ export const parseUA = (isApp, appversion) => {
                 dstr += '_' + s
             }
         } else if (c > 0) {
-                const s = navigator.userAgent
-                    .substr(c)
-                    .split(' ')[0]
-                    .split('/')[1]
-                if (s) {
-                    dstr += '_' + s
-                }
+            const s = navigator.userAgent
+                .substr(c)
+                .split(' ')[0]
+                .split('/')[1]
+            if (s) {
+                dstr += '_' + s
             }
+        }
         dstr += ')'
     } else {
         let plat = 'others'
@@ -277,14 +279,14 @@ export const parseUA = (isApp, appversion) => {
                 dstr += '_' + s
             }
         } else if (c > 0) {
-                const s = navigator.userAgent
-                    .substr(c)
-                    .split(' ')[0]
-                    .split('/')[1]
-                if (s) {
-                    dstr += '_' + s
-                }
+            const s = navigator.userAgent
+                .substr(c)
+                .split(' ')[0]
+                .split('/')[1]
+            if (s) {
+                dstr += '_' + s
             }
+        }
         dstr += ')'
     }
     return dstr
@@ -331,7 +333,40 @@ export const getFaqAnswerLabel = (ins, question) => {
     )
 }
 
-
-export const nativeFuncs = ()=>{
+export const nativeFuncs = () => {
     return window && window.getChannelId
+}
+
+export const downApp = function() {
+    let scheme = 'starvideo'
+    let failback = ''
+    const _this = this
+    const ua = navigator.userAgent.toLowerCase()
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        scheme = 'startimes'
+        failback = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+    }
+    const callLib = new CallApp({
+        scheme: {
+            protocol: scheme
+        }
+    })
+    callLib.open({
+        path: 'platformapi/webtoapp',
+        callback() {
+            if (failback) {
+                window.location.href = failback
+            } else {
+                _this.$axios.get('/cms/public/app').then(res => {
+                    let url = res.data.apkUrl
+                    if (url) {
+                        if (url.indexOf('google') > 0) {
+                            url = url.replace('google', 'officialWap')
+                        }
+                        window.location.href = url
+                    }
+                })
+            }
+        }
+    })
 }

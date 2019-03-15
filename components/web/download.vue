@@ -5,47 +5,11 @@
     </div>
 </template>
 <script>
-import CallApp from 'callapp-lib'
+import { downApp } from '~/functions/utils'
 export default {
-    data() {
-        return {
-            scheme: 'starvideo',
-            failback: ''
-        }
-    },
-    mounted() {
-        const ua = navigator.userAgent.toLowerCase()
-        if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-            this.scheme = 'startimes'
-            this.failback = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-        }
-    },
     methods: {
         down() {
-            const callLib = new CallApp({
-                scheme: {
-                    protocol: this.scheme
-                }
-            })
-            const _this = this
-            callLib.open({
-                path: 'platformapi/webtoapp',
-                callback() {
-                    if (_this.failback) {
-                        window.location.href = _this.failback
-                    } else {
-                        _this.$axios.get('/cms/public/app').then(res => {
-                            let url = res.data.apkUrl
-                            if (url) {
-                                if (url.indexOf('google') > 0) {
-                                    url = url.replace('google', 'officialWap')
-                                }
-                                window.location.href = url
-                            }
-                        })
-                    }
-                }
-            })
+            downApp.call(this)
         }
     }
 }
