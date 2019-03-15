@@ -1,18 +1,16 @@
 <template>
     <div class="password-box">
-        <p class="pwd-type">
-            {{placeholder}}
-        </p>
+        <p class="pwd-type">{{placeholder}}</p>
         <img v-if="toggleView&&isCiphertext==1" @click="isCiphertext=2" class="open-close" src="~assets/img/ic_hide_def_g.png" alt>
         <img v-if="toggleView&&isCiphertext==2" @click="isCiphertext=1" class="open-close" src="~assets/img/ic_show_def_g.png" alt>
         <div class="pwd-input">
             <!-- TODO 支持自定义化数量 -->
-            <div v-html="N1" class="input-item" />
-            <div v-show="length>=2" v-html="N2" class="input-item" />
-            <div v-show="length>=3" v-html="N3" class="input-item" />
-            <div v-show="length>=4" v-html="N4" class="input-item" />
-            <div v-show="length>=5" v-html="N5" class="input-item" />
-            <div v-show="length>=6" v-html="N6" class="input-item" />
+            <div v-html="N1" class="input-item"/>
+            <div v-show="length>=2" v-html="N2" class="input-item"/>
+            <div v-show="length>=3" v-html="N3" class="input-item"/>
+            <div v-show="length>=4" v-html="N4" class="input-item"/>
+            <div v-show="length>=5" v-html="N5" class="input-item"/>
+            <div v-show="length>=6" v-html="N6" class="input-item"/>
         </div>
         <input :maxlength="length" v-model="password" type="tel" class="hidden-pwd">
     </div>
@@ -21,8 +19,8 @@
 export default {
     props: {
         length: {
-            type: String, // max length 6
-            default: '6'
+            type: Number, // max length 6
+            default: 6
         },
         placeholder: {
             type: String,
@@ -91,7 +89,7 @@ export default {
             if (val.length >= this.length) {
                 this.$emit('endinput', true)
             } else {
-                this.$emit('endinput', false)
+                this.$emit('inputing', true)
             }
         }
     }

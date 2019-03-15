@@ -6,10 +6,16 @@
         <div @click="payHandle(993102, 3, 2)" class="addCard">
             <div class="img-box"/>
             <span>Add a card to pay</span>
-            <img src="~assets/img/dvb/ic_right_def_r.png">
+            <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </div>
-        <p @click="payHandle(993101, 3, 2)" class="bb1">Pay with Bank</p>
-        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">{{item.name}}</p>
+        <p @click="payHandle(993101, 3, 2)" class="bb1">
+            Pay with Bank
+            <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
+        </p>
+        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">
+            {{item.name}}
+            <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
+        </p>
         <div v-show="showDes" class="note">
             <p>Note:</p>
             <p v-html="showDes"/>
@@ -25,17 +31,11 @@
 import mLine from '~/components/pay/line'
 import radioBtnRight from '~/components/radioBtnRight'
 import { formatAmount, getCookie } from '~/functions/utils'
-import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass } from '~/functions/pay'
+import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass, needPassVerify } from '~/functions/pay'
 export default {
     components: {
         mLine,
         radioBtnRight
-    },
-    props: {
-        wallet: {
-            type: Object,
-            default: null
-        }
     },
     data() {
         return {
@@ -45,6 +45,7 @@ export default {
             normalMethods: [],
             selected: {},
             paymentAmount: 0,
+            wallet: {},
             currency: this.$store.state.country.currencySymbol
         }
     },
@@ -83,6 +84,11 @@ export default {
                     }
                 })
             }
+        })
+
+        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
+            this.wallet = res.data
+            sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
         })
 
         this.$axios
@@ -132,43 +138,51 @@ export default {
             this.selected = item
         },
         chargeWallet() {
-            chargeWallet(this)
+            chargeWallet(this, () => {
+                this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
+                    this.wallet = res.data
+                    sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
+                })
+            })
         },
         /* 
             channel 支付渠道号，width card 993102 ,with bank 993101, 钱包9002
             payType 支付方式 ewallet 1, width card/bank 3 
-            apiType 接口模型 ewallet 1, width card/bank 2
-            form   是否需要表单 false
-            byPass ewallet true,  width card(list true/ add false), with bank false
+            apiType 接口模型 ewallet 1, width card 3/2 , with bank 2
+            card 是否是绑卡支付
         */
         payHandle(channel, payType, apiType, card) {
             const order = JSON.parse(sessionStorage.getItem('order-info'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            const opt = card ? { authorization_code: card } : null
-            createDVBOrder(this, order, data => {
-                invoke(
-                    this,
-                    data.paymentToken,
-                    channel,
-                    data => {
+
+            createDVBOrder.call(this, order, data => {
+                // 生成订单
+                if (needPassVerify(channel,card)) {
+                    checkPass.call(this, this.wallet.accountNo, setted => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter(this, data, payType, apiType)
-                    },
-                    opt
-                )
+                        if (setted) {
+                            this.$router.push(`/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&card=${card || ''}`)
+                        } else {
+                            this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
+                                this.$router.push(`/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&card=${card || ''}`)
+                            })
+                        }
+                    })
+                } else {
+                    invoke.call(this, data.paymentToken, channel, data => {
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        commonPayAfter.call(this, data, payType, apiType)
+                    })
+                }
             })
         },
         pay() {
-            this.canPay &&
-                checkPass(this, this.wallet.accountNo, () => {
-                    if (this.selected.brand !== 'balance') {
-                        this.$router.push(`/hybrid/payment/wallet/paybyPass?card=${this.selected.authorizationCode}`)
-                    } else {
-                        this.payHandle(9002, 1, 1)
-                    }
-                })
+            this.canPay && this.selected.brand === 'balance'
+                ? this.payHandle(9002, 1, 1)
+                : this.payHandle(993102, 3, 3, this.selected.authorizationCode)
         },
         formatAmount(num) {
             return formatAmount(num)
@@ -182,14 +196,23 @@ export default {
     padding: 0 0.8rem;
     padding-bottom: 5rem;
     & > p {
-        line-height: 3.2rem;
+        line-height: 4rem;
         font-size: 1.1rem;
+        position: relative;
+        .arrows {
+            top: 1.6rem;
+        }
+    }
+    .arrows {
+        position: absolute;
+        right: 0.3rem;
+        top: 0.6rem;
     }
     .bb1 {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #eeeeee;
     }
     .addCard {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #eeeeee;
         font-size: 0.95rem;
         height: 2.7rem;
         line-height: 2.2rem;
@@ -205,19 +228,14 @@ export default {
         span {
             margin-left: 0.5rem;
         }
-        img {
-            position: absolute;
-            right: 0.3rem;
-            top: 0.6rem;
-        }
     }
     .note {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         color: #666666;
-        line-height: 1.1rem;
+        line-height: 1.3rem;
         background: #fff;
         word-break: break-all;
-        padding-top: 0.5rem;
+        padding-top: 0.7rem;
         p {
             margin: 0;
             padding: 0;
