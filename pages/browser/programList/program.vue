@@ -21,21 +21,11 @@
     </div>
 </template>
 <script>
+import {formatTime} from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
-            if (val < 60) {
-                return '00:' + val
-            } else if (val >= 60 && val < 360) {
-                const min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
-                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return min + ':' + sec
-            } else if (val >= 360) {
-                const hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
-                const min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
-                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return hour + ':' + min + ':' + sec
-            }
+           return formatTime(val)
         }
     },
     data() {
