@@ -69,7 +69,7 @@
 <script>
 import env from '~/env.js'
 import bgImgData from '~/components/web/bgImgData'
-import { downloadApk } from '~/functions/utils'
+import {downloadApk, formatTime} from '~/functions/utils'
 export default {
     layout: 'default',
     filters: {
@@ -101,18 +101,7 @@ export default {
             }
         },
         formatShowTime(val) {
-            if (val < 60) {
-                return '00:' + val
-            } else if (val >= 60 && val < 360) {
-                const min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
-                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return min + ':' + sec
-            } else if (val >= 360) {
-                const hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
-                const min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
-                const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
-                return hour + ':' + min + ':' + sec
-            }
+           return formatTime(val)
         }
     },
     components: {
