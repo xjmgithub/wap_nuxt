@@ -5,18 +5,18 @@
                 <input type="text" placeholder="Search your favorite channels">
                 <img @click="search" src="~assets/img/web/ic_search.png">
             </div>
-            <div v-for="(item ,i) in 5" :key="i" class="channels">
-                <img src="~assets/img/web/fox.jpg" alt="">
+            <div v-for="(item ,i) in channelList" :key="i" class="channels">
+                <img :src="item.logo.resources[0].url.replace('http:','https:')" alt="">
                 <div class="celDetail">
-                    <p>Fox news
-                        <span class="dtt"><img src="~assets/img/web/ic_guide_dtt.png" alt="">135</span>
-                        <span class="dth"><img src="~assets/img/web/ic_guide_dth.png" alt="">35</span>
+                    <p>{{item.name}}
+                        <span v-show="item.isDTT" class="dtt"><img src="~assets/img/web/ic_guide_dtt.png" alt="">{{item.dttChannel}}</span>
+                        <span v-show="item.isDTH" class="dth"><img src="~assets/img/web/ic_guide_dth.png" alt="">{{item.dthChannel}}</span>
                     </p>
                     <div v-for="(item1,index) in 3" :key="index">
                         <span :class="{current:index==0}" class="playTime">14:00</span>
                         <div :class="{current:index==0}" class="playTitle"> World Cup Goals 2019
                             <div v-show="index==0" class="total">
-                                <div :style="{ width: '50%'}" class="progress"/>
+                                <div :style="{ width: '50%'}" class="progress" />
                             </div>
                         </div>
                     </div>
@@ -35,76 +35,95 @@ export default {
             return hours + ':' + minutes
         }
     },
-    data(){
-        return{
-            channelList:[]
+    data() {
+        return {
+            channelList: [],
+            epgList:[]
         }
     },
-    methods:{
-        search(){
-            
-        }
+    mounted() {
+        this.$nextTick(() => this.$nuxt.$loading.start())
+        this.$axios.get(`/cms/v2/vup/snapshot/channels?count=1000&platformTypes=1&platformTypes=0`).then(res => {
+            console.log(res.data)
+            this.$nextTick(() => this.$nuxt.$loading.finish())
+            const data = res.data
+            data.forEach(ele => {
+                if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+                    const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+                    platformInfos.forEach(plat => {
+                        ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
+                        ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
+                        ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
+                        ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
+                    })
+                }
+            })
+            this.channelList = data
+        })
     },
+    methods: {
+        search() {}
+    }
 }
 </script>
 <style lang="less" scoped>
-.guide{
+.guide {
     width: 100%;
     padding: 0 0.8rem;
-    .search{
+    .search {
         position: relative;
-        margin:.5rem 0;
-        input{
+        margin: 0.5rem 0;
+        input {
             width: 100%;
-            padding-left:1rem;
+            padding-left: 1rem;
             border-radius: 4px;
-            border:1px solid #979797;
-            height:2.5rem;
+            border: 1px solid #979797;
+            height: 2.5rem;
             line-height: 2.5rem;
-            &::-webkit-input-placeholder{
-                color:#BDBDBD;
-                font-size: .95rem;
+            &::-webkit-input-placeholder {
+                color: #bdbdbd;
+                font-size: 0.95rem;
             }
-            & + img{
+            & + img {
                 position: absolute;
-                right:.8rem;
-                top:50%;
-                width:1.5rem;
-                height:1.5rem;
-                margin-top:-.75rem;
+                right: 0.8rem;
+                top: 50%;
+                width: 1.5rem;
+                height: 1.5rem;
+                margin-top: -0.75rem;
             }
         }
     }
-    .channels{
-        padding:1rem 0;
-        border-bottom:1px solid #D8D8D8;
-        img{
+    .channels {
+        padding: 1rem 0;
+        border-bottom: 1px solid #d8d8d8;
+        img {
             width: 30%;
         }
-        .celDetail{
+        .celDetail {
             float: right;
-            width:68%;
-            padding-top:.3rem;
-            p{
-                span{
+            width: 68%;
+            padding-top: 0.3rem;
+            p {
+                span {
                     float: right;
-                    margin-left:.5rem;
-                    font-size: .95rem;
-                    &.dtt{
-                        color:#5EB108;
+                    margin-left: 0.5rem;
+                    font-size: 0.95rem;
+                    &.dtt {
+                        color: #5eb108;
                     }
-                    &.dth{
-                        color:#E7336E;
-                }
-                    img{
+                    &.dth {
+                        color: #e7336e;
+                    }
+                    img {
                         width: 1rem;
-                        height:1rem;
+                        height: 1rem;
                         vertical-align: top;
                     }
                 }
             }
-            & > div{
-                margin:.3rem 0;
+            & > div {
+                margin: 0.3rem 0;
             }
         }
         .playTime {
