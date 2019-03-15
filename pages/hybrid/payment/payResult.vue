@@ -75,6 +75,11 @@ export default {
             if (this.$route.query.paytype === 'Paystack-NG') {
                 setCookie('lastpay', 'card')
             }
+            if(this.result===1){
+                setTimeout(()=>{
+                    this.click()
+                },5000)
+            }
         } else {
             // wait 模式
             if (!this.seqNo) {
@@ -82,15 +87,16 @@ export default {
                 return false
             }
             this.getPayStatus()
-            
         }
+        
+
     },
     methods: {
         click() {
-            if (this.isApp === 1 || this.isApp === '1') {
+            if (this.isApp === 1) {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 window.getChannelId && window.getChannelId.finish()
-            } else if (this.isApp === 2 || this.isApp === '2') {
+            } else if (this.isApp === 2) {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
@@ -105,6 +111,11 @@ export default {
                     this.money = data.amount
                     this.currency = data.currencySymbol
                     window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
+                    
+                    setTimeout(()=>{
+                        this.click()
+                    },5000)
+
                 }else if(data && data.state===4){
                     this.result = 2
                     window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
