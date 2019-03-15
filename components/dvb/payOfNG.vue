@@ -31,7 +31,7 @@
 import mLine from '~/components/pay/line'
 import radioBtnRight from '~/components/radioBtnRight'
 import { formatAmount, getCookie } from '~/functions/utils'
-import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass } from '~/functions/pay'
+import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass, needPassVerify } from '~/functions/pay'
 export default {
     components: {
         mLine,
@@ -45,7 +45,7 @@ export default {
             normalMethods: [],
             selected: {},
             paymentAmount: 0,
-            wallet:{},
+            wallet: {},
             currency: this.$store.state.country.currencySymbol
         }
     },
@@ -85,12 +85,11 @@ export default {
                 })
             }
         })
-        
-        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res=>{
+
+        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
             this.wallet = res.data
             sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
         })
-
 
         this.$axios
             .get('/payment/v2/pay-channels/993102/card-auth')
@@ -139,8 +138,8 @@ export default {
             this.selected = item
         },
         chargeWallet() {
-            chargeWallet(this,()=>{
-                this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res=>{
+            chargeWallet(this, () => {
+                this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
                     this.wallet = res.data
                     sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
                 })
@@ -149,38 +148,41 @@ export default {
         /* 
             channel 支付渠道号，width card 993102 ,with bank 993101, 钱包9002
             payType 支付方式 ewallet 1, width card/bank 3 
-            apiType 接口模型 ewallet 1, width card/bank 2
-            form   是否需要表单 false
-            byPass ewallet true,  width card(list true/ add false), with bank false
+            apiType 接口模型 ewallet 1, width card 3/2 , with bank 2
+            card 是否是绑卡支付
         */
         payHandle(channel, payType, apiType, card) {
             const order = JSON.parse(sessionStorage.getItem('order-info'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            const opt = card ? { authorization_code: card } : null
-            createDVBOrder(this, order, data => {
-                invoke(
-                    this,
-                    data.paymentToken,
-                    channel,
-                    data => {
+
+            createDVBOrder.call(this, order, data => {
+                // 生成订单
+                if (needPassVerify(channel,card)) {
+                    checkPass.call(this, this.wallet.accountNo, setted => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter(this, data, payType, apiType)
-                    },
-                    opt
-                )
+                        if (setted) {
+                            this.$router.push(`/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&card=${card || ''}`)
+                        } else {
+                            this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
+                                this.$router.push(`/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&card=${card || ''}`)
+                            })
+                        }
+                    })
+                } else {
+                    invoke.call(this, data.paymentToken, channel, data => {
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        commonPayAfter.call(this, data, payType, apiType)
+                    })
+                }
             })
         },
         pay() {
-            this.canPay &&
-                checkPass(this, this.wallet.accountNo, () => {
-                    if (this.selected.brand !== 'balance') {
-                        this.$router.push(`/hybrid/payment/wallet/paybyPass?card=${this.selected.authorizationCode}`)
-                    } else {
-                        this.payHandle(9002, 1, 1)
-                    }
-                })
+            this.canPay && this.selected.brand === 'balance'
+                ? this.payHandle(9002, 1, 1)
+                : this.payHandle(993102, 3, 3, this.selected.authorizationCode)
         },
         formatAmount(num) {
             return formatAmount(num)
@@ -197,11 +199,11 @@ export default {
         line-height: 4rem;
         font-size: 1.1rem;
         position: relative;
-        .arrows{
+        .arrows {
             top: 1.6rem;
         }
     }
-    .arrows{
+    .arrows {
         position: absolute;
         right: 0.3rem;
         top: 0.6rem;
@@ -226,7 +228,6 @@ export default {
         span {
             margin-left: 0.5rem;
         }
-        
     }
     .note {
         font-size: 0.95rem;

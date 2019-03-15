@@ -128,7 +128,7 @@ export default {
             const channel = this.selectMethod.fkPayChannelId
             const payType = this.selectMethod.payType
             const apiType = this.selectMethod.appInterfaceMode
-            createDVBOrder(this, order, data => {
+            createDVBOrder.call(this, order, data => {
                 if (useForm) {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')

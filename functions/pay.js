@@ -1,22 +1,20 @@
 import qs from 'qs'
-import { parseUA, toNativePage } from '~/functions/utils.js'
+import { parseUA, toNativePage, nativeFuncs } from '~/functions/utils.js'
 
-/* 
-    ins vue 组件实例
-    order 订单参数 object
-    callback 回调
-*/
-export const createDVBOrder = (ins, order, callback) => {
+// 生成订单
+export const createDVBOrder = function(order, callback) {
     if (!order) return false
-    const fcmToken = (window.getChannelId && window.getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
-    const user = ins.$store.state.user
+
+    const fcmToken = (nativeFuncs.getFCMToken && nativeFuncs.getFCMToken()) || ''
+    const user = this.$store.state.user
     const isLogin = user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
-    ins.$axios({
+
+    this.$axios({
         url: `/wxorder/v1/geneOrder4OnlinePay`,
         method: 'post',
         headers: {
             'content-type': 'application/x-www-form-urlencoded',
-            token: ins.$store.state.token
+            token: this.$store.state.token
         },
         data: qs.stringify(
             Object.assign({}, order, {
@@ -30,32 +28,32 @@ export const createDVBOrder = (ins, order, callback) => {
     })
 }
 
-/* 
-    ins vue 组件实例
-    walletNo 钱包账号
-*/
-export const checkPass = (ins, walletNo, callback) => {
+// 检查是否需要支付密码
+export const needPassVerify = function(channel, card) {
+    return (channel >= 9002 && channel <= 9034) || (channel == '993102' && card)
+}
+
+export const checkPass = function(walletNo, callback) {
     if (!walletNo) return false
-    ins.$axios
+    this.$axios
         .get(`/mobilewallet/v1/accounts/${walletNo}/prop-details`)
         .then(res => {
             if (res.data) {
+                let result = false
                 if (res.data.payPassword === 'true') {
-                    callback && callback()
+                    result = true
                 } else {
-                    ins.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
-                        ins.isLoading = false
-                        toNativePage('com.star.mobile.video.wallet.WalletSetPhoneNumActivity')
-                    })
+                    result = false
                 }
+                callback && callback(result)
             } else {
-                ins.isLoading = false
-                ins.$alert('ewallet config error')
+                this.$nuxt.$loading.finish()
+                this.$alert('ewallet config error')
             }
         })
         .catch(() => {
-            ins.isLoading = false
-            ins.$alert(ins.$store.state.lang.error_network, () => {}, 'Retry')
+            this.$nuxt.$loading.finish()
+            this.$alert(this.$store.state.lang.error_network)
         })
 }
 
@@ -65,12 +63,12 @@ export const checkPass = (ins, walletNo, callback) => {
     channel 渠道号
     extend 扩展字段，动态表单
 */
-export const invoke = (ins, payToken, channel, callback, extend) => {
+export const invoke = function(payToken, channel, callback, extend) {
     if (!payToken || !channel) return false
 
-    const dstr = parseUA(ins.$store.state.appType, ins.$store.state.appVersionCode)
+    const dstr = parseUA(this.$store.state.appType, this.$store.state.appVersionCode)
 
-    ins.$axios({
+    this.$axios({
         url: `/payment/api/v2/invoke-payment`,
         method: 'post',
         data: {
@@ -83,49 +81,82 @@ export const invoke = (ins, payToken, channel, callback, extend) => {
         }
     })
         .then(res => {
-            ins.isLoading = false
             if (res.data.resultCode === '0') {
                 callback && callback(res.data)
             } else {
-                ins.$nuxt.$loading.finish()
-                ins.$alert(res.data.resultMessage)
+                this.$nuxt.$loading.finish()
+                this.$alert(res.data.resultMessage)
             }
         })
-        .catch(() => {
-            ins.isLoading = false
-            ins.$nuxt.$loading.finish()
-            ins.$alert(ins.$store.state.lang.error_network, () => {}, 'Retry')
+        .catch(err => {
+            console.log(err)
+            this.$nuxt.$loading.finish()
+            this.$alert(this.$store.state.lang.error_network)
         })
 }
 
 /* 
-    ins vue 组件实例
     data invoke 返回值
     payType 支付方式
     apiType 对接方式
 */
-export const commonPayAfter = (ins, data, payType, apiType, product) => {
-    if (payType === 1) {
-        // 钱包支付
-        sessionStorage.setItem('payObj', JSON.stringify(data))
-        ins.$router.push(`/hybrid/payment/wallet/paybyPass`)
-    } else if (payType === 3 || payType === 4) {
-        // 第三方在线支付 订阅
+export const commonPayAfter = function(data, payType, apiType, product) {
+    if (payType === 3) {
         if (apiType === 2) {
-            window.location.href = data.tppRedirectUrl
+            window.location.href = data.tppRedirectUrl // 最终也会回调到payResult
         } else if (apiType === 3) {
-            ins.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
+            this.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
-            ins.$alert('The payment method is not supported for the time being')
+            this.$alert('The payment method is not supported for the time being')
         }
     } else {
-        ins.$alert('The payment method is not supported for the time being')
+        this.$alert('The payment method is not supported for the time being')
     }
 }
 
-export const chargeWallet = (ins,back) => {
+export const chargeWallet = (ins, back) => {
     ins.$alert(ins.$store.state.lang.refresh_wallet, () => {
         back && back()
     })
     toNativePage('com.star.mobile.video.wallet.WalletRechargeActivity')
+}
+
+export const payWithBalance = function(walletAccountNo, data, password, callback) {
+    this.$axios
+        .post('/mobilewallet/v1/balance-payments', {
+            amount: data.totalAmount,
+            currency: data.currency,
+            orderId: data.txNo,
+            payeeAccountNo: data.extendInfo.payeeAccountNo,
+            payerAccountNo: walletAccountNo,
+            payerPayPassword: password,
+            subject: data.paySubject,
+            signature: data.extendInfo.signature,
+            extensionInfo: {
+                paySeqNo: data.extendInfo.paySeqNo
+            }
+        })
+        .then(res => {
+            if (res.data.resultCode === 0) {
+                callback && callback(res)
+            } else {
+                this.$nuxt.$loading.finish()
+                this.$alert(res.data.resultMessage)
+            }
+        })
+        .catch(err => {
+            this.$nuxt.$loading.finish()
+            this.$alert(err)
+        })
+}
+
+export const verifyWalletPass = function(accountNo, password, callback) {
+    this.$axios.get(`/mobilewallet/v1/accounts/${accountNo}/pay-password?password=${password}`).then(res => {
+        if (res.data.code === 0) {
+            callback && callback(res.data)
+        } else {
+            this.$nuxt.$loading.finish()
+            this.$alert('Incorrect payment password.')
+        }
+    })
 }
