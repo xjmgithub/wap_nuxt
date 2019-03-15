@@ -82,7 +82,7 @@ export default {
             })
 
             if (type === true) {
-                return { step: 3 }
+                return { step: 1 }
             } else {
                 return { step: 3 }
             }
