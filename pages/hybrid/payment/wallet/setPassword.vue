@@ -186,6 +186,8 @@ export default {
 <style lang="less" scoped>
 .container {
     padding: 3rem 0.6rem;
+    height:100%;
+    background:white;
     .step2 {
         width: 100%;
         height: 100%;
