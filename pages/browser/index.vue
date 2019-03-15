@@ -171,11 +171,9 @@ export default {
             downloadApk(this)
         },
         getPrograms() {
-            // const tmp = new Date().toLocaleDateString()
-            // const start = new Date(new Date(tmp)).getTime() // 00:00:00
-            // const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
-            const start = 1552492800000 // 00:00:00
-            const end = 1552579199999 // 23:59:59
+            const tmp = new Date().toLocaleDateString()
+            const start = new Date(new Date(tmp)).getTime() // 00:00:00
+            const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
             this.$axios.get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=100&dateFrom=${start}&dateTo=${end}`).then(res => {
                 const data = res.data.data
                 if (data && data.length > 0) {
