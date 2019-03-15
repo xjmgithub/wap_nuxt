@@ -7,7 +7,14 @@
             </div>
         </div>
         <div v-show="step==2" class="step2">
-            <passInput @endinput="canStep3=true" @inputing="canStep3=false" :lenth="4" :toggle-view="true" placeholder="Enter the code"/>
+            <passInput
+                ref="vscode"
+                @endinput="canStep3=true"
+                @inputing="canStep3=false"
+                :length="4"
+                :toggle-view="true"
+                placeholder="Enter the code"
+            />
             <div class="footer">
                 <mButton :disabled="!canStep3" @click="goStep(3)" text="NEXT"/>
             </div>
@@ -48,14 +55,14 @@ export default {
             canStep5: false,
             reset: false,
             accountNo: null,
-            payToken: this.$router.query.paytoken,
+            payToken: this.$route.query.paytoken,
             card: this.$route.query.card // paystack card
         }
     },
     async asyncData({ app: { $axios }, store }) {
         try {
-            const res = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
-            this.$axios.get('/vup/v1/ums/user/area', {
+            $axios.setHeader('token', store.state.token)
+            const res = await $axios.get('/vup/v1/ums/user/area', {
                 headers: {
                     versionCode: '5300',
                     clientType: 'android',
@@ -75,7 +82,7 @@ export default {
             })
 
             if (type === true) {
-                return { step: 1 }
+                return { step: 3 }
             } else {
                 return { step: 3 }
             }
@@ -98,7 +105,7 @@ export default {
                         .get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${prefix + tel}&verifyCode=${vscode}`)
                         .then(res => {
                             const data = res.data
-                            if (data && data.code === '0') {
+                            if (data && data.code === 0) {
                                 this.step = num
                             } else {
                                 this.$alert(data.message)
@@ -107,7 +114,7 @@ export default {
                 } else {
                     this.$axios.put(`/mobilewallet/v1/accounts/${this.accountNo}/phone?phone=${prefix + tel}&verifyCode=${vscode}`, {}).then(res => {
                         const data = res.data
-                        if (data && data.code === '0') {
+                        if (data && data.code === 0) {
                             this.$alert('Set phone successfully', () => {
                                 this.step = num
                             })
@@ -149,7 +156,7 @@ export default {
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
             if (this.card) {
-                invoke(
+                invoke.call(
                     this,
                     this.payToken,
                     993102,
@@ -157,18 +164,21 @@ export default {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         setCookie('lastpay', 'card')
-                        commonPayAfter(this, data, 3, 3)
+                        commonPayAfter.call(this, data, 3, 3)
                     },
                     { authorization_code: this.card }
                 )
                 return false
-            }
-            invoke(this, this.payToken, 9002, data => {
-                payWithBalance(this, this.accountNo, data, this.password, res => {
-                    setCookie('lastpay', 'wallet')
-                    this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+            }else{
+                invoke.call(this, this.payToken, 9002, data => {
+                    payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
+                        setCookie('lastpay', 'wallet')
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                    })
                 })
-            })
+            }
         }
     }
 }
