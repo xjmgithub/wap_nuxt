@@ -92,9 +92,16 @@ export default {
         }
     },
     async asyncData({ app: { $axios }, store }) {
-        // TODO TRY catch
         $axios.setHeader('token', store.state.token)
-        const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+        let data = []
+        try{
+            const res = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+            data = res.data
+        }catch(e){
+            data = []
+        }
+        // TODO 匿名登录状态 const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
+        
         return {
             cardList: Array.from(data, x => x.smardcard_no) || [],
             newUser: data.length <= 0
@@ -201,7 +208,13 @@ export default {
             }
 
             sessionStorage.setItem('order-info', JSON.stringify(params))
-            this.$router.push('/hybrid/dvb/order')
+            
+            if(this.$store.state.appType==1){ // TODO app内缓存有问题，莫名其妙，暂时解决方案, 貌似webview对spa支持不好
+                window.location.href = '/hybrid/dvb/order'
+            }else{
+                this.$router.push('/hybrid/dvb/order')
+            }
+            
         },
         logSmartInput(card, val) {
             const newUser = this.$refs.cardInput.newUser

@@ -12,7 +12,7 @@
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
-import { createDVBOrder, invoke, commonPayAfter } from '~/functions/pay'
+import { invoke, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
 import { setCookie, toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -24,7 +24,7 @@ export default {
         return {
             password: '',
             canPay: false,
-            product: this.$route.query.product,
+            payToken: this.$route.query.paytoken,
             card: this.$route.query.card // paystack card
         }
     },
@@ -50,61 +50,33 @@ export default {
         },
         nextStep() {
             const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
-            const payObj = JSON.parse(sessionStorage.getItem('payObj'))
-            const order = JSON.parse(sessionStorage.getItem('order-info'))
-            const opt = this.card ? { authorization_code: this.card } : null
-
+            this.$nuxt.$loading.start()
+            this.$store.commit('SHOW_SHADOW_LAYER')
             if (this.card) {
-                this.$axios.get(`/mobilewallet/v1/accounts/${ewallet.accountNo}/pay-password?password=${this.password}`).then(res => {
-                    if (res.data.code === 0) {
-                        createDVBOrder(this, order, data => {
-                            invoke(
-                                this,
-                                data.paymentToken,
-                                993102,
-                                data => {
-                                    this.$nuxt.$loading.finish()
-                                    this.$store.commit('HIDE_SHADOW_LAYER')
-                                    setCookie('lastpay', 'card')
-                                    commonPayAfter(this, data, 3, 3)
-                                },
-                                opt
-                            )
-                        })
-                    } else {
-                        this.$alert('Incorrect payment password.')
-                    }
+                verifyWalletPass.call(this, ewallet.accountNo, this.password, data => {
+                    invoke.call(
+                        this,
+                        this.payToken,
+                        993102,
+                        data => {
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            setCookie('lastpay', 'card')
+                            commonPayAfter.call(this, data, 3, 3)
+                        },
+                        { authorization_code: this.card }
+                    )
                 })
-
-                return false
-            }
-
-            this.$axios
-                .post('/mobilewallet/v1/balance-payments', {
-                    amount: payObj.totalAmount,
-                    currency: payObj.currency,
-                    note: this.product,
-                    orderId: payObj.txNo,
-                    payeeAccountNo: payObj.extendInfo.payeeAccountNo,
-                    payerAccountNo: ewallet.accountNo,
-                    payerPayPassword: this.password,
-                    subject: payObj.paySubject,
-                    signature: payObj.extendInfo.signature,
-                    extensionInfo: {
-                        paySeqNo: payObj.extendInfo.paySeqNo
-                    }
-                })
-                .then(res => {
-                    if (res.data.resultCode === 0) {
+            } else {
+                invoke.call(this, this.payToken, 9002, data => {
+                    payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
                         setCookie('lastpay', 'wallet')
-                        this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
-                    } else {
-                        this.$alert(res.data.resultMessage)
-                    }
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                    })
                 })
-                .catch(err => {
-                    this.$alert(err)
-                })
+            }
         }
     }
 }

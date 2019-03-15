@@ -2,8 +2,8 @@
     <div class="wrapper">
         <card-info/>
         <order-info/>
-        <pay-of-NG :wallet="wallet" v-if="country==='NG'"/>
-        <pay-methods :wallet="wallet" v-else/>
+        <pay-of-NG v-if="country==='NG'"/>
+        <pay-methods v-else/>
         <div v-show="isYueMo" style="color: white;padding:5%;position:absolute;bottom:12rem;">{{$store.state.lang.monthly_billing}}:</div>
     </div>
 </template>
@@ -37,16 +37,15 @@ export default {
             }
         }
     },
-    async asyncData({ app: { $axios }, store }) {
-        const user = store.state.user
-        let wallet = null
-        if (user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS') {
-            $axios.setHeader('token', store.state.token)
-            const { data } = await $axios.get(`/mobilewallet/v1/accounts/me`)
-            wallet = data
-        }
+    asyncData({ app: { $axios }, store }) {
+        // const user = store.state.user
+        // let wallet = null
+        // if (user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS') {
+        //     $axios.setHeader('token', store.state.token)
+        //     const { data } = await $axios.get(`/mobilewallet/v1/accounts/me`)
+        //     wallet = data
+        // }
         return {
-            wallet: wallet,
             serverTime: new Date()
         }
     },
@@ -68,7 +67,6 @@ export default {
         }
 
         const param = JSON.parse(sessionStorage.getItem('order-info'))
-        sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
 
         this.sendEvLog({
             category: 'dvbservice',

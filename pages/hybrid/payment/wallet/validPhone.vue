@@ -63,7 +63,7 @@ export default {
         }
     },
     mounted() {
-        const walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
+        const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
         if (walletAccount.email) {
             this.wallet_email_config = true

@@ -18,10 +18,11 @@ module.exports = {
                 singleline: 10
             }
         ],
+        eqeqeq: 'off',
         'vue/mustache-interpolation-spacing': 'off',
         'prettier/prettier': 0,
         'vue/singleline-html-element-content-newline': 'off',
-        'vue/multiline-html-element-content-newline':'off',
+        'vue/multiline-html-element-content-newline': 'off',
         'vue/html-closing-bracket-spacing': 'off',
         'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }],
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',

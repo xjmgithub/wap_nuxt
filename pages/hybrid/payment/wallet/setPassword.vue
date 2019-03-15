@@ -1,47 +1,229 @@
 <template>
     <div class="container">
-        <loading v-show="loadStatus" />
-        <!-- TODO SETPASSWORD -->
+        <div v-show="step==1" class="step1">
+            <verify-tel ref="phone" @canNext="canStep2=true"/>
+            <div class="footer">
+                <mButton :disabled="!canStep2" @click="goStep(2)" text="NEXT"/>
+            </div>
+        </div>
+        <div v-show="step==2" class="step2">
+            <passInput
+                ref="vscode"
+                @endinput="canStep3=true"
+                @inputing="canStep3=false"
+                :length="4"
+                :toggle-view="true"
+                placeholder="Enter the code"
+            />
+            <div class="footer">
+                <mButton :disabled="!canStep3" @click="goStep(3)" text="NEXT"/>
+            </div>
+        </div>
+        <div v-show="step==3" class="step2 step3">
+            <passInput ref="newpass" @endinput="canStep4=true" @inputing="canStep4=false" :toggle-view="true" placeholder="Set a 6-bit password"/>
+            <div class="footer">
+                <mButton :disabled="!canStep4" @click="goStep(4)" text="NEXT"/>
+            </div>
+        </div>
+        <div v-show="step==4" class="step2 step4">
+            <passInput ref="confirmpass" @endinput="canStep5=true" @inputing="canStep5=false" :toggle-view="true" placeholder="Confirm password"/>
+            <div class="footer">
+                <mButton :disabled="!canStep5" @click="goStep(5)" text="OK"/>
+            </div>
+        </div>
     </div>
 </template>
 <script>
-import loading from '~/components/loading'
+import verifyTel from '~/components/form/wallet_tel_verify'
+import passInput from '~/components/password'
+import mButton from '~/components/button'
+import { invoke, commonPayAfter, payWithBalance } from '~/functions/pay'
+import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
-        loading
+        verifyTel,
+        passInput,
+        mButton
     },
     data() {
         return {
-            loadStatus: true
+            loadStatus: true,
+            canStep2: false,
+            canStep3: false,
+            canStep4: false,
+            canStep5: false,
+            reset: false,
+            accountNo: null,
+            payToken: this.$route.query.paytoken,
+            card: this.$route.query.card // paystack card
+        }
+    },
+    async asyncData({ app: { $axios }, store }) {
+        try {
+            $axios.setHeader('token', store.state.token)
+            const res = await $axios.get('/vup/v1/ums/user/area', {
+                headers: {
+                    versionCode: '5300',
+                    clientType: 'android',
+                    token: store.state.token
+                }
+            })
+            const configs = res.data && res.data.appFBConfigs
+            let type = true
+            configs.forEach(item => {
+                if (item.functionBlockType === 91) {
+                    if (item.validType === 2) {
+                        type = true
+                    } else {
+                        type = false
+                    }
+                }
+            })
+
+            if (type === true) {
+                return { step: 1 }
+            } else {
+                return { step: 3 }
+            }
+        } catch (e) {
+            return { step: 1 }
         }
     },
     mounted() {
-        this.$axios
-            .get('/vup/v1/ums/user/area', {
-                headers: {
-                    versionCode: '5300',
-                    clientType: 'android'
-                }
-            })
-            .then(res => {
-                const configs = res.data && res.data.appFBConfigs
-                let type = true
-                configs.forEach(item => {
-                    if (item.functionBlockType === 91) {
-                        if (item.validType === 2) {
-                            type = true
-                        } else {
-                            type = false
-                        }
-                    }
-                })
-                if (type === true) {
-                    this.$router.replace('/hybrid/payment/wallet/validPhone?init=true')
+        const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
+        this.accountNo = walletAccount.accountNo
+    },
+    methods: {
+        goStep(num) {
+            if (num === 3) {
+                const vscode = this.$refs.vscode.password
+                const tel = this.$refs.phone.tel
+                const prefix = this.$refs.phone.prefix
+                if (this.reset) {
+                    this.$axios
+                        .get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${prefix + tel}&verifyCode=${vscode}`)
+                        .then(res => {
+                            const data = res.data
+                            if (data && data.code === 0) {
+                                this.step = num
+                            } else {
+                                this.$alert(data.message)
+                            }
+                        })
                 } else {
-                    this.$router.replace('/hybrid/payment/wallet/validEmail?init=true')
+                    this.$axios.put(`/mobilewallet/v1/accounts/${this.accountNo}/phone?phone=${prefix + tel}&verifyCode=${vscode}`, {}).then(res => {
+                        const data = res.data
+                        if (data && data.code === 0) {
+                            this.$alert('Set phone successfully', () => {
+                                this.step = num
+                            })
+                        } else {
+                            this.$alert(data.message)
+                        }
+                    })
                 }
-            })
+            } else if (num === 5) {
+                const vscode = this.$refs.vscode.password
+                const newpass = this.$refs.newpass.password
+                const confirmpass = this.$refs.confirmpass.password
+                if (newpass !== confirmpass) {
+                    this.$alert('Password do not match.Please try again.')
+                    return false
+                }
+                this.$axios
+                    .put(`/mobilewallet/uc/v2/accounts/${this.accountNo}/pay-password?newPassword=${newpass}&verifyCode=${vscode}`, {})
+                    .then(res => {
+                        if (res.data && res.data.code == '0') {
+                            this.pay()
+                        } else {
+                            this.$alert(res.data.message)
+                        }
+                    })
+            } else if (num === 4) {
+                const newpass = this.$refs.newpass.password
+                const reg = /^[\d]+$/
+                if (!reg.test(newpass)) {
+                    this.$alert('You must enter pure numbers.')
+                    return false
+                }
+                this.step = num
+            } else {
+                this.step = num
+            }
+        },
+        pay() {
+            this.$nuxt.$loading.start()
+            this.$store.commit('SHOW_SHADOW_LAYER')
+            if (this.card) {
+                invoke.call(
+                    this,
+                    this.payToken,
+                    993102,
+                    data => {
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        setCookie('lastpay', 'card')
+                        commonPayAfter.call(this, data, 3, 3)
+                    },
+                    { authorization_code: this.card }
+                )
+                return false
+            }else{
+                invoke.call(this, this.payToken, 9002, data => {
+                    payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
+                        setCookie('lastpay', 'wallet')
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                    })
+                })
+            }
+        }
     }
 }
 </script>
+<style lang="less" scoped>
+.container {
+    padding: 3rem 0.6rem;
+    height:100%;
+    background:white;
+    .step2 {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: white;
+        z-index: 2;
+        padding: 3rem 1rem;
+    }
+    .step3 {
+        z-index: 3;
+    }
+    .change-phone-link {
+        text-align: right;
+        a {
+            color: #0087eb;
+            text-decoration: underline;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+    }
+}
+.footer {
+    position: fixed;
+    bottom: 3rem;
+    width: 75%;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    a {
+        color: #0087eb;
+        text-decoration: underline;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+}
+</style>

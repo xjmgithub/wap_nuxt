@@ -1,4 +1,4 @@
-export default ({ $axios, redirect, store,route }) => {
+export default ({ app, $axios, redirect, store, route, $nuxt }) => {
     $axios.onError(error => {
         const code = parseInt(error.response && error.response.status)
         if (code === 401) {
