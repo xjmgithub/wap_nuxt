@@ -67,7 +67,7 @@ export default {
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
             const accountNo = JSON.parse(sessionStorage.getItem('wallet')).accountNo
-            this.$axios.post(`/mobilewallet/uc/v2/accounts/${accountNo}/verify-code?phone=${this.prefix + this.tel}&`).then(res => {
+            this.$axios.post(`/mobilewallet/uc/v2/accounts/${accountNo}/verify-code?phone=${this.prefix + this.tel}`).then(res => {
                 this.waiting_res = false
                 if (res.data.code === 0) {
                     this.$emit('canNext')
