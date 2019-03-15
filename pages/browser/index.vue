@@ -12,19 +12,18 @@
                 </nuxt-link>
             </div>
         </div>
-        <div class="recommand">
+        <div v-for="(item,i) in programs" :key="i" :class="{last:i==programs.length-1}" class="recommand">
             <h3>
                 <div class="dot">‧</div>
-                <div>Recommand programs</div>
+                <div>{{item.name}}</div>
             </h3>
             <ul class="clearfix">
-                <li v-for="(item,index) in programs" :key="index" >
-                    <div>
-                        <!-- <img :src="item.poster.resources[0].url.replace('http:','https:')"> -->
-                        <img src="~assets/img/web/pic3.jpg">
-                        <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
+                <li v-for="(ele,k) in item.proList" :key="k" :class="{bigFirst:item.proList.length%2!=0&&k==0}">
+                    <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+')'">
+                        <!-- <img :src="ele.poster.resources[0].url.replace('http:','https:')"> -->
+                        <span class="show-time">{{ele.durationSecond | formatShowTime}}</span>
                     </div>
-                    <span class="title">{{item.name}}</span>
+                    <span class="title">{{ele.name}}</span>
                 </li>
             </ul>
         </div>
@@ -36,14 +35,14 @@
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
                     <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
                     <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
@@ -68,6 +67,7 @@
     </div>
 </template>
 <script>
+import env from '~/env.js'
 import bgImgData from '~/components/web/bgImgData'
 import { downloadApk } from '~/functions/utils'
 export default {
@@ -75,7 +75,14 @@ export default {
     filters: {
         dttImgUrl(name) {
             const data = name.toLowerCase()
-            if (data === 'sport plus' || data === 'unique' || data === 'classique' || data === 'nova' || data === 'basique' || data === 'sport play') {
+            if (
+                data === 'sport plus' ||
+                data === 'unique' ||
+                data === 'classique' ||
+                data === 'nova' ||
+                data === 'basique' ||
+                data === 'sport play'
+            ) {
                 return true
             }
         },
@@ -116,16 +123,7 @@ export default {
             dishList: [], // DTH
             antennaList: [], // DTT
             recharge_url: 'https://m.startimestv.com/DVB/binding.php',
-            programs:[
-                {
-                    durationSecond:360,
-                    name:'wonderful cilps from game of hroones'
-                },
-                {
-                    durationSecond:360,
-                    name:'wonderful cilps from game of hroones'
-                }
-            ]
+            programs: []
         }
     },
     computed: {
@@ -139,6 +137,7 @@ export default {
             this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
         }
         this.getBouquets()
+        this.getPrograms()
     },
     methods: {
         getBouquets() {
@@ -170,6 +169,31 @@ export default {
         },
         downloadApk() {
             downloadApk(this)
+        },
+        getPrograms() {
+            // const tmp = new Date().toLocaleDateString()
+            // const start = new Date(new Date(tmp)).getTime() // 00:00:00
+            // const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
+            const start = 1552492800000 // 00:00:00
+            const end = 1552579199999 // 23:59:59
+            this.$axios.get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=100&dateFrom=${start}&dateTo=${end}`).then(res => {
+                const data = res.data.data
+                if (data && data.length > 0) {
+                    data.forEach(ele => {
+                        if (ele.widgets && ele.widgets.length > 0) {
+                            ele.widgets.forEach(item => {
+                                if (item.content_code === '10012') {
+                                    this.programs.push({
+                                        name: ele.name,
+                                        proList: JSON.parse(item.data_json)
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+                console.log(this.programs)
+            })
         }
     },
     head() {
@@ -246,8 +270,12 @@ export default {
         }
     }
 }
-.recommand{
+.recommand {
     .boxStyle;
+    border-bottom: none;
+    &.last{
+        border-bottom: 1px solid #d8d8d8;
+    }
     li {
         list-style: none;
         float: left;
@@ -256,8 +284,20 @@ export default {
         &:nth-child(2n) {
             float: right;
         }
+        &.bigFirst {
+            width: 100%;
+        }
         div {
             position: relative;
+            width:100%;
+            background-size: contain !important;
+             &:before {
+                content: '';
+                display: inline-block;
+                padding-bottom: 50%;
+                width: 0.1px;
+                vertical-align: middle;
+            }
             .show-time {
                 position: absolute;
                 bottom: 0;
@@ -270,6 +310,7 @@ export default {
             img {
                 width: 100%;
                 display: block;
+                height:100%;
             }
         }
         span {
