@@ -121,24 +121,27 @@ export default {
     }
     ul {
         li {
-            list-style: none;
-            line-height: 2.3rem;
-            position: relative;
-            color: #0087eb;
-            font-weight: bold;
-            font-size: 0.9rem;
+            a {
+                list-style: none;
+                line-height: 2.3rem;
+                position: relative;
+                color: #0087eb;
+                font-weight: bold;
+                font-size: 0.9rem;
+                display:block;
 
-            span:first-child {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 94%;
-                display: block;
-            }
-            .arrows {
-                position: absolute;
-                right: 0;
-                bottom: 0;
+                span:first-child {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    width: 94%;
+                    display: block;
+                }
+                .arrows {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                }
             }
         }
     }
