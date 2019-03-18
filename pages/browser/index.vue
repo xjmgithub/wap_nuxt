@@ -12,21 +12,7 @@
                 </nuxt-link>
             </div>
         </div>
-        <div v-for="(item,i) in programs" :key="i" :class="{last:i==programs.length-1}" class="recommand">
-            <h3>
-                <div class="dot">‧</div>
-                <div>{{item.name}}</div>
-            </h3>
-            <ul class="clearfix">
-                <li v-for="(ele,k) in item.proList" :key="k" :class="{bigFirst:item.proList.length%2!=0&&k==0}">
-                    <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+')'">
-                        <!-- <img :src="ele.poster.resources[0].url.replace('http:','https:')"> -->
-                        <span class="show-time">{{ele.durationSecond | formatShowTime}}</span>
-                    </div>
-                    <span class="title">{{ele.name}}</span>
-                </li>
-            </ul>
-        </div>
+        <vod-list v-for="(item,index) in programs" :key="index" :item="item"/>
         <div class="bouquets">
             <h3>
                 <div class="dot">‧</div>
@@ -35,14 +21,14 @@
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
                     <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
                     <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
@@ -69,7 +55,8 @@
 <script>
 import env from '~/env.js'
 import bgImgData from '~/components/web/bgImgData'
-import {downloadApk, formatTime} from '~/functions/utils'
+import { downloadApk } from '~/functions/utils'
+import vodList from '~/components/web/vod'
 export default {
     layout: 'default',
     filters: {
@@ -99,13 +86,11 @@ export default {
             ) {
                 return true
             }
-        },
-        formatShowTime(val) {
-           return formatTime(val)
         }
     },
     components: {
-        bgImgData
+        bgImgData,
+        vodList
     },
     data() {
         return {
@@ -169,17 +154,17 @@ export default {
                     data.forEach(ele => {
                         if (ele.widgets && ele.widgets.length > 0) {
                             ele.widgets.forEach(item => {
-                                if (item.content_code === '10012') {
+                                if (item.content_code.indexOf('100') == 0 || item.content_code.indexOf('109') == 0) {
                                     this.programs.push({
                                         name: ele.name,
-                                        proList: JSON.parse(item.data_json)
+                                        type: item.content_code,
+                                        list: JSON.parse(item.data_json)
                                     })
                                 }
                             })
                         }
                     })
                 }
-                console.log(this.programs)
             })
         }
     },
@@ -257,63 +242,7 @@ export default {
         }
     }
 }
-.recommand {
-    .boxStyle;
-    border-bottom: none;
-    &.last{
-        border-bottom: 1px solid #d8d8d8;
-    }
-    li {
-        list-style: none;
-        float: left;
-        width: 48%;
-        line-height: 1.1rem;
-        &:nth-child(2n) {
-            float: right;
-        }
-        &.bigFirst {
-            width: 100%;
-        }
-        div {
-            position: relative;
-            width:100%;
-            background-size: contain !important;
-             &:before {
-                content: '';
-                display: inline-block;
-                padding-bottom: 50%;
-                width: 0.1px;
-                vertical-align: middle;
-            }
-            .show-time {
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                padding: 0 0.2rem;
-                background: rgba(0, 0, 0, 1);
-                color: #ffffff;
-                font-size: 0.8rem;
-            }
-            img {
-                width: 100%;
-                display: block;
-                height:100%;
-            }
-        }
-        span {
-            font-size: 0.85rem;
-            color: #666666;
-            &.title {
-                display: -webkit-box;
-                overflow: hidden;
-                height: 2.6rem;
-                padding-top: 0.4rem;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-            }
-        }
-    }
-}
+
 .bouquets {
     .boxStyle;
     padding: 0.3rem 0;

@@ -44,7 +44,6 @@ export default {
     mounted() {
         this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios.get(`/cms/v2/vup/snapshot/channels?count=1000&platformTypes=1&platformTypes=0`).then(res => {
-            console.log(res.data)
             this.$nextTick(() => this.$nuxt.$loading.finish())
             const data = res.data
             data.forEach(ele => {
@@ -69,7 +68,6 @@ export default {
 <style lang="less" scoped>
 .guide {
     width: 100%;
-    padding: 0 0.8rem;
     .search {
         position: relative;
         margin: 0.5rem 0;
