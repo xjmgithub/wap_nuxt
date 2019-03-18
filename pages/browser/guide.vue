@@ -5,28 +5,18 @@
                 <input type="text" placeholder="Search your favorite channels">
                 <img @click="search" src="~assets/img/web/ic_search.png">
             </div>
-            <div v-for="(item ,i) in channelList" :key="i" class="channels">
-                <img :src="item.logo.resources[0].url.replace('http:','https:')" alt="">
-                <div class="celDetail">
-                    <p>{{item.name}}
-                        <span v-show="item.isDTT" class="dtt"><img src="~assets/img/web/ic_guide_dtt.png" alt="">{{item.dttChannel}}</span>
-                        <span v-show="item.isDTH" class="dth"><img src="~assets/img/web/ic_guide_dth.png" alt="">{{item.dthChannel}}</span>
-                    </p>
-                    <div v-for="(item1,index) in 3" :key="index">
-                        <span :class="{current:index==0}" class="playTime">14:00</span>
-                        <div :class="{current:index==0}" class="playTitle"> World Cup Goals 2019
-                            <div v-show="index==0" class="total">
-                                <div :style="{ width: '50%'}" class="progress" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <channel v-for="(item ,i) in channelList" :key="i" :item="item"/>
         </div>
     </div>
 </template>
 <script>
+import channel from '~/components/web/guideitem'
+import localforage from 'localforage'
+import dayjs from 'dayjs'
 export default {
+    components: {
+        channel: channel
+    },
     filters: {
         formatPlayTime(time) {
             const tmp = new Date(time)
@@ -38,30 +28,63 @@ export default {
     data() {
         return {
             channelList: [],
-            epgList:[]
+            epgList: []
         }
     },
     mounted() {
-        this.$nextTick(() => this.$nuxt.$loading.start())
-        this.$axios.get(`/cms/v2/vup/snapshot/channels?count=1000&platformTypes=1&platformTypes=0`).then(res => {
-            this.$nextTick(() => this.$nuxt.$loading.finish())
-            const data = res.data
-            data.forEach(ele => {
-                if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
-                    const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
-                    platformInfos.forEach(plat => {
-                        ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
-                        ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
-                        ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
-                        ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
-                    })
+        
+        localforage.config({
+            driver: localforage.INDEXEDDB,
+            name: 'StarTimes'
+        })
+
+        localforage
+            .getItem('dbtime')
+            .then(val => {
+                if (val) {
+                    if (val != dayjs().format('YYYY-MM-DD')) {
+                        // DELETE CACHE
+                        localforage.clear().then(() => {
+                            localforage.setItem('dbtime', dayjs().format('YYYY-MM-DD'))
+                            this.getChannels()
+                        })
+                    } else {
+                        this.getChannels()
+                    }
+                } else {
+                    localforage.setItem('dbtime', dayjs().format('YYYY-MM-DD'))
+                    this.getChannels()
                 }
             })
-            this.channelList = data
+            .catch(err => {
+                console.log(err)
+            })
+
+        document.querySelector('#__layout>.wrapper').addEventListener('scroll', () => {
+            this.$store.commit('SCROLL_PAGE', document.querySelector('#__layout>.wrapper').scrollTop)
         })
     },
     methods: {
-        search() {}
+        search() {},
+        getChannels() {
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
+                const data = res.data
+                data.forEach(ele => {
+                    if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+                        const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+                        platformInfos.forEach(plat => {
+                            ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
+                            ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
+                            ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
+                            ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
+                        })
+                    }
+                })
+                this.channelList = data
+            })
+        }
     }
 }
 </script>
@@ -89,71 +112,6 @@ export default {
                 width: 1.5rem;
                 height: 1.5rem;
                 margin-top: -0.75rem;
-            }
-        }
-    }
-    .channels {
-        padding: 1rem 0;
-        border-bottom: 1px solid #d8d8d8;
-        img {
-            width: 30%;
-        }
-        .celDetail {
-            float: right;
-            width: 68%;
-            padding-top: 0.3rem;
-            p {
-                span {
-                    float: right;
-                    margin-left: 0.5rem;
-                    font-size: 0.95rem;
-                    &.dtt {
-                        color: #5eb108;
-                    }
-                    &.dth {
-                        color: #e7336e;
-                    }
-                    img {
-                        width: 1rem;
-                        height: 1rem;
-                        vertical-align: top;
-                    }
-                }
-            }
-            & > div {
-                margin: 0.3rem 0;
-            }
-        }
-        .playTime {
-            font-size: 0.95rem;
-            color: #000000;
-            width: 20%;
-            display: inline-block;
-            vertical-align: top;
-            &.current {
-                color: #0084e5;
-            }
-        }
-        .playTitle {
-            font-size: 0.95rem;
-            color: #333333;
-            display: inline-block;
-            width: 78%;
-            vertical-align: top;
-            &.current {
-                color: #0084e5;
-            }
-            .total {
-                width: 100%;
-                height: 4px;
-                background-color: #dddddd;
-                border-radius: 4px;
-                margin: 0.3rem 0;
-                .progress {
-                    background-color: #0084e5;
-                    height: 4px;
-                    border-radius: 4px;
-                }
             }
         }
     }
