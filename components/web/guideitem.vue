@@ -13,13 +13,17 @@
                     {{item.dthChannel}}
                 </span>
             </p>
-            <div v-for="(item1,index) in 3" :key="index">
+            <div v-for="(item1,index) in 3" :key="index" v-if="loaded">
                 <span :class="{current:index==0}" class="playTime">14:00</span>
                 <div :class="{current:index==0}" class="playTitle">World Cup Goals 2019
                     <div v-show="index==0" class="total">
                         <div :style="{ width: '50%'}" class="progress"/>
                     </div>
                 </div>
+            </div>
+            <div v-if="!loaded" class="loading-epg">
+                <div class="gray-block"/>
+                <div class="gray-block"/>
             </div>
         </div>
     </div>
@@ -85,6 +89,8 @@ export default {
                                     localforage.setItem('channel_' + channelID, res.data || '')
                                 })
                         } else {
+                            this.loading = false
+                            this.loaded = true
                             this.epg = val
                         }
                     })
@@ -160,6 +166,11 @@ export default {
                 border-radius: 4px;
             }
         }
+    }
+    .gray-block {
+        background: #d0d0d0;
+        height: 1.3rem;
+        margin: 0.8rem 0;
     }
 }
 </style>
