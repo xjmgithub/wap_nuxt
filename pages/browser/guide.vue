@@ -107,7 +107,6 @@ export default {
 <style lang="less" scoped>
 .guide {
     width: 100%;
-    padding: 0 0.8rem;
     .search {
         position: relative;
         margin: 0.5rem 0;
