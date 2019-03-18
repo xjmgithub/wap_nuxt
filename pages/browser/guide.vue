@@ -12,11 +12,14 @@
                         <span v-show="item.isDTT" class="dtt"><img src="~assets/img/web/ic_guide_dtt.png" alt="">{{item.dttChannel}}</span>
                         <span v-show="item.isDTH" class="dth"><img src="~assets/img/web/ic_guide_dth.png" alt="">{{item.dthChannel}}</span>
                     </p>
-                    <div v-for="(item1,index) in 3" :key="index">
-                        <span :class="{current:index==0}" class="playTime">14:00</span>
-                        <div :class="{current:index==0}" class="playTitle"> World Cup Goals 2019
-                            <div v-show="index==0" class="total">
-                                <div :style="{ width: '50%'}" class="progress" />
+                    <div :class="{show:item.epgList}">
+                        <div v-for="(ele,k) in item.epgList" :key="k" >
+                            <span v-show="ele.length==0">no epg for today</span>
+                            <span :class="{current:index==0}" class="playTime">14:00</span>
+                            <div :class="{current:index==0}" class="playTitle"> World Cup Goals 2019
+                                <div v-show="index==0" class="total">
+                                    <div :style="{ width: '50%'}" class="progress" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -36,33 +39,68 @@ export default {
         }
     },
     data() {
+        const tmp = new Date().toLocaleDateString()
+        const start = new Date(new Date(tmp)).getTime() // 00:00:00
+        const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
         return {
             channelList: [],
-            epgList:[]
+            startDate:start,
+            endDate:end,
+            flag: true
+
         }
     },
     mounted() {
-        this.$nextTick(() => this.$nuxt.$loading.start())
-        this.$axios.get(`/cms/v2/vup/snapshot/channels?count=1000&platformTypes=1&platformTypes=0`).then(res => {
-            console.log(res.data)
-            this.$nextTick(() => this.$nuxt.$loading.finish())
-            const data = res.data
-            data.forEach(ele => {
-                if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
-                    const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
-                    platformInfos.forEach(plat => {
-                        ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
-                        ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
-                        ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
-                        ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
-                    })
+        this.getChannelList()
+         this.$nextTick(() => {
+            const contain = document.querySelector('.wrapper')
+            contain.addEventListener('scroll', function() {
+                console.log(contain.scrollTop)
+                if (contain.scrollTop % 132 >= 66) {
+                    const index = (contain.scrollTop) / 132 + 3
+                    this.getEpg(index)
                 }
             })
-            this.channelList = data
         })
     },
     methods: {
-        search() {}
+        search() {},
+        getChannelList(){
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            this.$axios.get(`/cms/v2/vup/snapshot/channels?count=1000&platformTypes=1&platformTypes=0`).then(res => {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
+                const data = res.data
+                data.forEach(ele => {
+                    ele.epgList = []
+                    if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+                        const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+                        platformInfos.forEach(plat => {
+                            ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
+                            ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
+                            ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
+                            ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
+                        })
+                    }
+                })
+                this.channelList = data
+                this.getEpg(0)
+                this.getEpg(1)
+                this.getEpg(2)
+                this.getEpg(3)
+            })
+        },
+        getEpg(index){
+            const id = this.channelList[index].id
+            if(this.flag){
+                this.flag = false
+                this.$axios.get(`/cms/programs?channelID=${id}&startDate=${this.startDate}&endDate=${this.endDate}`).then(res => {
+                    const data = res.data
+                    console.log(data)
+                    this.channelList[index].epgList = data
+                    this.flag = true
+                })
+            }
+        }
     }
 }
 </script>
@@ -80,6 +118,7 @@ export default {
             border: 1px solid #979797;
             height: 2.5rem;
             line-height: 2.5rem;
+            outline-style: none;
             &::-webkit-input-placeholder {
                 color: #bdbdbd;
                 font-size: 0.95rem;
@@ -124,6 +163,12 @@ export default {
             }
             & > div {
                 margin: 0.3rem 0;
+                background-color: #eeeeee;
+                width:100%;
+                height:5rem;
+                .show{
+                    background-color: #ffffff;
+                }
             }
         }
         .playTime {
