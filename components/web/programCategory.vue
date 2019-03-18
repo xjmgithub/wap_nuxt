@@ -19,7 +19,7 @@ export default {
     data() {
         let choosedId = this.$route.params.id || 0
         let list = getOnlineCategory()
-        if (env.msHost.indexOf('qa') > 0 || env.msHost.indexOf('dev') > 0) {
+        if (env.proxyHost.indexOf('qa') > 0 || env.proxyHost.indexOf('dev') > 0) {
             list = getQaCategory()
         }
         list.sort((a, b) => {

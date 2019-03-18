@@ -1,54 +1,62 @@
 <template>
     <div class="wrapper">
         <div class="poster">
-            <img :src="pPoster.replace('http:','https:')" alt>
-            <img v-show="pPoster" src="~assets/img/web/ic_play.png" alt="">
+            <img :src="pPoster.replace('http:','https:')">
+            <img v-show="pPoster" src="~assets/img/web/ic_play.png">
             <span class="program-name">{{pName}}</span>
             <p>{{pDescription}}</p>
         </div>
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
             <ul class="clearfix">
-                <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item.id)">
-                    <div>
-                        <img :src="item.poster.resources[0].url.replace('http:','https:')">
-                        <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
-                    </div>
-                    <span class="title">{{item.name}}</span>
+                <li v-for="(item,index) in subProgram" :key="index">
+                    <nuxt-link :to="`/browser/program/subdetail/${pid}?subId=${item.id}`">
+                        <div>
+                            <img :src="item.poster.resources[0].url.replace('http:','https:')">
+                            <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
+                        </div>
+                        <span class="title">{{item.name}}</span>
+                    </nuxt-link>
                 </li>
             </ul>
         </div>
     </div>
 </template>
 <script>
-import {formatTime} from '~/functions/utils'
+import { formatTime } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
-           return formatTime(val)
+            return formatTime(val)
         }
     },
     data() {
         return {
-            pPoster: '',
-            pId: '',
-            pName: '',
-            pDescription: '',
+            pid: this.$route.params.id,
             subProgram: []
         }
     },
+    async asyncData({ app: { $axios }, route, store }) {
+        $axios.setHeader('token', store.state.token)
+        let data = {}
+        try {
+            const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
+            data = res.data
+        } catch (e) {
+            data = {}
+        }
+        return {
+            pPoster: data.poster || '',
+            pName: data.name || '',
+            pDescription: data.programSummary || ''
+        }
+    },
     mounted() {
-        const msg = sessionStorage.getItem('program')
-        if (msg) {
-            const info = JSON.parse(msg)
-            this.pPoster = info.poster
-            this.pId = info.id
-            this.pName = info.name
-            this.pDescription = info.programSummary
+        if (this.pid) {
             this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
-                const data = res.data.data
+            this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
+                const data = res.data.data
                 if (data && data.length > 0) {
                     this.subProgram = data
                 }
@@ -73,14 +81,13 @@ img {
 }
 .poster {
     border-bottom: 1px solid #d8d8d8;
-    margin: 0.8rem;
-    padding-bottom: 0.8rem;
+    padding: 0.8rem 0;
     position: relative;
     img {
         width: 100%;
         height: 11rem;
         margin-bottom: 0.5rem;
-        &+img{
+        & + img {
             position: absolute;
             width: 3rem;
             top: 4rem;
@@ -88,7 +95,7 @@ img {
             left: 50%;
             margin-left: -1.5rem;
         }
-    }    
+    }
     .program-name {
         font-weight: bold;
         color: #333333;
@@ -106,7 +113,6 @@ img {
     }
 }
 .clips {
-    margin: 0.8rem;
     p {
         color: #111111;
         margin: 0.5rem 0;

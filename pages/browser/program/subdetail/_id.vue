@@ -2,91 +2,92 @@
     <div class="wrapper">
         <div class="poster">
             <img :src="sPoster.replace('http:','https:')" alt class="cover">
-            <img v-show="sPoster" src="~assets/img/web/ic_play.png" alt="">
+            <img v-show="sPoster" src="~assets/img/web/ic_play.png">
             <span class="program-name">{{sName}}</span>
             <p>{{sDescription}}</p>
         </div>
         <div class="poster father">
-            <nuxt-link to="/browser/programlist/program">
+            <nuxt-link :to="`/browser/program/detail/${pid}`">
                 <span class="program-name">{{pName}}</span>
                 <div class="clearfix">
                     <p>{{pDescription}}</p>
-                    <img :src="pPoster.replace('http:','https:')" alt>
+                    <img :src="pPoster.replace('http:','https:')">
                 </div>
             </nuxt-link>
         </div>
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
             <ul class="clearfix">
-                <li v-for="(item,index) in subProgram" :key="index" @click="toSubProgramDetail(item.id)">
-                    <div>
-                        <img :src="item.poster.resources[0].url.replace('http:','https:')">
-                        <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
-                    </div>
-                    <span class="title">{{item.name}}</span>
+                <li v-for="(item,index) in subProgram" :key="index">
+                    <nuxt-link :to="`/browser/program/subdetail/${pid}?subId=${item.id}`">
+                        <div>
+                            <img :src="item.poster.resources[0].url.replace('http:','https:')">
+                            <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
+                        </div>
+                        <span class="title">{{item.name}}</span>
+                    </nuxt-link>
                 </li>
             </ul>
         </div>
     </div>
 </template>
 <script>
-import {formatTime} from '~/functions/utils'
+import { formatTime } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
-           return formatTime(val)
+            return formatTime(val)
         }
     },
     data() {
         return {
-            pPoster: '',
-            pId: this.$route.query.proId,
-            pName: '',
-            pDescription: '',
+            pid: this.$route.params.id,
             sPoster: '',
-            sId: this.$route.query.subId,
             sName: '',
             sDescription: '',
             subProgram: []
         }
     },
-    mounted() {
-        const program = sessionStorage.getItem('program')
-        if (program) {
-            const info = JSON.parse(program)
-            this.pPoster = info.poster
-            this.pId = info.id
-            this.pName = info.name
-            this.pDescription = info.programSummary
-        }
-        if (this.pId) {
-            this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
-                const data = res.data.data
-                this.$nextTick(() => this.$nuxt.$loading.finish())
-                if (data && data.length > 0) {
-                    this.subProgram = data
-                    this.toSubProgramDetail(this.sId)
-                }
-            })
+    computed: {
+        sid() {
+            return this.$route.query.subId
         }
     },
-    methods: {
-        getSubProgram() {
-            this.$axios.get(`/vup/v1/program/${this.pId}/sub-vods`).then(res => {
+    watch: {
+        sid(nv, ov) {
+            this.$router.go(0)
+        }
+    },
+    async asyncData({ app: { $axios }, route, store }) {
+        $axios.setHeader('token', store.state.token)
+        let data = {}
+        try {
+            const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
+            data = res.data
+        } catch (e) {
+            data = {}
+        }
+        return {
+            pPoster: data.poster || '',
+            pName: data.name || '',
+            pDescription: data.programSummary || ''
+        }
+    },
+    mounted() {
+        if (this.pid) {
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
                 const data = res.data.data
                 if (data && data.length > 0) {
                     this.subProgram = data
-                    this.toSubProgramDetail(this.sId)
-                }
-            })
-        },
-        toSubProgramDetail(id) {
-            this.subProgram.forEach(ele => {
-                if (ele.id === id) {
-                    this.sPoster = ele.poster.resources[0].url
-                    this.sName = ele.name
-                    this.sDescription = ele.summary
+                    this.subProgram.forEach(ele => {
+                        if (ele.id == this.sid) {
+                            this.sPoster = ele.poster.resources[0].url
+                            this.sName = ele.name
+                            this.sDescription = ele.summary
+                        }
+                    })
                 }
             })
         }
@@ -111,7 +112,7 @@ img {
         width: 100%;
         height: 11rem;
         margin-bottom: 0.5rem;
-         &+img{
+        & + img {
             position: absolute;
             width: 3rem;
             top: 4rem;

@@ -1,22 +1,24 @@
 <template>
     <div class="wrapper">
-        <program-category ref="category" />
+        <program-category ref="category"/>
         <div class="program-list">
             <div v-for="(item,index) in programList" :key="index" class="program">
-                <div @click="toProgramDetail(item)" class="title">
-                    <span>{{item.name}}</span>
-                    <span v-show="item.subPrograms.length>3" class="more">MORE</span>
-                </div>
+                <nuxt-link :to="`/browser/program/detail/${item.id}`">
+                    <div class="title">
+                        <span>{{item.name}}</span>
+                        <span v-show="item.subPrograms.length>3" class="more">MORE</span>
+                    </div>
+                </nuxt-link>
                 <ul>
-                    <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3" @click="toSubProgramDetail(subPro.id,item)">
-                        <span>{{subPro.name}}</span>
-                        <span class="arrows">&gt;&gt;</span>
+                    <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3">
+                        <nuxt-link :to="`/browser/program/subdetail/${item.id}?subId=${subPro.id}`">
+                            <span>{{subPro.name}}</span>
+                            <span class="arrows">&gt;&gt;</span>
+                        </nuxt-link>
                     </li>
                 </ul>
             </div>
-            <div v-show="!endedState" class="loading-end">
-                loading…
-            </div>
+            <div v-show="!endedState" class="loading-end">loading…</div>
         </div>
     </div>
 </template>
@@ -24,7 +26,7 @@
 import programCategory from '~/components/web/programCategory'
 export default {
     components: {
-        programCategory,
+        programCategory
     },
     data() {
         return {
