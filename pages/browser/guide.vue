@@ -26,12 +26,8 @@ export default {
         }
     },
     data() {
-        const tmp = new Date().toLocaleDateString()
-        const start = new Date(new Date(tmp)).getTime() // 00:00:00
-        const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
         return {
-            channelList: [],
-            epgList: []
+            channelList: []
         }
     },
     mounted() {
