@@ -212,8 +212,12 @@ export default {
         margin: 0.8rem 0;
     }
     .noEpg{
-        padding:1rem 0;
-        color:#aaaaaa;
+        color: #666666;
+        background-color: #eeeeee;
+        height: 5rem;
+        line-height: 5rem;
+        text-align: center;
+        margin-top: 0.5rem;
     }
 }
 </style>

@@ -2,10 +2,11 @@
     <div class="wrapper">
         <div class="guide">
             <div class="search">
-                <input type="text" placeholder="Search your favorite channels">
+                <input v-model="keyword" type="text" placeholder="Search your favorite channels">
                 <img @click="search" src="~assets/img/web/ic_search.png">
             </div>
-            <channel v-for="(item ,i) in channelList" :key="i" :item="item"/>
+            <p class="count">{{channelList.length}} Channels</p>
+            <channel v-for="(item ,i) in channelList" :key="i" :item="item" />
         </div>
     </div>
 </template>
@@ -19,11 +20,11 @@ export default {
     },
     data() {
         return {
-            channelList: []
+            channelList: [],
+            keyword: ''
         }
     },
     mounted() {
-        
         localforage.config({
             driver: localforage.INDEXEDDB,
             name: 'StarTimes'
@@ -56,24 +57,61 @@ export default {
         })
     },
     methods: {
-        search() {},
-        getChannels() {
-            this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
-                this.$nextTick(() => this.$nuxt.$loading.finish())
-                const data = res.data
-                data.forEach(ele => {
-                    if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
-                        const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
-                        platformInfos.forEach(plat => {
-                            ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
-                            ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
-                            ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
-                            ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
-                        })
+        search() {
+            if(this.keyword){
+                const tmp =[]
+                this.channelList.forEach(ele => {
+                    if (ele.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1 || ele.id.toString().indexOf(this.keyword) > -1) {
+                        tmp.push(ele)
                     }
                 })
-                this.channelList = data
+                this.channelList = tmp
+            }else{
+                this.getChannels()
+            }
+        },
+        getChannels() {
+            // this.$nextTick(() => this.$nuxt.$loading.start())
+            // this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
+            //     this.$nextTick(() => this.$nuxt.$loading.finish())
+            //     const data = res.data
+            //     data.forEach(ele => {
+            //         if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+            //             const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+            //             platformInfos.forEach(plat => {
+            //                 ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
+            //                 ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
+            //                 ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
+            //                 ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
+            //             })
+            //         }
+            //     })
+            //     this.channelList = data
+            // })
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            localforage.getItem('channel').then(val => {
+                if (!val) {
+                    this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
+                        this.$nextTick(() => this.$nuxt.$loading.finish())
+                        const data = res.data
+                        data.forEach(ele => {
+                            if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+                                const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+                                platformInfos.forEach(plat => {
+                                    ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
+                                    ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
+                                    ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
+                                    ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
+                                })
+                            }
+                        })
+                        this.channelList = data
+                        localforage.setItem('channel', this.channelList)
+                    })
+                } else {
+                    this.$nextTick(() => this.$nuxt.$loading.finish())
+                    this.channelList = val
+                }
             })
         }
     }
@@ -106,6 +144,9 @@ export default {
                 margin-top: -0.75rem;
             }
         }
+    }
+    .count{
+        color:#bdbdbd;
     }
 }
 </style>
