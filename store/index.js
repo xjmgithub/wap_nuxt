@@ -35,7 +35,8 @@ export const state = () => ({
     rankList: [],
     serverTime: new Date(),
     navState: false,
-    needLoginAlert: false
+    needLoginAlert: false,
+    scrollPage:0
 })
 
 export const mutations = {
@@ -129,6 +130,9 @@ export const mutations = {
     },
     SET_NEED_LOGIN: function(state, val) {
         state.needLoginAlert = val
+    },
+    SCROLL_PAGE:function(state,val){
+        state.scrollPage = val
     }
 }
 
