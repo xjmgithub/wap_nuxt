@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div v-if="channel.poster" class="poster">
+        <div v-if="channel.poster" @click="confirmDown" class="poster">
             <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
             <img src="~assets/img/web/ic_play.png">
 
@@ -70,6 +70,7 @@
     </div>
 </template>
 <script>
+import { downApp } from '~/functions/utils'
 export default {
     layout: 'default',
     filters: {
@@ -214,6 +215,18 @@ export default {
                     }
                 })
             }
+        },
+        confirmDown(){
+            const _this = this
+            this.$confirm(
+                'Download StarTimes ON to watch',
+                () => {
+                    downApp.call(_this)
+                },
+                () => {},
+                'Go',
+                'Not now'
+            )
         }
     },
     head() {

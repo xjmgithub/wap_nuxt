@@ -17,14 +17,6 @@ export default {
     components: {
         channel: channel
     },
-    filters: {
-        formatPlayTime(time) {
-            const tmp = new Date(time)
-            const hours = tmp.getHours() >= 10 ? tmp.getHours() : '0' + tmp.getHours()
-            const minutes = tmp.getMinutes() >= 10 ? tmp.getMinutes() : '0' + tmp.getMinutes()
-            return hours + ':' + minutes
-        }
-    },
     data() {
         return {
             channelList: []

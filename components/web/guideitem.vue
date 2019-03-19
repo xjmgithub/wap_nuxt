@@ -13,24 +13,37 @@
                     {{item.dthChannel}}
                 </span>
             </p>
-            <div v-for="(item1,index) in 3" :key="index" v-if="loaded">
-                <span :class="{current:index==0}" class="playTime">14:00</span>
-                <div :class="{current:index==0}" class="playTitle">World Cup Goals 2019
-                    <div v-show="index==0" class="total">
-                        <div :style="{ width: '50%'}" class="progress"/>
+            <nuxt-link :to="`/browser/liveDetail?channelId=${item.id}`">
+                <div v-for="(epg,index) in epgList" :key="index" v-if="loaded" class="epgMsg">
+                    <span :class="{current:index==0}" class="playTime">{{epg.startDate | formatPlayTime}}</span>
+                    <div :class="{current:index==0}" class="playTitle">{{epg.name}}
+                        <div v-show="index==0" class="total">
+                            <div :style="{ width: progress + '%'}" class="progress"/>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div v-if="!loaded" class="loading-epg">
-                <div class="gray-block"/>
-                <div class="gray-block"/>
-            </div>
+                <div v-if="!loaded">
+                    <div class="gray-block"/>
+                    <div class="gray-block"/>
+                </div>
+                <div v-if="loaded && epgList.length==0" class="noEpg">
+                    No epg for today
+                </div>
+            </nuxt-link>
         </div>
     </div>
 </template>
 <script>
 import localforage from 'localforage'
 export default {
+    filters: {
+        formatPlayTime(time) {
+            const tmp = new Date(time)
+            const hours = tmp.getHours() >= 10 ? tmp.getHours() : '0' + tmp.getHours()
+            const minutes = tmp.getMinutes() >= 10 ? tmp.getMinutes() : '0' + tmp.getMinutes()
+            return hours + ':' + minutes
+        }
+    },
     props: {
         item: {
             type: Object,
@@ -41,10 +54,16 @@ export default {
         }
     },
     data() {
+        const tmp = new Date().toLocaleDateString()
+        const start = new Date(new Date(tmp)).getTime() // 00:00:00
+        const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
         return {
             loading: false,
             loaded: false,
-            epg: []
+            epgList: [],
+            start:start,
+            end:end,
+            progress:0
         }
     },
     computed: {
@@ -81,22 +100,42 @@ export default {
                     .then(val => {
                         if (!val) {
                             this.$axios
-                                .get(`/cms/programs?channelID=${channelID}&startDate=1552838400000&endDate=1552924799999&count=100`)
+                                .get(`/cms/programs?channelID=${channelID}&startDate=${this.start}&endDate=${this.end}&count=100`)
                                 .then(res => {
                                     this.loading = false
                                     this.loaded = true
-                                    this.epg = res.data
+                                    this.getCurrentEpg(res.data)
                                     localforage.setItem('channel_' + channelID, res.data || '')
                                 })
                         } else {
                             this.loading = false
                             this.loaded = true
-                            this.epg = val
+                            this.getCurrentEpg(val)
                         }
                     })
                     .catch(function(err) {
                         console.log(err)
                     })
+            }
+        },
+        getCurrentEpg(data){
+            if (data.length > 0) {
+                const now = new Date().getTime()
+                data.sort(function(a, b) {
+                    return a.startDate - b.startDate
+                })
+                data.forEach((ele,i) => {
+                    if (ele.startDate <= now && now <= ele.endDate) {
+                        const totalTime = ele.endDate - ele.startDate
+                        const nowTime = now - ele.startDate
+                        this.progress = Math.floor((nowTime / totalTime) * 100)
+                        if(i<data.length-3){
+                            this.epgList = data.slice(i,i+3)
+                        }else{
+                            this.epgList = data.slice(i)
+                        }
+                    } 
+                })
             }
         }
     }
@@ -131,7 +170,7 @@ export default {
                 }
             }
         }
-        & > div {
+        .epgMsg {
             margin: 0.3rem 0;
         }
     }
@@ -171,6 +210,10 @@ export default {
         background: #d0d0d0;
         height: 1.3rem;
         margin: 0.8rem 0;
+    }
+    .noEpg{
+        padding:1rem 0;
+        color:#aaaaaa;
     }
 }
 </style>

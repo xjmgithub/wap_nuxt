@@ -221,15 +221,13 @@ export const formatAmount = num => {
     }
 }
 export const formatTime = val => {
-    if (val < 60) {
-        return '00:' + val
-    } else if (val >= 60 && val < 360) {
+    if ( val < 3600) {
         const min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
         const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
         return min + ':' + sec
-    } else if (val >= 360) {
-        const hour = Math.floor(val / 360) < 10 ? '0' + Math.floor(val / 360) : Math.floor(val / 360)
-        const min = Math.floor((val % 360) / 60) < 10 ? '0' + Math.floor((val % 360) / 60) : Math.floor((val % 360) / 60)
+    } else if (val >= 3600) {
+        const hour = Math.floor(val / 3600) < 10 ? '0' + Math.floor(val / 3600) : Math.floor(val / 3600)
+        const min = Math.floor((val % 3600) / 60) < 10 ? '0' + Math.floor((val % 3600) / 60) : Math.floor((val % 3600) / 60)
         const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
         return hour + ':' + min + ':' + sec
     }

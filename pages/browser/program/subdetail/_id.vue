@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div class="poster">
+        <div @click="confirmDown" class="poster">
             <img :src="sPoster.replace('http:','https:')" alt class="cover">
             <img v-show="sPoster" src="~assets/img/web/ic_play.png">
             <span class="program-name">{{sName}}</span>
@@ -32,7 +32,7 @@
     </div>
 </template>
 <script>
-import { formatTime } from '~/functions/utils'
+import {formatTime, downApp} from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -90,6 +90,20 @@ export default {
                     })
                 }
             })
+        }
+    },
+    methods:{
+        confirmDown(){
+            const _this = this
+            this.$confirm(
+                'Download StarTimes ON to watch',
+                () => {
+                    downApp.call(_this)
+                },
+                () => {},
+                'Go',
+                'Not now'
+            )
         }
     },
     head() {
