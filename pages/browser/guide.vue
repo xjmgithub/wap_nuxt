@@ -13,8 +13,8 @@
                         <span v-show="item.isDTH" class="dth"><img src="~assets/img/web/ic_guide_dth.png" alt="">{{item.dthChannel}}</span>
                     </p>
                     <div :class="{show:item.epgList}">
+                        <span v-show="item.epgList.length==0">no epg for today</span>
                         <div v-for="(ele,k) in item.epgList" :key="k" >
-                            <span v-show="ele.length==0">no epg for today</span>
                             <span :class="{current:index==0}" class="playTime">14:00</span>
                             <div :class="{current:index==0}" class="playTitle"> World Cup Goals 2019
                                 <div v-show="index==0" class="total">
@@ -52,13 +52,14 @@ export default {
     },
     mounted() {
         this.getChannelList()
-         this.$nextTick(() => {
+        const _this= this
+        this.$nextTick(() => {
             const contain = document.querySelector('.wrapper')
             contain.addEventListener('scroll', function() {
-                console.log(contain.scrollTop)
                 if (contain.scrollTop % 132 >= 66) {
-                    const index = (contain.scrollTop) / 132 + 3
-                    this.getEpg(index)
+                    const index = Math.floor(contain.scrollTop / 132) + 3
+                    console.log(index)
+                    _this.getEpg(index)
                 }
             })
         })
@@ -95,7 +96,6 @@ export default {
                 this.flag = false
                 this.$axios.get(`/cms/programs?channelID=${id}&startDate=${this.startDate}&endDate=${this.endDate}`).then(res => {
                     const data = res.data
-                    console.log(data)
                     this.channelList[index].epgList = data
                     this.flag = true
                 })
