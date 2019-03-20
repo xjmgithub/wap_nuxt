@@ -2,7 +2,7 @@
     <div>
         <mheader />
         <nuxt />
-        <div v-show="showNav" @click="closeNav" class="nav-layer" />
+        <div v-show="showNav" class="nav-layer" @click="closeNav" />
         <div :class="{'nav-show':showNav}" class="slide-bar">
             <ul>
                 <li>
