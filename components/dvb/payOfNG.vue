@@ -85,11 +85,11 @@ export default {
             if (res.data && res.data.length > 0) {
                 // 993102 ， 993101,9002
                 res.data.forEach(ele => {
-                    if (ele.id != 993102 && ele.id != 993101 && ele.id != 9002) {
+                    if (ele.id !== 993102 && ele.id !== 993101 && ele.id !== 9002) {
                         this.normalMethods.push(ele)
-                    } else if (ele.id == 993102) {
+                    } else if (ele.id === 993102) {
                         this.payStackDes = ele.description
-                    } else if (ele.id == 9002) {
+                    } else if (ele.id === 9002) {
                         this.walletDes = ele.description
                     }
                 })
