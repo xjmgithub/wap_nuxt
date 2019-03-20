@@ -91,7 +91,8 @@ export const invoke = function(payToken, channel, callback, extend) {
                 this.$alert(res.data.resultMessage)
             }
         })
-        .catch(() => {
+        .catch(err => {
+            console.log(err)
             this.$nuxt.$loading.finish()
             this.$alert(this.$store.state.lang.error_network)
         })

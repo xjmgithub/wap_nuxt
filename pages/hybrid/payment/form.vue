@@ -168,13 +168,16 @@ export default {
 
                     optarr[id] = value
                 }
-
+                _this.$nuxt.$loading.start()
+                _this.$store.commit('SHOW_SHADOW_LAYER')
                 invoke.call(
                     _this,
                     _this.payToken,
                     _this.payChannelId,
                     data => {
-                        commonPayAfter.call(_this, data, 3, _this.paymethod.appInterfaceMode)
+                        _this.$nuxt.$loading.finish()
+                        _this.$store.commit('HIDE_SHADOW_LAYER')
+                        commonPayAfter.call(_this, data, 3, 3)
                     },
                     optarr
                 )
