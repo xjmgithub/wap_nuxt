@@ -33,7 +33,7 @@
                 >
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
-                        <input :placeholder="item.placeholder" type="tel">
+                        <input :placeholder="item.placeholder" :value="item.defaultValue" type="tel">
                     </div>
                 </div>
                 <div
