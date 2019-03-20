@@ -1,5 +1,5 @@
 <template>
-    <Swiper :auto-play="false" v-if="bannerList.length > 0">
+    <Swiper v-if="bannerList.length > 0" :auto-play="false">
         <Slide v-for="(item,index) in bannerList" :key="index" @click="clickBanner(item)">
             <img :src="item.materials.replace('http:','https:')" alt>
         </Slide>
@@ -9,8 +9,12 @@
 import { Swiper, Slide } from '~/components/swiper'
 export default {
     layout: 'base',
+    components: {
+        Swiper,
+        Slide
+    },
     props: {
-        vote_id: {
+        voteId: {
             type: Number,
             default: 2
         }
@@ -30,9 +34,9 @@ export default {
                 method: 'get',
                 data: {}
             }).then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     if (res.data.data.banner) {
-                        let bannerUUID = res.data.data.banner
+                        const bannerUUID = res.data.data.banner
                         this.getBanner(bannerUUID)
                     }
                 }
@@ -44,43 +48,39 @@ export default {
                 method: 'get',
                 data: {}
             }).then(res => {
-                if (res.data.code == 0) {
-                    let shareLink = res.data.data[0].materials
-                    this.bannerList = res.data.data
-                    for (var i = 0; i < res.data.data.length; i++) {
-                        let bannerName = res.data.data[i].name
-                        this.sendEvLog({
-                            category: 'vote_Bongostar',
-                            action: 'banner_show',
-                            label: 'banner_' + bannerName,
-                            value: 10
-                        })
-                    }
+                if (res.data.code === 0) {
+                    // const shareLink = res.data.data[0].materials
+                    // this.bannerList = res.data.data
+                    // for (let i = 0; i < res.data.data.length; i++) {
+                    //     const bannerName = res.data.data[i].name
+                    //     this.sendEvLog({
+                    //         category: 'vote_Bongostar',
+                    //         action: 'banner_show',
+                    //         label: 'banner_' + bannerName,
+                    //         value: 10
+                    //     })
+                    // }
                 }
             })
         },
         clickBanner(banner) {
-            let href = banner.link
-            let bannerName = banner.name
+            const href = banner.link
+            const bannerName = banner.name
             this.sendEvLog({
                 category: 'vote_Bongostar',
                 action: 'banner_click',
                 label: 'banner_' + bannerName,
                 value: 10
             })
-            if (href.indexOf('com.star.mobile') == 0) {
-                if (this.appType == 1) {
-                    //TODO 点击banner操作 materials ??
+            if (href.indexOf('com.star.mobile') === 0) {
+                if (this.appType === 1) {
+                    // TODO 点击banner操作 materials ??
                     // skip4(3, href, "", INITCONFIG.PLAT);
                 }
             } else {
                 window.location.href = href
             }
         }
-    },
-    components: {
-        Swiper,
-        Slide
     }
 }
 </script>

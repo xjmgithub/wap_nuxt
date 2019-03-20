@@ -3,16 +3,24 @@
         <div class="order-msg" @click="toDetail">
             <p class="time">
                 {{message.orderCreateTime | formatDate}}
-                <span class="wait-result">{{replied? 'Replied': 'Waiting For Result'}}</span>
+                <span
+                    class="wait-result"
+                >{{replied? 'Replied': 'Waiting For Result'}}</span>
             </p>
             <div class="order-type clearfix">
                 <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
                 <div class="right">
-                    <p class="order-name">{{message.orderName}}</p>
-                    <p class="order-status">Order ID: {{message.orderNo}}</p>
+                    <p class="order-name">
+                        {{message.orderName}}
+                    </p>
+                    <p class="order-status">
+                        Order ID: {{message.orderNo}}
+                    </p>
                 </div>
             </div>
-            <p class="complain">Complain</p>
+            <p class="complain">
+                Complain
+            </p>
             <p>{{message.message}}</p>
         </div>
     </div>
@@ -20,11 +28,18 @@
 <script>
 import dayjs from 'dayjs'
 export default {
+    filters: {
+        formatDate(date) {
+            return dayjs(date).format('D MMM YYYY HH:mm:ss')
+        }
+    },
     props: {
         message: {
             require: true,
             type: Object,
-            default: new Object()
+            default: () => {
+                return {}
+            }
         },
         replied: {
             require: false,
@@ -37,11 +52,6 @@ export default {
             sessionStorage.setItem('showMsg', JSON.stringify(this.message))
             this.$router.push('/hybrid/faq/message')
         }
-    },
-    filters: {
-        formatDate(date) {
-            return dayjs(date).format('D MMM YYYY HH:mm:ss')
-        }
     }
 }
 </script>
@@ -49,9 +59,9 @@ export default {
 .order-msg {
     padding: 0 0.5rem 0.8rem;
     position: relative;
-    background:white;
-    width:90%;
-    margin:1rem auto;
+    background: white;
+    width: 90%;
+    margin: 1rem auto;
     border-radius: 2px;
     p.time {
         width: 100%;
@@ -104,10 +114,10 @@ export default {
                 -webkit-transition: opacity 0.1s;
             }
         }
-        .wait-result{
-            font-size:.9rem;
-            float:right;
-            color:black;
+        .wait-result {
+            font-size: 0.9rem;
+            float: right;
+            color: black;
         }
     }
     .order-type {

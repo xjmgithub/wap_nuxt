@@ -3,9 +3,11 @@
         <div class="word">
             <div class="title clearfix">
                 <span class="vote-title">{{share.voteName}}</span>
-                <span class="invited" v-show="app==1" @click="handleInvite">invite friends to vote</span>
+                <span v-show="app==1" class="invited" @click="handleInvite">invite friends to vote</span>
             </div>
-            <p v-for="(item,index) in document" :key="index" :class="item.class">{{item.word}}</p>
+            <p v-for="(item,index) in document" :key="index" :class="item.class">
+                {{item.word}}
+            </p>
         </div>
     </div>
 </template>
@@ -18,7 +20,7 @@ export default {
                 return []
             }
         },
-        tab_msg: {
+        tabMsg: {
             type: Object,
             default: () => {
                 return {}
@@ -44,8 +46,8 @@ export default {
                 label: '',
                 value: 10
             })
-            let link = window.location.href
-            shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
+            // const link = window.location.href
+            // shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
         }
     }
 }

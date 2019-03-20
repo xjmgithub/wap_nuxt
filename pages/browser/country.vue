@@ -1,9 +1,11 @@
 <template>
     <div class="wrapper">
         <div class="country">
-            <p class="title">Choose your country</p>
+            <p class="title">
+                Choose your country
+            </p>
             <ul>
-                <li v-for="(item,index) in countryList" :key="index" @click="chooseCountry(item)" v-show="item.id!=8">
+                <li v-for="(item,index) in countryList" v-show="item.id!=8" :key="index" @click="chooseCountry(item)">
                     <img :src="item.nationalFlag.replace('http:','https:')" alt class="nationalFlag">
                     {{item.name}}
                     <img src="~assets/img/web/ic_categary.png" class="arrows">
@@ -15,7 +17,6 @@
 <script>
 import countrys from '~/functions/countrys.json'
 import tokenMap from '~/functions/token.json'
-import qs from 'qs'
 import { setCookie } from '~/functions/utils'
 export default {
     data() {
@@ -23,6 +24,9 @@ export default {
             countryList: countrys,
             user: this.$store.state.user
         }
+    },
+    mounted() {
+        this.$nextTick(() => this.$nuxt.$loading.finish())
     },
     methods: {
         chooseCountry(item) {
@@ -32,9 +36,6 @@ export default {
             this.$store.commit('SET_GTOKEN', tokenMap[item.country])
             this.$router.replace('/browser')
         }
-    },
-    mounted() {
-        this.$nextTick(() => this.$nuxt.$loading.finish())
     },
     head() {
         return {

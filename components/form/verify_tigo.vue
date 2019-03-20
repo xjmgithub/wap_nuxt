@@ -1,12 +1,18 @@
 <template>
     <div>
-        <p class="label">{{input_label}}</p>
+        <p class="label">
+            {{input_label}}
+        </p>
         <div class="input-tel">
-            <div class="prefix">{{prefix}}</div>
-            <div class="number">
-                <input type="Number" v-model="tel" placeholder="9 digits total">
+            <div class="prefix">
+                {{prefix}}
             </div>
-            <div class="error" v-show="show_error">{{error_tel}}</div>
+            <div class="number">
+                <input v-model="tel" type="Number" placeholder="9 digits total">
+            </div>
+            <div v-show="show_error" class="error">
+                {{error_tel}}
+            </div>
         </div>
     </div>
 </template>
@@ -17,7 +23,7 @@ export default {
             type: String,
             required: true
         },
-        input_label: {
+        inputLabel: {
             type: String,
             default: ''
         }
@@ -29,17 +35,17 @@ export default {
             error_tel: ''
         }
     },
-    methods: {
-        setTel(tel) {
-            this.tel = tel.substr(tel.length - 9, 9)
-        }
-    },
     watch: {
         tel(nv, ov) {
             this.show_error = false
             if (nv.length > 9) {
                 this.tel = nv.slice(0, 9)
             }
+        }
+    },
+    methods: {
+        setTel(tel) {
+            this.tel = tel.substr(tel.length - 9, 9)
         }
     }
 }

@@ -1,10 +1,10 @@
 <template>
     <div class="wrapper">
         <div class="by_tel">
-            <verifyTigo ref="telpicker" :prefix="phonePrefix" :input_label="input_label"/>
+            <verifyTigo ref="telpicker" :prefix="phonePrefix" :input_label="input_label" />
         </div>
         <div class="footer">
-            <mButton :disabled="false" :text="'OK'" @click="nextStep"/>
+            <mButton :disabled="false" :text="'OK'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -13,6 +13,10 @@ import verifyTigo from '~/components/form/verify_tigo'
 import mButton from '~/components/button'
 export default {
     layout: 'base',
+    components: {
+        verifyTigo,
+        mButton
+    },
     data() {
         return {
             phonePrefix: '255 0',
@@ -40,7 +44,7 @@ export default {
                     })
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 this.sendEvLog({
                     category: 'flow_packet',
                     action: 'tigo_packet_show',
@@ -51,7 +55,7 @@ export default {
     },
     methods: {
         nextStep() {
-            let phone = this.$refs.telpicker.tel
+            const phone = this.$refs.telpicker.tel
             this.sendEvLog({
                 category: 'flow_packet',
                 action: 'tigo_packet_submit',
@@ -70,10 +74,6 @@ export default {
         return {
             title: 'Tigo'
         }
-    },
-    components: {
-        verifyTigo,
-        mButton
     }
 }
 </script>

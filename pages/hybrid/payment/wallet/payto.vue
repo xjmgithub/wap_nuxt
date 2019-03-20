@@ -1,19 +1,25 @@
 <template>
     <div class="container">
-        <loading v-show="loadStatus"/>
-        <p class="amount">Payments to {{merchant}}</p>
+        <loading v-show="loadStatus" />
+        <p class="amount">
+            Payments to {{merchant}}
+        </p>
         <div class="pay-number">
-            <div class="signature">{{signature}}</div>
+            <div class="signature">
+                {{signature}}
+            </div>
             <div class="money">
-                <input type="tel" placeholder="Payment amount" v-model="amount" disabled="disabled">
+                <input v-model="amount" type="tel" placeholder="Payment amount" disabled="disabled">
                 <div
-                    class="balance"
                     :class="{notenough:!enough}"
-                >eWallet Balance:{{balanceCurrency}}{{balance}}</div>
+                    class="balance"
+                >
+                    eWallet Balance:{{balanceCurrency}}{{balance}}
+                </div>
             </div>
         </div>
         <div class="footer">
-            <mButton :disabled="false" :text="enough?'NEXT':'RECHARGE'" @click="nextStep"/>
+            <mButton :disabled="false" :text="enough?'NEXT':'RECHARGE'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -23,6 +29,10 @@ import loading from '~/components/loading'
 import { updateWalletAccount, updateWalletConf } from '~/functions/utils'
 export default {
     layout: 'base',
+    components: {
+        mButton,
+        loading
+    },
     data() {
         return {
             payToken: this.$route.query.payToken,
@@ -40,10 +50,6 @@ export default {
         enough() {
             return this.amount <= this.balance
         }
-    },
-    components: {
-        mButton,
-        loading
     },
     mounted() {
         if (this.payToken) {
@@ -89,8 +95,8 @@ export default {
                 }
             })
             .then(res => {
-                let data = res.data
-                if (data && data.resultCode == '0') {
+                const data = res.data
+                if (data && data.resultCode === '0') {
                     this.loadStatus = false
                     this.amount = data.totalAmount
                     this.merchant = data.mercahntName
@@ -105,8 +111,8 @@ export default {
         nextStep() {
             if (this.enough) {
                 // 支付流程
-                let passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
-                if (passIsSet == 'true') {
+                const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
+                if (passIsSet === 'true') {
                     this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                 } else {
                     this.$router.push('/hybrid/payment/wallet/setPassword')

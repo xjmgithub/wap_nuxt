@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <Password ref="pass" :placeholder="pwdType" :toggle-view="true" @endinput="setPassword"/>
+        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword"/>
         <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/payment/wallet/resetPhone">Forgot payment password?</nuxt-link>
+            <a @click="forgetPass">Forgot payment password?</a>
         </div>
         <div class="footer">
             <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"/>
@@ -12,49 +12,20 @@
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
+import { invoke, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
+import { setCookie, toNativePage } from '~/functions/utils'
 export default {
-    data() {
-        return {
-            pwdType: 'Enter Payment Password',
-            password: '',
-            canPay: false,
-            product: this.$route.query.product
-        }
-    },
     layout: 'base',
     components: {
         mButton,
         Password
     },
-    methods: {
-        setPassword(data) {
-            this.password = this.$refs.pass.password
-        },
-        nextStep() {
-            let ewallet = JSON.parse(sessionStorage.getItem('wallet_account'))
-            let payObj = JSON.parse(sessionStorage.getItem('payObj'))
-
-            this.$axios
-                .post('/mobilewallet/v1/balance-payments', {
-                    amount: payObj.totalAmount,
-                    currency: payObj.currency,
-                    note: this.product,
-                    orderId: payObj.txNo,
-                    payeeAccountNo: payObj.extendInfo.payeeAccountNo,
-                    payerAccountNo: ewallet.accountNo,
-                    payerPayPassword: this.password,
-                    subject: payObj.paySubject,
-                    signature: payObj.extendInfo.signature,
-                    extensionInfo: {
-                        paySeqNo: payObj.extendInfo.paySeqNo
-                    }
-                })
-                .then(res => {
-                    this.$router.push(`/hybrid/payment/payResult?seqNo=${payObj.paySeqNo}`)
-                })
-                .catch(err => {
-                    this.$alert(err)
-                })
+    data() {
+        return {
+            password: '',
+            canPay: false,
+            payToken: this.$route.query.paytoken,
+            card: this.$route.query.card // paystack card
         }
     },
     watch: {
@@ -65,14 +36,56 @@ export default {
                 this.canPay = false
             }
         }
+    },
+    methods: {
+        setPassword(data) {
+            this.password = this.$refs.pass.password
+        },
+        forgetPass() {
+            if (this.$store.state.appType === 1) {
+                toNativePage('com.star.mobile.video.wallet.WalletForgetPwdActivity')
+            } else {
+                this.$router.push('/hybrid/payment/wallet/resetPhone')
+            }
+        },
+        nextStep() {
+            const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
+            this.$nuxt.$loading.start()
+            this.$store.commit('SHOW_SHADOW_LAYER')
+            verifyWalletPass.call(this, ewallet.accountNo, this.password, data => {
+                if (this.card) {
+                    invoke.call(
+                        this,
+                        this.payToken,
+                        993102,
+                        data => {
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            setCookie('lastpay', 'card')
+                            commonPayAfter.call(this, data, 3, 3)
+                        },
+                        { authorization_code: this.card }
+                    )
+                } else {
+                    invoke.call(this, this.payToken, 9002, data => {
+                        payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
+                            setCookie('lastpay', 'wallet')
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                        })
+                    })
+                }
+            })
+        }
     }
 }
 </script>
 <style scoped>
 .container {
     padding: 6rem 1rem 0 1rem;
-    background:white;
-    min-height:100%;
+    background: white;
+    min-height: 100%;
 }
 
 .forgot-pwd {

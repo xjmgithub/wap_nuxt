@@ -1,6 +1,6 @@
 <template>
     <div class="wh_slide" @click="clickSlide">
-        <slot/>
+        <slot />
     </div>
 </template>
 <script>

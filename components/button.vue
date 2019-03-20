@@ -1,5 +1,7 @@
 <template>
-    <button :class="{disabled:disabled}" @click="click">{{text}}</button>
+    <button :class="{disabled:disabled}" @click="click">
+        {{text}}
+    </button>
 </template>
 <script>
 export default {

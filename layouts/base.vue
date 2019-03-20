@@ -1,16 +1,16 @@
 <template>
     <div>
-        <nuxt v-if="!needLoginAlert"/>
+        <nuxt v-if="!needLoginAlert" />
         <div v-if="needLoginAlert" class="authfail">
             <img src="~assets/img/pay/img_failed_def_b.png">
             <p class="fail">
                 Please
-                <a href="javascript:void(0)" @click="toNativeLogin">Log in First.</a>
+                <a @click="toNativeLogin" href="javascript:void(0)">Log in First.</a>
             </p>
         </div>
-        <alert ref="alert"/>
-        <confirm ref="confirm"/>
-        <shadowLayer v-show="layer"/>
+        <alert ref="alert" />
+        <confirm ref="confirm" />
+        <shadowLayer v-show="layer" />
     </div>
 </template>
 <script>
@@ -20,15 +20,15 @@ import confirm from '~/components/confirm'
 import shadowLayer from '~/components/shadow-layer'
 import { toNativePage } from '~/functions/utils'
 export default {
-    data() {
-        return {
-            needLoginAlert: this.$store.state.needLoginAlert // 是否显示页面组件
-        }
-    },
     components: {
         alert,
         confirm,
         shadowLayer
+    },
+    data() {
+        return {
+            needLoginAlert: this.$store.state.needLoginAlert // 是否显示页面组件
+        }
     },
     computed: {
         layer() {
@@ -36,7 +36,7 @@ export default {
         }
     },
     created() {
-        let _this = this
+        const _this = this
         Vue.prototype.$alert = (msg, callback) => {
             _this.$refs.alert.show(msg, callback)
             this.$store.commit('SHOW_SHADOW_LAYER')
@@ -56,7 +56,7 @@ export default {
                 value: this.needLoginAlert ? 0 : 1
             })
         }
-        let user = this.$store.state.user
+        const user = this.$store.state.user
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
             if(!user.roleName&&this.$store.state.appType){
@@ -74,7 +74,7 @@ export default {
                 label: window.location.pathname,
                 value: 1
             })
-            if (this.$store.state.appType == 1) {
+            if (this.$store.state.appType === 1) {
                 toNativePage('com.star.mobile.video.account.LoginActivity')
             } else {
                 toNativePage('startimes://login')

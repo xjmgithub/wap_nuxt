@@ -25,24 +25,28 @@
             />
         </div>
         <div v-show="type==1" class="by_email">
-            <div class="input-email" :class="{focus:focus_email,error:error_email}">
+            <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
                     <input
-                        type="email"
                         v-model="email"
+                        type="email"
+                        placeholder="Enter your email address"
                         @focus="focus_email=true"
                         @blur="focus_email=false"
-                        placeholder="Enter your email address"
                     >
                 </div>
-                <div class="error" v-show="error_email">{{error_email}}</div>
+                <div v-show="error_email" class="error">
+                    {{error_email}}
+                </div>
             </div>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"/>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" />
         </div>
-        <div class="country-choose-dialog" v-show="countryDialogStatus">
-            <div class="dialog-title">Country List</div>
+        <div v-show="countryDialogStatus" class="country-choose-dialog">
+            <div class="dialog-title">
+                Country List
+            </div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
                     <img :src="item.nationalFlag.replace('http:','https:')">
@@ -50,7 +54,7 @@
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
@@ -60,6 +64,11 @@ import mButton from '~/components/button'
 import countrArr from '~/functions/countrys.json'
 export default {
     layout: 'base',
+    components: {
+        verifyTel,
+        shadowLayer,
+        mButton
+    },
     data() {
         return {
             type: 0,
@@ -74,15 +83,15 @@ export default {
     },
     computed: {
         canNext() {
-            if (this.type == 1) {
+            if (this.type === 1) {
                 return this.emailCanNext
             } else {
                 return this.phoneCanNext
             }
         },
         emailCanNext() {
-            let reg_email = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
-            return reg_email.test(this.email)
+            const regEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
+            return regEmail.test(this.email)
         }
     },
     watch: {
@@ -103,7 +112,7 @@ export default {
         },
         nextStep() {
             // TODO 防止多次点击
-            if (this.type == 1) {
+            if (this.type === 1) {
                 this.$axios
                     .get(`/ums/v1/register/password/change?email=${this.email}`, {
                         headers: {
@@ -111,7 +120,7 @@ export default {
                         }
                     })
                     .then(res => {
-                        if (res.data.code == 0) {
+                        if (res.data.code === 0) {
                             this.$alert(
                                 'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
                                 () => {
@@ -123,18 +132,13 @@ export default {
                         }
                     })
             } else {
-                let phone = this.$refs.telpicker.tel
-                let code = this.$refs.telpicker.vscode
-                let phoneCc = this.country.phonePrefix
-                let countryId = this.country.id
+                const phone = this.$refs.telpicker.tel
+                const code = this.$refs.telpicker.vscode
+                const phoneCc = this.country.phonePrefix
+                const countryId = this.country.id
                 this.$router.push(`/hybrid/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
             }
         }
-    },
-    components: {
-        verifyTel,
-        shadowLayer,
-        mButton
     },
     head() {
         return {

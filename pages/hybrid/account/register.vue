@@ -17,19 +17,21 @@
                 <img :src="country.nationalFlag.replace('http:','https:')">
                 <span>{{country.name}}</span>
             </div>
-            <verifyTel ref="telpicker" :prefix="country.phonePrefix" @pass="changePhoneCanNext"/>
+            <verifyTel ref="telpicker" :prefix="country.phonePrefix" @pass="changePhoneCanNext" />
         </div>
         <div v-show="type==1" class="by_email">
-            <verifyEmail ref="emailpicker" @pass="changeEmailCanNext"/>
+            <verifyEmail ref="emailpicker" @pass="changeEmailCanNext" />
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"/>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" />
         </div>
         <div class="terms">
             <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
         </div>
-        <div class="country-choose-dialog" v-show="countryDialogStatus">
-            <div class="dialog-title">Country List</div>
+        <div v-show="countryDialogStatus" class="country-choose-dialog">
+            <div class="dialog-title">
+                Country List
+            </div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
                     <img :src="item.nationalFlag.replace('http:','https:')">
@@ -37,7 +39,7 @@
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
@@ -48,6 +50,12 @@ import mButton from '~/components/button'
 import countrys from '~/functions/countrys.json'
 export default {
     layout: 'base',
+    components: {
+        verifyTel,
+        verifyEmail,
+        shadowLayer,
+        mButton
+    },
     data() {
         return {
             type: 0,
@@ -60,7 +68,7 @@ export default {
     },
     computed: {
         canNext() {
-            if (this.type == 1) {
+            if (this.type === 1) {
                 return this.emailCanNext
             } else {
                 return this.phoneCanNext
@@ -82,25 +90,19 @@ export default {
             this.countryDialogStatus = false
         },
         nextStep() {
-            if (this.type == 1) {
-                let email = this.$refs.emailpicker.email
-                let code = this.$refs.emailpicker.vscode
+            if (this.type === 1) {
+                const email = this.$refs.emailpicker.email
+                const code = this.$refs.emailpicker.vscode
 
                 this.$router.push(`/hybrid/account/setpass?email=${email}&code=${code}`)
             } else {
-                let phone = this.$refs.telpicker.tel
-                let code = this.$refs.telpicker.vscode
-                let phoneCc = this.country.phonePrefix
-                let countryId = this.country.id
+                const phone = this.$refs.telpicker.tel
+                const code = this.$refs.telpicker.vscode
+                const phoneCc = this.country.phonePrefix
+                const countryId = this.country.id
                 this.$router.push(`/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
             }
         }
-    },
-    components: {
-        verifyTel,
-        verifyEmail,
-        shadowLayer,
-        mButton
     },
     head() {
         return {

@@ -1,15 +1,19 @@
 <template>
-    <div class="dialog" :style="{display:style,'margin-left':offsetLeft,'margin-top':offsetTop}">
+    <div :style="{display:style,'margin-left':offsetLeft,'margin-top':offsetTop}" class="dialog">
         <div class="dialog-body">
             <div class="pop-default">
                 <p>
-                    <span v-html="msg"/>
+                    <span v-html="msg" />
                 </p>
             </div>
         </div>
         <div class="dialog-footer">
-            <div class="btn" @click="sure">{{yes}}</div>
-            <div class="btn" @click="close">{{no}}</div>
+            <div class="btn" @click="sure">
+                {{yes}}
+            </div>
+            <div class="btn" @click="close">
+                {{no}}
+            </div>
         </div>
     </div>
 </template>
@@ -43,16 +47,16 @@ export default {
             }
         },
         show(msg, callback, cancel, yes, no) {
-            let _this = this
+            const _this = this
             if (yes) this.yes = yes
             if (no) this.no = no
             this.msg = msg
             this.style = 'block'
             this.$store.commit('SHOW_SHADOW_LAYER')
             this.$nextTick(() => {
-                let dialog = _this.$el
-                let dh = dialog.offsetHeight,
-                    dw = dialog.offsetWidth
+                const dialog = _this.$el
+                const dh = dialog.offsetHeight;
+                    const dw = dialog.offsetWidth
                 _this.offsetLeft = -dw / 2 + 'px'
                 _this.offsetTop = -dh / 2 + 'px'
             })

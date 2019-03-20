@@ -1,23 +1,29 @@
 <template>
     <div class="email-cont">
-        <div class="input-email" :class="{focus:focus_email,error:error_email}">
+        <div :class="{focus:focus_email,error:error_email}" class="input-email">
             <div class="number">
-                <input type="email" v-model="email" @focus="focus_email=true" @blur="focus_email=false" placeholder="Enter your email address">
+                <input v-model="email" type="email" placeholder="Enter your email address" @focus="focus_email=true" @blur="focus_email=false">
             </div>
-            <div class="error" v-show="error_email">{{error_email}}</div>
+            <div v-show="error_email" class="error">
+                {{error_email}}
+            </div>
         </div>
         <div class="get-code">
             <input
+                v-model="vscode"
+                :class="{focus:focus_code,error:error_code}"
                 type="text"
                 maxlength="4"
-                :class="{focus:focus_code,error:error_code}"
-                v-model="vscode"
+                placeholder="Click to get verification code"
                 @focus="focus_code=true"
                 @blur="focus_code=false"
-                placeholder="Click to get verification code"
             >
-            <div class="btn" :class="{disabled:!canGetCode}" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
-            <div class="error_code" v-show="error_code">{{error_code}}</div>
+            <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">
+                {{codeDuring>0?`${codeDuring}s`:'Get Code'}}
+            </div>
+            <div v-show="error_code" class="error_code">
+                {{error_code}}
+            </div>
         </div>
     </div>
 </template>
@@ -28,6 +34,24 @@ export default {
         type: {
             type: Number,
             default: 0
+        }
+    },
+    data() {
+        return {
+            email: '',
+            vscode: '',
+            focus_email: false,
+            error_email: '',
+            focus_code: false,
+            error_code: '',
+            codeDuring: 0,
+            waiting_res: false
+        }
+    },
+    computed: {
+        canGetCode() {
+            const regEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
+            return regEmail.test(this.email) && this.codeDuring <= 0
         }
     },
     watch: {
@@ -49,7 +73,7 @@ export default {
                     }),
                     url: this.type ? '/ums/v1/user/code/verify' : '/ums/v1/register/code/verify'
                 }).then(res => {
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         this.$emit('pass', true)
                     } else {
                         this.$emit('pass', false)
@@ -62,46 +86,28 @@ export default {
         }
     },
     mounted() {
-        let _this = this
+        const _this = this
         this.timer = setInterval(() => {
             _this.codeDuring--
         }, 1000)
     },
-    data() {
-        return {
-            email: '',
-            vscode: '',
-            focus_email: false,
-            error_email: '',
-            focus_code: false,
-            error_code: '',
-            codeDuring: 0,
-            waiting_res: false
-        }
-    },
-    computed: {
-        canGetCode() {
-            let reg_email = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
-            return reg_email.test(this.email) && this.codeDuring <= 0
-        }
+    beforeDestroy() {
+        clearInterval(this.timer)
     },
     methods: {
         getCode() {
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
-            let url = this.type ? '/ums/v1/register/password/change' : '/ums/v1/register/code/email'
+            const url = this.type ? '/ums/v1/register/password/change' : '/ums/v1/register/code/email'
             this.$axios.get(`${url}?email=${this.email}`).then(res => {
                 this.waiting_res = false
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     this.codeDuring = 60
                 } else {
                     this.error_email = 'Please confirm you have entered the right email.'
                 }
             })
         }
-    },
-    beforeDestroy() {
-        clearInterval(this.timer)
     }
 }
 </script>

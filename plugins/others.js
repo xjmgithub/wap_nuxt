@@ -1,12 +1,12 @@
-import { setCookie, getCookie, toNativePage } from '~/functions/utils'
+import { setCookie } from '~/functions/utils'
 export default ({ app: { router }, store }) => {
     
     // 缓存登录状态
-    if (!getCookie('deviceId')) setCookie('deviceId', store.state.deviceId)
-    if (!getCookie('token')) setCookie('token', store.state.token)
-    if (!getCookie('gtoken')) setCookie('gtoken', store.state.gtoken)
-    if (!getCookie('lang')) setCookie('lang', store.state.langType)
-    if (!getCookie('country')) setCookie('country', store.state.country.country)
+    setCookie('deviceId', store.state.deviceId)
+    setCookie('token', store.state.token)
+    setCookie('gtoken', store.state.gtoken)
+    setCookie('lang', store.state.langType)
+    setCookie('country', store.state.country.country)
 
     router.beforeEach((to, from, next) => {
         // 路由切换侧边栏导航收回

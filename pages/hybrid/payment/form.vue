@@ -1,7 +1,7 @@
 <template>
     <div id="pay-form" class="container">
         <template v-for="(item,index) in configs">
-            <div class="form-item" :key="index" v-if="item.displayState!=2">
+            <div v-if="item.displayState!=2" :key="index" class="form-item">
                 <div
                     v-if="item.formType=='select'||item.formType=='radio'"
                     :data-show="item.displayCondition"
@@ -13,20 +13,14 @@
                     <div class="radio-box">
                         <div v-for="(radio,i) in item.optionArr" :key="i">
                             <label class="radio">
-                                <input
-                                    type="radio"
-                                    :name="item.name"
-                                    :value="radio"
-                                    :checked="radio == item.defaultValue ? 'checked' : false"
-                                >
-                                <i />
+                                <input :name="item.name" :value="radio" :checked="radio === item.defaultValue ? 'checked' : false" type="radio">
+                                <i/>
                                 <span>{{radio}}</span>
                             </label>
                         </div>
                     </div>
                 </div>
                 <div
-                    class="form-item input-tel"
                     v-if="item.formType=='tel'"
                     :data-show="item.displayCondition"
                     :data-state="item.displayState"
@@ -35,14 +29,14 @@
                     :data-reg="item.pattern"
                     :data-precode="item.countryCallingCode"
                     :data-name="item.name"
+                    class="form-item input-tel"
                 >
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
-                        <input type="tel" :placeholder="item.placeholder">
+                        <input :placeholder="item.placeholder" type="tel">
                     </div>
                 </div>
                 <div
-                    class="form-item input-tel"
                     v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'"
                     :data-show="item.displayCondition"
                     :data-state="item.displayState"
@@ -50,27 +44,31 @@
                     :data-type="item.formType"
                     :data-reg="item.pattern"
                     :data-name="item.name"
+                    class="form-item input-tel"
                 >
                     <div class="number">
                         <input :type="item.formType" :placeholder="item.placeholder">
                     </div>
                 </div>
                 <div>
-                    <input :name="item.name" v-model="item.defaultValue" type="hidden">
+                    <input v-model="item.defaultValue" :name="item.name" type="hidden">
                 </div>
             </div>
         </template>
         <div class="footer">
-            <mButton class="next" :disabled="false" text="NEXT" />
-            <!-- <mButton class="cancel" :disabled="false" text="CANCEL" /> -->
+            <mButton :disabled="false" class="next" text="NEXT"/>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import $ from 'jquery'
+import { invoke, commonPayAfter } from '~/functions/pay'
 export default {
     layout: 'base',
+    components: {
+        mButton
+    },
     data() {
         return {
             payToken: this.$route.query.payToken,
@@ -78,14 +76,11 @@ export default {
             configs: []
         }
     },
-    components: {
-        mButton
-    },
     mounted() {
         this.$axios.get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`).then(res => {
-            let data = res.data
+            const data = res.data
             if (data && data instanceof Array && data.length > 0) {
-                let configs = data.sort(function(a, b) {
+                const configs = data.sort(function(a, b) {
                     return a.orderSeq - b.orderSeq
                 })
                 configs.forEach((item, index) => {
@@ -100,7 +95,7 @@ export default {
             }
         })
 
-        let _this = this
+        const _this = this
 
         $('#pay-form')
             .on('change', 'input[type="radio"]', function() {
@@ -116,16 +111,16 @@ export default {
                 _this.$router.go(-1)
             })
             .on('click', '.next', function() {
-                var items = $('[data-id]').filter(':visible')
-                var optarr = {}
-                for (var i = 0; i < items.length; i++) {
-                    var item = $(items[i])
-                    var id = item.data('id')
-                    var name = item.data('name')
-                    var type = item.data('type')
-                    var value = getItemVal(id)
+                const items = $('[data-id]').filter(':visible')
+                const optarr = {}
+                for (let i = 0; i < items.length; i++) {
+                    const item = $(items[i])
+                    const id = item.data('id')
+                    const name = item.data('name')
+                    const type = item.data('type')
+                    let value = getItemVal(id)
 
-                    if (type == 'text' || type == 'password' || type == 'tel' || type == 'email') {
+                    if (type === 'text' || type === 'password' || type === 'tel' || type === 'email') {
                         if (!value) {
                             item.find('.error')
                                 .remove()
@@ -138,7 +133,7 @@ export default {
                             })
                             return false
                         } else {
-                            var reg = new RegExp(item.data('reg'))
+                            const reg = new RegExp(item.data('reg'))
                             if (!reg.test(value)) {
                                 item.find('.error')
                                     .remove()
@@ -157,10 +152,10 @@ export default {
                                     'border-bottom': '#dddddd solid 1px'
                                 })
                                 item.find('.error').remove()
-                                if (type == 'tel') {
-                                    var precode = item.data('precode')
-                                    if (precode && value.indexOf(precode) != 0) {
-                                        if (value.indexOf('0') == 0) {
+                                if (type === 'tel') {
+                                    const precode = item.data('precode')
+                                    if (precode && value.indexOf(precode) !== 0) {
+                                        if (value.indexOf('0') === 0) {
                                             value = precode + value.substring(1)
                                         } else {
                                             value = precode + value
@@ -174,44 +169,26 @@ export default {
                     optarr[id] = value
                 }
 
-                _this.$axios
-                    .post('/payment/api/v2/invoke-payment', {
-                        payToken: _this.payToken,
-                        payChannelId: _this.payChannelId,
-                        tradeType: 'JSAPI',
-                        signType: 'MD5',
-                        extendInfo: optarr
-                    })
-                    .then(res => {
-                        if (res.data && res.data.resultCode == 0) {
-                            if (_this.paymethod.appInterfaceMode == 2) {
-                                // open other payment
-                                window.open(res.data.tppRedirectUrl)
-                                _this.$router.push(`/hybrid/payment/payResult?payToken=${_this.payToken}`)
-                            } else if (_this.paymethod.appInterfaceMode == 3) {
-                                // processing
-                                _this.$router.push(`/hybrid/payment/payResult?payToken=${this.payToken}`)
-                            } else {
-                                // SDK 和 其他 不支持,
-                                // payType 1 钱包支付
-                                _this.$alert('The payment method is not supported for the time being')
-                            }
-                        } else {
-                            // TODO fail
-                            _this.$router.push(`/hybrid/payment/payResult?payToken=${_this.payToken}`)
-                        }
-                    })
+                invoke(
+                    _this,
+                    _this.payToken,
+                    _this.payChannelId,
+                    data => {
+                        commonPayAfter(_this, data, 3, _this.paymethod.appInterfaceMode)
+                    },
+                    optarr
+                )
             })
 
         function ifShow() {
-            var conditionShow = $('[data-state="3"]')
-            for (var i = 0; i < conditionShow.length; i++) {
-                var item = $(conditionShow[i])
-                var condition = item.data('show').split('=')
-                var key = condition[0]
-                var destValue = condition[1]
-                var realValue = getItemVal(key)
-                if (realValue == destValue) {
+            const conditionShow = $('[data-state="3"]')
+            for (let i = 0; i < conditionShow.length; i++) {
+                const item = $(conditionShow[i])
+                const condition = item.data('show').split('=')
+                const key = condition[0]
+                const destValue = condition[1]
+                const realValue = getItemVal(key)
+                if (realValue === destValue) {
                     item.show()
                 } else {
                     item.hide()
@@ -220,9 +197,9 @@ export default {
         }
 
         function getItemVal(key) {
-            var item = $('[data-id="' + key + '"]')
-            var type = item.data('type')
-            var value = ''
+            const item = $('[data-id="' + key + '"]')
+            const type = item.data('type')
+            let value = ''
             switch (type) {
                 case 'select':
                 case 'radio':
@@ -237,7 +214,6 @@ export default {
                     break
                 default:
                     return ''
-                    break
             }
             return value
         }
@@ -247,6 +223,8 @@ export default {
 <style lang="less" scoped>
 .container {
     padding: 3rem 3rem 0;
+    background: white;
+    height:100%;
     .form-item {
         margin: 2rem 0;
     }

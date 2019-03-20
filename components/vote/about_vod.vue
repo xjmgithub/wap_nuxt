@@ -3,13 +3,13 @@
         <div class="vod">
             <div class="title clearfix">
                 <span class="vote-title">{{share.voteName}}</span>
-                <span class="invited" v-show="app==1" @click="handleInvite">invite friends to vote</span>
+                <span v-show="app==1" class="invited" @click="handleInvite">invite friends to vote</span>
             </div>
             <p>{{vod_msg.programdetails}}</p>
             <div class="video-play">
-                <div class="line"/>
+                <div class="line" />
                 <ul class="video-play clearfix">
-                    <li :class="item.className" v-for="(item,index) in vodDetails" :key="index">
+                    <li v-for="(item,index) in vodDetails" :key="index" :class="item.className">
                         <span v-show="item.className =='review'">
                             <img src="~assets/img/vote/ic_replay_green.png">
                         </span>
@@ -25,26 +25,22 @@
                     </li>
                 </ul>
             </div>
-            <p v-for="(item,index) in vod_msg.description" :key="index">{{item}}</p>
+            <p v-for="(item,index) in vod_msg.description" :key="index">
+                {{item}}
+            </p>
         </div>
     </div>
 </template>
 <script>
 export default {
-    created() {
-        if (process.server) {
-            let serverTime = new Date()
-            this.$store.commit('SET_SERVER_TIME', serverTime)
-        }
-    },
     props: {
-        vod_msg: {
+        vodMsg: {
             type: Object,
             default: () => {
                 return {}
             }
         },
-        tab_msg: {
+        tabMsg: {
             type: Object,
             default: () => {
                 return {}
@@ -66,6 +62,12 @@ export default {
             serverTime: this.$store.state.serverTime
         }
     },
+    created() {
+        if (process.server) {
+            const serverTime = new Date()
+            this.$store.commit('SET_SERVER_TIME', serverTime)
+        }
+    },
     mounted() {
         this.getClientZoneTime()
         this.formatVod()
@@ -78,27 +80,27 @@ export default {
                 label: '',
                 value: 10
             })
-            let link = window.location.href
-            shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
+            // const link = window.location.href
+            // shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
         },
         // 根据零时区时间获取本地客户端时间
         getClientZoneTime() {
-            let ua = window.navigator.userAgent
+            const ua = window.navigator.userAgent
             if (ua.indexOf('iPhone') >= 0 || ua.indexOf('iPad') >= 0) {
-                let tArr = []
-                for (let i = 0; i < this.broadcast_time.length; i++) {
-                    let arr = this.broadcast_time[i].split(/[- : \/]/)
-                    let zeroZoneTime = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTime()
-                    let tt = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTimezoneOffset()
-                    let clientZoneTime = zeroZoneTime - tt * 60 * 1000
-                    tArr.push([this.formatDate(clientZoneTime), zeroZoneTime])
-                }
+                const tArr = []
+                // for (let i = 0; i < this.broadcast_time.length; i++) {
+                //     const arr = this.broadcast_time[i].split(/[- : \/]/)
+                //     const zeroZoneTime = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTime()
+                //     const tt = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTimezoneOffset()
+                //     const clientZoneTime = zeroZoneTime - tt * 60 * 1000
+                //     tArr.push([this.formatDate(clientZoneTime), zeroZoneTime])
+                // }
                 this.broadcast_time = tArr
             } else {
-                var tmp = []
+                const tmp = []
                 this.broadcast_time.forEach(ele => {
-                    let zeroZoneTime = new Date(ele.replace(/年|月/g, '-').replace(/日/g, ' ')).getTime()
-                    let clientZoneTime = zeroZoneTime - new Date(zeroZoneTime).getTimezoneOffset() * 60 * 1000
+                    const zeroZoneTime = new Date(ele.replace(/年|月/g, '-').replace(/日/g, ' ')).getTime()
+                    const clientZoneTime = zeroZoneTime - new Date(zeroZoneTime).getTimezoneOffset() * 60 * 1000
                     tmp.push([this.formatDate(clientZoneTime), zeroZoneTime])
                 })
                 this.broadcast_time = tmp
@@ -106,11 +108,11 @@ export default {
         },
         // 时间格式化
         formatDate(time) {
-            let month = new Date(time).getMonth() + 1
-            let date = new Date(time).getDate()
-            let hour = new Date(time).getHours()
-            let min = new Date(time).getMinutes()
-            let myTime = month + '-' + date + ' ' + hour + ':' + min
+            const month = new Date(time).getMonth() + 1
+            const date = new Date(time).getDate()
+            const hour = new Date(time).getHours()
+            const min = new Date(time).getMinutes()
+            const myTime = month + '-' + date + ' ' + hour + ':' + min
             return myTime
         },
         getVod() {
@@ -119,7 +121,7 @@ export default {
                 method: 'get',
                 data: {}
             }).then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     this.programTimeContral = res.data.data
                 }
             })

@@ -80,4 +80,5 @@ dist
 # IDE
 .idea
 
+# Service worker
 sw.*

@@ -1,14 +1,13 @@
-const pkg = require('./package')
-const env = require('./env.js')
+import env from './env'
 
-module.exports = {
+export default {
     mode: 'universal',
     head: {
         title: 'StarTimes ON',
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { hid: 'description', name: 'description', content: pkg.description },
+            { hid: 'description', name: 'description', content: 'StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment' },
             { name: 'format-detection', content: 'email=no' },
             { name: 'format-detection', content: 'telephone=no' },
             {
@@ -27,54 +26,44 @@ module.exports = {
 
     loading: '~/components/loading.vue',
 
-    /*
-    ** Global CSS
-    */
+    // global css
     css: ['~assets/css/normalize.css'],
     transition: {
         name: 'page',
         mode: 'out-in'
     },
 
-    /*
-    ** Plugins to load before mounting the App
-    */
+    // Plugins to load before mounting the App
     plugins: [{ src: '~plugins/analysis.js', ssr: false }, { src: '~plugins/axios.js', ssr: false }, { src: '~plugins/others.js', ssr: false }],
 
-    /*
-    ** Nuxt.js modules
-    */
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
         '@nuxtjs/axios'
-        // ['@nuxtjs/pwa', { icon: false }],
     ],
-    /*
-    ** Axios module configuration
-    */
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
-        proxy: true, // Can be also an object with default options
-        retry: { retries: 0 }
+        baseURL: process.env.NODE_ENV !== 'production' ? env.apiURL : '/',
+        browserBaseURL: '/',
+        proxy: process.env.NODE_ENV !== 'production'
     },
     proxy: {
-        '/ums/': env.ms_host,
-        '/vup/': env.ms_host,
-        '/cms/': env.ms_host,
-        '/genesys-proxy/v1/chats': env.ms_host,
-        '/membership/': env.ms_host,
-        '/mobilewallet/': env.ms_host,
-        '/payment/api': env.ms_host,
-        '/payment/v2': env.ms_host,
-        '/payment/platform/v1': env.mechant_request_url,
-        '/csms-service': env.ms_host,
-        '/ocs/': env.ms_host,
-        '/css/': env.ms_host,
-        '/voting/': env.ms_host,
-        '/adm/': env.ms_host,
-        '/self/': env.ms_host,
-        '/channel/': env.ms_host,
-        '/wxorder/': env.ms_host
+        '/ums/': env.proxyHost,
+        '/vup/': env.proxyHost,
+        '/cms/': env.proxyHost,
+        '/genesys-proxy/v1/chats': env.proxyHost,
+        '/membership/': env.proxyHost,
+        '/mobilewallet/': env.proxyHost,
+        '/payment/api': env.proxyHost,
+        '/payment/v2': env.proxyHost,
+        '/payment/platform/v1': env.mechantRequestUrl,
+        '/csms-service': env.proxyHost,
+        '/ocs/': env.proxyHost,
+        '/css/': env.proxyHost,
+        '/voting/': env.proxyHost,
+        '/adm/': env.proxyHost,
+        '/self/': env.proxyHost,
+        '/channel/': env.proxyHost,
+        '/wxorder/': env.proxyHost
     },
     router: {
         middleware: 'auth'
@@ -84,15 +73,11 @@ module.exports = {
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
     ],
 
-    /*
-    ** Build configuration
-    */
     build: {
         /*
         ** You can extend webpack config here
         */
         extend(config, ctx) {
-            // Run ESLint on save
             config.node = {
                 fs: 'empty',
                 net: 'empty'

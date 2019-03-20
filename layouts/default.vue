@@ -1,9 +1,9 @@
 <template>
     <div>
-        <mheader/>
-        <nuxt/>
-        <div class="nav-layer" v-show="showNav" @click="closeNav"/>
-        <div class="slide-bar" :class="{'nav-show':showNav}">
+        <mheader />
+        <nuxt />
+        <div v-show="showNav" @click="closeNav" class="nav-layer" />
+        <div :class="{'nav-show':showNav}" class="slide-bar">
             <ul>
                 <li>
                     <div>
@@ -12,7 +12,9 @@
                             <nuxt-link v-else to="/hybrid/account/login">
                                 <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
                             </nuxt-link>
-                            <div v-if="user">{{user.nickName}}</div>
+                            <div v-if="user">
+                                {{user.nickName}}
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -23,7 +25,9 @@
                     </nuxt-link>
                 </li>
                 <li>
-                    <nuxt-link :class="{checked:$route.path=='/browser/language'}" to="/browser/language">{{language}}</nuxt-link>
+                    <nuxt-link :class="{checked:$route.path=='/browser/language'}" to="/browser/language">
+                        {{language}}
+                    </nuxt-link>
                 </li>
                 <li>
                     <a :href="faq_url">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
@@ -39,6 +43,9 @@
 import mheader from '~/components/web/header.vue'
 import { setCookie } from '~/functions/utils'
 export default {
+    components: {
+        mheader
+    },
     data() {
         return {
             faq_url: 'https://m.startimestv.com/faq.php',
@@ -47,8 +54,8 @@ export default {
     },
     computed: {
         user() {
-            let userInfo = this.$store.state.user
-            return userInfo.roleName && userInfo.roleName != 'ANONYMOUS' ? userInfo : null
+            const userInfo = this.$store.state.user
+            return userInfo.roleName && userInfo.roleName !== 'ANONYMOUS' ? userInfo : null
         },
         showNav() {
             return this.$store.state.navState
@@ -57,7 +64,7 @@ export default {
             return this.$store.state.country
         },
         language() {
-            let type = this.$store.state.langType
+            const type = this.$store.state.langType
             switch (type) {
                 case 'fr':
                     return 'French'
@@ -76,33 +83,30 @@ export default {
             return this.$store.state.gtoken
         }
     },
-    components: {
-        mheader
-    },
-    methods: {
-        closeNav() {
-            this.$store.commit('SET_NAV_STATE', false)
+    watch: {
+        token(nv, ov) {
+            setCookie('token', nv)
+            // this.$axios.setHeader('token', nv)
+        },
+        gtoken(nv, ov) {
+            setCookie('gtoken', nv)
+            this.$axios.setHeader('token', nv)
         }
     },
     created() {
-        //this.$nextTick(() => this.$nuxt.$loading.start())
+        // this.$nextTick(() => this.$nuxt.$loading.start())
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {
-        let host = window.location.host
+        const host = window.location.host
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.faq_url = 'http://qa.upms.startimestv.com/wap/faq.php'
             this.contact_url = 'http://qa.upms.startimestv.com/wap/business.php'
         }
     },
-    watch: {
-        token(nv, ov) {
-            setCookie('token', nv)
-            //this.$axios.setHeader('token', nv)
-        },
-        gtoken(nv, ov) {
-            setCookie('gtoken', nv)
-            this.$axios.setHeader('token', nv)
+    methods: {
+        closeNav() {
+            this.$store.commit('SET_NAV_STATE', false)
         }
     }
 }

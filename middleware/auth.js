@@ -1,5 +1,4 @@
-import { toNativePage } from '~/functions/utils'
-const auth_ignore = [
+const authIgnore = [
     /^\/hybrid\/account\/login/,
     /^\/hybrid\/account\/logout/,
     /^\/hybrid\/account\/signin/,
@@ -22,7 +21,7 @@ const auth_ignore = [
 ]
 const inIgnore = url => {
     let result = false
-    auth_ignore.forEach(item => {
+    authIgnore.forEach(item => {
         if (item.test(url)) {
             result = true
         }
@@ -31,8 +30,8 @@ const inIgnore = url => {
 }
 
 export default ({ app, store, route, redirect,$axios }) => {
-    let user = store.state.user
-    let isLogin = user.roleName && user.roleName.toUpperCase() != 'ANONYMOUS'
+    const user = store.state.user
+    const isLogin = user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
     if (!inIgnore(route.fullPath)) {
         if (!isLogin) {
             if (store.state.appType > 0) {

@@ -1,40 +1,32 @@
 <template>
     <div class="email-cont">
-        <div class="title">Enter your email</div>
-        <div class="input-email" :class="{focus:focus_email,error:error_email}">
+        <div class="title">
+            Enter your email
+        </div>
+        <div :class="{focus:focus_email,error:error_email}" class="input-email">
             <div class="number">
                 <input
-                    type="email"
-                    :disabled="disabled"
                     v-model="email"
+                    :disabled="disabled"
+                    type="email"
+                    placeholder="Enter your email"
                     @focus="focus_email=true"
                     @blur="focus_email=false"
-                    placeholder="Enter your email"
                 >
             </div>
-            <div class="error" v-show="error_email">{{error_email}}</div>
+            <div v-show="error_email" class="error">
+                {{error_email}}
+            </div>
         </div>
     </div>
 </template>
 <script>
-import qs from 'qs'
 export default {
     props: {
         disabled: {
             type: Boolean,
             default: false
         }
-    },
-    watch: {
-        email(nv, ov) {
-            this.error_email = ''
-        }
-    },
-    mounted() {
-        let _this = this
-        this.timer = setInterval(() => {
-            _this.codeDuring--
-        }, 1000)
     },
     data() {
         return {
@@ -47,21 +39,36 @@ export default {
     },
     computed: {
         canGetCode() {
-            let reg_email = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
-            return reg_email.test(this.email) && this.codeDuring <= 0
+            const regEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
+            return regEmail.test(this.email) && this.codeDuring <= 0
         }
+    },
+    watch: {
+        email(nv, ov) {
+            this.error_email = ''
+        }
+    },
+    mounted() {
+        const _this = this
+        this.timer = setInterval(() => {
+            _this.codeDuring--
+        }, 1000)
+    },
+    beforeDestroy() {
+        clearInterval(this.timer)
     },
     methods: {
         getCode() {
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
+            const accountNo = ''
             this.$axios
                 .get(`/mobilewallet/uc/v2/accounts/${accountNo}/verify-code-mail`, {
                     email: this.email
                 })
                 .then(res => {
                     this.waiting_res = false
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         this.codeDuring = 60
                     } else {
                         this.error_email = 'Please confirm you have entered the right email.'
@@ -71,9 +78,6 @@ export default {
         setEmail(val) {
             this.email = val
         }
-    },
-    beforeDestroy() {
-        clearInterval(this.timer)
     }
 }
 </script>

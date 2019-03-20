@@ -2,9 +2,11 @@
     <div class="navContain">
         <ul>
             <li v-for="item in showList" :key="item.id" :class="{choosed:item.id==choosedId}">
-                <nuxt-link :to="{path:`/browser/programlist/${item.id}`}">{{item.name}}</nuxt-link>
+                <nuxt-link :to="{path:`/browser/programlist/${item.id}`}">
+                    {{item.name}}
+                </nuxt-link>
             </li>
-            <li @click="toggleAll" style="float:right">
+            <li style="float:right" @click="toggleAll">
                 <img :class="{updown:showAll}" src="~assets/img/ic_menuarrow_def_w.png">
             </li>
         </ul>
@@ -12,12 +14,12 @@
 </template>
 <script>
 import { getQaCategory, getOnlineCategory } from '~/functions/program/category'
-import conf from '~/env'
+import env from '~/env'
 export default {
     data() {
         let choosedId = this.$route.params.id || 0
         let list = getOnlineCategory()
-        if (conf.ms_host.indexOf('qa') > 0 || conf.ms_host.indexOf('dev') > 0) {
+        if (env.msHost.indexOf('qa') > 0 || env.msHost.indexOf('dev') > 0) {
             list = getQaCategory()
         }
         list.sort((a, b) => {
@@ -41,7 +43,7 @@ export default {
     },
     mounted() {
         this.showList.forEach((item, index) => {
-            if (item.id == this.choosedId) {
+            if (item.id === this.choosedId) {
                 if (index > 6) {
                     this.showAll = true
                 } else {

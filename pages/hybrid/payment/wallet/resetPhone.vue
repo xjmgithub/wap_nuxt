@@ -2,10 +2,10 @@
     <div class="container">
         <verifyTel ref="phone" :disabled="!nocheck" :title="title" :prefix="prefix" @canNext="canStep1=true" />
         <div class="footer">
-            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)"/>
+            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)" />
         </div>
         <div v-show="step==2" class="step2">
-            <passInput placeholder="Enter your msg code" @endinput="codeEnd"/>
+            <passInput placeholder="Enter your msg code" @endinput="codeEnd" />
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)" />
             </div>
@@ -41,7 +41,7 @@ export default {
         }
     },
     mounted() {
-        let walletAccount = JSON.parse(window.localStorage.getItem('wallet_account'))
+        const walletAccount = JSON.parse(sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
         if (!this.nocheck) {
             if (walletAccount.phone) {
@@ -60,9 +60,9 @@ export default {
     },
     methods: {
         goStep(num) {
-            if (num == 3) {
-                let vscode = this.$refs.vscode.password
-                let tel = this.$refs.phone.tel
+            if (num === 3) {
+                const vscode = this.$refs.vscode.password
+                const tel = this.$refs.phone.tel
                 if (this.nocheck) {
                     this.$axios
                         .put(
@@ -71,8 +71,8 @@ export default {
                             }&verifyCode4Old=${this.vscode}`
                         )
                         .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
+                            const data = res.data
+                            if (data && data.code === '0') {
                                 this.$alert('Set phone successfully.', () => {
                                     window.location.href = '/hybrid/payment/wallet/payto'
                                 })
@@ -84,8 +84,8 @@ export default {
                     this.$axios
                         .get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${this.prefix + tel}&verifyCode=${vscode}`)
                         .then(res => {
-                            let data = res.data
-                            if (data && data.code == '0') {
+                            const data = res.data
+                            if (data && data.code === '0') {
                                 window.location.href = `/hybrid/payment/wallet/resetPhone?nocheck=1&oldphone=${this.prefix + tel}&vscode=${vscode}`
                             } else {
                                 this.$alert(data.message)
@@ -93,8 +93,8 @@ export default {
                         })
                 }
             } else {
-                let tel = this.$refs.phone.tel
-                if (this.oldphone == this.prefix + tel) {
+                const tel = this.$refs.phone.tel
+                if (this.oldphone === this.prefix + tel) {
                     this.$alert('phone is seted')
                     return false
                 } else {

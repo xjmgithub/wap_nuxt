@@ -5,14 +5,16 @@
         </div>
         <div class="page-bottom">
             <div class="download">
-                <div class="download-appstore-wrapper" v-if="appType==2" @click="downFromAppStore()">
+                <div v-if="appType==2" class="download-appstore-wrapper" @click="downFromAppStore()">
                     <img v-if="langType=='fr'" src="~assets/img/landpage/ios_appstore_bg_fy.png">
                     <img v-if="langType=='pt'" src="~assets/img/landpage/ios_appstore_bg_py.png">
                     <img v-else src="~assets/img/landpage/ios_appstore_bg.png">
                 </div>
-                <div class="download-app-wrapper" v-if="appType==1">
+                <div v-if="appType==1" class="download-app-wrapper">
                     <div class="download-app-btn" @click="downApk()">
-                        <div style="padding:0px 0.8rem">{{$store.state.lang.download_apk}}</div>
+                        <div style="padding:0px 0.8rem">
+                            {{$store.state.lang.download_apk}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -31,9 +33,7 @@ export default {
     },
     mounted() {
         let timeout
-        let t = Date.now()
-        let interval = 2000
-        let ua = navigator.userAgent.toLowerCase()
+        const ua = navigator.userAgent.toLowerCase()
         let appStoreLink
         this.sendEvLog({
             category: 'langingpage',
@@ -56,16 +56,16 @@ export default {
         //     }
         // }, interval)
 
-        var iframe = document.createElement('iframe')
+        const iframe = document.createElement('iframe')
         iframe.onload = function() {
-            if (this.appType == 1) {
+            if (this.appType === 1) {
                 this.sendEvLog({
                     category: 'langingpage',
                     action: 'jump_googleplay',
                     label: window.location.pathname
                 })
             }
-            if (this.appType == 2) {
+            if (this.appType === 2) {
                 this.sendEvLog({
                     category: 'langingpage',
                     action: 'jump_appstore',

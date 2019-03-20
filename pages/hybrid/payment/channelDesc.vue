@@ -10,6 +10,9 @@
 import mButton from '~/components/button'
 export default {
     layout: 'base',
+    components: {
+        mButton
+    },
     data() {
         return {
             payToken: this.$route.query.payToken,
@@ -34,9 +37,9 @@ export default {
         }
 
         this.$axios.get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
-            let data = res.data
+            const data = res.data
             if (data && data.payChannels && data.payChannels.length > 0) {
-                let payChannels = {}
+                const payChannels = {}
                 data.payChannels.forEach((item, index) => {
                     payChannels[item.id] = item
                 })
@@ -59,7 +62,7 @@ export default {
     methods: {
         invokePay() {
             if (!this.form_exit) {
-                if (this.payType != 3 && [2, 3].indexOf(this.appInterfaceMode) < 0) {
+                if (this.payType !== 3 && [2, 3].indexOf(this.appInterfaceMode) < 0) {
                     /* payType 取值
                     1、钱包余额
                     2、现金
@@ -87,9 +90,9 @@ export default {
                         extendInfo: {} // 没有动态表单收集信息的传空对象
                     })
                     .then(res => {
-                        let data = res.data
-                        if (data && data.resultCode == 0) {
-                            if (this.appInterfaceMode == 2) {
+                        const data = res.data
+                        if (data && data.resultCode === 0) {
+                            if (this.appInterfaceMode === 2) {
                                 this.redirectUrl = data.tppRedirectUrl
                             }
                             this.merchantRedirectUrl = data.merchantPayRedirectUrl
@@ -103,7 +106,7 @@ export default {
                     `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.payChannel}&appInterfaceMode=${this.appInterfaceMode}`
                 )
             } else {
-                if (this.appInterfaceMode == 2) {
+                if (this.appInterfaceMode === 2) {
                     window.open(this.redirectUrl)
                     // this.$confirm(
                     //     'If payment has been completed,please click done.If you encounter problems,please try again or contact appservice@startimes.com.cn',
@@ -117,9 +120,6 @@ export default {
                 this.$router.push(`/hybrid/payment/payResult?payToken=${this.payToken}`)
             }
         }
-    },
-    components: {
-        mButton
     }
 }
 </script>

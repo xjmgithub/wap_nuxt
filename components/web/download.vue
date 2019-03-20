@@ -1,7 +1,9 @@
 <template>
     <nuxt-link class="link-to-download" to="/hybrid/lands">
         <div class="download">
-            <div class="max-width">{{$store.state.lang.officialwebsitemobile_downloadpromo}}</div>
+            <div class="max-width">
+                {{$store.state.lang.officialwebsitemobile_downloadpromo}}
+            </div>
             <span>{{$store.state.lang.officialwebsitemobile_go}} &gt;</span>
         </div>
     </nuxt-link>

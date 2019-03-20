@@ -2,8 +2,13 @@
     <div class="radio-box">
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
-                <input type="radio" :name="item.name" :value="item.code" @click="checkThis(item.code)">
-                <i/>
+                <input
+                    :name="item.name"
+                    :value="item.code"
+                    type="radio"
+                    @click="checkThis(item.code)"
+                >
+                <i />
                 <span>{{item.value}}</span>
             </label>
         </div>
@@ -15,7 +20,7 @@ export default {
         radioList: {
             type: Array,
             required: true,
-            default: new Array()
+            default: () => []
         }
     },
     methods: {

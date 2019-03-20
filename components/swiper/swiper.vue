@@ -1,15 +1,36 @@
 <template>
     <section class="wh_content" @touchmove="fn">
         <div :class="className" class="wh_swiper" @touchstart="s" @touchmove="m" @touchend="e">
-            <slot/>
+            <slot />
         </div>
         <div v-if="showIndicator" class="wh_indicator">
-            <div v-for="(tag,index) in slidesLength" :key="index" class="wh_indicator_item"/>
+            <div v-for="(tag,ind) in slidesLength" :key="ind" class="wh_indicator_item" />
         </div>
     </section>
 </template>
 <script>
 export default {
+    props: {
+        // 滑动所需要的时间
+        autoPlay: {
+            type: Boolean,
+            default: true
+        },
+        // 一次滑动需要走多久
+        duration: {
+            type: Number,
+            default: 500
+        },
+        // 两次滑动间隔的时间
+        interval: {
+            type: Number,
+            default: 2500
+        },
+        showIndicator: {
+            type: Boolean,
+            default: true
+        }
+    },
     data() {
         return {
             slidesLength: 1,
@@ -28,31 +49,10 @@ export default {
             index: 1
         }
     },
-    props: {
-        //滑动所需要的时间
-        autoPlay: {
-            type: Boolean,
-            default: true
-        },
-        //一次滑动需要走多久
-        duration: {
-            type: Number,
-            default: 500
-        },
-        //两次滑动间隔的时间
-        interval: {
-            type: Number,
-            default: 2500
-        },
-        showIndicator: {
-            type: Boolean,
-            default: true
-        }
-    },
     mounted() {
         this.className = `wh_swiper_${Math.random().toFixed(3) * 1000}`
         setTimeout(() => {
-            //克隆dom
+            // 克隆dom
             this.starDom()
             this.dom.transform = `translate3d(${this.comwidth * -1}px, 0px, 0px)`
             this.dom['-webkit-transform'] = `translate3d(${this.comwidth * -1}px, 0px, 0px)`
@@ -71,17 +71,17 @@ export default {
             }
         },
         m(x) {
-            if (this.slideing && this.t.s != -1) {
+            if (this.slideing && this.t.s !== -1) {
                 this.clearTimeOut()
                 this.t.m = x.touches[x.touches.length - 1].clientX - this.t.s
                 this.setTransform(this.t.m + this.t.sx)
             }
         },
         e(x) {
-            if (this.slideing && this.t.s != -1) {
+            if (this.slideing && this.t.s !== -1) {
                 this.clearTimeOut()
                 this.setTransform(this.t.m + this.t.sx)
-                var x = this.getTransform()
+                let x = this.getTransform()
                 x += this.t.m > 0 ? this.comwidth * 0.3 : this.comwidth * -0.3
                 this.index = Math.round(x / this.comwidth) * -1
                 this.wh('touch')
@@ -93,7 +93,7 @@ export default {
             this.dom['-ms-transform'] = `translate3d(${num}px, 0px, 0px)`
         },
         getTransform() {
-            var x = this.dom.transform || this.dom['-webkit-transform'] || this.dom['-ms-transform']
+            let x = this.dom.transform || this.dom['-webkit-transform'] || this.dom['-ms-transform']
             x = x.substring(12)
             x = x.match(/(\S*)px/)[1]
             return Number(x)
@@ -118,14 +118,14 @@ export default {
         },
         wh(type) {
             this.slideing = false
-            this.dom.transition = type == 'touch' ? '250ms' : this.duration + 'ms'
+            this.dom.transition = type === 'touch' ? '250ms' : this.duration + 'ms'
             this.setTransform(this.index * -1 * this.comwidth)
             this.t.m = 0
-            this.t.s = -1 //保证下次重新赋值
+            this.t.s = -1 // 保证下次重新赋值
             if (this.autoPlay) {
                 this.setTime()
             }
-            var timeDuration = type == 'touch' ? '250' : this.duration
+            const timeDuration = type === 'touch' ? '250' : this.duration
             setTimeout(() => {
                 this.dom.transition = '0s'
                 if (this.index >= this.slidesLength + 1) {
@@ -152,11 +152,11 @@ export default {
             }, this.interval)
         },
         starDom() {
-            var SlideDom = document.querySelector('.' + this.className).getElementsByClassName('wh_slide')
+            const SlideDom = document.querySelector('.' + this.className).getElementsByClassName('wh_slide')
             this.slidesLength = SlideDom.length
             if (this.slidesLength > 1) {
-                var cloneDom1 = SlideDom[0].cloneNode(true) //向最后append
-                var cloneDom2 = SlideDom[this.slidesLength - 1].cloneNode(true) //向最前append
+                const cloneDom1 = SlideDom[0].cloneNode(true) // 向最后append
+                const cloneDom2 = SlideDom[this.slidesLength - 1].cloneNode(true) // 向最前append
                 document.querySelector('.' + this.className).insertBefore(cloneDom2, SlideDom[0])
                 document.querySelector('.' + this.className).appendChild(cloneDom1)
                 this.comwidth = document.querySelector('.' + this.className).offsetWidth

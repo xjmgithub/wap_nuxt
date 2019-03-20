@@ -1,13 +1,13 @@
 <template>
     <div class="wrapper">
-        <div class="order-contain" v-if="order.order_status">
+        <div v-if="order.order_status" class="order-contain">
             <orderBlock :order="order">
                 <nuxt-link :to="{'path':'/hybrid/faq/chooseOrder',query:$route.query}">
                     <img src="~assets/img/faq/ic_Setting_def_g.png" alt>
                 </nuxt-link>
             </orderBlock>
         </div>
-        <div class="choose-order" v-else>
+        <div v-else class="choose-order">
             <nuxt-link to="/hybrid/faq/chooseOrder">
                 <div>
                     <img src="~assets/img/faq/ic_add_def_g.png"> Choose An Order
@@ -16,25 +16,25 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <mselect :list="questionsList" :default="question" placeholder="Please choose your question" ref="questionSelect" @change="setQuestion"/>
-            <mselect :list="channelList" placeholder="Please choose channel type" ref="channelSelect" @change="setChannelName" v-if="type[1]"/>
-            <mselect :list="channelNameList" placeholder="Please choose channel name" ref="channelNameSelect" v-if="type[1]"/>
+            <mselect ref="questionSelect" :list="questionsList" :default="question" placeholder="Please choose your question" @change="setQuestion" />
+            <mselect v-if="type[1]" ref="channelSelect" :list="channelList" placeholder="Please choose channel type" @change="setChannelName" />
+            <mselect v-if="type[1]" ref="channelNameSelect" :list="channelNameList" placeholder="Please choose channel name" />
             <mselect
+                v-if="!type[0]&&!type[1]"
+                ref="countrySelect"
                 :list="countryList"
                 :default="defaultCountry"
                 placeholder="Please choose your country"
-                ref="countrySelect"
-                v-if="!type[0]&&!type[1]"
             />
             <p>Detail Description</p>
             <textarea
+                v-model="moredes"
                 cols="35"
                 rows="5"
                 placeholder="To rapidly help solve the problem,please show us the screenshots of your payment"
-                v-model="moredes"
             />
         </div>
-        <div class="gap"/>
+        <div class="gap" />
         <div class="personal">
             <p>Personal Information</p>
             <ul>
@@ -43,33 +43,43 @@
                         Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{user.id}}</p>
+                    <p class="p-value">
+                        {{user.id}}
+                    </p>
                 </li>
                 <li>
                     <p class="p-name">
                         Country
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{user.countryCode}}</p>
+                    <p class="p-value">
+                        {{user.countryCode}}
+                    </p>
                 </li>
                 <li v-if="carrier">
                     <p class="p-name">
                         Telecom Info
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{carrier}}</p>
+                    <p class="p-value">
+                        {{carrier}}
+                    </p>
                 </li>
                 <li v-if="unitType">
                     <p class="p-name">
                         Device
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{unitType}}</p>
+                    <p class="p-value">
+                        {{unitType}}
+                    </p>
                 </li>
             </ul>
         </div>
         <div class="submit">
-            <button class="btn" @click="submit">SUBMIT</button>
+            <button class="btn" @click="submit">
+                SUBMIT
+            </button>
         </div>
     </div>
 </template>
@@ -79,6 +89,10 @@ import orderBlock from '~/components/faq/order'
 import {getFaqAnswerLabel} from '~/functions/utils'
 export default {
     layout: 'base',
+    components: {
+        mselect: mselect,
+        orderBlock: orderBlock
+    },
     data() {
         return {
             indexId: 'Select Channel Type',
@@ -98,19 +112,82 @@ export default {
             moredes: ''
         }
     },
+    mounted() {
+        const order = sessionStorage.getItem('orderMsg')
+        if (order) {
+            this.order = JSON.parse(order)
+        } else {
+            this.order = {}
+        }
+
+        const ua = window.navigator.userAgent
+        const deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
+        this.deviceInfo = deviceInfo[deviceInfo.length - 1].split('like')[0]
+
+        // more faqs
+        const serviceModuleId = sessionStorage.getItem('serviceModuleId')
+
+        // 如果是从首页的单个faq默认选中
+        // let faq_question = sessionStorage.getItem('faq_question')
+
+        this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
+            if (res.data.code === 200) {
+                const list = []
+                res.data.data.forEach((item, index) => {
+                    list.push({
+                        id: item.id,
+                        name: item.thema,
+                        tags: item.tags
+                    })
+                })
+                this.questionsList = list
+                const question = this.$route.query.question
+                if (question) {
+                    // this.question = JSON.parse(faq_question).id
+                    this.question = question
+                }
+            }
+        })
+
+        // 渠道分类
+        this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
+            if (res.data && res.data instanceof Array) {
+                res.data.forEach(item => {
+                    item.disparkChannel.forEach(i => {
+                        i.id = i.channelId
+                    })
+                })
+                this.channelList = res.data
+            }
+        })
+
+        // country
+        this.$axios.get(`/cms/vup/v2/areas?versionCode=${this.$store.state.appVersionCode}`).then(res => {
+            if (res.data && res.data instanceof Array) {
+                this.countryList = res.data
+                this.countryList.forEach(item => {
+                    if (item.country) {
+                        if (item.country.toLowerCase() === this.user.countryCode.toLowerCase()) {
+                            this.defaultCountry = item.id
+                        }
+                    }
+                })
+            }
+        })
+    },
     methods: {
         setChannelName(item) {
             this.channelNameList = item.disparkChannel
         },
         setQuestion(question) {
-            let tags = question.tags
-            let type = [0, 0] // 1 支付，2频道
+            const tags = question.tags
+            const type = [0, 0] // 1 支付，2频道
             if (tags && tags.length > 0) {
                 tags.forEach(item => {
-                    if (item.tagging_name == 'pay') {
+                    if (item.tagging_name === 'pay') {
                         type[0] = 1
                     }
-                    if (item.tagging_name == 'channel') {
+                    if (item.tagging_name === 'channel') {
                         type[1] = 1
                     }
                 })
@@ -118,7 +195,7 @@ export default {
             this.type = type
         },
         submit() {
-            let order = sessionStorage.getItem('orderMsg')
+            const order = sessionStorage.getItem('orderMsg')
 
             if (this.type[1]) {
                 if (!this.$refs.channelSelect.selected.id) {
@@ -142,7 +219,7 @@ export default {
                 return false
             }
 
-            let param = {
+            const param = {
                 orderType: order ? JSON.parse(order).order_type_id : '',
                 orderNo: order ? JSON.parse(order).order_no : '',
                 orderName: order ? JSON.parse(order).order_name : '',
@@ -172,7 +249,7 @@ export default {
                     }
                 })
                 .then(res => {
-                    if (res.data.code == 200) {
+                    if (res.data.code === 200) {
                         sessionStorage.setItem('addMsg', JSON.stringify(Object.assign({}, param)))
                         this.$router.replace({
                             path: '/hybrid/faq/customerService',
@@ -188,73 +265,6 @@ export default {
                 value: 1
             })
         }
-    },
-    mounted() {
-        let order = sessionStorage.getItem('orderMsg')
-        if (order) {
-            this.order = JSON.parse(order)
-        } else {
-            this.order = {}
-        }
-
-        let ua = window.navigator.userAgent
-        let deviceInfo = ua.match(/\(([^)]*)\)/)[1].split(';')
-        this.deviceInfo = deviceInfo[deviceInfo.length - 1].split('like')[0]
-
-        // more faqs
-        let serviceModuleId = sessionStorage.getItem('serviceModuleId')
-
-        // 如果是从首页的单个faq默认选中
-        //let faq_question = sessionStorage.getItem('faq_question')
-
-        this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
-            if (res.data.code == 200) {
-                let list = []
-                res.data.data.forEach((item, index) => {
-                    list.push({
-                        id: item.id,
-                        name: item.thema,
-                        tags: item.tags
-                    })
-                })
-                this.questionsList = list
-                let question = this.$route.query.question
-                if (question) {
-                    //this.question = JSON.parse(faq_question).id
-                    this.question = question
-                }
-            }
-        })
-
-        // 渠道分类
-        this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
-            if (res.data && res.data instanceof Array) {
-                res.data.forEach(item => {
-                    item.disparkChannel.forEach(i => {
-                        i.id = i.channelId
-                    })
-                })
-                this.channelList = res.data
-            }
-        })
-
-        // country
-        this.$axios.get(`/cms/vup/v2/areas?versionCode=${this.$store.state.appVersionCode}`).then(res => {
-            if (res.data && res.data instanceof Array) {
-                this.countryList = res.data
-                this.countryList.forEach(item => {
-                    if (item.country) {
-                        if (item.country.toLowerCase() == this.user.countryCode.toLowerCase()) {
-                            this.defaultCountry = item.id
-                        }
-                    }
-                })
-            }
-        })
-    },
-    components: {
-        mselect: mselect,
-        orderBlock: orderBlock
     },
     head() {
         return {

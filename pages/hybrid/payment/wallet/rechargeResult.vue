@@ -1,16 +1,20 @@
 <template>
     <div :class="{'grey-back':result==2}" class="container">
-        <loading v-show="loadStatus"/>
+        <loading v-show="loadStatus" />
         <template v-if="result=='1'&&!loadStatus">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
-            <p class="success">Recharge Successful</p>
+            <p class="success">
+                Recharge Successful
+            </p>
             <p class="money">
                 {{ amount }}
                 <span>{{ currency }}</span>
             </p>
             <p
                 class="msg"
-            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            >
+                Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.
+            </p>
             <p class="msg">
                 Recharge No.:{{ accountNo }}
                 <br>
@@ -22,11 +26,15 @@
         </template>
         <template v-if="result=='2'&&!loadStatus">
             <img src="~assets/img/pay/img_failed_def_b.png" alt>
-            <p class="fail">Payment Failed</p>
-            <p class="msg">{{ fail_message }}</p>
+            <p class="fail">
+                Payment Failed
+            </p>
+            <p class="msg">
+                {{ fail_message }}
+            </p>
         </template>
         <div v-show="!loadStatus" class="footer">
-            <mButton :disabled="false" text="OK" @click="back"/>
+            <mButton :disabled="false" text="OK" @click="back" />
         </div>
     </div>
 </template>
@@ -54,10 +62,10 @@ export default {
         }
     },
     mounted() {
-        if (this.result == 1 || this.result == 2) {
+        if (this.result === 1 || this.result === 2) {
             this.loadStatus = false
         }
-        if (this.result == 2) {
+        if (this.result === 2) {
             this.loadStatus = false
         } else {
             this.loadStatus = true

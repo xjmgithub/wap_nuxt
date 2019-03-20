@@ -1,27 +1,31 @@
 <template>
     <div class="wrapper">
-        <program-category ref="category"/>
+        <program-category ref="category" />
         <div class="program-list">
-            <div class="program" v-for="(item,index) in programList" :key="index">
+            <div v-for="(item,index) in programList" :key="index" class="program">
                 <div class="title" @click="toProgramDetail(item)">
                     <span>{{item.name}}</span>
-                    <span class="more" v-show="item.subPrograms.length>3">MORE</span>
+                    <span v-show="item.subPrograms.length>3" class="more">MORE</span>
                 </div>
                 <ul>
-                    <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3" @click="toSubProgramDetail(subPro.id,item)">
+                    <li v-for="(subPro,i) in item.subPrograms" v-show="i < 3" :key="i" @click="toSubProgramDetail(subPro.id,item)">
                         <span>{{subPro.name}}</span>
                         <span class="arrows">&gt;&gt;</span>
                     </li>
                 </ul>
             </div>
-            <div class="loading-end" v-show="!endedState">loading…</div>
+            <div v-show="!endedState" class="loading-end">
+                loading…
+            </div>
         </div>
     </div>
 </template>
 <script>
 import programCategory from '~/components/web/programCategory'
-import programItem from '~/components/web/programItem'
 export default {
+    components: {
+        programCategory,
+    },
     data() {
         return {
             tagId: this.$route.params.id,
@@ -32,18 +36,14 @@ export default {
             loadstate: false
         }
     },
-    components: {
-        programCategory,
-        programItem
-    },
     mounted() {
         this.loadData()
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
-            let contain = document.querySelector('.wrapper')
-            let navContain = document.querySelector('.wrapper .navContain')
-            let list = document.querySelector('.wrapper .program-list')
-            let _this = this
+            const contain = document.querySelector('.wrapper')
+            const navContain = document.querySelector('.wrapper .navContain')
+            const list = document.querySelector('.wrapper .program-list')
+            const _this = this
             contain.addEventListener('scroll', function() {
                 if (navContain.offsetHeight + list.offsetHeight - contain.offsetHeight - contain.scrollTop < 200) {
                     if (_this.loadstate || _this.endedState) return false
@@ -59,9 +59,9 @@ export default {
             this.$router.push('/browser/programlist/program')
         },
         loadData() {
-            let choosedId = this.$refs.category.choosedId
+            const choosedId = this.$refs.category.choosedId
             this.$axios.get(`/vup/v1/programs/tag/${choosedId}?pageNumber=${this.perIndex}&perSize=${this.perSize}`).then(res => {
-                let data = res.data.data
+                const data = res.data.data
                 this.loadstate = false
                 if (data && data.length > 0) {
                     this.programList = this.programList.concat(data)

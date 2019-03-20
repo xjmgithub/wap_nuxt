@@ -1,10 +1,10 @@
 ;(function(w, d) {
-    var host = window.location.host
-    var url = 'https://event.startimestv.com'
+    const host = window.location.host
+    let url = 'https://event.startimestv.com'
     if (host.indexOf('localhost') >= 0 || host.indexOf('qa') >= 0) {
         url = 'http://10.0.243.111:8080'
     }
-    var commonLog = {
+    const commonLog = {
         al: 'en',
         bst: '0',
         car: '',
@@ -43,7 +43,7 @@
         }
     }
 
-    var s = d.createElement('img')
+    const s = d.createElement('img')
     s.height = 1
     s.width = 1
     s.src =

@@ -28,7 +28,8 @@ export const setCookie = (name, value, end, path, domain, secure) => {
 }
 
 export const getCookie = name => {
-    let value = document.cookie.replace(
+    const value = document.cookie.replace(
+        // eslint-disable-next-line no-useless-escape
         new RegExp('(?:(?:^|.*;)\\s*' + encodeURIComponent(name).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=\\s*([^;]*).*$)|^.*$'),
         '$1'
     )
@@ -65,9 +66,9 @@ export const toNativePage = page => {
 }
 
 export const getQuery = name => {
-    let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
-    let r = window.location.search.substr(1).match(reg)
-    if (r != null) return decodeURIComponent(r[2])
+    const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
+    const r = window.location.search.substr(1).match(reg)
+    if (r !== null) return decodeURIComponent(r[2])
     return null
 }
 
@@ -78,14 +79,14 @@ export const getRandomInt = (min, max) => {
 }
 
 export const shareInvite = (link, shareTitle, shareContent, tabName, voteName) => {
-    let shareLink = '' //TODO 图片地址
+    const shareLink = '' // TODO 图片地址
     if (link.indexOf('?') > 0) {
         link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + voteName + '_' + tabName
     } else {
         link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + voteName + '_' + tabName
     }
     if (window.getChannelId && window.getChannelId.showCustorm) {
-        let content = '【' + shareTitle + '】' + shareContent + link
+        const content = '【' + shareTitle + '】' + shareContent + link
         window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareLink, voteName)
     }
 }
@@ -94,30 +95,31 @@ export const initGoogleLogin = (elm, callback) => {
     // google sign in
     // https://developers.google.com/identity/sign-in/web/build-button
     // !!! need element is mounted
-    let googleUser = {}
-    let script = document.createElement('script')
-    let host = window.location.host
-    let client_id
+    const script = document.createElement('script')
+    const host = window.location.host
+    let clientId
 
     // credentials generate from https://developers.google.com/identity/sign-in/web/sign-in
     if (host.indexOf('localhost') >= 0) {
-        client_id = '461626275431-dlisbhgbpdnb7044lmtr73jrdpcf8uo6.apps.googleusercontent.com'
+        clientId = '461626275431-dlisbhgbpdnb7044lmtr73jrdpcf8uo6.apps.googleusercontent.com'
     } else if (host.indexOf('qa') >= 0) {
-        client_id = '461626275431-ta9fp4nqgn6ubs1cuksc5ruuq9vd80c1.apps.googleusercontent.com'
+        clientId = '461626275431-ta9fp4nqgn6ubs1cuksc5ruuq9vd80c1.apps.googleusercontent.com'
     } else if (host.indexOf('dev') >= 0) {
-        client_id = '461626275431-clalb6djdkk80if7ajo7maatoviom3c6.apps.googleusercontent.com'
+        clientId = '461626275431-clalb6djdkk80if7ajo7maatoviom3c6.apps.googleusercontent.com'
     } else if (host.indexOf('staging') >= 0) {
-        client_id = '461626275431-h61qm78g5df8vt6jrirdvsms1c2dvm8v.apps.googleusercontent.com'
+        clientId = '461626275431-h61qm78g5df8vt6jrirdvsms1c2dvm8v.apps.googleusercontent.com'
     } else {
-        client_id = '461626275431-hqm5jvacsn8i5m2tu5md1rqdbqrlsbt2.apps.googleusercontent.com'
+        clientId = '461626275431-hqm5jvacsn8i5m2tu5md1rqdbqrlsbt2.apps.googleusercontent.com'
     }
 
     script.src = 'https://apis.google.com/js/platform.js'
 
     script.onload = function() {
+        // eslint-disable-next-line no-undef
         gapi.load('auth2', function() {
-            var auth2 = gapi.auth2.init({
-                client_id: client_id,
+            // eslint-disable-next-line no-undef
+            const auth2 = gapi.auth2.init({
+                clientId: clientId,
                 cookiepolicy: 'single_host_origin'
             })
             auth2.attachClickHandler(
@@ -126,7 +128,7 @@ export const initGoogleLogin = (elm, callback) => {
                 function(googleUser) {
                     // parse user info
                     // https://developers.google.com/identity/sign-in/web/people
-                    let profile = googleUser.getBasicProfile()
+                    const profile = googleUser.getBasicProfile()
                     callback(profile.getId(), profile.getName())
                 },
                 function(error) {
@@ -141,12 +143,14 @@ export const initGoogleLogin = (elm, callback) => {
 }
 
 export const initFacebookLogin = () => {
+    // eslint-disable-next-line no-undef
     FB.init({
         appId: '159785064477978',
         xfbml: true,
         cookie: true,
         version: 'v3.1'
     })
+    // eslint-disable-next-line no-undef
     FB.AppEvents.logPageView()
 }
 
@@ -165,15 +169,15 @@ export const downloadApk = app => {
                 this.$alert('Download error.Please retry.')
             }
         })
-        .catch(err => {
+        .catch(() => {
             this.$alert('Download error.Please retry.')
         })
 }
 
 export const login = (v, opt) => {
     v.$axios.post('/ums/v3/user/login', opt).then(res => {
-        res.data.code != 0 && v.$alert(res.data.message)
-        let token = res.data.data.token
+        res.data.code !== 0 && v.$alert(res.data.message)
+        const token = res.data.data.token
         v.$axios
             .get('/cms/users/me', {
                 headers: {
@@ -181,27 +185,110 @@ export const login = (v, opt) => {
                 }
             })
             .then(res => {
-                res.status != 200 && v.$alert(res.data.message)
+                res.status !== 200 && v.$alert(res.data.message)
 
-                let user = res.data
+                const user = res.data
                 v.$store.commit('SET_TOKEN', token)
                 v.$store.commit('SET_USER', user)
 
                 setCookie('token', token)
                 localStorage.setItem('user', JSON.stringify(user))
-                let pre = sessionStorage.getItem('login_prefer') || ''
+                const pre = sessionStorage.getItem('login_prefer') || ''
                 if (pre) {
                     window.location.href = pre
                 } else {
                     v.$router.replace('/browser')
                 }
             })
-            .catch(error => {
+            .catch(() => {
                 v.$alert('Get user info error.')
             })
     })
 }
 
+export const formatAmount = num => {
+    if (!isNaN(num)) {
+        const arr = num.toString().split('.')
+        if (arr[1]) {
+            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
+        } else {
+            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
+        }
+    } else {
+        return ''
+    }
+}
+
+// client 端使用
+export const parseUA = (isApp, appversion) => {
+    let dstr = ''
+    if (isApp === 1 || isApp === 2) {
+        const system = isApp === 1 ? 'android' : 'ios'
+        dstr = 'APP(' + system + ',' + appversion + ')'
+        dstr += ';H5(' + system
+        if (isApp === 1) {
+            const s = navigator.userAgent.indexOf('Android')
+            if (s > 0) {
+                dstr += '_' + navigator.userAgent.substr(s + 8).split(';')[0]
+            }
+        } else {
+            const s = navigator.userAgent.indexOf('iPhone OS')
+            if (s > 0) {
+                dstr += '_' + navigator.userAgent.substr(s + 10).split(' ')[0]
+            }
+        }
+        dstr += ', Chrome'
+        const b = navigator.userAgent.indexOf('Version')
+        const c = navigator.userAgent.indexOf('Chrome')
+        if (b > 0) {
+            const s = navigator.userAgent
+                .substr(b)
+                .split(' ')[1]
+                .split('/')[1]
+            if (s) {
+                dstr += '_' + s
+            }
+        } else if (c > 0) {
+                const s = navigator.userAgent
+                    .substr(c)
+                    .split(' ')[0]
+                    .split('/')[1]
+                if (s) {
+                    dstr += '_' + s
+                }
+            }
+        dstr += ')'
+    } else {
+        let plat = 'others'
+        if (navigator.userAgent.indexOf('Android') > 0) {
+            plat = 'android'
+        } else if (navigator.userAgent.indexOf('iPhone') > 0) {
+            plat = 'ios'
+        }
+        dstr = 'H5(' + plat + ', MQQBrowser'
+        const b = navigator.userAgent.indexOf('Version')
+        const c = navigator.userAgent.indexOf('Chrome')
+        if (b > 0) {
+            const s = navigator.userAgent
+                .substr(b)
+                .split(' ')[1]
+                .split('/')[1]
+            if (s) {
+                dstr += '_' + s
+            }
+        } else if (c > 0) {
+                const s = navigator.userAgent
+                    .substr(c)
+                    .split(' ')[0]
+                    .split('/')[1]
+                if (s) {
+                    dstr += '_' + s
+                }
+            }
+        dstr += ')'
+    }
+    return dstr
+}
 export const getFaqBlockLogLabel = ins => {
     return (
         (ins.$store.state.country.id || '') +
@@ -242,4 +329,9 @@ export const getFaqAnswerLabel = (ins, question) => {
         '_' +
         (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
     )
+}
+
+
+export const nativeFuncs = ()=>{
+    return window && window.getChannelId
 }

@@ -1,13 +1,17 @@
 <template>
     <div class="wrapper wide">
-        <div class="bouquets clearfix" v-show="!loadstate">
+        <div v-show="!loadstate" class="bouquets clearfix">
             <p>{{tvPlatFormName}}</p>
             <div class="logo">
-                <bg-img-data :img-path="packageLogo" :package-name="bouquetName"/>
+                <bg-img-data :img-path="packageLogo" :package-name="bouquetName" />
             </div>
             <div class="info">
-                <p class="bouquetName">{{bouquetName}} Bouquet</p>
-                <p class="money">{{currency}} {{price}}</p>
+                <p class="bouquetName">
+                    {{bouquetName}} Bouquet
+                </p>
+                <p class="money">
+                    {{currency}} {{price}}
+                </p>
                 <p class="recharge">
                     <a :href="recharge_url">
                         <img src="~assets/img/web/Group.png" alt> Recharge
@@ -15,7 +19,9 @@
                 </p>
             </div>
         </div>
-        <p class="title" v-show="!loadstate">{{detailList.length}} TV Channels inclued</p>
+        <p v-show="!loadstate" class="title">
+            {{detailList.length}} TV Channels inclued
+        </p>
         <ul class="channelList">
             <li v-for="(item,index) in detailList" :key="index">
                 <div class="lasy_bg">
@@ -23,7 +29,7 @@
                         <img :src="item.logo.resources[0].url.replace('http:','https:')" alt>
                     </nuxt-link>
                 </div>
-                <img src="~assets/img/web/channelsOn.png" v-show="item.liveStatus" class="imgOn">
+                <img v-show="item.liveStatus" src="~assets/img/web/channelsOn.png" class="imgOn">
             </li>
         </ul>
     </div>
@@ -32,28 +38,35 @@
 import bgImgData from '~/components/web/bgImgData'
 export default {
     layout: 'default',
+    components: {
+        bgImgData
+    },
     data() {
         return {
             detailList: [],
             price: this.$route.query.price,
             bouquetName: this.$route.query.name,
             packageLogo: this.$route.query.logo,
-            tvPlatFormName: this.$route.query.plat == 'DTH' ? 'Dish' : 'Antenna',
+            tvPlatFormName: this.$route.query.plat === 'DTH' ? 'Dish' : 'Antenna',
             loadstate: true,
             recharge_url: 'https://m.startimestv.com/DVB/binding.php'
         }
     },
+    computed: {
+        currency() {
+            return this.$store.state.country.currencySymbol
+        }
+    },
     mounted() {
         this.$nextTick(() => this.$nuxt.$loading.start())
-        let host = window.location.host
+        const host = window.location.host
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
         }
 
-        let id = this.$route.query.id
-        let countryCode = this.$store.state.country.country
-        let packageId = this.$route.query.id
-        let plat = this.$route.query.plat == 'DTH' ? '1' : '0'
+        const countryCode = this.$store.state.country.country
+        const packageId = this.$route.query.id
+        const plat = this.$route.query.plat === 'DTH' ? '1' : '0'
         this.$axios
             .get(
                 `/channel/v1/channels/broadcast/channels/package-id?country_code=${countryCode}&platform_type=${plat}&package_id=${packageId}&include_lower_code=true`
@@ -61,21 +74,12 @@ export default {
             .then(res => {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 this.loadstate = false
-                let countChannel = res.data.data
-                if (res.data && res.data.code == 200) {
+                if (res.data && res.data.code === 200) {
                     this.detailList = res.data.data
                 } else {
                     this.detailList = []
                 }
             })
-    },
-    computed: {
-        currency() {
-            return this.$store.state.country.currencySymbol
-        }
-    },
-    components: {
-        bgImgData
     },
     head() {
         return {

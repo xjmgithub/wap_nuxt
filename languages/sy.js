@@ -54,10 +54,6 @@ export default {
     // order
     my_order_details: 'Maelezo ya Utaratibu',
     smart_card_no_content: 'Nambari ya Kadi:',
-    dormant: 'Haitumiki',
-    dvb_acitve_to: 'Imewezeshwa hadi:',
-    active_: 'Inatumika',
-    link_suspend: 'Kusimamishwa',
     smart_card_balance: 'Bakshishi:',
     dvb_recharge_link_recharge: 'Ongeza', 
     payment_details_promation: 'Matangazo',

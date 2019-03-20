@@ -1,17 +1,19 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <serviceBlock :show-more="true"/>
-            <div class="service" v-if="faqTagsData">
+            <serviceBlock :show-more="true" />
+            <div v-if="faqTagsData" class="service">
                 <div id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
-                        <div :class="item.class"/>
+                        <div :class="item.class" />
                     </a>
                 </div>
                 <div class="questions">
-                    <div v-for="(item,index) in faqTagsData" :key="index" v-show="item.checked">
+                    <div v-for="(item,index) in faqTagsData" v-show="item.checked" :key="index">
                         <ul>
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">
+                                {{item2.thema}}
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -19,7 +21,9 @@
         </div>
         <div class="costomer">
             <nuxt-link :to="{path:'/hybrid/faq/customerService',query:$route.query}">
-                <button class="btn">COSTOMER SERVICE</button>
+                <button class="btn">
+                    COSTOMER SERVICE
+                </button>
             </nuxt-link>
         </div>
     </div>
@@ -29,6 +33,9 @@ import serviceBlock from '~/components/faq/serviceBlock'
 import { getFaqLogLabel,getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
+    components: {
+        serviceBlock
+    },
     data: function() {
         return {
             faqTagsData: [],
@@ -51,12 +58,12 @@ export default {
 
         this.$axios.get('/ocs/v1/faqs/Tags').then(res => {
             if (res.data) {
-                let arr = []
+                const arr = []
                 let firstTagId = null
                 res.data.data.forEach((item, index) => {
-                    let checked = index <= 0 ? true : false
-                    if (index == 0) firstTagId = item.tagging_id
-                    let logoMap = {
+                    const checked = index <= 0
+                    if (index === 0) firstTagId = item.tagging_id
+                    const logoMap = {
                         hot: 'tab_hot',
                         on: 'tab_on',
                         tv: 'tab_tv',
@@ -78,7 +85,7 @@ export default {
                 this.changeServiceTag(firstTagId)
 
                 this.$nextTick(() => {
-                    let collect = document.querySelectorAll('.questions div')
+                    const collect = document.querySelectorAll('.questions div')
                     for (let i = 0; i < collect.length; i++) {
                         collect[i].addEventListener('scroll', this.handleScroll)
                     }
@@ -90,7 +97,7 @@ export default {
         getfaqsByTag(tagid, moretag) {
             let tag = {}
             this.faqTagsData.forEach(item => {
-                if (item.id == tagid) {
+                if (item.id === tagid) {
                     tag = item
                 }
             })
@@ -109,7 +116,7 @@ export default {
         },
         changeServiceTag(tagId) {
             this.faqTagsData.forEach(item => {
-                if (item.id == tagId) {
+                if (item.id === tagId) {
                     item.checked = true
                 } else {
                     item.checked = false
@@ -126,16 +133,16 @@ export default {
             this.getfaqsByTag(tagId)
         },
         handleScroll(evt) {
-            let container = evt.target
-            let child = evt.target.querySelector('ul')
-            let childHeight = child.offsetHeight
-            let scrollTop = container.scrollTop
+            const container = evt.target
+            const child = evt.target.querySelector('ul')
+            const childHeight = child.offsetHeight
+            const scrollTop = container.scrollTop
 
-            if (childHeight - scrollTop - container.offsetHeight <= 150 && this.isLoading == false) {
+            if (childHeight - scrollTop - container.offsetHeight <= 150 && this.isLoading === false) {
                 this.isLoading = true
                 let checkedId = null
                 this.faqTagsData.forEach(item => {
-                    if (item.checked == true) {
+                    if (item.checked === true) {
                         checkedId = item.id
                     }
                 })
@@ -156,9 +163,6 @@ export default {
                 value: 1
             })
         }
-    },
-    components: {
-        serviceBlock
     },
     head() {
         return {

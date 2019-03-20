@@ -1,16 +1,22 @@
 <template>
     <div class="wrapper">
         <div class="input-item">
-            <div class="label">Create a Password</div>
-            <input type="text" v-model="pass" @blur="checkpass">
+            <div class="label">
+                Create a Password
+            </div>
+            <input v-model="pass" type="text" @blur="checkpass">
         </div>
         <div class="input-item">
-            <div class="label">Confirm New Password</div>
-            <input type="text" v-model="repass" @blur="checkpass">
+            <div class="label">
+                Confirm New Password
+            </div>
+            <input v-model="repass" type="text" @blur="checkpass">
         </div>
         <div class="input-item invite">
-            <div class="label">Invitation Code(Optional)</div>
-            <input type="text" v-model="inviteCode" @blur="checkpass">
+            <div class="label">
+                Invitation Code(Optional)
+            </div>
+            <input v-model="inviteCode" type="text" @blur="checkpass">
         </div>
         <div class="footer">
             <mButton :disabled="false" :text="'NEXT'" @click="nextStep" />
@@ -19,9 +25,11 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import qs from 'qs'
 export default {
     layout: 'base',
+    components: {
+        mButton
+    },
     data() {
         return {
             countryId: this.$route.query.countryId || '',
@@ -41,7 +49,7 @@ export default {
         nextStep() {
             // TODO 校验
 
-            let options = {
+            const options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
                 invitedId: this.inviteCode
@@ -57,16 +65,13 @@ export default {
             }
 
             this.$axios.post('/ums/v1/register', options).then(res => {
-                if (res.data.code == 0) {
+                if (res.data.code === 0) {
                     this.$router.push('/hybrid/account/login')
                 } else {
                     this.error_code = 'This code you entered is incorrect. Please try again.'
                 }
             })
         }
-    },
-    components: {
-        mButton
     }
 }
 </script>

@@ -11,35 +11,41 @@
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
-            <div class="country_choose" v-if="country" @click="countryDialogStatus=true">
+            <div v-if="country" class="country_choose" @click="countryDialogStatus=true">
                 <img :src="country.nationalFlag.replace('http:','https:')">
                 <span>{{country.name}}</span>
             </div>
             <div class="img-box">
                 <img src="~assets/img/users/ic_user_def_w.png" alt>
-                <input type="tel" v-model="phoneNum" placeholder="Phone Number">
+                <input v-model="phoneNum" type="tel" placeholder="Phone Number">
             </div>
             <div class="img-box">
                 <img src="~assets/img/users/ic_lockr_def_w.png" alt>
-                <input type="password" v-model="password" placeholder="Password">
+                <input v-model="password" type="password" placeholder="Password">
             </div>
         </div>
         <div v-show="type==1" class="by_email">
             <div class="img-box">
                 <img src="~assets/img/users/ic_user_def_w.png" alt>
-                <input type="email" v-model="email" placeholder="E-mail">
+                <input v-model="email" type="email" placeholder="E-mail">
             </div>
             <div class="img-box">
                 <img src="~assets/img/users/ic_lockr_def_w.png" alt>
-                <input type="password" v-model="password" placeholder="Password">
+                <input v-model="password" type="password" placeholder="Password">
             </div>
         </div>
-        <div class="next-btn" @click="login">SIGN IN</div>
-        <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/account/resetpass">Forgot password?</nuxt-link>
+        <div class="next-btn" @click="login">
+            SIGN IN
         </div>
-        <div class="country-choose-dialog" v-show="countryDialogStatus">
-            <div class="dialog-title">Country List</div>
+        <div class="forgot-pwd">
+            <nuxt-link to="/hybrid/account/resetpass">
+                Forgot password?
+            </nuxt-link>
+        </div>
+        <div v-show="countryDialogStatus" class="country-choose-dialog">
+            <div class="dialog-title">
+                Country List
+            </div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
                     <img :src="item.nationalFlag.replace('http:','https:')">
@@ -47,15 +53,18 @@
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
 import shadowLayer from '~/components/shadow-layer'
-import { setCookie, login } from '~/functions/utils'
+import { login } from '~/functions/utils'
 import countrArr from '~/functions/countrys.json'
 export default {
     layout: 'base',
+    components: {
+        shadowLayer
+    },
     data() {
         return {
             type: 0, // 0 tel 1 email
@@ -78,7 +87,7 @@ export default {
         },
         login() {
             let params = {}
-            if (this.type == 1) {
+            if (this.type === 1) {
                 params = {
                     applicationId: 1,
                     deviceId: this.$store.state.deviceId,
@@ -87,10 +96,10 @@ export default {
                     pwd: this.password
                 }
             } else {
-                let tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
+                const tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
                 params = {
                     applicationId: 2,
-                    phoneCc: this.country['phonePrefix'],
+                    phoneCc: this.country.phonePrefix,
                     phone: tel,
                     pwd: this.password,
                     deviceId: this.$store.state.deviceId,
@@ -100,9 +109,6 @@ export default {
 
             login(this, params)
         }
-    },
-    components: {
-        shadowLayer
     },
     head() {
         return {

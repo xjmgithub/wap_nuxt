@@ -1,26 +1,26 @@
 <template>
     <div class="password-box">
         <p class="pwd-type">{{placeholder}}</p>
-        <img class="open-close" src="~assets/img/ic_hide_def_g.png" v-if="toggleView&&isCiphertext==1" alt @click="isCiphertext=2">
-        <img class="open-close" src="~assets/img/ic_show_def_g.png" v-if="toggleView&&isCiphertext==2" alt @click="isCiphertext=1">
+        <img v-if="toggleView&&isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2">
+        <img v-if="toggleView&&isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1">
         <div class="pwd-input">
             <!-- TODO 支持自定义化数量 -->
             <div class="input-item" v-html="N1"/>
-            <div class="input-item" v-show="length>=2" v-html="N2"/>
-            <div class="input-item" v-show="length>=3" v-html="N3"/>
-            <div class="input-item" v-show="length>=4" v-html="N4"/>
-            <div class="input-item" v-show="length>=5" v-html="N5"/>
-            <div class="input-item" v-show="length>=6" v-html="N6"/>
+            <div v-show="length>=2" class="input-item" v-html="N2"/>
+            <div v-show="length>=3" class="input-item" v-html="N3"/>
+            <div v-show="length>=4" class="input-item" v-html="N4"/>
+            <div v-show="length>=5" class="input-item" v-html="N5"/>
+            <div v-show="length>=6" class="input-item" v-html="N6"/>
         </div>
-        <input type="tel" :maxlength="length" v-model="password" class="hidden-pwd">
+        <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd">
     </div>
 </template>
 <script>
 export default {
     props: {
         length: {
-            type: String, // max length 6
-            default: '6'
+            type: Number, // max length 6
+            default: 6
         },
         placeholder: {
             type: String,
@@ -39,46 +39,45 @@ export default {
     },
     computed: {
         pwdType() {
-            return this.isCiphertext == 1 ? 'password' : 'text'
+            return this.isCiphertext === 1 ? 'password' : 'text'
         },
         N1() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(0, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(0, 1) || ''
             }
         },
         N2() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(1, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(1, 1) || ''
             }
-            return this.password.substr(1, 1) || ''
         },
         N3() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(2, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(2, 1) || ''
             }
         },
         N4() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(3, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(3, 1) || ''
             }
         },
         N5() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(4, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(4, 1) || ''
             }
         },
         N6() {
-            if (this.isCiphertext == 1) {
+            if (this.isCiphertext === 1) {
                 return this.password.substr(5, 1) ? '&bull;' : ''
             } else {
                 return this.password.substr(5, 1) || ''
@@ -90,7 +89,7 @@ export default {
             if (val.length >= this.length) {
                 this.$emit('endinput', true)
             } else {
-                this.$emit('endinput', false)
+                this.$emit('inputing', true)
             }
         }
     }
