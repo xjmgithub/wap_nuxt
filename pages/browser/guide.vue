@@ -21,6 +21,7 @@ export default {
     data() {
         return {
             channelList: [],
+            oriChannelList: [],
             keyword: ''
         }
     },
@@ -58,60 +59,37 @@ export default {
     },
     methods: {
         search() {
+            this.channelList =[]
             if(this.keyword){
-                const tmp =[]
-                this.channelList.forEach(ele => {
+                this.oriChannelList.forEach(ele => {
                     if (ele.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1 || ele.id.toString().indexOf(this.keyword) > -1) {
-                        tmp.push(ele)
+                        this.channelList.push(ele)
                     }
                 })
-                this.channelList = tmp
             }else{
-                this.getChannels()
+                this.oriChannelList.forEach(ele => {
+                    this.channelList.push(ele)
+                })
             }
         },
         getChannels() {
-            // this.$nextTick(() => this.$nuxt.$loading.start())
-            // this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
-            //     this.$nextTick(() => this.$nuxt.$loading.finish())
-            //     const data = res.data
-            //     data.forEach(ele => {
-            //         if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
-            //             const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
-            //             platformInfos.forEach(plat => {
-            //                 ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
-            //                 ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
-            //                 ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
-            //                 ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
-            //             })
-            //         }
-            //     })
-            //     this.channelList = data
-            // })
             this.$nextTick(() => this.$nuxt.$loading.start())
-            localforage.getItem('channel').then(val => {
-                if (!val) {
-                    this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
-                        this.$nextTick(() => this.$nuxt.$loading.finish())
-                        const data = res.data
-                        data.forEach(ele => {
-                            if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
-                                const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
-                                platformInfos.forEach(plat => {
-                                    ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
-                                    ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
-                                    ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
-                                    ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
-                                })
-                            }
+            this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
+                const data = res.data
+                data.forEach(ele => {
+                    if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+                        const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+                        platformInfos.forEach(plat => {
+                            ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
+                            ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
+                            ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
+                            ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
                         })
-                        this.channelList = data
-                        localforage.setItem('channel', this.channelList)
-                    })
-                } else {
-                    this.$nextTick(() => this.$nuxt.$loading.finish())
-                    this.channelList = val
-                }
+                    }
+                })
+                this.channelList = data
+                this.oriChannelList = data
             })
         }
     }
