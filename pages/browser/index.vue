@@ -12,7 +12,9 @@
                 </nuxt-link>
             </div>
         </div>
-        <vod-list v-for="(item,index) in programs" :key="index" :item="item"/>
+        <div class="programs">
+            <vod-list v-for="(item,index) in programs" :key="index" :item="item"/>
+        </div>
         <div class="bouquets">
             <h3>
                 <div class="dot">‧</div>
@@ -243,7 +245,9 @@ export default {
         }
     }
 }
-
+.programs{
+    border-bottom: 1px solid #d8d8d8;
+}
 .bouquets {
     .boxStyle;
     padding: 0.3rem 0;

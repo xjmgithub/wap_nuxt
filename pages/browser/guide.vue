@@ -5,8 +5,15 @@
                 <input v-model="keyword" type="text" placeholder="Search your favorite channels">
                 <img @click="search" src="~assets/img/web/ic_search.png">
             </div>
-            <p class="count">{{channelList.length}} Channels</p>
+            <p class="count">{{channelList.length}} Channels 
+                <span v-show="showSearch">for "{{showSearch}}"</span>
+            </p>
+            <div class="noResult" v-show="showSearch&&channelList.length==0 ">
+                <img src="~assets/img/web/noresult.png" alt="">
+                <span>No results</span>
+            </div>
             <channel v-for="(item ,i) in channelList" :key="i" :item="item" />
+            <p v-show="channelList.length>0" class="noMoreChannel">No more channels</p>
         </div>
     </div>
 </template>
@@ -66,10 +73,12 @@ export default {
                         this.channelList.push(ele)
                     }
                 })
+                this.showSearch = this.keyword
             }else{
                 this.oriChannelList.forEach(ele => {
                     this.channelList.push(ele)
                 })
+                this.showSearch = ''
             }
         },
         getChannels() {
@@ -125,6 +134,21 @@ export default {
     }
     .count{
         color:#bdbdbd;
+    }
+    .noResult{
+        padding:1rem;
+        text-align: center;
+        color:#bdbdbd;
+        img{
+            display: block;
+            width:100%;
+            margin-bottom: 1rem;
+        }
+    }
+    .noMoreChannel{
+        color:#bdbdbd;
+        text-align: center;
+        padding:1rem;
     }
 }
 </style>
