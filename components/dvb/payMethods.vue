@@ -110,7 +110,7 @@ export default {
         },
         pay() {
             const channel = this.selectMethod.fkPayChannelId
-            const checkPassTag = channel > 9002 && channel < 9034
+            const checkPassTag = channel >= 9002 && channel <= 9034
             if (!this.canPay) return false
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
@@ -149,10 +149,10 @@ export default {
                     this.$store.commit('HIDE_SHADOW_LAYER')
                     this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}`)
                 } else {
-                    invoke(this, data.paymentToken, channel, data => {
+                    invoke.call(this, data.paymentToken, channel, data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter(this, data, payType, apiType)
+                        commonPayAfter.call(this, data, payType, apiType)
                     })
                 }
             })
