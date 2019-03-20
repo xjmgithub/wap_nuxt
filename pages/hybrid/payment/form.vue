@@ -169,12 +169,12 @@ export default {
                     optarr[id] = value
                 }
 
-                invoke(
+                invoke.call(
                     _this,
                     _this.payToken,
                     _this.payChannelId,
                     data => {
-                        commonPayAfter(_this, data, 3, _this.paymethod.appInterfaceMode)
+                        commonPayAfter.call(_this, data, 3, _this.paymethod.appInterfaceMode)
                     },
                     optarr
                 )
