@@ -147,7 +147,7 @@ export default {
                 if (useForm) {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
-                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}`)
+                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}&appInterfaceMode=${apiType}`)
                 } else {
                     invoke.call(this, data.paymentToken, channel, data => {
                         this.$nuxt.$loading.finish()

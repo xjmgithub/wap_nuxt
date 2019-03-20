@@ -73,6 +73,7 @@ export default {
         return {
             payToken: this.$route.query.payToken,
             payChannelId: this.$route.query.payChannelId,
+            apiInterface:this.$store.query.appInterfaceMode||3,
             configs: []
         }
     },
@@ -177,7 +178,7 @@ export default {
                     data => {
                         _this.$nuxt.$loading.finish()
                         _this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter.call(_this, data, 3, 3)
+                        commonPayAfter.call(_this, data, 3, _this.apiInterface)
                     },
                     optarr
                 )
