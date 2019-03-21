@@ -141,6 +141,14 @@ img {
             }
             div {
                 position: relative;
+                width:100%;
+                &:before {
+                    content: '';
+                    display: inline-block;
+                    padding-bottom: 50%;
+                    width: 0.1px;
+                    vertical-align: middle;
+                }
                 .show-time {
                     position: absolute;
                     bottom: 0;
@@ -152,7 +160,8 @@ img {
                 }
                 img {
                     width: 100%;
-                    display: block;
+                    position: absolute;
+                    height:100%;
                 }
             }
             span {
