@@ -8,7 +8,7 @@
             <p class="count">{{channelList.length}} Channels 
                 <span v-show="showSearch">for "{{showSearch}}"</span>
             </p>
-            <div v-show="showSearch&&channelList.length==0 " class="noResult">
+            <div v-show="showSearch&&channelList.length==0" class="noResult">
                 <img src="~assets/img/web/noresult.png" alt="">
                 <span>No results</span>
             </div>
@@ -29,7 +29,8 @@ export default {
         return {
             channelList: [],
             oriChannelList: [],
-            keyword: ''
+            keyword: '',
+            showSearch:false
         }
     },
     mounted() {
@@ -60,8 +61,8 @@ export default {
                 console.log(err)
             })
 
-        document.querySelector('#__layout>.wrapper').addEventListener('scroll', () => {
-            this.$store.commit('SCROLL_PAGE', document.querySelector('#__layout>.wrapper').scrollTop)
+        document.querySelector('#__layout>.container').addEventListener('scroll', () => {
+            this.$store.commit('SCROLL_PAGE', document.querySelector('#__layout>.container').scrollTop)
         })
     },
     methods: {

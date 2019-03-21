@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper wide">
+    <div class="container wide">
         <mheader/>
         <download class="clearfix"/>
         <nuxt/>
@@ -38,6 +38,7 @@
         </div>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
+        <shadowLayer v-show="layer" />
     </div>
 </template>
 <script>
@@ -46,13 +47,15 @@ import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import mheader from '~/components/web/header.vue'
 import download from '~/components/web/download'
+import shadowLayer from '~/components/shadow-layer'
 import { setCookie } from '~/functions/utils'
 export default {
     components: {
         alert,
         confirm,
         mheader,
-        download
+        download,
+        shadowLayer
     },
     data() {
         return {
@@ -89,6 +92,9 @@ export default {
         },
         gtoken() {
             return this.$store.state.gtoken
+        },
+        layer() {
+            return this.$store.state.shadowStatus
         }
     },
     watch: {
@@ -177,7 +183,7 @@ export default {
         display: block;
     }
 }
-.wrapper {
+.container {
     width: 100%;
     padding: 3rem 0.8rem 0;
     background: white;

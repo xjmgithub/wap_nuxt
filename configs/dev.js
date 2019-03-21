@@ -10,5 +10,5 @@ export default {
     proxyHost: '//dev.upms.startimestv.com/',
     apiURL: 'https://dev.upms.startimestv.com/',
     mechantRequestUrl: 'http://dev-appserver.bj.startimes.com.cn:8010/',
-    vodtab:'a868db298ef84dcbb22d919d02f473cb'
+    vodtab:'8146c5ff88a245b9af2ce7d2bf301b27'
 }

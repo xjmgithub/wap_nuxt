@@ -94,11 +94,10 @@ export default {
     },
     methods:{
         confirmDown(){
-            const _this = this
             this.$confirm(
                 'Download StarTimes ON to watch',
                 () => {
-                    downApp.call(_this)
+                    downApp.call(this)
                 },
                 () => {},
                 'Go',
@@ -114,6 +113,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.wrapper {
+    width: 100%;
+    padding: 3rem 0 0;
+    background: white;
+    overflow-y: auto;
+}
 img {
     border-radius: 2px;
 }

@@ -20,7 +20,7 @@
                 <div>{{item.name}}</div>
             </h3>
             <ul class="clearfix">
-                <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,item.id)">
+                <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.replace('http:','https:')+')'"/>
                     <span class="title">{{ele.name}}</span>
                 </li>
@@ -45,8 +45,12 @@ export default {
             }
         }
     },
+    mounted(){
+        console.log(this.item)
+    },
     methods:{
         toProgram(type,id){
+            console.log(id)
             if(type.indexOf('109')==0){
                 this.$router.push(`/browser/program/detail/${id}`)
             }
