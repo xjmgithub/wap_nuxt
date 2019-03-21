@@ -9,10 +9,9 @@
             <div class="right">
                 <p class="order-name">
                     {{orderName}}
-                    <span>{{currency}} {{order.order_amount}}</span>
+                    <span>{{currency}} {{order.payAmount}}</span>
                 </p>
                 <p class="order-status">
-                    {{order.order_type}}
                     <span>{{orderStatus}}</span>
                 </p>
             </div>
@@ -38,13 +37,13 @@ export default {
     },
     computed: {
         orderName() {
-            switch (this.order.order_type_id) {
+            switch (this.order.orderType) {
                 case 1:
                 case 2:
                 case 3:
                     return 'Card No.' + this.order.card_no
                 default:
-                    return this.order.order_name
+                    return this.order.orderNo
             }
         },
         currency() {
@@ -52,7 +51,7 @@ export default {
         },
         orderStatus() {
             if (this.order) {
-                const type = this.order.order_type_id
+                const type = this.order.orderType
                 if ([1, 2, 3].indexOf(type) >= 0) {
                     // bouquet,link,charge
                     switch (this.order.order_status) {
