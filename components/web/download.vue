@@ -1,5 +1,5 @@
 <template>
-    <div @click="down" class="download">
+    <div class="download" @click="down">
         <div class="max-width">{{$store.state.lang.officialwebsitemobile_downloadpromo}}</div>
         <span>{{$store.state.lang.officialwebsitemobile_go}} &gt;</span>
     </div>
