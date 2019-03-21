@@ -1,12 +1,8 @@
 <template>
-    <nuxt-link class="link-to-download" to="/hybrid/lands">
-        <div class="download">
-            <div class="max-width">
-                {{$store.state.lang.officialwebsitemobile_downloadpromo}}
-            </div>
-            <span>{{$store.state.lang.officialwebsitemobile_go}} &gt;</span>
-        </div>
-    </nuxt-link>
+    <div @click="down" class="download">
+        <div class="max-width">{{$store.state.lang.officialwebsitemobile_downloadpromo}}</div>
+        <span>{{$store.state.lang.officialwebsitemobile_go}} &gt;</span>
+    </div>
 </template>
 <script>
 import { downApp } from '~/functions/utils'
@@ -42,4 +38,3 @@ export default {
     }
 }
 </style>
-
