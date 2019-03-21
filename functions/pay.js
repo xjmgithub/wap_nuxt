@@ -25,6 +25,9 @@ export const createDVBOrder = function(order, callback) {
         )
     }).then(res => {
         callback && callback(res.data)
+    }).catch(()=>{
+        this.$nuxt.$loading.finish()
+        this.$alert('network error')
     })
 }
 
@@ -101,10 +104,10 @@ export const invoke = function(payToken, channel, callback, extend) {
     apiType 对接方式
 */
 export const commonPayAfter = function(data, payType, apiType, product) {
-    if (payType === 3) {
-        if (apiType === 2) {
+    if (payType == 3) {
+        if (apiType == 2) {
             window.location.href = data.tppRedirectUrl // 最终也会回调到payResult
-        } else if (apiType === 3) {
+        } else if (apiType == 3) {
             this.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
             this.$alert('The payment method is not supported for the time being')

@@ -2,10 +2,10 @@
     <div class="container">
         <verifyTel ref="phone" :disabled="!nocheck" :title="title" :prefix="prefix" @canNext="canStep1=true" />
         <div class="footer">
-            <mButton :disabled="!canStep1" @click="goStep(2)" text="NEXT" />
+            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)" />
         </div>
         <div v-show="step==2" class="step2">
-            <passInput @endinput="codeEnd" placeholder="Enter your msg code" />
+            <passInput placeholder="Enter your msg code" @endinput="codeEnd" />
             <div class="footer">
                 <mButton :disabled="!canStep2" @click="goStep(3)" text="NEXT" />
             </div>

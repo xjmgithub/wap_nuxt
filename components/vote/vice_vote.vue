@@ -2,7 +2,7 @@
     <div id="show-advisor">
         <div class="clearfix">
             <span class="leftflower">left flower：{{leftflower}}</span>
-            <span v-show="app==1" @click="handleInvite" class="invited">invite friends to vote</span>
+            <span v-show="app==1" class="invited" @click="handleInvite">invite friends to vote</span>
         </div>
         <ul class="clearfix">
             <li v-for="(item,index) in advisorList" :key="index" data-id="item.id">
@@ -17,9 +17,9 @@
                     <span>flowers</span>
                 </div>
                 <span
-                    @click="handleViceVote(item)"
                     :class="{'send':item.state === 1,'sent':item.state <=0}"
                     class="flower-state"
+                    @click="handleViceVote(item)"
                 >{{item.state | canVoteState}}</span>
             </li>
         </ul>

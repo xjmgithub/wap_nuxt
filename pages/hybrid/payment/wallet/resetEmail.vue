@@ -2,12 +2,12 @@
     <div class="container">
         <verifyEmail ref="emailCont" :disabled="!nocheck" />
         <div class="footer">
-            <mButton :disabled="false" @click="goStep(2)" text="NEXT" />
+            <mButton :disabled="false" text="NEXT" @click="goStep(2)" />
         </div>
         <div v-show="step==2" class="step2">
             <passInput />
             <div class="footer">
-                <mButton :disabled="false" @click="goStep(3)" text="NEXT" />
+                <mButton :disabled="false" text="NEXT" @click="goStep(3)" />
             </div>
         </div>
     </div>

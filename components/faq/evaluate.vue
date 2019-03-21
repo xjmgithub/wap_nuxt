@@ -18,11 +18,11 @@
         <div class="gave-star">
             <p>Please evaluate for us? THX.</p>
             <template v-for="(item,index) in 5">
-                <img :key="index" v-if="index<score" @click="starToBlue(index)" src="~assets/img/faq/ic_favoritez_blue_evl.png">
-                <img :key="index" v-if="index>=score" @click="starToBlue(index)" src="~assets/img/faq/ic_favorite_def_evl.png">
+                <img v-if="index<score" :key="index" src="~assets/img/faq/ic_favoritez_blue_evl.png" @click="starToBlue(index)">
+                <img v-if="index>=score" :key="index" src="~assets/img/faq/ic_favorite_def_evl.png" @click="starToBlue(index)">
             </template>
         </div>
-        <mbutton :disabled="!canSubmit" v-show="!ended" @click="submit" />
+        <mbutton v-show="!ended" :disabled="!canSubmit" @click="submit" />
     </div>
 </template>
 <script>

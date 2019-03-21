@@ -1,7 +1,7 @@
 <template>
     <div class="m_header">
         <div class="logo">
-            <img @click="showNav" src="~assets/img/web/ic_guidelist.png">
+            <img src="~assets/img/web/ic_guidelist.png" @click="showNav">
             <img v-if="logo==0" class="logo_img" src="~assets/img/startimes.png" alt="Startimes">
             <img v-if="logo==1" class="logo_img" src="~assets/img/topstar_white.png" alt="Startimes">
             <img v-if="logo==2" class="logo_img" src="~assets/img/starsat_white.png" alt="Startimes">
@@ -11,7 +11,12 @@
                 <nuxt-link to="/browser/">
                     <img v-if="$route.path=='/browser/'||$route.path=='/browser'" src="~assets/img/web/ic_home_def_yellow.png">
                     <img v-else src="~assets/img/web/ic_home_def_g.png">
-                    <div :class="{checked:$route.path=='/browser/'||$route.path=='/browser'}" class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_home}}</div>
+                    <div
+                        :class="{checked:$route.path=='/browser/'||$route.path=='/browser'}"
+                        class="nav_title"
+                    >
+                        {{$store.state.lang.officialwebsitemobile_topnav_home}}
+                    </div>
                 </nuxt-link>
             </div>
             <div>
@@ -26,14 +31,18 @@
                 <nuxt-link to="/browser/program/list">
                     <img v-if="$route.path.indexOf('/browser/program/list')>=0" src="~assets/img/web/ic_menu_def_yellow.png">
                     <img v-else src="~assets/img/web/ic_menu_def_w.png">
-                    <div :class="{checked:$route.path.indexOf('/browser/program/list')>=0}" class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_list}}</div>
+                    <div :class="{checked:$route.path.indexOf('/browser/programlist')>=0}" class="nav_title">
+                        {{$store.state.lang.officialwebsitemobile_topnav_list}}
+                    </div>
                 </nuxt-link>
             </div>
             <div>
                 <nuxt-link to="/browser/live">
                     <img v-if="$route.path.indexOf('/browser/live')>=0" src="~assets/img/web/ic_phoneplay_def_yellow.png">
                     <img v-else src="~assets/img/web/ic_phoneplay_def_w.png">
-                    <div :class="{checked:$route.path.indexOf('/browser/live')>=0}" class="nav_title">{{$store.state.lang.officialwebsitemobile_topnav_live}}</div>
+                    <div :class="{checked:$route.path.indexOf('/browser/live')>=0}" class="nav_title">
+                        {{$store.state.lang.officialwebsitemobile_topnav_live}}
+                    </div>
                 </nuxt-link>
             </div>
         </div>

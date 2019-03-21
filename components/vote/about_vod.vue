@@ -3,13 +3,13 @@
         <div class="vod">
             <div class="title clearfix">
                 <span class="vote-title">{{share.voteName}}</span>
-                <span v-show="app==1" @click="handleInvite" class="invited">invite friends to vote</span>
+                <span v-show="app==1" class="invited" @click="handleInvite">invite friends to vote</span>
             </div>
             <p>{{vod_msg.programdetails}}</p>
             <div class="video-play">
                 <div class="line" />
                 <ul class="video-play clearfix">
-                    <li :class="item.className" v-for="(item,index) in vodDetails" :key="index">
+                    <li v-for="(item,index) in vodDetails" :key="index" :class="item.className">
                         <span v-show="item.className =='review'">
                             <img src="~assets/img/vote/ic_replay_green.png">
                         </span>

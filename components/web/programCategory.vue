@@ -6,7 +6,7 @@
                     {{item.name}}
                 </nuxt-link>
             </li>
-            <li @click="toggleAll" style="float:right">
+            <li style="float:right" @click="toggleAll">
                 <img :class="{updown:showAll}" src="~assets/img/ic_menuarrow_def_w.png">
             </li>
         </ul>

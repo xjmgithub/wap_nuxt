@@ -16,14 +16,14 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <mselect ref="questionSelect" :list="questionsList" :default="question" @change="setQuestion" placeholder="Please choose your question" />
-            <mselect ref="channelSelect" :list="channelList" @change="setChannelName" v-if="type[1]" placeholder="Please choose channel type" />
-            <mselect ref="channelNameSelect" :list="channelNameList" v-if="type[1]" placeholder="Please choose channel name" />
+            <mselect ref="questionSelect" :list="questionsList" :default="question" placeholder="Please choose your question" @change="setQuestion" />
+            <mselect v-if="type[1]" ref="channelSelect" :list="channelList" placeholder="Please choose channel type" @change="setChannelName" />
+            <mselect v-if="type[1]" ref="channelNameSelect" :list="channelNameList" placeholder="Please choose channel name" />
             <mselect
+                v-if="!type[0]&&!type[1]"
                 ref="countrySelect"
                 :list="countryList"
                 :default="defaultCountry"
-                v-if="!type[0]&&!type[1]"
                 placeholder="Please choose your country"
             />
             <p>Detail Description</p>
@@ -77,7 +77,7 @@
             </ul>
         </div>
         <div class="submit">
-            <button @click="submit" class="btn">
+            <button class="btn" @click="submit">
                 SUBMIT
             </button>
         </div>

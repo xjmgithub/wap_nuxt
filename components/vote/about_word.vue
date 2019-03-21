@@ -3,7 +3,7 @@
         <div class="word">
             <div class="title clearfix">
                 <span class="vote-title">{{share.voteName}}</span>
-                <span v-show="app==1" @click="handleInvite" class="invited">invite friends to vote</span>
+                <span v-show="app==1" class="invited" @click="handleInvite">invite friends to vote</span>
             </div>
             <p v-for="(item,index) in document" :key="index" :class="item.class">
                 {{item.word}}

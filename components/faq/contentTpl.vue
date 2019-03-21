@@ -5,14 +5,14 @@
         </div>
         <div class="content_show">
             <img class="arrow" src="~assets/img/faq/Triangle.png">
-            <div v-html="content" class="result-wraper" />
+            <div class="result-wraper" v-html="content" />
             <div>
-                <div @click="tocomplain" class="btn">
+                <div class="btn" @click="tocomplain">
                     COMPLAIN
                 </div>
                 <div class="clear" />
                 <div v-if="!noevaluate" class="attitude-container">
-                    <div @click="evaluate(1)" class="yes-item">
+                    <div class="yes-item" @click="evaluate(1)">
                         <img v-show="!agree" src="~assets/img/faq/ic_happy_def_g.png" alt>
                         <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt>
                         <span>YES</span>

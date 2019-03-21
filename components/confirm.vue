@@ -8,10 +8,10 @@
             </div>
         </div>
         <div class="dialog-footer">
-            <div @click="sure" class="btn">
+            <div class="btn" @click="sure">
                 {{yes}}
             </div>
-            <div @click="close" class="btn">
+            <div class="btn" @click="close">
                 {{no}}
             </div>
         </div>

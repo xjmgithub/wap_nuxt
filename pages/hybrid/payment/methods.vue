@@ -1,10 +1,10 @@
 <template>
     <div style="padding:1rem;">
-        <RadioBtn :radio-list="radioList" @pick="changeItem" class="radioBtn" />
+        <RadioBtn :radio-list="radioList" class="radioBtn" @pick="changeItem" />
         <div style="height:0;border-bottom:solid 1px #E0E0E0;margin:1rem 0;" />
-        <RadioBtn :radio-list="radioList2" @pick="changeItem" class="radioBtn" />
+        <RadioBtn :radio-list="radioList2" class="radioBtn" @pick="changeItem" />
         <div class="footer">
-            <mButton @click="next()" text="OK" />
+            <mButton text="OK" @click="next()" />
         </div>
     </div>
 </template>

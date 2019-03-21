@@ -5,7 +5,6 @@ yes | cp -rf configs/staging.js env.js
 
 if $1 eq true
 then
-        npm config set registry https://registry.npm.taobao.org
         npm install
 fi
 

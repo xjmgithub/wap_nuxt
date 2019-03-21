@@ -2,7 +2,9 @@
     <div class="wrapper">
         <div class="selfService">
             <h3>
-                <div class="dot">‧</div>
+                <div class="dot">
+                    ‧
+                </div>
                 <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
             </h3>
             <div class="recharge">
@@ -17,21 +19,27 @@
         </div>
         <div class="bouquets">
             <h3>
-                <div class="dot">‧</div>
+                <div class="dot">
+                    ‧
+                </div>
                 <div>{{$store.state.lang.officialwebsitemobile_bouquet_section}}</div>
             </h3>
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
-                    <p class="money">{{currency}} {{item.price}}</p>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
+                    <p class="money">
+                        {{currency}} {{item.price}}
+                    </p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
-                    <p class="money">{{currency}} {{item.price}}</p>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
+                    <p class="money">
+                        {{currency}} {{item.price}}
+                    </p>
                 </li>
             </ul>
         </div>
@@ -100,6 +108,11 @@ export default {
             antennaList: [], // DTT
             recharge_url: 'https://m.startimestv.com/DVB/binding.php',
             programs: []
+        }
+    },
+    computed: {
+        currency() {
+            return this.$store.state.country.currencySymbol
         }
     },
     computed: {

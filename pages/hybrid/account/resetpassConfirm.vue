@@ -5,40 +5,36 @@
                 Create a Password
                 <img
                     v-if="isCiphertext==1"
-                    @click="isCiphertext=2"
                     class="open-close"
                     src="~assets/img/ic_hide_def_g.png"
                     alt
                 >
                 <img
                     v-if="isCiphertext==2"
-                    @click="isCiphertext=1"
                     class="open-close"
                     src="~assets/img/ic_show_def_g.png"
                     alt
                 >
             </div>
-            <input :type="pwdType" v-model="pass" @blur="checkpass">
+            <input v-model="pass" :type="pwdType" @blur="checkpass">
         </div>
         <div class="input-item">
             <div class="label">
                 Confirm New Password
                 <img
                     v-if="isCiphertext_confirm==1"
-                    @click="isCiphertext_confirm=2"
                     class="open-close"
                     src="~assets/img/ic_hide_def_g.png"
                     alt
                 >
                 <img
                     v-if="isCiphertext_confirm==2"
-                    @click="isCiphertext_confirm=1"
                     class="open-close"
                     src="~assets/img/ic_show_def_g.png"
                     alt
                 >
             </div>
-            <input :type="pwdType_confirm" v-model="repass" @blur="checkpass">
+            <input v-model="repass" :type="pwdType_confirm" @blur="checkpass">
         </div>
         <div class="footer">
             <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep" />

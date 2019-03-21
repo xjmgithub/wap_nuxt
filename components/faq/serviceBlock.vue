@@ -5,7 +5,7 @@
         <div class="bottom clearfix">
             <p class="clearfix">
                 Questions
-                <img @click="moreQues(service.id)" src="~assets/img/faq/ic_categary_copy41.png">
+                <img src="~assets/img/faq/ic_categary_copy41.png" @click="moreQues(service.id)">
             </p>
             <ul v-if="service.questions">
                 <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">
@@ -17,7 +17,7 @@
             </div>
         </div>
         <div v-if="showMore" class="gap" />
-        <nuxt-link v-if="showMore" @click="moreOrders" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}">
+        <nuxt-link v-if="showMore" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}" @click="moreOrders">
             <div class="more">
                 MORE ORDERS
             </div>

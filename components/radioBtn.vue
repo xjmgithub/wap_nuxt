@@ -3,11 +3,11 @@
         <div v-for="(item,i) in radioList" :key="i">
             <label class="radio">
                 <input
-                    @click="checkThis(item.code)"
                     :checked="item.checked?true:false"
                     type="radio"
                     name="pay-options"
                     value="item.code"
+                    @click="checkThis(item.code)"
                 >
                 <i />
                 <span id="labelValue" :class="{ml15:item.imgUrl!=''}">{{item.value}}</span>

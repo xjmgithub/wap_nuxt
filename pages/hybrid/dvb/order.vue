@@ -72,13 +72,12 @@ export default {
             category: 'dvbservice',
             action: 'order_show',
             label: 'DVB_H5',
-            value: 10,
+            value: 1,
             SmartCardNo: param.cardNo,
             BouquetName: param.program_name,
             CardState: param.smartcard_status,
             PauseDate: param.stop_days,
-            service_type: 'Recharge',
-            page_from: 'new'
+            service_type: 'Recharge'
         })
     },
     head() {

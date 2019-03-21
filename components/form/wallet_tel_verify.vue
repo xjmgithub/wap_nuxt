@@ -5,17 +5,17 @@
             <div class="prefix">+{{prefix}}</div>
             <div class="number">
                 <input
+                    v-model="tel"
                     :disabled="disabled"
                     :class="{focus:focus_tel,'input-error':error_tel}"
-                    v-model="tel"
-                    @focus="focus_tel=true"
-                    @blur="focus_tel=false"
                     type="tel"
                     placeholder="Cellphone number"
+                    @focus="focus_tel=true"
+                    @blur="focus_tel=false"
                 >
             </div>
             <div class="get-code">
-                <div :class="{disabled:!canGetCode}" @click="getCode" class="btn">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
             </div>
         </div>
         <div v-show="error_tel" class="error">{{error_tel}}</div>

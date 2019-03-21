@@ -18,8 +18,8 @@
             <p class="msg">{{fail_message}}</p>
         </template>
         <div v-show="result>0" class="footer">
-            <mButton @click="refresh" text="REFRESH"/>
-            <mButton @click="click" text="OK"/>
+            <mButton text="REFRESH" @click="refresh"/>
+            <mButton text="OK" @click="click"/>
         </div>
     </div>
 </template>
@@ -37,7 +37,8 @@ export default {
         return {
             fail_message: 'Your request was not accepted. Please refresh the current page or try again the payment.',
             isApp: this.$store.state.appType,
-            timer: 0
+            timer: null,
+            maxReqNum: 10
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -75,10 +76,10 @@ export default {
             if (this.$route.query.paytype === 'Paystack-NG') {
                 setCookie('lastpay', 'card')
             }
-            if(this.result===1){
-                setTimeout(()=>{
+            if (this.result === 1) {
+                setTimeout(() => {
                     this.click()
-                },5000)
+                }, 5000)
             }
         } else {
             // wait 模式
@@ -86,10 +87,16 @@ export default {
                 this.$alert('Query seqNo needed! please check request')
                 return false
             }
-            this.getPayStatus()
-        }
         
-
+            this.getPayStatus()
+            this.timer = setInterval(() => {
+                if (this.result > 0) {
+                    clearInterval(this.timer)
+                } else {
+                    this.getPayStatus()
+                }
+            }, 3000)
+        }
     },
     methods: {
         click() {
@@ -101,6 +108,29 @@ export default {
             } else {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 // TODO this.$router.push('/browser')
+            }
+        },
+        getPayStatus() {
+            if (this.maxReqNum > 0) {
+                this.maxReqNum--
+                this.$axios.get(`/payment/v2/order-pay-bills/${this.seqNo}`).then(res => {
+                    if (this.result > 0) return false
+                    const data = res.data
+                    if (data && data.state === 3) {
+                        this.result = 1
+                        this.money = data.amount
+                        this.currency = data.currencySymbol
+                        window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
+                        setTimeout(() => {
+                            this.click()
+                        }, 5000)
+                    } else if (data && data.state === 4) {
+                        this.result = 2
+                        window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
+                    }
+                })
+            } else {
+                this.result = 2
             }
         },
         getPayStatus() {
@@ -139,7 +169,7 @@ export default {
 </script>
 <style scoped lang="less">
 .container {
-    padding: 5rem 1rem 0;
+    padding: 3rem 1rem 0;
     text-align: center;
     min-height: 100%;
     background: white;
@@ -149,8 +179,8 @@ export default {
     }
 }
 .container img {
-    width: 15rem;
-    height: 13rem;
+    width: 13rem;
+    height: 11rem;
 }
 .container img.success_img {
     width: 3rem;
@@ -164,8 +194,8 @@ export default {
     margin-top: 0.75rem;
 }
 .container .fail {
-    line-height: 3rem;
-    font-size: 1.3rem;
+    line-height: 2rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #ff6100;
     margin-top: 1rem;

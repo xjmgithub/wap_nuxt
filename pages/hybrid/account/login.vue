@@ -2,14 +2,14 @@
     <div class="wrapper">
         <img class="st_logo" src="~assets/img/logo01.png">
         <img
-            @click="byfacebook"
             class="third_login facebook"
             src="~assets/img/users/btn_facebook_def.png"
+            @click="byfacebook"
         >
         <img
-            @click="bytwitter"
             class="third_login twitter"
             src="~assets/img/users/btn_twitter_def.png"
+            @click="bytwitter"
         >
         <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
         <nuxt-link to="/hybrid/account/signin" replace>

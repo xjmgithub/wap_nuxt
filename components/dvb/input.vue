@@ -6,6 +6,9 @@
                 v-model="cardNum"
                 :class="{error:error}"
                 :placeholder="LANG.please_input_smartcard"
+                class="card"
+                type="tel"
+                maxlength="13"
                 @input="changeNum"
                 @focus="typing"
                 @blur="inputOver"
@@ -22,10 +25,10 @@
                 <span>11</span>
             </p>
             <div class="operate">
-                <img @click="clearVal" v-show="oriCardNum!=''" src="~assets/img/dvb/delete.png">
+                <img v-show="oriCardNum!=''" src="~assets/img/dvb/delete.png" @click="clearVal">
             </div>
             <ul v-show="showList" class="history">
-                <li v-for="(item,index) in list" @click="choose(index)" :key="index">{{ formatCard(item) }}</li>
+                <li v-for="(item,index) in list" :key="index" @click="choose(index)">{{ formatCard(item) }}</li>
             </ul>
         </div>
     </div>

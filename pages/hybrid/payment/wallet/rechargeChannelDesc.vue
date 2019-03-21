@@ -6,12 +6,12 @@
         </h4>
         <div class="desc">
             <div v-html="desc" />
-            <div id="copy-button" :data-clipboard-text="ussd" v-if="ussd">
+            <div v-if="ussd" id="copy-button" :data-clipboard-text="ussd">
                 click to copy {{ ussd }}
             </div>
         </div>
         <div class="footer">
-            <mButton :disabled="type!=4&&type!=1" @click="nextStep" text="NEXT" />
+            <mButton :disabled="type!=4&&type!=1" text="NEXT" @click="nextStep" />
         </div>
     </div>
 </template>

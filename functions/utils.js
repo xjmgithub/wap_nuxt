@@ -221,7 +221,7 @@ export const formatAmount = num => {
     }
 }
 export const formatTime = val => {
-    if ( val < 3600) {
+    if (val < 3600) {
         const min = Math.floor(val / 60) < 10 ? '0' + Math.floor(val / 60) : Math.floor(val / 60)
         const sec = Math.floor(val % 60) < 10 ? '0' + Math.floor(val % 60) : Math.floor(val % 60)
         return min + ':' + sec

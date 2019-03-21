@@ -13,13 +13,13 @@ export default {
     height:1px;
     width: 100%;
     position: relative;
-    background-color: #eeeeee;
+    background-color: #e0e0e0;
     margin-bottom:0.8rem;
     .arrows {
        width: .8rem;
        height:.8rem;
-       border-bottom: 1px solid #eeeeee;
-       border-right:  1px solid #eeeeee;
+       border-bottom: 1px solid #e0e0e0;
+       border-right:  1px solid #e0e0e0;
        position: absolute;
        top:0;
        left:50%;

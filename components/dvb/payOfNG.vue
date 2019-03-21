@@ -2,18 +2,26 @@
     <div class="pay-cont">
         <p>Pay with eWallet</p>
         <mLine/>
-        <radioBtnRight :radio-list="radioList" :balance="balance" :payment-amount="paymentAmount" @pick="changeItem" @charge="chargeWallet"/>
-        <div @click="payHandle(993102, 3, 2)" class="addCard">
+        <radioBtnRight
+            v-if="isLogin"
+            :radio-list="radioList"
+            :balance="balance"
+            :payment-amount="paymentAmount"
+            @pick="changeItem"
+            @charge="chargeWallet"
+        />
+        <div class="addCard" @click="payHandle(993102, 3, 2,'eWallet-NEWCARD')">
             <div class="img-box"/>
-            <span>Add a card to pay</span>
+            <span v-if="radioList.length>1&&isLogin">Pay with Another Card</span>
+            <span v-else>Credit or Debit Card</span>
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </div>
-        <p @click="payHandle(993101, 3, 2)" class="bb1">
-            Pay with Bank
+        <p v-for="(item,i) in normalMethods" :key="i" class="bb1" @click="payHandle(item.id,item.payType,item.appInterfaceMode,item.name)">
+            {{item.name}}
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </p>
-        <p v-for="(item,i) in normalMethods" :key="i" @click="payHandle(item.id,item.payType,item.appInterfaceMode)" class="bb1">
-            {{item.name}}
+        <p class="bb1" @click="payHandle(993101, 3, 2,'Pay with Bank')">
+            Pay with Bank Account
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </p>
         <div v-show="showDes" class="note">
@@ -23,7 +31,7 @@
         <div class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{ formatAmount(paymentAmount)}}</span>
-            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
+            <div :class="{disabled:!canPay}" class="pay-btn" @click="pay">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
         </div>
     </div>
 </template>
@@ -38,6 +46,7 @@ export default {
         radioBtnRight
     },
     data() {
+        const user = this.$store.state.user
         return {
             radioList: [],
             walletDes: '',
@@ -46,7 +55,8 @@ export default {
             selected: {},
             paymentAmount: 0,
             wallet: {},
-            currency: this.$store.state.country.currencySymbol
+            currency: this.$store.state.country.currencySymbol,
+            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
         }
     },
     computed: {
@@ -151,14 +161,27 @@ export default {
             apiType 接口模型 ewallet 1, width card 3/2 , with bank 2
             card 是否是绑卡支付
         */
-        payHandle(channel, payType, apiType, card) {
+        payHandle(channel, payType, apiType, name, card) {
             const order = JSON.parse(sessionStorage.getItem('order-info'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
 
+            this.sendEvLog({
+                category: 'dvbservice',
+                action: 'order_click',
+                label: name,
+                value: order.rechargeAmount || 0,
+                service_type: 'Recharge',
+                recharge_config: order.rechargeItemSelectedName,
+                recharge_amount: order.rechargeItemSelectedQuantity,
+                SmartCardNo: order.cardNo,
+                BouquetName: order.program_name,
+                CardState: order.smartcard_status,
+                PauseDate: order.stop_days
+            })
             createDVBOrder.call(this, order, data => {
                 // 生成订单
-                if (needPassVerify(channel,card)) {
+                if (needPassVerify(channel, card)) {
                     checkPass.call(this, this.wallet.accountNo, setted => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
@@ -180,9 +203,10 @@ export default {
             })
         },
         pay() {
-            this.canPay && this.selected.brand === 'balance'
-                ? this.payHandle(9002, 1, 1)
-                : this.payHandle(993102, 3, 3, this.selected.authorizationCode)
+            this.canPay &&
+                (this.selected.brand === 'balance'
+                    ? this.payHandle(9002, 1, 1, 'eWallet-BALANCE')
+                    : this.payHandle(993102, 3, 3, 'eWallet-OLDCARD', this.selected.authorizationCode))
         },
         formatAmount(num) {
             return formatAmount(num)
@@ -193,15 +217,10 @@ export default {
 <style lang="less" scoped>
 .pay-cont {
     margin: 0 auto;
-    padding: 0 0.8rem;
-    padding-bottom: 5rem;
+    padding: 0 0.8rem 5rem;
     & > p {
-        line-height: 4rem;
-        font-size: 1.1rem;
         position: relative;
-        .arrows {
-            top: 1.6rem;
-        }
+        padding: 0.65rem 0;
     }
     .arrows {
         position: absolute;
@@ -209,10 +228,10 @@ export default {
         top: 0.6rem;
     }
     .bb1 {
-        border-bottom: 1px solid #eeeeee;
+        border-bottom: 1px solid #e0e0e0;
     }
     .addCard {
-        border-bottom: 1px solid #eeeeee;
+        border-bottom: 1px solid #e0e0e0;
         font-size: 0.95rem;
         height: 2.7rem;
         line-height: 2.2rem;

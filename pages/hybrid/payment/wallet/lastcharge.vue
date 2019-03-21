@@ -39,7 +39,7 @@
             </p>
         </template>
         <div v-show="!loadStatus" class="footer">
-            <mButton :disabled="false" @click="refresh" text="REFRESH" />
+            <mButton :disabled="false" text="REFRESH" @click="refresh" />
         </div>
     </div>
 </template>

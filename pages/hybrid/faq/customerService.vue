@@ -19,9 +19,9 @@
                 <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name" />
                 <contentTpl
                     v-if="item.tpl=='content'"
+                    :key="index"
                     :noevaluate="item.noEvaluate"
                     :service-record="item.serviceRecord"
-                    :key="index"
                     :question="item.questionId"
                     :content="item.content"
                     @imgloaded="refreshScroll"
@@ -34,7 +34,7 @@
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
-            <div v-show="connectState==0" @click="connectLiveChat" class="btn">
+            <div v-show="connectState==0" class="btn" @click="connectLiveChat">
                 LIVE CHAT
             </div>
             <div v-show="connectState==1" class="btn">
@@ -47,7 +47,7 @@
                     <textarea v-model="chatMsg" class="form-control user-edit" placeholder="Enter your question" />
                 </div>
                 <div class="user-submit-w">
-                    <button @click="sendChatMsg" type="submit" class="user-submit-btn">
+                    <button type="submit" class="user-submit-btn" @click="sendChatMsg">
                         SEND
                     </button>
                 </div>

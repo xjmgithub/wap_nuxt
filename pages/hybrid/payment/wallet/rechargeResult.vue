@@ -34,7 +34,7 @@
             </p>
         </template>
         <div v-show="!loadStatus" class="footer">
-            <mButton :disabled="false" @click="back" text="OK" />
+            <mButton :disabled="false" text="OK" @click="back" />
         </div>
     </div>
 </template>

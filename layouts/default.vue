@@ -1,9 +1,8 @@
 <template>
-    <div class="wrapper wide">
-        <mheader/>
-        <download class="clearfix"/>
-        <nuxt/>
-        <div v-show="showNav" @click="closeNav" class="nav-layer"/>
+    <div>
+        <mheader />
+        <nuxt />
+        <div v-show="showNav" class="nav-layer" @click="closeNav" />
         <div :class="{'nav-show':showNav}" class="slide-bar">
             <ul>
                 <li>
@@ -13,7 +12,9 @@
                             <nuxt-link v-else to="/hybrid/account/login">
                                 <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
                             </nuxt-link>
-                            <div v-if="user">{{user.nickName}}</div>
+                            <div v-if="user">
+                                {{user.nickName}}
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -24,7 +25,9 @@
                     </nuxt-link>
                 </li>
                 <li>
-                    <nuxt-link :class="{checked:$route.path=='/browser/language'}" to="/browser/language">{{language}}</nuxt-link>
+                    <nuxt-link :class="{checked:$route.path=='/browser/language'}" to="/browser/language">
+                        {{language}}
+                    </nuxt-link>
                 </li>
                 <li>
                     <a :href="faq_url">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
@@ -103,15 +106,6 @@ export default {
     },
     created() {
         // this.$nextTick(() => this.$nuxt.$loading.start())
-        const _this = this
-        Vue.prototype.$alert = (msg, callback) => {
-            _this.$refs.alert.show(msg, callback)
-            this.$store.commit('SHOW_SHADOW_LAYER')
-        }
-        Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
-            _this.$refs.confirm.show(msg, callback, cancel, yes, no)
-            this.$store.commit('SHOW_SHADOW_LAYER')
-        }
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {

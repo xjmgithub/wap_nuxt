@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="dialog-footer">
-            <div @click="sure" class="btn">
+            <div class="btn" @click="sure">
                 {{text}}
             </div>
         </div>

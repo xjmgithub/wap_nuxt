@@ -58,8 +58,8 @@
                 </tr>
             </table>
         </div>
-        <mButton :text="'GO TO LINK'" @click="goToLink" class="btn" />
-        <mButton :text="'GET REWARD'" @click="getReward" class="btn" />
+        <mButton :text="'GO TO LINK'" class="btn" @click="goToLink" />
+        <mButton :text="'GET REWARD'" class="btn" @click="getReward" />
     </div>
 </template>
 <script>

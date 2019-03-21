@@ -3,32 +3,32 @@
         <div v-show="step==1" class="step1">
             <verify-tel ref="phone" @canNext="canStep2=true"/>
             <div class="footer">
-                <mButton :disabled="!canStep2" @click="goStep(2)" text="NEXT"/>
+                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)"/>
             </div>
         </div>
         <div v-show="step==2" class="step2">
             <passInput
                 ref="vscode"
-                @endinput="canStep3=true"
-                @inputing="canStep3=false"
                 :length="4"
                 :toggle-view="true"
                 placeholder="Enter the code"
+                @endinput="canStep3=true"
+                @inputing="canStep3=false"
             />
             <div class="footer">
-                <mButton :disabled="!canStep3" @click="goStep(3)" text="NEXT"/>
+                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(3)"/>
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
-            <passInput ref="newpass" @endinput="canStep4=true" @inputing="canStep4=false" :toggle-view="true" placeholder="Set a 6-bit password"/>
+            <passInput ref="newpass" :toggle-view="true" placeholder="Set a 6-bit password" @endinput="canStep4=true" @inputing="canStep4=false"/>
             <div class="footer">
-                <mButton :disabled="!canStep4" @click="goStep(4)" text="NEXT"/>
+                <mButton :disabled="!canStep4" text="NEXT" @click="goStep(4)"/>
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
-            <passInput ref="confirmpass" @endinput="canStep5=true" @inputing="canStep5=false" :toggle-view="true" placeholder="Confirm password"/>
+            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm password" @endinput="canStep5=true" @inputing="canStep5=false"/>
             <div class="footer">
-                <mButton :disabled="!canStep5" @click="goStep(5)" text="OK"/>
+                <mButton :disabled="!canStep5" text="OK" @click="goStep(5)"/>
             </div>
         </div>
     </div>

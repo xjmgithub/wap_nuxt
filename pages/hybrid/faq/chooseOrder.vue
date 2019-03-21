@@ -2,14 +2,14 @@
     <div class="wrapper">
         <div v-show="loaded&&serviceList">
             <div class="orders" style="padding-bottom:5rem;">
-                <div v-for="(item,index) in serviceList" :key="index" @click="check(item.id)" class="order-contain">
+                <div v-for="(item,index) in serviceList" :key="index" class="order-contain" @click="check(item.id)">
                     <orderBlock :order="item">
                         <input :checked="item.id==checkedId" type="radio" name="order"><i />
                     </orderBlock>
                 </div>
             </div>
             <div class="ok">
-                <button @click="submit" class="btn">
+                <button class="btn" @click="submit">
                     OK
                 </button>
             </div>

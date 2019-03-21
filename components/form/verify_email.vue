@@ -2,7 +2,7 @@
     <div class="email-cont">
         <div :class="{focus:focus_email,error:error_email}" class="input-email">
             <div class="number">
-                <input v-model="email" @focus="focus_email=true" @blur="focus_email=false" type="email" placeholder="Enter your email address">
+                <input v-model="email" type="email" placeholder="Enter your email address" @focus="focus_email=true" @blur="focus_email=false">
             </div>
             <div v-show="error_email" class="error">
                 {{error_email}}
@@ -10,15 +10,15 @@
         </div>
         <div class="get-code">
             <input
-                :class="{focus:focus_code,error:error_code}"
                 v-model="vscode"
-                @focus="focus_code=true"
-                @blur="focus_code=false"
+                :class="{focus:focus_code,error:error_code}"
                 type="text"
                 maxlength="4"
                 placeholder="Click to get verification code"
+                @focus="focus_code=true"
+                @blur="focus_code=false"
             >
-            <div :class="{disabled:!canGetCode}" @click="getCode" class="btn">
+            <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">
                 {{codeDuring>0?`${codeDuring}s`:'Get Code'}}
             </div>
             <div v-show="error_code" class="error_code">

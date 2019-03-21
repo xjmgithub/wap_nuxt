@@ -11,7 +11,7 @@
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
-            <div v-if="country" @click="countryDialogStatus=true" class="country_choose">
+            <div v-if="country" class="country_choose" @click="countryDialogStatus=true">
                 <img :src="country.nationalFlag.replace('http:','https:')">
                 <span>{{country.name}}</span>
             </div>
@@ -34,7 +34,7 @@
                 <input v-model="password" type="password" placeholder="Password">
             </div>
         </div>
-        <div @click="login" class="next-btn">
+        <div class="next-btn" @click="login">
             SIGN IN
         </div>
         <div class="forgot-pwd">

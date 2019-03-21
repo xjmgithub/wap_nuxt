@@ -4,41 +4,41 @@
         <mTab :tab="tabList" @onChange="handleTab" />
         <template v-for="(item,index) in tabList">
             <mVote
-                :key="index"
-                :tab_msg="item"
-                :share="share"
                 v-if="item.type=='normal_vote'"
                 v-show="boxIndex==index"
+                :key="index"
+                :tab_msg="item"
+                :share="share"
             />
             <mRank
-                :key="index"
-                :tab_msg="item"
-                :share="share"
                 v-if="item.type=='rank'"
                 v-show="boxIndex==index"
-            />
-            <mViceVote
                 :key="index"
                 :tab_msg="item"
                 :share="share"
+            />
+            <mViceVote
                 v-if="item.type=='vice_vote'"
                 v-show="boxIndex==index"
+                :key="index"
+                :tab_msg="item"
+                :share="share"
             />
             <mAboutWord
+                v-if="item.type=='about_word'"
+                v-show="boxIndex==index"
                 :key="index"
                 :document="document"
                 :tab_msg="item"
                 :share="share"
-                v-if="item.type=='about_word'"
-                v-show="boxIndex==index"
             />
             <mAboutVod
+                v-if="item.type=='about_vod'"
+                v-show="boxIndex==index"
                 :key="index"
                 :vod_msg="vodMsg"
                 :tab_msg="item"
                 :share="share"
-                v-if="item.type=='about_vod'"
-                v-show="boxIndex==index"
             />
         </template>
     </div>

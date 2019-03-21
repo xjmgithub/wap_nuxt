@@ -1,15 +1,13 @@
 export default {
-    gaWapKey: 'UA-55969660-4',
-    gaAndroidKey: 'UA-55969660-7',
-    gaIosKey: 'UA-55969660-5',
-    countlyHost: '//collect.startimestv.com',
-    countlyAppKey: 'cd58cfb3e81658905d802cbe44b04683effbc7ed',
-    pvCountlyServer: 'https://pv.startimestv.com',
-    evCountlyServer: 'https://event.startimestv.com',
-    gtbankJdkHost: 'https://eu-gateway.mastercard.com',
-    proxyHost: 'https://upms.startimestv.com/',
-    // apiURL: 'http://172.31.39.21',
-    apiURL: 'http://upms.startimestv.com/',
-    mechantRequestUrl: 'http://172.31.39.21:8010/',
-    vodtab:'d6d9c3e21dfd4631ab14d95eb0871ca3'
+    gaWapKey: 'UA-55969660-8',
+    gaAndroidKey: 'UA-55969660-8',
+    gaIosKey: 'UA-55969660-8',
+    countlyHost: '//10.0.63.102:32769',
+    countlyAppKey: 'cb95b4e9125098b99a7df2fbda4554eda982918b',
+    pvCountlyServer: 'http://10.0.243.111:8080',
+    evCountlyServer: 'http://10.0.243.111:8080',
+    gtbankJdkHost: 'https://test-gateway.mastercard.com',
+    proxyHost: 'https://qa.upms.startimestv.com/',
+    apiURL: 'https://qa.upms.startimestv.com/',
+    mechantRequestUrl: 'test1-appserver.bj.startimes.com.cn:8010/'
 }

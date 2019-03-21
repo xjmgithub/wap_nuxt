@@ -7,7 +7,7 @@
             </nuxt-link>
         </div>
         <div class="footer">
-            <mButton :disabled="false" @click="goStep(2)" text="NEXT" style="margin-bottom:0.5rem" />
+            <mButton :disabled="false" text="NEXT" style="margin-bottom:0.5rem" @click="goStep(2)" />
             <nuxt-link v-if="!init&&wallet_phone_config" to="/hybrid/payment/wallet/validPhone">
                 RESET IT BY CELLPHONE NUMBER
             </nuxt-link>
@@ -15,19 +15,19 @@
         <div v-show="step==2" class="step2">
             <passInput />
             <div class="footer">
-                <mButton :disabled="false" @click="goStep(3)" text="NEXT" />
+                <mButton :disabled="false" text="NEXT" @click="goStep(3)" />
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
-            <passInput ref="newpass" :toggle-view="true" @endinput="inputPass" placeholder="Set payment password" />
+            <passInput ref="newpass" :toggle-view="true" placeholder="Set payment password" @endinput="inputPass" />
             <div class="footer">
-                <mButton :disabled="!canStep3" @click="goStep(4)" text="NEXT" />
+                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(4)" />
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
-            <passInput ref="confirmpass" :toggle-view="true" @endinput="confirmEnd" placeholder="Confirm Password" />
+            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm Password" @endinput="confirmEnd" />
             <div class="footer">
-                <mButton :disabled="!canStep4" @click="goStep(5)" text="OK" />
+                <mButton :disabled="!canStep4" text="OK" @click="goStep(5)" />
             </div>
         </div>
     </div>

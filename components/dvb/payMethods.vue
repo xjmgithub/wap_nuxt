@@ -4,9 +4,9 @@
             <div class="methods">
                 <p>{{LANG.payment_details_method}}：</p>
                 <ul class="choose clearfix">
-                    <li v-for="(item,index) in methodsList" :key="index" v-show="item.fkPayChannelId<9002||item.fkPayChannelId>9034||wallet">
-                        <label @click="changeMethod(item)" class="radio">
-                            <input :value="item.name" v-model="selectMethod.name" type="radio" name="methods">
+                    <li v-for="(item,index) in methodsList" v-show="item.fkPayChannelId<9002||item.fkPayChannelId>9034||wallet" :key="index">
+                        <label class="radio" @click="changeMethod(item)">
+                            <input v-model="selectMethod.name" :value="item.name" type="radio" name="methods">
                             <i/>
                             <span>{{ item.name }}</span>
                             <br>
@@ -17,9 +17,9 @@
                             >(Balance:{{wallet.currencySymbol}}{{wallet.amount}} )</span>
                         </label>
                         <div
-                            @click="chargeWallet"
                             v-if="item.fkPayChannelId>=9002&&item.fkPayChannelId<=9034&&wallet.accountNo&&wallet.amount<payAmount"
                             class="recharge"
+                            @click="chargeWallet"
                         >RECHARGE</div>
                     </li>
                 </ul>
@@ -32,7 +32,7 @@
         <div class="btn-box">
             <span class="total">{{LANG.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{formatAmount(payAmount) }}</span>
-            <div :class="{disabled:!canPay}" @click="pay" class="pay-btn">{{LANG.dvb_recharge_btn_pay}}</div>
+            <div :class="{disabled:!canPay}" class="pay-btn" @click="pay">{{LANG.dvb_recharge_btn_pay}}</div>
         </div>
     </div>
 </template>
@@ -49,7 +49,7 @@ export default {
             selectMethod: {},
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             payAmount: 0,
-            wallet:{}
+            wallet: {}
         }
     },
     computed: {
@@ -76,7 +76,7 @@ export default {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.payAmount = param.paymentAmount
 
-        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res=>{
+        this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
             this.wallet = res.data
             sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
         })
@@ -110,7 +110,7 @@ export default {
         },
         pay() {
             const channel = this.selectMethod.fkPayChannelId
-            const checkPassTag = channel > 9002 && channel < 9034
+            const checkPassTag = channel >= 9002 && channel <= 9034
             if (!this.canPay) return false
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
@@ -128,16 +128,31 @@ export default {
             const channel = this.selectMethod.fkPayChannelId
             const payType = this.selectMethod.payType
             const apiType = this.selectMethod.appInterfaceMode
+
+            this.sendEvLog({
+                category: 'dvbservice',
+                action: 'order_click',
+                label: this.selectMethod.name,
+                value: order.rechargeAmount || 0,
+                service_type: 'Recharge',
+                recharge_config: order.rechargeItemSelectedName,
+                recharge_amount: order.rechargeItemSelectedQuantity,
+                SmartCardNo: order.cardNo,
+                BouquetName: order.program_name,
+                CardState: order.smartcard_status,
+                PauseDate: order.stop_days
+            })
+
             createDVBOrder.call(this, order, data => {
                 if (useForm) {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
-                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}`)
+                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel}&appInterfaceMode=${apiType}`)
                 } else {
-                    invoke(this, data.paymentToken, channel, data => {
+                    invoke.call(this, data.paymentToken, channel, data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter(this, data, payType, apiType)
+                        commonPayAfter.call(this, data, payType, apiType)
                     })
                 }
             })

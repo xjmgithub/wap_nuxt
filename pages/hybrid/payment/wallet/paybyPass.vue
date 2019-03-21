@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Password ref="pass" :toggle-view="true" @endinput="setPassword" placeholder="Enter Payment Password"/>
+        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword"/>
         <div class="forgot-pwd">
             <a @click="forgetPass">Forgot payment password?</a>
         </div>
@@ -33,7 +33,14 @@ export default {
             if (val.length >= 6) {
                 this.canPay = true
             } else {
-                this.canPay = false
+                invoke.call(this, this.payToken, 9002, data => {
+                    payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
+                        setCookie('lastpay', 'wallet')
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                    })
+                })
             }
         }
     },
@@ -52,8 +59,8 @@ export default {
             const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            if (this.card) {
-                verifyWalletPass.call(this, ewallet.accountNo, this.password, data => {
+            verifyWalletPass.call(this, ewallet.accountNo, this.password, data => {
+                if (this.card) {
                     invoke.call(
                         this,
                         this.payToken,
@@ -66,17 +73,17 @@ export default {
                         },
                         { authorization_code: this.card }
                     )
-                })
-            } else {
-                invoke.call(this, this.payToken, 9002, data => {
-                    payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
-                        setCookie('lastpay', 'wallet')
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
-                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                } else {
+                    invoke.call(this, this.payToken, 9002, data => {
+                        payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
+                            setCookie('lastpay', 'wallet')
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                        })
                     })
-                })
-            }
+                }
+            })
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <program-category ref="category"/>
+        <program-category ref="category" />
         <div class="program-list">
             <div v-for="(item,index) in programList" :key="index" class="program">
                 <nuxt-link :to="`/browser/program/detail/${item.id}`">

@@ -5,13 +5,13 @@
         </div>
         <div class="page-bottom">
             <div class="download">
-                <div v-if="appType==2" @click="downFromAppStore()" class="download-appstore-wrapper">
+                <div v-if="appType==2" class="download-appstore-wrapper" @click="downFromAppStore()">
                     <img v-if="langType=='fr'" src="~assets/img/landpage/ios_appstore_bg_fy.png">
                     <img v-if="langType=='pt'" src="~assets/img/landpage/ios_appstore_bg_py.png">
                     <img v-else src="~assets/img/landpage/ios_appstore_bg.png">
                 </div>
                 <div v-if="appType==1" class="download-app-wrapper">
-                    <div @click="downApk()" class="download-app-btn">
+                    <div class="download-app-btn" @click="downApk()">
                         <div style="padding:0px 0.8rem">
                             {{$store.state.lang.download_apk}}
                         </div>

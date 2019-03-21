@@ -15,7 +15,7 @@
                         <RadioNaire :radio-list="item.answer" @pick="changeItem($event,index)" />
                     </div>
                 </div>
-                <mButton @click="submit" :text="'SUBMIT'" class="submit" />
+                <mButton :text="'SUBMIT'" class="submit" @click="submit" />
             </div>
             <div v-show="loaded" class="loadlayer">
                 <loading />
@@ -24,12 +24,12 @@
         <div v-show="isDone && initLoading " class="done">
             <img src="~assets/img/naire/done.png" alt>
             <p>You have already submitted. Thank you again.</p>
-            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok" />
+            <mButton v-if="appType==1" :text="'OK'" class="ok" @click="ok" />
         </div>
         <div v-show="isSucessed" class="success">
             <img src="~assets/img/naire/success.png" alt>
             <p>Thank you for your participation and have a nice day!</p>
-            <mButton v-if="appType==1" @click="ok" :text="'OK'" class="ok" />
+            <mButton v-if="appType==1" :text="'OK'" class="ok" @click="ok" />
         </div>
     </div>
 </template>

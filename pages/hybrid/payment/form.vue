@@ -1,7 +1,7 @@
 <template>
     <div id="pay-form" class="container">
         <template v-for="(item,index) in configs">
-            <div :key="index" v-if="item.displayState!=2" class="form-item">
+            <div v-if="item.displayState!=2" :key="index" class="form-item">
                 <div
                     v-if="item.formType=='select'||item.formType=='radio'"
                     :data-show="item.displayCondition"
@@ -33,7 +33,7 @@
                 >
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
-                        <input :placeholder="item.placeholder" type="tel">
+                        <input :placeholder="item.placeholder" :value="item.defaultValue" type="tel">
                     </div>
                 </div>
                 <div
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div>
-                    <input :name="item.name" v-model="item.defaultValue" type="hidden">
+                    <input v-model="item.defaultValue" :name="item.name" type="hidden">
                 </div>
             </div>
         </template>
@@ -73,6 +73,7 @@ export default {
         return {
             payToken: this.$route.query.payToken,
             payChannelId: this.$route.query.payChannelId,
+            apiInterface:this.$route.query.appInterfaceMode||3,
             configs: []
         }
     },
@@ -168,13 +169,17 @@ export default {
 
                     optarr[id] = value
                 }
-
-                invoke(
+                _this.$nuxt.$loading.start()
+                _this.$store.commit('SHOW_SHADOW_LAYER')
+                invoke.call(
                     _this,
                     _this.payToken,
                     _this.payChannelId,
                     data => {
-                        commonPayAfter(_this, data, 3, _this.paymethod.appInterfaceMode)
+                        _this.$nuxt.$loading.finish()
+                        _this.$store.commit('HIDE_SHADOW_LAYER')
+                        console.log(_this.apiInterface)
+                        commonPayAfter.call(_this, data, 3, _this.apiInterface)
                     },
                     optarr
                 )

@@ -1,26 +1,26 @@
 <template>
     <div class="wrapper">
         <div class="untrim">
-            <card-input ref="cardInput" :list="cardList" @endInput="checkout" @typing="canBuy=false" :stop-days="stopDays" :card-state="cardState"/>
+            <card-input ref="cardInput" :list="cardList" :stop-days="stopDays" :card-state="cardState" @endInput="checkout" @typing="canBuy=false"/>
             <div v-if="recharge_items.length>0" class="program-box">
                 <p v-show="canBuy">
                     {{LANG.topup_bouquet}}:
                     <span class="program-name">{{ program_name }}</span>
                 </p>
             </div>
-            <goods ref="goodsPicker" v-if="recharge_items.length>0" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm"/>
-            <div v-if="recharge_items.length>0" @click="buyNow" :class="{disabled:!canBuy}" class="pay-btn">
+            <goods v-if="recharge_items.length>0" ref="goodsPicker" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm"/>
+            <div v-if="recharge_items.length>0" :class="{disabled:!canBuy}" class="pay-btn" @click="buyNow">
                 <span class="need-pay">{{ currency }}{{ formatAmount(payAmount) }}</span>
                 {{LANG.next_}}
             </div>
         </div>
         <img
             v-show="recharge_items.length>0&&(countryCode=='NG'||countryCode=='TZ')"
-            @click="buyNow"
             src="~assets/img/dvb/dvb_ug_off.png"
             style="width:100%"
+            @click="buyNow"
         >
-        <more-methods :newUser="newUser" v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'"/>
+        <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'" :new-user="newUser"/>
         <div v-if="recharge_items.length<=0" class="demoDialog">
             <div @click="focusInput">
                 <p>{{LANG.input_your_smartcard_number}}</p>
@@ -33,9 +33,9 @@
             <p>
                 {{LANG.if_you_are_not_a_startimes_tv_user}}
                 <a
-                    @click="toLoadurl"
                     href="javascript:void(0)"
                     style="color:#0087EB;text-decoration:underline"
+                    @click="toLoadurl"
                 >{{LANG.click_here}}</a>
                 {{LANG.if_you_are_not_a_startimes_tv_user2}}
             </p>
@@ -94,14 +94,14 @@ export default {
     async asyncData({ app: { $axios }, store }) {
         $axios.setHeader('token', store.state.token)
         let data = []
-        try{
+        try {
             const res = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
             data = res.data
-        }catch(e){
+        } catch (e) {
             data = []
         }
         // TODO 匿名登录状态 const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
-        
+
         return {
             cardList: Array.from(data, x => x.smardcard_no) || [],
             newUser: data.length <= 0
@@ -112,7 +112,7 @@ export default {
             category: 'dvbservice',
             action: 'recharge_show',
             label: 'DVB_H5',
-            value: 10,
+            value: 1,
             service_type: 'Recharge'
         })
     },
@@ -164,13 +164,12 @@ export default {
                 label: 'DVB_H5',
                 value: this.rechargeAmount || 0,
                 service_type: 'Recharge',
-                page_from: 'new',
                 recharge_config: rechargeItem.rate_display_name,
                 recharge_amount: num,
+                SmartCardNo: card,
                 BouquetName: this.program_name,
                 CardState: this.cardState,
-                PauseDate: this.stopDays,
-                SmartCardNo: card
+                PauseDate: this.stopDays
             })
 
             if (!this.canBuy) return false
@@ -208,15 +207,15 @@ export default {
             }
 
             sessionStorage.setItem('order-info', JSON.stringify(params))
-            
-            if(this.$store.state.appType==1){ // TODO app内缓存有问题，莫名其妙，暂时解决方案, 貌似webview对spa支持不好
+
+            if (this.$store.state.appType == 1) {
+                // TODO app内缓存有问题，莫名其妙，暂时解决方案, 貌似webview对spa支持不好
                 window.location.href = '/hybrid/dvb/order'
-            }else{
+            } else {
                 this.$router.push('/hybrid/dvb/order')
             }
-            
         },
-        logSmartInput(card, val) {
+        logSmartInput(card, val, err) {
             const newUser = this.$refs.cardInput.newUser
             this.sendEvLog({
                 category: 'dvbservice',
@@ -224,8 +223,8 @@ export default {
                 label: newUser ? 'NewCardUser' : 'AddCardUser',
                 value: val,
                 service_type: 'Recharge',
-                page_from: 'new',
-                SmartCardNo: card
+                SmartCardNo: card,
+                errorMsg: err || 'Refuse'
             })
         },
         logloadItem(card, val) {
@@ -239,8 +238,7 @@ export default {
                 BouquetName: this.program_name,
                 CardState: this.cardState,
                 PauseDate: this.stopDays,
-                service_type: 'Recharge',
-                page_from: 'new'
+                service_type: 'Recharge'
             })
         },
         checkout(card) {
@@ -257,7 +255,7 @@ export default {
                 return false
             } else if (!reg3.test(card)) {
                 if (reg2.test(card)) {
-                    this.logSmartInput(card, 0)
+                    this.logSmartInput(card, 0, 'eWallet')
                     this.$confirm(
                         this.$store.state.lang.besure_input_ewallet,
                         () => {
@@ -268,7 +266,7 @@ export default {
                         this.$store.state.lang.refuse_tip
                     )
                 } else {
-                    this.logSmartInput(card, 0)
+                    this.logSmartInput(card, 0, 'Decoder')
                     this.$confirm(
                         this.$store.state.lang.besure_have_card,
                         () => {
@@ -292,7 +290,7 @@ export default {
                     this.isLoading = false
 
                     if (!data || !data.program_name) {
-                        this.logloadItem(card, -1)
+                        this.logloadItem(card, 0)
                         this.$refs.cardInput.showError()
                         return false
                     }
@@ -317,7 +315,7 @@ export default {
                     }
                 })
                 .catch(err => {
-                    this.logloadItem(card, 1)
+                    this.logloadItem(card, err.status)
                     this.isLoading = false
                     this.canBuy = false
                     this.$nextTick(() => {

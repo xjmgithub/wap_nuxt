@@ -6,12 +6,12 @@
         <div :class="{focus:focus_email,error:error_email}" class="input-email">
             <div class="number">
                 <input
-                    :disabled="disabled"
                     v-model="email"
-                    @focus="focus_email=true"
-                    @blur="focus_email=false"
+                    :disabled="disabled"
                     type="email"
                     placeholder="Enter your email"
+                    @focus="focus_email=true"
+                    @blur="focus_email=false"
                 >
             </div>
             <div v-show="error_email" class="error">

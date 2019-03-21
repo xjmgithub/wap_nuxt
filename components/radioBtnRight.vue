@@ -5,9 +5,9 @@
                 <div :class="item.brand" class="img-box"/>
                 <span v-if="item.brand==='balance'">{{item.cardType}} {{currency}} {{ formatAmount(balance) }}</span>
                 <span v-else>{{item.cardType}}({{item.last4}})</span>
-                <input @click="checkThis(item)" :checked="i===0?true:false" type="radio" name="pay-options" value="item.code">
+                <input :checked="i===0?true:false" type="radio" name="pay-options" value="item.code" @click="checkThis(item)">
                 <i/>
-                <div @click="chargeWallet" v-if="item.brand==='balance'&&balance<paymentAmount" class="recharge">RECHARGE</div>
+                <div v-if="item.brand==='balance'&&balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
             </label>
         </div>
     </div>
@@ -57,6 +57,7 @@ export default {
     height: 1.3rem;
     width: 1.3rem;
     background-size: 100% !important;
+    background: url('~assets/img/dvb/ic_no_logo_card.png') no-repeat;
     &.balance {
         background: url('~assets/img/dvb/ic_ewallet_balance.png') no-repeat;
     }
@@ -66,11 +67,8 @@ export default {
     &.verve {
         background: url('~assets/img/dvb/ic_verve.png') no-repeat;
     }
-    &.master {
+    &.mastercard {
         background: url('~assets/img/dvb/ic_mastercard.png') no-repeat;
-    }
-    &.default {
-        background: url('~assets/img/dvb/ic_no_logo_card.png') no-repeat;
     }
 }
 .radio-box .radio {

@@ -1,7 +1,7 @@
 <template>
     <div style="width:1200px;margin:0 auto;padding:20px">
         <textarea v-model="text" />
-        <div @click="decode" class="button">
+        <div class="button" @click="decode">
             Decode
         </div>
         <textarea v-model="formatHTML" class="format" readonly="readonly" />

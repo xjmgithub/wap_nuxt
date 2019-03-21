@@ -9,7 +9,7 @@
                     </a>
                 </div>
                 <div class="questions">
-                    <div v-for="(item,index) in faqTagsData" :key="index" v-show="item.checked">
+                    <div v-for="(item,index) in faqTagsData" v-show="item.checked" :key="index">
                         <ul>
                             <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">
                                 {{item2.thema}}

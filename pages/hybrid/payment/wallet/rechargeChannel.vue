@@ -10,9 +10,9 @@
                 <span class="money">{{ walletLeft | fixAmount }}</span>
             </div>
         </div>
-        <RadioBtn :radio-list="radioList" @pick="changeItem" class="radioBtn" />
+        <RadioBtn :radio-list="radioList" class="radioBtn" @pick="changeItem" />
         <div class="footer">
-            <mButton :disabled="false" @click="nextStep" text="NEXT" />
+            <mButton :disabled="false" text="NEXT" @click="nextStep" />
         </div>
     </div>
 </template>

@@ -5,8 +5,8 @@
                 <input
                     :name="item.name"
                     :value="item.code"
-                    @click="checkThis(item.code)"
                     type="radio"
+                    @click="checkThis(item.code)"
                 >
                 <i />
                 <span>{{item.value}}</span>

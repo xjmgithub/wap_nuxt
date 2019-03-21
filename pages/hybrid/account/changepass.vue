@@ -4,19 +4,19 @@
             <div class="label">
                 Create a Password
             </div>
-            <input v-model="pass" @blur="checkpass" type="text">
+            <input v-model="pass" type="text" @blur="checkpass">
         </div>
         <div class="input-item">
             <div class="label">
                 Confirm New Password
             </div>
-            <input v-model="repass" @blur="checkpass" type="text">
+            <input v-model="repass" type="text" @blur="checkpass">
         </div>
         <div class="input-item invite">
             <div class="label">
                 Invitation Code(Optional)
             </div>
-            <input v-model="inviteCode" @blur="checkpass" type="text">
+            <input v-model="inviteCode" type="text" @blur="checkpass">
         </div>
         <div class="footer">
             <mButton :disabled="false" :text="'NEXT'" @click="nextStep" />

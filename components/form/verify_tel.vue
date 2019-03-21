@@ -5,7 +5,7 @@
                 +{{prefix}}
             </div>
             <div class="number">
-                <input v-model="tel" @focus="focus_tel=true" @blur="focus_tel=false" type="tel" placeholder="Enter your Phone Number">
+                <input v-model="tel" type="tel" placeholder="Enter your Phone Number" @focus="focus_tel=true" @blur="focus_tel=false">
             </div>
             <div v-show="error_tel" class="error">
                 {{error_tel}}
@@ -13,15 +13,15 @@
         </div>
         <div class="get-code">
             <input
-                :class="{focus:focus_code,error:error_code}"
                 v-model="vscode"
-                @focus="focus_code=true"
-                @blur="focus_code=false"
+                :class="{focus:focus_code,error:error_code}"
                 type="text"
                 maxlength="4"
                 placeholder="Click to get verification code"
+                @focus="focus_code=true"
+                @blur="focus_code=false"
             >
-            <div :class="{disabled:!canGetCode}" @click="getCode" class="btn">
+            <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">
                 {{codeDuring>0?`${codeDuring}s`:'Get code'}}
             </div>
             <div v-show="error_code" class="error_code">

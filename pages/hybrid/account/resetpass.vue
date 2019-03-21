@@ -29,10 +29,10 @@
                 <div class="number">
                     <input
                         v-model="email"
-                        @focus="focus_email=true"
-                        @blur="focus_email=false"
                         type="email"
                         placeholder="Enter your email address"
+                        @focus="focus_email=true"
+                        @blur="focus_email=false"
                     >
                 </div>
                 <div v-show="error_email" class="error">

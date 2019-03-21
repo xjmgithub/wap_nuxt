@@ -1,6 +1,6 @@
 <template>
     <div v-if="list.length>0" class="container">
-        <div @click="showList" class="checked">
+        <div class="checked" @click="showList">
             <span v-show="selected.id">{{selected.name}}</span>
             <span v-show="!selected.id" class="placeholder">{{placeholder}}</span>
             <img src="~assets/img/ic_sl_g.png">

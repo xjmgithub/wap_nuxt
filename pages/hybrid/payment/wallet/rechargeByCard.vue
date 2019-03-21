@@ -15,11 +15,11 @@
             <div>
                 <span :class="{focus:isFocus}">Enter the 4-32 digits on Voucher Card</span>
                 <input
-                    @focus="isFocus=true"
                     v-model="rechargePin"
-                    @input="changePinNum"
                     type="tel"
                     maxlength="39"
+                    @focus="isFocus=true"
+                    @input="changePinNum"
                 >
             </div>
             <p
@@ -29,7 +29,7 @@
             </p>
         </div>
         <div class="footer">
-            <mButton :disabled="!canNext" @click="nextStep" text="NEXT" />
+            <mButton :disabled="!canNext" text="NEXT" @click="nextStep" />
         </div>
     </div>
 </template>

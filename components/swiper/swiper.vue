@@ -1,6 +1,6 @@
 <template>
-    <section @touchmove="fn" class="wh_content">
-        <div :class="className" @touchstart="s" @touchmove="m" @touchend="e" class="wh_swiper">
+    <section class="wh_content" @touchmove="fn">
+        <div :class="className" class="wh_swiper" @touchstart="s" @touchmove="m" @touchend="e">
             <slot />
         </div>
         <div v-if="showIndicator" class="wh_indicator">

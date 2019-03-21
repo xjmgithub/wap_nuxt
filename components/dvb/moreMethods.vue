@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="blank_bottom">&nbsp;</div>
-        <div @click="showAllWays" class="more-services">
+        <div class="more-services" @click="showAllWays">
             <p>
                 {{$store.state.lang.more_recharge_method}}
                 <span class="all">

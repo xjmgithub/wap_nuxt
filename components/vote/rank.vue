@@ -1,9 +1,9 @@
 <template>
     <div id="show-rank">
         <div class="line clearfix">
-            <span v-show="app==1" @click="handleInvite" class="invited">invite friends to vote</span>
+            <span v-show="app==1" class="invited" @click="handleInvite">invite friends to vote</span>
         </div>
-        <div v-show="rankListData.length>0" v-for="(item,index) in rankListData" :key="index" class="ranking-list">
+        <div v-for="(item,index) in rankListData" v-show="rankListData.length>0" :key="index" class="ranking-list">
             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
             <span class="ranking-name">{{item.name}}</span>
             <span class="ranking-poll">{{item.ballot_num}}</span>
