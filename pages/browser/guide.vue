@@ -2,8 +2,10 @@
     <div class="wrapper">
         <div class="guide">
             <div class="search">
-                <input v-model="keyword" type="text" placeholder="Search your favorite channels">
-                <img src="~assets/img/web/ic_search.png" @click="search">
+                <form @submit.prevent="search">
+                    <input v-model="keyword" type="text" placeholder="Search your favorite channels">
+                    <img src="~assets/img/web/ic_search.png" @click="search">
+                </form>
             </div>
             <p class="count">{{channelList.length}} Channels 
                 <span v-show="showSearch">for "{{showSearch}}"</span>
