@@ -7,7 +7,10 @@
                     <img src="~assets/img/web/ic_search.png" @click="search">
                 </form>
             </div>
-            <p class="count">{{channelList.length}} Channels 
+            <p class="count">
+                <span v-show="channelList.length > 1">{{channelList.length}} Channels</span>
+                <span v-show="channelList.length == 1"> 1 Channel</span>
+                <span v-show="channelList.length == 0"> No Channel</span>
                 <span v-show="showSearch">for "{{showSearch}}"</span>
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
@@ -32,7 +35,7 @@ export default {
             channelList: [],
             oriChannelList: [],
             keyword: '',
-            showSearch:false
+            showSearch: false
         }
     },
     mounted() {
@@ -69,9 +72,9 @@ export default {
     },
     methods: {
         search() {
-            this.channelList =[]
+            this.channelList = []
             let channelNumber
-            if(this.keyword){
+            if (this.keyword) {
                 this.oriChannelList.forEach(ele => {
                     if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
                         const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
@@ -84,7 +87,7 @@ export default {
                     }
                 })
                 this.showSearch = this.keyword
-            }else{
+            } else {
                 this.oriChannelList.forEach(ele => {
                     this.channelList.push(ele)
                 })
@@ -93,22 +96,31 @@ export default {
         },
         getChannels() {
             this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
-                this.$nextTick(() => this.$nuxt.$loading.finish())
-                const data = res.data
-                data.forEach(ele => {
-                    if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
-                        const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
-                        platformInfos.forEach(plat => {
-                            ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
-                            ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
-                            ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
-                            ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
+            localforage.getItem('channel').then(val => {
+                if (!val) {
+                    this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
+                        this.$nextTick(() => this.$nuxt.$loading.finish())
+                        const data = res.data
+                        data.forEach(ele => {
+                            if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+                                const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+                                platformInfos.forEach(plat => {
+                                    ele.isDTT = plat.tvPlatForm === 'DTT' ? true : ''
+                                    ele.isDTH = plat.tvPlatForm === 'DTH' ? true : ''
+                                    ele.dttChannel = plat.tvPlatForm === 'DTT' ? plat.channelNumber : ''
+                                    ele.dthChannel = plat.tvPlatForm === 'DTH' ? plat.channelNumber : ''
+                                })
+                            }
                         })
-                    }
-                })
-                this.channelList = data
-                this.oriChannelList = data
+                        this.oriChannelList = data
+                        this.channelList = data
+                        localforage.setItem('channel', this.channelList)
+                    })
+                } else {
+                    this.$nextTick(() => this.$nuxt.$loading.finish())
+                    this.oriChannelList = val
+                    this.channelList = val
+                }
             })
         }
     }
@@ -142,23 +154,22 @@ export default {
             }
         }
     }
-    .count{
-        color:#bdbdbd;
+    .count {
+        color: #bdbdbd;
     }
-    .noResult{
-        padding:1rem;
+    .noResult {
         text-align: center;
-        color:#bdbdbd;
-        img{
+        color: #333333;
+        img {
             display: block;
-            width:100%;
-            margin-bottom: 1rem;
+            width: 65%;
+            margin:2rem auto 2rem;
         }
     }
-    .noMoreChannel{
-        color:#bdbdbd;
+    .noMoreChannel {
+        color: #bdbdbd;
         text-align: center;
-        padding:1rem;
+        padding: 1rem;
     }
 }
 </style>

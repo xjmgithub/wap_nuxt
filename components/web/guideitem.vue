@@ -1,7 +1,7 @@
 <template>
     <div v-if="item.logo" class="channels">
         <nuxt-link :to="`/browser/liveDetail?channelId=${item.id}`">
-            <img :src="item.logo.resources[0].url.replace('http:','https:')" alt>
+            <img :src="item.logo.resources[0].url.replace('http:','https:')" alt class="logo">
             <div class="celDetail">
                 <p>
                     {{item.name}}
@@ -146,13 +146,17 @@ export default {
     padding: 1rem 0;
     border-bottom: 1px solid #d8d8d8;
     img {
-        width: 30%;
+        &.logo{
+            width: 25%;
+            border:1px solid #979797;
+        }
     }
     .celDetail {
         float: right;
-        width: 68%;
-        padding-top: 0.3rem;
+        width: 72%;
+        font-size: .95rem;
         p {
+            color: #333333;
             span {
                 float: right;
                 margin-left: 0.5rem;
@@ -171,7 +175,7 @@ export default {
             }
         }
         .epgMsg {
-            margin: 0.3rem 0;
+            margin: 0.2rem 0;
         }
     }
     .playTime {
@@ -214,8 +218,8 @@ export default {
     .noEpg {
         color: #666666;
         background-color: #eeeeee;
-        height: 5rem;
-        line-height: 5rem;
+        height: 3.8rem;
+        line-height: 3.8rem;
         text-align: center;
         margin-top: 0.5rem;
     }

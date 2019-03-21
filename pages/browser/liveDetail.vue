@@ -159,13 +159,15 @@ export default {
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         getDateStr(date) {
-            const tmp = new Date(date).toLocaleDateString()
+            const tmp = new Date(date)
+            console.log(tmp.getMonth())
+            const localTmp = new Date(date).toLocaleDateString()
             const today = new Date().toLocaleDateString()
             let dateStr
-            if (tmp === today) {
+            if (localTmp === today) {
                 dateStr = 'Today'
             } else {
-                dateStr = tmp.split('/')[1] + '/' + tmp.split('/')[2]
+                dateStr = (tmp.getMonth() + 1) + '/' +  tmp.getDate()
             }
             const start = new Date(new Date(tmp)).getTime() // 00:00:00
             const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
@@ -218,7 +220,7 @@ export default {
         confirmDown(){
             const _this = this
             this.$confirm(
-                'Download StarTimes ON to watch',
+                this.LANG.officialwebsitemobile_downloadpromo,
                 () => {
                     downApp.call(_this)
                 },
@@ -334,12 +336,13 @@ export default {
                 float: left;
                 width: 22%;
                 margin-right: 4%;
-                margin-top: 0.4rem;
+                margin-top: 0.7rem;
                 background-color: #eeeeee;
                 border-radius: 4px;
                 text-align: center;
                 color: #212121;
                 font-weight: bold;
+                padding: 0.2rem 0;
                 &:nth-child(4n) {
                     margin-right: 0;
                 }

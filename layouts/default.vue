@@ -112,11 +112,11 @@ export default {
         const _this = this
         Vue.prototype.$alert = (msg, callback) => {
             _this.$refs.alert.show(msg, callback)
-            this.$store.commit('SHOW_SHADOW_LAYER')
+            _this.$store.commit('SHOW_SHADOW_LAYER')
         }
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
             _this.$refs.confirm.show(msg, callback, cancel, yes, no)
-            this.$store.commit('SHOW_SHADOW_LAYER')
+            _this.$store.commit('SHOW_SHADOW_LAYER')
         }
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },

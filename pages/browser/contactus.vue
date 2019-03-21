@@ -1,10 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="hall">
-            <h3>
-                <div class="dot">‧</div>
-                <div>Business Hall</div>
-            </h3>
+            <mTitle :showTitle="'Business Hall'"></mTitle>
             <ul class="hallList">
                 <li v-for="(item,i) in hallList " :key="i" @click="toHallDetail(item.id)">
                     {{item.name}}
@@ -15,7 +12,11 @@
     </div>
 </template>
 <script>
+import mTitle from '~/components/web/title'
 export default {
+    components:{
+        mTitle
+    },
     data(){
         return{
             hallList:[]

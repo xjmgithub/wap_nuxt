@@ -1,10 +1,7 @@
 <template>
     <div>
         <div v-if="item.type.indexOf('100')==0" class="recommand">
-            <h3>
-                <div class="dot">‧</div>
-                <div>{{item.name}}</div>
-            </h3>
+            <mTitle :showTitle="item.name"></mTitle>
             <ul class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+')'">
@@ -29,12 +26,16 @@
     </div>
 </template>
 <script>
+import mTitle from '~/components/web/title'
 import { formatTime } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
             return formatTime(val)
         }
+    },
+    components:{
+        mTitle
     },
     props: {
         item: {

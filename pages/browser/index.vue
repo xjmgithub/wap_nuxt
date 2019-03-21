@@ -1,12 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="selfService">
-            <h3>
-                <div class="dot">
-                    ‧
-                </div>
-                <div>{{$store.state.lang.officialwebsitemobile_selfservice_section}}</div>
-            </h3>
+            <mTitle :showTitle="$store.state.lang.officialwebsitemobile_selfservice_section"></mTitle>
             <div class="recharge">
                 <nuxt-link to="/hybrid/dvb/bind">
                     <span>$</span>
@@ -18,12 +13,7 @@
             <vod-list v-for="(item,index) in programs" :key="index" :item="item"/>
         </div>
         <div class="bouquets">
-            <h3>
-                <div class="dot">
-                    ‧
-                </div>
-                <div>{{$store.state.lang.officialwebsitemobile_bouquet_section}}</div>
-            </h3>
+            <mTitle :showTitle="$store.state.lang.officialwebsitemobile_bouquet_section"></mTitle>
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
@@ -44,9 +34,7 @@
             </ul>
         </div>
         <div class="startimes">
-            <h3 class="flytitle">
-                <div>{{$store.state.lang.officialwebsitemobile_startimeson_section}}</div>
-            </h3>
+            <mTitle :icon="true" :showTitle="$store.state.lang.officialwebsitemobile_startimeson_section"></mTitle>
             <img src="~assets/img/web/wap_pic.jpg" class="bigPic">
             <div class="download clearfix">
                 <a href="javascript:void(0)" @click="downloadApk">
@@ -65,6 +53,7 @@
 <script>
 import env from '~/env.js'
 import bgImgData from '~/components/web/bgImgData'
+import mTitle from '~/components/web/title'
 import { downloadApk } from '~/functions/utils'
 import vodList from '~/components/web/vod'
 export default {
@@ -100,7 +89,8 @@ export default {
     },
     components: {
         bgImgData,
-        vodList
+        vodList,
+        mTitle
     },
     data() {
         return {
@@ -195,32 +185,6 @@ export default {
 .boxStyle {
     margin: 0 auto;
     border-bottom: 1px solid #d8d8d8;
-    h3 {
-        margin: 0.4rem 0;
-        color: #333333;
-        font-weight: bold;
-        div {
-            margin-right: 0.3rem;
-            font-size: 1.1rem;
-            line-height: 2.5rem;
-            &.dot {
-                font-size: 2.5rem;
-                height: 1rem;
-                line-height: 2.3rem;
-                float: left;
-            }
-        }
-        img {
-            width: auto;
-            float: left;
-            display: block;
-        }
-        &.flytitle {
-            background: url('~assets/img/web/ON-RIGHT.png') no-repeat left center;
-            background-size: 1rem;
-            padding-left: 1.5rem;
-        }
-    }
 }
 .selfService {
     .boxStyle;

@@ -70,7 +70,7 @@ export default {
         confirmDown(){
             const _this = this
             this.$confirm(
-                'Download StarTimes ON to watch',
+                this.LANG.officialwebsitemobile_downloadpromo,
                 () => {
                     downApp.call(_this)
                 },
@@ -82,7 +82,7 @@ export default {
     },
     head() {
         return {
-            title: 'List'
+            title: this.pName
         }
     }
 }
