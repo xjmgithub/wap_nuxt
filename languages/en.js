@@ -13,7 +13,7 @@ export default {
     officialwebsitemobile_slidenav_contactus: 'Contact us',
     officialwebsitemobile_subprogramdetails_clips: 'All Clips',
     officialwebsitemobile_downloadpromo: 'Install StarTimes ON to watch',
-    officialwebsitemobile_go: 'go',
+    officialwebsitemobile_go: 'GO',
     officialwebsitemobile_topnav_home: 'Home',
     officialwebsitemobile_topnav_list: 'List',
     officialwebsitemobile_topnav_tvguide: 'Guide',

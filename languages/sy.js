@@ -13,7 +13,7 @@ export default {
     officialwebsitemobile_slidenav_contactus:'WASILIANA NASI',
     officialwebsitemobile_subprogramdetails_clips:'Sehemu zote',
     officialwebsitemobile_downloadpromo:'Install StarTimes ON to watch',
-    officialwebsitemobile_go:'nenda',
+    officialwebsitemobile_go:'NENDA',
     officialwebsitemobile_topnav_home:'Kurasa Kuu',
     officialwebsitemobile_topnav_list:'Orodha',
     officialwebsitemobile_topnav_tvguide:'Mwongozo',
