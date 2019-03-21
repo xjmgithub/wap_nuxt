@@ -1,11 +1,10 @@
 <template>
     <div class="wrapper">
-        <div v-if="channel.poster" class="poster" @click="confirmDown">
+        <div v-if="channel.poster&&channel.poster.resources[0].url" class="poster" @click="confirmDown">
             <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
             <img src="~assets/img/web/ic_play.png">
-
         </div>
-        <div class="container">
+        <div class="container-main">
             <p class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views</p>
             <div v-if="channel.id" class="base-info clearfix">
                 <div class="logo">
@@ -255,7 +254,7 @@ export default {
         }
     }
 }
-.container {
+.container-main {
     margin: 0.8rem;
     .views {
         color: #999999;
