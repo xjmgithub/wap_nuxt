@@ -12,7 +12,7 @@ export default {
     officialwebsitemobile_slidenav_faq: 'FAQ',
     officialwebsitemobile_slidenav_contactus: 'CONTACTEZ-NOUS',
     officialwebsitemobile_subprogramdetails_clips: 'Toutes les vidéos',
-    officialwebsitemobile_downloadpromo: "Téléchargez l'app StarTimes ON pour regarder. ",
+    officialwebsitemobile_downloadpromo: "Install StarTimes ON to watch",
     officialwebsitemobile_go: 'Cliquez',
     officialwebsitemobile_topnav_home: 'Accueil',
     officialwebsitemobile_topnav_list: 'Liste',

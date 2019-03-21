@@ -12,7 +12,7 @@ export default {
     officialwebsitemobile_slidenav_faq:'Maswali na majibu',
     officialwebsitemobile_slidenav_contactus:'WASILIANA NASI',
     officialwebsitemobile_subprogramdetails_clips:'Sehemu zote',
-    officialwebsitemobile_downloadpromo:'Pakua app ya StarTimes  programu ili uangalie.',
+    officialwebsitemobile_downloadpromo:'Install StarTimes ON to watch',
     officialwebsitemobile_go:'nenda',
     officialwebsitemobile_topnav_home:'Kurasa Kuu',
     officialwebsitemobile_topnav_list:'Orodha',
