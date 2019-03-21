@@ -5,7 +5,7 @@
             <img src="~assets/img/pay/img_failed_def_b.png">
             <p class="fail">
                 Please
-                <a @click="toNativeLogin" href="javascript:void(0)">Log in First.</a>
+                <a href="javascript:void(0)" @click="toNativeLogin">Log in First.</a>
             </p>
         </div>
         <alert ref="alert" />

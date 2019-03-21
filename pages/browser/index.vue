@@ -49,7 +49,7 @@
             </h3>
             <img src="~assets/img/web/wap_pic.jpg" class="bigPic">
             <div class="download clearfix">
-                <a @click="downloadApk" href="javascript:void(0)">
+                <a href="javascript:void(0)" @click="downloadApk">
                     <img src="~assets/img/web/pic_downloadapk.png">
                 </a>
                 <a href="market://details?id=com.star.mobile.video" target="_blank">
@@ -108,11 +108,6 @@ export default {
             antennaList: [], // DTT
             recharge_url: 'https://m.startimestv.com/DVB/binding.php',
             programs: []
-        }
-    },
-    computed: {
-        currency() {
-            return this.$store.state.country.currencySymbol
         }
     },
     computed: {

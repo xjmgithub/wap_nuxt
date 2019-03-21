@@ -13,7 +13,7 @@
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
-            <div @click="countryDialogStatus=true" class="country_choose">
+            <div class="country_choose" @click="countryDialogStatus=true">
                 <img :src="country.nationalFlag.replace('http:','https:')">
                 <span>{{country.name}}</span>
             </div>

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div v-if="channel.poster" @click="confirmDown" class="poster">
+        <div v-if="channel.poster" class="poster" @click="confirmDown">
             <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
             <img src="~assets/img/web/ic_play.png">
 
@@ -23,7 +23,7 @@
             </div>
             <div v-show="platformInfos.length>0" class="watch">
                 <p>Watch it on TV</p>
-                <div v-for="(item,index) in platformInfos" :key="index" @click="goToBouquetDetail(item)" class="watchList">
+                <div v-for="(item,index) in platformInfos" :key="index" class="watchList" @click="goToBouquetDetail(item)">
                     <img v-if="item.tvPlatForm=='DTT'" src="~assets/img/web/DTT.png" class="sign">
                     <img v-if="item.tvPlatForm=='DTH'" src="~assets/img/web/DTH.png" class="sign">
                     <span :class="{isDtt:item.tvPlatForm=='DTT',isDth:item.tvPlatForm=='DTH'}">{{item.channelNumber}}</span>
@@ -42,7 +42,7 @@
                     <div v-for="(item,index) in epgList" :key="index" class="epg">
                         <span class="playTime">{{item.startDate | formatPlayTime}}</span>
                         <span :class="{current:item.isCurrent}" class="circle"/>
-                        <div @click="toggleDetail(item)" class="playTitle">
+                        <div class="playTitle" @click="toggleDetail(item)">
                             {{item.name}}
                             <div style="height:0.8rem;"/>
                             <div v-show="item.isCurrent" class="total">

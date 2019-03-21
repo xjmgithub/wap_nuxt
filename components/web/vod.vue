@@ -6,7 +6,7 @@
                 <div>{{item.name}}</div>
             </h3>
             <ul class="clearfix">
-                <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,ele.id)" :class="{bigFirst:item.list.length%2!=0&&k==0}">
+                <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+')'">
                         <span class="show-time">{{ele.durationSecond | formatShowTime}}</span>
                     </div>
@@ -20,7 +20,7 @@
                 <div>{{item.name}}</div>
             </h3>
             <ul class="clearfix">
-                <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,item.id)" :class="{bigFirst:item.list.length%2!=0&&k==0}">
+                <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,item.id)">
                     <div :style="'background:url('+ele.poster.replace('http:','https:')+')'"/>
                     <span class="title">{{ele.name}}</span>
                 </li>

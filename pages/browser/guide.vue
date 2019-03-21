@@ -3,12 +3,12 @@
         <div class="guide">
             <div class="search">
                 <input v-model="keyword" type="text" placeholder="Search your favorite channels">
-                <img @click="search" src="~assets/img/web/ic_search.png">
+                <img src="~assets/img/web/ic_search.png" @click="search">
             </div>
             <p class="count">{{channelList.length}} Channels 
                 <span v-show="showSearch">for "{{showSearch}}"</span>
             </p>
-            <div class="noResult" v-show="showSearch&&channelList.length==0 ">
+            <div v-show="showSearch&&channelList.length==0 " class="noResult">
                 <img src="~assets/img/web/noresult.png" alt="">
                 <span>No results</span>
             </div>

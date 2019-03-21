@@ -10,7 +10,7 @@
                     </div>
                 </nuxt-link>
                 <ul>
-                    <li v-for="(subPro,i) in item.subPrograms" :key="i" v-show="i < 3">
+                    <li v-for="(subPro,i) in item.subPrograms" v-show="i < 3" :key="i">
                         <nuxt-link :to="`/browser/program/subdetail/${item.id}?subId=${subPro.id}`">
                             <span>{{subPro.name}}</span>
                             <span class="arrows">&gt;&gt;</span>

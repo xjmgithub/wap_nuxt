@@ -12,9 +12,6 @@
                 @input="changeNum"
                 @focus="typing"
                 @blur="inputOver"
-                class="card"
-                type="tel"
-                maxlength="13"
             >
             <span v-show="!error" :class="cardState === 'VALID' ? 'program-state-valid' : 'program-state'" class="card_state">
                 <span>{{cardStateDes}}</span>

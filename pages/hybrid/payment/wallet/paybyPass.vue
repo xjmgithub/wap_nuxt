@@ -33,14 +33,7 @@ export default {
             if (val.length >= 6) {
                 this.canPay = true
             } else {
-                invoke.call(this, this.payToken, 9002, data => {
-                    payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
-                        setCookie('lastpay', 'wallet')
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
-                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
-                    })
-                })
+                this.canPay = false
             }
         }
     },

@@ -7,7 +7,7 @@
         <div v-show="step==2" class="step2">
             <passInput placeholder="Enter your msg code" @endinput="codeEnd" />
             <div class="footer">
-                <mButton :disabled="!canStep2" @click="goStep(3)" text="NEXT" />
+                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)" />
             </div>
         </div>
     </div>

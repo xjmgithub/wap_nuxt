@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div @click="toDetail" class="order-msg">
+        <div class="order-msg" @click="toDetail">
             <p class="time">
                 {{message.orderCreateTime | formatDate}}
                 <span

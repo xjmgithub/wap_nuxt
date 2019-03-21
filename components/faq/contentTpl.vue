@@ -17,7 +17,7 @@
                         <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt>
                         <span>YES</span>
                     </div>
-                    <div @click="evaluate(0)" class="no-item">
+                    <div class="no-item" @click="evaluate(0)">
                         <img v-show="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png" alt>
                         <img v-show="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png" alt>
                         <span>NO</span>

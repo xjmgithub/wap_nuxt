@@ -2,7 +2,7 @@
     <div class="container">
         <p>{{desc}}</p>
         <div class="footer">
-            <mButton :disabled="false" @click="nextStep" text="PAY NOW" />
+            <mButton :disabled="false" text="PAY NOW" @click="nextStep" />
         </div>
     </div>
 </template>

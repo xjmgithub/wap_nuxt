@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div @click="confirmDown" class="poster">
+        <div class="poster" @click="confirmDown">
             <img :src="sPoster.replace('http:','https:')" alt class="cover">
             <img v-show="sPoster" src="~assets/img/web/ic_play.png">
             <span class="program-name">{{sName}}</span>

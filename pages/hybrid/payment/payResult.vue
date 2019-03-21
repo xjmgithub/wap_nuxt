@@ -133,34 +133,6 @@ export default {
                 this.result = 2
             }
         },
-        getPayStatus() {
-            this.$axios.get(`/payment/v2/order-pay-bills/${this.seqNo}`).then(res => {
-                const data = res.data
-                if (data && data.state === 3) {
-                    this.result = 1
-                    this.money = data.amount
-                    this.currency = data.currencySymbol
-                    window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
-                    
-                    setTimeout(()=>{
-                        this.click()
-                    },5000)
-
-                }else if(data && data.state===4){
-                    this.result = 2
-                    window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
-                } else {
-                    this.timer ++
-                    if(this.timer >10){
-                        this.result = 2
-                    }else{
-                        setTimeout(()=>{
-                            this.getPayStatus()
-                        },3000)
-                    }
-                }
-            })
-        },
         refresh() {
             this.$router.go(0)
         }

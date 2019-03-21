@@ -33,7 +33,7 @@
         <div v-show="firstChargeTip" class="first-charge">
             <img src="~assets/img/dvb/ic_gift_def.png">
             <div style="width:65%;float:left;">{{firstChargeTip}}</div>
-            <div v-show="firstChargeDetails" @click="showDetails" class="first-charge-detail">{{LANG.first_recharge_detail}}</div>
+            <div v-show="firstChargeDetails" class="first-charge-detail" @click="showDetails">{{LANG.first_recharge_detail}}</div>
         </div>
         <div v-show="countList.length>1" class="count-box clearfix">
             <p>{{LANG.results_recharge_amount}}</p>

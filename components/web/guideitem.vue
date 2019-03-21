@@ -14,7 +14,7 @@
                 </span>
             </p>
             <nuxt-link :to="`/browser/liveDetail?channelId=${item.id}`">
-                <div v-for="(epg,index) in epgList" :key="index" v-if="loaded" class="epgMsg">
+                <div v-for="(epg,index) in epgList" v-show="loaded" :key="index" class="epgMsg">
                     <span :class="{current:index==0}" class="playTime">{{epg.startDate | formatPlayTime}}</span>
                     <div :class="{current:index==0}" class="playTitle">{{epg.name}}
                         <div v-show="index==0" class="total">
