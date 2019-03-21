@@ -1,22 +1,24 @@
 <template>
     <div v-if="item.logo" class="channels">
-        <img :src="item.logo.resources[0].url.replace('http:','https:')" alt>
-        <div class="celDetail">
-            <p>
-                {{item.name}}
-                <span v-show="item.isDTT" class="dtt">
-                    <img src="~assets/img/web/ic_guide_dtt.png" alt>
-                    {{item.dttChannel}}
-                </span>
-                <span v-show="item.isDTH" class="dth">
-                    <img src="~assets/img/web/ic_guide_dth.png" alt>
-                    {{item.dthChannel}}
-                </span>
-            </p>
-            <nuxt-link :to="`/browser/liveDetail?channelId=${item.id}`">
+        <nuxt-link :to="`/browser/liveDetail?channelId=${item.id}`">
+            <img :src="item.logo.resources[0].url.replace('http:','https:')" alt>
+            <div class="celDetail">
+                <p>
+                    {{item.name}}
+                    <span v-show="item.isDTT" class="dtt">
+                        <img src="~assets/img/web/ic_guide_dtt.png" alt>
+                        {{item.dttChannel}}
+                    </span>
+                    <span v-show="item.isDTH" class="dth">
+                        <img src="~assets/img/web/ic_guide_dth.png" alt>
+                        {{item.dthChannel}}
+                    </span>
+                </p>
+
                 <div v-for="(epg,index) in epgList" v-show="loaded" :key="index" class="epgMsg">
                     <span :class="{current:index==0}" class="playTime">{{epg.startDate | formatPlayTime}}</span>
-                    <div :class="{current:index==0}" class="playTitle">{{epg.name}}
+                    <div :class="{current:index==0}" class="playTitle">
+                        {{epg.name}}
                         <div v-show="index==0" class="total">
                             <div :style="{ width: progress + '%'}" class="progress"/>
                         </div>
@@ -26,11 +28,9 @@
                     <div class="gray-block"/>
                     <div class="gray-block"/>
                 </div>
-                <div v-if="loaded && epgList.length==0" class="noEpg">
-                    No epg for today
-                </div>
-            </nuxt-link>
-        </div>
+                <div v-if="loaded && epgList.length==0" class="noEpg">No epg for today</div>
+            </div>
+        </nuxt-link>
     </div>
 </template>
 <script>
@@ -61,9 +61,9 @@ export default {
             loading: false,
             loaded: false,
             epgList: [],
-            start:start,
-            end:end,
-            progress:0
+            start: start,
+            end: end,
+            progress: 0
         }
     },
     computed: {
@@ -118,23 +118,23 @@ export default {
                     })
             }
         },
-        getCurrentEpg(data){
+        getCurrentEpg(data) {
             if (data.length > 0) {
                 const now = new Date().getTime()
                 data.sort(function(a, b) {
                     return a.startDate - b.startDate
                 })
-                data.forEach((ele,i) => {
+                data.forEach((ele, i) => {
                     if (ele.startDate <= now && now <= ele.endDate) {
                         const totalTime = ele.endDate - ele.startDate
                         const nowTime = now - ele.startDate
                         this.progress = Math.floor((nowTime / totalTime) * 100)
-                        if(i<data.length-3){
-                            this.epgList = data.slice(i,i+3)
-                        }else{
+                        if (i < data.length - 3) {
+                            this.epgList = data.slice(i, i + 3)
+                        } else {
                             this.epgList = data.slice(i)
                         }
-                    } 
+                    }
                 })
             }
         }
@@ -211,7 +211,7 @@ export default {
         height: 1.3rem;
         margin: 0.8rem 0;
     }
-    .noEpg{
+    .noEpg {
         color: #666666;
         background-color: #eeeeee;
         height: 5rem;
