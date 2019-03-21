@@ -67,9 +67,16 @@ export default {
     methods: {
         search() {
             this.channelList =[]
+            let channelNumber
             if(this.keyword){
                 this.oriChannelList.forEach(ele => {
-                    if (ele.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1 || ele.id.toString().indexOf(this.keyword) > -1) {
+                    if (ele.ofAreaTVPlatforms[0] && ele.ofAreaTVPlatforms[0].platformInfos) {
+                        const platformInfos = ele.ofAreaTVPlatforms[0].platformInfos
+                        platformInfos.forEach(plat => {
+                            channelNumber = plat.channelNumber
+                        })
+                    }
+                    if (ele.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1 || channelNumber.toString().indexOf(this.keyword) > -1) {
                         this.channelList.push(ele)
                     }
                 })
