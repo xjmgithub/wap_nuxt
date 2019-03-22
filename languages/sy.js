@@ -63,6 +63,24 @@ export default {
     refresh_wallet: 'Tafadhali angalia uwiano wako wa eWallet. Kisha uitumie kurejesha kwa akaunti yako ya TV.',
     continue_to_pay: 'ENDELEA',
     payment_details_total:'Jumla',
-    dvb_recharge_btn_pay:'LIPA'
+    dvb_recharge_btn_pay:'LIPA',
+
+
+    // seo title
+    seo_title_browser: 'StarTimes ON',
+    seo_title_live: 'Home',
+    seo_title_bouquets: 'Pacotes',
+
+    // seo description
+    seo_desc_browser:
+        'StarTimes On dedica-se a serviços de transmissão online com acesso a vídeos de entretenimento em qualquer hora e em todo locais e com qualquer dispositivo',
+    seo_desc_live:
+        'StarTimes deu primazia a conteúdos de televisão de grande audiência, como são os filmes e desporto para diferentes públicos independentes do tipo de dispositivo usados por estes. ',
+    seo_desc_bouquets: 'Cada pacote de  DTT/DTH tem preços diferentes, vários canais em cada pacote. ',
+
+    // seo keywords
+    seo_keywords_browser: 'HD,Em Directo,Vídeo,transmissão online,futebol,Series,filmes,Africa',
+    seo_keywords_live: 'HD,Em Directo,Vídeo,transmissão online,futebol,Series,filmes,Africa,Smart TV',
+    seo_keywords_bouquets: 'Pacotes,DTH,DTT,Básico,Clássico,Único,Smart,Super,Chinês,Francês,Desporto'
 
 }
