@@ -4,7 +4,7 @@
             <mTitle :show-title="item.name" :icon="true" />
             <ul class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
-                    <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+')'">
+                    <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+') no-repeat'">
                         <span class="show-time">{{ele.durationSecond | formatShowTime}}</span>
                     </div>
                     <span class="title">{{ele.name}}</span>
@@ -15,7 +15,7 @@
             <mTitle :show-title="item.name" :icon="true" />
             <ul class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
-                    <div :style="'background:url('+ele.poster.replace('http:','https:')+')'"/>
+                    <div :style="'background:url('+ele.poster.replace('http:','https:')+') no-repeat'"/>
                     <span class="title">{{ele.name}}</span>
                 </li>
             </ul>
@@ -65,32 +65,6 @@ export default {
 .boxStyle {
     margin: 0 auto;
     border-bottom: 1px solid #d8d8d8;
-    h3 {
-        margin: 0.4rem 0;
-        color: #333333;
-        font-weight: bold;
-        div {
-            margin-right: 0.3rem;
-            font-size: 1.1rem;
-            line-height: 2.5rem;
-            &.dot {
-                font-size: 2.5rem;
-                height: 1rem;
-                line-height: 2.3rem;
-                float: left;
-            }
-        }
-        img {
-            width: auto;
-            float: left;
-            display: block;
-        }
-        &.flytitle {
-            background: url('~assets/img/web/ON-RIGHT.png') no-repeat left center;
-            background-size: 1rem;
-            padding-left: 1.5rem;
-        }
-    }
 }
 .recommand {
     .boxStyle;
