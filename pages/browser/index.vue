@@ -99,6 +99,9 @@ export default {
     computed: {
         currency() {
             return this.$store.state.country.currencySymbol
+        },
+        langType(){
+            return this.$store.state.langType
         }
     },
     mounted() {
@@ -144,10 +147,19 @@ export default {
             const tmp = new Date().toLocaleDateString()
             const start = new Date(new Date(tmp)).getTime() // 00:00:00
             const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
+            let lang = 'en'
+            if (this.langType.indexOf('fr') >= 0) {
+                lang = 'fr'
+            } else if (lang.indexOf('sw') >= 0) {
+                lang = 'sw'
+            } else if (lang.indexOf('pt') >= 0) {
+                lang = 'pt'
+            }
+
             this.$axios
                 .get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=100&dateFrom=${start}&dateTo=${end}`, {
                     headers: {
-                        lnCode: 'en'
+                        lnCode: lang
                     }
                 })
                 .then(res => {

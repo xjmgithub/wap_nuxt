@@ -381,3 +381,29 @@ export const downApp = function() {
         }
     })
 }
+
+export const downloadApp = () => {
+    const ua = navigator.userAgent.toLowerCase()
+    let appStoreLink
+    const interval = 500
+    const t = new Date()
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        appStoreLink = 'startimes://'
+    } else {
+        appStoreLink = 'starvideo://platformapi/webtoapp'
+    }
+    // window.location.href = 'startimes://'
+    setTimeout(function() {
+        console.log(Date.now() - t)
+        if (Date.now() - t < interval + 800) {
+            location.href = 'http://www.baidu.com'
+        }
+    }, interval)
+    const iframe = document.createElement('iframe')
+    iframe.setAttribute('src', appStoreLink)
+    iframe.setAttribute('style', 'display:none')
+    document.body.appendChild(iframe)
+    setTimeout(function() {
+        document.body.removeChild(iframe)
+    }, 200)
+}
