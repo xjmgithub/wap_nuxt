@@ -156,8 +156,12 @@ export default {
                         data.forEach(ele => {
                             if (ele.widgets && ele.widgets.length > 0) {
                                 ele.widgets.forEach(item => {
-                                    // 10012/10021 子节目矩阵 1091/1092/1093 节目矩阵
-                                    if (item.content_code.indexOf('100') == 0 || item.content_code.indexOf('109') == 0) {
+                                    // 10012/10021 子节目矩阵 1091/1092 节目矩阵
+                                    if (
+                                        item.content_code.indexOf('100') == 0 ||
+                                        item.content_code.indexOf('1091') == 0 ||
+                                        item.content_code.indexOf('1092') == 0
+                                    ) {
                                         this.programs.push({
                                             name: ele.name,
                                             type: item.content_code,
