@@ -102,7 +102,7 @@ export default {
             this.$nextTick(() => this.$nuxt.$loading.start())
             localforage.getItem('channel').then(val => {
                 if (!val) {
-                    this.$axios.get(`/cms/v2/vup/snapshot/channels?count=100&platformTypes=1&platformTypes=0`).then(res => {
+                    this.$axios.get(`/cms/v2/vup/snapshot/channels?count=1000&platformTypes=1&platformTypes=0`).then(res => {
                         this.$nextTick(() => this.$nuxt.$loading.finish())
                         const data = res.data
                         data.forEach(ele => {
