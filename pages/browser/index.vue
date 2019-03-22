@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="selfService">
-            <mTitle :show-title="$store.state.lang.officialwebsitemobile_selfservice_section" />
+            <mTitle :show-title="$store.state.lang.officialwebsitemobile_selfservice_section"/>
             <div class="recharge">
                 <nuxt-link to="/hybrid/dvb/bind">
                     <span>$</span>
@@ -13,28 +13,24 @@
             <vod-list v-for="(item,index) in programs" :key="index" :item="item"/>
         </div>
         <div class="bouquets">
-            <mTitle :show-title="$store.state.lang.officialwebsitemobile_bouquet_section" />
+            <mTitle :show-title="$store.state.lang.officialwebsitemobile_bouquet_section"/>
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
-                    <p class="money">
-                        {{currency}} {{item.price}}
-                    </p>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
-                    <p class="money">
-                        {{currency}} {{item.price}}
-                    </p>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
         </div>
         <div class="startimes">
-            <mTitle :icon="true" :show-title="$store.state.lang.officialwebsitemobile_startimeson_section" />
+            <mTitle :icon="true" :show-title="$store.state.lang.officialwebsitemobile_startimeson_section"/>
             <img src="~assets/img/web/wap_pic.jpg" class="bigPic">
             <div class="download clearfix">
                 <a href="javascript:void(0)" @click="downloadApk">
@@ -148,25 +144,31 @@ export default {
             const tmp = new Date().toLocaleDateString()
             const start = new Date(new Date(tmp)).getTime() // 00:00:00
             const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
-            this.$axios.get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=100&dateFrom=${start}&dateTo=${end}`).then(res => {
-                const data = res.data.data
-                if (data && data.length > 0) {
-                    data.forEach(ele => {
-                        if (ele.widgets && ele.widgets.length > 0) {
-                            ele.widgets.forEach(item => {
-                                // 10012/10021 子节目矩阵 1091/1092/1093 节目矩阵
-                                if (item.content_code.indexOf('100') == 0 || item.content_code.indexOf('109') == 0) {
-                                    this.programs.push({
-                                        name: ele.name,
-                                        type: item.content_code,
-                                        list: JSON.parse(item.data_json)
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
+            this.$axios
+                .get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=100&dateFrom=${start}&dateTo=${end}`, {
+                    headers: {
+                        lnCode: 'en'
+                    }
+                })
+                .then(res => {
+                    const data = res.data.data
+                    if (data && data.length > 0) {
+                        data.forEach(ele => {
+                            if (ele.widgets && ele.widgets.length > 0) {
+                                ele.widgets.forEach(item => {
+                                    // 10012/10021 子节目矩阵 1091/1092/1093 节目矩阵
+                                    if (item.content_code.indexOf('100') == 0 || item.content_code.indexOf('109') == 0) {
+                                        this.programs.push({
+                                            name: ele.name,
+                                            type: item.content_code,
+                                            list: JSON.parse(item.data_json)
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
         }
     },
     head() {
@@ -217,7 +219,7 @@ export default {
         }
     }
 }
-.programs{
+.programs {
     border-bottom: 1px solid #d8d8d8;
 }
 .bouquets {

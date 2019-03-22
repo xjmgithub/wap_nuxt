@@ -97,7 +97,6 @@ img {
     position: relative;
     img {
         width: 100%;
-        height: 11rem;
         margin-bottom: 0.5rem;
         & + img {
             position: absolute;

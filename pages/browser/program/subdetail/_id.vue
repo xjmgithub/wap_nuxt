@@ -129,15 +129,15 @@ img {
     position: relative;
     .cover {
         width: 100%;
-        height: 11rem;
         margin-bottom: 0.5rem;
         & + img {
             position: absolute;
             width: 3rem;
-            top: 4rem;
+            top: 50%;
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
+            margin-top:-3rem;
         }
     }
     .program-name {
@@ -167,7 +167,6 @@ img {
             display: block;
             width: 38%;
             float: right;
-            height: 5rem;
         }
     }
 }
@@ -193,7 +192,7 @@ img {
                 &:before{
                     content: '';
                     display: inline-block;
-                    padding-bottom: 50%;
+                    padding-bottom: 56%;
                     width: 0.1px;
                     vertical-align: middle;
                 }
