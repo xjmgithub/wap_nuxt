@@ -69,6 +69,10 @@ export default {
         document.querySelector('#__layout>.container').addEventListener('scroll', () => {
             this.$store.commit('SCROLL_PAGE', document.querySelector('#__layout>.container').scrollTop)
         })
+        document.querySelector('#__layout>.container').addEventListener('touchmove', ()=> {
+            if(document.activeElement)
+                document.activeElement.blur();
+        }, {passive: false});
     },
     methods: {
         search() {
@@ -138,8 +142,9 @@ export default {
             border-radius: 4px;
             border: 1px solid #979797;
             height: 2.5rem;
-            line-height: 2.5rem;
+            line-height: 1.25rem;
             outline-style: none;
+            z-index:-1;
             &::-webkit-input-placeholder {
                 color: #bdbdbd;
                 font-size: 0.95rem;

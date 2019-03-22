@@ -188,6 +188,7 @@ export default {
     padding: 3rem 0.8rem 0;
     background: white;
     overflow-y: auto;
+    -webkit-overflow-scrolling:touch; 
     &.wide {
         padding-left: 0;
         padding-right: 0;
