@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="item.type.indexOf('100')==0" class="recommand">
-            <mTitle :show-title="item.name" />
+            <mTitle :show-title="item.name" :icon="true" />
             <ul class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+')'">
@@ -12,10 +12,7 @@
             </ul>
         </div>
         <div v-if="item.type.indexOf('109')==0" class="recommand">
-            <h3>
-                <div class="dot">‧</div>
-                <div>{{item.name}}</div>
-            </h3>
+            <mTitle :show-title="item.name" :icon="true" />
             <ul class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.replace('http:','https:')+')'"/>
