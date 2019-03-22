@@ -86,7 +86,7 @@ export default {
         div {
             position: relative;
             width: 100%;
-            background-size: contain !important;
+            background-size: 100% !important;
             &:before {
                 content: '';
                 display: inline-block;
