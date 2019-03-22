@@ -12,7 +12,6 @@ export default {
     officialwebsitemobile_slidenav_faq:'Maswali na majibu',
     officialwebsitemobile_slidenav_contactus:'WASILIANA NASI',
     officialwebsitemobile_subprogramdetails_clips:'Sehemu zote',
-    officialwebsitemobile_downloadpromo:'Install StarTimes ON to watch',
     officialwebsitemobile_downloadpromo: 'Weka StarTimes ON kutazama',
     officialwebsitemobile_downloadpopup_install:'Weka',
     officialwebsitemobile_downloadpopup_cancel:'Sitisha',
