@@ -28,7 +28,7 @@
                     <div class="gray-block"/>
                     <div class="gray-block"/>
                 </div>
-                <div v-if="loaded && epgList.length==0" class="noEpg">No epg for today</div>
+                <div v-if="loaded && epgList.length==0" class="noEpg">No EPG for today</div>
             </div>
         </nuxt-link>
     </div>
@@ -217,7 +217,7 @@ export default {
     }
     .noEpg {
         color: #666666;
-        background-color: #eeeeee;
+        background:linear-gradient(360deg,rgba(255,255,255,1) 0%,rgba(238,238,238,1) 100%);
         height: 3.8rem;
         line-height: 3.8rem;
         text-align: center;
