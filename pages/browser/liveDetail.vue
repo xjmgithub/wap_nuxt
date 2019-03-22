@@ -160,7 +160,6 @@ export default {
         },
         getDateStr(date) {
             const tmp = new Date(date)
-            console.log(tmp.getMonth())
             const localTmp = new Date(date).toLocaleDateString()
             const today = new Date().toLocaleDateString()
             let dateStr
@@ -220,7 +219,7 @@ export default {
         confirmDown(){
             const _this = this
             this.$confirm(
-                this.LANG.officialwebsitemobile_downloadpromo,
+                this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
                     downApp.call(_this)
                 },

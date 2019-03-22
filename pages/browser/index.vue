@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="selfService">
-            <mTitle :showTitle="$store.state.lang.officialwebsitemobile_selfservice_section"></mTitle>
+            <mTitle :show-title="$store.state.lang.officialwebsitemobile_selfservice_section" />
             <div class="recharge">
                 <nuxt-link to="/hybrid/dvb/bind">
                     <span>$</span>
@@ -13,7 +13,7 @@
             <vod-list v-for="(item,index) in programs" :key="index" :item="item"/>
         </div>
         <div class="bouquets">
-            <mTitle :showTitle="$store.state.lang.officialwebsitemobile_bouquet_section"></mTitle>
+            <mTitle :show-title="$store.state.lang.officialwebsitemobile_bouquet_section" />
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
@@ -34,7 +34,7 @@
             </ul>
         </div>
         <div class="startimes">
-            <mTitle :icon="true" :showTitle="$store.state.lang.officialwebsitemobile_startimeson_section"></mTitle>
+            <mTitle :icon="true" :show-title="$store.state.lang.officialwebsitemobile_startimeson_section" />
             <img src="~assets/img/web/wap_pic.jpg" class="bigPic">
             <div class="download clearfix">
                 <a href="javascript:void(0)" @click="downloadApk">

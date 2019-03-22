@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="item.type.indexOf('100')==0" class="recommand">
-            <mTitle :showTitle="item.name"></mTitle>
+            <mTitle :show-title="item.name" />
             <ul class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+')'">

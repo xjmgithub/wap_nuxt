@@ -95,7 +95,7 @@ export default {
     methods:{
         confirmDown(){
             this.$confirm(
-                this.LANG.officialwebsitemobile_downloadpromo,
+                this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
                     downApp.call(this)
                 },

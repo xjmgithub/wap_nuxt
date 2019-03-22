@@ -70,7 +70,7 @@ export default {
         confirmDown(){
             const _this = this
             this.$confirm(
-                this.LANG.officialwebsitemobile_downloadpromo,
+                this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
                     downApp.call(_this)
                 },

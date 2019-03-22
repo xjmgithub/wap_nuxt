@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="hall">
-            <mTitle :showTitle="'Business Hall'"></mTitle>
+            <mTitle :show-title="'Business Hall'" />
             <ul class="hallList">
                 <li v-for="(item,i) in hallList " :key="i" @click="toHallDetail(item.id)">
                     {{item.name}}
