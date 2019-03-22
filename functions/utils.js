@@ -330,8 +330,3 @@ export const getFaqAnswerLabel = (ins, question) => {
         (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
     )
 }
-
-
-export const nativeFuncs = ()=>{
-    return window && window.getChannelId
-}
