@@ -144,7 +144,7 @@ img {
                 &:before {
                     content: '';
                     display: inline-block;
-                    padding-bottom: 50%;
+                    padding-bottom: 56%;
                     width: 0.1px;
                     vertical-align: middle;
                 }
