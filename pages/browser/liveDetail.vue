@@ -277,8 +277,8 @@ export default {
                     downApp.call(_this)
                 },
                 () => {},
-                'Go',
-                'Not now'
+                this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
+                this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
         }
     },

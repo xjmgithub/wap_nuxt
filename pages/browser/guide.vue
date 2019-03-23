@@ -8,17 +8,20 @@
                 </form>
             </div>
             <p class="count">
-                <span v-show="channelList.length > 1">{{channelList.length}} Channels</span>
-                <span v-show="channelList.length == 1">1 Channel</span>
-                <span v-show="channelList.length == 0">No Channel</span>
-                <span v-show="showSearch">for "{{showSearch}}"</span>
+                <span v-if="!showSearch">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_tvguide_channellist}}</span>
+                <span
+                    v-else-if="channelList.length > 1 && showSearch"
+                >{{channelList.length}}{{$store.state.lang.officialwebsitemobile_tvguide_searchresults}}'{{showSearch}}'</span>
+                <span
+                    v-else-if="channelList.length == 1 && showSearch"
+                >{{$store.state.lang.officialwebsitemobile_tvguide_search1result}}'{{showSearch}}'</span>
+                <span v-else-if="channelList.length == 0 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}</span>
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
                 <img src="~assets/img/web/noresult.png" alt>
-                <span>No results</span>
             </div>
-            <channel v-for="(item ,i) in channelList" :key="i" :server-time="serverTime" :item="item"/>
-            <p v-show="channelList.length>0" class="noMoreChannel">No more channels</p>
+            <channel v-for="(item ,i) in channelList" :key="i" :item="item"/>
+            <p v-show="channelList.length>0" class="noMoreChannel">{{$store.state.lang.officialwebsitemobile_tvguide_channellistbottom}}</p>
         </div>
     </div>
 </template>
