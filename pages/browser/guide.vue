@@ -9,15 +9,15 @@
             </div>
             <p class="count">
                 <span v-show="channelList.length > 1">{{channelList.length}} Channels</span>
-                <span v-show="channelList.length == 1"> 1 Channel</span>
-                <span v-show="channelList.length == 0"> No Channel</span>
+                <span v-show="channelList.length == 1">1 Channel</span>
+                <span v-show="channelList.length == 0">No Channel</span>
                 <span v-show="showSearch">for "{{showSearch}}"</span>
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
-                <img src="~assets/img/web/noresult.png" alt="">
+                <img src="~assets/img/web/noresult.png" alt>
                 <span>No results</span>
             </div>
-            <channel v-for="(item ,i) in channelList" :key="i" :item="item" />
+            <channel v-for="(item ,i) in channelList" :key="i" :server-time="serverTime" :item="item"/>
             <p v-show="channelList.length>0" class="noMoreChannel">No more channels</p>
         </div>
     </div>
@@ -38,27 +38,36 @@ export default {
             showSearch: false
         }
     },
+    async asyncData({ $axios }) {
+        if (process.server) {
+            return { serverTime: new Date().getTime() }
+        } else {
+            const { headers } = await $axios.get('/hybrid/api/getServerTime')
+            return {
+                serverTime: dayjs(headers.date).valueOf()
+            }
+        }
+    },
     mounted() {
         localforage.config({
             driver: localforage.INDEXEDDB,
             name: 'StarTimes'
         })
-
         localforage
             .getItem('dbtime')
             .then(val => {
                 if (val) {
-                    if (val != dayjs().format('YYYY-MM-DD')) {
+                    if (val != dayjs(this.serverTime).format('YYYY-MM-DD')) {
                         // DELETE CACHE
                         localforage.clear().then(() => {
-                            localforage.setItem('dbtime', dayjs().format('YYYY-MM-DD'))
+                            localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
                             this.getChannels()
                         })
                     } else {
                         this.getChannels()
                     }
                 } else {
-                    localforage.setItem('dbtime', dayjs().format('YYYY-MM-DD'))
+                    localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
                     this.getChannels()
                 }
             })
@@ -69,10 +78,13 @@ export default {
         document.querySelector('#__layout>.container').addEventListener('scroll', () => {
             this.$store.commit('SCROLL_PAGE', document.querySelector('#__layout>.container').scrollTop)
         })
-        document.querySelector('#__layout>.container').addEventListener('touchmove', ()=> {
-            if(document.activeElement)
-                document.activeElement.blur();
-        }, {passive: false});
+        document.querySelector('#__layout>.container').addEventListener(
+            'touchmove',
+            () => {
+                if (document.activeElement) document.activeElement.blur()
+            },
+            { passive: false }
+        )
     },
     methods: {
         search() {
@@ -144,7 +156,7 @@ export default {
             height: 2.5rem;
             line-height: 1.25rem;
             outline-style: none;
-            z-index:-1;
+            z-index: -1;
             &::-webkit-input-placeholder {
                 color: #bdbdbd;
                 font-size: 0.95rem;
@@ -168,7 +180,7 @@ export default {
         img {
             display: block;
             width: 65%;
-            margin:2rem auto 2rem;
+            margin: 2rem auto 2rem;
         }
     }
     .noMoreChannel {
