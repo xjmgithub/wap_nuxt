@@ -234,7 +234,7 @@ export default {
             this.$axios.get(`/cms/programs?channelID=${this.channelID}&startDate=${item.start}&endDate=${item.end}&count=1000`).then(res => {
                 const data = res.data
                 if (data.length > 0) {
-                    const now = new Date().getTime()
+                    const now = this.serverTime
                     data.forEach(ele => {
                         ele.showDetail = false
                         if (ele.startDate <= now && now <= ele.endDate) {
