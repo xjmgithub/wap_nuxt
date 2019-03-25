@@ -145,8 +145,6 @@ html,
 body {
     margin: 0px;
     padding: 0px;
-    height: auto;
-    overflow-y: auto;
     font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Sans-serif;
 }
 .nav-layer {

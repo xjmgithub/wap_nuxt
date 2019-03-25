@@ -83,7 +83,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @font-face {
     font-family: Roboto;
     src: url('~assets/fonts/Roboto-Regular.ttf');
@@ -93,8 +93,6 @@ html,
 body {
     margin: 0px;
     padding: 0px;
-    height: 100%;
-    overflow-y: hidden;
     font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Sans-serif;
 }
 .clearfix:after {
