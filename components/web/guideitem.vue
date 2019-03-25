@@ -35,6 +35,7 @@
 </template>
 <script>
 import localforage from 'localforage'
+import dayjs from 'dayjs'
 export default {
     filters: {
         formatPlayTime(time) {
@@ -51,18 +52,24 @@ export default {
             default() {
                 return {}
             }
+        },
+        serverTime: {
+            type: Number,
+            require: true,
+            default: new Date().getTime()
         }
     },
     data() {
-        const tmp = new Date().toLocaleDateString()
-        const start = new Date(new Date(tmp)).getTime() // 00:00:00
-        const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
         return {
             loading: false,
             loaded: false,
             epgList: [],
-            start: start,
-            end: end,
+            start: dayjs(this.serverTime)
+                .startOf('day')
+                .valueOf(),
+            end: dayjs(this.serverTime)
+                .endOf('day')
+                .valueOf(),
             progress: 0
         }
     },
@@ -94,7 +101,9 @@ export default {
         getEPG() {
             const top = this.$el.getBoundingClientRect().top
             const screenHeight = window.screen.availHeight
+
             if (this.loading || this.loaded) return false
+
             if (top < screenHeight) {
                 this.loadImg()
                 this.loading = true
@@ -103,14 +112,12 @@ export default {
                     .getItem('channel_' + channelID)
                     .then(val => {
                         if (!val) {
-                            this.$axios
-                                .get(`/cms/programs?channelID=${channelID}&startDate=${this.start}&endDate=${this.end}&count=100`)
-                                .then(res => {
-                                    this.loading = false
-                                    this.loaded = true
-                                    this.getCurrentEpg(res.data)
-                                    localforage.setItem('channel_' + channelID, res.data || '')
-                                })
+                            this.$axios.get(`/cms/programs?channelID=${channelID}&startDate=${this.start}&endDate=${this.end}&count=50`).then(res => {
+                                this.loading = false
+                                this.loaded = true
+                                this.getCurrentEpg(res.data)
+                                localforage.setItem('channel_' + channelID, res.data || '')
+                            })
                         } else {
                             this.loading = false
                             this.loaded = true
@@ -124,7 +131,7 @@ export default {
         },
         getCurrentEpg(data) {
             if (data.length > 0) {
-                const now = new Date().getTime()
+                const now = this.serverTime
                 data.sort(function(a, b) {
                     return a.startDate - b.startDate
                 })

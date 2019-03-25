@@ -70,6 +70,7 @@
 </template>
 <script>
 import { downApp } from '~/functions/utils'
+import dayjs from 'dayjs'
 export default {
     layout: 'default',
     filters: {
@@ -84,23 +85,12 @@ export default {
         }
     },
     data() {
-        const now = new Date()
-        const epgTime = []
-        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 3)))
-        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 2)))
-        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() - 1)))
-        epgTime.push(this.getDateStr(now))
-        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 1)))
-        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 2)))
-        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 3)))
-        epgTime.push(this.getDateStr(new Date().setDate(now.getDate() + 4)))
-
         return {
             channelID: this.$route.query.channelId,
             channel: {},
             platformInfos: [],
-            epgTime: epgTime,
             epgList: [],
+            epgTime: [],
             progress: 0,
             currentIndex: 3
         }
@@ -125,6 +115,16 @@ export default {
             return t
         }
     },
+    async asyncData({ $axios }) {
+        if (process.server) {
+            return { serverTime: new Date().getTime() }
+        } else {
+            const { headers } = await $axios.get('/hybrid/api/getServerTime')
+            return {
+                serverTime: dayjs(headers.date).valueOf()
+            }
+        }
+    },
     mounted() {
         if (this.channelID) {
             this.$nextTick(() => this.$nuxt.$loading.start())
@@ -146,6 +146,57 @@ export default {
             this.$alert('Channel id can not be null')
         }
 
+        // 处理epgTime
+        this.epgTime.push(
+            this.getDateStr(
+                dayjs(this.serverTime)
+                    .subtract(3, 'd')
+                    .valueOf()
+            )
+        )
+        this.epgTime.push(
+            this.getDateStr(
+                dayjs(this.serverTime)
+                    .subtract(2, 'd')
+                    .valueOf()
+            )
+        )
+        this.epgTime.push(
+            this.getDateStr(
+                dayjs(this.serverTime)
+                    .subtract(1, 'd')
+                    .valueOf()
+            )
+        )
+        this.epgTime.push(this.getDateStr(dayjs(this.serverTime).valueOf()))
+        this.epgTime.push(
+            this.getDateStr(
+                dayjs(this.serverTime)
+                    .add(1, 'd')
+                    .valueOf()
+            )
+        )
+        this.epgTime.push(
+            this.getDateStr(
+                dayjs(this.serverTime)
+                    .add(2, 'd')
+                    .valueOf()
+            )
+        )
+        this.epgTime.push(
+            this.getDateStr(
+                dayjs(this.serverTime)
+                    .add(3, 'd')
+                    .valueOf()
+            )
+        )
+        this.epgTime.push(
+            this.getDateStr(
+                dayjs(this.serverTime)
+                    .add(4, 'd')
+                    .valueOf()
+            )
+        )
         this.getTvGuide(this.epgTime[3], 3)
     },
     methods: {
@@ -160,16 +211,18 @@ export default {
         },
         getDateStr(date) {
             const tmp = new Date(date)
-            const localTmp = new Date(date).toLocaleDateString()
-            const today = new Date().toLocaleDateString()
             let dateStr
-            if (localTmp === today) {
+            if (date === this.serverTime) {
                 dateStr = 'Today'
             } else {
-                dateStr = (tmp.getMonth() + 1) + '/' +  tmp.getDate()
+                dateStr = tmp.getMonth() + 1 + '/' + tmp.getDate()
             }
-            const start = new Date(new Date(tmp)).getTime() // 00:00:00
-            const end = new Date(new Date(tmp)).getTime() + 24 * 60 * 60 * 1000 - 1 // 23:59:59
+            const start = dayjs(date)
+                .startOf('day')
+                .valueOf() // 00:00:00
+            const end = dayjs(date)
+                .endOf('day')
+                .valueOf() // 23:59:59
             return {
                 dateStr: dateStr,
                 start: start,
@@ -181,7 +234,7 @@ export default {
             this.$axios.get(`/cms/programs?channelID=${this.channelID}&startDate=${item.start}&endDate=${item.end}&count=1000`).then(res => {
                 const data = res.data
                 if (data.length > 0) {
-                    const now = new Date().getTime()
+                    const now = this.serverTime
                     data.forEach(ele => {
                         ele.showDetail = false
                         if (ele.startDate <= now && now <= ele.endDate) {
@@ -216,7 +269,7 @@ export default {
                 })
             }
         },
-        confirmDown(){
+        confirmDown() {
             const _this = this
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
@@ -237,7 +290,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.wrapper{
+.wrapper {
     padding: 2.95rem 0 0;
 }
 .poster {
@@ -245,7 +298,7 @@ export default {
     img {
         width: 100%;
         height: 12rem;
-        &+img{
+        & + img {
             position: absolute;
             width: 3rem;
             top: 4.5rem;

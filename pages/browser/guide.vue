@@ -8,16 +8,19 @@
                 </form>
             </div>
             <p class="count">
-                <span v-if="!showSearch">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_tvguide_channellist}}
-                </span>
-                <span v-else-if="channelList.length > 1 && showSearch">{{channelList.length}}{{$store.state.lang.officialwebsitemobile_tvguide_searchresults}}'{{showSearch}}'</span>
-                <span v-else-if="channelList.length == 1 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search1result}}'{{showSearch}}'</span>
-                <span v-else-if="channelList.length == 0 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}'{{showSearch}}'</span>
+                <span v-if="!showSearch">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_tvguide_channellist}}</span>
+                <span
+                    v-else-if="channelList.length > 1 && showSearch"
+                >{{channelList.length}}{{$store.state.lang.officialwebsitemobile_tvguide_searchresults}}'{{showSearch}}'</span>
+                <span
+                    v-else-if="channelList.length == 1 && showSearch"
+                >{{$store.state.lang.officialwebsitemobile_tvguide_search1result}}'{{showSearch}}'</span>
+                <span v-else-if="channelList.length == 0 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}</span>
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
-                <img src="~assets/img/web/noresult.png" alt="">
+                <img src="~assets/img/web/noresult.png" alt>
             </div>
-            <channel v-for="(item ,i) in channelList" :key="i" :item="item" />
+            <channel v-for="item in channelList" :key="item.id" :item="item"/>
             <p v-show="channelList.length>0" class="noMoreChannel">{{$store.state.lang.officialwebsitemobile_tvguide_channellistbottom}}</p>
         </div>
     </div>
@@ -38,27 +41,36 @@ export default {
             showSearch: false
         }
     },
+    async asyncData({ $axios }) {
+        if (process.server) {
+            return { serverTime: new Date().getTime() }
+        } else {
+            const { headers } = await $axios.get('/hybrid/api/getServerTime')
+            return {
+                serverTime: dayjs(headers.date).valueOf()
+            }
+        }
+    },
     mounted() {
         localforage.config({
             driver: localforage.INDEXEDDB,
             name: 'StarTimes'
         })
-
         localforage
             .getItem('dbtime')
             .then(val => {
                 if (val) {
-                    if (val != dayjs().format('YYYY-MM-DD')) {
+                    if (val != dayjs(this.serverTime).format('YYYY-MM-DD')) {
                         // DELETE CACHE
                         localforage.clear().then(() => {
-                            localforage.setItem('dbtime', dayjs().format('YYYY-MM-DD'))
+                            localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
                             this.getChannels()
                         })
                     } else {
                         this.getChannels()
                     }
                 } else {
-                    localforage.setItem('dbtime', dayjs().format('YYYY-MM-DD'))
+                    localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
                     this.getChannels()
                 }
             })
