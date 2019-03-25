@@ -64,7 +64,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .channelList {
-    padding: 0.8rem;
+    padding-top: 0.8rem;
     .title {
         font-weight: bold;
         padding: 0;

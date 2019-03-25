@@ -57,6 +57,11 @@ export default {
             type: Number,
             require: true,
             default: new Date().getTime()
+        },
+        searchTimes: {
+            type: Number,
+            require: true,
+            default: 0
         }
     },
     data() {
@@ -80,6 +85,9 @@ export default {
     },
     watch: {
         scrollPage() {
+            this.getEPG()
+        },
+        searchTimes() {
             this.getEPG()
         }
     },

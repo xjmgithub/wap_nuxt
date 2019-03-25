@@ -38,7 +38,7 @@
         </div>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
-        <shadowLayer v-show="layer" />
+        <shadowLayer v-show="layer"/>
     </div>
 </template>
 <script>
@@ -141,6 +141,14 @@ export default {
     src: url('~assets/fonts/Roboto-Regular.ttf');
     font-style: 'normal';
 }
+html,
+body {
+    margin: 0px;
+    padding: 0px;
+    height: auto;
+    overflow-y: auto;
+    font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Sans-serif;
+}
 .nav-layer {
     width: 100%;
     height: 100%;
@@ -187,8 +195,7 @@ export default {
     width: 100%;
     padding: 3rem 0.8rem 0;
     background: white;
-    overflow-y: auto;
-    -webkit-overflow-scrolling:touch; 
+    // -webkit-overflow-scrolling:touch;
     &.wide {
         padding-left: 0;
         padding-right: 0;

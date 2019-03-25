@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <program-category ref="category" />
+        <program-category ref="category"/>
         <div class="program-list">
             <div v-for="(item,index) in programList" :key="index" class="program">
                 <nuxt-link :to="`/browser/program/detail/${item.id}`">
@@ -42,20 +42,23 @@ export default {
         this.loadData()
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
-            const contain = document.querySelector('.wrapper')
-            const navContain = document.querySelector('.wrapper .navContain')
-            const list = document.querySelector('.wrapper .program-list')
-            const _this = this
-            contain.addEventListener('scroll', function() {
-                if (navContain.offsetHeight + list.offsetHeight - contain.offsetHeight - contain.scrollTop < 200) {
-                    if (_this.loadstate || _this.endedState) return false
-                    _this.loadstate = true
-                    _this.loadData()
-                }
-            })
+            document.addEventListener('scroll', this.listener)
         })
     },
+    beforeRouteLeave(to, from, next) {
+        document.removeEventListener('scroll', this.listener)
+        next()
+    },
     methods: {
+        listener() {
+            const bot = document.querySelector('.program-list').getBoundingClientRect().bottom
+            const screenHeight = window.screen.availHeight
+            if (bot - screenHeight < 100) {
+                if (this.loadstate || this.endedState) return false
+                this.loadstate = true
+                this.loadData()
+            }
+        },
         toProgramDetail(item) {
             sessionStorage.setItem('program', JSON.stringify(item))
             this.$router.push('/browser/programlist/program')
@@ -128,7 +131,7 @@ export default {
                 color: #0087eb;
                 font-weight: bold;
                 font-size: 0.9rem;
-                display:block;
+                display: block;
 
                 span:first-child {
                     overflow: hidden;

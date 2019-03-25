@@ -15,12 +15,14 @@
                 <span
                     v-else-if="channelList.length == 1 && showSearch"
                 >{{$store.state.lang.officialwebsitemobile_tvguide_search1result}}'{{showSearch}}'</span>
-                <span v-else-if="channelList.length == 0 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}'{{showSearch}}'</span>
+                <span
+                    v-else-if="channelList.length == 0 && showSearch"
+                >{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}'{{showSearch}}'</span>
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
                 <img src="~assets/img/web/noresult.png" alt>
             </div>
-            <channel v-for="item in channelList" :key="item.id" :item="item"/>
+            <channel v-for="item in channelList" :key="item.id" :search-times="searchTimes" :server-time="serverTime" :item="item"/>
             <p v-show="channelList.length>0" class="noMoreChannel">{{$store.state.lang.officialwebsitemobile_tvguide_channellistbottom}}</p>
         </div>
     </div>
@@ -38,7 +40,8 @@ export default {
             channelList: [],
             oriChannelList: [],
             keyword: '',
-            showSearch: false
+            showSearch: false,
+            searchTimes: 0
         }
     },
     async asyncData({ $axios }) {
@@ -79,10 +82,11 @@ export default {
                 // this.getChannels()
             })
 
-        document.querySelector('#__layout>.container').addEventListener('scroll', () => {
-            this.$store.commit('SCROLL_PAGE', document.querySelector('#__layout>.container').scrollTop)
+        document.addEventListener('scroll', () => {
+            const scollTop = document.body.scrollTop || document.documentElement.scrollTop
+            this.$store.commit('SCROLL_PAGE', scollTop)
         })
-        document.querySelector('#__layout>.container').addEventListener(
+        document.addEventListener(
             'touchmove',
             () => {
                 if (document.activeElement) document.activeElement.blur()
@@ -113,14 +117,7 @@ export default {
                 })
                 this.showSearch = ''
             }
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    const s = document.querySelector('#__layout>.container').scrollTop
-                    let d = 1
-                    if (s > 0) d = 0
-                    document.querySelector('#__layout>.container').scrollTo(0, d)
-                }, 200)
-            })
+            this.searchTimes++
         },
         getChannels() {
             this.$nextTick(() => this.$nuxt.$loading.start())
