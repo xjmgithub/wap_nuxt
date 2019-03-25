@@ -28,7 +28,7 @@
                     <div class="gray-block"/>
                     <div class="gray-block"/>
                 </div>
-                <div v-if="loaded && epgList.length==0" class="noEpg">No EPG for today</div>
+                <div v-if="loaded && epgList.length==0" class="noEpg">{{$store.state.lang.officialwebsitemobile_tvguide_noepg}}</div>
             </div>
         </nuxt-link>
     </div>

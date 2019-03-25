@@ -8,17 +8,18 @@
                 </form>
             </div>
             <p class="count">
-                <span v-show="channelList.length > 1">{{channelList.length}} Channels</span>
-                <span v-show="channelList.length == 1"> 1 Channel</span>
-                <span v-show="channelList.length == 0"> No Channel</span>
-                <span v-show="showSearch">for "{{showSearch}}"</span>
+                <span v-if="!showSearch">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_tvguide_channellist}}
+                </span>
+                <span v-else-if="channelList.length > 1 && showSearch">{{channelList.length}}{{$store.state.lang.officialwebsitemobile_tvguide_searchresults}}'{{showSearch}}'</span>
+                <span v-else-if="channelList.length == 1 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search1result}}'{{showSearch}}'</span>
+                <span v-else-if="channelList.length == 0 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}</span>
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
                 <img src="~assets/img/web/noresult.png" alt="">
                 <span>No results</span>
             </div>
             <channel v-for="(item ,i) in channelList" :key="i" :item="item" />
-            <p v-show="channelList.length>0" class="noMoreChannel">No more channels</p>
+            <p v-show="channelList.length>0" class="noMoreChannel">{{$store.state.lang.officialwebsitemobile_tvguide_channellistbottom}}</p>
         </div>
     </div>
 </template>
@@ -69,10 +70,13 @@ export default {
         document.querySelector('#__layout>.container').addEventListener('scroll', () => {
             this.$store.commit('SCROLL_PAGE', document.querySelector('#__layout>.container').scrollTop)
         })
-        document.querySelector('#__layout>.container').addEventListener('touchmove', ()=> {
-            if(document.activeElement)
-                document.activeElement.blur();
-        }, {passive: false});
+        document.querySelector('#__layout>.container').addEventListener(
+            'touchmove',
+            () => {
+                if (document.activeElement) document.activeElement.blur()
+            },
+            { passive: false }
+        )
     },
     methods: {
         search() {
@@ -144,7 +148,7 @@ export default {
             height: 2.5rem;
             line-height: 1.25rem;
             outline-style: none;
-            z-index:-1;
+            z-index: -1;
             &::-webkit-input-placeholder {
                 color: #bdbdbd;
                 font-size: 0.95rem;
@@ -168,7 +172,7 @@ export default {
         img {
             display: block;
             width: 65%;
-            margin:2rem auto 2rem;
+            margin: 2rem auto 2rem;
         }
     }
     .noMoreChannel {
