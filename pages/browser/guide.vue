@@ -3,7 +3,7 @@
         <div class="guide">
             <div class="search">
                 <form @submit.prevent="search">
-                    <input v-model="keyword" type="text" placeholder="Search your favorite channels">
+                    <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_tvguide_searchbox">
                     <img src="~assets/img/web/ic_search.png" @click="search">
                 </form>
             </div>
@@ -12,7 +12,7 @@
                 </span>
                 <span v-else-if="channelList.length > 1 && showSearch">{{channelList.length}}{{$store.state.lang.officialwebsitemobile_tvguide_searchresults}}'{{showSearch}}'</span>
                 <span v-else-if="channelList.length == 1 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search1result}}'{{showSearch}}'</span>
-                <span v-else-if="channelList.length == 0 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}</span>
+                <span v-else-if="channelList.length == 0 && showSearch">{{$store.state.lang.officialwebsitemobile_tvguide_search0result}}'{{showSearch}}'</span>
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
                 <img src="~assets/img/web/noresult.png" alt="">
