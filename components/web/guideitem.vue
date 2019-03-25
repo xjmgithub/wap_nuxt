@@ -1,5 +1,5 @@
 <template>
-    <div v-if="item.logo" class="channels">
+    <div v-if="item.logo" class="channels clearfix">
         <nuxt-link :to="`/browser/liveDetail?channelId=${item.id}`">
             <img ref="dataimg" src="~assets/img/web/channel.png" alt class="logo">
             <div class="celDetail">
@@ -153,6 +153,7 @@ export default {
         &.logo {
             width: 25%;
             border: 1px solid #979797;
+            float: left;
         }
     }
     .celDetail {
