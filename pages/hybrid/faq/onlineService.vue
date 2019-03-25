@@ -1,19 +1,17 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <serviceBlock :show-more="true" />
+            <serviceBlock :show-more="true"/>
             <div v-if="faqTagsData" class="service">
                 <div id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
-                        <div :class="item.class" />
+                        <div :class="item.class"/>
                     </a>
                 </div>
                 <div class="questions">
                     <div v-for="(item,index) in faqTagsData" v-show="item.checked" :key="index">
                         <ul>
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">
-                                {{item2.thema}}
-                            </li>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
                         </ul>
                     </div>
                 </div>
@@ -21,16 +19,14 @@
         </div>
         <div class="costomer">
             <nuxt-link :to="{path:'/hybrid/faq/customerService',query:$route.query}">
-                <button class="btn">
-                    COSTOMER SERVICE
-                </button>
+                <button class="btn">COSTOMER SERVICE</button>
             </nuxt-link>
         </div>
     </div>
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
-import { getFaqLogLabel,getFaqAnswerLabel } from '~/functions/utils'
+import { getFaqLogLabel, getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -46,6 +42,7 @@ export default {
         }
     },
     mounted() {
+        document.querySelector('.wrapper').style.height = window.screen.availHeight + 'px'
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
 
@@ -174,7 +171,6 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     background: white;
-    height: 100%;
     display: -webkit-box;
     width: 100%;
     /* 

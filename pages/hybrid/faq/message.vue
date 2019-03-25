@@ -133,9 +133,6 @@ export default {
 @import '~assets/less/faq/common.less';
 </style>
 <style lang="less" scoped>
-.wrapper {
-    background: #ffffff;
-}
 
 .gap {
     background-color: #f2f2f2;

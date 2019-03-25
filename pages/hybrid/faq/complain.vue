@@ -277,10 +277,6 @@ export default {
 @import '~assets/less/faq/common.less';
 </style>
 <style lang="less" scoped>
-.wrapper {
-    background: #ffffff;
-}
-
 .order-contain {
     box-shadow: 0px 1px 3px 1px #dddddd;
     border-radius: 5px;

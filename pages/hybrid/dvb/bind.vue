@@ -348,8 +348,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
-    min-height: 100%;
-    background: white;
     .untrim {
         padding: 0 1rem;
         position: relative;

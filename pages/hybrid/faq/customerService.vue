@@ -11,12 +11,12 @@
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest" />
+                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest"/>
                 <div v-if="item.tpl=='order'" :key="index" class="order-contain">
-                    <orderBlockTpl :order="item.order" />
+                    <orderBlockTpl :order="item.order"/>
                 </div>
-                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name" />
-                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name" />
+                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"/>
+                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"/>
                 <contentTpl
                     v-if="item.tpl=='content'"
                     :key="index"
@@ -29,27 +29,21 @@
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
-                <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord" />
-                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied" />
+                <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord"/>
+                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied"/>
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
-            <div v-show="connectState==0" class="btn" @click="connectLiveChat">
-                LIVE CHAT
-            </div>
-            <div v-show="connectState==1" class="btn">
-                Connecting …
-            </div>
+            <div v-show="connectState==0" class="btn" @click="connectLiveChat">LIVE CHAT</div>
+            <div v-show="connectState==1" class="btn">Connecting …</div>
         </div>
         <div v-show="showLiveChatBtn&&connectState==2" class="live-chat-input">
             <div class="user-control-w">
                 <div class="user-edit-w">
-                    <textarea v-model="chatMsg" class="form-control user-edit" placeholder="Enter your question" />
+                    <textarea v-model="chatMsg" class="form-control user-edit" placeholder="Enter your question"/>
                 </div>
                 <div class="user-submit-w">
-                    <button type="submit" class="user-submit-btn" @click="sendChatMsg">
-                        SEND
-                    </button>
+                    <button type="submit" class="user-submit-btn" @click="sendChatMsg">SEND</button>
                 </div>
             </div>
         </div>
@@ -65,7 +59,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage, setCookie, getCookie,getFaqAnswerLabel } from '~/functions/utils'
+import { toNativePage, setCookie, getCookie, getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -101,6 +95,7 @@ export default {
         }
     },
     mounted() {
+        document.querySelector('.wrapper').style.height = window.screen.availHeight * 0.88 + 'px'
         const questions = JSON.parse(sessionStorage.getItem('faq_question'))
         const serviceModuleId = sessionStorage.getItem('serviceModuleId')
         const morefaqs = sessionStorage.getItem('morefaqs')
@@ -265,7 +260,7 @@ export default {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `answer_${this.entrance_id || ''}_click`,
-                label: getFaqAnswerLabel(this,item.id) + '_2',
+                label: getFaqAnswerLabel(this, item.id) + '_2',
                 value: 1
             })
         },
@@ -375,8 +370,8 @@ export default {
                             if (!this.minHistoryId) {
                                 this.minHistoryId = res.data.data
                             } else if (res.data.data < this.minHistoryId) {
-                                    this.minHistoryId = res.data.data
-                                }
+                                this.minHistoryId = res.data.data
+                            }
 
                             // 如果是回答则重新创建一条服务记录
                             if (obj.tpl === 'content') {
@@ -642,15 +637,13 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/faq/common.less';
-#__layout > div {
+body {
     background: #eeeeee;
 }
 </style>
 <style lang="less" scoped>
 .wrapper {
     overflow: hidden;
-    height: 88%;
-    min-height: 88%;
     background: #eeeeee;
 }
 .order-contain {
