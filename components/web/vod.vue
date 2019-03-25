@@ -2,8 +2,8 @@
     <div>
         <div v-if="item.type.indexOf('100')==0" class="recommand">
             <mTitle :show-title="item.name" :icon="true" />
-            <ul class="clearfix">
-                <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
+            <ul :class="{'odd':item.list.length%2!=0,'even':item.list.length%2==0}" class="clearfix">
+                <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+') no-repeat'">
                         <span class="show-time">{{ele.durationSecond | formatShowTime}}</span>
                     </div>
@@ -13,8 +13,8 @@
         </div>
         <div v-if="item.type.indexOf('109')==0" class="recommand">
             <mTitle :show-title="item.name" :icon="true" />
-            <ul class="clearfix">
-                <li v-for="(ele,k) in item.list" :key="k" :class="{bigFirst:item.list.length%2!=0&&k==0}" @click="toProgram(item.type,ele.id)">
+            <ul :class="{'odd':item.list.length%2!=0,'even':item.list.length%2==0}" class="clearfix">
+                <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,ele.id)">
                     <div :style="'background:url('+ele.poster.replace('http:','https:')+') no-repeat'"/>
                     <span class="title">{{ele.name}}</span>
                 </li>
@@ -72,17 +72,28 @@ export default {
     &.last {
         border-bottom: 1px solid #d8d8d8;
     }
+    .odd{
+        li{
+           &:nth-child(1) {
+                width: 100%;
+            } 
+           &:nth-child(2n+1) {
+                float: right;
+            } 
+        }
+    }
+    .even{
+        li{
+           &:nth-child(2n) {
+                float: right;
+            } 
+        }
+    }
     li {
         list-style: none;
         float: left;
         width: 48%;
         line-height: 1.1rem;
-        &:nth-child(2n) {
-            float: right;
-        }
-        &.bigFirst {
-            width: 100%;
-        }
         div {
             position: relative;
             width: 100%;
