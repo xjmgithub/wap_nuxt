@@ -112,6 +112,14 @@ export default {
                 })
                 this.showSearch = ''
             }
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    const s = document.querySelector('#__layout>.container').scrollTop
+                    let d = 1
+                    if (s > 0) d = 0
+                    document.querySelector('#__layout>.container').scrollTo(0, d)
+                }, 200)
+            })
         },
         getChannels() {
             this.$nextTick(() => this.$nuxt.$loading.start())
