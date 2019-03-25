@@ -20,10 +20,10 @@
             {{item.name}}
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </p>
-        <p class="bb1" @click="payHandle(993101, 3, 2,'Pay with Bank')">
+        <!-- <p class="bb1" @click="payHandle(993101, 3, 2,'Pay with Bank')">
             Pay with Bank Account
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
-        </p>
+        </p> -->
         <div v-show="showDes" class="note">
             <p>Note:</p>
             <p v-html="showDes"/>
