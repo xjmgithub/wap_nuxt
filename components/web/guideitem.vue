@@ -1,7 +1,7 @@
 <template>
     <div v-if="item.logo" class="channels">
         <nuxt-link :to="`/browser/liveDetail?channelId=${item.id}`">
-            <img :src="item.logo.resources[0].url.replace('http:','https:')" alt class="logo">
+            <img ref="dataimg" src="~assets/img/web/channel.png" alt class="logo">
             <div class="celDetail">
                 <p>
                     {{item.name}}
@@ -88,11 +88,15 @@ export default {
         })
     },
     methods: {
+        loadImg() {
+            this.$refs.dataimg.src = this.item.logo.resources[0].url.replace('http:', 'https:')
+        },
         getEPG() {
             const top = this.$el.getBoundingClientRect().top
             const screenHeight = window.screen.availHeight
             if (this.loading || this.loaded) return false
             if (top < screenHeight) {
+                this.loadImg()
                 this.loading = true
                 const channelID = this.item.id
                 localforage
@@ -146,15 +150,15 @@ export default {
     padding: 1rem 0;
     border-bottom: 1px solid #d8d8d8;
     img {
-        &.logo{
+        &.logo {
             width: 25%;
-            border:1px solid #979797;
+            border: 1px solid #979797;
         }
     }
     .celDetail {
         float: right;
         width: 72%;
-        font-size: .95rem;
+        font-size: 0.95rem;
         p {
             color: #333333;
             span {
@@ -217,7 +221,7 @@ export default {
     }
     .noEpg {
         color: #666666;
-        background:linear-gradient(360deg,rgba(255,255,255,1) 0%,rgba(238,238,238,1) 100%);
+        background: linear-gradient(360deg, rgba(255, 255, 255, 1) 0%, rgba(238, 238, 238, 1) 100%);
         height: 3.8rem;
         line-height: 3.8rem;
         text-align: center;

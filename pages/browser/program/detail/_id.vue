@@ -101,10 +101,11 @@ img {
         & + img {
             position: absolute;
             width: 3rem;
-            top: 4rem;
+            top: 50%;
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
+            margin-top:-3rem;
         }
     }
     .program-name {
