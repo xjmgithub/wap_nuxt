@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div>
         <div class="country">
             <p class="title">
                 Choose your language

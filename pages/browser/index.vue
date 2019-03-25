@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div>
         <div class="selfService">
             <mTitle :show-title="$store.state.lang.officialwebsitemobile_selfservice_section"/>
             <div class="recharge">

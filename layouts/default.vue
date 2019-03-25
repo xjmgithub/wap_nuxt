@@ -1,8 +1,8 @@
 <template>
-    <div class="container">
+    <div class="frame">
         <mheader/>
         <download class="clearfix"/>
-        <nuxt/>
+        <nuxt class="page-main"/>
         <div v-show="showNav" class="nav-layer" @click="closeNav"/>
         <div :class="{'nav-show':showNav}" class="slide-bar">
             <ul>
@@ -174,12 +174,16 @@ export default {
         display: block;
     }
 }
-.container {
+.frame {
     width: 100%;
-    padding: 3rem 0.8rem 0;
+    padding-top: 6rem;
     background: white;
     padding-left: 0;
     padding-right: 0;
+}
+.page-main {
+    padding: 0 0.8rem;
+    background: white;
 }
 .country {
     img {

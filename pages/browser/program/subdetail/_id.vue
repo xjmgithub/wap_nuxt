@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div>
         <div class="poster" @click="confirmDown">
             <img :src="sPoster.replace('http:','https:')" alt class="cover">
             <img v-show="sPoster" src="~assets/img/web/ic_play.png">

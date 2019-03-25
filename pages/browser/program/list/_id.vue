@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="untrim-page">
         <program-category ref="category"/>
         <div class="program-list">
             <div v-for="(item,index) in programList" :key="index" class="program">
@@ -86,9 +86,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.wrapper {
-    padding-left: 0;
-    padding-right: 0;
+.untrim-page{
+    padding-left:0;
+    padding-right:0;
 }
 .program-list {
     padding: 0 0.8rem;

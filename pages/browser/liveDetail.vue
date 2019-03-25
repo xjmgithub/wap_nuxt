@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="untrim-page">
         <div v-if="channel.poster&&channel.poster.resources[0].url" class="poster" @click="confirmDown">
             <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
             <img src="~assets/img/web/ic_play.png">
@@ -290,8 +290,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.wrapper {
-    padding: 2.95rem 0 0;
+.untrim-page{
+    padding-left:0;
+    padding-right:0;
 }
 .poster {
     position: relative;

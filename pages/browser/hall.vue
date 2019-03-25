@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div>
         <div class="hall">
             <ul v-if="hallList">
                 <li v-for="(item,i) in hallList " :key="i">
@@ -49,8 +49,6 @@ export default {
 </script>
 <style  lang="less" scoped>
 .hall {
-    width: 100%;
-    padding: 0 0.8rem;
     li {
         list-style: none;
         padding: 1rem 0 1rem 1rem;

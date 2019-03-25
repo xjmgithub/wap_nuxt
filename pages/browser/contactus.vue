@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div>
         <div class="hall">
             <mTitle :show-title="'Business Hall'" />
             <ul class="hallList">
@@ -36,8 +36,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .hall{
-    width: 100%;
-    padding: 0 0.8rem;
     h3 {
         margin: 0.4rem 0;
         color: #333333;

@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div>
         <div class="guide">
             <div class="search">
                 <form @submit.prevent="search">
