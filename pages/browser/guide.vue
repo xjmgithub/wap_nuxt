@@ -53,7 +53,7 @@ export default {
     },
     mounted() {
         localforage.config({
-            driver: localforage.INDEXEDDB,
+            driver: [localforage.INDEXEDDB, localforage.WEBSQL],
             name: 'StarTimes'
         })
         localforage
@@ -76,6 +76,7 @@ export default {
             })
             .catch(err => {
                 console.log(err)
+                // this.getChannels()
             })
 
         document.querySelector('#__layout>.container').addEventListener('scroll', () => {

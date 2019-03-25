@@ -85,7 +85,7 @@ export default {
     },
     mounted() {
         localforage.config({
-            driver: localforage.INDEXEDDB,
+            driver: [localforage.INDEXEDDB, localforage.WEBSQL],
             name: 'StarTimes'
         })
         this.$nextTick(() => {
