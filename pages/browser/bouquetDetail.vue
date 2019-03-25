@@ -3,15 +3,11 @@
         <div v-show="!loadstate" class="bouquets clearfix">
             <p>{{tvPlatFormName}}</p>
             <div class="logo">
-                <bg-img-data :img-path="packageLogo" :package-name="bouquetName" />
+                <bg-img-data :img-path="packageLogo" :package-name="bouquetName"/>
             </div>
             <div class="info">
-                <p class="bouquetName">
-                    {{bouquetName}} Bouquet
-                </p>
-                <p class="money">
-                    {{currency}} {{price}}
-                </p>
+                <p class="bouquetName">{{bouquetName}} Bouquet</p>
+                <p class="money">{{currency}} {{price}}</p>
                 <p class="recharge">
                     <a :href="recharge_url">
                         <img src="~assets/img/web/Group.png" alt> Recharge
@@ -19,9 +15,7 @@
                 </p>
             </div>
         </div>
-        <p v-show="!loadstate" class="title">
-            {{detailList.length}} TV Channels inclued
-        </p>
+        <p v-show="!loadstate" class="title">{{detailList.length}} TV Channels inclued</p>
         <ul class="channelList">
             <li v-for="(item,index) in detailList" :key="index">
                 <div class="lasy_bg">

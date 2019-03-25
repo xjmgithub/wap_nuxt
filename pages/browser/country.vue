@@ -1,9 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="country">
-            <p class="title">
-                Choose your country
-            </p>
+            <p class="title">Choose your country</p>
             <ul>
                 <li v-for="(item,index) in countryList" v-show="item.id!=8" :key="index" @click="chooseCountry(item)">
                     <img :src="item.nationalFlag.replace('http:','https:')" alt class="nationalFlag">
@@ -45,7 +43,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 .country {
     .title {
         font-size: 1.1rem;

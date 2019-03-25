@@ -1,10 +1,8 @@
 <template>
     <div class="wrapper">
         <div v-show="!loadstate" class="channelList">
-            <p class="title">
-                {{channelList.length}} {{$store.state.lang.officialwebsitemobile_live_channelnumber}}
-            </p>
-            <channel v-for="(item,index) in channelList" :key="index" :channel="item" class="piece" />
+            <p class="title">{{channelList.length}} {{$store.state.lang.officialwebsitemobile_live_channelnumber}}</p>
+            <channel v-for="(item,index) in channelList" :key="index" :channel="item" class="piece"/>
         </div>
     </div>
 </template>
@@ -12,7 +10,7 @@
 import channel from '~/components/web/channel'
 export default {
     components: {
-        channel,
+        channel
     },
     data() {
         return {

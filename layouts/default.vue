@@ -1,5 +1,5 @@
 <template>
-    <div class="container wide">
+    <div class="container">
         <mheader/>
         <download class="clearfix"/>
         <nuxt/>
@@ -59,8 +59,7 @@ export default {
     },
     data() {
         return {
-            faq_url: 'https://m.startimestv.com/faq.php',
-            contact_url: 'https://m.startimestv.com/business.php'
+            faq_url: 'https://m.startimestv.com/faq.php'
         }
     },
     computed: {
@@ -100,7 +99,7 @@ export default {
     watch: {
         token(nv, ov) {
             setCookie('token', nv)
-            // this.$axios.setHeader('token', nv)
+            this.$axios.setHeader('token', nv)
         },
         gtoken(nv, ov) {
             setCookie('gtoken', nv)
@@ -108,15 +107,13 @@ export default {
         }
     },
     created() {
-        // this.$nextTick(() => this.$nuxt.$loading.start())
-        const _this = this
         Vue.prototype.$alert = (msg, callback) => {
-            _this.$refs.alert.show(msg, callback)
-            _this.$store.commit('SHOW_SHADOW_LAYER')
+            this.$refs.alert.show(msg, callback)
+            this.$store.commit('SHOW_SHADOW_LAYER')
         }
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
-            _this.$refs.confirm.show(msg, callback, cancel, yes, no)
-            _this.$store.commit('SHOW_SHADOW_LAYER')
+            this.$refs.confirm.show(msg, callback, cancel, yes, no)
+            this.$store.commit('SHOW_SHADOW_LAYER')
         }
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
@@ -124,7 +121,6 @@ export default {
         const host = window.location.host
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.faq_url = 'http://qa.upms.startimestv.com/wap/faq.php'
-            this.contact_url = 'http://qa.upms.startimestv.com/wap/business.php'
         }
     },
     methods: {
@@ -136,17 +132,6 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/browser/index.less';
-@font-face {
-    font-family: Roboto;
-    src: url('~assets/fonts/Roboto-Regular.ttf');
-    font-style: 'normal';
-}
-html,
-body {
-    margin: 0px;
-    padding: 0px;
-    font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Sans-serif;
-}
 .nav-layer {
     width: 100%;
     height: 100%;
@@ -193,11 +178,8 @@ body {
     width: 100%;
     padding: 3rem 0.8rem 0;
     background: white;
-    // -webkit-overflow-scrolling:touch;
-    &.wide {
-        padding-left: 0;
-        padding-right: 0;
-    }
+    padding-left: 0;
+    padding-right: 0;
 }
 .country {
     img {

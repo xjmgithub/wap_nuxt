@@ -86,7 +86,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '~assets/less/browser/index.less';
 .wrapper {
     padding-left: 0;
     padding-right: 0;

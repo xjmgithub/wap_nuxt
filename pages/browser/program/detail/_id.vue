@@ -23,7 +23,7 @@
     </div>
 </template>
 <script>
-import { formatTime,downApp } from '~/functions/utils'
+import { formatTime, downApp } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -67,7 +67,7 @@ export default {
         toSubProgramDetail(id) {
             this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         },
-        confirmDown(){
+        confirmDown() {
             const _this = this
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
@@ -105,7 +105,7 @@ img {
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
-            margin-top:-3rem;
+            margin-top: -3rem;
         }
     }
     .program-name {
@@ -141,7 +141,7 @@ img {
             }
             div {
                 position: relative;
-                width:100%;
+                width: 100%;
                 &:before {
                     content: '';
                     display: inline-block;
@@ -161,7 +161,7 @@ img {
                 img {
                     width: 100%;
                     position: absolute;
-                    height:100%;
+                    height: 100%;
                 }
             }
             span {

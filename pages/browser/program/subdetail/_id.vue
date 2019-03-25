@@ -32,7 +32,7 @@
     </div>
 </template>
 <script>
-import {formatTime, downApp} from '~/functions/utils'
+import { formatTime, downApp } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -92,8 +92,8 @@ export default {
             })
         }
     },
-    methods:{
-        confirmDown(){
+    methods: {
+        confirmDown() {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
@@ -113,19 +113,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.wrapper {
-    width: 100%;
-    padding: 3rem 0 0;
-    background: white;
-    overflow-y: auto;
-}
 img {
     border-radius: 2px;
 }
 .poster {
     border-bottom: 1px solid #d8d8d8;
-    margin: 0.8rem;
-    padding-bottom: 0.8rem;
+    margin: 0.8rem 0;
     position: relative;
     .cover {
         width: 100%;
@@ -137,7 +130,7 @@ img {
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
-            margin-top:-3rem;
+            margin-top: -3rem;
         }
     }
     .program-name {
@@ -171,7 +164,7 @@ img {
     }
 }
 .clips {
-    margin: 0.8rem;
+    margin: 0.8rem 0;
     p {
         color: #111111;
         margin: 0.5rem 0;
@@ -189,7 +182,7 @@ img {
             div {
                 position: relative;
                 width: 100%;
-                &:before{
+                &:before {
                     content: '';
                     display: inline-block;
                     padding-bottom: 56%;
@@ -207,7 +200,7 @@ img {
                 }
                 img {
                     width: 100%;
-                    height:100%;
+                    height: 100%;
                     position: absolute;
                 }
             }
