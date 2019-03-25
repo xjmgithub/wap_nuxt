@@ -16,7 +16,6 @@
             </p>
             <div v-show="showSearch&&channelList.length==0" class="noResult">
                 <img src="~assets/img/web/noresult.png" alt="">
-                <span>No results</span>
             </div>
             <channel v-for="(item ,i) in channelList" :key="i" :item="item" />
             <p v-show="channelList.length>0" class="noMoreChannel">{{$store.state.lang.officialwebsitemobile_tvguide_channellistbottom}}</p>
