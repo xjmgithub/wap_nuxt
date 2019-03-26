@@ -2,14 +2,14 @@
     <div class="order-msg">
         <p class="time">
             {{order.order_create_time | formatDate }}
-            <slot />
+            <slot/>
         </p>
         <div class="order-type clearfix">
             <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
             <div class="right">
                 <p class="order-name">
                     {{orderName}}
-                    <span>{{currency}} {{order.payAmount}}</span>
+                    <span>{{currency}} {{order.order_amount}}</span>
                 </p>
                 <p class="order-status">
                     <span>{{orderStatus}}</span>
@@ -28,7 +28,7 @@ export default {
     },
     props: {
         order: {
-            default:()=>{
+            default: () => {
                 return {}
             },
             require: true,
@@ -37,13 +37,13 @@ export default {
     },
     computed: {
         orderName() {
-            switch (this.order.orderType) {
+            switch (this.order.order_type_id) {
                 case 1:
                 case 2:
                 case 3:
                     return 'Card No.' + this.order.card_no
                 default:
-                    return this.order.orderNo
+                    return this.order.order_no
             }
         },
         currency() {
@@ -51,7 +51,7 @@ export default {
         },
         orderStatus() {
             if (this.order) {
-                const type = this.order.orderType
+                const type = this.order.order_type_id
                 if ([1, 2, 3].indexOf(type) >= 0) {
                     // bouquet,link,charge
                     switch (this.order.order_status) {
@@ -95,6 +95,9 @@ export default {
                 return ''
             }
         }
+    },
+    mounted() {
+        console.log(this.order)
     }
 }
 </script>
