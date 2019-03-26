@@ -1,4 +1,5 @@
-export default function() {
+export default function(v) {
+    // v.$store.state.lang
     return {
         1: {
             items: [
@@ -15,7 +16,7 @@ export default function() {
                     child: 13
                 }
             ],
-            name: 'loginhelp_que_way',
+            name: 'Choose the way you cannot sign in successfully',
             key:'01'
         },
         11: {
@@ -29,7 +30,7 @@ export default function() {
                     child: 112
                 }
             ],
-            name: 'loginhelp_que_tips',
+            name: 'login-with-Facebook',
             key:'01-1'
         },
         12: {
@@ -51,7 +52,7 @@ export default function() {
                     child: 9001
                 }
             ],
-            name: 'loginhelp_que_tips',
+            name: 'login-with-Google',
             key:'01-1'
         },
         13: {
