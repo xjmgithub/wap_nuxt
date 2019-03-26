@@ -2,7 +2,7 @@
     <div class="navContain">
         <ul>
             <li v-for="item in showList" :key="item.id" :class="{choosed:item.id==choosedId}">
-                <nuxt-link :to="{path:`/browser/programlist/${item.id}`}">
+                <nuxt-link :to="{path:`/browser/program/list/${item.id}`}">
                     {{item.name}}
                 </nuxt-link>
             </li>
