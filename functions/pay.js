@@ -1,14 +1,13 @@
 import qs from 'qs'
-import { parseUA, toNativePage, nativeFuncs } from '~/functions/utils.js'
+import { parseUA, toNativePage } from '~/functions/utils.js'
 
 // 生成订单
 export const createDVBOrder = function(order, callback) {
     if (!order) return false
 
-    const fcmToken = (nativeFuncs.getFCMToken && nativeFuncs.getFCMToken()) || ''
+    const fcmToken = (window.getChannelId && window.getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
     const user = this.$store.state.user
     const isLogin = user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
-
     this.$axios({
         url: `/wxorder/v1/geneOrder4OnlinePay`,
         method: 'post',
@@ -23,12 +22,14 @@ export const createDVBOrder = function(order, callback) {
                 promotion: !isLogin ? 'l1' : 'lalala'
             })
         )
-    }).then(res => {
-        callback && callback(res.data)
-    }).catch(()=>{
-        this.$nuxt.$loading.finish()
-        this.$alert('network error')
     })
+        .then(res => {
+            callback && callback(res.data)
+        })
+        .catch(() => {
+            this.$nuxt.$loading.finish()
+            this.$alert('network error')
+        })
 }
 
 // 检查是否需要支付密码

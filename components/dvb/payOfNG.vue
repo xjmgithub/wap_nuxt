@@ -13,17 +13,17 @@
         <div class="addCard" @click="payHandle(993102, 3, 2,'eWallet-NEWCARD')">
             <div class="img-box"/>
             <span v-if="radioList.length>1&&isLogin">Pay with Another Card</span>
-            <span v-else>Credit or Debit Card</span>
+            <span v-else>Add a Bank Card</span>
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </div>
         <p v-for="(item,i) in normalMethods" :key="i" class="bb1" @click="payHandle(item.id,item.payType,item.appInterfaceMode,item.name)">
             {{item.name}}
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </p>
-        <p class="bb1" @click="payHandle(993101, 3, 2,'Pay with Bank')">
+        <!-- <p class="bb1" @click="payHandle(993101, 3, 2,'Pay with Bank')">
             Pay with Bank Account
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
-        </p>
+        </p> -->
         <div v-show="showDes" class="note">
             <p>Note:</p>
             <p v-html="showDes"/>

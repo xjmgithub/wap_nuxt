@@ -16,26 +16,8 @@
             </div>
         </div>
         <div class="gap" />
-        <div v-if="msg.orderNo" class="order-msg">
-            <p class="time">
-                {{msg.orderCreateTime | formatDate }}
-            </p>
-            <div class="order-type clearfix">
-                <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
-                <div class="right">
-                    <p class="order-name">
-                        {{msg.orderType }}
-                        <span>{{msg.orderAmount}}</span>
-                    </p>
-                    <p class="order-status">
-                        {{msg.orderName }}
-                        <span>{{msg.orderStatus}}</span>
-                    </p>
-                </div>
-            </div>
-        </div>
         <div v-if="msg.orderNo" class="order-contain">
-            <orderBlock :order="msg.orderNo" />
+            <orderBlock :order="msg" />
         </div>
         <div class="problem">
             <p>Your Problem</p>
