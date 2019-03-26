@@ -260,7 +260,7 @@ export default {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `answer_${this.entrance_id || ''}_click`,
-                label: getFaqAnswerLabel(this, item.id) + '_2',
+                label: getFaqAnswerLabel.call(this, item.id) + '_2',
                 value: 1
             })
         },

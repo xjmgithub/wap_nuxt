@@ -1,26 +1,22 @@
 <template>
-    <div v-show="service.order_info" class="b-order-msg">
-        <orderBlock :order="service.order_info" />
-        <div class="gap" />
+    <div v-show="order" class="b-order-msg">
+        <orderBlock :order="order"/>
+        <div class="gap"/>
         <div class="bottom clearfix">
             <p class="clearfix">
                 Questions
-                <img src="~assets/img/faq/ic_categary_copy41.png" @click="moreQues(service.id)">
+                <img v-if="questions.length>3" src="~assets/img/faq/ic_categary_copy41.png" @click="moreQues()">
             </p>
-            <ul v-if="service.questions">
-                <li v-for="(item,index) in service.questions.slice(0,3)" :key="index" @click="clickQues(item)">
-                    {{item.thema}}
-                </li>
+            <ul v-if="questions.length>0">
+                <li v-for="(item,index) in questions.slice(0,3)" :key="index" @click="clickQues(item)">{{item.thema}}</li>
             </ul>
-            <div v-for="(item,index) in service.service_components" :key="index" class="btn">
+            <div v-for="(item,index) in buttons" :key="index" class="btn">
                 <a :href="item.service_address">{{item.presentation_name}}</a>
             </div>
         </div>
-        <div v-if="showMore" class="gap" />
+        <div v-if="showMore" class="gap"/>
         <nuxt-link v-if="showMore" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}" @click="moreOrders">
-            <div class="more">
-                MORE ORDERS
-            </div>
+            <div class="more">MORE ORDERS</div>
         </nuxt-link>
     </div>
 </template>
@@ -41,7 +37,9 @@ export default {
     data() {
         return {
             entranceId: this.$route.query.entrance_id,
-            service: {}
+            order: {},
+            questions: [],
+            buttons: []
         }
     },
     mounted() {
@@ -49,25 +47,30 @@ export default {
             .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`, {
                 headers: {
                     'x-clientType': 1,
-                    'x-appVersion': '5300'
+                    'x-appVersion': '51120'
                 }
             })
             .then(res => {
                 if (res.data && res.data.data) {
-                    this.service = res.data.data
-                    sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
-                    sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
+                    const data = res.data.data
+                    this.order = data.order_info || {}
+                    this.questions = data.questions || []
+                    this.buttons = data.service_components || []
+
+                    sessionStorage.setItem('serviceModuleId', data.service_module.id)
+                    sessionStorage.setItem('orderMsg', JSON.stringify(this.order))
 
                     this.sendEvLog({
                         category: 'onlineService',
                         action: `block_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel(this),
+                        label: getFaqBlockLogLabel.call(this),
                         value: 1
                     })
+
                     this.sendEvLog({
                         category: 'onlineService',
                         action: `block_moreorders_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel(this),
+                        label: getFaqBlockLogLabel.call(this),
                         value: 1
                     })
                 }
@@ -80,20 +83,19 @@ export default {
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
             })
-            console.log(123)
             this.sendEvLog({
                 category: 'onlineService',
                 action: `answer_${this.entranceId || ''}_click`,
-                label: getFaqAnswerLabel(this,item.id) + '_1',
+                label: getFaqAnswerLabel.call(this, item.id) + '_1',
                 value: 1
             })
         },
-        moreQues(item) {
+        moreQues() {
             sessionStorage.setItem('morefaqs', 1)
             this.sendEvLog({
                 category: 'onlineService',
                 action: `block_${this.entranceId || ''}_more_click`,
-                label: getFaqBlockLogLabel(this),
+                label: getFaqBlockLogLabel.call(this),
                 value: 1
             })
             this.$router.push({
@@ -105,7 +107,7 @@ export default {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `block_moreorders_${this.entranceId || ''}_click`,
-                label: getFaqBlockLogLabel(this),
+                label: getFaqBlockLogLabel.call(this),
                 value: 1
             })
         }
@@ -134,16 +136,19 @@ export default {
                 height: 1.5rem;
             }
         }
+        ul {
+            padding: 0.3rem 0;
+        }
         li {
             color: #333333;
             font-size: 0.8rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            line-height: 1.2rem;
         }
         .btn {
             font-size: 0.8rem;
-            margin-top: 0.3rem;
             float: right;
             margin-left: 0.7rem;
             font-weight: bold;

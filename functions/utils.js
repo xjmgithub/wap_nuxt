@@ -302,50 +302,46 @@ export const parseUA = (isApp, appversion) => {
     }
     return dstr
 }
-export const getFaqBlockLogLabel = ins => {
+export const getFaqBlockLogLabel = function() {
     return (
-        (ins.$store.state.country.id || '') +
+        (this.$store.state.country.id || '') +
         '_' +
-        (ins.$store.state.user.id || '') +
+        (this.$store.state.user.id || '') +
         '_' +
-        ((ins.service && ins.service.order_info && ins.service.order_info.order_type) || '') +
+        ((this.order && this.order.order_type) || '') +
         '_' +
-        ((ins.service && ins.service.order_info && ins.service.order_info.order_no) || '') +
+        ((this.order && this.order.order_no) || '') +
         '_' +
-        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        (this.$store.state.user.smartCartCount ? 1 : 0) +
         '_' +
-        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+        (this.$store.state.user.activationInfo && this.$store.state.user.activationInfo.ottStatus ? 1 : 0)
     )
 }
 
-export const getFaqLogLabel = ins => {
+export const getFaqLogLabel = function() {
     return (
-        (ins.$store.state.country.id || '') +
+        (this.$store.state.country.id || '') +
         '_' +
-        (ins.$store.state.user.id || '') +
+        (this.$store.state.user.id || '') +
         '_' +
-        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        (this.$store.state.user.smartCartCount ? 1 : 0) +
         '_' +
-        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+        (this.$store.state.user.activationInfo && this.$store.state.user.activationInfo.ottStatus ? 1 : 0)
     )
 }
 
-export const getFaqAnswerLabel = (ins, question) => {
+export const getFaqAnswerLabel = function(question) {
     return (
-        (ins.$store.state.country.id || '') +
+        (this.$store.state.country.id || '') +
         '_' +
-        (ins.$store.state.user.id || '') +
+        (this.$store.state.user.id || '') +
         '_' +
         (question || '') +
         '_' +
-        (ins.$store.state.user.smartCartCount ? 1 : 0) +
+        (this.$store.state.user.smartCartCount ? 1 : 0) +
         '_' +
-        (ins.$store.state.user.activationInfo && ins.$store.state.user.activationInfo.ottStatus ? 1 : 0)
+        (this.$store.state.user.activationInfo && this.$store.state.user.activationInfo.ottStatus ? 1 : 0)
     )
-}
-
-export const nativeFuncs = () => {
-    return window && window.getChannelId
 }
 
 export const downApp = function() {
@@ -380,30 +376,4 @@ export const downApp = function() {
             }
         }
     })
-}
-
-export const downloadApp = () => {
-    const ua = navigator.userAgent.toLowerCase()
-    let appStoreLink
-    const interval = 500
-    const t = new Date()
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        appStoreLink = 'startimes://'
-    } else {
-        appStoreLink = 'starvideo://platformapi/webtoapp'
-    }
-    // window.location.href = 'startimes://'
-    setTimeout(function() {
-        console.log(Date.now() - t)
-        if (Date.now() - t < interval + 800) {
-            location.href = 'http://www.baidu.com'
-        }
-    }, interval)
-    const iframe = document.createElement('iframe')
-    iframe.setAttribute('src', appStoreLink)
-    iframe.setAttribute('style', 'display:none')
-    document.body.appendChild(iframe)
-    setTimeout(function() {
-        document.body.removeChild(iframe)
-    }, 200)
 }

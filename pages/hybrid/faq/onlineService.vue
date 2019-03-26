@@ -49,7 +49,7 @@ export default {
         this.sendEvLog({
             category: 'onlineService',
             action: `dialog_${this.entranceId || ''}_show`,
-            label: getFaqLogLabel(this),
+            label: getFaqLogLabel.call(this),
             value: 1
         })
 
@@ -123,7 +123,7 @@ export default {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `cat_${tagId || ''}_click`,
-                label: getFaqLogLabel(this),
+                label: getFaqLogLabel.call(this),
                 value: 1
             })
 
@@ -156,7 +156,7 @@ export default {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `answer_${this.entranceId || ''}_click`,
-                label: getFaqAnswerLabel(this, item.id) + '_0',
+                label: getFaqAnswerLabel.call(this, item.id) + '_0',
                 value: 1
             })
         }

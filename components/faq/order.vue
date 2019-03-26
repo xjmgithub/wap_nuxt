@@ -7,13 +7,14 @@
         <div class="order-type clearfix">
             <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
             <div class="right">
-                <p class="order-name">
-                    {{orderName}}
-                    <span>{{currency}} {{order.order_amount}}</span>
-                </p>
-                <p class="order-status">
-                    <span>{{orderStatus}}</span>
-                </p>
+                <div class="order-l">
+                    <div>{{order.order_type}}</div>
+                    <div class="card-no">{{orderNo}}</div>
+                </div>
+                <div class="order-r">
+                    <div>{{currency}} {{order.order_amount}}</div>
+                    <div>{{orderStatus}}</div>
+                </div>
             </div>
         </div>
     </div>
@@ -23,7 +24,7 @@ import dayjs from 'dayjs'
 export default {
     filters: {
         formatDate(date) {
-            return dayjs(date).format('D MMM YYYY HH-mm:ss')
+            return dayjs(date).format('D MMM YYYY HH:mm:ss')
         }
     },
     props: {
@@ -36,12 +37,12 @@ export default {
         }
     },
     computed: {
-        orderName() {
+        orderNo() {
             switch (this.order.order_type_id) {
                 case 1:
                 case 2:
                 case 3:
-                    return 'Card No.' + this.order.card_no
+                    return `Card No.${this.order.card_no}`
                 default:
                     return this.order.order_no
             }
@@ -73,35 +74,30 @@ export default {
                     // ott
                     switch (this.order.order_status) {
                         case '1':
-                        case '10':
-                        case '100':
+                        case '2':
+                        case '4':
+                        case '6':
                             return 'UNPAID'
-                        case '11':
-                        case '110':
+                        case '3':
                             return 'CANCEL'
-                        case '101':
+                        case '5':
                             return 'SUCCESS'
-                        case '111':
+                        case '7':
                             return 'REFUNDING'
-                        case '1000':
+                        case '8':
                             return 'REFUNDED'
-                        case '1001':
-                            return 'EXPIRED'
                         default:
-                            return ''
+                            return 'EXPIRED'
                     }
                 }
             } else {
                 return ''
             }
         }
-    },
-    mounted() {
-        console.log(this.order)
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .order-msg {
     padding: 0 0.5rem;
     position: relative;
@@ -111,6 +107,7 @@ export default {
         font-size: 0.8rem;
         border-bottom: 1px solid #eeeeee;
         padding: 0.4rem 0;
+        // TODO 单选按钮在slot里
         img {
             position: absolute;
             display: block;
@@ -159,6 +156,7 @@ export default {
     }
     .order-type {
         padding: 0.5em 0;
+        line-height: 1.3rem;
         img {
             width: 2.5rem;
             height: 2.5rem;
@@ -167,18 +165,25 @@ export default {
         .right {
             margin-left: 3rem;
         }
-        .order-name {
-            span {
-                font-weight: bold;
-                float: right;
+        .order-l {
+            width: 78%;
+            float: left;
+            .card-no {
+                color: #999999;
+                font-size: 0.95rem;
             }
         }
-        .order-status {
-            font-size: 0.9rem;
-            color: #999999;
-            span {
+        .order-r {
+            float: right;
+            text-align: right;
+
+            div:first-child {
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+            div:last-child {
                 color: #00cc33;
-                float: right;
+                font-size: 0.9rem;
             }
         }
     }

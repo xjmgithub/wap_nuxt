@@ -261,7 +261,7 @@ export default {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `stdservice_${this.$route.query.entrance_id || ''}_submit`,
-                label: getFaqAnswerLabel(this, this.$route.query.question),
+                label: getFaqAnswerLabel.call(this, this.$route.query.question),
                 value: 1
             })
         }
