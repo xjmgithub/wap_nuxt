@@ -15,7 +15,7 @@
                             <img :src="item.poster.resources[0].url.replace('http:','https:')">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
-                        <span class="title">{{item.name}}</span>
+                        <span class="title">{{item.description || item.name}}</span>
                     </nuxt-link>
                 </li>
             </ul>
@@ -47,7 +47,7 @@ export default {
         }
         return {
             pPoster: data.poster || '',
-            pName: data.name || '',
+            pName: data.description || data.name || '',
             pDescription: data.programSummary || ''
         }
     },
