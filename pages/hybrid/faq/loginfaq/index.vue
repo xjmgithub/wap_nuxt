@@ -114,6 +114,11 @@ export default {
             this.mSendEvLog('login_feedback', `question[${this.faq[9001].key}]_show`, 1, 1)
             this.reason = ''
         }
+    },
+    head() {
+        return {
+            title: 'Feedback',
+        }
     }
 }
 </script>
