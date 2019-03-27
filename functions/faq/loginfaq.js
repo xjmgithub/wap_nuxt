@@ -53,11 +53,12 @@ export default function(v) {
                 }
             ],
             name: 'login-with-Google',
-            key:'01-1'
+            key:'01-2'
         },
         13: {
             items: [],
-            name: "Twitter's login SDK is repairing, you can try other way to login instead."
+            name: "Twitter's login SDK is repairing, you can try other way to login instead.",
+            key:'01-3'
         },
         111: {
             items: [
@@ -82,7 +83,8 @@ export default function(v) {
                     child: 9002
                 }
             ],
-            name: 'loginhelp_que_why'
+            name: 'loginhelp_que_why',
+            key:'01-1-1'
         },
         112: {
             items: [
@@ -95,7 +97,8 @@ export default function(v) {
                     child: 9001
                 }
             ],
-            name: 'loginhelp_que_why'
+            name: 'loginhelp_que_why',
+            key:'01-1-2'
         },
         121: {
             items: [
@@ -112,7 +115,8 @@ export default function(v) {
                     child: 9002
                 }
             ],
-            name: 'loginhelp_que_why'
+            name: 'loginhelp_que_why',
+            key:'01-2-1'
         },
         122: {
             items: [
@@ -125,11 +129,13 @@ export default function(v) {
                     child: 9001
                 }
             ],
-            name: 'loginhelp_que_gg'
+            name: 'loginhelp_que_gg',
+            key:'01-2-2'
         },
         9001: {
             items: [],
-            name: "Thanks for your feedback，we'll try our best to solve this problem, and you can change other way for login."
+            name: "Thanks for your feedback，we'll try our best to solve this problem, and you can change other way for login.",
+            key:'02'
         }
     }
 }

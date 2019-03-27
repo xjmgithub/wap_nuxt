@@ -6,7 +6,7 @@
         <div class="content_show">
             <img class="arrow" src="~assets/img/faq/Triangle.png">
             <div class="hint">
-                <span >You may ask:</span>
+                You may ask:
             </div>
             <ul class="ques-item-wraper clearfix">
                 <li v-for="(item,index) in list" :key="index" @click="ask(item)">

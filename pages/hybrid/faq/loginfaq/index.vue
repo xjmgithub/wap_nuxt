@@ -2,8 +2,8 @@
     <div class="wrapper">
         <div class="content" style="min-height:101%">
             <template v-for="(item,index) in renderQueue">
-                <signwayTpl v-if="item.tpl=='signway'" :key="index" :dtype="item.key" :list="item.contents" :question="item.name" @chooseWay="askQuest" />
-                <signQuestionTpl v-if="item.tpl=='list'" :key="index" :dtype="item.key" :list="item.contents" :question="item.name" @ask="askQuest" />
+                <signwayTpl v-if="item.tpl=='signway'" :key="index" :item="item" @chooseWay="askQuest" />
+                <signQuestionTpl v-if="item.tpl=='list'" :key="index" :item="item" @ask="askQuest" />
                 <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name" />
             </template>
             <inputTpl v-if="reason" @otherReason="sendReason" />
@@ -28,8 +28,9 @@ export default {
         const faq = loginfaq(this)
         return {
             renderQueue: [],
-            faq:faq,
-            reason:''
+            faq: faq,
+            reason: '',
+            showTime: ''
         }
     },
     mounted() {
@@ -37,8 +38,15 @@ export default {
             tpl: 'signway',
             contents: this.faq[1].items,
             name: this.faq[1].name,
-            key:this.faq[1].key
+            key: this.faq[1].key
         })
+        this.sendEvLog({
+            category: 'login_feedback',
+            action: 'page_show',
+            Label: 1,
+            Value: 1
+        })
+        this.showTime = new Date().getTime()
     },
     methods: {
         addOperate(obj) {
@@ -46,10 +54,20 @@ export default {
                 this.renderQueue.push(obj)
             }
         },
-        askQuest(item,key) {
+        askQuest(item, code) {
             this.reason = ''
+            console.log(code)
+            const clickTime = new Date().getTime()
+            const dealTime = clickTime - this.showTime
             if (item.child === 9001) {
-               this.addOperate({
+                this.sendEvLog({
+                    category: 'login_feedback',
+                    action: `question[${code}]_click`,
+                    label: item.name,
+                    Value: 1,
+                    deal_time: dealTime
+                })
+                this.addOperate({
                     tpl: 'ask',
                     name: item.name
                 })
@@ -57,10 +75,29 @@ export default {
                     tpl: 'list',
                     name: this.faq[9001].name
                 })
+                this.sendEvLog({
+                    category: 'login_feedback',
+                    action: `question[${this.faq[9001].key}]_show`,
+                    label: 1,
+                    Value: 1
+                })
             } else if (item.child === 9002) {
-                // TODO 弹出 form input 
-                this.reason = ''
-            }else {
+                this.reason = code
+                this.sendEvLog({
+                    category: 'login_feedback',
+                    action: `question[${code}]_click`,
+                    label: item.name,
+                    Value: 1,
+                    deal_time: dealTime
+                })
+            } else {
+                this.sendEvLog({
+                    category: 'login_feedback',
+                    action: `question[${code}]_click`,
+                    label: item.name,
+                    Value: 1,
+                    deal_time: dealTime
+                })
                 this.addOperate({
                     tpl: 'ask',
                     name: item.name
@@ -68,16 +105,23 @@ export default {
                 this.addOperate({
                     tpl: 'list',
                     contents: this.faq[item.child].items,
-                    name: this.faq[item.child].name
+                    name: this.faq[item.child].name,
+                    key: this.faq[item.child].key
+                })
+                this.sendEvLog({
+                    category: 'login_feedback',
+                    action: `question[${this.faq[item.child].key}]_show`,
+                    label: 1,
+                    Value: 1,
                 })
             }
         },
-        sendReason(con){
-            this.reason = ''
+        sendReason(con) {
             this.addOperate({
                 tpl: 'ask',
-                name:con
+                name: con
             })
+            this.reason = ''
         }
     }
 }
@@ -93,6 +137,6 @@ body {
 .wrapper {
     overflow: hidden;
     background: #eeeeee;
-    padding-bottom:1.5rem;
+    padding-bottom: 1.5rem;
 }
 </style>
