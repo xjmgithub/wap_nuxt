@@ -5,7 +5,7 @@
             <div v-for="(item,index) in programList" :key="index" class="program">
                 <nuxt-link :to="`/browser/program/detail/${item.id}`">
                     <div class="title">
-                        <span>{{item.name}}</span>
+                        <span>{{item.description||item.name}}</span>
                         <span v-show="item.subPrograms.length>3" class="more">MORE</span>
                     </div>
                 </nuxt-link>
