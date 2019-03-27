@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <serviceBlock :show-more="true"/>
+            <serviceBlock v-if="service.order_info" :service="service" :show-more="true"/>
             <div v-if="faqTagsData" class="service">
                 <div id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
@@ -26,7 +26,7 @@
 </template>
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
-import { getFaqLogLabel, getFaqAnswerLabel } from '~/functions/utils'
+import { getFaqLogLabel, getFaqAnswerLabel, getFaqBlockLogLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -38,7 +38,8 @@ export default {
             faqsByTag: {},
             pageSize: 20,
             isLoading: false,
-            entranceId: this.$route.query.entrance_id || ''
+            entranceId: this.$route.query.entrance_id || '',
+            service: {}
         }
     },
     mounted() {
@@ -89,6 +90,35 @@ export default {
                 })
             }
         })
+
+        this.$axios
+            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`, {
+                headers: {
+                    'x-clientType': 1,
+                    'x-appVersion': '51120'
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.data) {
+                    this.service = res.data.data
+                    sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
+                    sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
+
+                    this.sendEvLog({
+                        category: 'onlineService',
+                        action: `block_${this.entranceId || ''}_show`,
+                        label: getFaqBlockLogLabel.call(this),
+                        value: 1
+                    })
+
+                    this.sendEvLog({
+                        category: 'onlineService',
+                        action: `block_moreorders_${this.entranceId || ''}_show`,
+                        label: getFaqBlockLogLabel.call(this),
+                        value: 1
+                    })
+                }
+            })
     },
     methods: {
         getfaqsByTag(tagid, moretag) {

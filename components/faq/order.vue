@@ -8,7 +8,7 @@
             <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
             <div class="right">
                 <div class="order-l">
-                    <div>{{order.order_type}}</div>
+                    <div>{{orderName}}</div>
                     <div class="card-no">{{orderNo}}</div>
                 </div>
                 <div class="order-r">
@@ -37,6 +37,16 @@ export default {
         }
     },
     computed: {
+        orderName() {
+            switch (this.order.order_type_id) {
+                case 1:
+                case 2:
+                case 3:
+                    return this.order.order_type
+                default:
+                    return this.order.order_name
+            }
+        },
         orderNo() {
             switch (this.order.order_type_id) {
                 case 1:

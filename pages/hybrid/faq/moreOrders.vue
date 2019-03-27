@@ -1,8 +1,6 @@
 <template>
-    <div>
-        <div class="wrapper">
-            <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item" />
-        </div>
+    <div class="wrapper">
+        <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item" />
     </div>
 </template>
 <script>
