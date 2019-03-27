@@ -27,7 +27,7 @@ export default {
     data() {
         return {
             renderQueue: [],
-            faq:null,
+            faq: null,
             reason: '',
             showTime: ''
         }
@@ -40,12 +40,7 @@ export default {
             name: this.faq[1].name,
             key: this.faq[1].key
         })
-        this.sendEvLog({
-            category: 'login_feedback',
-            action: 'page_show',
-            Label: 1,
-            Value: 1
-        })
+        this.mSendEvLog('login_feedback', 'page_show', 1, 1)
         this.showTime = new Date().getTime()
     },
     methods: {
@@ -58,22 +53,24 @@ export default {
         refreshScroll() {
             const contain = document.querySelector('.wrapper')
             this.$nextTick(() => {
-                contain.scrollIntoView(false);
+                contain.scrollIntoView(false)
+            })
+        },
+        mSendEvLog(category, action, label, Value, dealTime) {
+            this.sendEvLog({
+                category: category,
+                action: action,
+                label: label,
+                Value: Value,
+                deal_time: dealTime || ''
             })
         },
         askQuest(item, code) {
             this.reason = ''
-            console.log(code)
             const clickTime = new Date().getTime()
             const dealTime = clickTime - this.showTime
             if (item.child === 9001) {
-                this.sendEvLog({
-                    category: 'login_feedback',
-                    action: `question[${code}]_click`,
-                    label: item.name,
-                    Value: 1,
-                    deal_time: dealTime
-                })
+                this.mSendEvLog('login_feedback', `question[${code}]_click`, item.name, 1, dealTime)
                 this.addOperate({
                     tpl: 'ask',
                     name: item.name
@@ -82,30 +79,13 @@ export default {
                     tpl: 'list',
                     name: this.faq[9001].name
                 })
-                this.sendEvLog({
-                    category: 'login_feedback',
-                    action: `question[${this.faq[9001].key}]_show`,
-                    label: 1,
-                    Value: 1
-                })
+                this.mSendEvLog('login_feedback', `question[${this.faq[9001].key}]_show`, 1, 1)
             } else if (item.child === 9002) {
                 this.reason = code
-                this.sendEvLog({
-                    category: 'login_feedback',
-                    action: `question[${code}]_click`,
-                    label: item.name,
-                    Value: 1,
-                    deal_time: dealTime
-                })
+                this.mSendEvLog('login_feedback', `question[${code}]_click`, item.name, 1, dealTime)
                 this.refreshScroll()
             } else {
-                this.sendEvLog({
-                    category: 'login_feedback',
-                    action: `question[${code}]_click`,
-                    label: item.name,
-                    Value: 1,
-                    deal_time: dealTime
-                })
+                this.mSendEvLog('login_feedback', `question[${code}]_click`, item.name, 1, dealTime)
                 this.addOperate({
                     tpl: 'ask',
                     name: item.name
@@ -116,19 +96,22 @@ export default {
                     name: this.faq[item.child].name,
                     key: this.faq[item.child].key
                 })
-                this.sendEvLog({
-                    category: 'login_feedback',
-                    action: `question[${this.faq[item.child].key}]_show`,
-                    label: 1,
-                    Value: 1,
-                })
+                this.mSendEvLog('login_feedback', `question[${this.faq[item.child].key}]_show`, 1, 1)
             }
         },
         sendReason(con) {
+            const clickTime = new Date().getTime()
+            const dealTime = clickTime - this.showTime
             this.addOperate({
                 tpl: 'ask',
                 name: con
             })
+            this.mSendEvLog('login_feedback', `question[${this.reason}]_click`, con, 1, dealTime)
+            this.addOperate({
+                tpl: 'list',
+                name: this.faq[9001].name
+            })
+            this.mSendEvLog('login_feedback', `question[${this.faq[9001].key}]_show`, 1, 1)
             this.reason = ''
         }
     }
@@ -145,7 +128,7 @@ body {
 .wrapper {
     overflow: hidden;
     background: #eeeeee;
-    .content{
+    .content {
         padding-bottom: 4.5rem;
         background: #eeeeee;
     }
