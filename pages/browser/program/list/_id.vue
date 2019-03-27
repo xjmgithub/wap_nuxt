@@ -41,13 +41,11 @@ export default {
     mounted() {
         this.loadData()
         this.$nextTick(() => {
-            console.log(123)
             this.$nuxt.$loading.finish()
             document.addEventListener('scroll', this.listener)
         })
     },
     beforeRouteLeave(to, from, next) {
-        console.log(345)
         document.removeEventListener('scroll', this.listener)
         next()
     },
