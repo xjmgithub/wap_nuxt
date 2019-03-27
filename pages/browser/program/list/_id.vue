@@ -12,7 +12,7 @@
                 <ul>
                     <li v-for="(subPro,i) in item.subPrograms" v-show="i < 3" :key="i">
                         <nuxt-link :to="`/browser/program/subdetail/${item.id}?subId=${subPro.id}`">
-                            <span>{{subPro.name}}</span>
+                            <span>{{subPro.description || subPro.name}}</span>
                             <span class="arrows">&gt;&gt;</span>
                         </nuxt-link>
                     </li>
@@ -41,13 +41,11 @@ export default {
     mounted() {
         this.loadData()
         this.$nextTick(() => {
-            console.log(123)
             this.$nuxt.$loading.finish()
             document.addEventListener('scroll', this.listener)
         })
     },
     beforeRouteLeave(to, from, next) {
-        console.log(345)
         document.removeEventListener('scroll', this.listener)
         next()
     },
@@ -88,9 +86,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.untrim-page{
-    padding-left:0;
-    padding-right:0;
+.untrim-page {
+    padding-left: 0;
+    padding-right: 0;
 }
 .program-list {
     padding: 0 0.8rem;
