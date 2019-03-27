@@ -25,11 +25,11 @@ export default function(v) {
             items: [
                 {
                     name: v.$store.state.lang.loginfaq_poor_network_to_access_Facebook,
-                    child: 111
+                    child: 112
                 },
                 {
                     name: v.$store.state.lang.loginfaq_I_cancelled,
-                    child: 112
+                    child: 111
                 }
             ]
         },
@@ -39,7 +39,7 @@ export default function(v) {
             items: [
                 {
                     name: v.$store.state.lang.loginfaq_poor_network_to_access_Google,
-                    child: 121
+                    child: 122
                 },
                 {
                     name: v.$store.state.lang.loginfaq_please_update_your_google_play,
@@ -47,11 +47,11 @@ export default function(v) {
                 },
                 {
                     name: v.$store.state.lang.loginfaq_cant_log_on_Google_due_to_network,
-                    child: 9001
+                    child: 122
                 },
                 {
                     name: v.$store.state.lang.loginfaq_I_cancelled,
-                    child: 9001
+                    child: 121
                 }
             ]
         },
