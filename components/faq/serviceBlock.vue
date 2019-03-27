@@ -11,7 +11,7 @@
                 <li v-for="(item,index) in questions.slice(0,3)" :key="index" @click="clickQues(item)">{{item.thema}}</li>
             </ul>
             <div v-for="(item,index) in buttons" :key="index" class="btn">
-                <a :href="item.service_address">{{item.presentation_name}}</a>
+                <nuxt-link :to="{path:item.service_address,query:$route.query}">{{item.presentation_name}}</nuxt-link>
             </div>
         </div>
         <nuxt-link v-if="showMore" :to="{path:'/hybrid/faq/moreOrders',query:$route.query}" @click="moreOrders">

@@ -107,7 +107,8 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
+/* slot的样式暂时放这里 */
 .order-msg {
     padding: 0 0.5rem;
     position: relative;
@@ -117,7 +118,6 @@ export default {
         font-size: 0.8rem;
         border-bottom: 1px solid #eeeeee;
         padding: 0.4rem 0;
-        // TODO 单选按钮在slot里
         img {
             position: absolute;
             display: block;

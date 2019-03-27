@@ -1,20 +1,19 @@
 <template>
     <div class="wrapper">
-        <div v-show="loaded&&serviceList">
+        <div v-show="loaded&&orderList">
             <div class="orders" style="padding-bottom:5rem;">
-                <div v-for="(item,index) in serviceList" :key="index" class="order-contain" @click="check(item.id)">
+                <div v-for="(item,index) in orderList" :key="index" class="order-contain" @click="check(item.id)">
                     <orderBlock :order="item">
-                        <input :checked="item.id==checkedId" type="radio" name="order"><i />
+                        <input :checked="item.id==checkedId" type="radio" name="order">
+                        <i/>
                     </orderBlock>
                 </div>
             </div>
             <div class="ok">
-                <button class="btn" @click="submit">
-                    OK
-                </button>
+                <button class="btn" @click="submit">OK</button>
             </div>
         </div>
-        <div v-show="loaded&&!serviceList" class="no-orders">
+        <div v-show="loaded&&!orderList" class="no-orders">
             <img src="~assets/img/faq/Group5.png" alt>
             <p>No Orders.</p>
         </div>
@@ -30,14 +29,18 @@ export default {
     data: function() {
         return {
             entranceId: this.$route.query.entrance_id || '',
-            serviceList: null,
+            orderList: [],
             checkedId: null,
             loaded: false
         }
     },
     computed: {
         checked() {
-            return this.serviceList[this.checkedId]
+            let result = this.orderList[0]
+            this.orderList.forEach(item => {
+                if (item.id == this.checkedId) result = item
+            })
+            return result
         }
     },
     mounted() {
@@ -53,16 +56,13 @@ export default {
             .then(res => {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (res.data) {
-                    const obj = {}
-                    res.data.data.forEach((item, index) => {
-                        obj[item.order_info.id] = item.order_info
-                        if (index === 0) {
-                            this.checkedId = item.order_info.id
-                        }
+                    res.data.data.forEach(item => {
+                        this.orderList.push(item.order_info)
                     })
-                    this.serviceList = obj
                     if (cachedOrder) {
                         this.checkedId = JSON.parse(cachedOrder).id
+                    } else {
+                        this.checkedId = this.orderList[0].id
                     }
                 }
                 this.loaded = true
