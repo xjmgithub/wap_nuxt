@@ -107,7 +107,8 @@ export default {
     },
     head() {
         return {
-            title: this.sName
+            title: this.sName,
+            meta: [{ hid: 'description', name: 'description', content: this.sDescription }]
         }
     }
 }

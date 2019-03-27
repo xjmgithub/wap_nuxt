@@ -82,7 +82,8 @@ export default {
     },
     head() {
         return {
-            title: this.pName
+            title: this.pName,
+            meta: [{ hid: 'description', name: 'description', content: this.pDescription }]
         }
     }
 }
