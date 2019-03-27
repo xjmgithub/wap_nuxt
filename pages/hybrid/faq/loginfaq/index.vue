@@ -6,15 +6,15 @@
                 <signQuestionTpl v-if="item.tpl=='list'" :key="index" :item="item" @ask="askQuest" />
                 <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name" />
             </template>
-            <inputTpl v-if="reason" @otherReason="sendReason" />
         </div>
+        <mInput v-if="reason" @otherReason="sendReason" />
     </div>
 </template>
 <script>
 import signwayTpl from '~/components/faq/signwayTpl'
 import signQuestionTpl from '~/components/faq/signQuestionTpl'
 import askTpl from '~/components/faq/askTpl'
-import inputTpl from '~/components/faq/inputTpl'
+import mInput from '~/components/faq/input'
 import loginfaq from '~/functions/faq/loginfaq'
 export default {
     layout: 'base',
@@ -22,7 +22,7 @@ export default {
         signwayTpl,
         signQuestionTpl,
         askTpl,
-        inputTpl
+        mInput
     },
     data() {
         const faq = loginfaq(this)
@@ -52,7 +52,14 @@ export default {
         addOperate(obj) {
             if (obj && obj.tpl) {
                 this.renderQueue.push(obj)
+                this.refreshScroll()
             }
+        },
+        refreshScroll() {
+            const contain = document.querySelector('.wrapper')
+            this.$nextTick(() => {
+                contain.scrollIntoView(false);
+            })
         },
         askQuest(item, code) {
             this.reason = ''
@@ -137,6 +144,9 @@ body {
 .wrapper {
     overflow: hidden;
     background: #eeeeee;
-    padding-bottom: 1.5rem;
+    .content{
+        padding-bottom: 4.5rem;
+        background: #eeeeee;
+    }
 }
 </style>
