@@ -70,7 +70,7 @@ export default ({ app: { router, $axios }, store, query }) => {
         // eslint-disable-next-line no-undef
         ga('create', gaKey, 'auto')
     }
-
+    
     const commonLog = {
         al: store.state.langType, // App语言
         bst: store.state.user && store.state.user.smartCartCount, // 用户绑卡状态

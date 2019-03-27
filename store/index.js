@@ -56,15 +56,19 @@ export const mutations = {
         state.deviceId = deviceId || ''
     },
     SET_LANG: function(state, lang='en') {
-        state.langType = lang
+        
         if (lang.indexOf('fr') >= 0) {
             state.lang = LANG.fy
+            state.langType = 'fr'
         } else if (lang.indexOf('sw') >= 0) {
             state.lang = LANG.sy
+            state.langType = 'sw'
         } else if (lang.indexOf('pt') >= 0) {
             state.lang = LANG.py
+            state.langType = 'pt'
         } else {
             state.lang = LANG.en
+            state.langType = 'en'
         }
     },
     SET_GA_CLIENT: function(state, id) {
