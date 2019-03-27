@@ -16,9 +16,9 @@
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <mselect ref="questionSelect" :list="questionsList" :default="question" placeholder="Please choose your question" @change="setQuestion" />
-            <mselect v-if="type[1]" ref="channelSelect" :list="channelList" placeholder="Please choose channel type" @change="setChannelName" />
-            <mselect v-if="type[1]" ref="channelNameSelect" :list="channelNameList" placeholder="Please choose channel name" />
+            <mselect ref="questionSelect" :list="questionsList" :default="question" placeholder="Please choose your question" @change="setQuestion"/>
+            <mselect v-if="type[1]" ref="channelSelect" :list="channelList" placeholder="Please choose channel type" @change="setChannelName"/>
+            <mselect v-if="type[1]" ref="channelNameSelect" :list="channelNameList" placeholder="Please choose channel name"/>
             <mselect
                 v-if="!type[0]&&!type[1]"
                 ref="countrySelect"
@@ -34,7 +34,7 @@
                 placeholder="To rapidly help solve the problem,please show us the screenshots of your payment"
             />
         </div>
-        <div class="gap" />
+        <div class="gap"/>
         <div class="personal">
             <p>Personal Information</p>
             <ul>
@@ -43,50 +43,40 @@
                         Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">
-                        {{user.id}}
-                    </p>
+                    <p class="p-value">{{user.id}}</p>
                 </li>
                 <li>
                     <p class="p-name">
                         Country
                         <span>*</span>
                     </p>
-                    <p class="p-value">
-                        {{user.countryCode}}
-                    </p>
+                    <p class="p-value">{{user.countryCode}}</p>
                 </li>
                 <li v-if="carrier">
                     <p class="p-name">
                         Telecom Info
                         <span>*</span>
                     </p>
-                    <p class="p-value">
-                        {{carrier}}
-                    </p>
+                    <p class="p-value">{{carrier}}</p>
                 </li>
                 <li v-if="unitType">
                     <p class="p-name">
                         Device
                         <span>*</span>
                     </p>
-                    <p class="p-value">
-                        {{unitType}}
-                    </p>
+                    <p class="p-value">{{unitType}}</p>
                 </li>
             </ul>
         </div>
         <div class="submit">
-            <button class="btn" @click="submit">
-                SUBMIT
-            </button>
+            <button class="btn" @click="submit">SUBMIT</button>
         </div>
     </div>
 </template>
 <script>
 import mselect from '~/components/select'
 import orderBlock from '~/components/faq/order'
-import {getFaqAnswerLabel} from '~/functions/utils'
+import { getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -250,7 +240,7 @@ export default {
                 })
                 .then(res => {
                     if (res.data.code === 200) {
-                        sessionStorage.setItem('addMsg', JSON.stringify(Object.assign({}, param)))
+                        sessionStorage.setItem('addMsg', JSON.stringify(Object.assign({}, param, JSON.parse(order))))
                         this.$router.replace({
                             path: '/hybrid/faq/customerService',
                             query: this.$route.query
