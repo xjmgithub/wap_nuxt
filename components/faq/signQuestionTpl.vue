@@ -5,8 +5,11 @@
         </div>
         <div class="content_show">
             <img class="arrow" src="~assets/img/faq/Triangle.png">
-            <div class="hint">
+            <div v-if="!question" class="hint">
                 <span >You may ask:</span>
+            </div>
+            <div v-else :class="{haslist:list.length > 0}" class="quest">
+                <span>{{question}}</span>
             </div>
             <ul class="ques-item-wraper clearfix">
                 <li v-for="(item,index) in list" :key="index" @click="ask(item)">
@@ -25,15 +28,20 @@ export default {
             type: Array,
             default: () => []
         },
-        dtype: {
-            require: false,
-            type: Number,
-            default: 0
-        }
+        question: {
+            require: true,
+            type: String,
+            default: ''
+        },
+        key: {
+            require: true,
+            type: String,
+            default: ''
+        },
     },
     methods: {
         ask(item) {
-            this.$emit('ask', item, this.dtype)
+            this.$emit('ask', item, this.key)
         }
     }
 }
