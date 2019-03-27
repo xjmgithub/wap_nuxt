@@ -2,26 +2,24 @@
     <div>
         <div class="order-msg" @click="toDetail">
             <p class="time">
-                {{message.orderCreateTime | formatDate}}
-                <span
-                    class="wait-result"
-                >{{replied? 'Replied': 'Waiting For Result'}}</span>
+                {{order.order_create_time | formatDate}}
+                <span class="wait-result">{{replied? 'Replied': 'Waiting For Result'}}</span>
             </p>
             <div class="order-type clearfix">
                 <img src="~assets/img/faq/ic_RechargeOrder_def_b.png" alt>
                 <div class="right">
-                    <p class="order-name">
-                        {{message.orderName}}
-                    </p>
-                    <p class="order-status">
-                        Order ID: {{message.orderNo}}
-                    </p>
+                    <div class="order-l">
+                        <div>{{orderName}}</div>
+                        <div class="card-no">{{orderNo}}</div>
+                    </div>
+                    <div class="order-r">
+                        <div>{{currency}} {{order.order_amount}}</div>
+                        <div>{{orderStatus}}</div>
+                    </div>
                 </div>
             </div>
-            <p class="complain">
-                Complain
-            </p>
-            <p>{{message.message}}</p>
+            <p class="complain">Complain</p>
+            <p>{{order.message}}</p>
         </div>
     </div>
 </template>
@@ -34,12 +32,12 @@ export default {
         }
     },
     props: {
-        message: {
-            require: true,
-            type: Object,
+        order: {
             default: () => {
                 return {}
-            }
+            },
+            require: true,
+            type: Object
         },
         replied: {
             require: false,
@@ -47,9 +45,78 @@ export default {
             default: false
         }
     },
+    computed: {
+        orderName() {
+            switch (this.order.order_type_id) {
+                case 1:
+                case 2:
+                case 3:
+                    return this.order.order_type
+                default:
+                    return this.order.order_name
+            }
+        },
+        orderNo() {
+            switch (this.order.order_type_id) {
+                case 1:
+                case 2:
+                case 3:
+                    return `Card No.${this.order.card_no}`
+                default:
+                    return this.order.order_no
+            }
+        },
+        currency() {
+            return this.$store.state.country.currencySymbol
+        },
+        orderStatus() {
+            if (this.order) {
+                const type = this.order.order_type_id
+                if ([1, 2, 3].indexOf(type) >= 0) {
+                    // bouquet,link,charge
+                    switch (this.order.order_status) {
+                        case '0':
+                            return 'UNPAID'
+                        case '10':
+                            return 'UNRECHARGED'
+                        case '20':
+                        case '4':
+                            return 'FAILD'
+                        case '3':
+                            return 'SUCCESS'
+                        case '11':
+                            return 'CHARGING'
+                        default:
+                            return ''
+                    }
+                } else {
+                    // ott
+                    switch (this.order.order_status) {
+                        case '1':
+                        case '2':
+                        case '4':
+                        case '6':
+                            return 'UNPAID'
+                        case '3':
+                            return 'CANCEL'
+                        case '5':
+                            return 'SUCCESS'
+                        case '7':
+                            return 'REFUNDING'
+                        case '8':
+                            return 'REFUNDED'
+                        default:
+                            return 'EXPIRED'
+                    }
+                }
+            } else {
+                return ''
+            }
+        }
+    },
     methods: {
         toDetail() {
-            sessionStorage.setItem('showMsg', JSON.stringify(this.message))
+            sessionStorage.setItem('showMsg', JSON.stringify(this.order))
             this.$router.push('/hybrid/faq/message')
         }
     }
@@ -122,6 +189,7 @@ export default {
     }
     .order-type {
         padding: 0.5em 0;
+        line-height: 1.3rem;
         img {
             width: 2.5rem;
             height: 2.5rem;
@@ -130,18 +198,25 @@ export default {
         .right {
             margin-left: 3rem;
         }
-        .order-name {
-            span {
-                font-weight: bold;
-                float: right;
+        .order-l {
+            width: 78%;
+            float: left;
+            .card-no {
+                color: #999999;
+                font-size: 0.95rem;
             }
         }
-        .order-status {
-            font-size: 0.9rem;
-            color: #999999;
-            span {
+        .order-r {
+            float: right;
+            text-align: right;
+
+            div:first-child {
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+            div:last-child {
                 color: #00cc33;
-                float: right;
+                font-size: 0.9rem;
             }
         }
     }

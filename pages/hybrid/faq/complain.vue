@@ -185,8 +185,6 @@ export default {
             this.type = type
         },
         submit() {
-            const order = sessionStorage.getItem('orderMsg')
-
             if (this.type[1]) {
                 if (!this.$refs.channelSelect.selected.id) {
                     this.$alert('Please select a channel type')
@@ -209,24 +207,22 @@ export default {
                 return false
             }
 
-            const param = Object.assign({},{
-                userAccount: this.user.id,
-                userId: this.user.id,
-                unitType: this.unitType || '',
-                operatorInfo: this.carrier || '',
-                problemId: this.$refs.questionSelect.selected.id,
-                problem: this.$refs.questionSelect.selected.name,
-                problemChannelTypeKey: this.type[1] ? this.$refs.channelSelect.selected.id : '',
-                problemChannelTypeValue: this.type[1] ? this.$refs.channelSelect.selected.name : '',
-                problemChannelNameKey: this.type[1] ? this.$refs.channelNameSelect.selected.id : '',
-                problemChannelNameValue: this.type[1] ? this.$refs.channelNameSelect.selected.name : '',
-                problemCountryId: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.id : '',
-                problemCountryCode: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.name : '',
-                message: this.moredes,
-                channelNameAdditional: '',
-                channelType: ''
-            },JSON.parse(order))
-
+            const param = Object.assign(
+                {},
+                {
+                    unitType: this.unitType || '',
+                    operatorInfo: this.carrier || '',
+                    problemId: this.$refs.questionSelect.selected.id,
+                    problem: this.$refs.questionSelect.selected.name,
+                    channelType: this.type[1] ? this.$refs.channelSelect.selected.name : '',
+                    channelName: this.type[1] ? this.$refs.channelNameSelect.selected.name : '',
+                    countryName: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.name : '',
+                    message: this.moredes
+                },
+                this.order,
+                { id: 1 }
+            )
+            console.log(param)
 
             this.$axios
                 .post(`/csms-service/v1/standard-leaving-message-records`, param, {
