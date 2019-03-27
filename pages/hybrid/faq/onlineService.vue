@@ -43,7 +43,7 @@ export default {
         }
     },
     mounted() {
-        document.querySelector('.wrapper').style.height = window.screen.availHeight + 'px'
+        document.querySelector('.wrapper').style.height = window.innerHeight + 'px'
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
 
