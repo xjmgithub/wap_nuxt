@@ -6,7 +6,7 @@
         <div class="content_show">
             <img class="arrow" src="~assets/img/faq/Triangle.png">
             <div>
-                {{item.key}}-{{item.name}}
+                {{item.name}}
             </div>
             <ul class="signway-item-wraper clearfix">
                 <li v-for="(way,index) in item.contents" :key="index" @click="ask(way)">

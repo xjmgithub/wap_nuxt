@@ -2,6 +2,8 @@ export default function(v) {
     // v.$store.state.lang
     return {
         1: {
+            key: '01',
+            name: v.$store.state.lang.loginfaq_signway_hasproblem,
             items: [
                 {
                     name: 'Facebook',
@@ -15,127 +17,125 @@ export default function(v) {
                     name: 'Twitter',
                     child: 13
                 }
-            ],
-            name: 'Choose the way you cannot sign in successfully',
-            key:'01'
+            ]
         },
         11: {
+            key: '01-1',
+            name: v.$store.state.lang.loginfaq_toast_disappeared,
             items: [
                 {
-                    name: 'Your access to Facebook service has failed due to network.',
+                    name: v.$store.state.lang.loginfaq_poor_network_to_access_Facebook,
                     child: 111
                 },
                 {
-                    name: 'I cancelled',
+                    name: v.$store.state.lang.loginfaq_I_cancelled,
                     child: 112
                 }
-            ],
-            name: 'login-with-Facebook',
-            key:'01-1'
+            ]
         },
         12: {
+            key: '01-2',
+            name: v.$store.state.lang.loginfaq_toast_disappeared,
             items: [
                 {
-                    name: 'Your access to Google service has failed due to network.',
+                    name: v.$store.state.lang.loginfaq_poor_network_to_access_Google,
                     child: 121
                 },
                 {
-                    name: 'Please update your Google play to version 12.0 or above.',
+                    name: v.$store.state.lang.loginfaq_please_update_your_google_play,
                     child: 122
                 },
                 {
-                    name: "You can't log on Google due to network connection issue",
+                    name: v.$store.state.lang.loginfaq_cant_log_on_Google_due_to_network,
                     child: 9001
                 },
                 {
-                    name: 'I cancelled',
+                    name: v.$store.state.lang.loginfaq_I_cancelled,
                     child: 9001
                 }
-            ],
-            name: 'login-with-Google',
-            key:'01-2'
+            ]
         },
         13: {
             items: [],
-            name: "Twitter's login SDK is repairing, you can try other way to login instead.",
-            key:'01-3'
+            name: v.$store.state.lang.loginfaq_Twitter_SDK_repairing,
+            key: '01-3'
         },
         111: {
+            key: '01-1-1',
+            name: v.$store.state.lang.loginfaq_Why_cancelled,
             items: [
                 {
-                    name: "It's loading all the time, I don't want to wait.",
+                    name: v.$store.state.lang.loginfaq_loading_allthetime_towait,
                     child: 9001
                 },
                 {
-                    name: 'I have something wrong with Facebook account.',
+                    name: v.$store.state.lang.loginfaq_something_wrong_with_Facebook,
                     child: 9001
                 },
                 {
-                    name: "I don't want to grant access about permission.",
+                    name: v.$store.state.lang.loginfaq_dont_want_grant_access_about_permission,
                     child: 9001
                 },
                 {
-                    name: 'I have grant access permission but already can`t login successfully.',
+                    name: v.$store.state.lang.loginfaq_have_grant_access_permission,
                     child: 9001
                 },
                 {
-                    name: 'Other reason',
+                    name: v.$store.state.lang.loginfaq_other_reason,
                     child: 9002
                 }
-            ],
-            name: 'loginhelp_que_why',
-            key:'01-1-1'
+            ]
         },
         112: {
+            key: '01-1-2',
+            name: v.$store.state.lang.loginfaq_signed_success_lastest_week,
             items: [
                 {
-                    name: 'YES',
+                    name: v.$store.state.lang.loginfaq_yes,
                     child: 9001
                 },
                 {
-                    name: 'NO',
+                    name: v.$store.state.lang.loginfaq_no,
                     child: 9001
                 }
-            ],
-            name: 'loginhelp_que_why',
-            key:'01-1-2'
+            ]
         },
         121: {
+            key: '01-2-1',
+            name: v.$store.state.lang.loginfaq_Why_cancelled,
             items: [
                 {
-                    name: "It's loading all the time, I don't want to wait.",
+                    name: v.$store.state.lang.loginfaq_loading_allthetime_towait,
                     child: 9001
                 },
                 {
-                    name: 'I have something wrong with Google account.',
+                    name: v.$store.state.lang.loginfaq_something_wrong_with_Facebook,
                     child: 9001
                 },
                 {
-                    name: 'Other reason',
+                    name: v.$store.state.lang.loginfaq_other_reason,
                     child: 9002
                 }
-            ],
-            name: 'loginhelp_que_why',
-            key:'01-2-1'
+            ]
         },
         122: {
+            key: '01-2-2',
+            name: v.$store.state.lang.loginfaq_signed_success_lastest_week,
             items: [
                 {
-                    name: 'YES',
+                    name: v.$store.state.lang.loginfaq_yes,
                     child: 9001
                 },
                 {
-                    name: 'NO',
+                    name: v.$store.state.lang.loginfaq_no,
                     child: 9001
                 }
-            ],
-            name: 'loginhelp_que_gg',
-            key:'01-2-2'
+            ]
         },
         9001: {
             items: [],
-            name: "Thanks for your feedback，we'll try our best to solve this problem, and you can change other way for login.",
-            key:'02'
+            name: v.$store.state.lang.loginfaq_thanks_for_your_feedback,
+            key: '02'
         }
     }
 }

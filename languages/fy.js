@@ -5,6 +5,33 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Téléchargez',
 
+    // loginfaq
+    loginfaq_signway_hasproblem: 'Quel compte avez-vous utilisé pour vous connecter quand vous avez rencontré ce problème ?',
+    loginfaq_toast_disappeared: "Quel est le message d'erreur que vous avez reçu ?",
+    loginfaq_I_cancelled: "J'ai annulé.",
+    loginfaq_Twitter_SDK_repairing:
+        "Le Kit de Développement Logiciel de la connexion Twitter est en réparation. Veuillez essayer d'autres moyens pour vous connecter.",
+    loginfaq_Why_cancelled: "Pourquoi avez-vous choisi d'annuler ?",
+    loginfaq_loading_allthetime_towait: "C'est tout le temps en train de se charger, je ne veux pas attendre.",
+    loginfaq_something_wrong_with_Facebook: 'Il y a un problème avec mon compte Facebook.',
+    loginfaq_dont_want_grant_access_about_permission: "Je ne veux pas  accorder l'accès.",
+    loginfaq_have_grant_access_permission: "J'ai  accordé l'accès mais je ne peux toujours pas me connecter.",
+    loginfaq_other_reason: 'Autres raisons',
+    loginfaq_signed_success_lastest_week:
+        "Avez-vous réussi à vous connecter à d'autres applications en utilisant votre compte Facebook au cours des sept derniers jours ?",
+    loginfaq_thanks_for_your_feedback:
+        "Merci pour vos commentaires. Nous ferons de notre mieux pour régler ce problème.  Vous pouvez essayer de vous connecter par d'autres méthodes.",
+
+    loginfaq_poor_network_to_access_Google:
+        'Votre accès au service Google a échoué en raison de problèmes de connexion au réseau, veuillez réessayer.',
+    loginfaq_poor_network_to_access_Facebook:
+        'Votre accès au service Facebook a échoué en raison de problèmes de connexion au réseau, veuillez réessayer.',
+    loginfaq_please_update_your_google_play: 'Veuillez actualiser votre Google play à la version 12.0 ou au-dessus afin de se connecter',
+    loginfaq_cant_log_on_Google_due_to_network:
+        'Vous ne pouvez pas vous connecter à Google en raison de problèmes de connexion au réseau, veuillez réessayer.',
+    loginfaq_yes: 'OUI',
+    loginfaq_no: 'NON',
+
     // 官网
     officialwebsitemobile_selfservice_section: 'Décodeur self-service ',
     officialwebsitemobile_bouquet_section: 'Décodeur bouquets',
@@ -13,15 +40,15 @@ export default {
     officialwebsitemobile_slidenav_contactus: 'CONTACTEZ-NOUS',
     officialwebsitemobile_subprogramdetails_clips: 'Toutes les vidéos',
     officialwebsitemobile_downloadpromo: 'Installer StarTimes ON',
-    officialwebsitemobile_downloadpopup_install:'Installer',
-    officialwebsitemobile_downloadpopup_cancel:'Annuler',
-    officialwebsitemobile_tvguide_channellistbottom:'Il n\'y a plus de chaînes',
-    officialwebsitemobile_tvguide_channellist:' chaînes',
-    officialwebsitemobile_tvguide_searchbox:'Nom ou code de la chaîne',
-    officialwebsitemobile_tvguide_searchresults:' résultats trouvés pour ',
-    officialwebsitemobile_tvguide_search1result:'1 résultat trouvé pour ',
-    officialwebsitemobile_tvguide_search0result:'Aucun résultat trouvés pour ',
-    officialwebsitemobile_tvguide_noepg:'Aucun EPG n\'est accessible pour aujourd\'hui',
+    officialwebsitemobile_downloadpopup_install: 'Installer',
+    officialwebsitemobile_downloadpopup_cancel: 'Annuler',
+    officialwebsitemobile_tvguide_channellistbottom: "Il n'y a plus de chaînes",
+    officialwebsitemobile_tvguide_channellist: ' chaînes',
+    officialwebsitemobile_tvguide_searchbox: 'Nom ou code de la chaîne',
+    officialwebsitemobile_tvguide_searchresults: ' résultats trouvés pour ',
+    officialwebsitemobile_tvguide_search1result: '1 résultat trouvé pour ',
+    officialwebsitemobile_tvguide_search0result: 'Aucun résultat trouvés pour ',
+    officialwebsitemobile_tvguide_noepg: "Aucun EPG n'est accessible pour aujourd'hui",
     officialwebsitemobile_go: 'Démarrer',
     officialwebsitemobile_topnav_home: 'Accueil',
     officialwebsitemobile_topnav_list: 'Liste',

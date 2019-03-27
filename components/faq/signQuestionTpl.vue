@@ -9,7 +9,7 @@
                 <span >You may ask:</span>
             </div>
             <div v-else :class="{haslist:item.contents && item.contents.length}" class="quest">
-                <span>{{item.key}}-{{item.name}}</span>
+                <span>{{item.name}}</span>
             </div>
             <ul class="ques-item-wraper clearfix">
                 <li v-for="(ques,index) in item.contents" :key="index" @click="ask(ques)">

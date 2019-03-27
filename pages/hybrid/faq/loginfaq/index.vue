@@ -25,15 +25,15 @@ export default {
         mInput
     },
     data() {
-        const faq = loginfaq(this)
         return {
             renderQueue: [],
-            faq: faq,
+            faq:null,
             reason: '',
             showTime: ''
         }
     },
     mounted() {
+        this.faq = loginfaq(this)
         this.addOperate({
             tpl: 'signway',
             contents: this.faq[1].items,
@@ -97,6 +97,7 @@ export default {
                     Value: 1,
                     deal_time: dealTime
                 })
+                this.refreshScroll()
             } else {
                 this.sendEvLog({
                     category: 'login_feedback',
