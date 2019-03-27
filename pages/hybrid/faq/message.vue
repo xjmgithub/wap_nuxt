@@ -2,43 +2,27 @@
     <div class="wrapper">
         <div class="reply">
             <div v-if="!msg.replyRecordDtoList||msg.replyRecordDtoList.length<=0" class="waiting">
-                <div class="waiting_btn">
-                    Waiting For Result…
-                </div>
+                <div class="waiting_btn">Waiting For Result…</div>
             </div>
             <div v-if="msg.replyRecordDtoList&&msg.replyRecordDtoList.length>0" class="over">
-                <div class="replied_txt">
-                    Replied
-                </div>
-                <div v-for="item in msg.replyRecordDtoList" :key="item.id" class="replied_content">
-                    {{item.message}}
-                </div>
+                <div class="replied_txt">Replied</div>
+                <div v-for="item in msg.replyRecordDtoList" :key="item.id" class="replied_content">{{item.message}}</div>
             </div>
         </div>
-        <div class="gap" />
+        <div class="gap"/>
         <div v-if="msg.order_no" class="order-contain">
-            <orderBlock :order="msg" />
+            <orderBlock :order="msg"/>
         </div>
         <div class="problem">
             <p>Your Problem</p>
-            <div class="problem_txt">
-                {{msg.problem}}
-            </div>
-            <div v-if="msg.problemChannelTypeValue" class="problem_txt">
-                {{msg.problemChannelTypeValue}}
-            </div>
-            <div v-if="msg.problemChannelNameValue" class="problem_txt">
-                {{msg.problemChannelNameValue}}
-            </div>
-            <div v-if="msg.problemCountryCode" class="problem_txt">
-                {{msg.problemCountryCode}}
-            </div>
+            <div class="problem_txt">{{msg.problem}}</div>
+            <div v-if="msg.problemChannelTypeValue" class="problem_txt">{{msg.problemChannelTypeValue}}</div>
+            <div v-if="msg.problemChannelNameValue" class="problem_txt">{{msg.problemChannelNameValue}}</div>
+            <div v-if="msg.problemCountryCode" class="problem_txt">{{msg.problemCountryCode}}</div>
             <p>Detail Description</p>
-            <div class="msg_container">
-                {{msg.message}}
-            </div>
+            <div class="msg_container">{{msg.message}}</div>
         </div>
-        <div class="gap" />
+        <div class="gap"/>
         <div class="personal">
             <p>Personal Information</p>
             <ul>
@@ -47,27 +31,28 @@
                         Account
                         <span>*</span>
                     </p>
-                    <p class="p-value">
-                        {{msg.userId}}
+                    <p class="p-value">{{$store.state.user.id}}</p>
+                </li>
+                <li>
+                    <p class="p-name">
+                        Country
+                        <span>*</span>
                     </p>
+                    <p class="p-value">{{countryName}}</p>
                 </li>
                 <li v-if="msg.operatorInfo">
                     <p class="p-name">
                         Telecom Info
                         <span>*</span>
                     </p>
-                    <p class="p-value">
-                        {{msg.operatorInfo}}
-                    </p>
+                    <p class="p-value">{{msg.operatorInfo}}</p>
                 </li>
                 <li v-if="msg.unitType">
                     <p class="p-name">
                         Device
                         <span>*</span>
                     </p>
-                    <p class="p-value">
-                        {{msg.unitType}}
-                    </p>
+                    <p class="p-value">{{msg.unitType}}</p>
                 </li>
             </ul>
         </div>
@@ -75,6 +60,7 @@
 </template>
 <script>
 import orderBlock from '~/components/faq/order'
+import countryMap from '~/functions/countrys.json'
 export default {
     layout: 'base',
     components: {
@@ -83,6 +69,17 @@ export default {
     data() {
         return {
             msg: {}
+        }
+    },
+    computed: {
+        countryName() {
+            let countryName = ''
+            countryMap.forEach(item => {
+                if (item.country == this.msg.countryCode) {
+                    countryName = item.name
+                }
+            })
+            return countryName
         }
     },
     mounted() {
@@ -115,7 +112,6 @@ export default {
 @import '~assets/less/faq/common.less';
 </style>
 <style lang="less" scoped>
-
 .gap {
     background-color: #f2f2f2;
     height: 4px;

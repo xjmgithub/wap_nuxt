@@ -50,7 +50,7 @@
                         Country
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{user.countryCode}}</p>
+                    <p class="p-value">{{this.$store.state.country.name}}</p>
                 </li>
                 <li v-if="carrier">
                     <p class="p-name">
@@ -157,7 +157,7 @@ export default {
                 this.countryList = res.data
                 this.countryList.forEach(item => {
                     if (item.country) {
-                        if (item.country.toLowerCase() === this.user.countryCode.toLowerCase()) {
+                        if (item.country.toLowerCase() === this.$store.state.country.country.toLowerCase()) {
                             this.defaultCountry = item.id
                         }
                     }
