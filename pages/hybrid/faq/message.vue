@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="gap" />
-        <div v-if="msg.orderNo" class="order-contain">
+        <div v-if="msg.order_no" class="order-contain">
             <orderBlock :order="msg" />
         </div>
         <div class="problem">

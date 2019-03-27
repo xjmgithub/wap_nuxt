@@ -209,11 +209,7 @@ export default {
                 return false
             }
 
-            const param = {
-                orderType: order ? JSON.parse(order).order_type_id : '',
-                orderNo: order ? JSON.parse(order).order_no : '',
-                orderName: order ? JSON.parse(order).order_name : '',
-                orderCreateTime: order ? JSON.parse(order).order_create_time : '',
+            const param = Object.assign({},{
                 userAccount: this.user.id,
                 userId: this.user.id,
                 unitType: this.unitType || '',
@@ -229,7 +225,8 @@ export default {
                 message: this.moredes,
                 channelNameAdditional: '',
                 channelType: ''
-            }
+            },JSON.parse(order))
+
 
             this.$axios
                 .post(`/csms-service/v1/standard-leaving-message-records`, param, {
@@ -240,7 +237,7 @@ export default {
                 })
                 .then(res => {
                     if (res.data.code === 200) {
-                        sessionStorage.setItem('addMsg', JSON.stringify(Object.assign({}, param, JSON.parse(order))))
+                        sessionStorage.setItem('addMsg', JSON.stringify(param))
                         this.$router.replace({
                             path: '/hybrid/faq/customerService',
                             query: this.$route.query
