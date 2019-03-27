@@ -11,7 +11,7 @@
                 <div class="questions">
                     <div v-for="(item,index) in faqTagsData" v-show="item.checked" :key="index">
                         <ul>
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)" v-html="item2.thema"/>
                         </ul>
                     </div>
                 </div>
