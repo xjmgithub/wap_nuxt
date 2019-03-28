@@ -22,13 +22,12 @@
     "dependencies": {
         "@nuxtjs/axios": "^5.3.6",
         "@nuxtjs/pwa": "^3.0.0-beta.12",
-        "cross-env": "^5.2.0",
-        "nuxt": "^2.4.0",
         "autosize": "^4.0.2",
         "axios": "^0.18.0",
         "better-scroll": "^1.13.2",
         "callapp-lib": "^2.1.5",
         "clipboard": "^2.0.4",
+        "cross-env": "^5.2.0",
         "dayjs": "^1.7.7",
         "dexie": "^2.0.4",
         "geoip-lite": "^1.3.5",
@@ -37,6 +36,8 @@
         "less-loader": "^4.1.0",
         "localforage": "^1.7.3",
         "mockjs": "^1.0.1-beta3",
+        "nuxt": "^2.4.0",
+        "nuxt-memwatch": "^0.1.1",
         "qs": "^6.6.0"
     },
     "devDependencies": {

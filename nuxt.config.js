@@ -38,8 +38,21 @@ export default {
 
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
+        'nuxt-memwatch',
         '@nuxtjs/axios'
     ],
+    memwatch: {
+        graph: true,
+        graphSetup(setup) {
+            setup.metrics.malloc = {
+                aggregator: 'avg',
+                color: 'cyan'
+            }
+        },
+        graphAddMetric(turtleGraph, stats) {
+            turtleGraph.metric('my metrics', 'malloc').push(stats.malloced_memory)
+        }
+    },
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
         baseURL: process.env.NODE_ENV !== 'production' ? env.apiURL : '/',
