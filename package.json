@@ -37,7 +37,6 @@
         "localforage": "^1.7.3",
         "mockjs": "^1.0.1-beta3",
         "nuxt": "^2.4.0",
-        "nuxt-memwatch": "^0.1.1",
         "qs": "^6.6.0"
     },
     "devDependencies": {
