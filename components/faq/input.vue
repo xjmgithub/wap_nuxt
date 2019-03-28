@@ -1,8 +1,6 @@
 <template>
     <div class="search">
-        <form @submit.prevent="search">
-            <input v-model="content" type="text">
-        </form>
+        <textarea v-model="content" @keydown.enter="search"/>
     </div>
 </template>
 <script>
@@ -22,9 +20,9 @@ export default {
 <style lang="less" scoped>
 .search {
     position: fixed;
-    bottom: 1rem;
-    width:100%;
-    input {
+    bottom: 0.6rem;
+    width: 100%;
+    textarea {
         display: block;
         width: 95%;
         margin: 0 auto;
@@ -32,8 +30,9 @@ export default {
         border-radius: 2px;
         box-shadow: 0px 1px 2px 0px rgba(189, 189, 189, 1);
         border: none;
-        height: 2.5rem;
-        line-height: 1.25rem;
+        padding: 0.5rem;
+        height: 2rem;
+        line-height: 1.2rem;
     }
 }
 </style>

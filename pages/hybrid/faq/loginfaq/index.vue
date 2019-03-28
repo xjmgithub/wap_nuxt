@@ -2,12 +2,12 @@
     <div class="wrapper">
         <div class="content" style="min-height:101%">
             <template v-for="(item,index) in renderQueue">
-                <signwayTpl v-if="item.tpl=='signway'" :key="index" :item="item" @chooseWay="askQuest" />
-                <signQuestionTpl v-if="item.tpl=='list'" :key="index" :item="item" @ask="askQuest" />
-                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name" />
+                <signwayTpl v-if="item.tpl=='signway'" :key="index" :item="item" @chooseWay="askQuest"/>
+                <signQuestionTpl v-if="item.tpl=='list'" :key="index" :item="item" @ask="askQuest"/>
+                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"/>
             </template>
         </div>
-        <mInput v-if="reason" @otherReason="sendReason" />
+        <mInput v-if="reason" @otherReason="sendReason"/>
     </div>
 </template>
 <script>
@@ -16,6 +16,7 @@ import signQuestionTpl from '~/components/faq/signQuestionTpl'
 import askTpl from '~/components/faq/askTpl'
 import mInput from '~/components/faq/input'
 import loginfaq from '~/functions/faq/loginfaq'
+import autosize from 'autosize'
 export default {
     layout: 'base',
     components: {
@@ -30,6 +31,13 @@ export default {
             faq: null,
             reason: '',
             showTime: ''
+        }
+    },
+    watch: {
+        reason() {
+            this.$nextTick(() => {
+                autosize(document.querySelector('.search textarea'))
+            })
         }
     },
     mounted() {
@@ -117,7 +125,7 @@ export default {
     },
     head() {
         return {
-            title: 'Feedback',
+            title: 'Feedback'
         }
     }
 }
