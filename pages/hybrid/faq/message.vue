@@ -74,12 +74,16 @@ export default {
     computed: {
         countryName() {
             let countryName = ''
-            countryMap.forEach(item => {
-                if (item.country == this.msg.countryCode) {
-                    countryName = item.name
-                }
-            })
-            return countryName
+            if (this.msg.countryName) {
+                return this.msg.countryName
+            } else {
+                countryMap.forEach(item => {
+                    if (item.country == this.msg.countryCode) {
+                        countryName = item.name
+                    }
+                })
+                return countryName
+            }
         }
     },
     mounted() {

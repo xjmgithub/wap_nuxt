@@ -19,7 +19,7 @@
         </div>
         <div class="costomer">
             <nuxt-link :to="{path:'/hybrid/faq/customerService',query:$route.query}">
-                <button class="btn">COSTOMER SERVICE</button>
+                <button class="btn">CUSTOMER SERVICE</button>
             </nuxt-link>
         </div>
     </div>
