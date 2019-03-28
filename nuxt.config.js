@@ -38,7 +38,7 @@ export default {
 
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
-        ['nuxt-memwatch', { averages: true }],
+        // ['nuxt-memwatch', { averages: true }],
         '@nuxtjs/axios'
     ],
 
