@@ -125,7 +125,7 @@ export default {
     },
     head() {
         return {
-            title: 'Feedback'
+            title: this.$store.state.lang.loginfaq_title
         }
     }
 }

@@ -6,6 +6,7 @@ export default {
     download_apk: 'Baixar',
 
     // loginfaq
+    loginfaq_title:"comentários",
     loginfaq_signway_hasproblem: 'Em que conta você entrou para encontrar esse problema?',
     loginfaq_toast_disappeared: 'Que mensagem de erro você recebeu?',
     loginfaq_I_cancelled: 'Eu cancelei',

@@ -6,6 +6,7 @@ export default {
     download_apk: 'Download Now',
 
     // loginfaq
+    loginfaq_title:'Feedback',
     loginfaq_signway_hasproblem: 'What account did you use to sign in to encounter this problem?',
     loginfaq_toast_disappeared: 'What error message did you receive?',
     loginfaq_I_cancelled: 'I cancelled',

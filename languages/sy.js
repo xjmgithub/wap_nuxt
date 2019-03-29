@@ -6,6 +6,7 @@ export default {
     download_apk: 'Kupakua',
 
     // loginfaq
+    loginfaq_title:"maoni",
     loginfaq_signway_hasproblem: 'Ni akaunti gani uliyotumia kuingia ili kukabiliana na tatizo hili?',
     loginfaq_toast_disappeared: 'Ujumbe gani wa kosa umepokea?',
     loginfaq_I_cancelled: 'Nilisitisha',

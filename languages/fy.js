@@ -6,6 +6,7 @@ export default {
     download_apk: 'Téléchargez',
 
     // loginfaq
+    loginfaq_title:"retour d'information",
     loginfaq_signway_hasproblem: 'Quel compte avez-vous utilisé pour vous connecter quand vous avez rencontré ce problème ?',
     loginfaq_toast_disappeared: "Quel est le message d'erreur que vous avez reçu ?",
     loginfaq_I_cancelled: "J'ai annulé.",
