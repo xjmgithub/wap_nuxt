@@ -24,7 +24,7 @@
                             <img :src="item.poster.resources[0].url.replace('http:','https:')">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
-                        <span class="title">{{item.name}}</span>
+                        <span class="title">{{item.description||item.name}}</span>
                     </nuxt-link>
                 </li>
             </ul>
@@ -84,7 +84,7 @@ export default {
                     this.subProgram.forEach(ele => {
                         if (ele.id == this.sid) {
                             this.sPoster = ele.poster.resources[0].url
-                            this.sName = ele.name
+                            this.sName = ele.description || ele.name
                             this.sDescription = ele.summary
                         }
                     })
@@ -107,7 +107,8 @@ export default {
     },
     head() {
         return {
-            title: this.sName
+            title: this.sName,
+            meta: [{ hid: 'description', name: 'description', content: this.sDescription }]
         }
     }
 }

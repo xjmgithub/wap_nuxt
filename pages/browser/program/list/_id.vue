@@ -5,14 +5,14 @@
             <div v-for="(item,index) in programList" :key="index" class="program">
                 <nuxt-link :to="`/browser/program/detail/${item.id}`">
                     <div class="title">
-                        <span>{{item.name}}</span>
+                        <span>{{item.description||item.name}}</span>
                         <span v-show="item.subPrograms.length>3" class="more">MORE</span>
                     </div>
                 </nuxt-link>
                 <ul>
                     <li v-for="(subPro,i) in item.subPrograms" v-show="i < 3" :key="i">
                         <nuxt-link :to="`/browser/program/subdetail/${item.id}?subId=${subPro.id}`">
-                            <span>{{subPro.name}}</span>
+                            <span>{{subPro.description || subPro.name}}</span>
                             <span class="arrows">&gt;&gt;</span>
                         </nuxt-link>
                     </li>
@@ -86,9 +86,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.untrim-page{
-    padding-left:0;
-    padding-right:0;
+.untrim-page {
+    padding-left: 0;
+    padding-right: 0;
 }
 .program-list {
     padding: 0 0.8rem;

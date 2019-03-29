@@ -30,7 +30,7 @@
                     <div>{{item.text}}</div>
                 </div>
                 <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord"/>
-                <msgTpl v-if="item.tpl=='message'" :key="index" :message="item" :replied="item.replied"/>
+                <msgTpl v-if="item.tpl=='message'" :key="index" :order="item" :replied="item.replied"/>
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
@@ -637,9 +637,6 @@ export default {
 </script>
 <style lang="less">
 @import '~assets/less/faq/common.less';
-body {
-    background: #eeeeee;
-}
 </style>
 <style lang="less" scoped>
 .wrapper {

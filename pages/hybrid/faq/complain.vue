@@ -50,7 +50,7 @@
                         Country
                         <span>*</span>
                     </p>
-                    <p class="p-value">{{user.countryCode}}</p>
+                    <p class="p-value">{{this.$store.state.country.name}}</p>
                 </li>
                 <li v-if="carrier">
                     <p class="p-name">
@@ -157,7 +157,7 @@ export default {
                 this.countryList = res.data
                 this.countryList.forEach(item => {
                     if (item.country) {
-                        if (item.country.toLowerCase() === this.user.countryCode.toLowerCase()) {
+                        if (item.country.toLowerCase() === this.$store.state.country.country.toLowerCase()) {
                             this.defaultCountry = item.id
                         }
                     }
@@ -185,8 +185,6 @@ export default {
             this.type = type
         },
         submit() {
-            const order = sessionStorage.getItem('orderMsg')
-
             if (this.type[1]) {
                 if (!this.$refs.channelSelect.selected.id) {
                     this.$alert('Please select a channel type')
@@ -209,27 +207,22 @@ export default {
                 return false
             }
 
-            const param = {
-                orderType: order ? JSON.parse(order).order_type_id : '',
-                orderNo: order ? JSON.parse(order).order_no : '',
-                orderName: order ? JSON.parse(order).order_name : '',
-                orderCreateTime: order ? JSON.parse(order).order_create_time : '',
-                userAccount: this.user.id,
-                userId: this.user.id,
-                unitType: this.unitType || '',
-                operatorInfo: this.carrier || '',
-                problemId: this.$refs.questionSelect.selected.id,
-                problem: this.$refs.questionSelect.selected.name,
-                problemChannelTypeKey: this.type[1] ? this.$refs.channelSelect.selected.id : '',
-                problemChannelTypeValue: this.type[1] ? this.$refs.channelSelect.selected.name : '',
-                problemChannelNameKey: this.type[1] ? this.$refs.channelNameSelect.selected.id : '',
-                problemChannelNameValue: this.type[1] ? this.$refs.channelNameSelect.selected.name : '',
-                problemCountryId: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.id : '',
-                problemCountryCode: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.name : '',
-                message: this.moredes,
-                channelNameAdditional: '',
-                channelType: ''
-            }
+            const param = Object.assign(
+                {},
+                {
+                    unitType: this.unitType || '',
+                    operatorInfo: this.carrier || '',
+                    problemId: this.$refs.questionSelect.selected.id,
+                    problem: this.$refs.questionSelect.selected.name,
+                    channelType: this.type[1] ? this.$refs.channelSelect.selected.name : '',
+                    channelName: this.type[1] ? this.$refs.channelNameSelect.selected.name : '',
+                    countryName: !this.type[0] && !this.type[1] ? this.$refs.countrySelect.selected.name : '',
+                    message: this.moredes
+                },
+                this.order,
+                { id: 1 }
+            )
+            console.log(param)
 
             this.$axios
                 .post(`/csms-service/v1/standard-leaving-message-records`, param, {
@@ -240,7 +233,7 @@ export default {
                 })
                 .then(res => {
                     if (res.data.code === 200) {
-                        sessionStorage.setItem('addMsg', JSON.stringify(Object.assign({}, param, JSON.parse(order))))
+                        sessionStorage.setItem('addMsg', JSON.stringify(param))
                         this.$router.replace({
                             path: '/hybrid/faq/customerService',
                             query: this.$route.query

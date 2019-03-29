@@ -42,7 +42,7 @@ export default {
                 case 1:
                 case 2:
                 case 3:
-                    return this.order.order_type
+                    return this.order.order_type || 'DVB Recharge'
                 default:
                     return this.order.order_name
             }
@@ -52,7 +52,7 @@ export default {
                 case 1:
                 case 2:
                 case 3:
-                    return `Card No.${this.order.card_no}`
+                    return `Card No.${this.order.card_no||this.order.smartcardNo}`
                 default:
                     return this.order.order_no
             }
@@ -176,7 +176,7 @@ export default {
             margin-left: 3rem;
         }
         .order-l {
-            width: 78%;
+            width: 70%;
             float: left;
             .card-no {
                 color: #999999;

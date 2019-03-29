@@ -11,7 +11,7 @@
                 <div class="questions">
                     <div v-for="(item,index) in faqTagsData" v-show="item.checked" :key="index">
                         <ul>
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)">{{item2.thema}}</li>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)" v-html="item2.thema"/>
                         </ul>
                     </div>
                 </div>
@@ -19,7 +19,7 @@
         </div>
         <div class="costomer">
             <nuxt-link :to="{path:'/hybrid/faq/customerService',query:$route.query}">
-                <button class="btn">COSTOMER SERVICE</button>
+                <button class="btn">CUSTOMER SERVICE</button>
             </nuxt-link>
         </div>
     </div>
@@ -43,7 +43,7 @@ export default {
         }
     },
     mounted() {
-        document.querySelector('.wrapper').style.height = window.screen.availHeight + 'px'
+        document.querySelector('.wrapper').style.height = window.innerHeight + 'px'
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
 
