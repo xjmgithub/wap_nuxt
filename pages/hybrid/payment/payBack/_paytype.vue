@@ -42,8 +42,8 @@ export default {
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
-        if (route.param.paytype) {
-            const payType = route.param.paytype || 'InterSwitchPayDirectWeb-NG'
+        if (route.params.paytype) {
+            const payType = route.params.paytype || 'InterSwitchPayDirectWeb-NG'
             try {
                 $axios.setHeader('token', store.state.token)
                 const { data } = await $axios.post(`/payment/v2/third-party-payment-web-notify/${payType}`, route.query)
@@ -73,7 +73,7 @@ export default {
     mounted() {
         if (this.result > 0) {
             // 直接回调
-            if (this.$route.param.paytype === 'Paystack-NG') {
+            if (this.$route.params.paytype === 'Paystack-NG') {
                 setCookie('lastpay', 'card')
             }
             if (this.result === 1) {

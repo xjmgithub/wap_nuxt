@@ -7,6 +7,7 @@ const authIgnore = [
     /^\/hybrid\/account\/resetpass/,
     /^\/hybrid\/payment\/channelDesc/,
     /^\/hybrid\/payment\/payResult/,
+    /^\/hybrid\/payment\/payBack/,
     /^\/hybrid\/payment\/form/,
     /^\/hybrid\/payment\/methods/,
     /^\/hybrid\/faq/,
