@@ -1,31 +1,19 @@
 import CallApp from 'callapp-lib'
 
-export const setCookie = (name, value, end, path, domain, secure) => {
+export const setCookie = (name, value, time) => {
     if (!name) {
         return false
     }
-    let expires = ''
-    if (end) {
-        switch (end.constructor) {
-            case Number:
-                expires = end === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : '; max-age=' + end
-                break
-            case String:
-                expires = '; expires=' + end
-                break
-            case Date:
-                expires = '; expires=' + end.toUTCString()
-                break
-        }
+    let now = new Date().getTime()
+    if (time) {
+        now = now + time
+    } else {
+        now = now + 1000 * 60 * 60 * 24 * 7
     }
-    document.cookie =
-        encodeURIComponent(name) +
-        '=' +
-        encodeURIComponent(value) +
-        expires +
-        (domain ? '; domain=' + domain : '') +
-        (path ? '; path=' + path : ';path=/') +
-        (secure ? '; secure' : '')
+
+    const expires = '; expires=' + new Date(now).toUTCString()
+
+    document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) + expires + '; domain=;path=/'
     return true
 }
 
