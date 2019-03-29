@@ -36,7 +36,7 @@
         "less-loader": "^4.1.0",
         "localforage": "^1.7.3",
         "mockjs": "^1.0.1-beta3",
-        "nuxt": "^2.4.0",
+        "nuxt": "^2.5.1",
         "qs": "^6.6.0"
     },
     "devDependencies": {
