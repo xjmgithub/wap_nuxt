@@ -1,3 +1,4 @@
+import accesslog from 'access-log'
 import env from './env'
 
 export default {
@@ -73,7 +74,17 @@ export default {
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
     ],
-    
+    hooks: {
+        listen(server) {
+            if (process.env.NODE_ENV === 'production') {
+                server.on('request', function(req, res) {
+                    const format =
+                        ':ip [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent" ":Xip" :delta'
+                    accesslog(req, res, format)
+                })
+            }
+        }
+    },
     build: {
         /*
         ** You can extend webpack config here
