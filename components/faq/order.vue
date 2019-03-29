@@ -176,7 +176,7 @@ export default {
             margin-left: 3rem;
         }
         .order-l {
-            width: 78%;
+            width: 70%;
             float: left;
             .card-no {
                 color: #999999;
