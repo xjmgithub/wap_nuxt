@@ -73,7 +73,7 @@ export default {
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
     ],
-
+    
     build: {
         /*
         ** You can extend webpack config here
