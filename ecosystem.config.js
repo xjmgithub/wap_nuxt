@@ -6,7 +6,7 @@ module.exports = {
             args: 'run start',
             autorestart: true,
             max_restarts: 5,
-            max_memory_restart: '1.6G',
+            max_memory_restart: '2G',
             restart_delay: 1000,
             watch: false,
             log_date_format: 'YYYY-MM-DD HH:mm Z',
