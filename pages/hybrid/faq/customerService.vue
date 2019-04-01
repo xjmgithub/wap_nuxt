@@ -30,7 +30,7 @@
                     <div>{{item.text}}</div>
                 </div>
                 <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord"/>
-                <msgTpl v-if="item.tpl=='message'" :key="index" :order="item" :replied="item.replied"/>
+                <msgTpl style="padding-top:0.5rem;" v-if="item.tpl=='message'" :key="index" :order="item" :replied="item.replied"/>
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
