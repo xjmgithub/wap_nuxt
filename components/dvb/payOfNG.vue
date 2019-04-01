@@ -10,7 +10,7 @@
             @pick="changeItem"
             @charge="chargeWallet"
         />
-        <div class="addCard" @click="payHandle(993102, 3, 2,'eWallet-NEWCARD')">
+        <div v-if="osv5" class="addCard" @click="payHandle(993102, 3, 2,'eWallet-NEWCARD')">
             <div class="img-box"/>
             <span v-if="radioList.length>1&&isLogin">Pay with Another Card</span>
             <span v-else>Add a Bank Card</span>
@@ -20,10 +20,6 @@
             {{item.name}}
             <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
         </p>
-        <!-- <p class="bb1" @click="payHandle(993101, 3, 2,'Pay with Bank')">
-            Pay with Bank Account
-            <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
-        </p> -->
         <div v-show="showDes" class="note">
             <p>Note:</p>
             <p v-html="showDes"/>
@@ -56,7 +52,8 @@ export default {
             paymentAmount: 0,
             wallet: {},
             currency: this.$store.state.country.currencySymbol,
-            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
+            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
+            osv5:false
         }
     },
     computed: {
@@ -79,6 +76,11 @@ export default {
         }
     },
     mounted() {
+        
+        if(navigator.connection){
+            this.osv5 = true
+        }
+
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.paymentAmount = Math.floor(param.paymentAmount)
         this.$axios.get(`/wxorder/v1/queryPaymentChannelByCountryCode?countryCode=${this.$store.state.country.country}`).then(res => {
