@@ -56,9 +56,13 @@ export default {
             .then(res => {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (res.data) {
-                    res.data.data.forEach(item => {
-                        this.orderList.push(item.order_info)
-                    })
+                    res.data.data
+                        .sort((a, b) => {
+                            return a.order_info.order_create_time > b.order_info.order_create_time ? -1 : 1
+                        })
+                        .forEach(item => {
+                            this.orderList.push(item.order_info)
+                        })
                     if (cachedOrder) {
                         this.checkedId = JSON.parse(cachedOrder).id
                     } else {
