@@ -36,7 +36,7 @@ export const state = () => ({
     serverTime: new Date(),
     navState: false,
     needLoginAlert: false,
-    scrollPage:0
+    scrollPage: 0
 })
 
 export const mutations = {
@@ -55,7 +55,7 @@ export const mutations = {
     SET_DEVICE: function(state, deviceId) {
         state.deviceId = deviceId || ''
     },
-    SET_LANG: function(state, lang='en') {
+    SET_LANG: function(state, lang = 'en') {
         state.langType = lang
         if (lang.indexOf('fr') >= 0) {
             state.lang = LANG.fy
@@ -131,7 +131,7 @@ export const mutations = {
     SET_NEED_LOGIN: function(state, val) {
         state.needLoginAlert = val
     },
-    SCROLL_PAGE:function(state,val){
+    SCROLL_PAGE: function(state, val) {
         state.scrollPage = val
     }
 }
@@ -140,7 +140,6 @@ export const actions = {
     async nuxtServerInit({ commit, state }, { req, res, query }) {
         const _COOKIE = {}
         const _HEADER = req.headers
-
         _HEADER.cookie &&
             _HEADER.cookie.split(';').forEach(Cookie => {
                 const parts = Cookie.split('=')
@@ -150,11 +149,7 @@ export const actions = {
         const language = _HEADER.lncode || _COOKIE.lang || _HEADER['accept-language']
 
         const str =
-            req.connection.remoteAddress +
-            req.connection.remotePort +
-            _HEADER['user-agent'] +
-            _HEADER['accept-encoding'] +
-            _HEADER['accept-language']
+            req.connection.remoteAddress + req.connection.remotePort + _HEADER['user-agent'] + _HEADER['accept-encoding'] + _HEADER['accept-language']
         const newDevice = crypto
             .createHash('md5')
             .update(str)
@@ -181,8 +176,8 @@ export const actions = {
         if (_COOKIE.country) {
             country = _COOKIE.country
         } else if (geo) {
-                country = countryMap[geo.country] ? geo.country : 'NG'
-            }
+            country = countryMap[geo.country] ? geo.country : 'NG'
+        }
 
         const getMe = async token => {
             await this.$axios
@@ -220,12 +215,12 @@ export const actions = {
         }
 
         await getMe(state.token)
-        if (state.user.countryCode&&countryMap[state.user.countryCode]) {
+        if (state.user.countryCode && countryMap[state.user.countryCode]) {
             commit('SET_AREA_INFO', countryMap[state.user.countryCode])
-        } else if(countryMap[country]){
-                commit('SET_AREA_INFO', countryMap[country])
-            }else{
-                commit('SET_AREA_INFO', countryMap.NG)
-            }
+        } else if (countryMap[country]) {
+            commit('SET_AREA_INFO', countryMap[country])
+        } else {
+            commit('SET_AREA_INFO', countryMap.NG)
+        }
     }
 }
