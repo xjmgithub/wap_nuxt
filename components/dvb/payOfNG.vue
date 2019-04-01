@@ -53,7 +53,7 @@ export default {
             wallet: {},
             currency: this.$store.state.country.currencySymbol,
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
-            osv5:false
+            osv5: false
         }
     },
     computed: {
@@ -76,9 +76,16 @@ export default {
         }
     },
     mounted() {
-        
-        if(navigator.connection){
+        if (navigator.connection) {
             this.osv5 = true
+        } else {
+            this.sendEvLog({
+                category: 'dvbservice',
+                action: 'hide_payment',
+                label: 1,
+                value: 0,
+                service_type: 'Recharge'
+            })
         }
 
         const param = JSON.parse(sessionStorage.getItem('order-info'))
