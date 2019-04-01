@@ -38,7 +38,7 @@
 </template>
 <script>
 import { formatAmount } from '~/functions/utils'
-import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass } from '~/functions/pay'
+import { createDVBOrder, invoke, commonPayAfter, chargeWallet, checkPass, needPassVerify } from '~/functions/pay'
 export default {
     data() {
         const user = this.$store.state.user
@@ -115,7 +115,7 @@ export default {
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
             if (checkPassTag) {
-                checkPass(this, this.wallet.accountNo, () => {
+                checkPass.call(this, this.wallet.accountNo, () => {
                     this.payHandle()
                 })
             } else {
@@ -144,6 +144,21 @@ export default {
             })
 
             createDVBOrder.call(this, order, data => {
+                if (needPassVerify(channel, '')) {
+                    checkPass.call(this, this.wallet.accountNo, setted => {
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        if (setted) {
+                            this.$router.push(`/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&card=`)
+                        } else {
+                            this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
+                                this.$router.push(`/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&card=`)
+                            })
+                        }
+                    })
+                    return false
+                }
+
                 if (useForm) {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
