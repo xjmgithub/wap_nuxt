@@ -53,7 +53,7 @@ export default {
                 case 3:
                     return this.order.order_type || 'DVB Recharge'
                 default:
-                    return this.order.order_name
+                    return 'StarTimes ON ' + this.order.order_name
             }
         },
         orderNo() {
