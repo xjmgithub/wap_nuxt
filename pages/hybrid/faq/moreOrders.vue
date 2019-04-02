@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item" />
+        <serviceBlock v-for="(item,index) in serviceList" :key="index" :service="item"/>
     </div>
 </template>
 <script>
@@ -28,7 +28,9 @@ export default {
             .then(res => {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 if (res.data) {
-                    this.serviceList = res.data.data
+                    this.serviceList = res.data.data.sort((a, b) => {
+                        return a.order_info.order_create_time > b.order_info.order_create_time ? -1 : 1
+                    })
                 }
             })
     },
