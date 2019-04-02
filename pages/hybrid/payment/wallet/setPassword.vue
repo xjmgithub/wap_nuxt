@@ -55,6 +55,7 @@ export default {
             canStep5: false,
             reset: false,
             accountNo: null,
+            channel:this.$route.query.channel,
             payToken: this.$route.query.paytoken,
             card: this.$route.query.card // paystack card
         }
@@ -170,7 +171,7 @@ export default {
                 )
                 return false
             }else{
-                invoke.call(this, this.payToken, 9002, data => {
+                invoke.call(this, this.payToken, this.channel, data => {
                     payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
                         setCookie('lastpay', 'wallet')
                         this.$nuxt.$loading.finish()
