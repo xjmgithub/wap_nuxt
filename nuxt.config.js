@@ -1,7 +1,5 @@
-// import easyMonitor from 'easy-monitor'
 import env from './env'
 import accesslog from './functions/accesslog'
-// easyMonitor('wap')
 export default {
     mode: 'universal',
     head: {
