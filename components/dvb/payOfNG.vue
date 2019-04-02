@@ -195,10 +195,10 @@ export default {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         if (setted) {
-                            this.$router.push(`/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&card=${card || ''}`)
+                            this.$router.push(`/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&channel=9002&card=${card || ''}`)
                         } else {
                             this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
-                                this.$router.push(`/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&card=${card || ''}`)
+                                this.$router.push(`/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&channel=9002&card=${card || ''}`)
                             })
                         }
                     })

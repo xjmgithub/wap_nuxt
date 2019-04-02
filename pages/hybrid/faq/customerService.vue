@@ -30,7 +30,7 @@
                     <div>{{item.text}}</div>
                 </div>
                 <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord"/>
-                <msgTpl v-if="item.tpl=='message'" :key="index" :order="item" :replied="item.replied"/>
+                <msgTpl v-if="item.tpl=='message'" :key="index" :order="item" :replied="item.replied" style="padding-top:0.5rem;"/>
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
@@ -512,12 +512,12 @@ export default {
                             })
                     } else if (res.data.statusCode === -1) {
                         // TODO 是否要只显示一次
-                        this.renderOrder.push({
+                        this.addOperate({
                             text: 'Working time(7:00–20:00) Agents are only available during working hours (7am~8pm).',
                             tpl: 'tips'
                         })
                     } else {
-                        this.renderOrder.push({
+                        this.addOperate({
                             text: 'Connect fail',
                             tpl: 'tips'
                         })
