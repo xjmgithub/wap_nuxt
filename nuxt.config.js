@@ -1,7 +1,7 @@
-import accesslog from 'access-log'
-import easyMonitor  from 'easy-monitor'
+// import easyMonitor from 'easy-monitor'
 import env from './env'
-easyMonitor('wap')
+import accesslog from './functions/accesslog'
+// easyMonitor('wap')
 export default {
     mode: 'universal',
     head: {
@@ -79,9 +79,7 @@ export default {
         listen(server) {
             if (process.env.NODE_ENV === 'production') {
                 server.on('request', function(req, res) {
-                    const format =
-                        ':ip [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent" ":Xip" :delta'
-                    accesslog(req, res, format)
+                    accesslog(req, res)
                 })
             }
         }
