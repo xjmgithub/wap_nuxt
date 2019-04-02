@@ -11,15 +11,19 @@
 import { initFacebookLogin } from '~/functions/utils'
 export default {
     layout: 'base',
-    mounted(){
+    mounted() {
         initFacebookLogin()
-       document.getElementById('shareBtn').onclick = function() {
+        document.getElementById('shareBtn').onclick = function() {
             // eslint-disable-next-line no-undef
-            FB.ui({
-                method: 'share',
-                display: 'popup',
-                href: 'http://m.startimestv.com/browser/program/subdetail/3816?subId=31629',
-            }, function(response){});
+            FB.ui(
+                {
+                    method: 'share',
+                    display: 'popup',
+                    href: 'http://www.baidu.com'
+                    // href: 'http://m.startimestv.com/browser/program/subdetail/3816?subId=31629'
+                },
+                function(response) {}
+            )
         }
     },
     head() {
@@ -32,7 +36,7 @@ export default {
                 { property: 'og:description', content: 'How much does culture influence creative thinking?' },
                 {
                     property: 'og:image',
-                    content: 'http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg'
+                    content: 'https://cdn.startimestv.com/static/files/console/20180211141525.jpg'
                 }
             ]
         }
