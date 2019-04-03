@@ -1,5 +1,5 @@
 <template>
-    <div v-show="order" class="b-order-msg">
+    <div v-if="order.order_type_id" class="b-order-msg">
         <orderBlock :order="order"/>
         <div class="gap"/>
         <div class="bottom clearfix">

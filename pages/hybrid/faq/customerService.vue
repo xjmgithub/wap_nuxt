@@ -95,20 +95,21 @@ export default {
         }
     },
     mounted() {
-        document.querySelector('.wrapper').style.height = window.screen.availHeight * 0.88 + 'px'
+        
+        document.querySelector('.wrapper').style.height = window.screen.availHeight * 0.89 + 'px'
         const questions = JSON.parse(sessionStorage.getItem('faq_question'))
         const serviceModuleId = sessionStorage.getItem('serviceModuleId')
         const morefaqs = sessionStorage.getItem('morefaqs')
         const renderQueue = JSON.parse(getCookie('renderQueue'))
         const addMsg = sessionStorage.getItem('addMsg')
         const _this = this
+        
         // LiveChat 按钮判断
-        this.$store.state.country &&
-            this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.$store.state.country.id}&entranceId=${this.entrance_id}`).then(res => {
-                if (res.data.code === 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
-                    this.showLiveChatBtn = true
-                }
-            })
+        this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.$store.state.country.id}&entranceId=${this.entrance_id}`).then(res => {
+            if (res.data.code === 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
+                this.showLiveChatBtn = true
+            }
+        })
 
         this.$nextTick(() => {
             const wrapper = document.querySelector('.wrapper')
@@ -133,11 +134,11 @@ export default {
 
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
-            // return false
         }
-
+        
         // 创建服务记录
         this.createServiceRecord(6, () => {
+            
             // TODO 是否有留言
             if (addMsg) {
                 this.addOperate(
@@ -247,7 +248,7 @@ export default {
                     name: item.thema || item.name
                 })
             )
-
+            
             if (withOrder) {
                 this.renderOrder()
             }
@@ -340,7 +341,6 @@ export default {
                 } else if (obj.tpl === 'tips') {
                     return false
                 }
-
                 this.$axios
                     .post('/css/v1/service/history', {
                         service_type: 1, // TODO

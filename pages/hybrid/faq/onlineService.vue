@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <serviceBlock v-if="service.order_info" :service="service" :show-more="true"/>
+            <serviceBlock :service="service" :show-more="true"/>
             <div v-if="faqTagsData" class="service">
                 <div id="nav">
                     <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">

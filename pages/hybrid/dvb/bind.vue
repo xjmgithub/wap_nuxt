@@ -14,12 +14,6 @@
                 {{LANG.next_}}
             </div>
         </div>
-        <img
-            v-show="recharge_items.length>0&&(countryCode=='NG'||countryCode=='TZ')"
-            src="~assets/img/dvb/dvb_ug_off.png"
-            style="width:100%"
-            @click="buyNow"
-        >
         <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'" :new-user="newUser"/>
         <div v-if="recharge_items.length<=0" class="demoDialog">
             <div @click="focusInput">
