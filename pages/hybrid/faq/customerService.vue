@@ -113,6 +113,7 @@ export default {
 
         this.$nextTick(() => {
             const wrapper = document.querySelector('.wrapper')
+            
             this.scroll = new BScroll(wrapper, {
                 pullDownRefresh: {
                     threshold: 100, // 下拉距离
@@ -150,7 +151,7 @@ export default {
                 sessionStorage.removeItem('addMsg')
             } else if (questions) {
                 // 单个问题
-                this.askQuest(questions, 1, 1)
+                this.askQuest(questions, 1)
             } else if (morefaqs) {
                 // MORE FAQS
                 this.addOperate({
@@ -241,7 +242,7 @@ export default {
                 }
             })
         },
-        askQuest(item, type, withOrder) {
+        askQuest(item, type) {
             this.addOperate(
                 Object.assign({}, item, {
                     tpl: 'ask',
@@ -249,9 +250,7 @@ export default {
                 })
             )
             
-            if (withOrder) {
-                this.renderOrder()
-            }
+            this.renderOrder()
 
             if (type === 1) {
                 this.getAnswer(item.id)
@@ -280,7 +279,7 @@ export default {
         },
         renderOrder() {
             const order = JSON.parse(sessionStorage.getItem('orderMsg'))
-            if (order) {
+            if (order.order_type) {
                 this.addOperate({
                     tpl: 'order',
                     order: order
@@ -292,6 +291,7 @@ export default {
                 .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
                 .then(res => {
                     if (res.data.code === 200) {
+                        console.log(234)
                         this.serviceRecord = res.data.data
                         if (!this.isLogin) {
                             let cacheRecord = getCookie('serviceRecords')
