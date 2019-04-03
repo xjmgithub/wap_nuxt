@@ -95,7 +95,6 @@ export default {
         }
     },
     mounted() {
-        
         document.querySelector('.wrapper').style.height = window.screen.availHeight * 0.89 + 'px'
         const questions = JSON.parse(sessionStorage.getItem('faq_question'))
         const serviceModuleId = sessionStorage.getItem('serviceModuleId')
@@ -103,7 +102,7 @@ export default {
         const renderQueue = JSON.parse(getCookie('renderQueue'))
         const addMsg = sessionStorage.getItem('addMsg')
         const _this = this
-        
+
         // LiveChat 按钮判断
         this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.$store.state.country.id}&entranceId=${this.entrance_id}`).then(res => {
             if (res.data.code === 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
@@ -113,7 +112,7 @@ export default {
 
         this.$nextTick(() => {
             const wrapper = document.querySelector('.wrapper')
-            
+
             this.scroll = new BScroll(wrapper, {
                 pullDownRefresh: {
                     threshold: 100, // 下拉距离
@@ -136,10 +135,9 @@ export default {
         if (this.isLogin && renderQueue && renderQueue.length > 0) {
             this.renderFromCacheQueue()
         }
-        
+
         // 创建服务记录
         this.createServiceRecord(6, () => {
-            
             // TODO 是否有留言
             if (addMsg) {
                 this.addOperate(
@@ -249,7 +247,7 @@ export default {
                     name: item.thema || item.name
                 })
             )
-            
+
             this.renderOrder()
 
             if (type === 1) {
@@ -291,7 +289,6 @@ export default {
                 .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
                 .then(res => {
                     if (res.data.code === 200) {
-                        console.log(234)
                         this.serviceRecord = res.data.data
                         if (!this.isLogin) {
                             let cacheRecord = getCookie('serviceRecords')
@@ -343,7 +340,7 @@ export default {
                 }
                 this.$axios
                     .post('/css/v1/service/history', {
-                        service_type: 1, // TODO
+                        service_type: this.connectState == 2 ? 3 : 1, // TODO
                         service_group_id: this.serviceRecord,
                         service_state: 2,
                         remark: JSON.stringify(obj),
@@ -490,7 +487,6 @@ export default {
                                 userId: this.chatLink.userId
                             })
                             .then(res => {
-                                this.createServiceRecord(1)
                                 if (res.data.statusCode === 0 && !res.data.chatEnded) {
                                     this.connectState = 2 // BUTTON 变成输入框
                                     autosize(document.querySelectorAll('textarea.form-control'))
@@ -507,6 +503,7 @@ export default {
                                         })
                                     })
                                 } else {
+                                    this.createServiceRecord(1)
                                     this.connectLiveChat()
                                 }
                             })
