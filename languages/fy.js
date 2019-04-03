@@ -52,7 +52,7 @@ export default {
     officialwebsitemobile_tvguide_noepg: "Aucun EPG n'est accessible pour aujourd'hui",
     officialwebsitemobile_go: 'Démarrer',
     officialwebsitemobile_topnav_home: 'Accueil',
-    officialwebsitemobile_topnav_list: 'Liste',
+    officialwebsitemobile_topnav_list: 'Vidéo',
     officialwebsitemobile_topnav_tvguide: 'Guide',
     officialwebsitemobile_topnav_live: 'DIRECT',
     officialwebsitemobile_live_channelnumber: " chaînes en direct sur l'app StarTimes ON",

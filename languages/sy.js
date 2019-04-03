@@ -49,7 +49,7 @@ export default {
     officialwebsitemobile_tvguide_noepg: 'Hakuna EPG inayopatikana kwa leo',
     officialwebsitemobile_go: 'bonyeza',
     officialwebsitemobile_topnav_home: 'Kurasa Kuu',
-    officialwebsitemobile_topnav_list: 'Orodha',
+    officialwebsitemobile_topnav_list: 'Video',
     officialwebsitemobile_topnav_tvguide: 'Mwongozo',
     officialwebsitemobile_topnav_live: 'MOJA KWA MOJA',
     officialwebsitemobile_live_channelnumber: ' programu ya mojakwa moja kwenye  app ya StarTimes',

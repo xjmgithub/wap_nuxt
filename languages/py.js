@@ -48,7 +48,7 @@ export default {
     officialwebsitemobile_tvguide_noepg: 'EPG não está disponível para hoje',
     officialwebsitemobile_go: 'IR',
     officialwebsitemobile_topnav_home: 'Casa',
-    officialwebsitemobile_topnav_list: 'Lista',
+    officialwebsitemobile_topnav_list: 'Vídeo',
     officialwebsitemobile_topnav_tvguide: 'Guia',
     officialwebsitemobile_topnav_live: 'AO VIVO',
     officialwebsitemobile_live_channelnumber: ' Canais ao vivo no app StarTimes ON',
