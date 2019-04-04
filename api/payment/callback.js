@@ -12,7 +12,8 @@ export default function(req, res, next) {
     })
 
     req.on('end', function() {
-        const getBodyData = getPostData(data, req.headers['content-type'].indexOf('json') >= 0)
+        const formType = req.headers['content-type'] && req.headers['content-type'].indexOf('json') >= 0
+        const getBodyData = getPostData(data, formType)
         const sendData = Object.assign({}, getBodyData, qs.parse(urlobj.search.substr(1)))
 
         // 如果没有paytype的
