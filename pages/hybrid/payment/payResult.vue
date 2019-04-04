@@ -38,36 +38,11 @@ export default {
             fail_message: 'Your request was not accepted. Please refresh the current page or try again the payment.',
             isApp: this.$store.state.appType,
             timer: null,
-            maxReqNum: 10
-        }
-    },
-    async asyncData({ app: { $axios }, store, route }) {
-        if (route.query.paytype) {
-            const payType = route.query.paytype || 'InterSwitchPayDirectWeb-NG'
-            try {
-                $axios.setHeader('token', store.state.token)
-                const { data } = await $axios.post(`/payment/v2/third-party-payment-web-notify/${payType}`, route.query)
-                return {
-                    result: data.state == 3 ? 1 : 2,
-                    money: data.amount,
-                    currency: data.currencySymbol,
-                    seqNo: data.seqNo
-                }
-            } catch (e) {
-                return {
-                    result: 2,
-                    money: 0,
-                    currency: '',
-                    seqNo: ''
-                }
-            }
-        } else {
-            return {
-                result: 0, // 0 支付查询中， 1 支付成功，2 支付失败
-                money: 0,
-                currency: '',
-                seqNo: route.query.seqNo
-            }
+            maxReqNum: 10,
+            result: this.$route.query.result || 0,
+            money: this.$route.query.money || 0,
+            currency: this.$route.query.currency || '',
+            seqNo: this.$route.query.seqNo || ''
         }
     },
     mounted() {
@@ -87,7 +62,7 @@ export default {
                 this.$alert('Query seqNo needed! please check request')
                 return false
             }
-        
+
             this.getPayStatus()
             this.timer = setInterval(() => {
                 if (this.result > 0) {
