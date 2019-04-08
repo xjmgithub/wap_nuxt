@@ -2,67 +2,52 @@
     <div id="pay-form" class="container">
         <template v-for="(item,index) in configs">
             <div v-if="item.displayState!=2" :key="index" class="form-item">
-                <div
-                    v-if="item.formType=='select'||item.formType=='radio'"
-                    :data-show="item.displayCondition"
-                    :data-state="item.displayState"
-                    :data-id="item.code"
-                    :data-type="item.formType"
-                >
+                <div v-if="['select','radio'].indexOf(item.formType)>=0">
                     <p class="network">{{item.name}}</p>
                     <div class="radio-box">
-                        <div v-for="(radio,i) in item.optionArr" :key="i">
+                        <div v-for="(radio,i) in item.optionArr" :key="i" @click="item.value=radio">
                             <label class="radio">
-                                <input :name="item.name" :value="radio" :checked="radio === item.defaultValue ? 'checked' : false" type="radio">
+                                <input :name="item.name" :value="radio" :checked="radio === item.value ? 'checked' : false" type="radio">
                                 <i/>
                                 <span>{{radio}}</span>
                             </label>
                         </div>
                     </div>
+                    <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
                 <div
                     v-if="item.formType=='tel'"
-                    :data-show="item.displayCondition"
-                    :data-state="item.displayState"
-                    :data-id="item.code"
-                    :data-type="item.formType"
-                    :data-reg="item.pattern"
-                    :data-precode="item.countryCallingCode"
-                    :data-name="item.name"
+                    v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0"
                     class="form-item input-tel"
                 >
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
-                        <input :placeholder="item.placeholder" :value="item.defaultValue" type="tel">
+                        <input v-model="item.value" :placeholder="item.placeholder" type="tel">
                     </div>
+                    <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
                 <div
-                    v-if="item.formType=='text'||item.formType=='password'||item.formType=='email'"
-                    :data-show="item.displayCondition"
-                    :data-state="item.displayState"
-                    :data-id="item.code"
-                    :data-type="item.formType"
-                    :data-reg="item.pattern"
-                    :data-name="item.name"
+                    v-if="['text','password','email'].indexOf(item.formType)>=0"
+                    v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0"
                     class="form-item input-tel"
                 >
                     <div class="number">
-                        <input :type="item.formType" :placeholder="item.placeholder">
+                        <input v-model="item.value" :type="item.formType" :placeholder="item.placeholder">
                     </div>
+                    <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
-                <div>
-                    <input v-model="item.defaultValue" :name="item.name" type="hidden">
+                <div v-if="item.formType=='hidden'">
+                    <input v-model="item.value" :name="item.name" type="hidden">
                 </div>
             </div>
         </template>
         <div class="footer">
-            <mButton :disabled="false" class="next" text="NEXT"/>
+            <mButton :disabled="false" text="NEXT" class="next" @click="next"/>
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
-import $ from 'jquery'
 import { invoke, commonPayAfter } from '~/functions/pay'
 export default {
     layout: 'base',
@@ -73,8 +58,17 @@ export default {
         return {
             payToken: this.$route.query.payToken,
             payChannelId: this.$route.query.payChannelId,
-            apiInterface:this.$route.query.appInterfaceMode||3,
+            apiInterface: this.$route.query.appInterfaceMode || 3,
             configs: []
+        }
+    },
+    computed: {
+        showCondition() {
+            const result = []
+            this.configs.forEach(item => {
+                result.push(`${item.code}=${item.value}`)
+            })
+            return result
         }
     },
     mounted() {
@@ -85,142 +79,74 @@ export default {
                     return a.orderSeq - b.orderSeq
                 })
                 configs.forEach((item, index) => {
-                    if (item.options) {
+                    if (item.formType == 'radio' || item.formType == 'select') {
                         item.optionArr = item.options.split('|')
                     }
+                    item.value = item.defaultValue
                 })
                 this.configs = configs
-                this.$nextTick(function() {
-                    ifShow()
-                })
             }
         })
-
-        const _this = this
-
-        $('#pay-form')
-            .on('change', 'input[type="radio"]', function() {
-                ifShow()
+    },
+    methods: {
+        conditionShow(val) {
+            const condition = val.split('=')
+            let result = false
+            this.configs.forEach(item => {
+                if (item.formType == 'radio' || item.formType == 'select') {
+                    if (item.name == condition[0]) {
+                        if (item.value == condition[1]) {
+                            result = true
+                        }
+                    }
+                }
             })
-            .on('change', 'input[type="checkbox"]', function() {
-                ifShow()
-            })
-            .on('blur', 'input[type="text"],input[type="password"],input[type="tel"],input[type="email"]', function() {
-                ifShow()
-            })
-            .on('click', '.cancel', function() {
-                _this.$router.go(-1)
-            })
-            .on('click', '.next', function() {
-                const items = $('[data-id]').filter(':visible')
-                const optarr = {}
-                for (let i = 0; i < items.length; i++) {
-                    const item = $(items[i])
-                    const id = item.data('id')
-                    const name = item.data('name')
-                    const type = item.data('type')
-                    let value = getItemVal(id)
-
-                    if (type === 'text' || type === 'password' || type === 'tel' || type === 'email') {
-                        if (!value) {
-                            item.find('.error')
-                                .remove()
-                                .end()
-                                .append(
-                                    '<div class="error" style="position: absolute;bottom: -1.4rem;font-size: 0.5rem;color: red;">Please enter the complete information.</div>'
-                                )
-                            item.css({
-                                'border-bottom': '#dddddd solid 1px'
-                            })
-                            return false
-                        } else {
-                            const reg = new RegExp(item.data('reg'))
-                            if (!reg.test(value)) {
-                                item.find('.error')
-                                    .remove()
-                                    .end()
-                                    .append(
-                                        '<div class="error" style="position: absolute;bottom: -1.4rem;font-size: 0.5rem;color: red;">Please enter the correct ' +
-                                            name +
-                                            '.</div>'
-                                    )
-                                item.css({
-                                    'border-bottom': '#red solid 1px'
-                                })
-                                return false
-                            } else {
-                                item.css({
-                                    'border-bottom': '#dddddd solid 1px'
-                                })
-                                item.find('.error').remove()
-                                if (type === 'tel') {
-                                    const precode = item.data('precode')
-                                    if (precode && value.indexOf(precode) !== 0) {
-                                        if (value.indexOf('0') === 0) {
-                                            value = precode + value.substring(1)
-                                        } else {
-                                            value = precode + value
-                                        }
-                                    }
+            return result
+        },
+        next() {
+            let canSubmit = true
+            const optarr = {}
+            const configBak = [...this.configs]
+            configBak.forEach(item => {
+                if (['text', 'password', 'tel', 'email'].indexOf(item.formType) >= 0) {
+                    if (!item.value) {
+                        item.error = 'Please enter the complete information.'
+                        canSubmit = false
+                    } else {
+                        const reg = new RegExp(item.pattern)
+                        if (!reg.test(item.value)) {
+                            item.error = `Please enter the correct ${item.name}.`
+                            canSubmit = false
+                        } else if (item.formType == 'tel') {
+                            item.error = ''
+                            if (item.countryCallingCode && item.value.indexOf(item.countryCallingCode) !== 0) {
+                                if (item.value.indexOf('0') === 0) {
+                                    item.value = item.countryCallingCode + item.value.substring(1)
+                                } else {
+                                    item.value = item.countryCallingCode + item.value
                                 }
                             }
                         }
                     }
-
-                    optarr[id] = value
                 }
-                _this.$nuxt.$loading.start()
-                _this.$store.commit('SHOW_SHADOW_LAYER')
+                optarr[item.code] = item.value
+            })
+            this.configs = configBak
+            if (canSubmit) {
+                this.$nuxt.$loading.start()
+                this.$store.commit('SHOW_SHADOW_LAYER')
                 invoke.call(
-                    _this,
-                    _this.payToken,
-                    _this.payChannelId,
+                    this,
+                    this.payToken,
+                    this.payChannelId,
                     data => {
-                        _this.$nuxt.$loading.finish()
-                        _this.$store.commit('HIDE_SHADOW_LAYER')
-                        console.log(_this.apiInterface)
-                        commonPayAfter.call(_this, data, 3, _this.apiInterface)
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        commonPayAfter.call(this, data, 3, this.apiInterface)
                     },
                     optarr
                 )
-            })
-
-        function ifShow() {
-            const conditionShow = $('[data-state="3"]')
-            for (let i = 0; i < conditionShow.length; i++) {
-                const item = $(conditionShow[i])
-                const condition = item.data('show').split('=')
-                const key = condition[0]
-                const destValue = condition[1]
-                const realValue = getItemVal(key)
-                if (realValue === destValue) {
-                    item.show()
-                } else {
-                    item.hide()
-                }
             }
-        }
-
-        function getItemVal(key) {
-            const item = $('[data-id="' + key + '"]')
-            const type = item.data('type')
-            let value = ''
-            switch (type) {
-                case 'select':
-                case 'radio':
-                    value = item.find('input:checked').val()
-                    break
-                case 'password':
-                case 'text':
-                case 'tel':
-                case 'email':
-                case 'hidden':
-                    value = item.find('input').val()
-                    break
-                default:
-                    return ''
-            }
-            return value
         }
     }
 }
@@ -229,7 +155,7 @@ export default {
 .container {
     padding: 3rem 3rem 0;
     background: white;
-    height:100%;
+    height: 100%;
     .form-item {
         margin: 2rem 0;
     }
