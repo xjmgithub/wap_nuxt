@@ -92,7 +92,6 @@ export default {
         return {
             dishList: [], // DTH
             antennaList: [], // DTT
-            recharge_url: 'https://m.startimestv.com/DVB/binding.php',
             programs: []
         }
     },
@@ -105,10 +104,6 @@ export default {
         }
     },
     mounted() {
-        const host = window.location.host
-        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
-            this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
-        }
         this.getBouquets()
         this.getPrograms()
     },

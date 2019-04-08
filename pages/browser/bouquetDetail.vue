@@ -9,9 +9,9 @@
                 <p class="bouquetName">{{bouquetName}} Bouquet</p>
                 <p class="money">{{currency}} {{price}}</p>
                 <p class="recharge">
-                    <a :href="recharge_url">
+                    <nuxt-link to="/hybrid/dvb/bind">
                         <img src="~assets/img/web/Group.png" alt> Recharge
-                    </a>
+                    </nuxt-link>
                 </p>
             </div>
         </div>
@@ -42,8 +42,7 @@ export default {
             bouquetName: this.$route.query.name,
             packageLogo: this.$route.query.logo,
             tvPlatFormName: this.$route.query.plat === 'DTH' ? 'Dish' : 'Antenna',
-            loadstate: true,
-            recharge_url: 'https://m.startimestv.com/DVB/binding.php'
+            loadstate: true
         }
     },
     computed: {
@@ -53,10 +52,6 @@ export default {
     },
     mounted() {
         this.$nextTick(() => this.$nuxt.$loading.start())
-        const host = window.location.host
-        if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
-            this.recharge_url = 'http://qa.upms.startimestv.com/wap/DVB/binding.php'
-        }
 
         const countryCode = this.$store.state.country.country
         const packageId = this.$route.query.id
