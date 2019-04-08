@@ -95,7 +95,6 @@ export default {
         }
     },
     mounted() {
-        document.querySelector('.wrapper').style.height = window.screen.availHeight * 0.89 + 'px'
         const questions = JSON.parse(sessionStorage.getItem('faq_question'))
         const serviceModuleId = sessionStorage.getItem('serviceModuleId')
         const morefaqs = sessionStorage.getItem('morefaqs')
@@ -108,98 +107,100 @@ export default {
             if (res.data.code === 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
                 this.showLiveChatBtn = true
             }
-        })
-
-        this.$nextTick(() => {
-            const wrapper = document.querySelector('.wrapper')
-
-            this.scroll = new BScroll(wrapper, {
-                pullDownRefresh: {
-                    threshold: 100, // 下拉距离
-                    stop: 40
-                },
-                startY: 0,
-                bounce: {
-                    top: true,
-                    bottom: true,
-                    left: true,
-                    right: true
-                },
-                click: true
-            })
-            this.scroll.on('pullingDown', function() {
-                _this.loadHistory()
-            })
-        })
-
-        if (this.isLogin && renderQueue && renderQueue.length > 0) {
-            this.renderFromCacheQueue()
-        }
-
-        // 创建服务记录
-        this.createServiceRecord(6, () => {
-            // TODO 是否有留言
-            if (addMsg) {
-                this.addOperate(
-                    Object.assign({}, JSON.parse(addMsg), {
-                        tpl: 'message',
-                        replied: false
-                    })
-                )
-                sessionStorage.removeItem('addMsg')
-            } else if (questions) {
-                // 单个问题
-                this.askQuest(questions, 1)
-            } else if (morefaqs) {
-                // MORE FAQS
-                this.addOperate({
-                    tpl: 'ask',
-                    name: 'more questions'
-                })
-
-                this.renderOrder()
-
-                this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
-                    if (res.data.code === 200) {
-                        const list = []
-                        res.data.data.forEach((item, index) => {
-                            list.push({
-                                id: item.id,
-                                name: item.thema
-                            })
-                        })
-                        this.addOperate(
-                            Object.assign({}, res.data.data, {
-                                operator: 0, // 0 客服， 1 用户
-                                tpl: 'list', // list , content, order
-                                pId: '-99',
-                                type: 1,
-                                contents: list
-                            })
-                        )
-                    }
-                })
-            } else {
-                // 默认根目录进入
-                this.addOperate({
-                    tpl: 'welcome',
-                    name: 'Welcome to StarTimes Online Service.'
-                })
-
-                this.$axios.get(`/ocs/v1/faqs/directory/${this.$store.state.country.id}`).then(res => {
-                    if (res.data.code === 200) {
-                        this.categoryId = res.data.data
-                        this.getfaqDirectory(res.data.data)
-                    }
-                })
-            }
 
             this.$nextTick(() => {
-                if (this.$store.state.intervalTimer) {
-                    clearInterval(this.$store.state.intervalTimer)
+                const liveChatBtnHeight = document.querySelector('.live-chat').offsetHeight
+                document.querySelector('.wrapper').style.height = window.innerHeight - liveChatBtnHeight + 'px'
+                const wrapper = document.querySelector('.wrapper')
+
+                this.scroll = new BScroll(wrapper, {
+                    pullDownRefresh: {
+                        threshold: 100, // 下拉距离
+                        stop: 40
+                    },
+                    startY: 0,
+                    bounce: {
+                        top: true,
+                        bottom: true,
+                        left: true,
+                        right: true
+                    },
+                    click: true
+                })
+                this.scroll.on('pullingDown', function() {
+                    _this.loadHistory()
+                })
+            })
+
+            if (this.isLogin && renderQueue && renderQueue.length > 0) {
+                this.renderFromCacheQueue()
+            }
+
+            // 创建服务记录
+            this.createServiceRecord(6, () => {
+                // TODO 是否有留言
+                if (addMsg) {
+                    this.addOperate(
+                        Object.assign({}, JSON.parse(addMsg), {
+                            tpl: 'message',
+                            replied: false
+                        })
+                    )
+                    sessionStorage.removeItem('addMsg')
+                } else if (questions) {
+                    // 单个问题
+                    this.askQuest(questions, 1)
+                } else if (morefaqs) {
+                    // MORE FAQS
+                    this.addOperate({
+                        tpl: 'ask',
+                        name: 'more questions'
+                    })
+
+                    this.renderOrder()
+
+                    this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
+                        if (res.data.code === 200) {
+                            const list = []
+                            res.data.data.forEach((item, index) => {
+                                list.push({
+                                    id: item.id,
+                                    name: item.thema
+                                })
+                            })
+                            this.addOperate(
+                                Object.assign({}, res.data.data, {
+                                    operator: 0, // 0 客服， 1 用户
+                                    tpl: 'list', // list , content, order
+                                    pId: '-99',
+                                    type: 1,
+                                    contents: list
+                                })
+                            )
+                        }
+                    })
+                } else {
+                    // 默认根目录进入
+                    this.addOperate({
+                        tpl: 'welcome',
+                        name: 'Welcome to StarTimes Online Service.'
+                    })
+
+                    this.$axios.get(`/ocs/v1/faqs/directory/${this.$store.state.country.id}`).then(res => {
+                        if (res.data.code === 200) {
+                            this.categoryId = res.data.data
+                            this.getfaqDirectory(res.data.data)
+                        }
+                    })
                 }
-                const timer = setInterval(this.getLeaveMessage, 5 * 1000)
-                this.$store.commit('SET_TIMER', timer)
+
+                this.$nextTick(() => {
+                    if (this.$store.state.intervalTimer) {
+                        clearInterval(this.$store.state.intervalTimer)
+                    }
+                    const timer = setInterval(this.getLeaveMessage, 5 * 1000)
+                    this.$store.commit('SET_TIMER', timer)
+                })
             })
         })
     },
