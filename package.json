@@ -32,7 +32,6 @@
         "less": "^3.8.1",
         "less-loader": "^4.1.0",
         "localforage": "^1.7.3",
-        "mockjs": "^1.0.1-beta3",
         "nuxt": "^2.5.1",
         "qs": "^6.6.0"
     },
