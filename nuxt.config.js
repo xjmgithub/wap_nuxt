@@ -72,7 +72,7 @@ export default {
         '/wxorder/': env.proxyHost
     },
     router: {
-        middleware: 'auth'
+        middleware: 'auth' // middleware before all pages render
     },
     serverMiddleware: [
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
