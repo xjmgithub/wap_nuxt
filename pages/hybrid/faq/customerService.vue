@@ -480,7 +480,7 @@ export default {
                     if (res.data.statusCode === 0) {
                         this.chatLink = res.data
                         this.$axios
-                            .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}}/messages`, {
+                            .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}/messages`, {
                                 alias: this.chatLink.alias,
                                 operationName: 'GetChat',
                                 secureKey: this.chatLink.secureKey,
