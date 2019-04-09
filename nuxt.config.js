@@ -2,6 +2,11 @@ import env from './env'
 import accesslog from './functions/accesslog'
 export default {
     mode: 'universal',
+    server: {
+        timing: {
+            total: true // https://www.w3.org/TR/server-timing/
+        }
+    },
     head: {
         title: 'StarTimes ON',
         meta: [
