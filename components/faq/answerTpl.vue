@@ -5,7 +5,7 @@
         </div>
         <div class="welcome-wraper">
             <img class="arrow" src="~assets/img/faq/Triangle.png">
-            <span class="welcome-item">{{answer}}</span>
+            <span class="welcome-item" v-html="answer"/>
         </div>
     </div>
 </template>
