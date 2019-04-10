@@ -143,7 +143,6 @@ export default {
 
         // 创建服务记录
         this.createServiceRecord(6, () => {
-            
             this.getLeaveMessage()
 
             if (addMsg) {
@@ -279,7 +278,7 @@ export default {
         },
         renderOrder() {
             const order = JSON.parse(sessionStorage.getItem('orderMsg'))
-            if (order.order_type) {
+            if (order && order.order_type) {
                 this.addOperate({
                     tpl: 'order',
                     order: order
@@ -459,8 +458,10 @@ export default {
             if (!this.isLogin) {
                 if (this.$store.state.appType === 1) {
                     toNativePage('com.star.mobile.video.account.LoginActivity')
-                } else {
+                } else if (this.$store.state.appType === 2) {
                     toNativePage('startimes://login')
+                } else {
+                    this.$route.push('/hybrid/account/login')
                 }
                 return false
             }
