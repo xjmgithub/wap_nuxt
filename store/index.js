@@ -31,7 +31,6 @@ export const state = () => ({
     payToken: '',
     selectCompId: 0,
     phoneModel: '',
-    intervalTimer: null,
     rankList: [],
     serverTime: new Date(),
     navState: false,
@@ -118,9 +117,6 @@ export const mutations = {
     },
     ADD_SELECT_COMP: function(state, val) {
         state.selectCompId = val
-    },
-    SET_TIMER: function(state, val) {
-        state.intervalTimer = val
     },
     SET_RANKLIST: function(state, val) {
         const [...arr] = val

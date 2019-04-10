@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div class="content" style="min-height:101%">
+        <div class="content">
             <div class="pull_refresh">
                 <div v-show="!loadHistoryState" style="padding-top:1rem;">
                     <span v-show="!historyEnd" class="refresh_text">Pull down to see more history</span>
@@ -59,7 +59,7 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage, setCookie, getCookie, getFaqAnswerLabel } from '~/functions/utils'
+import { toNativePage, getFaqAnswerLabel } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -78,7 +78,6 @@ export default {
             config_id: this.$route.query.config_id,
             entrance_id: this.$route.query.entrance_id,
             categoryId: 183, // default others
-            showLiveChatBtn: false,
             serviceRecord: null,
             renderQueue: [],
             loadHistoryState: false, // 加载历史记录状态
@@ -94,154 +93,156 @@ export default {
             messageShowed: [] // 记录已经展示出来的
         }
     },
+    asyncData({ app: { $axios }, store, query }) {
+        $axios.setHeader('token', store.state.token)
+        return $axios
+            .get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${store.state.country.id}&entranceId=${query.entrance_id}`)
+            .then(res => {
+                return {
+                    showLiveChatBtn: res.data.code === 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0
+                }
+            })
+            .catch(() => {
+                return { showLiveChatBtn: false }
+            })
+    },
     mounted() {
-        const questions = JSON.parse(sessionStorage.getItem('faq_question'))
         const serviceModuleId = sessionStorage.getItem('serviceModuleId')
+        const questions = JSON.parse(sessionStorage.getItem('faq_question'))
         const morefaqs = sessionStorage.getItem('morefaqs')
-        const renderQueue = JSON.parse(getCookie('renderQueue'))
+
         const addMsg = sessionStorage.getItem('addMsg')
         const _this = this
 
-        // LiveChat 按钮判断
-        this.$axios.get(`/ocs/v1/faqs/faqConfigByAreaId?areaId=${this.$store.state.country.id}&entranceId=${this.entrance_id}`).then(res => {
-            if (res.data.code === 200 && res.data.data.shortcuts_codes.indexOf(1) >= 0) {
-                this.showLiveChatBtn = true
-            }
+        this.renderFromCacheQueue()
 
-            this.$nextTick(() => {
-                const liveChatBtnHeight = document.querySelector('.live-chat').offsetHeight
-                document.querySelector('.wrapper').style.height = window.innerHeight - liveChatBtnHeight + 'px'
-                const wrapper = document.querySelector('.wrapper')
+        this.$nextTick(() => {
+            const liveChatBtnHeight = document.querySelector('.live-chat').offsetHeight
+            document.querySelector('.wrapper').style.height = window.innerHeight - liveChatBtnHeight + 'px'
 
-                this.scroll = new BScroll(wrapper, {
-                    pullDownRefresh: {
-                        threshold: 100, // 下拉距离
-                        stop: 40
-                    },
-                    startY: 0,
-                    bounce: {
-                        top: true,
-                        bottom: true,
-                        left: true,
-                        right: true
-                    },
-                    click: true
-                })
-                this.scroll.on('pullingDown', function() {
-                    _this.loadHistory()
-                })
+            this.bscroll = new BScroll('.wrapper', {
+                pullDownRefresh: {
+                    threshold: 80,
+                    stop: 40
+                },
+                startY: 0,
+                bounce: {
+                    top: true,
+                    bottom: false,
+                    left: false,
+                    right: false
+                },
+                click: true,
+                tap: true,
+                observeDOM: false
             })
+            this.bscroll.on('pullingDown', function() {
+                _this.loadHistory()
+            })
+        })
 
-            if (this.isLogin && renderQueue && renderQueue.length > 0) {
-                this.renderFromCacheQueue()
-            }
+        // 创建服务记录
+        this.createServiceRecord(6, () => {
+            
+            this.getLeaveMessage()
 
-            // 创建服务记录
-            this.createServiceRecord(6, () => {
-                // TODO 是否有留言
-                if (addMsg) {
-                    this.addOperate(
-                        Object.assign({}, JSON.parse(addMsg), {
-                            tpl: 'message',
-                            replied: false
-                        })
-                    )
-                    sessionStorage.removeItem('addMsg')
-                } else if (questions) {
-                    // 单个问题
-                    this.askQuest(questions, 1)
-                } else if (morefaqs) {
-                    // MORE FAQS
-                    this.addOperate({
-                        tpl: 'ask',
-                        name: 'more questions'
+            if (addMsg) {
+                // todo check
+                this.addOperate(
+                    Object.assign({}, JSON.parse(addMsg), {
+                        tpl: 'message',
+                        replied: false
                     })
+                )
+                sessionStorage.removeItem('addMsg')
+            } else if (questions) {
+                // 单个问题
+                this.askQuest(questions, 1, 1)
+            } else if (morefaqs) {
+                // MORE FAQS
+                this.addOperate({
+                    tpl: 'ask',
+                    name: 'more questions'
+                })
 
-                    this.renderOrder()
+                this.renderOrder()
 
-                    this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
-                        if (res.data.code === 200) {
-                            const list = []
-                            res.data.data.forEach((item, index) => {
-                                list.push({
-                                    id: item.id,
-                                    name: item.thema
-                                })
+                this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
+                    if (res.data.code === 200) {
+                        const list = []
+                        res.data.data.forEach((item, index) => {
+                            list.push({
+                                id: item.id,
+                                name: item.thema
                             })
-                            this.addOperate(
-                                Object.assign({}, res.data.data, {
-                                    operator: 0, // 0 客服， 1 用户
-                                    tpl: 'list', // list , content, order
-                                    pId: '-99',
-                                    type: 1,
-                                    contents: list
-                                })
-                            )
-                        }
-                    })
-                } else {
-                    // 默认根目录进入
-                    this.addOperate({
-                        tpl: 'welcome',
-                        name: 'Welcome to StarTimes Online Service.'
-                    })
-
-                    this.$axios.get(`/ocs/v1/faqs/directory/${this.$store.state.country.id}`).then(res => {
-                        if (res.data.code === 200) {
-                            this.categoryId = res.data.data
-                            this.getfaqDirectory(res.data.data)
-                        }
-                    })
-                }
-
-                this.$nextTick(() => {
-                    if (this.$store.state.intervalTimer) {
-                        clearInterval(this.$store.state.intervalTimer)
+                        })
+                        this.addOperate(
+                            Object.assign({}, res.data.data, {
+                                operator: 0, // 0 客服， 1 用户
+                                tpl: 'list', // list , content, order
+                                pId: '-99',
+                                type: 1,
+                                contents: list
+                            })
+                        )
                     }
-                    const timer = setInterval(this.getLeaveMessage, 5 * 1000)
-                    this.$store.commit('SET_TIMER', timer)
                 })
-            })
+            } else {
+                // 默认根目录进入
+                this.addOperate({
+                    tpl: 'welcome',
+                    name: 'Welcome to StarTimes Online Service.'
+                })
+
+                this.$axios.get(`/ocs/v1/faqs/directory/${this.$store.state.country.id}`).then(res => {
+                    if (res.data.code === 200) {
+                        this.categoryId = res.data.data
+                        this.getfaqDirectory(res.data.data)
+                    }
+                })
+            }
         })
     },
     methods: {
         getLeaveMessage() {
-            this.$axios
-                .get(`/csms-service/v1/get-standard-leaving-message-record`, {
-                    headers: {
-                        'x-clientType': 1,
-                        'x-appVersion': '5300'
-                    }
-                })
-                .then(res => {
-                    if (res.data && res.data.length > 0) {
-                        res.data.forEach(item => {
-                            if (this.messageShowed.indexOf(item.id) < 0) {
-                                this.messageShowed.push(item.id)
-                                this.addOperate(
-                                    Object.assign({}, item, {
-                                        tpl: 'message',
-                                        replied: true
-                                    })
-                                )
-                            }
-                        })
-                    }
-                })
+            this.$route.path == '/hybrid/faq/customerService' &&
+                setTimeout(this.getLeaveMessage, 10 * 1000) &&
+                this.$axios
+                    .get(`/csms-service/v1/get-standard-leaving-message-record`, {
+                        headers: {
+                            'x-clientType': 1,
+                            'x-appVersion': '5300'
+                        }
+                    })
+                    .then(res => {
+                        if (res.data && res.data.length > 0) {
+                            res.data.forEach(item => {
+                                if (this.messageShowed.indexOf(item.id) < 0) {
+                                    this.messageShowed.push(item.id)
+                                    this.addOperate(
+                                        Object.assign({}, item, {
+                                            tpl: 'message',
+                                            replied: true
+                                        })
+                                    )
+                                }
+                            })
+                        }
+                    })
         },
         getfaqDirectory(id) {
-            if (!id) return false
-            this.$axios.get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`).then(res => {
-                if (res.data.code === 200) {
-                    this.addOperate(
-                        Object.assign({}, res.data.data, {
-                            tpl: 'list'
-                        })
-                    )
-                }
-            })
+            id &&
+                this.$axios.get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`).then(res => {
+                    if (res.data.code === 200) {
+                        this.addOperate(
+                            Object.assign({}, res.data.data, {
+                                tpl: 'list'
+                            })
+                        )
+                    }
+                })
         },
-        askQuest(item, type) {
+        askQuest(item, type, showOrder) {
             this.addOperate(
                 Object.assign({}, item, {
                     tpl: 'ask',
@@ -249,7 +250,7 @@ export default {
                 })
             )
 
-            this.renderOrder()
+            showOrder && this.renderOrder()
 
             if (type === 1) {
                 this.getAnswer(item.id)
@@ -286,30 +287,28 @@ export default {
             }
         },
         createServiceRecord(type, callback) {
-            this.$axios
-                .post(`/css/v1/service/start?type=${type || 6}&anonymity=0`) // TODO 匿名
-                .then(res => {
-                    if (res.data.code === 200) {
-                        this.serviceRecord = res.data.data
-                        if (!this.isLogin) {
-                            let cacheRecord = getCookie('serviceRecords')
-                            if (cacheRecord) {
-                                cacheRecord = JSON.parse(cacheRecord)
-                                if (cacheRecord.indexOf(this.serviceRecord) < 0) {
-                                    cacheRecord.push(this.serviceRecord)
-                                }
-                            } else {
-                                cacheRecord = [this.serviceRecord]
+            this.$axios.post(`/css/v1/service/start?type=${type || 6}&anonymity=0`).then(res => {
+                if (res.data.code === 200) {
+                    this.serviceRecord = res.data.data
+                    if (!this.isLogin) {
+                        let cacheRecord = localStorage.getItem('serviceRecords')
+                        if (cacheRecord) {
+                            cacheRecord = JSON.parse(cacheRecord)
+                            if (cacheRecord.indexOf(this.serviceRecord) < 0) {
+                                cacheRecord.push(this.serviceRecord)
                             }
-                            setCookie('serviceRecords', JSON.stringify(cacheRecord), Infinity)
+                        } else {
+                            cacheRecord = [this.serviceRecord]
                         }
-                        if (callback) callback()
+                        localStorage.setItem('serviceRecords', JSON.stringify(cacheRecord))
                     }
-                })
+                    if (callback) callback()
+                }
+            })
         },
         refreshScroll() {
             this.$nextTick(() => {
-                this.scroll.refresh()
+                this.bscroll.refresh()
             })
         },
         addOperate(obj, send) {
@@ -352,7 +351,7 @@ export default {
                         if (res.data.code === 200) {
                             if (!this.isLogin) {
                                 // 未登录状态缓存操作历史
-                                let cacheHisory = getCookie('historys')
+                                let cacheHisory = JSON.parse(localStorage.getItem('historys'))
                                 if (cacheHisory) {
                                     cacheHisory = JSON.parse(cacheHisory)
                                     if (cacheHisory.indexOf(res.data.data) < 0) {
@@ -361,7 +360,7 @@ export default {
                                 } else {
                                     cacheHisory = [res.data.data]
                                 }
-                                setCookie('historys', JSON.stringify(cacheHisory), Infinity)
+                                localStorage.setItem('historys', JSON.stringify(cacheHisory))
                             }
 
                             // 最小historyId记录
@@ -380,42 +379,44 @@ export default {
             }
         },
         updateCacheQueue() {
-            if (!this.isLogin) {
-                setCookie('renderQueue', JSON.stringify(this.renderQueue), Infinity)
-                // sessionStorage.setItem(
-                //     'renderQueue',
-                //     JSON.stringify(this.renderQueue)
-                // )
-            }
+            !this.isLogin && localStorage.setItem('renderQueue', JSON.stringify(this.renderQueue))
         },
         renderFromCacheQueue() {
-            // 恢复对话
-            this.renderQueue = JSON.parse(getCookie('renderQueue'))
+            const renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
+            const historys = JSON.parse(localStorage.getItem('historys'))
+            const serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
 
-            // 更新历史记录
-            const historys = JSON.parse(getCookie('historys'))
-            const serviceIds = JSON.parse(getCookie('serviceRecords'))
+            if (
+                !this.isLogin ||
+                !renderQueue ||
+                !historys ||
+                !serviceIds ||
+                renderQueue.length <= 0 ||
+                historys.length <= 0 ||
+                serviceIds.length <= 0
+            ) {
+                return false
+            }
 
-            if (historys) {
-                historys.forEach(item => {
-                    if (this.minHistoryId) {
-                        if (item < this.minHistoryId) {
-                            this.minHistoryId = item
-                        }
-                    } else {
+            this.renderQueue = JSON.parse(renderQueue)
+
+            historys.forEach(item => {
+                if (this.minHistoryId) {
+                    if (item < this.minHistoryId) {
                         this.minHistoryId = item
                     }
-                })
-                if (historys && serviceIds) {
-                    this.$axios.post(`/css/v1/history/updateUserId?historyIds=${historys.join(',')}&serviceIds=${serviceIds.join(',')}`).then(res => {
-                        if (res.data.code === 200) {
-                            setCookie('serviceRecords', '')
-                            setCookie('historys', '')
-                            setCookie('renderQueue', '')
-                        }
-                    })
+                } else {
+                    this.minHistoryId = item
                 }
-            }
+            })
+
+            this.$axios.post(`/css/v1/history/updateUserId?historyIds=${historys.join(',')}&serviceIds=${serviceIds.join(',')}`).then(res => {
+                if (res.data.code === 200) {
+                    localStorage.removeItem('renderQueue')
+                    localStorage.removeItem('serviceRecords')
+                    localStorage.removeItem('historys')
+                }
+            })
         },
         loadHistory() {
             if (this.historyEnd) return
@@ -441,9 +442,9 @@ export default {
                 }
 
                 this.loadHistoryState = false
-                this.scroll.finishPullDown()
+                this.bscroll.finishPullDown()
                 this.$nextTick(() => {
-                    this.scroll.refresh()
+                    this.bscroll.refresh()
                 })
             })
         },
@@ -451,7 +452,7 @@ export default {
             this.$nextTick(() => {
                 const h1 = document.querySelector('.wrapper').offsetHeight
                 const h2 = document.querySelector('.content').offsetHeight
-                this.scroll.scrollTo(0, h1 - h2, 300)
+                this.bscroll.scrollTo(0, h1 - h2, 300)
             })
         },
         connectLiveChat() {
@@ -640,6 +641,10 @@ export default {
 .wrapper {
     overflow: hidden;
     background: #eeeeee;
+    .content {
+        min-height: 101%;
+        padding-bottom: 1rem;
+    }
 }
 .order-contain {
     box-shadow: 0px 1px 3px 1px #dddddd;

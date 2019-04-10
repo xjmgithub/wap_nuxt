@@ -1,6 +1,5 @@
 import { setCookie } from '~/functions/utils'
 export default ({ app: { router }, store }) => {
-    
     // 缓存登录状态
     setCookie('deviceId', store.state.deviceId)
     setCookie('token', store.state.token)
@@ -12,10 +11,6 @@ export default ({ app: { router }, store }) => {
         // 路由切换侧边栏导航收回
         store.commit('SET_NAV_STATE', false)
 
-        // 清除计时器
-        if (store.state.intervalTimer) {
-            clearInterval(store.state.intervalTimer)
-        }
         next()
     })
 }
