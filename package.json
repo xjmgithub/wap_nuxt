@@ -4,6 +4,11 @@
     "description": "StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment",
     "author": "shangxinbo",
     "private": true,
+    "config": {
+        "nuxt": {
+            "host": "0.0.0.0"
+        }
+    },
     "scripts": {
         "dev": "nuxt",
         "debug": "nodemon --watch api --exec \"nuxt\"",
