@@ -384,7 +384,6 @@ export default {
             const renderQueue = JSON.parse(localStorage.getItem('renderQueue'))
             const historys = JSON.parse(localStorage.getItem('historys'))
             const serviceIds = JSON.parse(localStorage.getItem('serviceRecords'))
-
             if (
                 !this.isLogin ||
                 !renderQueue ||
@@ -396,8 +395,6 @@ export default {
             ) {
                 return false
             }
-
-            this.renderQueue = JSON.parse(renderQueue)
 
             historys.forEach(item => {
                 if (this.minHistoryId) {

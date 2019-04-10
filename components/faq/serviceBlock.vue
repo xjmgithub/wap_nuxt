@@ -60,6 +60,7 @@ export default {
     methods: {
         clickQues(item) {
             sessionStorage.setItem('faq_question', JSON.stringify(item))
+            sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
             this.$router.push({
                 path: '/hybrid/faq/customerService',
                 query: this.$route.query
@@ -73,6 +74,7 @@ export default {
         },
         moreQues() {
             sessionStorage.setItem('morefaqs', 1)
+            sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
             this.sendEvLog({
                 category: 'onlineService',
                 action: `block_${this.entranceId || ''}_more_click`,
