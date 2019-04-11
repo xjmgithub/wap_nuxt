@@ -222,7 +222,6 @@ export default {
                 this.order,
                 { id: 1 }
             )
-            console.log(param)
 
             this.$axios
                 .post(`/csms-service/v1/standard-leaving-message-records`, param, {
@@ -239,6 +238,8 @@ export default {
                             query: this.$route.query
                         })
                     }
+                }).catch(() =>{
+                    this.$alert('The system is being upgraded, please try later')
                 })
 
             this.sendEvLog({
