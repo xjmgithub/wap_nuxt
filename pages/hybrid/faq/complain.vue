@@ -222,7 +222,7 @@ export default {
                 this.order,
                 { id: 1 }
             )
-
+            this.$nuxt.$loading.start()
             this.$axios
                 .post(`/csms-service/v1/standard-leaving-message-records`, param, {
                     headers: {
@@ -231,6 +231,7 @@ export default {
                     }
                 })
                 .then(res => {
+                    this.$nuxt.$loading.finish()
                     if (res.data.code === 200) {
                         sessionStorage.setItem('addMsg', JSON.stringify(param))
                         this.$router.replace({
@@ -239,6 +240,7 @@ export default {
                         })
                     }
                 }).catch(() =>{
+                    this.$nuxt.$loading.finish()
                     this.$alert('The system is being upgraded, please try later')
                 })
 
