@@ -136,13 +136,13 @@ export default {
             } else if (this.countryCode.toLowerCase() === 'gh') {
                 window.location.href = 'https://goo.gl/YWzd1m'
             } else if (this.countryCode.toLowerCase() === 'ng') {
-                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=136&dir_id=0'
+                this.$router.push('/hybrid/faq/onlineService?entrance_id=0&config_id=136&dir_id=0')
             } else if (this.countryCode.toLowerCase() === 'ug') {
-                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=137&dir_id=0'
+                this.$router.push('/hybrid/faq/onlineService?entrance_id=0&config_id=137&dir_id=0')
             } else if (this.countryCode.toLowerCase() === 'mg') {
-                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=138&dir_id=0'
+                this.$router.push('/hybrid/faq/onlineService?entrance_id=0&config_id=138&dir_id=0')
             } else {
-                window.location.href = 'https://m.startimestv.com/IntelligentService.php?entrance_id=0&config_id=139&dir_id=0'
+                this.$router.push('/hybrid/faq/onlineService?entrance_id=0&config_id=139&dir_id=0')
             }
         },
         buyNow() {

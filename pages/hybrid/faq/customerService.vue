@@ -75,7 +75,7 @@ export default {
         return {
             isLogin: this.$store.state.user.type || false,
             user: this.$store.state.user,
-            config_id: this.$route.query.config_id,
+            config_id: this.$route.query.config_id || 0,
             entrance_id: this.$route.query.entrance_id,
             categoryId: 183, // default others
             serviceRecord: null,
