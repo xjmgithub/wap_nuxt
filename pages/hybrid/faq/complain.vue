@@ -8,7 +8,7 @@
             </orderBlock>
         </div>
         <div v-else class="choose-order">
-            <nuxt-link to="/hybrid/faq/chooseOrder">
+            <nuxt-link :to="{'path':'/hybrid/faq/chooseOrder',query:$route.query}">
                 <div>
                     <img src="~assets/img/faq/ic_add_def_g.png"> Choose An Order
                 </div>
@@ -118,26 +118,25 @@ export default {
         const serviceModuleId = sessionStorage.getItem('serviceModuleId')
 
         // 如果是从首页的单个faq默认选中
-        // let faq_question = sessionStorage.getItem('faq_question')
-
-        this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
-            if (res.data.code === 200) {
-                const list = []
-                res.data.data.forEach((item, index) => {
-                    list.push({
-                        id: item.id,
-                        name: item.thema,
-                        tags: item.tags
+        if (serviceModuleId) {
+            this.$axios.get(`/ocs/v1/moreFaqs?serviceModuleId=${serviceModuleId}`).then(res => {
+                if (res.data.code === 200) {
+                    const list = []
+                    res.data.data.forEach((item, index) => {
+                        list.push({
+                            id: item.id,
+                            name: item.thema,
+                            tags: item.tags
+                        })
                     })
-                })
-                this.questionsList = list
-                const question = this.$route.query.question
-                if (question) {
-                    // this.question = JSON.parse(faq_question).id
-                    this.question = question
+                    this.questionsList = list
+                    const question = this.$route.query.question
+                    if (question) {
+                        this.question = question
+                    }
                 }
-            }
-        })
+            })
+        }
 
         // 渠道分类
         this.$axios.get(`/cms/vup/channels/dispark/categories`).then(res => {
@@ -239,7 +238,8 @@ export default {
                             query: this.$route.query
                         })
                     }
-                }).catch(() =>{
+                })
+                .catch(() => {
                     this.$nuxt.$loading.finish()
                     this.$alert('The system is being upgraded, please try later')
                 })
