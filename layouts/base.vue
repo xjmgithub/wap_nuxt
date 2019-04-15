@@ -10,6 +10,7 @@
         </div>
         <alert ref="alert" />
         <confirm ref="confirm" />
+        <toast ref="toast" />
         <shadowLayer v-show="layer" />
     </div>
 </template>
@@ -17,13 +18,15 @@
 import Vue from 'vue'
 import alert from '~/components/alert'
 import confirm from '~/components/confirm'
+import toast from '~/components/toast'
 import shadowLayer from '~/components/shadow-layer'
 import { toNativePage } from '~/functions/utils'
 export default {
     components: {
         alert,
         confirm,
-        shadowLayer
+        shadowLayer,
+        toast
     },
     data() {
         return {
@@ -43,6 +46,9 @@ export default {
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
             this.$refs.confirm.show(msg, callback, cancel, yes, no)
             this.$store.commit('SHOW_SHADOW_LAYER')
+        }
+        Vue.prototype.$toast = (msg, duration) => {
+            this.$refs.toast.show(msg, duration)
         }
         this.$axios.setHeader('token', this.$store.state.token)
     },
