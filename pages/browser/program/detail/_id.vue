@@ -23,7 +23,7 @@
     </div>
 </template>
 <script>
-import { formatTime, downApp,initFacebookLogin } from '~/functions/utils'
+import { formatTime, downApp,initFacebookLogin,shareFacebook } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -66,15 +66,7 @@ export default {
     },
     methods: {
         share(){
-            // eslint-disable-next-line no-undef
-            FB.ui(
-                {
-                    method: 'share',
-                    display: 'popup',
-                    href: window.location.href
-                },
-                function(response) {}
-            )
+            shareFacebook()
         },
         toSubProgramDetail(id) {
             this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
@@ -97,6 +89,7 @@ export default {
             title: this.pName,
             meta: [
                 { hid: 'description', name: 'description', content: this.pDescription },
+                { property: 'og:description', content: this.pDescription + '#StarTimes ON Live TV & football' },
                 { property: 'og:image', content: this.pPoster.replace('http:','https:') }
             ]
         }

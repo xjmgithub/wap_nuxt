@@ -32,7 +32,7 @@
     </div>
 </template>
 <script>
-import { formatTime, downApp } from '~/functions/utils'
+import { formatTime, downApp,initFacebookLogin,shareFacebook } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -74,6 +74,7 @@ export default {
         }
     },
     mounted() {
+        initFacebookLogin()
         if (this.pid) {
             this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
@@ -93,6 +94,9 @@ export default {
         }
     },
     methods: {
+        share(){
+            shareFacebook()
+        },
         confirmDown() {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
@@ -108,7 +112,11 @@ export default {
     head() {
         return {
             title: this.sName,
-            meta: [{ hid: 'description', name: 'description', content: this.sDescription }]
+            meta: [
+                { hid: 'description', name: 'description', content: this.sDescription },
+                { property: 'og:description', content: this.sDescription + '#StarTimes ON Live TV & football' },
+                { property: 'og:image', content: this.sPoster.replace('http:', 'https:') }
+            ]
         }
     }
 }

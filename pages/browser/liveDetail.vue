@@ -284,15 +284,19 @@ export default {
     },
     head() {
         return {
-            title: 'Live'
+            title: 'Live',
+            meta: [
+                { property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
+                { property: 'og:image', content: this.channel.logo.resources[0].url.replace('http:','https:') }
+            ]
         }
     }
 }
 </script>
 <style lang="less" scoped>
-.untrim-page{
-    padding-left:0;
-    padding-right:0;
+.untrim-page {
+    padding-left: 0;
+    padding-right: 0;
 }
 .poster {
     position: relative;

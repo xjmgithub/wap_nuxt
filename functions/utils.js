@@ -365,3 +365,12 @@ export const downApp = function() {
         }
     })
 }
+
+export const shareFacebook = function() {
+    // eslint-disable-next-line no-undef
+    FB.ui({
+        method: 'share',
+        display: 'popup',
+        href: window.location.href
+    })
+}
