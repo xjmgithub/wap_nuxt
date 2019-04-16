@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div @click="share">share button</div>
         <div class="poster" @click="confirmDown">
             <img :src="pPoster.replace('http:','https:')">
             <img v-show="pPoster" src="~assets/img/web/ic_play.png">
@@ -23,7 +24,7 @@
     </div>
 </template>
 <script>
-import { formatTime, downApp } from '~/functions/utils'
+import { formatTime, downApp,initFacebookLogin } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -52,6 +53,7 @@ export default {
         }
     },
     mounted() {
+        initFacebookLogin()
         if (this.pid) {
             this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
@@ -64,6 +66,17 @@ export default {
         }
     },
     methods: {
+        share(){
+            // eslint-disable-next-line no-undef
+            FB.ui(
+                {
+                    method: 'share',
+                    display: 'popup',
+                    href: window.location.href
+                },
+                function(response) {}
+            )
+        },
         toSubProgramDetail(id) {
             this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         },
@@ -83,7 +96,13 @@ export default {
     head() {
         return {
             title: this.pName,
-            meta: [{ hid: 'description', name: 'description', content: this.pDescription }]
+            meta: [
+                { hid: 'description', name: 'description', content: this.pDescription },
+                { property: 'og:url', content: window.location.href },
+                { property: 'og:title', content: this.pName },
+                { property: 'og:description', content: this.pDescription },
+                { property: 'og:image', content: this.pPoster.replace('http:','https:') },
+            ]
         }
     }
 }
