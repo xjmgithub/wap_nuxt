@@ -9,9 +9,9 @@
             </div>
         </div>
         <div class="rule">
-            <img src="~assets/img/vote/tv.png">
             <span class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
             <nuxt-link :to="{path:'/hybrid/vote/rule'}">
+                <img src="~assets/img/vote/tv.png">
                 <div class="how-to-win">{{$store.state.lang.mrright_how_to_win}}</div>
             </nuxt-link>
         </div>
@@ -31,13 +31,15 @@
                     <span class="player-name">{{item.name.split('&')[1]}}</span>
                     <div class="vote-btn">
                         <span class="votes">{{item.ballot_num}}</span>
-                        <span v-if="item.user_ballot_num>0" class="btn" @click="handleViceVote(item)">{{$store.state.lang.mrright_voted}}</span>
-                        <span v-else class="btn" @click="handleViceVote(item)">{{$store.state.lang.mrright_vote}}</span>
+                        <div :class="{disabled:voteLeft==0}" class="btn" @click="handleViceVote(item)">
+                            <span v-if="item.user_ballot_num>0">{{$store.state.lang.mrright_voted}}</span>
+                            <span v-else>{{$store.state.lang.mrright_vote}}</span>
+                        </div>
                     </div>
                 </li>
             </ul>
         </div>
-        <div v-show="advisorList.length>0" class="rank">
+        <div v-show="advisorList.length>0 && rankList.length>0" class="rank">
             <p>
                 <img class="heart" src="~assets/img/vote/heartpoint.png">
                 <span class="title">{{$store.state.lang.mrright_history_rank}}</span>
@@ -221,8 +223,6 @@ export default {
                     this.$store.state.lang.mrright_no
                 )
             } else {
-                advisor.ballot_num++
-                // this.voteLeft--
                 this.$axios({
                     url: '/voting/v1/ballot',
                     method: 'POST',
@@ -236,6 +236,8 @@ export default {
                 }).then(res => {
                     if (res.data.code === 0) {
                         this.getVoteLeft()
+                        advisor.ballot_num++
+                        advisor.user_ballot_num++
                         if (!this.isLogin) {
                             this.$confirm(
                                 this.$store.state.lang.mrright_successfully_voted,
@@ -300,7 +302,7 @@ export default {
             text-decoration: underline;
             position: absolute;
             left: 3rem;
-            bottom: 4rem;
+            bottom: 3.3rem;
         }
     }
     .title {
@@ -398,16 +400,19 @@ export default {
                 margin-top: 0.5rem;
                 .votes {
                     display: inline-block;
-                    width: 45%;
+                    width: 40%;
                     color: #ff598c;
                 }
                 .btn {
                     color: #ffffff;
                     font-weight: bold;
                     display: inline-block;
-                    width: 50%;
+                    width: 55%;
                     background: #ff598c;
                     border-radius: 15px;
+                    &.disabled {
+                        background: #b0b0b0;
+                    }
                 }
             }
         }
@@ -558,5 +563,11 @@ export default {
             }
         }
     }
+}
+@keyframes toRight {
+  
+}
+@keyframes toLeft {
+
 }
 </style>
