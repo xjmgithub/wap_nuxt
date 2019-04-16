@@ -43,7 +43,8 @@ export default {
 
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
-        '@nuxtjs/axios'
+        '@nuxtjs/axios',
+        ['@nuxtjs/pwa', { icon: false }]
     ],
 
     axios: {
