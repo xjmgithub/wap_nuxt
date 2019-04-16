@@ -24,6 +24,10 @@ export default {
     mrright_download_ios: "Download StarTimes ON from App Store to vote & win prizes! ",
     mrright_not_now: "Not Now",
     mrright_go: "Go",
+    mrright_successfully_voted: "Successfully voted! Sign in for more chances to win prize!",
+    mrright_successfully_voted_signin: "Successfully voted! Today's left vote: ",
+    mrright_how_to_win: "HOW TO WIN",
+    mrright_tell_my_friends: "TEll MY FRIENDS",
     
     // loginfaq
     loginfaq_title: "retour d'information",

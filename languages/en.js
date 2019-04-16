@@ -26,6 +26,8 @@ export default {
     mrright_go: "Go",
     mrright_successfully_voted: "Successfully voted! Sign in for more chances to win prize!",
     mrright_successfully_voted_signin: "Successfully voted! Today's left vote: ",
+    mrright_how_to_win: "HOW TO WIN",
+    mrright_tell_my_friends: "TEll MY FRIENDS",
 
 
     

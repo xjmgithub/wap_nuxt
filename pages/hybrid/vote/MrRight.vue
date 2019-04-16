@@ -8,6 +8,13 @@
                 <img src="~assets/img/vote/highlights.png">
             </div>
         </div>
+        <div class="rule">
+            <img src="~assets/img/vote/tv.png">
+            <span class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
+            <nuxt-link :to="{path:'/hybrid/vote/rule'}">
+                <div class="how-to-win">{{$store.state.lang.mrright_how_to_win}}</div>
+            </nuxt-link>
+        </div>
         <div class="vote">
             <p>
                 <img class="heart" src="~assets/img/vote/heartpoint.png">
@@ -24,7 +31,7 @@
                     <span class="player-name">{{item.name.split('&')[1]}}</span>
                     <div class="vote-btn">
                         <span class="votes">{{item.ballot_num}}</span>
-                        <span v-if="item.user_ballot_num>0" class="btn" @click="handleViceVote(item)" >{{$store.state.lang.mrright_voted}}</span>
+                        <span v-if="item.user_ballot_num>0" class="btn" @click="handleViceVote(item)">{{$store.state.lang.mrright_voted}}</span>
                         <span v-else class="btn" @click="handleViceVote(item)">{{$store.state.lang.mrright_vote}}</span>
                     </div>
                 </li>
@@ -126,6 +133,10 @@ export default {
         this.getVideoList()
     },
     methods: {
+        toShare() {
+            // TODO 风险
+        },
+
         // 获取投票单元数据
         getAdvisorList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {
@@ -268,6 +279,29 @@ export default {
         height: 0.6rem;
         margin-right: 0.2rem;
         vertical-align: inherit;
+    }
+    .rule {
+        padding: 0 2%;
+        position: relative;
+        font-size: 0.88rem;
+        font-weight: bold;
+        img {
+            width: 100%;
+        }
+        .share {
+            position: absolute;
+            right: 3%;
+            top: 0.6rem;
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .how-to-win {
+            color: #ffe8a4;
+            text-decoration: underline;
+            position: absolute;
+            left: 3rem;
+            bottom: 4rem;
+        }
     }
     .title {
         & > img {
