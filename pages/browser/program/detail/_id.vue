@@ -1,6 +1,5 @@
 <template>
     <div>
-        <div @click="share">share button</div>
         <div class="poster" @click="confirmDown">
             <img :src="pPoster.replace('http:','https:')">
             <img v-show="pPoster" src="~assets/img/web/ic_play.png">
@@ -98,10 +97,7 @@ export default {
             title: this.pName,
             meta: [
                 { hid: 'description', name: 'description', content: this.pDescription },
-                { property: 'og:url', content: window.location.href },
-                { property: 'og:title', content: this.pName },
-                { property: 'og:description', content: this.pDescription },
-                { property: 'og:image', content: this.pPoster.replace('http:','https:') },
+                { property: 'og:image', content: this.pPoster.replace('http:','https:') }
             ]
         }
     }
