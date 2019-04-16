@@ -115,7 +115,8 @@ export default {
             meta: [
                 { hid: 'description', name: 'description', content: this.sDescription },
                 { property: 'og:description', content: this.sDescription + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.sPoster.replace('http:', 'https:') }
+                { property: 'og:image', content: this.sPoster.replace('http:', 'https:') },
+                { property: 'twitter:card', content: "summary" }
             ]
         }
     }

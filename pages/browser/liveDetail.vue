@@ -287,7 +287,8 @@ export default {
             title: 'Live',
             meta: [
                 { property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.channel.logo.resources[0].url.replace('http:','https:') }
+                { property: 'og:image', content: this.channel.logo.resources[0].url.replace('http:','https:') },
+                { property: 'twitter:card', content: "summary" }
             ]
         }
     }
