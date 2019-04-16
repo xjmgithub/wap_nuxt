@@ -1,14 +1,14 @@
 <template>
     <div class="untrim-page">
         <div v-if="channel.poster&&channel.poster.resources[0].url" class="poster" @click="confirmDown">
-            <img :src="channel.poster.resources[0].url.replace('http:','https:')" alt>
+            <img :src="channel.poster&&channel.poster.resources[0].url.replace('http:','https:')" alt>
             <img src="~assets/img/web/ic_play.png">
         </div>
         <div class="container-main">
             <p class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views</p>
             <div v-if="channel.id" class="base-info clearfix">
                 <div class="logo">
-                    <img :src="channel.logo.resources[0].url.replace('http:','https:')" alt>
+                    <img :src="channel.logo.resources[0]&&channel.logo.resources[0].url.replace('http:','https:')" alt>
                 </div>
                 <div class="info">
                     <p class="info-name">{{channel.name}}</p>
@@ -287,7 +287,7 @@ export default {
             title: 'Live',
             meta: [
                 { property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.channel.logo.resources[0].url.replace('http:','https:') },
+                { property: 'og:image', content: this.channel.logo&&this.channel.logo.resources[0].url.replace('http:','https:') },
                 { property: 'twitter:card', content: "summary" }
             ]
         }
