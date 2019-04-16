@@ -18,18 +18,19 @@
                 <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length<3}" data-id="item.id">
                     <div class="img-box">
                         <img :src="item.icon.replace('http:','https:')" class="icon">
-                        <img src="~assets/img/vote/ic_play_small_white.png" class="player" v-show="item.link_vod_code">
+                        <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                     </div>
                     <span class="player-name">{{item.name.split('&')[0]}}</span>
                     <span class="player-name">{{item.name.split('&')[1]}}</span>
                     <div class="vote-btn">
                         <span class="votes">{{item.ballot_num}}</span>
-                        <span class="btn" @click="handleViceVote(item)">{{$store.state.lang.mrright_vote}}</span>
+                        <span v-if="item.user_ballot_num>0" class="btn" @click="handleViceVote(item)" >{{$store.state.lang.mrright_voted}}</span>
+                        <span v-else class="btn" @click="handleViceVote(item)">{{$store.state.lang.mrright_vote}}</span>
                     </div>
                 </li>
             </ul>
         </div>
-        <div class="rank" v-show="advisorList.length>0">
+        <div v-show="advisorList.length>0" class="rank">
             <p>
                 <img class="heart" src="~assets/img/vote/heartpoint.png">
                 <span class="title">{{$store.state.lang.mrright_history_rank}}</span>
@@ -50,7 +51,7 @@
                         <span class="count">{{item.ballot_num}}</span>
                         <span class="votes">votes</span>
                         <span class="player">
-                            <img src="~assets/img/vote/ic_play_small_white.png" v-show="item.link_vod_code">
+                            <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png">
                         </span>
                     </div>
                 </li>
@@ -85,7 +86,8 @@
     </div>
 </template>
 <script>
-import { downApp } from '~/functions/utils'
+// import { downApp } from '~/functions/utils'
+import qs from 'qs'
 export default {
     layout: 'base',
     data() {
@@ -109,8 +111,8 @@ export default {
                 return this.rankList.slice(0, 6)
             }
         },
-        coupleList(){
-            if (this.advisorList.length>0) {
+        coupleList() {
+            if (this.advisorList.length > 0) {
                 return this.advisorList
             } else {
                 return this.rankList
@@ -167,33 +169,34 @@ export default {
         // 投票提交
         handleViceVote(advisor) {
             // 浏览器打开判断用户终端，提示下载
-            if (this.isApp !== 1 && this.isApp !== 2) {
-                const _this = this
-                if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-                    console.log(navigator.userAgent)
-                    this.$confirm(
-                        this.$store.state.lang.mrright_download_ios,
-                        () => {
-                            downApp.call(_this)
-                        },
-                        () => {},
-                        this.$store.state.lang.mrright_go,
-                        this.$store.state.lang.mrright_not_now
-                    )
-                } else if (/(Android)/i.test(navigator.userAgent)) {
-                    console.log(navigator.userAgent)
-                    this.$confirm(
-                        this.$store.state.lang.mrright_download_android,
-                        () => {
-                            downApp.call(_this)
-                        },
-                        () => {},
-                        this.$store.state.lang.mrright_go,
-                        this.$store.state.lang.mrright_not_now
-                    )
-                }
-                return
-            }
+            // if (this.isApp !== 1 && this.isApp !== 2) {
+            //     const _this = this
+            //     if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+            //         console.log(navigator.userAgent)
+            //         this.$confirm(
+            //             this.$store.state.lang.mrright_download_ios,
+            //             () => {
+            //                 downApp.call(_this)
+            //             },
+            //             () => {},
+            //             this.$store.state.lang.mrright_go,
+            //             this.$store.state.lang.mrright_not_now
+            //         )
+            //     } else if (/(Android)/i.test(navigator.userAgent)) {
+            //         console.log(navigator.userAgent)
+            //         this.$confirm(
+            //             this.$store.state.lang.mrright_download_android,
+            //             () => {
+            //                 downApp.call(_this)
+            //             },
+            //             () => {},
+            //             this.$store.state.lang.mrright_go,
+            //             this.$store.state.lang.mrright_not_now
+            //         )
+            //     }
+            //     return
+            // }
+
             if (this.voteLeft === 0 && this.isLogin) {
                 this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
             } else if (this.voteLeft === 0 && !this.isLogin) {
@@ -208,7 +211,37 @@ export default {
                 )
             } else {
                 advisor.ballot_num++
-                this.voteLeft--
+                // this.voteLeft--
+                this.$axios({
+                    url: '/voting/v1/ballot',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        candidate_id: advisor.id,
+                        vote_id: this.vote_id
+                    })
+                }).then(res => {
+                    if (res.data.code === 0) {
+                        this.getVoteLeft()
+                        if (!this.isLogin) {
+                            this.$confirm(
+                                this.$store.state.lang.mrright_successfully_voted,
+                                () => {
+                                    this.$router.push('/hybrid/account/login')
+                                },
+                                () => {},
+                                this.$store.state.lang.mrright_sign_in,
+                                this.$store.state.lang.mrright_no
+                            )
+                        } else {
+                            this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + this.voteLeft)
+                        }
+                    } else {
+                        this.$toast(res.data.message)
+                    }
+                })
             }
         },
         toggleAll() {
