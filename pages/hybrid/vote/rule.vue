@@ -58,6 +58,7 @@ export default {
             font-weight: bold;
         }
         div {
+            margin:.5rem 0;
             p {
                 width: 55%;
                 display: inline-block;
