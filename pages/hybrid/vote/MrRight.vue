@@ -201,10 +201,10 @@ export default {
         },
         // 投票提交
         handleViceVote(advisor, _evt1) {
-            // if (this.$store.state.appType <= 0) {
-            //     toAppStore.call(this)
-            //     return
-            // }
+            if (this.$store.state.appType <= 0) {
+                toAppStore.call(this)
+                return
+            }
 
             if (this.voteLeft === 0 && this.isLogin) {
                 this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
