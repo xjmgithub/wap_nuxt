@@ -35,8 +35,8 @@
                     <span class="player-name">{{item.name.split('&')[0]}}</span>
                     <span class="player-name">{{item.name.split('&')[1]}}</span>
                     <div class="vote-btn">
-                        <div :class="{move:item.move}" class="votes">{{item.ballot_num}}</div>
-                        <div :class="{disabled:voteLeft==0, move:item.move}" class="btn" @click="handleViceVote(item)">
+                        <div class="votes">{{item.ballot_num}}</div>
+                        <div :class="{disabled:voteLeft==0}" class="btn" @click="handleViceVote(item,$event)">
                             <span v-if="item.user_ballot_num>0">{{$store.state.lang.mrright_voted}}</span>
                             <span v-else>{{$store.state.lang.mrright_vote}}</span>
                         </div>
@@ -78,7 +78,8 @@
         </div>
         <div class="clips">
             <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png"> {{$store.state.lang.mrright_clips_you_cant_miss}}
+                <img class="heart" src="~assets/img/vote/heartpoint.png">
+                {{$store.state.lang.mrright_clips_you_cant_miss}}
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
@@ -102,6 +103,7 @@
 <script>
 import { shareInvite, playVodinApp, toNativePage, toAppStore } from '~/functions/utils'
 import qs from 'qs'
+import anime from 'animejs'
 export default {
     layout: 'base',
     data() {
@@ -191,12 +193,11 @@ export default {
             })
         },
         // 投票提交
-        handleViceVote(advisor) {
-
-            if (this.$store.state.appType <= 0) {
-                toAppStore.call(this)
-                return 
-            }
+        handleViceVote(advisor, _evt1) {
+            // if (this.$store.state.appType <= 0) {
+            //     toAppStore.call(this)
+            //     return
+            // }
 
             if (this.voteLeft === 0 && this.isLogin) {
                 this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
@@ -215,6 +216,7 @@ export default {
                     this.$store.state.lang.mrright_no
                 )
             } else {
+                const animateTarget = _evt1.currentTarget
                 this.$axios({
                     url: '/voting/v1/ballot',
                     method: 'POST',
@@ -227,9 +229,16 @@ export default {
                     })
                 }).then(res => {
                     if (res.data.code === 0) {
+                        anime({
+                            targets: animateTarget,
+                            left: 0,
+                            direction: 'alternate',
+                            easing: 'easeInOutSine',
+                            duration: 200
+                        })
                         advisor.ballot_num++
                         advisor.user_ballot_num++
-                        advisor.move = true
+
                         if (!this.isLogin) {
                             this.$confirm(
                                 this.$store.state.lang.mrright_successfully_voted,
@@ -248,7 +257,6 @@ export default {
                             this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
                         }
                         this.getVoteLeft()
-                        this.$nextTick(() => (advisor.move = false))
                     } else {
                         this.$toast(res.data.message)
                     }
@@ -394,6 +402,7 @@ export default {
             }
             .vote-btn {
                 width: 100%;
+                height: 2rem;
                 line-height: 1.6rem;
                 background: #fed56b;
                 border-radius: 15px;
@@ -402,15 +411,7 @@ export default {
                 padding: 0.2rem 0.1rem;
                 margin-top: 0.5rem;
                 position: relative;
-                .votes {
-                    position: absolute;
-                    left: 0;
-                    width: 40%;
-                    color: #ff598c;
-                    &.move {
-                        animation: toRight 0.3s forwards;
-                    }
-                }
+
                 .btn {
                     position: absolute;
                     right: 2px;
@@ -419,9 +420,6 @@ export default {
                     font-weight: bold;
                     background: #ff598c;
                     border-radius: 15px;
-                    &.move {
-                        animation: toLeft 0.3s forwards;
-                    }
                     &.disabled {
                         background: #b0b0b0;
                     }
@@ -576,30 +574,5 @@ export default {
         }
     }
 }
-@keyframes toRight {
-    0% {
-    }
 
-    50% {
-        right: 0;
-        color: #000000;
-    }
-
-    100% {
-        left: 0;
-        color: lime;
-    }
-}
-@keyframes toLeft {
-    0% {
-    }
-
-    50% {
-        left: 0;
-    }
-
-    100% {
-        right: 2px;
-    }
-}
 </style>
