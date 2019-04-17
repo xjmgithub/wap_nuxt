@@ -219,7 +219,7 @@ export default {
 
         // 获取所有获选人列表，及排行
         getRankList() {
-            this.$axios.get(`/voting/v1/candidates-with-ballot-num?vote_id=${this.vote_id}`).then(res => {
+            this.$axios.get(`/voting/v1/candidates-with-ballot-num?vote_id=${this.vote_id}&filter_now_candidate=true`).then(res => {
                 if (res.data.code === 0) {
                     this.rankList = res.data.data
                     this.rankList.sort(function(a, b) {
