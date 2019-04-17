@@ -366,12 +366,54 @@ export const downApp = function() {
     })
 }
 
-export const playVodinApp = function(appType,vod){
-    if(appType==1){
-        window.getChannelId && window.getChannelId.toAppPage(3, "com.star.mobile.video.player.PlayerVodActivity?vodId=" + vod, "");
-    }else if(appType==2){
+export const toAppStore = function() {
+    let scheme = 'starvideo'
+    let appType = 1
+    const ua = navigator.userAgent.toLowerCase()
+    const _this = this
+    let source = ''
+
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        scheme = 'startimes'
+        appType = 2
+    }
+    const callLib = new CallApp({
+        scheme: {
+            protocol: scheme
+        }
+    })
+    callLib.open({
+        path: 'platformapi/webtoapp',
+        callback() {
+            if (location.href.indexOf('referrer') > 0) {
+                source = location.search
+            } else if (location.href.indexOf('utm_source') > 0) {
+                source = '&referrer=' + encodeURIComponent(location.search.substr(1))
+            } else {
+                source = '&' + location.search.substr(1)
+            }
+            _this.$confirm(
+                appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
+                () => {
+                    window.location.href =
+                        appType == 1
+                            ? 'market://details?id=com.star.mobile.video' + source
+                            : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+                },
+                () => {},
+                _this.$store.state.lang.mrright_go,
+                _this.$store.state.lang.mrright_not_now
+            )
+        }
+    })
+}
+
+export const playVodinApp = function(appType, vod) {
+    if (appType == 1) {
+        window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+    } else if (appType == 2) {
         window.location.href = 'startimes://player?vodId=' + vod
-    }else{
+    } else {
         downApp()
     }
 }

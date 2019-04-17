@@ -22,7 +22,12 @@
                 <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
             </p>
             <ul class="clearfix">
-                <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length<3}" data-id="item.id">
+                <li
+                    v-for="(item,index) in coupleList"
+                    :key="index"
+                    :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
+                    data-id="item.id"
+                >
                     <div class="img-box" @click="toPlayer(item.link_vod_code)">
                         <img :src="item.icon.replace('http:','https:')" class="icon">
                         <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
@@ -96,7 +101,7 @@
     </div>
 </template>
 <script>
-import { shareInvite, playVodinApp } from '~/functions/utils'
+import { shareInvite, playVodinApp, toNativePage, toAppStore } from '~/functions/utils'
 import qs from 'qs'
 export default {
     layout: 'base',
@@ -110,6 +115,7 @@ export default {
             rankList: [],
             voteLeft: '-',
             showAll: false,
+            loaded: false,
             clipsList: []
         }
     },
@@ -122,10 +128,14 @@ export default {
             }
         },
         coupleList() {
-            if (this.advisorList.length > 0) {
-                return this.advisorList
+            if (this.loaded) {
+                if (this.advisorList.length > 0) {
+                    return this.advisorList
+                } else {
+                    return this.rankList
+                }
             } else {
-                return this.rankList
+                return []
             }
         }
     },
@@ -145,7 +155,9 @@ export default {
                 if (res.data.data.length > 0) {
                     this.advisorList = res.data.data
                 } else {
+                    this.advisorList = []
                 }
+                this.loaded = true
             })
         },
 
@@ -181,34 +193,11 @@ export default {
         },
         // 投票提交
         handleViceVote(advisor) {
-            // 浏览器打开判断用户终端，提示下载
-            // if (this.isApp !== 1 && this.isApp !== 2) {
-            //     const _this = this
-            //     if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-            //         console.log(navigator.userAgent)
-            //         this.$confirm(
-            //             this.$store.state.lang.mrright_download_ios,
-            //             () => {
-            //                 downApp.call(_this)
-            //             },
-            //             () => {},
-            //             this.$store.state.lang.mrright_go,
-            //             this.$store.state.lang.mrright_not_now
-            //         )
-            //     } else if (/(Android)/i.test(navigator.userAgent)) {
-            //         console.log(navigator.userAgent)
-            //         this.$confirm(
-            //             this.$store.state.lang.mrright_download_android,
-            //             () => {
-            //                 downApp.call(_this)
-            //             },
-            //             () => {},
-            //             this.$store.state.lang.mrright_go,
-            //             this.$store.state.lang.mrright_not_now
-            //         )
-            //     }
-            //     return
-            // }
+
+            if (this.$store.state.appType <= 0) {
+                toAppStore.call(this)
+                return 
+            }
 
             if (this.voteLeft === 0 && this.isLogin) {
                 this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
@@ -216,7 +205,11 @@ export default {
                 this.$confirm(
                     this.$store.state.lang.mrright_vote_tomorrow,
                     () => {
-                        this.$router.push('/hybrid/account/login')
+                        if (this.$store.state.appType === 1) {
+                            toNativePage('com.star.mobile.video.account.LoginActivity')
+                        } else {
+                            toNativePage('startimes://login')
+                        }
                     },
                     () => {},
                     this.$store.state.lang.mrright_sign_in,
@@ -242,7 +235,11 @@ export default {
                             this.$confirm(
                                 this.$store.state.lang.mrright_successfully_voted,
                                 () => {
-                                    this.$router.push('/hybrid/account/login')
+                                    if (this.$store.state.appType === 1) {
+                                        toNativePage('com.star.mobile.video.account.LoginActivity')
+                                    } else {
+                                        toNativePage('startimes://login')
+                                    }
                                 },
                                 () => {},
                                 this.$store.state.lang.mrright_sign_in,
@@ -261,7 +258,11 @@ export default {
             this.showAll = !this.showAll
         },
         toPlayer(vod) {
-            playVodinApp(this.$store.state.appType, vod)
+            if (this.$store.state.appType > 0) {
+                playVodinApp(this.$store.state.appType, vod)
+            } else {
+                toAppStore.call(this)
+            }
         }
     },
     head() {
@@ -393,7 +394,6 @@ export default {
             }
             .vote-btn {
                 width: 100%;
-                height: 2rem;
                 line-height: 1.6rem;
                 background: #fed56b;
                 border-radius: 15px;
