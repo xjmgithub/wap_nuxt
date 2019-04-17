@@ -89,7 +89,8 @@
         </div>
         <div class="clips">
             <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png"> {{$store.state.lang.mrright_clips_you_cant_miss}}
+                <img class="heart" src="~assets/img/vote/heartpoint.png">
+                {{$store.state.lang.mrright_clips_you_cant_miss}}
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
@@ -264,43 +265,47 @@ export default {
                         candidate_id: advisor.id,
                         vote_id: this.vote_id
                     })
-                }).then(res => {
-                    if (res.data.code === 0) {
-                        anime({
-                            targets: animateTarget,
-                            left: 0,
-                            direction: 'alternate',
-                            easing: 'easeInOutSine',
-                            duration: 200
-                        })
-                        advisor.ballot_num++
-                        advisor.user_ballot_num++
-
-                        if (!this.isLogin) {
-                            this.$confirm(
-                                this.$store.state.lang.mrright_successfully_voted,
-                                () => {
-                                    if (this.$store.state.appType === 1) {
-                                        toNativePage('com.star.mobile.video.account.LoginActivity')
-                                    } else {
-                                        toNativePage('startimes://login')
-                                    }
-                                },
-                                () => {},
-                                this.$store.state.lang.mrright_sign_in,
-                                this.$store.state.lang.mrright_no
-                            )
-                        } else {
-                            this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
-                        }
-                        this.getVoteLeft()
-                        this.$nextTick(() => (advisor.move = false))
-                        this.mSendEvLog('votebtn_click', advisor.name, 10)
-                    } else {
-                        this.$toast(res.data.message)
-                        this.mSendEvLog('votebtn_click', advisor.name, 1)
-                    }
                 })
+                    .then(res => {
+                        if (res.data.code === 0) {
+                            anime({
+                                targets: animateTarget,
+                                left: 0,
+                                direction: 'alternate',
+                                easing: 'easeInOutSine',
+                                duration: 200
+                            })
+                            advisor.ballot_num++
+                            advisor.user_ballot_num++
+
+                            if (!this.isLogin) {
+                                this.$confirm(
+                                    this.$store.state.lang.mrright_successfully_voted,
+                                    () => {
+                                        if (this.$store.state.appType === 1) {
+                                            toNativePage('com.star.mobile.video.account.LoginActivity')
+                                        } else {
+                                            toNativePage('startimes://login')
+                                        }
+                                    },
+                                    () => {},
+                                    this.$store.state.lang.mrright_sign_in,
+                                    this.$store.state.lang.mrright_no
+                                )
+                            } else {
+                                this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
+                            }
+                            this.getVoteLeft()
+                            this.$nextTick(() => (advisor.move = false))
+                            this.mSendEvLog('votebtn_click', advisor.name, 10)
+                        } else {
+                            this.$toast(res.data.message)
+                            this.mSendEvLog('votebtn_click', advisor.name, 1)
+                        }
+                    })
+                    .catch(() => {
+                        this.mSendEvLog('votebtn_click', advisor.name, 1)
+                    })
             }
         },
         toPlayer(vod, action, label, value) {

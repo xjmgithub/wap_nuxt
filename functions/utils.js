@@ -392,15 +392,36 @@ export const toAppStore = function() {
             } else {
                 source = '&' + location.search.substr(1)
             }
+
+            _this.sendEvLog({
+                category: _this.vote_name,
+                action: 'downloadpopup_show',
+                label: '',
+                Value: 1
+            })
+
             _this.$confirm(
                 appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
                 () => {
+                    _this.sendEvLog({
+                        category: _this.vote_name,
+                        action: 'downloadpopup_click',
+                        label: 'go',
+                        Value: 1
+                    })
                     window.location.href =
                         appType == 1
                             ? 'market://details?id=com.star.mobile.video' + source
                             : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
                 },
-                () => {},
+                () => {
+                    _this.sendEvLog({
+                        category: _this.vote_name,
+                        action: 'downloadpopup_click',
+                        label: 'not now',
+                        Value: 1
+                    })
+                },
                 _this.$store.state.lang.mrright_go,
                 _this.$store.state.lang.mrright_not_now
             )
