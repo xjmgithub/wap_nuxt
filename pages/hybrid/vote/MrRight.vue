@@ -11,7 +11,7 @@
         <div class="rule">
             <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
             <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click','1',10)">
+                <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
             </nuxt-link>
         </div>
         <div class="vote">
@@ -72,8 +72,7 @@
         </div>
         <div class="clips">
             <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png">
-                {{$store.state.lang.mrright_clips_you_cant_miss}}
+                <img class="heart" src="~assets/img/vote/heartpoint.png"> {{$store.state.lang.mrright_clips_you_cant_miss}}
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
@@ -153,7 +152,7 @@ export default {
             })
         },
         toShare() {
-            this.mSendEvLog('share_click', 1, 10) // TODO sharebtn_click 埋点
+            this.mSendEvLog('share_click', 1, 10)
             process.client && shareInvite(window.location.href, 'Hello, Mr Right', 'Hello, Mr Right', 'Hello, Mr Right')
         },
         // 获取投票单元数据
@@ -174,7 +173,9 @@ export default {
                 if (res.data.code === 0) {
                     this.videoList = res.data.data.slice(0, 3)
                     this.clipsList = res.data.data.slice(3, 7)
-                    this.mSendEvLog('video_show', 'video名称', 10)
+                    this.clipsList.forEach(ele => {
+                        this.mSendEvLog('video_show', ele.name || ele.description, 10)
+                    })
                 }
             })
         },
@@ -584,5 +585,4 @@ export default {
         }
     }
 }
-
 </style>
