@@ -365,3 +365,13 @@ export const downApp = function() {
         }
     })
 }
+
+export const playVodinApp = function(appType,vod){
+    if(appType==1){
+        window.getChannelId && window.getChannelId.toAppPage(3, "com.star.mobile.video.player.PlayerVodActivity?vodId=" + vod, "");
+    }else if(appType==2){
+        window.location.href = 'startimes://player?vodId=' + vod
+    }else{
+        downApp()
+    }
+}

@@ -3,9 +3,9 @@
         <div class="title">
             <img src="~assets/img/vote/pic_title.png">
             <div class="video">
-                <img src="~assets/img/vote/full_eps.png">
-                <img src="~assets/img/vote/trailer.png">
-                <img src="~assets/img/vote/highlights.png">
+                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code)">
+                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code)">
+                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code)">
             </div>
         </div>
         <div class="rule">
@@ -23,7 +23,7 @@
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length<3}" data-id="item.id">
-                    <div class="img-box">
+                    <div class="img-box" @click="toPlayer(item.link_vod_code)">
                         <img :src="item.icon.replace('http:','https:')" class="icon">
                         <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                     </div>
@@ -46,7 +46,7 @@
                 <span class="voteleft">{{$store.state.lang.mrright_all_candidates}}</span>
             </p>
             <ul>
-                <li v-for="(item,index) in showList" :key="index">
+                <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code)">
                     <div class="left">
                         <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
                         <img v-show="index<3" :src="item.icon.replace('http:','https:')" class="icon">
@@ -78,7 +78,7 @@
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
-                    <div>
+                    <div @click="toPlayer(item.link_vod_code)">
                         <img :src="item.link_url.replace('http:','https:')" class="url">
                         <img src="~assets/img/vote/ic_play_small_white.png" class="player">
                     </div>
@@ -88,15 +88,15 @@
         </div>
         <div class="title">
             <div class="video">
-                <img src="~assets/img/vote/full_eps.png">
-                <img src="~assets/img/vote/trailer.png">
-                <img src="~assets/img/vote/highlights.png">
+                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code)">
+                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code)">
+                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code)">
             </div>
         </div>
     </div>
 </template>
 <script>
-import { shareInvite } from '~/functions/utils'
+import { shareInvite, playVodinApp } from '~/functions/utils'
 import qs from 'qs'
 export default {
     layout: 'base',
@@ -259,6 +259,9 @@ export default {
         },
         toggleAll() {
             this.showAll = !this.showAll
+        },
+        toPlayer(vod) {
+            playVodinApp(this.$store.state.appType, vod)
         }
     },
     head() {
@@ -565,9 +568,7 @@ export default {
     }
 }
 @keyframes toRight {
-  
 }
 @keyframes toLeft {
-
 }
 </style>
