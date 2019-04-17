@@ -267,14 +267,22 @@ export default {
                     })
                 })
                     .then(res => {
+                        
                         if (res.data.code === 0) {
-                            anime({
-                                targets: animateTarget,
-                                left: 0,
-                                direction: 'alternate',
-                                easing: 'easeInOutSine',
-                                duration: 200
-                            })
+                            
+                            try{ // 有些不支持这个动画效果的
+                                anime({
+                                    targets: animateTarget,
+                                    left: 0,
+                                    direction: 'alternate',
+                                    easing: 'easeInOutSine',
+                                    duration: 200
+                                })
+                            }catch(e){
+                                console.log(e)
+                            }
+                            
+                            // alert(res.data.code)
                             advisor.ballot_num++
                             advisor.user_ballot_num++
 
@@ -303,7 +311,8 @@ export default {
                             this.mSendEvLog('votebtn_click', advisor.name, 1)
                         }
                     })
-                    .catch(() => {
+                    .catch((err) => {
+                        alert(err)
                         this.mSendEvLog('votebtn_click', advisor.name, 1)
                     })
             }
