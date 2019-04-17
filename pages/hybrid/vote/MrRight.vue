@@ -3,16 +3,15 @@
         <div class="title">
             <img src="~assets/img/vote/pic_title.png">
             <div class="video">
-                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code)">
-                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code)">
-                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code)">
+                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)">
+                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)">
+                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)">
             </div>
         </div>
         <div class="rule">
             <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
             <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                <img src="~assets/img/vote/tv.png">
-                <div class="how-to-win">{{$store.state.lang.mrright_how_to_win}}</div>
+                <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click','banner名称',10)">
             </nuxt-link>
         </div>
         <div class="vote">
@@ -22,13 +21,8 @@
                 <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
             </p>
             <ul class="clearfix">
-                <li
-                    v-for="(item,index) in coupleList"
-                    :key="index"
-                    :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
-                    data-id="item.id"
-                >
-                    <div class="img-box" @click="toPlayer(item.link_vod_code)">
+                <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length>0&&advisorList.length<3}" data-id="item.id">
+                    <div class="img-box" @click="toPlayer(item.link_vod_code,'votepic_click',item.name,10)">
                         <img :src="item.icon.replace('http:','https:')" class="icon">
                         <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                     </div>
@@ -51,7 +45,7 @@
                 <span class="voteleft">{{$store.state.lang.mrright_all_candidates}}</span>
             </p>
             <ul>
-                <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code)">
+                <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,)">
                     <div class="left">
                         <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
                         <img v-show="index<3" :src="item.icon.replace('http:','https:')" class="icon">
@@ -70,7 +64,7 @@
                     </div>
                 </li>
             </ul>
-            <p class="toggleAll" @click="toggleAll">
+            <p class="toggleAll" @click="showAll = !showAll">
                 <span v-show="showList.length==6&&rankList.length>6">{{$store.state.lang.mrright_view_all}}</span>
                 <span v-show="showList.length>6">{{$store.state.lang.mrright_view_less}}</span>
                 <img v-show="rankList.length>6" :class="{updown:showAll}" src="~assets/img/vote/view more.png">
@@ -82,7 +76,7 @@
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
-                    <div @click="toPlayer(item.link_vod_code)">
+                    <div @click="toPlayer(item.link_vod_code,'video_click',item.name||item.description,10)">
                         <img :src="item.link_url.replace('http:','https:')" class="url">
                         <img src="~assets/img/vote/ic_play_small_white.png" class="player">
                     </div>
@@ -92,9 +86,9 @@
         </div>
         <div class="title">
             <div class="video">
-                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code)">
-                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code)">
-                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code)">
+                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)">
+                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)">
+                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)">
             </div>
         </div>
     </div>
@@ -115,12 +109,14 @@ export default {
             voteLeft: '-',
             showAll: false,
             loaded: false,
-            clipsList: []
+            clipsList: [],
+            vote_name: 'vote_Hello, Mr Right'
         }
     },
     computed: {
         showList() {
             if (this.showAll) {
+                this.mSendEvLog('viewallbtn_click', 1, 10)
                 return this.rankList
             } else {
                 return this.rankList.slice(0, 6)
@@ -143,9 +139,20 @@ export default {
         this.getAdvisorList()
         this.getRankList()
         this.getVideoList()
+        this.mSendEvLog('homepage_show', 1, 10)
+        this.mSendEvLog('banner_show', 'banner名称', 10) // TODO
     },
     methods: {
+        mSendEvLog(action, label, Value) {
+            this.sendEvLog({
+                category: this.vote_name,
+                action: action,
+                label: label,
+                Value: Value
+            })
+        },
         toShare() {
+            this.mSendEvLog('share_click', 1, 10) // TODO sharebtn_click 埋点
             process.client && shareInvite(window.location.href, 'Hello, Mr Right', 'Hello, Mr Right', 'Hello, Mr Right')
         },
         // 获取投票单元数据
@@ -166,6 +173,7 @@ export default {
                 if (res.data.code === 0) {
                     this.videoList = res.data.data.slice(0, 3)
                     this.clipsList = res.data.data.slice(3, 7)
+                    this.mSendEvLog('video_show', 'video名称', 10)
                 }
             })
         },
@@ -192,10 +200,9 @@ export default {
         },
         // 投票提交
         handleViceVote(advisor) {
-
             if (this.$store.state.appType <= 0) {
                 toAppStore.call(this)
-                return 
+                return
             }
 
             if (this.voteLeft === 0 && this.isLogin) {
@@ -249,21 +256,21 @@ export default {
                         }
                         this.getVoteLeft()
                         this.$nextTick(() => (advisor.move = false))
+                        this.mSendEvLog('votebtn_click', advisor.name, 10)
                     } else {
                         this.$toast(res.data.message)
+                        this.mSendEvLog('votebtn_click', advisor.name, 1)
                     }
                 })
             }
         },
-        toggleAll() {
-            this.showAll = !this.showAll
-        },
-        toPlayer(vod) {
+        toPlayer(vod, action, label, value) {
             if (this.$store.state.appType > 0) {
                 playVodinApp(this.$store.state.appType, vod)
             } else {
                 toAppStore.call(this)
             }
+            this.mSendEvLog(action, label, value)
         }
     },
     head() {
@@ -301,13 +308,6 @@ export default {
             top: 0.6rem;
             color: #ffffff;
             text-decoration: underline;
-        }
-        .how-to-win {
-            color: #ffe8a4;
-            text-decoration: underline;
-            position: absolute;
-            left: 3rem;
-            bottom: 3.3rem;
         }
     }
     .title {
@@ -394,6 +394,7 @@ export default {
             }
             .vote-btn {
                 width: 100%;
+                height: 2rem;
                 line-height: 1.6rem;
                 background: #fed56b;
                 border-radius: 15px;
@@ -407,6 +408,7 @@ export default {
                     left: 0;
                     width: 40%;
                     color: #ff598c;
+                    font-size: 0.75rem;
                     &.move {
                         animation: toRight 0.3s forwards;
                     }
