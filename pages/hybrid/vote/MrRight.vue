@@ -10,7 +10,7 @@
         </div>
         <div class="rule">
             <img src="~assets/img/vote/tv.png">
-            <span class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
+            <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
             <nuxt-link :to="{path:'/hybrid/vote/rule'}">
                 <div class="how-to-win">{{$store.state.lang.mrright_how_to_win}}</div>
             </nuxt-link>
@@ -50,7 +50,7 @@
                         <img v-show="index<3" :src="item.icon.replace('http:','https:')" class="icon">
                         <div v-if="index<3" class="name">
                             <p>{{item.name.split('&')[0]}}</p>
-                            <p> & {{item.name.split('&')[1]}}</p>
+                            <p>& {{item.name.split('&')[1]}}</p>
                         </div>
                         <span v-else class="name">{{item.name.split('&')[0]}} & {{item.name.split('&')[1]}}</span>
                     </div>
@@ -71,7 +71,8 @@
         </div>
         <div class="clips">
             <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png"> {{$store.state.lang.mrright_clips_you_cant_miss}}
+                <img class="heart" src="~assets/img/vote/heartpoint.png">
+                {{$store.state.lang.mrright_clips_you_cant_miss}}
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
@@ -93,7 +94,7 @@
     </div>
 </template>
 <script>
-// import { downApp } from '~/functions/utils'
+import { shareInvite } from '~/functions/utils'
 import qs from 'qs'
 export default {
     layout: 'base',
@@ -134,9 +135,8 @@ export default {
     },
     methods: {
         toShare() {
-            // TODO 风险
+            process.client && shareInvite(window.location.href, 'Hello, Mr Right', 'Hello, Mr Right', 'Hello, Mr Right')
         },
-
         // 获取投票单元数据
         getAdvisorList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {

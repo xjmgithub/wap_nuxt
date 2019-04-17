@@ -68,16 +68,16 @@ export const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min
 }
 
-export const shareInvite = (link, shareTitle, shareContent, tabName, voteName) => {
+export const shareInvite = (link, shareTitle, shareContent, channel) => {
     const shareLink = '' // TODO 图片地址
     if (link.indexOf('?') > 0) {
-        link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + voteName + '_' + tabName
+        link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
     } else {
-        link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + voteName + '_' + tabName
+        link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
     }
     if (window.getChannelId && window.getChannelId.showCustorm) {
         const content = '【' + shareTitle + '】' + shareContent + link
-        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareLink, voteName)
+        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareLink, channel)
     }
 }
 
