@@ -3,9 +3,21 @@
         <div class="title">
             <img src="~assets/img/vote/pic_title.png">
             <div class="video">
-                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)">
-                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)">
-                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)">
+                <img
+                    v-if="videoList.length>0"
+                    src="~assets/img/vote/full_eps.png"
+                    @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)"
+                >
+                <img
+                    v-if="videoList.length>1"
+                    src="~assets/img/vote/trailer.png"
+                    @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)"
+                >
+                <img
+                    v-if="videoList.length>2"
+                    src="~assets/img/vote/highlights.png"
+                    @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)"
+                >
             </div>
         </div>
         <div class="rule">
@@ -21,7 +33,12 @@
                 <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
             </p>
             <ul class="clearfix">
-                <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length>0&&advisorList.length<3}" data-id="item.id">
+                <li
+                    v-for="(item,index) in coupleList"
+                    :key="index"
+                    :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
+                    data-id="item.id"
+                >
                     <div class="img-box" @click="toPlayer(item.link_vod_code,'votepic_click',item.name,10)">
                         <img :src="item.icon.replace('http:','https:')" class="icon">
                         <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
@@ -86,9 +103,21 @@
         </div>
         <div class="title">
             <div class="video">
-                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)">
-                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)">
-                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)">
+                <img
+                    v-if="videoList.length>0"
+                    src="~assets/img/vote/full_eps.png"
+                    @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)"
+                >
+                <img
+                    v-if="videoList.length>1"
+                    src="~assets/img/vote/trailer.png"
+                    @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)"
+                >
+                <img
+                    v-if="videoList.length>2"
+                    src="~assets/img/vote/highlights.png"
+                    @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)"
+                >
             </div>
         </div>
     </div>
@@ -275,12 +304,14 @@ export default {
             }
         },
         toPlayer(vod, action, label, value) {
-            if (this.$store.state.appType > 0) {
-                playVodinApp(this.$store.state.appType, vod)
-            } else {
-                toAppStore.call(this)
+            if (vod) {
+                if (this.$store.state.appType > 0) {
+                    playVodinApp(this.$store.state.appType, vod)
+                } else {
+                    toAppStore.call(this)
+                }
+                this.mSendEvLog(action, label, value)
             }
-            this.mSendEvLog(action, label, value)
         }
     },
     head() {
