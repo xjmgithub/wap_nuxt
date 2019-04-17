@@ -30,8 +30,8 @@
                     <span class="player-name">{{item.name.split('&')[0]}}</span>
                     <span class="player-name">{{item.name.split('&')[1]}}</span>
                     <div class="vote-btn">
-                        <span class="votes">{{item.ballot_num}}</span>
-                        <div :class="{disabled:voteLeft==0}" class="btn" @click="handleViceVote(item)">
+                        <div :class="{move:item.move}" class="votes">{{item.ballot_num}}</div>
+                        <div :class="{disabled:voteLeft==0, move:item.move}" class="btn" @click="handleViceVote(item)">
                             <span v-if="item.user_ballot_num>0">{{$store.state.lang.mrright_voted}}</span>
                             <span v-else>{{$store.state.lang.mrright_vote}}</span>
                         </div>
@@ -73,8 +73,7 @@
         </div>
         <div class="clips">
             <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png">
-                {{$store.state.lang.mrright_clips_you_cant_miss}}
+                <img class="heart" src="~assets/img/vote/heartpoint.png"> {{$store.state.lang.mrright_clips_you_cant_miss}}
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
@@ -235,9 +234,9 @@ export default {
                     })
                 }).then(res => {
                     if (res.data.code === 0) {
-                        this.getVoteLeft()
                         advisor.ballot_num++
                         advisor.user_ballot_num++
+                        advisor.move = true
                         if (!this.isLogin) {
                             this.$confirm(
                                 this.$store.state.lang.mrright_successfully_voted,
@@ -249,8 +248,10 @@ export default {
                                 this.$store.state.lang.mrright_no
                             )
                         } else {
-                            this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + this.voteLeft)
+                            this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
                         }
+                        this.getVoteLeft()
+                        this.$nextTick(() => (advisor.move = false))
                     } else {
                         this.$toast(res.data.message)
                     }
@@ -325,7 +326,6 @@ export default {
     }
     .vote {
         padding: 0 2.5%;
-
         p {
             margin: 1rem 0;
             height: 1.25rem;
@@ -401,18 +401,27 @@ export default {
                 text-align: center;
                 padding: 0.2rem 0.1rem;
                 margin-top: 0.5rem;
+                position: relative;
                 .votes {
-                    display: inline-block;
+                    position: absolute;
+                    left: 0;
                     width: 40%;
                     color: #ff598c;
+                    &.move {
+                        animation: toRight 0.3s forwards;
+                    }
                 }
                 .btn {
+                    position: absolute;
+                    right: 2px;
+                    width: 55%;
                     color: #ffffff;
                     font-weight: bold;
-                    display: inline-block;
-                    width: 55%;
                     background: #ff598c;
                     border-radius: 15px;
+                    &.move {
+                        animation: toLeft 0.3s forwards;
+                    }
                     &.disabled {
                         background: #b0b0b0;
                     }
@@ -568,7 +577,29 @@ export default {
     }
 }
 @keyframes toRight {
+    0% {
+    }
+
+    50% {
+        right: 0;
+        color: #000000;
+    }
+
+    100% {
+        left: 0;
+        color: lime;
+    }
 }
 @keyframes toLeft {
+    0% {
+    }
+
+    50% {
+        left: 0;
+    }
+
+    100% {
+        right: 2px;
+    }
 }
 </style>
