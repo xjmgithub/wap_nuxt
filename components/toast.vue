@@ -12,7 +12,7 @@ export default {
     },
     methods: {
         show(text, duration = 2000) {
-            clearInterval(this,timer)
+            clearInterval(this.timer)
             const _this = this
             this.style = 'block'
             this.tip = text
