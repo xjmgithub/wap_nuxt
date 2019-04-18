@@ -263,9 +263,12 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            animateCSS(animateTarget, 'slideOutLeft')
                             advisor.ballot_num++
                             advisor.user_ballot_num++
+                            animateCSS(animateTarget, 'slideOutLeft', () => {
+                                this.getVoteLeft()
+                            })
+
                             if (!this.isLogin) {
                                 this.$confirm(
                                     this.$store.state.lang.mrright_successfully_voted,
@@ -285,8 +288,7 @@ export default {
                             } else {
                                 this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
                             }
-                            this.getVoteLeft()
-                            this.$nextTick(() => (advisor.move = false))
+
                             this.mSendEvLog('votebtn_click', advisor.name, 10)
                         } else {
                             this.$toast(res.data.message)
