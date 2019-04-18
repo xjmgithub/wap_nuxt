@@ -328,7 +328,7 @@ export default {
     }
 
     to {
-        transform: translate3d(-72%, 0, 0);
+        transform: translate3d(-72%, 0, 0); // 40/55
     }
 }
 
