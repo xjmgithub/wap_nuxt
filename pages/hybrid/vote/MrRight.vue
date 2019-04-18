@@ -178,7 +178,7 @@ export default {
         },
         toShare() {
             this.mSendEvLog('share_click', 1, 10)
-            process.client && shareInvite(window.location.href, 'Hello, Mr Right', 'Hello, Mr Right', 'Hello, Mr Right')
+            process.client && shareInvite(window.location.href, 'Hello Mr. Right', 'Vote & Win Big Prizes', window.location.host + '/res_nuxt/img/mrRight.png', 'Hello Mr. Right')
         },
         // 获取投票单元数据
         getAdvisorList() {

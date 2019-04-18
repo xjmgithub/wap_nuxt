@@ -68,8 +68,7 @@ export const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min
 }
 
-export const shareInvite = (link, shareTitle, shareContent, channel) => {
-    const shareLink = '' // TODO 图片地址
+export const shareInvite = (link, shareTitle, shareContent, shareImg, channel) => {
     if (link.indexOf('?') > 0) {
         link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
     } else {
@@ -77,7 +76,7 @@ export const shareInvite = (link, shareTitle, shareContent, channel) => {
     }
     if (window.getChannelId && window.getChannelId.showCustorm) {
         const content = '【' + shareTitle + '】' + shareContent + ' ' + link
-        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareLink, channel)
+        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', channel)
     }
 }
 
@@ -453,6 +452,4 @@ export const animateCSS = function(element, animationName, callback) {
     node.addEventListener('animationend', handleAnimationEnd)
     node.addEventListener('webkitAnimationEnd', handleAnimationEnd)
     node.classList.add('animated', animationName)
-    
-    
 }
