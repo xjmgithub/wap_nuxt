@@ -3,21 +3,9 @@
         <div class="title">
             <img src="~assets/img/vote/pic_title.png">
             <div class="video">
-                <img
-                    v-if="videoList.length>0"
-                    src="~assets/img/vote/full_eps.png"
-                    @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)"
-                >
-                <img
-                    v-if="videoList.length>1"
-                    src="~assets/img/vote/trailer.png"
-                    @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)"
-                >
-                <img
-                    v-if="videoList.length>2"
-                    src="~assets/img/vote/highlights.png"
-                    @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)"
-                >
+                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)">
+                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)">
+                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)">
             </div>
         </div>
         <div class="rule">
@@ -26,19 +14,14 @@
                 <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
             </nuxt-link>
         </div>
-        <div class="vote" v-show="coupleList.length>0">
+        <div v-show="coupleList.length>0" class="vote">
             <p>
                 <img class="heart" src="~assets/img/vote/heartpoint.png">
                 <span class="title">{{$store.state.lang.mrright_weekly_candidates}}</span>
                 <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
             </p>
             <ul class="clearfix">
-                <li
-                    v-for="(item,index) in coupleList"
-                    :key="index"
-                    :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
-                    data-id="item.id"
-                >
+                <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length>0&&advisorList.length<3}" data-id="item.id">
                     <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
                         <img :src="item.icon.replace('http:','https:')" class="icon">
                         <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
@@ -89,8 +72,7 @@
         </div>
         <div class="clips">
             <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png">
-                {{$store.state.lang.mrright_clips_you_cant_miss}}
+                <img class="heart" src="~assets/img/vote/heartpoint.png"> {{$store.state.lang.mrright_clips_you_cant_miss}}
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
@@ -104,21 +86,9 @@
         </div>
         <div class="title">
             <div class="video">
-                <img
-                    v-if="videoList.length>0"
-                    src="~assets/img/vote/full_eps.png"
-                    @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)"
-                >
-                <img
-                    v-if="videoList.length>1"
-                    src="~assets/img/vote/trailer.png"
-                    @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)"
-                >
-                <img
-                    v-if="videoList.length>2"
-                    src="~assets/img/vote/highlights.png"
-                    @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)"
-                >
+                <img v-if="videoList.length>0" src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)">
+                <img v-if="videoList.length>1" src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)">
+                <img v-if="videoList.length>2" src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)">
             </div>
         </div>
     </div>
@@ -155,7 +125,7 @@ export default {
         },
         coupleList() {
             if (this.loaded) {
-                    return this.advisorList
+                return this.advisorList
             } else {
                 return []
             }
@@ -263,10 +233,9 @@ export default {
                     })
                 })
                     .then(res => {
-                        
                         if (res.data.code === 0) {
-                            
-                            try{ // 有些不支持这个动画效果的
+                            try {
+                                // 有些不支持这个动画效果的
                                 anime({
                                     targets: animateTarget,
                                     left: 0,
@@ -274,10 +243,10 @@ export default {
                                     easing: 'easeInOutSine',
                                     duration: 200
                                 })
-                            }catch(e){
+                            } catch (e) {
                                 console.log(e)
                             }
-                            
+
                             // alert(res.data.code)
                             advisor.ballot_num++
                             advisor.user_ballot_num++
@@ -296,22 +265,19 @@ export default {
                                     this.$store.state.lang.mrright_sign_in,
                                     this.$store.state.lang.mrright_no
                                 )
+                            } else if (this.isLogin && this.voteLeft <= 1) {
+                                this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
                             } else {
-                                if((this.voteLeft-1) <= 0){
-                                    this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
-                                }else{
-                                    this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
-                                }
+                                this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
                             }
                             this.getVoteLeft()
-                            this.$nextTick(() => (advisor.move = false))
                             this.mSendEvLog('votebtn_click', advisor.name, 10)
                         } else {
                             this.$toast(res.data.message)
                             this.mSendEvLog('votebtn_click', advisor.name, 1)
                         }
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         alert(err)
                         this.mSendEvLog('votebtn_click', advisor.name, 1)
                     })
@@ -464,9 +430,6 @@ export default {
                     width: 40%;
                     color: #ff598c;
                     font-size: 0.75rem;
-                    &.move {
-                        animation: toRight 0.3s forwards;
-                    }
                 }
                 .btn {
                     position: absolute;
