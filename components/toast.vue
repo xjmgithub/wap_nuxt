@@ -6,16 +6,18 @@ export default {
     data() {
         return {
             tip: '',
-            style: 'none'
+            style: 'none',
+            timer:null
         }
     },
     methods: {
         show(text, duration = 2000) {
+            clearInterval(this,timer)
             const _this = this
             this.style = 'block'
             this.tip = text
             this.$nextTick(() => {
-                setTimeout(() => {
+                this.timer = setTimeout(() => {
                     _this.style = 'none'
                 }, duration)
             })
