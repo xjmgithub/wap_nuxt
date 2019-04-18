@@ -47,7 +47,7 @@
                     <span class="player-name">{{item.name.split('&')[1]}}</span>
                     <div class="vote-btn">
                         <div class="votes">{{item.ballot_num}}</div>
-                        <div :class="{disabled:voteLeft==0}" class="btn" @click="handleViceVote(item,$event)">
+                        <div :class="{disabled:voteLeft==0}" class="btn" @touchstart="handleViceVote(item,$event)">
                             <span v-if="item.user_ballot_num>0">{{$store.state.lang.mrright_voted}}</span>
                             <span v-else>{{$store.state.lang.mrright_vote}}</span>
                         </div>
