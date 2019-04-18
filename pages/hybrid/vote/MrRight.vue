@@ -297,7 +297,11 @@ export default {
                                     this.$store.state.lang.mrright_no
                                 )
                             } else {
-                                this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
+                                if((this.voteLeft-1) <= 0){
+                                    this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
+                                }else{
+                                    this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
+                                }
                             }
                             this.getVoteLeft()
                             this.$nextTick(() => (advisor.move = false))
