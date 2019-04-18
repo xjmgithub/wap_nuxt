@@ -228,7 +228,7 @@ export default {
         // 投票提交
         handleViceVote(advisor, _evt1) {
             if (this.$store.state.appType <= 0) {
-                toAppStore.call(this)
+                toAppStore.call(this,'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href)
                 return
             }
 
@@ -305,7 +305,7 @@ export default {
                 if (this.$store.state.appType > 0) {
                     playVodinApp(this.$store.state.appType, vod)
                 } else {
-                    toAppStore.call(this)
+                    toAppStore.call(this,'com.star.mobile.video.player.PlayerVodActivity?vodId='+ vod)
                 }
                 this.mSendEvLog(action, label, value)
             }

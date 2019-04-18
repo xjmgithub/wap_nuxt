@@ -1,4 +1,5 @@
 import CallApp from 'callapp-lib'
+import { Base64 } from 'js-base64'
 
 export const setCookie = (name, value, time) => {
     if (!name) {
@@ -365,24 +366,40 @@ export const downApp = function() {
     })
 }
 
-export const toAppStore = function() {
-    let scheme = 'starvideo'
-    let appType = 1
+export const shareFacebook = function() {
+    // eslint-disable-next-line no-undef
+    FB.ui({
+        method: 'share',
+        display: 'popup',
+        href: window.location.href
+    })
+}
+export const toAppStore = function(page) {
     const ua = navigator.userAgent.toLowerCase()
     const _this = this
+
     let source = ''
+    let scheme = 'starvideo'
+    let appType = 1
+    let path = 'platformapi/webtoapp'
+    if (page) {
+        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
+    }
 
     if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
         scheme = 'startimes'
         appType = 2
+        // path = '?player?vod='+ page
     }
+
     const callLib = new CallApp({
         scheme: {
             protocol: scheme
         }
     })
+
     callLib.open({
-        path: 'platformapi/webtoapp',
+        path: path,
         callback() {
             if (location.href.indexOf('referrer') > 0) {
                 source = location.search
