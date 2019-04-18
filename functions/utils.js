@@ -76,7 +76,7 @@ export const shareInvite = (link, shareTitle, shareContent, channel) => {
         link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
     }
     if (window.getChannelId && window.getChannelId.showCustorm) {
-        const content = '【' + shareTitle + '】' + shareContent + link
+        const content = '【' + shareTitle + '】' + shareContent + ' ' + link
         window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareLink, channel)
     }
 }
