@@ -183,7 +183,7 @@ export default {
                     window.location.href,
                     'Hello Mr. Right',
                     'Vote & Win Big Prizes',
-                    window.location.origin + '/res_nuxt/img/mrRight.png',
+                    window.location.origin + '/res_nuxt/img/mrshare.jpg',
                     'Hello Mr. Right'
                 )
         },
