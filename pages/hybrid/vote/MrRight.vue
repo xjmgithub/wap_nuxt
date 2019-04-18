@@ -217,6 +217,8 @@ export default {
             this.$axios.get(`/voting/v1/ballot/user-ballot-nums?vote_id=${this.vote_id}`).then(res => {
                 if (res.data.code === 0) {
                     this.voteLeft = res.data.data
+                }else{
+                    this.voteLeft = 0 // 服务器端计算数据错误时
                 }
             })
         },
@@ -238,7 +240,6 @@ export default {
                 toAppStore.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href)
                 return
             }
-
             if (this.voteLeft === 0 && this.isLogin) {
                 this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
             } else if (this.voteLeft === 0 && !this.isLogin && this.$store.state.appType == 1) {
@@ -248,8 +249,7 @@ export default {
                         if (this.$store.state.appType === 1) {
                             toNativePage('com.star.mobile.video.account.LoginActivity')
                         } else {
-                            // toNativePage('startimes://login')
-                            window.location.href = 'startimes://login'
+                            toNativePage('startimes://login')
                         }
                     },
                     () => {},
