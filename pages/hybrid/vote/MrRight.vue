@@ -283,12 +283,11 @@ export default {
                                     this.$store.state.lang.mrright_sign_in,
                                     this.$store.state.lang.mrright_no
                                 )
-                            } else if (this.voteLeft - 1 <= 0) {
+                            } else if (this.isLogin && this.voteLeft <= 1) {
                                 this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
                             } else {
                                 this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
                             }
-
                             this.mSendEvLog('votebtn_click', advisor.name, 10)
                         } else {
                             this.$toast(res.data.message)
@@ -470,9 +469,6 @@ export default {
                     width: 40%;
                     color: #ff598c;
                     font-size: 0.75rem;
-                    &.move {
-                        animation: toRight 0.3s forwards;
-                    }
                 }
                 .btn {
                     position: absolute;
