@@ -39,7 +39,7 @@
                     :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
                     data-id="item.id"
                 >
-                    <div class="img-box" @click="toPlayer(item.link_vod_code,'votepic_click',item.name,10)">
+                    <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
                         <img :src="item.icon.replace('http:','https:')" class="icon">
                         <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                     </div>
@@ -55,14 +55,14 @@
                 </li>
             </ul>
         </div>
-        <div v-show="advisorList.length>0 && rankList.length>0" class="rank">
+        <div v-show="rankList.length > 0" class="rank">
             <p>
                 <img class="heart" src="~assets/img/vote/heartpoint.png">
                 <span class="title">{{$store.state.lang.mrright_history_rank}}</span>
                 <span class="voteleft">{{$store.state.lang.mrright_all_candidates}}</span>
             </p>
             <ul>
-                <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,)">
+                <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,1)">
                     <div class="left">
                         <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
                         <img v-show="index<3" :src="item.icon.replace('http:','https:')" class="icon">
@@ -155,11 +155,7 @@ export default {
         },
         coupleList() {
             if (this.loaded) {
-                if (this.advisorList.length > 0) {
                     return this.advisorList
-                } else {
-                    return this.rankList
-                }
             } else {
                 return []
             }
