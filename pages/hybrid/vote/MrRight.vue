@@ -140,7 +140,7 @@ export default {
             showAll: false,
             loaded: false,
             clipsList: [],
-            vote_name: 'vote_Hello, Mr Right'
+            vote_name: 'vote_Hello Mr. Right'
         }
     },
     computed: {
@@ -178,7 +178,14 @@ export default {
         },
         toShare() {
             this.mSendEvLog('share_click', 1, 10)
-            process.client && shareInvite(window.location.href, 'Hello Mr. Right', 'Vote & Win Big Prizes', window.location.origin + '/res_nuxt/img/mrRight.png', 'Hello Mr. Right')
+            process.client &&
+                shareInvite(
+                    window.location.href,
+                    'Hello Mr. Right',
+                    'Vote & Win Big Prizes',
+                    window.location.origin + '/res_nuxt/img/mrRight.png',
+                    'Hello Mr. Right'
+                )
         },
         // 获取投票单元数据
         getAdvisorList() {
@@ -228,20 +235,21 @@ export default {
         // 投票提交
         handleViceVote(advisor, _evt1) {
             if (this.$store.state.appType <= 0) {
-                toAppStore.call(this,'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href)
+                toAppStore.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href)
                 return
             }
 
             if (this.voteLeft === 0 && this.isLogin) {
                 this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
-            } else if (this.voteLeft === 0 && !this.isLogin) {
+            } else if (this.voteLeft === 0 && !this.isLogin && this.$store.state.appType == 1) {
                 this.$confirm(
                     this.$store.state.lang.mrright_vote_tomorrow,
                     () => {
                         if (this.$store.state.appType === 1) {
                             toNativePage('com.star.mobile.video.account.LoginActivity')
                         } else {
-                            toNativePage('startimes://login')
+                            // toNativePage('startimes://login')
+                            window.location.href = 'startimes://login'
                         }
                     },
                     () => {},
@@ -269,7 +277,7 @@ export default {
                                 this.getVoteLeft()
                             })
 
-                            if (!this.isLogin) {
+                            if (!this.isLogin && this.$store.state.appType == 1) {
                                 this.$confirm(
                                     this.$store.state.lang.mrright_successfully_voted,
                                     () => {
@@ -305,7 +313,7 @@ export default {
                 if (this.$store.state.appType > 0) {
                     playVodinApp(this.$store.state.appType, vod)
                 } else {
-                    toAppStore.call(this,'com.star.mobile.video.player.PlayerVodActivity?vodId='+ vod)
+                    toAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
                 }
                 this.mSendEvLog(action, label, value)
             }
@@ -313,7 +321,7 @@ export default {
     },
     head() {
         return {
-            title: 'Hello, Mr Right'
+            title: 'Hello Mr. Right'
         }
     }
 }
