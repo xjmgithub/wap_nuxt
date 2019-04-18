@@ -26,7 +26,7 @@
                 <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
             </nuxt-link>
         </div>
-        <div class="vote">
+        <div class="vote" v-show="coupleList.length>0">
             <p>
                 <img class="heart" src="~assets/img/vote/heartpoint.png">
                 <span class="title">{{$store.state.lang.mrright_weekly_candidates}}</span>
