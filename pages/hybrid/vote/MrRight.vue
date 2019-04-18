@@ -94,9 +94,8 @@
     </div>
 </template>
 <script>
-import { shareInvite, playVodinApp, toNativePage, toAppStore } from '~/functions/utils'
+import { shareInvite, playVodinApp, animateCSS, toAppStore, toNativePage } from '~/functions/utils'
 import qs from 'qs'
-import anime from 'animejs'
 export default {
     layout: 'base',
     data() {
@@ -234,23 +233,9 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            try {
-                                // 有些不支持这个动画效果的
-                                anime({
-                                    targets: animateTarget,
-                                    left: 0,
-                                    direction: 'alternate',
-                                    easing: 'easeInOutSine',
-                                    duration: 200
-                                })
-                            } catch (e) {
-                                console.log(e)
-                            }
-
-                            // alert(res.data.code)
+                            animateCSS(animateTarget, 'slideOutLeft')
                             advisor.ballot_num++
                             advisor.user_ballot_num++
-
                             if (!this.isLogin) {
                                 this.$confirm(
                                     this.$store.state.lang.mrright_successfully_voted,
@@ -301,8 +286,30 @@ export default {
     }
 }
 </script>
+
 <style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
+@keyframes slideOutLeft {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-72%, 0, 0); // 40/55
+    }
+}
+
+.slideOutLeft {
+    animation-name: slideOutLeft;
+}
+.animated {
+    animation-duration: 200ms;
+    animation-fill-mode: both;
+    animation-iteration-count: 2;
+    animation-timing-function: ease-out;
+    animation-direction: alternate;
+}
+
 .Mr-Right {
     width: 100%;
     height: 100%;
