@@ -26,7 +26,7 @@
                 <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
             </nuxt-link>
         </div>
-        <div class="vote" v-show="coupleList.length>0">
+        <div v-show="coupleList.length>0" class="vote">
             <p>
                 <img class="heart" src="~assets/img/vote/heartpoint.png">
                 <span class="title">{{$store.state.lang.mrright_weekly_candidates}}</span>
@@ -154,7 +154,7 @@ export default {
         },
         coupleList() {
             if (this.loaded) {
-                    return this.advisorList
+                return this.advisorList
             } else {
                 return []
             }
@@ -280,12 +280,10 @@ export default {
                                     this.$store.state.lang.mrright_sign_in,
                                     this.$store.state.lang.mrright_no
                                 )
+                            } else if (this.voteLeft - 1 <= 0) {
+                                this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
                             } else {
-                                if((this.voteLeft-1) <= 0){
-                                    this.$toast(this.$store.state.lang.mrright_vote_tomorrow_login)
-                                }else{
-                                    this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
-                                }
+                                this.$toast(this.$store.state.lang.mrright_successfully_voted_signin + (this.voteLeft - 1))
                             }
                             this.getVoteLeft()
                             this.$nextTick(() => (advisor.move = false))
