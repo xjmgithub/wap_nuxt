@@ -1,124 +1,126 @@
 <template>
-    <div class="Mr-Right">
-        <div class="title">
-            <img src="~assets/img/vote/pic_title.png">
-            <div class="video">
-                <img
-                    v-if="videoList.length>0"
-                    src="~assets/img/vote/full_eps.png"
-                    @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)"
-                >
-                <img
-                    v-if="videoList.length>1"
-                    src="~assets/img/vote/trailer.png"
-                    @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)"
-                >
-                <img
-                    v-if="videoList.length>2"
-                    src="~assets/img/vote/highlights.png"
-                    @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)"
-                >
+    <div class="wrapper">
+        <div class="Mr-Right">
+            <div class="title">
+                <img src="~assets/img/vote/pic_title.png">
+                <div class="video">
+                    <img
+                        v-if="videoList.length>0"
+                        src="~assets/img/vote/full_eps.png"
+                        @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)"
+                    >
+                    <img
+                        v-if="videoList.length>1"
+                        src="~assets/img/vote/trailer.png"
+                        @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)"
+                    >
+                    <img
+                        v-if="videoList.length>2"
+                        src="~assets/img/vote/highlights.png"
+                        @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)"
+                    >
+                </div>
             </div>
-        </div>
-        <div class="rule">
-            <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
-            <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
-            </nuxt-link>
-        </div>
-        <div v-show="coupleList.length>0" class="vote">
-            <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png">
-                <span class="title">{{$store.state.lang.mrright_weekly_candidates}}</span>
-                <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
-            </p>
-            <ul class="clearfix">
-                <li
-                    v-for="(item,index) in coupleList"
-                    :key="index"
-                    :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
-                    data-id="item.id"
-                >
-                    <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
-                        <img :src="item.icon.replace('http:','https:')" class="icon">
-                        <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
-                    </div>
-                    <span class="player-name">{{item.name.split('&')[0]}}</span>
-                    <span class="player-name">{{item.name.split('&')[1]}}</span>
-                    <div class="vote-btn">
-                        <div class="votes">{{item.ballot_num}}</div>
-                        <div :class="{disabled:voteLeft==0}" class="btn" @touchstart="handleViceVote(item,$event)">
-                            <span v-if="item.user_ballot_num>0">{{$store.state.lang.mrright_voted}}</span>
-                            <span v-else>{{$store.state.lang.mrright_vote}}</span>
+            <div class="rule">
+                <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
+                <nuxt-link :to="{path:'/hybrid/vote/rule'}">
+                    <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
+                </nuxt-link>
+            </div>
+            <div v-show="coupleList.length>0" class="vote">
+                <p>
+                    <img class="heart" src="~assets/img/vote/heartpoint.png">
+                    <span class="title">{{$store.state.lang.mrright_weekly_candidates}}</span>
+                    <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
+                </p>
+                <ul class="clearfix">
+                    <li
+                        v-for="(item,index) in coupleList"
+                        :key="index"
+                        :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
+                        data-id="item.id"
+                    >
+                        <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
+                            <img :src="item.icon.replace('http:','https:')" class="icon">
+                            <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                         </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div v-show="rankList.length > 0" class="rank">
-            <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png">
-                <span class="title">{{$store.state.lang.mrright_history_rank}}</span>
-                <span class="voteleft">{{$store.state.lang.mrright_all_candidates}}</span>
-            </p>
-            <ul>
-                <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,1)">
-                    <div class="left">
-                        <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
-                        <img v-show="index<3" :src="item.icon.replace('http:','https:')" class="icon">
-                        <div v-if="index<3" class="name">
-                            <p>{{item.name.split('&')[0]}}</p>
-                            <p>& {{item.name.split('&')[1]}}</p>
+                        <span class="player-name">{{item.name.split('&')[0]}}</span>
+                        <span class="player-name">{{item.name.split('&')[1]}}</span>
+                        <div class="vote-btn">
+                            <div class="votes">{{item.ballot_num}}</div>
+                            <div :class="{disabled:voteLeft==0}" class="btn" @touchstart="handleViceVote(item,$event)">
+                                <span v-if="item.user_ballot_num>0">{{$store.state.lang.mrright_voted}}</span>
+                                <span v-else>{{$store.state.lang.mrright_vote}}</span>
+                            </div>
                         </div>
-                        <span v-else class="name">{{item.name.split('&')[0]}} & {{item.name.split('&')[1]}}</span>
-                    </div>
-                    <div class="right" :class="{'top-three':index<3}">
-                        <span class="count">{{item.ballot_num}}</span>
-                        <span class="votes">votes</span>
-                        <span class="player">
-                            <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png">
-                        </span>
-                    </div>
-                </li>
-            </ul>
-            <p class="toggleAll" @click="showAll = !showAll">
-                <span v-show="showList.length==6&&rankList.length>6">{{$store.state.lang.mrright_view_all}}</span>
-                <span v-show="showList.length>6">{{$store.state.lang.mrright_view_less}}</span>
-                <img v-show="rankList.length>6" :class="{updown:showAll}" src="~assets/img/vote/view more.png">
-            </p>
-        </div>
-        <div class="clips">
-            <p>
-                <img class="heart" src="~assets/img/vote/heartpoint.png">
-                {{$store.state.lang.mrright_clips_you_cant_miss}}
-            </p>
-            <ul class="clearfix">
-                <li v-for="(item,index) in clipsList" :key="index">
-                    <div @click="toPlayer(item.link_vod_code,'video_click',item.name||item.description,10)">
-                        <img :src="item.link_url.replace('http:','https:')" class="url">
-                        <img src="~assets/img/vote/ic_play_small_white.png" class="player">
-                    </div>
-                    <span class="title">{{item.description||item.name}}</span>
-                </li>
-            </ul>
-        </div>
-        <div class="title">
-            <div class="video">
-                <img
-                    v-if="videoList.length>0"
-                    src="~assets/img/vote/full_eps.png"
-                    @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)"
-                >
-                <img
-                    v-if="videoList.length>1"
-                    src="~assets/img/vote/trailer.png"
-                    @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)"
-                >
-                <img
-                    v-if="videoList.length>2"
-                    src="~assets/img/vote/highlights.png"
-                    @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)"
-                >
+                    </li>
+                </ul>
+            </div>
+            <div v-show="rankList.length > 0" class="rank">
+                <p>
+                    <img class="heart" src="~assets/img/vote/heartpoint.png">
+                    <span class="title">{{$store.state.lang.mrright_history_rank}}</span>
+                    <span class="voteleft">{{$store.state.lang.mrright_all_candidates}}</span>
+                </p>
+                <ul>
+                    <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,1)">
+                        <div class="left">
+                            <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
+                            <img v-show="index<3" :src="item.icon.replace('http:','https:')" class="icon">
+                            <div v-if="index<3" class="name">
+                                <p>{{item.name.split('&')[0]}}</p>
+                                <p>& {{item.name.split('&')[1]}}</p>
+                            </div>
+                            <span v-else class="name">{{item.name.split('&')[0]}} & {{item.name.split('&')[1]}}</span>
+                        </div>
+                        <div class="right" :class="{'top-three':index<3}">
+                            <span class="count">{{item.ballot_num}}</span>
+                            <span class="votes">votes</span>
+                            <span class="player">
+                                <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png">
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+                <p class="toggleAll" @click="showAll = !showAll">
+                    <span v-show="showList.length==6&&rankList.length>6">{{$store.state.lang.mrright_view_all}}</span>
+                    <span v-show="showList.length>6">{{$store.state.lang.mrright_view_less}}</span>
+                    <img v-show="rankList.length>6" :class="{updown:showAll}" src="~assets/img/vote/view more.png">
+                </p>
+            </div>
+            <div class="clips">
+                <p>
+                    <img class="heart" src="~assets/img/vote/heartpoint.png">
+                    {{$store.state.lang.mrright_clips_you_cant_miss}}
+                </p>
+                <ul class="clearfix">
+                    <li v-for="(item,index) in clipsList" :key="index">
+                        <div @click="toPlayer(item.link_vod_code,'video_click',item.name||item.description,10)">
+                            <img :src="item.link_url.replace('http:','https:')" class="url">
+                            <img src="~assets/img/vote/ic_play_small_white.png" class="player">
+                        </div>
+                        <span class="title">{{item.description||item.name}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="title">
+                <div class="video">
+                    <img
+                        v-if="videoList.length>0"
+                        src="~assets/img/vote/full_eps.png"
+                        @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)"
+                    >
+                    <img
+                        v-if="videoList.length>1"
+                        src="~assets/img/vote/trailer.png"
+                        @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)"
+                    >
+                    <img
+                        v-if="videoList.length>2"
+                        src="~assets/img/vote/highlights.png"
+                        @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)"
+                    >
+                </div>
             </div>
         </div>
     </div>
@@ -126,6 +128,7 @@
 <script>
 import { shareInvite, playVodinApp, animateCSS, toAppStore, toNativePage } from '~/functions/utils'
 import qs from 'qs'
+import BScroll from 'better-scroll'
 export default {
     layout: 'base',
     data() {
@@ -140,7 +143,8 @@ export default {
             showAll: false,
             loaded: false,
             clipsList: [],
-            vote_name: 'vote_Hello Mr. Right'
+            vote_name: 'vote_Hello Mr. Right',
+            bscroll: null
         }
     },
     computed: {
@@ -166,6 +170,27 @@ export default {
         this.getRankList()
         this.getVideoList()
         this.mSendEvLog('homepage_show', 1, 10)
+        if (
+            navigator.userAgent.indexOf('Android 7') > 0 ||
+            navigator.userAgent.indexOf('Android 8') > 0 ||
+            navigator.userAgent.indexOf('Android 9') > 0
+        ) {
+            document.querySelector('.wrapper').style.height = '100vh'
+            this.$nextTick(() => {
+                this.bscroll = new BScroll('.wrapper', {
+                    startY: 0,
+                    bounce: {
+                        top: false,
+                        bottom: false,
+                        left: false,
+                        right: false
+                    },
+                    click: true,
+                    tap: true,
+                    observeDOM: false
+                })
+            })
+        }
     },
     methods: {
         mSendEvLog(action, label, Value) {
@@ -196,6 +221,10 @@ export default {
                     this.advisorList = []
                 }
                 this.loaded = true
+                this.bscroll &&
+                    this.$nextTick(() => {
+                        this.bscroll.refresh()
+                    })
             })
         },
 
@@ -209,6 +238,10 @@ export default {
                         this.mSendEvLog('video_show', ele.name || ele.description, 10)
                     })
                 }
+                this.bscroll &&
+                    this.$nextTick(() => {
+                        this.bscroll.refresh()
+                    })
             })
         },
 
@@ -217,21 +250,29 @@ export default {
             this.$axios.get(`/voting/v1/ballot/user-ballot-nums?vote_id=${this.vote_id}`).then(res => {
                 if (res.data.code === 0) {
                     this.voteLeft = res.data.data
-                }else{
+                } else {
                     this.voteLeft = 0 // 服务器端计算数据错误时
                 }
+                this.bscroll &&
+                    this.$nextTick(() => {
+                        this.bscroll.refresh()
+                    })
             })
         },
 
         // 获取所有获选人列表，及排行
         getRankList() {
-            this.$axios.get(`/voting/v1/candidates-with-ballot-num?vote_id=${this.vote_id}&filter_now_candidate=true`).then(res => {
+            this.$axios.get(`/voting/v1/candidates-with-ballot-num?vote_id=${this.vote_id}&only_previouse=true`).then(res => {
                 if (res.data.code === 0) {
                     this.rankList = res.data.data
                     this.rankList.sort(function(a, b) {
                         return b.ballot_num - a.ballot_num
                     })
                 }
+                this.bscroll &&
+                    this.$nextTick(() => {
+                        this.bscroll.refresh()
+                    })
             })
         },
         // 投票提交
@@ -326,7 +367,12 @@ export default {
     }
 }
 </script>
-
+<style>
+html,
+body {
+    background: #f5a189;
+}
+</style>
 <style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
 @keyframes slideOutLeft {
@@ -352,7 +398,6 @@ export default {
 
 .Mr-Right {
     width: 100%;
-    height: 100%;
     min-height: 100vh;
     background: #f5a189;
     padding-bottom: 2rem;
