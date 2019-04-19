@@ -94,17 +94,14 @@
             <div class="title">
                 <div class="video">
                     <img
-                        v-if="videoList.length>0"
                         src="~assets/img/vote/full_eps.png"
                         @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)"
                     >
                     <img
-                        v-if="videoList.length>1"
                         src="~assets/img/vote/trailer.png"
                         @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)"
                     >
                     <img
-                        v-if="videoList.length>2"
                         src="~assets/img/vote/highlights.png"
                         @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)"
                     >
