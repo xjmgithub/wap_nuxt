@@ -164,6 +164,14 @@ export default {
             }
         }
     },
+    watch: {
+        showAll(nv, ov) {
+            this.bscroll &&
+                this.$nextTick(() => {
+                    this.bscroll.refresh()
+                })
+        }
+    },
     mounted() {
         this.getVoteLeft()
         this.getAdvisorList()
