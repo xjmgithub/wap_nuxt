@@ -4,25 +4,13 @@
             <div class="title">
                 <img src="~assets/img/vote/pic_title.png">
                 <div class="video">
-                    <img
-                        v-if="videoList.length>0"
-                        src="~assets/img/vote/full_eps.png"
-                        @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)"
-                    >
-                    <img
-                        v-if="videoList.length>1"
-                        src="~assets/img/vote/trailer.png"
-                        @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)"
-                    >
-                    <img
-                        v-if="videoList.length>2"
-                        src="~assets/img/vote/highlights.png"
-                        @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)"
-                    >
+                    <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)">
+                    <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)">
+                    <img src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)">
                 </div>
             </div>
             <div class="rule">
-                <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
+                <span class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
                 <nuxt-link :to="{path:'/hybrid/vote/rule'}">
                     <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
                 </nuxt-link>
@@ -416,17 +404,17 @@ body {
         vertical-align: inherit;
     }
     .rule {
-        padding: 0 2%;
+        padding: 0 1rem;
         position: relative;
-        font-size: 0.88rem;
+        font-size: 0.95rem;
         font-weight: bold;
+        margin-top: 0.7rem;
         img {
             width: 100%;
         }
         .share {
             position: absolute;
-            right: 3%;
-            top: 0.6rem;
+            right: 4%;
             color: #ffffff;
             text-decoration: underline;
         }
@@ -437,9 +425,9 @@ body {
             width: 100%;
         }
         .video {
-            padding: 0 2%;
+            padding: 0 0.5rem;
             img {
-                width: 33%;
+                width: 33.33%;
                 &:nth-child(2) {
                     width: 30%;
                 }
@@ -460,7 +448,7 @@ body {
             .voteleft {
                 color: #ffffff;
                 float: right;
-                font-size: 0.8rem;
+                font-size: 0.9rem;
             }
         }
         li {
@@ -559,7 +547,7 @@ body {
             .voteleft {
                 color: #ffffff;
                 float: right;
-                font-size: 0.8rem;
+                font-size: 0.9rem;
             }
         }
         li {
