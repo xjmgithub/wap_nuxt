@@ -7,15 +7,17 @@
             <h3>Vote Rules</h3>
             <p>From Apr 21st to Jul 16th you have 3 votes every day. Vote for couples you like to help them win!</p>
             <div>
-                <p>One lucky user will get a
-                    <span> 32'' Digital TV+Satellite Dish+3 months subscription.</span>
+                <p>
+                    One lucky user will get a
+                    <span>32'' Digital TV+Satellite Dish+3 months subscription.</span>
                 </p>
                 <span>
                     <img src="~assets/img/vote/satellite.png">
                 </span>
             </div>
             <div>
-                <p>Top 3 voted couples will win full
+                <p>
+                    Top 3 voted couples will win full
                     <span>Solar Kit+24inch Digital TV+Satellite Dish+4 light bulbs+Solar Power System.</span>
                 </p>
                 <span>
@@ -54,22 +56,22 @@ export default {
             margin-top: 0;
         }
         span {
-            color: #FF3E75;
+            color: #ff3e75;
             font-weight: bold;
         }
         div {
-            margin:.5rem 0;
+            margin: 0.5rem 0;
             p {
                 width: 55%;
                 display: inline-block;
                 vertical-align: middle;
             }
-            &>span {
+            & > span {
                 width: 40%;
                 display: inline-block;
-                margin-left:.5rem;
+                margin-left: 0.5rem;
                 img {
-                    width:100% ;
+                    width: 100%;
                 }
             }
         }
