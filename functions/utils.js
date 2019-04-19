@@ -470,3 +470,12 @@ export const animateCSS = function(element, animationName, callback) {
     node.addEventListener('webkitAnimationEnd', handleAnimationEnd)
     node.classList.add('animated', animationName)
 }
+
+
+export const cdnPicSrc = function(src){
+    if(window && window.indexedDB){
+        return src.replace('http:','https:')
+    }else{
+        return src
+    }
+}

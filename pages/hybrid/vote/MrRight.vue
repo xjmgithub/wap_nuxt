@@ -29,7 +29,7 @@
                         data-id="item.id"
                     >
                         <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
-                            <img :src="item.icon.replace('http:','https:')" class="icon">
+                            <img :src="cdnPic(item.icon)" class="icon">
                             <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                         </div>
                         <span class="player-name">{{item.name.split('&')[0]}}</span>
@@ -54,7 +54,7 @@
                     <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,1)">
                         <div class="left">
                             <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
-                            <img v-show="index<3" :src="item.icon.replace('http:','https:')" class="icon">
+                            <img v-show="index<3" :src="cdnPic(item.icon)" class="icon">
                             <div v-if="index<3" class="name">
                                 <p>{{item.name.split('&')[0]}}</p>
                                 <p>& {{item.name.split('&')[1]}}</p>
@@ -84,7 +84,7 @@
                 <ul class="clearfix">
                     <li v-for="(item,index) in clipsList" :key="index">
                         <div @click="toPlayer(item.link_vod_code,'video_click',item.name||item.description,10)">
-                            <img :src="item.link_url.replace('http:','https:')" class="url">
+                            <img :src="cdnPic(item.link_url)" class="url">
                             <img src="~assets/img/vote/ic_play_small_white.png" class="player">
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -93,25 +93,16 @@
             </div>
             <div class="title">
                 <div class="video">
-                    <img
-                        src="~assets/img/vote/full_eps.png"
-                        @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)"
-                    >
-                    <img
-                        src="~assets/img/vote/trailer.png"
-                        @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)"
-                    >
-                    <img
-                        src="~assets/img/vote/highlights.png"
-                        @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)"
-                    >
+                    <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)">
+                    <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)">
+                    <img src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)">
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { shareInvite, playVodinApp, animateCSS, toAppStore, toNativePage } from '~/functions/utils'
+import { shareInvite, playVodinApp, animateCSS, toAppStore, toNativePage, cdnPicSrc } from '~/functions/utils'
 import qs from 'qs'
 import BScroll from 'better-scroll'
 export default {
@@ -186,6 +177,9 @@ export default {
         }
     },
     methods: {
+        cdnPic(src) {
+            return cdnPicSrc(src)
+        },
         mSendEvLog(action, label, Value) {
             this.sendEvLog({
                 category: this.vote_name,
