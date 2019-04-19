@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="rule">
-                <span class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
+                <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
                 <nuxt-link :to="{path:'/hybrid/vote/rule'}">
                     <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
                 </nuxt-link>
