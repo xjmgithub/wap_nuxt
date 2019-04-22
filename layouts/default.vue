@@ -182,7 +182,7 @@ export default {
     padding-right: 0;
 }
 .page-main {
-    padding: 0 0.8rem;
+    padding: 1.4rem 0.8rem;
     background: white;
 }
 .country {

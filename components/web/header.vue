@@ -2,7 +2,7 @@
     <div class="m_header">
         <div class="logo">
             <img src="~assets/img/web/ic_guidelist.png" @click="showNav">
-            <img v-if="logo==0" class="logo_img" src="~assets/img/startimes.png" alt="Startimes">
+            <img v-if="logo==0" class="logo_img" src="~assets/img/startimes2.png" alt="Startimes">
             <img v-if="logo==1" class="logo_img" src="~assets/img/topstar_white.png" alt="Startimes">
             <img v-if="logo==2" class="logo_img" src="~assets/img/starsat_white.png" alt="Startimes">
         </div>
@@ -42,6 +42,16 @@
                     <img v-else src="~assets/img/web/ic_phoneplay_def_w.png">
                     <div :class="{checked:$route.path.indexOf('/browser/live')>=0}" class="nav_title">
                         {{$store.state.lang.officialwebsitemobile_topnav_live}}
+                    </div>
+                </nuxt-link>
+            </div>
+            <div>
+                <nuxt-link to="/browser/search">
+                    <img v-if="$route.path.indexOf('/browser/search')>=0" src="~assets/img/web/ic_search_y.png">
+                    <img v-else src="~assets/img/web/ic_search_w.png">
+                    <div :class="{checked:$route.path.indexOf('/browser/search')>=0}" class="nav_title">
+                        <!-- {{$store.state.lang.officialwebsitemobile_topnav_live}} -->
+                        Search
                     </div>
                 </nuxt-link>
             </div>
@@ -96,7 +106,7 @@ export default {
         img {
             height: 1.6rem;
             &.logo_img {
-                height: 2.2rem;
+                height: 2.5rem;
             }
         }
     }
@@ -106,7 +116,7 @@ export default {
             float: left;
             margin-left: 0.4rem;
             text-align: center;
-            width: 2.3rem;
+            width: 2.4rem;
             &:first-of-type {
                 margin-left: 0;
             }

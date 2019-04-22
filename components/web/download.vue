@@ -1,7 +1,10 @@
 <template>
     <div class="download" @click="down">
-        <div class="max-width">{{$store.state.lang.officialwebsitemobile_downloadpromo}}</div>
-        <span>{{$store.state.lang.officialwebsitemobile_go}} &gt;</span>
+        <div>
+            <img src="~assets/img/web/app_icon.png">
+            <div> {{$store.state.lang.officialwebsitemobile_downloadpromo}}</div>
+        </div>
+        <span class="down">DOWNLOAD</span>
     </div>
 </template>
 <script>
@@ -17,7 +20,7 @@ export default {
 <style lang="less" scoped>
 .download {
     padding: 0rem 0.8rem;
-    background-color: #ffbe19;
+    background-color: #b7b7b7;
     font-weight: bold;
     color: #333333;
     overflow: hidden;
@@ -26,15 +29,35 @@ export default {
     position: fixed;
     width: 100%;
     z-index: 999;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    div {
-        width: auto;
+    height: 4rem;
+    line-height: 4rem;
+    &>div {
+        width: 60%;
+        vertical-align: middle;
+        font-size: 0.88rem;
         float: left;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        img {
+            width: 3rem;
+            margin-right: 0.5rem;
+        }
+        div{
+            display: inline-block;
+        }
     }
-    span {
-        color: #0087eb;
-        float: right;
+    .down {
+        background-color: #0087eb;
+        width: 6rem;
+        color: #ffffff;
+        border-radius: 2px;
+        height: 2rem;
+        position: absolute;
+        right: 0.8rem;
+        top: 1rem;
+        line-height: 2rem;
+        text-align: center;
     }
 }
 </style>
