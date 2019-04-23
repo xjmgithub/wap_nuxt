@@ -77,7 +77,8 @@ export default {
     },
     serverMiddleware: [
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
-        { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
+        { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' },
+        { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' }
     ],
     hooks: {
         listen(server) {
@@ -95,7 +96,8 @@ export default {
         extend(config, ctx) {
             config.node = {
                 fs: 'empty',
-                net: 'empty'
+                net: 'empty',
+                url: 'empty'
             }
             if (ctx.isDev && ctx.isClient) {
                 config.module.rules.push({
