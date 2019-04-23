@@ -47,8 +47,16 @@ export default {
             try {
                 $axios.setHeader('token', store.state.token)
                 const { data } = await $axios.post(`/payment/v2/third-party-payment-web-notify/${payType}`, route.query)
+                let result = 0
+                if(data.state==3){
+                    result = 1
+                }else if(data.state==4){
+                    result = 2
+                }else{
+                    result = 0
+                }
                 return {
-                    result: data.state == 3 ? 1 : 2,
+                    result: result,
                     money: data.amount,
                     currency: data.currencySymbol,
                     seqNo: data.seqNo
