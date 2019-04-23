@@ -12,8 +12,8 @@
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
-import { invoke, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
-import { setCookie, toNativePage } from '~/functions/utils'
+import { invoke, commonPayAfter, verifyWalletPass } from '~/functions/pay'
+import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -53,30 +53,18 @@ export default {
             const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            verifyWalletPass.call(this, ewallet.accountNo, this.password, data => {
-                if (this.card) {
-                    invoke.call(
-                        this,
-                        this.payToken,
-                        993102,
-                        data => {
-                            this.$nuxt.$loading.finish()
-                            this.$store.commit('HIDE_SHADOW_LAYER')
-                            setCookie('lastpay', 'card')
-                            commonPayAfter.call(this, data, 3, 3)
-                        },
-                        { authorization_code: this.card }
-                    )
-                } else {
-                    invoke.call(this, this.payToken, this.channel, data => {
-                        payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
-                            setCookie('lastpay', 'wallet')
-                            this.$nuxt.$loading.finish()
-                            this.$store.commit('HIDE_SHADOW_LAYER')
-                            this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
-                        })
-                    })
-                }
+            verifyWalletPass.call(this, ewallet.accountNo, this.password, result => {
+                invoke.call(
+                    this,
+                    this.payToken,
+                    this.channel,
+                    data => {
+                        this.$nuxt.$loading.finish()
+                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        commonPayAfter.call(this, data, 3, 3)
+                    },
+                    { payPwdVerifyToken: result.payPwdVerifyToken }
+                )
             })
         }
     }
