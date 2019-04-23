@@ -3,8 +3,8 @@
         <div class="channels">
             <div v-for="(item,i) in renderChannels" :key="i" class="channel">
                 <div v-if="item.id>9001&&item.id<9035">
-                    <p>{{item.name}}</p>
-                    <mLine/>
+                    <div class="channel-name">{{item.name}}</div>
+                    <mLine style="clear:both"/>
                     <div class="radio-box">
                         <div v-if="!lastPayByCard">
                             <label class="radio">
@@ -42,12 +42,12 @@
                         <div class="img-box"/>
                         <span v-if="isLogin">Pay with Another Card</span>
                         <span v-else>Add a Bank Card</span>
-                        <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
+                        <div class="arrows"/>
                     </div>
                 </div>
                 <div v-else>
-                    <p>{{item.name}}</p>
-                    <img src="~assets/img/dvb/ic_right_def_r.png" class="arrows">
+                    <div class="channel-name">{{item.name}}</div>
+                    <div class="arrows"/>
                 </div>
             </div>
         </div>
@@ -73,8 +73,6 @@ export default {
     data() {
         const user = this.$store.state.user
         return {
-            walletDes: '',
-            payStackDes: '',
             selected: {},
             paymentAmount: 0,
             wallet: {},
@@ -95,7 +93,7 @@ export default {
             return (this.wallet && this.wallet.amount) || 0
         },
         canPay() {
-            if (this.selected.id > 9001 && this.selected.id < 9034 && this.balance < this.paymentAmount) {
+            if (this.selected.id > 9001 && this.selected.id < 9035 && this.balance < this.paymentAmount) {
                 return false
             } else {
                 return true
@@ -226,15 +224,24 @@ export default {
 }
 .channels {
     .channel {
+        position: relative;
         border-bottom: 1px solid #e0e0e0;
-        p {
+        >div{
+            overflow: hidden;
+            zoom:1;
+        }
+        .channel-name {
             line-height: 3rem;
             font-size: 1.1rem;
+            width:85%;
+            float:left;
         }
         .arrows {
-            position: absolute;
-            right: 0.3rem;
-            top: 0.6rem;
+            float:right;
+            width:1.3rem;
+            height:3rem;
+            background:url('~assets/img/dvb/ic_right_def_r.png') no-repeat center center;
+            background-size: auto;
         }
         .addCard {
             font-size: 0.95rem;
