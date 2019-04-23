@@ -45,7 +45,7 @@
                         <div class="arrows"/>
                     </div>
                 </div>
-                <div v-else>
+                <div v-else @click="payHandle(item)">
                     <div class="channel-name">{{item.name}}</div>
                     <div class="arrows"/>
                 </div>
