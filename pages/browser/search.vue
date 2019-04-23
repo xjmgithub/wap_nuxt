@@ -81,6 +81,7 @@ export default {
     }
     .select{
         color:#B7B7B7;
+        margin-top: 0.7rem;
     }
     .select-word{
         li{

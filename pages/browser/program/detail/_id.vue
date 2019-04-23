@@ -3,7 +3,12 @@
         <div class="poster" @click="confirmDown">
             <img :src="pPoster.replace('http:','https:')">
             <img v-show="pPoster" src="~assets/img/web/ic_play.png">
-            <span class="program-name">{{pName}}</span>
+            <div class="clearfix">
+                <span class="program-name title">{{pName}}</span>
+                <div class="share">
+                    <img src="~assets/img/web/ic_share_def_g.png"> Share
+                </div>
+            </div>
             <p>{{pDescription}}</p>
         </div>
         <div class="clips">
@@ -23,7 +28,7 @@
     </div>
 </template>
 <script>
-import { formatTime, downApp,initFacebookLogin,shareFacebook } from '~/functions/utils'
+import { formatTime, downApp, initFacebookLogin, shareFacebook } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -65,7 +70,7 @@ export default {
         }
     },
     methods: {
-        share(){
+        share() {
             shareFacebook()
         },
         toSubProgramDetail(id) {
@@ -90,8 +95,8 @@ export default {
             meta: [
                 { hid: 'description', name: 'description', content: this.pDescription },
                 { property: 'og:description', content: this.pDescription + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.pPoster.replace('http:','https:') },
-                { property: 'twitter:card', content: "summary" }
+                { property: 'og:image', content: this.pPoster.replace('http:', 'https:') },
+                { property: 'twitter:card', content: 'summary' }
             ]
         }
     }
@@ -121,8 +126,26 @@ img {
     .program-name {
         font-weight: bold;
         color: #333333;
-        margin: 0.5rem 0;
         line-height: 2rem;
+        &.title {
+            display: block;
+            width: 85%;
+            float: left;
+        }
+    }
+    .share {
+        float: right;
+        width: 14%;
+        color: #666666;
+        font-size: 0.8rem;
+        line-height: 0.8rem;
+        padding: 0.4rem 0;
+        text-align: center;
+        img {
+            display: block;
+            width: 1.5rem;
+            margin: 0 auto;
+        }
     }
     p {
         color: #666666;

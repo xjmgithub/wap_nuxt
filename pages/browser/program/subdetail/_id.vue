@@ -3,7 +3,12 @@
         <div class="poster" @click="confirmDown">
             <img :src="sPoster.replace('http:','https:')" alt class="cover">
             <img v-show="sPoster" src="~assets/img/web/ic_play.png">
-            <span class="program-name">{{sName}}</span>
+            <div class="clearfix">
+                <span class="program-name title">{{sName}}</span>
+                <div class="share">
+                    <img src="~assets/img/web/ic_share_def_g.png"> Share
+                </div>
+            </div>
             <p>{{sDescription}}</p>
         </div>
         <div class="poster father">
@@ -32,7 +37,7 @@
     </div>
 </template>
 <script>
-import { formatTime, downApp,initFacebookLogin,shareFacebook } from '~/functions/utils'
+import { formatTime, downApp, initFacebookLogin, shareFacebook } from '~/functions/utils'
 export default {
     filters: {
         formatShowTime(val) {
@@ -94,7 +99,7 @@ export default {
         }
     },
     methods: {
-        share(){
+        share() {
             shareFacebook()
         },
         confirmDown() {
@@ -116,7 +121,7 @@ export default {
                 { hid: 'description', name: 'description', content: this.sDescription },
                 { property: 'og:description', content: this.sDescription + '#StarTimes ON Live TV & football' },
                 { property: 'og:image', content: this.sPoster.replace('http:', 'https:') },
-                { property: 'twitter:card', content: "summary" }
+                { property: 'twitter:card', content: 'summary' }
             ]
         }
     }
@@ -128,11 +133,10 @@ img {
 }
 .poster {
     border-bottom: 1px solid #d8d8d8;
-    margin: 0.8rem 0;
+    margin: 0.8rem 0 0.5rem;
     position: relative;
     .cover {
         width: 100%;
-        margin-bottom: 0.5rem;
         & + img {
             position: absolute;
             width: 3rem;
@@ -146,8 +150,26 @@ img {
     .program-name {
         font-weight: bold;
         color: #333333;
-        margin: 0.5rem 0;
         line-height: 2rem;
+        &.title {
+            display: block;
+            width: 85%;
+            float: left;
+        }
+    }
+    .share {
+        float: right;
+        width: 14%;
+        color: #666666;
+        font-size: 0.8rem;
+        line-height: 0.8rem;
+        padding: 0.3rem 0;
+        text-align: center;
+        img {
+            display: block;
+            width: 1.5rem;
+            margin: 0 auto;
+        }
     }
     p {
         color: #666666;
@@ -159,6 +181,7 @@ img {
     }
     &.father {
         padding-bottom: 0.5rem;
+        margin-top: 0;
         p {
             width: 60%;
             float: left;

@@ -5,7 +5,12 @@
             <img src="~assets/img/web/ic_play.png">
         </div>
         <div class="container-main">
-            <p class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views</p>
+            <div class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views
+                <div class="share">
+                    <img src="~assets/img/web/ic_share_def_g.png">
+                    Share
+                </div>
+            </div>
             <div v-if="channel.id" class="base-info clearfix">
                 <div class="logo">
                     <img :src="channel.logo.resources[0]&&channel.logo.resources[0].url.replace('http:','https:')" alt>
@@ -40,12 +45,12 @@
                 <div class="epg-contain">
                     <div v-for="(item,index) in epgList" :key="index" class="epg">
                         <span class="playTime">{{item.startDate | formatPlayTime}}</span>
-                        <span :class="{current:item.isCurrent}" class="circle"/>
+                        <span :class="{current:item.isCurrent}" class="circle" />
                         <div class="playTitle" @click="toggleDetail(item)">
                             {{item.name}}
-                            <div style="height:0.8rem;"/>
+                            <div style="height:0.8rem;" />
                             <div v-show="item.isCurrent" class="total">
-                                <div :style="{ width: progress + '%'}" class="progress"/>
+                                <div :style="{ width: progress + '%'}" class="progress" />
                             </div>
                             <div v-show="item.showDetail" class="more-info">
                                 <div>
@@ -241,7 +246,7 @@ export default {
                             ele.isCurrent = true
                             const totalTime = ele.endDate - ele.startDate
                             const nowTime = now - ele.startDate
-                            this.progress = Math.floor((nowTime / totalTime) * 100)
+                            this.progress = Math.floor(nowTime / totalTime * 100)
                         } else {
                             ele.isCurrent = false
                         }
@@ -287,9 +292,9 @@ export default {
             title: 'Live',
             meta: [
                 { property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.channel.logo&&this.channel.logo.resources[0].url.replace('http:','https:') },
-                { property: 'twitter:card', content: "summary" },
-                { property: 'og:title', content: "Live" }
+                { property: 'og:image', content: this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:') },
+                { property: 'twitter:card', content: 'summary' },
+                { property: 'og:title', content: 'Live' }
             ]
         }
     }
@@ -316,11 +321,26 @@ export default {
     }
 }
 .container-main {
-    margin: 0.8rem;
+    margin:0  0.8rem .8rem;
     .views {
         color: #999999;
         border-bottom: 1px solid #eeeeee;
         padding-bottom: 0.5rem;
+        height:3rem;
+        line-height: 3rem;
+        .share{
+            float: right;
+            color:#666666;
+            font-size: .8rem;
+            line-height: .8rem;
+            padding-top:.3rem;
+            text-align: center;
+            img{
+                display: block;
+                width:1.5rem;
+                margin:0 auto;
+            }
+        }
     }
     .base-info {
         padding: 0.5rem;
@@ -340,6 +360,10 @@ export default {
             .info-name {
                 font-weight: bold;
                 padding-bottom: 0.5rem;
+                img{
+                    width:1.5rem;
+                    float: right;
+                }
             }
             img {
                 width: 1.8rem;
