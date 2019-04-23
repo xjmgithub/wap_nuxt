@@ -82,7 +82,6 @@ export default {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
-                // TODO this.$router.push('/browser')
             }
         },
         getPayStatus() {
