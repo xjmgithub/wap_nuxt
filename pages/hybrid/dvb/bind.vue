@@ -94,8 +94,6 @@ export default {
         } catch (e) {
             data = []
         }
-        // TODO 匿名登录状态 const { data } = await $axios.get(`/self/v1/user/all_smartcard_basic_info_4wx`)
-
         return {
             cardList: Array.from(data, x => x.smardcard_no) || [],
             newUser: data.length <= 0

@@ -2,20 +2,17 @@
     <div class="wrapper">
         <card-info/>
         <order-info/>
-        <pay-of-NG v-if="country==='NG'"/>
-        <pay-methods v-else/>
+        <pay-methods/>
         <div v-show="isYueMo" style="color: white;padding:5%;position:absolute;bottom:12rem;">{{$store.state.lang.monthly_billing}}:</div>
     </div>
 </template>
 <script>
-import payOfNG from '~/components/dvb/payOfNG'
 import cardInfo from '~/components/dvb/cardInfo'
 import orderInfo from '~/components/dvb/orderInfo'
-import payMethods from '~/components/dvb/payMethods'
+import payMethods from '~/components/dvb/payMethod'
 export default {
     layout: 'base',
     components: {
-        payOfNG,
         cardInfo,
         orderInfo,
         payMethods
