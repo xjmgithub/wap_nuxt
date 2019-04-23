@@ -2,16 +2,16 @@
     <div>
         <div class="page">
             <div class="search">
-                <form @submit.prevent="search">
+                <form @submit.prevent="search(keyword)">
                     <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_tvguide_searchbox">
-                    <img src="~assets/img/web/ic_search.png" @click="search">
+                    <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
                 </form>
             </div>
             <p class="select">SELECT FOR YOU</p>
             <ul class="select-word">
-                <li v-for="(item,index) in channelList" :key="index">
+                <li v-for="(item,index) in hotKeyList" :key="index" @click="search(item)">
                     <img src="~assets/img/web/ic_search_b.png">
-                    <span >{{item}}</span>
+                    <span>{{item}}</span>
                 </li>
             </ul>
         </div>
@@ -21,15 +21,14 @@
 export default {
     data() {
         return {
-            channelList: [
-                'ST NOVELA PLUS','ADOM TV','KYN HOME','Wildflower S2','KYN HOME'
-            ],
-            keyword: ''
+            hotKeyList: [],
+            keyword: '',
+            page_number: 1,
+            page_size: 10
         }
     },
     mounted() {
-        this.$nextTick(() => this.$nuxt.$loading.finish())
-
+        this.getHotKeyList()
         document.addEventListener('scroll', () => {
             const scollTop = document.body.scrollTop || document.documentElement.scrollTop
             this.$store.commit('SCROLL_PAGE', scollTop)
@@ -43,9 +42,36 @@ export default {
         )
     },
     methods: {
-        search() {},
-        getChannels() {
+        getHotKeyList() {
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            this.$axios
+                .get(`/cms/search/hotkeys`, {
+                    headers: {
+                        appVersion: 51300
+                    }
+                })
+                .then(res => {
+                    this.$nextTick(() => this.$nuxt.$loading.finish())
+                    this.hotKeyList = res.data
+                })
+        },
+        search(hotkey) {
             // this.$nextTick(() => this.$nuxt.$loading.start())
+            // this.$axios
+            //     .get(
+            //         `/v1/search-by-source-type?search_value=${hotkey}&page_number=${this.page_number}&page_size=${
+            //             this.page_size
+            //         }&source_type=PROGRAM&request_source=WEB`,
+            //         {
+            //             headers: {
+            //                 UserCountryCode: 2
+            //             }
+            //         }
+            //     )
+            //     .then(res => {
+            //         this.$nextTick(() => this.$nuxt.$loading.finish())
+            //         console.log(res)
+            //     })
         }
     }
 }
@@ -79,19 +105,19 @@ export default {
             }
         }
     }
-    .select{
-        color:#B7B7B7;
+    .select {
+        color: #b7b7b7;
         margin-top: 0.7rem;
     }
-    .select-word{
-        li{
-            padding:1rem 0;
-            img{
-                width:1.25rem;
-                margin-right:.5rem;
+    .select-word {
+        li {
+            padding: 1rem 0;
+            img {
+                width: 1.25rem;
+                margin-right: 0.5rem;
             }
-            span{
-                color:#0087EB;
+            span {
+                color: #0087eb;
             }
         }
     }
