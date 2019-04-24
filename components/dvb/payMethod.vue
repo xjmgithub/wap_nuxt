@@ -2,7 +2,7 @@
     <div class="pay-cont">
         <div class="channels">
             <div v-for="(item,i) in renderChannels" :key="i" class="channel">
-                <div v-if="item.id>9001&&item.id<9035">
+                <div v-if="item.fkPayChannelId>9001&&item.fkPayChannelId<9035">
                     <div class="channel-name">{{item.name}}</div>
                     <mLine style="clear:both"/>
                     <div class="radio-box">
@@ -10,7 +10,7 @@
                             <label class="radio">
                                 <div class="balance img-box"/>
                                 <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
-                                <input :checked="item.id==selected.id" type="radio" name="pay-options" @click="choose(ewalletChannel,'')">
+                                <input :checked="item.fkPayChannelId==selected.fkPayChannelId" type="radio" name="pay-options" @click="choose(ewalletChannel,'')">
                                 <i/>
                                 <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
                             </label>
@@ -32,7 +32,7 @@
                             <label class="radio">
                                 <div class="balance img-box"/>
                                 <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
-                                <input :checked="item.id==selected.id" type="radio" name="pay-options" @click="choose(ewalletChannel,'')">
+                                <input :checked="item.fkPayChannelId==selected.fkPayChannelId" type="radio" name="pay-options" @click="choose(ewalletChannel,'')">
                                 <i/>
                                 <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
                             </label>
@@ -93,7 +93,7 @@ export default {
             return (this.wallet && this.wallet.amount) || 0
         },
         canPay() {
-            if (this.selected.id > 9001 && this.selected.id < 9035 && this.balance < this.paymentAmount) {
+            if (this.selected.fkPayChannelId > 9001 && this.selected.fkPayChannelId < 9035 && this.balance < this.paymentAmount) {
                 return false
             } else {
                 return true
@@ -129,7 +129,7 @@ export default {
                         this.lastPayByCard = item.lastSuccessPay
                         this.addCardChannel = item
                     } else {
-                        if (item.id > 9001 && item.id < 9035) {
+                        if (item.fkPayChannelId > 9001 && item.fkPayChannelId < 9035) {
                             this.ewalletChannel = item
                         }
                         this.renderChannels.push(item)
@@ -138,6 +138,7 @@ export default {
                 if (this.lastPayByCard) {
                     this.choose(this.addCardChannel, this.cardList[0])
                 } else {
+                    console.log(this.ewalletChannel)
                     this.choose(this.ewalletChannel, '')
                 }
             })
@@ -189,14 +190,14 @@ export default {
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         if (setted) {
                             this.$router.push(
-                                `/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&channel=${channel.id}&apiType=${
+                                `/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
                                     channel.appInterfaceMode
                                 }&card=${card || ''}`
                             )
                         } else {
                             this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
                                 this.$router.push(
-                                    `/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&channel=${channel.id}&apiType=${
+                                    `/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
                                         channel.appInterfaceMode
                                     }&card=${card || ''}`
                                 )
@@ -204,7 +205,7 @@ export default {
                         }
                     })
                 } else {
-                    invoke.call(this, data.paymentToken, channel.id, data => {
+                    invoke.call(this, data.paymentToken, channel.fkPayChannelId, data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         commonPayAfter.call(this, data, channel.payType, channel.appInterfaceMode)
