@@ -15,16 +15,22 @@
                 </li>
             </ul>
         </div>
+        <mShare :show="showShare"/>
     </div>
 </template>
 <script>
+import mShare from '~/components/web/share.vue'
 export default {
+    components: {
+        mShare
+    },
     data() {
         return {
             hotKeyList: [],
             keyword: '',
             page_number: 1,
-            page_size: 10
+            page_size: 10,
+            showShare: true
         }
     },
     mounted() {
@@ -56,6 +62,7 @@ export default {
                 })
         },
         search(hotkey) {
+            this.$store.commit('SET_SHARE_STATE', true)
             // this.$nextTick(() => this.$nuxt.$loading.start())
             // this.$axios
             //     .get(
@@ -79,6 +86,8 @@ export default {
 <style lang="less" scoped>
 .page {
     width: 100%;
+    position: relative;
+
     .search {
         position: relative;
         margin: 0.5rem 0;
