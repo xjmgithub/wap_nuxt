@@ -39,7 +39,7 @@ export default {
             const jsonStr = decodeText.substring(start, end).replace(/\+{/g, '{')
 
             const parseArr = JSON.parse(jsonStr)
-
+            this.logArr = []
             parseArr.forEach(item => {
                 this.logArr.push(item.msg)
             })
