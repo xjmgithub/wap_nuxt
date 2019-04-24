@@ -6,9 +6,8 @@
         </div>
         <div class="container-main">
             <div class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views
-                <div class="share">
-                    <img src="~assets/img/web/ic_share_def_g.png">
-                    Share
+                <div class="share" @click="toShare">
+                    <img src="~assets/img/web/ic_share_def_g.png"> Share
                 </div>
             </div>
             <div v-if="channel.id" class="base-info clearfix">
@@ -71,12 +70,17 @@
                 </div>
             </div>
         </div>
+        <mShare :show="showShare" />
     </div>
 </template>
 <script>
+import mShare from '~/components/web/share.vue'
 import { downApp } from '~/functions/utils'
 import dayjs from 'dayjs'
 export default {
+    components: {
+        mShare
+    },
     layout: 'default',
     filters: {
         formatViewCount(count) {
@@ -97,7 +101,8 @@ export default {
             epgList: [],
             epgTime: [],
             progress: 0,
-            currentIndex: 3
+            currentIndex: 3,
+            showShare: false
         }
     },
     computed: {
@@ -205,6 +210,9 @@ export default {
         this.getTvGuide(this.epgTime[3], 3)
     },
     methods: {
+        toShare() {
+            this.$store.commit('SET_SHARE_STATE', true)
+        },
         goToBouquetDetail(item) {
             const pack = item.ofPackage
             const bouId = pack.id
@@ -321,24 +329,24 @@ export default {
     }
 }
 .container-main {
-    margin:0  0.8rem .8rem;
+    margin: 0 0.8rem 0.8rem;
     .views {
         color: #999999;
         border-bottom: 1px solid #eeeeee;
         padding-bottom: 0.5rem;
-        height:3rem;
+        height: 3rem;
         line-height: 3rem;
-        .share{
+        .share {
             float: right;
-            color:#666666;
-            font-size: .8rem;
-            line-height: .8rem;
-            padding-top:.3rem;
+            color: #666666;
+            font-size: 0.8rem;
+            line-height: 0.8rem;
+            padding-top: 0.3rem;
             text-align: center;
-            img{
+            img {
                 display: block;
-                width:1.5rem;
-                margin:0 auto;
+                width: 1.5rem;
+                margin: 0 auto;
             }
         }
     }
@@ -360,8 +368,8 @@ export default {
             .info-name {
                 font-weight: bold;
                 padding-bottom: 0.5rem;
-                img{
-                    width:1.5rem;
+                img {
+                    width: 1.5rem;
                     float: right;
                 }
             }

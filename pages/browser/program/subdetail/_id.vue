@@ -5,7 +5,7 @@
             <img v-show="sPoster" src="~assets/img/web/ic_play.png">
             <div class="clearfix">
                 <span class="program-name title">{{sName}}</span>
-                <div class="share">
+                <div class="share" @click.stop="toShare">
                     <img src="~assets/img/web/ic_share_def_g.png"> Share
                 </div>
             </div>
@@ -34,11 +34,16 @@
                 </li>
             </ul>
         </div>
+        <mShare :show="showShare" />
     </div>
 </template>
 <script>
+import mShare from '~/components/web/share.vue'
 import { formatTime, downApp, initFacebookLogin, shareFacebook } from '~/functions/utils'
 export default {
+    components: {
+        mShare
+    },
     filters: {
         formatShowTime(val) {
             return formatTime(val)
@@ -50,7 +55,8 @@ export default {
             sPoster: '',
             sName: '',
             sDescription: '',
-            subProgram: []
+            subProgram: [],
+            showShare: false
         }
     },
     computed: {
@@ -101,6 +107,9 @@ export default {
     methods: {
         share() {
             shareFacebook()
+        },
+        toShare() {
+            this.$store.commit('SET_SHARE_STATE', true)
         },
         confirmDown() {
             this.$confirm(

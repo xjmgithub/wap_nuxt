@@ -1,12 +1,12 @@
 <template>
-    <div>
-        <div class="page">
-            <div class="search">
-                <form @submit.prevent="search(keyword)">
-                    <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_tvguide_searchbox">
-                    <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
-                </form>
-            </div>
+    <div class="page">
+        <div class="search">
+            <form @submit.prevent="search(keyword)">
+                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_tvguide_searchbox">
+                <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
+            </form>
+        </div>
+        <div v-show="!programList.length">
             <p class="select">SELECT FOR YOU</p>
             <ul class="select-word">
                 <li v-for="(item,index) in hotKeyList" :key="index" @click="search(item)">
@@ -15,17 +15,45 @@
                 </li>
             </ul>
         </div>
-        <mShare :show="showShare" />
+        <div v-show="programList.length>0" class="clips">
+            <p class="title">Programs for
+                <span class="highlight">{{highlightValues.join(' ')}}</span>
+            </p>
+            <ul class="clearfix">
+                <li v-for="(item,index) in programList" :key="index">
+                    <nuxt-link v-show="item.fields.program_type=='PROGRAM'" :to="`/browser/program/detail/${item.fields.pro_id}`">
+                        <div>
+                            <img :src="item.fields.pro_picture_url">
+                        </div>
+                        <p class="title" v-html="highlight(getName(item))" />
+                    </nuxt-link>
+                    <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/1111?subId=${item.fields.subpro_id}`">
+                        <div>
+                            <img :src="item.fields.subpro_picture_url">
+                            <span class="show-time">{{item | formatShowTime}}</span>
+                        </div>
+                        <p class="title" v-html="highlight(getName(item))" />
+                    </nuxt-link>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 <script>
-import mShare from '~/components/web/share.vue'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 export default {
-    components: {
-        mShare
+    filters: {
+        formatShowTime(item) {
+            const tmpHour = item.fields.subpro_duration_hour
+            const tmpMin = item.fields.subpro_duration_minute
+            const tmpSec = item.fields.subpro_duration_second
+            const hour = tmpHour > 0 ? tmpHour : '0' + tmpHour
+            const min = tmpMin > 0 ? tmpMin : '0' + tmpMin
+            const sec = tmpSec > 0 ? tmpSec : '0' + tmpSec
+            return hour + ':' + min + ':' + sec
+        }
     },
     data() {
         return {
@@ -33,7 +61,8 @@ export default {
             keyword: '',
             page_number: 1,
             page_size: 10,
-            showShare: true
+            highlightValues: [],
+            programList: []
         }
     },
     mounted() {
@@ -51,6 +80,26 @@ export default {
         )
     },
     methods: {
+        getName(obj) {
+            const item = JSON.parse(JSON.stringify(obj))
+            if (item.fields.program_type == 'PROGRAM') {
+                return item.fields.pro_name.en
+            } else if (item.fields.program_type == 'SUBPROGRAM') {
+                return item.fields.subpro_name.en
+            }
+        },
+        highlight(name) {
+            this.highlightValues.forEach(ele => {
+                const index = name.toLowerCase().indexOf(ele.toLowerCase()) 
+                let tmp
+                if(index >= 0){
+                    tmp = name.substr(index,ele.length)
+                }
+                const replaceString = '<span class="light" style="color:#0087eb">' + tmp + '</span>'
+                name = name.replace(tmp, replaceString)
+            })
+            return name
+        },
         getHotKeyList() {
             this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios
@@ -65,14 +114,12 @@ export default {
                 })
         },
         search(hotkey) {
-            // this.$store.commit('SET_SHARE_STATE', true)
-            // if(hotkey.replace(/\s/g,"").length === 0){
-            //     return
-            // }
+            if (hotkey.replace(/\s/g, '').length === 0) {
+                return
+            }
+            this.keyword = hotkey
             const time = dayjs.utc().format()
             this.$nextTick(() => this.$nuxt.$loading.start())
-            console.log(time)
-
             this.$axios
                 .get(
                     `/search-service/v1/search-by-source-type?search_value=${hotkey}&page_number=${this.page_number}&page_size=${
@@ -81,7 +128,10 @@ export default {
                 )
                 .then(res => {
                     this.$nextTick(() => this.$nuxt.$loading.finish())
-                    console.log(res.data)
+                    if (res.data.sources.length > 0) {
+                        this.programList = res.data.sources
+                        this.highlightValues = res.data.customHighlightValues
+                    }
                 })
         }
     }
@@ -91,7 +141,6 @@ export default {
 .page {
     width: 100%;
     position: relative;
-
     .search {
         position: relative;
         margin: 0.5rem 0;
@@ -131,6 +180,61 @@ export default {
             }
             span {
                 color: #0087eb;
+            }
+        }
+    }
+    .clips {
+        & > .title {
+            color: #333333;
+            font-weight: bold;
+            margin: 1rem 0;
+            .highlight {
+                color: #0087eb;
+            }
+        }
+        li {
+            list-style: none;
+            float: left;
+            width: 48%;
+            line-height: 1.1rem;
+            &:nth-child(2n) {
+                float: right;
+            }
+            div {
+                position: relative;
+                width: 100%;
+                &:before {
+                    content: '';
+                    display: inline-block;
+                    padding-bottom: 56%;
+                    width: 0.1px;
+                    vertical-align: middle;
+                }
+                .show-time {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    padding: 0 0.2rem;
+                    background: rgba(0, 0, 0, 1);
+                    color: #ffffff;
+                    font-size: 0.8rem;
+                }
+                img {
+                    width: 100%;
+                    position: absolute;
+                    height: 100%;
+                }
+            }
+            .title {
+                font-size: 0.85rem;
+                color: #666666;
+                display: -webkit-box;
+                overflow: hidden;
+                height: 2.6rem;
+                padding-top: 0.4rem;
+                -webkit-line-clamp: 2;
+                /* autoprefixer: off */
+                -webkit-box-orient: vertical;
             }
         }
     }
