@@ -36,6 +36,7 @@
                     </nuxt-link>
                 </li>
             </ul>
+            <div v-show="!endedState" class="loading-end">loading…</div>
         </div>
     </div>
 </template>
@@ -59,17 +60,19 @@ export default {
         return {
             hotKeyList: [],
             keyword: '',
+            oriKeyword: '',
             page_number: 1,
             page_size: 10,
             highlightValues: [],
-            programList: []
+            programList: [],
+            endedState: false,
+            loadstate: false
         }
     },
     mounted() {
         this.getHotKeyList()
-        document.addEventListener('scroll', () => {
-            const scollTop = document.body.scrollTop || document.documentElement.scrollTop
-            this.$store.commit('SCROLL_PAGE', scollTop)
+        this.$nextTick(() => {
+            document.addEventListener('scroll', this.listener)
         })
         document.addEventListener(
             'touchmove',
@@ -79,7 +82,20 @@ export default {
             { passive: false }
         )
     },
+    beforeRouteLeave(to, from, next) {
+        document.removeEventListener('scroll', this.listener)
+        next()
+    },
     methods: {
+        listener() {
+            const bot = document.querySelector('.clips').getBoundingClientRect().bottom
+            const screenHeight = window.screen.availHeight
+            if (bot - screenHeight < 100) {
+                if (this.loadstate || this.endedState) return false
+                this.loadstate = true
+                this.search(this.oriKeyword)
+            }
+        },
         getName(obj) {
             const item = JSON.parse(JSON.stringify(obj))
             if (item.fields.program_type == 'PROGRAM') {
@@ -90,10 +106,10 @@ export default {
         },
         highlight(name) {
             this.highlightValues.forEach(ele => {
-                const index = name.toLowerCase().indexOf(ele.toLowerCase()) 
+                const index = name.toLowerCase().indexOf(ele.toLowerCase())
                 let tmp
-                if(index >= 0){
-                    tmp = name.substr(index,ele.length)
+                if (index >= 0) {
+                    tmp = name.substr(index, ele.length)
                 }
                 const replaceString = '<span class="light" style="color:#0087eb">' + tmp + '</span>'
                 name = name.replace(tmp, replaceString)
@@ -118,6 +134,7 @@ export default {
                 return
             }
             this.keyword = hotkey
+            this.oriKeyword = hotkey
             const time = dayjs.utc().format()
             this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios
@@ -128,9 +145,15 @@ export default {
                 )
                 .then(res => {
                     this.$nextTick(() => this.$nuxt.$loading.finish())
-                    if (res.data.sources.length > 0) {
-                        this.programList = res.data.sources
+                    this.loadstate = false
+                    const data = res.data.sources
+                    if (data && data.length > 0) {
+                        this.programList = this.programList.concat(data)
                         this.highlightValues = res.data.customHighlightValues
+                        this.page_number += 1
+                    }
+                    if (!data || data.length < 10) {
+                        this.endedState = true
                     }
                 })
         }
@@ -237,6 +260,13 @@ export default {
                 -webkit-box-orient: vertical;
             }
         }
+    }
+    .loading-end {
+        height: 2.8rem;
+        line-height: 3rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #666666;
     }
 }
 </style>
