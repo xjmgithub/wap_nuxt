@@ -48,7 +48,7 @@
                             </label>
                         </div>
                     </div>
-                    <div v-if="osv5&&addCardChannel!=null" class="addCard" @click="payHandle(addCardChannel,'',1)">
+                    <div v-if="osv5&&addCardChannel.id" class="addCard" @click="payHandle(addCardChannel,'',1)">
                         <div class="img-box"/>
                         <span v-if="isLogin">Pay with Another Card</span>
                         <span v-else>Add a Bank Card</span>
