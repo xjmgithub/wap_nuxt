@@ -69,6 +69,7 @@ export default {
         '/adm/': env.proxyHost,
         '/self/': env.proxyHost,
         '/channel/': env.proxyHost,
+        '/search-service/': env.proxyHost,
         '/wxorder/': env.proxyHost
     },
     router: {
