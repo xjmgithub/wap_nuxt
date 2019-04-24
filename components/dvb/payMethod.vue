@@ -183,7 +183,7 @@ export default {
             })
 
             createDVBOrder.call(this, order, data => {
-                if (channel.needEwalletPwdVerify && !ignorePwdVerify) {
+                if (channel.needEwalletPwdVerify>0 && !ignorePwdVerify) {
                     checkPass.call(this, this.wallet.accountNo, setted => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
