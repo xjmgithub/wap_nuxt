@@ -15,11 +15,14 @@
                 </li>
             </ul>
         </div>
-        <mShare :show="showShare"/>
+        <mShare :show="showShare" />
     </div>
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
 export default {
     components: {
         mShare
@@ -62,23 +65,24 @@ export default {
                 })
         },
         search(hotkey) {
-            this.$store.commit('SET_SHARE_STATE', true)
-            // this.$nextTick(() => this.$nuxt.$loading.start())
-            // this.$axios
-            //     .get(
-            //         `/v1/search-by-source-type?search_value=${hotkey}&page_number=${this.page_number}&page_size=${
-            //             this.page_size
-            //         }&source_type=PROGRAM&request_source=WEB`,
-            //         {
-            //             headers: {
-            //                 UserCountryCode: 2
-            //             }
-            //         }
-            //     )
-            //     .then(res => {
-            //         this.$nextTick(() => this.$nuxt.$loading.finish())
-            //         console.log(res)
-            //     })
+            // this.$store.commit('SET_SHARE_STATE', true)
+            // if(hotkey.replace(/\s/g,"").length === 0){
+            //     return
+            // }
+            const time = dayjs.utc().format()
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            console.log(time)
+
+            this.$axios
+                .get(
+                    `/search-service/v1/search-by-source-type?search_value=${hotkey}&page_number=${this.page_number}&page_size=${
+                        this.page_size
+                    }&local_zero_utc=${time}&source_type=PROGRAM&request_source=WEB`
+                )
+                .then(res => {
+                    this.$nextTick(() => this.$nuxt.$loading.finish())
+                    console.log(res.data)
+                })
         }
     }
 }
