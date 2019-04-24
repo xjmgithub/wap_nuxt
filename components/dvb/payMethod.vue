@@ -38,7 +38,7 @@
                             </label>
                         </div>
                     </div>
-                    <div v-if="osv5&&cardList.length>0" class="addCard" @click="payHandle(addCardChannel,'',1)">
+                    <div v-if="osv5&&addCardChannel!=null" class="addCard" @click="payHandle(addCardChannel,'',1)">
                         <div class="img-box"/>
                         <span v-if="isLogin">Pay with Another Card</span>
                         <span v-else>Add a Bank Card</span>
@@ -124,8 +124,8 @@ export default {
                 }
 
                 this.channels.forEach((item, index) => {
-                    if (item.payChannelCardAuthDtoList) {
-                        this.cardList = item.payChannelCardAuthDtoList
+                    if (item.isSupportCardBind > 0) {
+                        this.cardList = item.payChannelCardAuthDtoList || []
                         this.lastPayByCard = item.lastSuccessPay
                         this.addCardChannel = item
                     } else {
@@ -183,7 +183,7 @@ export default {
             })
 
             createDVBOrder.call(this, order, data => {
-                if (channel.needEwalletPwdVerify>0 && !ignorePwdVerify) {
+                if (channel.needEwalletPwdVerify > 0 && !ignorePwdVerify) {
                     checkPass.call(this, this.wallet.accountNo, setted => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
