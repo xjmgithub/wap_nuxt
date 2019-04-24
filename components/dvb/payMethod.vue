@@ -10,7 +10,12 @@
                             <label class="radio">
                                 <div class="balance img-box"/>
                                 <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
-                                <input :checked="item.fkPayChannelId==selected.fkPayChannelId" type="radio" name="pay-options" @click="choose(ewalletChannel,'')">
+                                <input
+                                    :checked="item.fkPayChannelId==selected.fkPayChannelId"
+                                    type="radio"
+                                    name="pay-options"
+                                    @click="choose(ewalletChannel,'')"
+                                >
                                 <i/>
                                 <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
                             </label>
@@ -32,7 +37,12 @@
                             <label class="radio">
                                 <div class="balance img-box"/>
                                 <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
-                                <input :checked="item.fkPayChannelId==selected.fkPayChannelId" type="radio" name="pay-options" @click="choose(ewalletChannel,'')">
+                                <input
+                                    :checked="item.fkPayChannelId==selected.fkPayChannelId"
+                                    type="radio"
+                                    name="pay-options"
+                                    @click="choose(ewalletChannel,'')"
+                                >
                                 <i/>
                                 <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
                             </label>
@@ -204,6 +214,10 @@ export default {
                             })
                         }
                     })
+                } else if (channel.formConfigExist) {
+                    this.$nuxt.$loading.finish()
+                    this.$store.commit('HIDE_SHADOW_LAYER')
+                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel.fkPayChannelId}&appInterfaceMode=${channel.appInterfaceMode}`)
                 } else {
                     invoke.call(this, data.paymentToken, channel.fkPayChannelId, data => {
                         this.$nuxt.$loading.finish()
