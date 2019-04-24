@@ -19,7 +19,7 @@ export const createDVBOrder = function(order, callback) {
             Object.assign({}, order, {
                 orderSource: 2,
                 fcmToken: fcmToken || '',
-                promotion: !isLogin ? 'l1' : 'lalala'
+                promotion: !isLogin ? 'a' : 'l'
             })
         )
     })
@@ -28,13 +28,8 @@ export const createDVBOrder = function(order, callback) {
         })
         .catch(() => {
             this.$nuxt.$loading.finish()
-            this.$alert('network error')
+            this.$alert(this.$store.state.lang.error_network)
         })
-}
-
-// 检查是否需要支付密码
-export const needPassVerify = function(channel, card) {
-    return (channel >= 9002 && channel <= 9034) || (channel == '993102' && card)
 }
 
 export const checkPass = function(walletNo, callback) {
@@ -59,6 +54,17 @@ export const checkPass = function(walletNo, callback) {
             this.$nuxt.$loading.finish()
             this.$alert(this.$store.state.lang.error_network)
         })
+}
+
+export const verifyWalletPass = function(accountNo, password, callback) {
+    this.$axios.get(`/mobilewallet/v1/accounts/${accountNo}/pay-password?password=${password}`).then(res => {
+        if (res.data.code === 0) {
+            callback && callback(res.data)
+        } else {
+            this.$nuxt.$loading.finish()
+            this.$alert('Incorrect payment password.')
+        }
+    })
 }
 
 /* 
@@ -92,8 +98,7 @@ export const invoke = function(payToken, channel, callback, extend) {
                 this.$alert(res.data.resultMessage)
             }
         })
-        .catch(err => {
-            console.log(err)
+        .catch(() => {
             this.$nuxt.$loading.finish()
             this.$alert(this.$store.state.lang.error_network)
         })
@@ -104,11 +109,13 @@ export const invoke = function(payToken, channel, callback, extend) {
     payType 支付方式
     apiType 对接方式
 */
-export const commonPayAfter = function(data, payType, apiType, product) {
+export const commonPayAfter = function(data, payType, apiType) {
     if (payType == 3) {
         if (apiType == 2) {
+            // redirect
             window.location.href = data.tppRedirectUrl // 最终也会回调到payResult
         } else if (apiType == 3) {
+            // wait
             this.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
             this.$alert('The payment method is not supported for the time being')
@@ -118,7 +125,7 @@ export const commonPayAfter = function(data, payType, apiType, product) {
     }
 }
 
-export const chargeWallet = (ins, back) => {
+export const chargeWallet = function(ins, back) {
     ins.$alert(ins.$store.state.lang.refresh_wallet, () => {
         back && back()
     })
@@ -152,15 +159,4 @@ export const payWithBalance = function(walletAccountNo, data, password, callback
             this.$nuxt.$loading.finish()
             this.$alert(err)
         })
-}
-
-export const verifyWalletPass = function(accountNo, password, callback) {
-    this.$axios.get(`/mobilewallet/v1/accounts/${accountNo}/pay-password?password=${password}`).then(res => {
-        if (res.data.code === 0) {
-            callback && callback(res.data)
-        } else {
-            this.$nuxt.$loading.finish()
-            this.$alert('Incorrect payment password.')
-        }
-    })
 }

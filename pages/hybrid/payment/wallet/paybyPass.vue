@@ -27,7 +27,7 @@ export default {
             payToken: this.$route.query.paytoken,
             channel: this.$route.query.channel,
             apiType: this.$route.query.apiType,
-            card: this.$route.query.card // paystack card
+            card: this.$route.query.card
         }
     },
     watch: {
@@ -63,7 +63,7 @@ export default {
                         data => {
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
-                            commonPayAfter.call(this, data, 3, this.apiType)
+                            commonPayAfter.call(this, data, 3, 2)
                         },
                         {
                             payPwdVerifyToken: result.data,
@@ -75,7 +75,7 @@ export default {
                         payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
-                            this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                            commonPayAfter.call(this, data, 3, 3)
                         })
                     })
                 }

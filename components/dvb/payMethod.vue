@@ -38,7 +38,7 @@
                             </label>
                         </div>
                     </div>
-                    <div v-if="osv5" class="addCard" @click="payHandle(addCardChannel,'add')">
+                    <div v-if="osv5" class="addCard" @click="payHandle(addCardChannel,'',1)">
                         <div class="img-box"/>
                         <span v-if="isLogin">Pay with Another Card</span>
                         <span v-else>Add a Bank Card</span>
@@ -156,14 +156,14 @@ export default {
             this.chooseCard = card ? card.authorizationCode : ''
         },
         chargeWallet() {
-            chargeWallet(this, () => {
+            chargeWallet.call(this, () => {
                 this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
                     this.wallet = res.data
                     sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
                 })
             })
         },
-        payHandle(channel, card, name) {
+        payHandle(channel, card, ignorePwdVerify) {
             const order = JSON.parse(sessionStorage.getItem('order-info'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
@@ -183,7 +183,7 @@ export default {
             })
 
             createDVBOrder.call(this, order, data => {
-                if ((card && card != 'add' && channel.needEwalletPwdVerify) || (!card && this.selected.id > 9001 && this.selected.id < 9035)) {
+                if (channel.needEwalletPwdVerify && !ignorePwdVerify) {
                     checkPass.call(this, this.wallet.accountNo, setted => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
