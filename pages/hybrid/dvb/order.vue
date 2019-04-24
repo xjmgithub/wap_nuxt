@@ -2,20 +2,20 @@
     <div class="wrapper">
         <card-info/>
         <order-info/>
-        <pay-methods/>
+        <pay-method/>
         <div v-show="isYueMo" style="color: white;padding:5%;position:absolute;bottom:12rem;">{{$store.state.lang.monthly_billing}}:</div>
     </div>
 </template>
 <script>
 import cardInfo from '~/components/dvb/cardInfo'
 import orderInfo from '~/components/dvb/orderInfo'
-import payMethods from '~/components/dvb/payMethod'
+import payMethod from '~/components/dvb/payMethod'
 export default {
     layout: 'base',
     components: {
         cardInfo,
         orderInfo,
-        payMethods
+        payMethod
     },
     data() {
         return {
@@ -35,13 +35,6 @@ export default {
         }
     },
     asyncData({ app: { $axios }, store }) {
-        // const user = store.state.user
-        // let wallet = null
-        // if (user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS') {
-        //     $axios.setHeader('token', store.state.token)
-        //     const { data } = await $axios.get(`/mobilewallet/v1/accounts/me`)
-        //     wallet = data
-        // }
         return {
             serverTime: new Date()
         }
