@@ -61,9 +61,9 @@
                 </div>
             </div>
         </div>
-        <div v-show="selected.description" class="note">
+        <div v-show="selected&&selected.description" class="note">
             <p>Note:</p>
-            <p v-html="selected.description"/>
+            <p v-html="selected&&selected.description"/>
         </div>
         <div class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
@@ -93,8 +93,8 @@ export default {
             chooseCard: '',
             cardList: [],
             lastPayByCard: false,
-            addCardChannel: null,
-            ewalletChannel: null,
+            addCardChannel: {},
+            ewalletChannel: {},
             renderChannels: []
         }
     },
@@ -145,10 +145,10 @@ export default {
                         this.renderChannels.push(item)
                     }
                 })
+
                 if (this.lastPayByCard) {
                     this.choose(this.addCardChannel, this.cardList[0])
                 } else {
-                    console.log(this.ewalletChannel)
                     this.choose(this.ewalletChannel, '')
                 }
             })
@@ -163,7 +163,7 @@ export default {
     },
     methods: {
         choose(item, card) {
-            this.selected = item
+            this.selected = item 
             this.chooseCard = card ? card.authorizationCode : ''
         },
         chargeWallet() {
@@ -217,7 +217,11 @@ export default {
                 } else if (channel.formConfigExist) {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
-                    this.$router.push(`/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel.fkPayChannelId}&appInterfaceMode=${channel.appInterfaceMode}`)
+                    this.$router.push(
+                        `/hybrid/payment/form?payToken=${data.paymentToken}&payChannelId=${channel.fkPayChannelId}&appInterfaceMode=${
+                            channel.appInterfaceMode
+                        }`
+                    )
                 } else {
                     invoke.call(this, data.paymentToken, channel.fkPayChannelId, data => {
                         this.$nuxt.$loading.finish()
