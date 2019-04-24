@@ -38,7 +38,7 @@
                             </label>
                         </div>
                     </div>
-                    <div v-if="osv5" class="addCard" @click="payHandle(addCardChannel)">
+                    <div v-if="osv5" class="addCard" @click="payHandle(addCardChannel,'add')">
                         <div class="img-box"/>
                         <span v-if="isLogin">Pay with Another Card</span>
                         <span v-else>Add a Bank Card</span>
@@ -183,18 +183,22 @@ export default {
             })
 
             createDVBOrder.call(this, order, data => {
-                if (card && channel.needEwalletPwdVerify) {
+                if ((card && card != 'add' && channel.needEwalletPwdVerify) || (!card && this.selected.id > 9001 && this.selected.id < 9035)) {
                     checkPass.call(this, this.wallet.accountNo, setted => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         if (setted) {
                             this.$router.push(
-                                `/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&channel=${channel.id}&card=${card || ''}`
+                                `/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&channel=${channel.id}&apiType=${
+                                    channel.appInterfaceMode
+                                }&card=${card || ''}`
                             )
                         } else {
                             this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
                                 this.$router.push(
-                                    `/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&channel=${channel.id}&card=${card || ''}`
+                                    `/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&channel=${channel.id}&apiType=${
+                                        channel.appInterfaceMode
+                                    }&card=${card || ''}`
                                 )
                             })
                         }
@@ -226,21 +230,21 @@ export default {
     .channel {
         position: relative;
         border-bottom: 1px solid #e0e0e0;
-        >div{
+        > div {
             overflow: hidden;
-            zoom:1;
+            zoom: 1;
         }
         .channel-name {
             line-height: 3rem;
             font-size: 1.1rem;
-            width:85%;
-            float:left;
+            width: 85%;
+            float: left;
         }
         .arrows {
-            float:right;
-            width:1.3rem;
-            height:3rem;
-            background:url('~assets/img/dvb/ic_right_def_r.png') no-repeat center center;
+            float: right;
+            width: 1.3rem;
+            height: 3rem;
+            background: url('~assets/img/dvb/ic_right_def_r.png') no-repeat center center;
             background-size: auto;
         }
         .addCard {
