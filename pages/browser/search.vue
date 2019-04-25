@@ -69,6 +69,12 @@ export default {
             loadstate: false
         }
     },
+    watch: {
+        oriKeyword(nv, ov) {
+            this.page_number = 1
+            this.programList = []
+        }
+    },
     mounted() {
         this.getHotKeyList()
         this.$nextTick(() => {
@@ -91,7 +97,7 @@ export default {
             const bot = document.querySelector('.clips').getBoundingClientRect().bottom
             const screenHeight = window.screen.availHeight
             if (bot - screenHeight < 100) {
-                if (this.loadstate || this.endedState) return false
+                if (this.loadstate || this.endedState || !this.programList.length) return false
                 this.loadstate = true
                 this.search(this.oriKeyword)
             }
@@ -130,7 +136,10 @@ export default {
                 })
         },
         search(hotkey) {
-            if (hotkey.replace(/\s/g, '').length === 0) {
+            if (hotkey.replace(/\s/g, '').length === 0 && this.programList.length > 0) {
+                this.oriKeyword = ''
+                return
+            } else if (hotkey.replace(/\s/g, '').length === 0) {
                 return
             }
             this.keyword = hotkey
