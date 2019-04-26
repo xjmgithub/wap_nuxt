@@ -17,7 +17,7 @@
                     <p>Twitter</p>
                 </li>
             </ul>
-            <div class="link">{{link}}</div>
+            <div class="map-link">{{link}}</div>
         </div>
     </div>
 </template>
@@ -54,18 +54,21 @@ export default {
             )
         },
         copyLink() {
-            const copyText = document.querySelector('.link')
-            const range = document.createRange()
-            range.selectNode(copyText)
-            window.getSelection().addRange(range)
-            console.log(window.getSelection().toString())
-            const successful = document.execCommand('copy')
-            if (successful) {
-                this.$toast('Copied')
-            } else {
-                this.$toast('Copylink is not support on your browser')
-            }
-            this.$store.commit('SET_SHARE_STATE', false)
+            this.link = window.location.href
+            this.$nextTick(() => {
+                const copyText = document.querySelector('.map-link')
+                const range = document.createRange()
+                range.selectNode(copyText)
+                window.getSelection().addRange(range)
+                const successful = document.execCommand('copy')
+                window.getSelection().removeAllRanges()
+                if (successful) {
+                    this.$toast('Copied')
+                } else {
+                    this.$toast('Copylink is not support on your browser')
+                }
+                this.$store.commit('SET_SHARE_STATE', false)
+            })
         },
         shareWithTwitter() {
             window.location.href =
@@ -74,7 +77,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .share-layer {
     width: 100%;
     height: 100%;
@@ -116,8 +119,8 @@ export default {
         }
     }
 }
-.link {
-    height:10px;
-    overflow: hidden;
+.map-link {
+    position: fixed;
+    left: -1000px;
 }
 </style>
