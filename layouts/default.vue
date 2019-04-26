@@ -38,6 +38,7 @@
         </div>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
+        <toast ref="toast"/>
         <shadowLayer v-show="layer"/>
     </div>
 </template>
@@ -48,6 +49,7 @@ import confirm from '~/components/confirm'
 import mheader from '~/components/web/header.vue'
 import download from '~/components/web/download'
 import shadowLayer from '~/components/shadow-layer'
+import toast from '~/components/toast'
 import { setCookie, cdnPicSrc } from '~/functions/utils'
 export default {
     components: {
@@ -55,7 +57,8 @@ export default {
         confirm,
         mheader,
         download,
-        shadowLayer
+        shadowLayer,
+        toast
     },
     data() {
         return {
@@ -114,6 +117,9 @@ export default {
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
             this.$refs.confirm.show(msg, callback, cancel, yes, no)
             this.$store.commit('SHOW_SHADOW_LAYER')
+        }
+        Vue.prototype.$toast = (msg, duration) => {
+            this.$refs.toast.show(msg, duration)
         }
         Vue.prototype.cdnPicSrc = value => {
             return cdnPicSrc.call(this, value)

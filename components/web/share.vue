@@ -17,12 +17,18 @@
                     <p>Twitter</p>
                 </li>
             </ul>
+            <div id="link">{{link}}</div>
         </div>
     </div>
 </template>
 <script>
 import { initFacebookLogin } from '~/functions/utils'
 export default {
+    data() {
+        return {
+            link: ''
+        }
+    },
     computed: {
         showShare() {
             return this.$store.state.shareState
@@ -30,6 +36,7 @@ export default {
     },
     mounted() {
         initFacebookLogin()
+        this.link = window.location.href
     },
     methods: {
         closeShare() {
@@ -47,10 +54,21 @@ export default {
             )
         },
         copyLink() {
-            // TODO copy Link
+            const copyText = document.querySelector('#link')
+            const range = document.createRange()
+            range.selectNode(copyText)
+            window.getSelection().addRange(range)
+            const successful = document.execCommand('copy')
+            if (successful) {
+                this.$toast('Copied')
+            } else {
+                this.$toast('Copylink is not support on your browser')
+            }
+            this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithTwitter() {
-            // TODO share with twitter
+            window.location.href =
+                'http://twitter.com/share?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(document.title)
         }
     }
 }
@@ -96,5 +114,8 @@ export default {
             }
         }
     }
+}
+.link {
+    display: none;
 }
 </style>
