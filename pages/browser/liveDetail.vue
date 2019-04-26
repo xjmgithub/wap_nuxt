@@ -1,18 +1,19 @@
 <template>
     <div class="untrim-page">
         <div v-if="channel.poster&&channel.poster.resources[0].url" class="poster" @click="confirmDown">
-            <img :src="channel.poster&&channel.poster.resources[0].url.replace('http:','https:')" alt>
+            <img :src="channel.poster&&cdnPicSrc(channel.poster.resources[0].url)" alt>
             <img src="~assets/img/web/ic_play.png">
         </div>
         <div class="container-main">
-            <div class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views
+            <div class="views">
+                {{channel.liveOnlineUserNumber||0 | formatViewCount}} views
                 <div class="share" @click="toShare">
                     <img src="~assets/img/web/ic_share_def_g.png"> Share
                 </div>
             </div>
             <div v-if="channel.id" class="base-info clearfix">
                 <div class="logo">
-                    <img :src="channel.logo.resources[0]&&channel.logo.resources[0].url.replace('http:','https:')" alt>
+                    <img :src="channel.logo.resources[0]&&cdnPicSrc(channel.logo.resources[0].url)" alt>
                 </div>
                 <div class="info">
                     <p class="info-name">{{channel.name}}</p>
@@ -44,12 +45,12 @@
                 <div class="epg-contain">
                     <div v-for="(item,index) in epgList" :key="index" class="epg">
                         <span class="playTime">{{item.startDate | formatPlayTime}}</span>
-                        <span :class="{current:item.isCurrent}" class="circle" />
+                        <span :class="{current:item.isCurrent}" class="circle"/>
                         <div class="playTitle" @click="toggleDetail(item)">
                             {{item.name}}
-                            <div style="height:0.8rem;" />
+                            <div style="height:0.8rem;"/>
                             <div v-show="item.isCurrent" class="total">
-                                <div :style="{ width: progress + '%'}" class="progress" />
+                                <div :style="{ width: progress + '%'}" class="progress"/>
                             </div>
                             <div v-show="item.showDetail" class="more-info">
                                 <div>
@@ -70,7 +71,7 @@
                 </div>
             </div>
         </div>
-        <mShare :show="showShare" />
+        <mShare :show="showShare"/>
     </div>
 </template>
 <script>
@@ -254,7 +255,7 @@ export default {
                             ele.isCurrent = true
                             const totalTime = ele.endDate - ele.startDate
                             const nowTime = now - ele.startDate
-                            this.progress = Math.floor(nowTime / totalTime * 100)
+                            this.progress = Math.floor((nowTime / totalTime) * 100)
                         } else {
                             ele.isCurrent = false
                         }

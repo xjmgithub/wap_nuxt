@@ -1,6 +1,6 @@
 <template>
     <div>
-        <nuxt v-if="!needLoginAlert" />
+        <nuxt v-if="!needLoginAlert"/>
         <div v-if="needLoginAlert" class="authfail">
             <img src="~assets/img/pay/img_failed_def_b.png">
             <p class="fail">
@@ -8,10 +8,10 @@
                 <a href="javascript:void(0)" @click="toNativeLogin">Log in First.</a>
             </p>
         </div>
-        <alert ref="alert" />
-        <confirm ref="confirm" />
-        <toast ref="toast" />
-        <shadowLayer v-show="layer" />
+        <alert ref="alert"/>
+        <confirm ref="confirm"/>
+        <toast ref="toast"/>
+        <shadowLayer v-show="layer"/>
     </div>
 </template>
 <script>
@@ -20,7 +20,7 @@ import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import toast from '~/components/toast'
 import shadowLayer from '~/components/shadow-layer'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage, cdnPicSrc } from '~/functions/utils'
 export default {
     components: {
         alert,
@@ -50,6 +50,10 @@ export default {
         Vue.prototype.$toast = (msg, duration) => {
             this.$refs.toast.show(msg, duration)
         }
+        
+        Vue.prototype.cdnPicSrc = value => {
+            return cdnPicSrc.call(this, value)
+        }
         this.$axios.setHeader('token', this.$store.state.token)
     },
     mounted() {
@@ -64,8 +68,8 @@ export default {
         const user = this.$store.state.user
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
-            if(!user.roleName&&this.$store.state.appType){
-                this.$alert('Your user authentication has expired. Please log in again.',()=>{
+            if (!user.roleName && this.$store.state.appType) {
+                this.$alert('Your user authentication has expired. Please log in again.', () => {
                     this.toNativeLogin()
                 })
             }

@@ -1,7 +1,7 @@
 <template>
     <div class="list_faq_item list_faq_item_fr clearfix">
         <div class="content_avatar fr">
-            <img v-if="user.head" :src="user.head.replace('http:','https:')">
+            <img v-if="user.head" :src="cdnPicSrc(user.head)">
             <img v-if="!user.head" src="~assets/img/faq/1-02.png">
         </div>
         <div class="content_show fr">

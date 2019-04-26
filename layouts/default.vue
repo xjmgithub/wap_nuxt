@@ -9,7 +9,7 @@
                 <li>
                     <div>
                         <div class="user_info">
-                            <img v-if="user" :src="user.head.replace('http:','https:')">
+                            <img v-if="user" :src="cdnPicSrc(user.head)">
                             <nuxt-link v-else to="/hybrid/account/login">
                                 <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
                             </nuxt-link>
@@ -20,7 +20,7 @@
                 <li class="country">
                     <nuxt-link :class="{checked:$route.path=='/browser/country'}" to="/browser/country">
                         <span>{{country.name}}</span>
-                        <img :src="country.nationalFlag.replace('http:','https:')">
+                        <img :src="cdnPicSrc(country.nationalFlag)">
                     </nuxt-link>
                 </li>
                 <li>
@@ -48,7 +48,7 @@ import confirm from '~/components/confirm'
 import mheader from '~/components/web/header.vue'
 import download from '~/components/web/download'
 import shadowLayer from '~/components/shadow-layer'
-import { setCookie } from '~/functions/utils'
+import { setCookie, cdnPicSrc } from '~/functions/utils'
 export default {
     components: {
         alert,
@@ -114,6 +114,9 @@ export default {
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {
             this.$refs.confirm.show(msg, callback, cancel, yes, no)
             this.$store.commit('SHOW_SHADOW_LAYER')
+        }
+        Vue.prototype.cdnPicSrc = value => {
+            return cdnPicSrc.call(this, value)
         }
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },

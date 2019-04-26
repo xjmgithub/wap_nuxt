@@ -1,10 +1,10 @@
 <template>
     <div>
         <div v-if="item.type.indexOf('100')==0" class="recommand">
-            <mTitle :show-title="item.name" :icon="true" />
+            <mTitle :show-title="item.name" :icon="true"/>
             <ul :class="{'odd':item.list.length%2!=0,'even':item.list.length%2==0}" class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,ele.id)">
-                    <div :style="'background:url('+ele.poster.resources[0].url.replace('http:','https:')+') no-repeat'">
+                    <div :style="'background:url('+ (cdnPicSrc(ele.poster.resources[0].url)|| '/res_nuxt/img/wap_ccard.png') +') no-repeat'">
                         <span class="show-time">{{ele.durationSecond | formatShowTime}}</span>
                     </div>
                     <span class="title">{{ele.name}}</span>
@@ -12,10 +12,10 @@
             </ul>
         </div>
         <div v-if="item.type.indexOf('109')==0" class="recommand">
-            <mTitle :show-title="item.name" :icon="true" />
+            <mTitle :show-title="item.name" :icon="true"/>
             <ul :class="{'odd':item.list.length%2!=0,'even':item.list.length%2==0}" class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,ele.id)">
-                    <div :style="'background:url('+ele.poster.replace('http:','https:')+') no-repeat'"/>
+                    <div :style="'background:url('+ (cdnPicSrc(ele.poster) || '/res_nuxt/img/wap_ccard.png') +') no-repeat'"/>
                     <span class="title">{{ele.name}}</span>
                 </li>
             </ul>
@@ -31,7 +31,7 @@ export default {
             return formatTime(val)
         }
     },
-    components:{
+    components: {
         mTitle
     },
     props: {
@@ -43,17 +43,13 @@ export default {
             }
         }
     },
-    mounted(){
-        console.log(this.item)
-    },
-    methods:{
-        toProgram(type,id){
-            console.log(id)
-            if(type.indexOf('109')==0){
+    methods: {
+        toProgram(type, id) {
+            if (type.indexOf('109') == 0) {
                 this.$router.push(`/browser/program/detail/${id}`)
             }
-            if(type.indexOf('100')==0){
-                this.$axios.get(`/cms/program_detail/byvod/${id}`).then(res=>{
+            if (type.indexOf('100') == 0) {
+                this.$axios.get(`/cms/program_detail/byvod/${id}`).then(res => {
                     this.$router.push(`/browser/program/subdetail/${res.data.id}?subId=${id}`)
                 })
             }
@@ -72,21 +68,21 @@ export default {
     &.last {
         border-bottom: 1px solid #d8d8d8;
     }
-    .odd{
-        li{
-           &:nth-child(1) {
+    .odd {
+        li {
+            &:nth-child(1) {
                 width: 100%;
-            } 
-           &:nth-child(2n+1) {
+            }
+            &:nth-child(2n + 1) {
                 float: right;
-            } 
+            }
         }
     }
-    .even{
-        li{
-           &:nth-child(2n) {
+    .even {
+        li {
+            &:nth-child(2n) {
                 float: right;
-            } 
+            }
         }
     }
     li {

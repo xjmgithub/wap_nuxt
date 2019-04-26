@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="poster" @click="confirmDown">
-            <img :src="sPoster.replace('http:','https:')" alt class="cover">
+            <img :src="cdnPicSrc(sPoster)" alt class="cover">
             <img v-show="sPoster" src="~assets/img/web/ic_play.png">
             <div class="clearfix">
                 <span class="program-name title">{{sName}}</span>
@@ -16,7 +16,7 @@
                 <span class="program-name">{{pName}}</span>
                 <div class="clearfix">
                     <p>{{pDescription}}</p>
-                    <img :src="pPoster.replace('http:','https:')">
+                    <img :src="cdnPicSrc(pPoster)">
                 </div>
             </nuxt-link>
         </div>
@@ -26,7 +26,7 @@
                 <li v-for="(item,index) in subProgram" :key="index">
                     <nuxt-link :to="`/browser/program/subdetail/${pid}?subId=${item.id}`">
                         <div>
-                            <img :src="item.poster.resources[0].url.replace('http:','https:')">
+                            <img :src="cdnPicSrc(item.poster.resources[0].url)">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -34,7 +34,7 @@
                 </li>
             </ul>
         </div>
-        <mShare :show="showShare" />
+        <mShare :show="showShare"/>
     </div>
 </template>
 <script>

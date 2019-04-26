@@ -471,11 +471,15 @@ export const animateCSS = function(element, animationName, callback) {
     node.classList.add('animated', animationName)
 }
 
-
-export const cdnPicSrc = function(src){
-    if(window && window.indexedDB){
-        return src.replace('http:','https:')
-    }else{
-        return src
+export const cdnPicSrc = function(src) {
+    if (src) {
+        const app = (this.$store && this.$store.state.appType) || 0
+        if (app <= 0 || (window && window.indexedDB)) {
+            return src.replace('http:', 'https:')
+        } else {
+            return src
+        }
+    } else {
+        return ''
     }
 }

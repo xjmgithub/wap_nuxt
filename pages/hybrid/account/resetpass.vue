@@ -14,47 +14,32 @@
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" @click="countryDialogStatus=true">
-                <img :src="country.nationalFlag.replace('http:','https:')">
+                <img :src="cdnPicSrc(country.nationalFlag)">
                 <span>{{country.name}}</span>
             </div>
-            <verifyTel
-                ref="telpicker"
-                :type="1"
-                :prefix="country.phonePrefix"
-                @pass="changePhoneCanNext"
-            />
+            <verifyTel ref="telpicker" :type="1" :prefix="country.phonePrefix" @pass="changePhoneCanNext"/>
         </div>
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
-                    <input
-                        v-model="email"
-                        type="email"
-                        placeholder="Enter your email address"
-                        @focus="focus_email=true"
-                        @blur="focus_email=false"
-                    >
+                    <input v-model="email" type="email" placeholder="Enter your email address" @focus="focus_email=true" @blur="focus_email=false">
                 </div>
-                <div v-show="error_email" class="error">
-                    {{error_email}}
-                </div>
+                <div v-show="error_email" class="error">{{error_email}}</div>
             </div>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"/>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
-            <div class="dialog-title">
-                Country List
-            </div>
+            <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag.replace('http:','https:')">
+                    <img :src="cdnPicSrc(item.nationalFlag)">
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
     </div>
 </template>
 <script>

@@ -14,32 +14,30 @@
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="country_choose" @click="countryDialogStatus=true">
-                <img :src="country.nationalFlag.replace('http:','https:')">
+                <img :src="cdnPicSrc(country.nationalFlag)">
                 <span>{{country.name}}</span>
             </div>
-            <verifyTel ref="telpicker" :prefix="country.phonePrefix" @pass="changePhoneCanNext" />
+            <verifyTel ref="telpicker" :prefix="country.phonePrefix" @pass="changePhoneCanNext"/>
         </div>
         <div v-show="type==1" class="by_email">
-            <verifyEmail ref="emailpicker" @pass="changeEmailCanNext" />
+            <verifyEmail ref="emailpicker" @pass="changeEmailCanNext"/>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"/>
         </div>
         <div class="terms">
             <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
-            <div class="dialog-title">
-                Country List
-            </div>
+            <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag.replace('http:','https:')">
+                    <img :src="cdnPicSrc(item.nationalFlag)">
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
     </div>
 </template>
 <script>
@@ -59,7 +57,7 @@ export default {
     data() {
         return {
             type: 0,
-            countrys:countrys,
+            countrys: countrys,
             country: this.$store.state.country,
             countryDialogStatus: false,
             phoneCanNext: false,
@@ -114,7 +112,7 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     position: static;
-    padding:0 1.2rem;
+    padding: 0 1.2rem;
     .tab {
         div {
             width: 50%;

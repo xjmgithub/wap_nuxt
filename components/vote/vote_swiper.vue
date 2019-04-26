@@ -1,7 +1,7 @@
 <template>
     <Swiper v-if="bannerList.length > 0" :auto-play="false">
         <Slide v-for="(item,index) in bannerList" :key="index" @click="clickBanner(item)">
-            <img :src="item.materials.replace('http:','https:')" alt>
+            <img :src="cdnPicSrc(item.materials)" alt>
         </Slide>
     </Swiper>
 </template>

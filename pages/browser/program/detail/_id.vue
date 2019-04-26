@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="poster" @click="confirmDown">
-            <img :src="pPoster.replace('http:','https:')">
+            <img :src="cdnPicSrc(pPoster)">
             <img v-show="pPoster" src="~assets/img/web/ic_play.png">
             <div class="clearfix">
                 <span class="program-name title">{{pName}}</span>
@@ -17,7 +17,7 @@
                 <li v-for="(item,index) in subProgram" :key="index">
                     <nuxt-link :to="`/browser/program/subdetail/${pid}?subId=${item.id}`">
                         <div>
-                            <img :src="item.poster.resources[0].url.replace('http:','https:')">
+                            <img :src="cdnPicSrc(item.poster.resources[0].url)">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description || item.name}}</span>
