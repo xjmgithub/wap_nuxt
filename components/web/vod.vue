@@ -4,7 +4,7 @@
             <mTitle :show-title="item.name" :icon="true"/>
             <ul :class="{'odd':item.list.length%2!=0,'even':item.list.length%2==0}" class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,ele.id)">
-                    <div :style="'background:url('+ (cdnPicSrc(ele.poster.resources[0].url)|| '/res_nuxt/img/wap_ccard.png') +') no-repeat'">
+                    <div :style="'background:url('+ (cdnPicSrc(ele.poster.resources[0].url)|| '/res_nuxt/img/def.png') +') no-repeat'">
                         <span class="show-time">{{ele.durationSecond | formatShowTime}}</span>
                     </div>
                     <span class="title">{{ele.name}}</span>
@@ -15,7 +15,7 @@
             <mTitle :show-title="item.name" :icon="true"/>
             <ul :class="{'odd':item.list.length%2!=0,'even':item.list.length%2==0}" class="clearfix">
                 <li v-for="(ele,k) in item.list" :key="k" @click="toProgram(item.type,ele.id)">
-                    <div :style="'background:url('+ (cdnPicSrc(ele.poster) || '/res_nuxt/img/wap_ccard.png') +') no-repeat'"/>
+                    <div :style="'background:url('+ (cdnPicSrc(ele.poster) || '/res_nuxt/img/def.png') +') no-repeat'"/>
                     <span class="title">{{ele.name}}</span>
                 </li>
             </ul>
