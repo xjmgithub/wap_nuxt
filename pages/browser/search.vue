@@ -2,12 +2,12 @@
     <div class="page">
         <div class="search">
             <form @submit.prevent="search(keyword)">
-                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_tvguide_searchbox">
+                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_serarch_input">
                 <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
             </form>
         </div>
         <div v-show="!programList.length">
-            <p class="select">SELECT FOR YOU</p>
+            <p class="select">{{$store.state.lang.officialwebsitemobile_select_for_you}}</p>
             <ul class="select-word">
                 <li v-for="(item,index) in hotKeyList" :key="index" @click="search(item)">
                     <img src="~assets/img/web/ic_search_b.png">
@@ -16,20 +16,22 @@
             </ul>
         </div>
         <div v-show="programList.length>0" class="clips">
-            <p class="title">Programs for
+            <p class="title">{{$store.state.lang.officialwebsitemobile_programs_for}}
                 <span class="highlight">{{highlightValues.join(' ')}}</span>
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in programList" :key="index">
                     <nuxt-link v-show="item.fields.program_type=='PROGRAM'" :to="`/browser/program/detail/${item.fields.pro_id}`">
                         <div>
-                            <img :src="item.fields.pro_picture_url">
+                            <img v-if="item.fields.pro_picture_url" :src="item.fields.pro_picture_url">
+                            <img v-else src="~assets/img/web/def.png">
                         </div>
                         <p class="title" v-html="highlight(getName(item))" />
                     </nuxt-link>
                     <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/1111?subId=${item.fields.subpro_id}`">
                         <div>
-                            <img :src="item.fields.subpro_picture_url">
+                            <img v-if="item.fields.subpro_picture_url" :src="item.fields.subpro_picture_url">
+                            <img v-else src="~assets/img/web/def.png">
                             <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
                         <p class="title" v-html="highlight(getName(item))" />

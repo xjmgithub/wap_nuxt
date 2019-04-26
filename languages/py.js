@@ -78,6 +78,14 @@ export default {
     officialwebsitemobile_live_channelnumber: ' Canais ao vivo no app StarTimes ON',
     officialwebsitemobile_list_more: 'Mais',
 
+    officialwebsitemobile_search: 'Procurar',
+    officialwebsitemobile_select_for_you: 'Selecciona',
+    officialwebsitemobile_programs_for: 'Programas para',
+    officialwebsitemobile_install_to_watch: 'Instalar para assistir',
+    officialwebsitemobile_install: 'Instalar',
+    officialwebsitemobile_serarch_input: 'Insira a Palavra-chave',
+    officialwebsitemobile_action_share: 'Partilhar',
+
     // dvb recharge
     // bind
     dvb_bind_title: 'Recarregue o seu Smartcard',

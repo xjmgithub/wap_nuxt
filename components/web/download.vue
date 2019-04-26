@@ -3,9 +3,9 @@
         <div>
             <img src="~assets/img/web/app_icon.png">
             <div>
-                <span> {{$store.state.lang.officialwebsitemobile_downloadpromo}}</span>
+                <span> {{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
             </div>
-            <span class="down">DOWNLOAD</span>
+            <span class="down">{{$store.state.lang.officialwebsitemobile_install}}</span>
         </div>
     </div>
 </template>
@@ -43,12 +43,12 @@ export default {
             position: absolute;
             top: 50%;
             left: 3.5rem;
-            margin-top: -1.2rem;
+            margin-top: -.6rem;
             line-height: 1.3rem;
         }
         .down {
             background-color: #0087eb;
-            width: 6rem;
+            width: 4.5rem;
             color: #ffffff;
             border-radius: 2px;
             height: 2rem;

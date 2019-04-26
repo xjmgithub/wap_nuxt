@@ -3,8 +3,8 @@
         <div class="logo">
             <img src="~assets/img/web/ic_guidelist.png" @click="showNav">
             <img v-if="logo==0" class="logo_img" src="~assets/img/startimes2.png" alt="Startimes">
-            <img v-if="logo==1" class="logo_img" src="~assets/img/topstar_white.png" alt="Startimes">
-            <img v-if="logo==2" class="logo_img" src="~assets/img/starsat_white.png" alt="Startimes">
+            <img v-if="logo==1" class="logo_img" src="~assets/img/topstar_white2.png" alt="Startimes">
+            <img v-if="logo==2" class="logo_img" src="~assets/img/starsat_white2.png" alt="Startimes">
         </div>
         <div class="navigator">
             <div>
@@ -50,8 +50,7 @@
                     <img v-if="$route.path.indexOf('/browser/search')>=0" src="~assets/img/web/ic_search_y.png">
                     <img v-else src="~assets/img/web/ic_search_w.png">
                     <div :class="{checked:$route.path.indexOf('/browser/search')>=0}" class="nav_title">
-                        <!-- {{$store.state.lang.officialwebsitemobile_topnav_live}} -->
-                        Search
+                        {{$store.state.lang.officialwebsitemobile_search}}
                     </div>
                 </nuxt-link>
             </div>

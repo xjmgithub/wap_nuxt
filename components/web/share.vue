@@ -5,19 +5,15 @@
             <p>Share to:</p>
             <ul>
                 <li @click="shareWithFacebook">
-                    <!-- <nuxt-link :class="{checked:$route.path=='/browser/country'}" to="/browser/country">
-                        <img :src="country.nationalFlag.replace('http:','https:')">
-                        <span>{{country.name}}</span>
-                    </nuxt-link>-->
-                    <img src="~assets/img/web/app_icon.png">
+                    <img src="~assets/img/web/ic_facebook_def.png">
                     <p>Facebook</p>
                 </li>
                 <li @click="copyLink">
-                    <img src="~assets/img/web/app_icon.png">
+                    <img src="~assets/img/web/ic_copylink_def copy.png">
                     <p>Copy Link</p>
                 </li>
                 <li @click="shareWithTwitter">
-                    <img src="~assets/img/web/app_icon.png">
+                    <img src="~assets/img/web/ic_twitter_def.png">
                     <p>Twitter</p>
                 </li>
             </ul>
@@ -84,7 +80,7 @@ export default {
     }
     & > p {
         color: #333333;
-        padding: 1rem 0 0 1rem;
+        padding: 1rem;
     }
     ul {
         line-height: 2.5rem;
@@ -96,7 +92,7 @@ export default {
             width: 33.3%;
             padding: 0 1rem;
             img {
-                width: 100%;
+                width: 65%;
             }
         }
     }
