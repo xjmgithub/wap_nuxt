@@ -58,6 +58,7 @@ export default {
             const range = document.createRange()
             range.selectNode(copyText)
             window.getSelection().addRange(range)
+            console.log(window.getSelection().toString())
             const successful = document.execCommand('copy')
             if (successful) {
                 this.$toast('Copied')
@@ -116,6 +117,7 @@ export default {
     }
 }
 .link {
-    display: none;
+    height:1px;
+    overflow: hidden;
 }
 </style>
