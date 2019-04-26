@@ -31,6 +31,7 @@
 import channel from '~/components/web/guideitem'
 import localforage from 'localforage'
 import dayjs from 'dayjs'
+import { initDB, cacheDateUpdate } from '~/functions/utils'
 export default {
     components: {
         channel: channel
@@ -55,31 +56,8 @@ export default {
         }
     },
     mounted() {
-        localforage.config({
-            driver: [localforage.INDEXEDDB, localforage.WEBSQL],
-            name: 'StarTimes'
-        })
-        localforage
-            .getItem('dbtime')
-            .then(val => {
-                if (val) {
-                    if (val != dayjs(this.serverTime).format('YYYY-MM-DD')) {
-                        // DELETE CACHE
-                        localforage.clear().then(() => {
-                            localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
-                            this.getChannels()
-                        })
-                    } else {
-                        this.getChannels()
-                    }
-                } else {
-                    localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
-                    this.getChannels()
-                }
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        initDB()
+        cacheDateUpdate.call(this, this.getChannels)
 
         document.addEventListener('scroll', () => {
             const scollTop = document.body.scrollTop || document.documentElement.scrollTop

@@ -1,5 +1,7 @@
 import CallApp from 'callapp-lib'
 import { Base64 } from 'js-base64'
+import localforage from 'localforage'
+import dayjs from 'dayjs'
 
 export const setCookie = (name, value, time) => {
     if (!name) {
@@ -482,4 +484,35 @@ export const cdnPicSrc = function(src) {
     } else {
         return ''
     }
+}
+
+export const cacheDateUpdate = function(callback) {
+    localforage
+        .getItem('dbtime')
+        .then(val => {
+            if (val) {
+                if (val != dayjs(this.serverTime).format('YYYY-MM-DD')) {
+                    // DELETE CACHE
+                    localforage.clear().then(() => {
+                        localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
+                        callback && callback()
+                    })
+                } else {
+                    callback && callback()
+                }
+            } else {
+                localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
+                callback && callback()
+            }
+        })
+        .catch(err => {
+            this.$alert(err)
+        })
+}
+
+export const initDB = function() {
+    localforage.config({
+        driver: [localforage.INDEXEDDB, localforage.WEBSQL],
+        name: 'StarTimes'
+    })
 }

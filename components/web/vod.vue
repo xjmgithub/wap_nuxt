@@ -49,9 +49,7 @@ export default {
                 this.$router.push(`/browser/program/detail/${id}`)
             }
             if (type.indexOf('100') == 0) {
-                this.$axios.get(`/cms/program_detail/byvod/${id}`).then(res => {
-                    this.$router.push(`/browser/program/subdetail/${res.data.id}?subId=${id}`)
-                })
+                this.$router.push(`/browser/program/subdetail/${id}`)
             }
         }
     }
