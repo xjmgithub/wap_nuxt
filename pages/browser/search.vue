@@ -2,12 +2,12 @@
     <div class="page">
         <div class="search">
             <form @submit.prevent="search(keyword)">
-                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_tvguide_searchbox">
+                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_serarch_input">
                 <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
             </form>
         </div>
         <div v-show="!programList.length">
-            <p class="select">SELECT FOR YOU</p>
+            <p class="select">{{$store.state.lang.officialwebsitemobile_select_for_you}}</p>
             <ul class="select-word">
                 <li v-for="(item,index) in hotKeyList" :key="index" @click="search(item)">
                     <img src="~assets/img/web/ic_search_b.png">
@@ -16,7 +16,7 @@
             </ul>
         </div>
         <div v-show="programList.length>0" class="clips">
-            <p class="title">Programs for
+            <p class="title">{{$store.state.lang.officialwebsitemobile_programs_for}}
                 <span class="highlight">{{highlightValues.join(' ')}}</span>
             </p>
             <ul class="clearfix">

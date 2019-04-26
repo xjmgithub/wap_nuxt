@@ -58,6 +58,14 @@ export default {
     officialwebsitemobile_live_channelnumber: " chaînes en direct sur l'app StarTimes ON",
     officialwebsitemobile_list_more: 'Plus',
 
+    officialwebsitemobile_search: 'chercher',
+    officialwebsitemobile_select_for_you: 'Choisissez pour vous',
+    officialwebsitemobile_programs_for: 'Programmes pour',
+    officialwebsitemobile_install_to_watch: 'installer pour regarder',
+    officialwebsitemobile_install: 'Installer',
+    officialwebsitemobile_serarch_input: 'Veuillez entrer le mot-clé',
+    officialwebsitemobile_action_share: 'Partager',
+
     // dvb recharge
     // bind
     dvb_bind_title: 'Recharge de carte à puce',

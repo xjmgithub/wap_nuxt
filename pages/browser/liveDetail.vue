@@ -7,7 +7,7 @@
         <div class="container-main">
             <div class="views">{{channel.liveOnlineUserNumber||0 | formatViewCount}} views
                 <div class="share" @click="toShare">
-                    <img src="~assets/img/web/ic_share_def_g.png"> Share
+                    <img src="~assets/img/web/ic_share_def_g.png"> {{$store.state.lang.officialwebsitemobile_action_share}}
                 </div>
             </div>
             <div v-if="channel.id" class="base-info clearfix">

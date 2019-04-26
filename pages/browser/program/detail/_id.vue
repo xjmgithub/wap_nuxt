@@ -6,7 +6,7 @@
             <div class="clearfix">
                 <span class="program-name title">{{pName}}</span>
                 <div class="share" @click.stop="toShare">
-                    <img src="~assets/img/web/ic_share_def_g.png"> Share
+                    <img src="~assets/img/web/ic_share_def_g.png">{{$store.state.lang.officialwebsitemobile_action_share}}
                 </div>
             </div>
             <p>{{pDescription}}</p>

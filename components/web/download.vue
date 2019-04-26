@@ -3,9 +3,9 @@
         <div>
             <img src="~assets/img/web/app_icon.png">
             <div>
-                <span> {{$store.state.lang.officialwebsitemobile_downloadpromo}}</span>
+                <span> {{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
             </div>
-            <span class="down">DOWNLOAD</span>
+            <span class="down">{{$store.state.lang.officialwebsitemobile_install}}</span>
         </div>
     </div>
 </template>

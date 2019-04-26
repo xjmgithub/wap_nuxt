@@ -50,8 +50,7 @@
                     <img v-if="$route.path.indexOf('/browser/search')>=0" src="~assets/img/web/ic_search_y.png">
                     <img v-else src="~assets/img/web/ic_search_w.png">
                     <div :class="{checked:$route.path.indexOf('/browser/search')>=0}" class="nav_title">
-                        <!-- {{$store.state.lang.officialwebsitemobile_topnav_live}} -->
-                        Search
+                        {{$store.state.lang.officialwebsitemobile_search}}
                     </div>
                 </nuxt-link>
             </div>
