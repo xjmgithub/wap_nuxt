@@ -3,8 +3,8 @@
         <div class="logo">
             <img src="~assets/img/web/ic_guidelist.png" @click="showNav">
             <img v-if="logo==0" class="logo_img" src="~assets/img/startimes2.png" alt="Startimes">
-            <img v-if="logo==1" class="logo_img" src="~assets/img/topstar_white.png" alt="Startimes">
-            <img v-if="logo==2" class="logo_img" src="~assets/img/starsat_white.png" alt="Startimes">
+            <img v-if="logo==1" class="logo_img" src="~assets/img/topstar_white2.png" alt="Startimes">
+            <img v-if="logo==2" class="logo_img" src="~assets/img/starsat_white2.png" alt="Startimes">
         </div>
         <div class="navigator">
             <div>
