@@ -12,8 +12,8 @@
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
-import { invoke, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
-import { setCookie, toNativePage } from '~/functions/utils'
+import { invoke, commonPayAfter, verifyWalletPass, payWithBalance } from '~/functions/pay'
+import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -26,7 +26,8 @@ export default {
             canPay: false,
             payToken: this.$route.query.paytoken,
             channel: this.$route.query.channel,
-            card: this.$route.query.card // paystack card
+            apiType: this.$route.query.apiType,
+            card: this.$route.query.card
         }
     },
     watch: {
@@ -53,27 +54,28 @@ export default {
             const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            verifyWalletPass.call(this, ewallet.accountNo, this.password, data => {
+            verifyWalletPass.call(this, ewallet.accountNo, this.password, result => {
                 if (this.card) {
                     invoke.call(
                         this,
                         this.payToken,
-                        993102,
+                        this.channel,
                         data => {
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
-                            setCookie('lastpay', 'card')
-                            commonPayAfter.call(this, data, 3, 3)
+                            commonPayAfter.call(this, data, 3, 2)
                         },
-                        { authorization_code: this.card }
+                        {
+                            payPwdVerifyToken: result.data,
+                            authorization_code: this.card
+                        }
                     )
                 } else {
                     invoke.call(this, this.payToken, this.channel, data => {
                         payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
-                            setCookie('lastpay', 'wallet')
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
-                            this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                            commonPayAfter.call(this, data, 3, 3)
                         })
                     })
                 }

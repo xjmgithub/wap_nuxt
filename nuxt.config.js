@@ -43,12 +43,13 @@ export default {
 
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
-        '@nuxtjs/axios'
+        '@nuxtjs/axios',
+        ['@nuxtjs/pwa', { icon: false }]
     ],
 
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
-        baseURL: process.env.NODE_ENV !== 'production' ? env.apiURL : '/',
+        baseURL: env.apiURL,
         browserBaseURL: '/',
         proxy: process.env.NODE_ENV !== 'production'
     },
@@ -77,7 +78,8 @@ export default {
     },
     serverMiddleware: [
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
-        { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' }
+        { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' },
+        { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' }
     ],
     hooks: {
         listen(server) {
@@ -95,7 +97,8 @@ export default {
         extend(config, ctx) {
             config.node = {
                 fs: 'empty',
-                net: 'empty'
+                net: 'empty',
+                url: 'empty'
             }
             if (ctx.isDev && ctx.isClient) {
                 config.module.rules.push({

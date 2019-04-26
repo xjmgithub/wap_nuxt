@@ -133,8 +133,9 @@ export default {
 <style lang="less">
 @import '~assets/less/faq/common.less';
 @import '~assets/less/faq/loginfaq.less';
-body {
-    background: #eeeeee;
+body,html {
+    background:#eeeeee;
+    min-height:100%;
 }
 </style>
 <style lang="less" scoped>

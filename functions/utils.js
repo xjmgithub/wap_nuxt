@@ -1,4 +1,5 @@
 import CallApp from 'callapp-lib'
+import { Base64 } from 'js-base64'
 
 export const setCookie = (name, value, time) => {
     if (!name) {
@@ -68,16 +69,15 @@ export const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min
 }
 
-export const shareInvite = (link, shareTitle, shareContent, tabName, voteName) => {
-    const shareLink = '' // TODO 图片地址
+export const shareInvite = (link, shareTitle, shareContent, shareImg, channel) => {
     if (link.indexOf('?') > 0) {
-        link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + voteName + '_' + tabName
+        link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
     } else {
-        link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + voteName + '_' + tabName
+        link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
     }
     if (window.getChannelId && window.getChannelId.showCustorm) {
-        const content = '【' + shareTitle + '】' + shareContent + link
-        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareLink, voteName)
+        const content = '【' + shareTitle + '】' + shareContent + ' ' + link
+        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', channel)
     }
 }
 
@@ -373,4 +373,109 @@ export const shareFacebook = function() {
         display: 'popup',
         href: window.location.href
     })
+}
+export const toAppStore = function(page) {
+    const ua = navigator.userAgent.toLowerCase()
+    const _this = this
+
+    let source = ''
+    let scheme = 'starvideo'
+    let appType = 1
+    let path = 'platformapi/webtoapp'
+    if (page) {
+        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
+    }
+
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        scheme = 'startimes'
+        appType = 2
+        // path = '?player?vod='+ page
+    }
+
+    const callLib = new CallApp({
+        scheme: {
+            protocol: scheme
+        }
+    })
+
+    callLib.open({
+        path: path,
+        callback() {
+            if (location.href.indexOf('referrer') > 0) {
+                source = location.search
+            } else if (location.href.indexOf('utm_source') > 0) {
+                source = '&referrer=' + encodeURIComponent(location.search.substr(1))
+            } else {
+                source = '&' + location.search.substr(1)
+            }
+
+            _this.sendEvLog({
+                category: _this.vote_name,
+                action: 'downloadpopup_show',
+                label: '',
+                Value: 1
+            })
+
+            _this.$confirm(
+                appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
+                () => {
+                    _this.sendEvLog({
+                        category: _this.vote_name,
+                        action: 'downloadpopup_click',
+                        label: 'go',
+                        Value: 1
+                    })
+                    window.location.href =
+                        appType == 1
+                            ? 'market://details?id=com.star.mobile.video' + source
+                            : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+                },
+                () => {
+                    _this.sendEvLog({
+                        category: _this.vote_name,
+                        action: 'downloadpopup_click',
+                        label: 'not now',
+                        Value: 1
+                    })
+                },
+                _this.$store.state.lang.mrright_go,
+                _this.$store.state.lang.mrright_not_now
+            )
+        }
+    })
+}
+
+export const playVodinApp = function(appType, vod) {
+    if (appType == 1) {
+        window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+    } else if (appType == 2) {
+        window.location.href = 'startimes://player?vodId=' + vod
+    } else {
+        downApp()
+    }
+}
+
+export const animateCSS = function(element, animationName, callback) {
+    const node = element
+
+    function handleAnimationEnd() {
+        node.classList.remove('animated', animationName)
+        node.removeEventListener('animationend', handleAnimationEnd)
+        node.removeEventListener('webkitAnimationEnd', handleAnimationEnd)
+
+        if (typeof callback === 'function') callback()
+    }
+
+    node.addEventListener('animationend', handleAnimationEnd)
+    node.addEventListener('webkitAnimationEnd', handleAnimationEnd)
+    node.classList.add('animated', animationName)
+}
+
+
+export const cdnPicSrc = function(src){
+    if(window && window.indexedDB){
+        return src.replace('http:','https:')
+    }else{
+        return src
+    }
 }

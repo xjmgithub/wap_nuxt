@@ -5,8 +5,32 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Kupakua',
 
+    // Mr Right
+    mrright_weekly_candidates: 'Weekly Candidates',
+    mrright_votes: 'votes',
+    mrright_vote: 'VOTE',
+    mrright_voted: 'VOTED',
+    mrright_left_vote_today: 'left vote today:',
+    mrright_history_rank: 'History Rank',
+    mrright_all_candidates: 'All candidates encore on 14th Jul!',
+    mrright_clips_you_cant_miss: "Clips You Can't Miss",
+    mrright_vote_tomorrow_login: "Continue vote tomorrow! More vote, more chances for prize!",
+    mrright_vote_tomorrow: "Continue vote tomorrow! Sign in for more chances to win prize!",
+    mrright_no: "No",
+    mrright_sign_in: "Sign in",
+    mrright_view_all: "VIEW ALL",
+    mrright_view_less: "VIEW LESS",
+    mrright_download_android: "Download StarTimes ON from Google Play to vote & win prizes!",
+    mrright_download_ios: "Download StarTimes ON from App Store to vote & win prizes! ",
+    mrright_not_now: "Not Now",
+    mrright_go: "Go",
+    mrright_successfully_voted: "Successfully voted! Sign in for more chances to win prize!",
+    mrright_successfully_voted_signin: "Successfully voted! Today's left vote: ",
+    mrright_how_to_win: "HOW TO WIN",
+    mrright_tell_my_friends: "TELL MY FRIENDS",
+    
     // loginfaq
-    loginfaq_title:"maoni",
+    loginfaq_title: 'maoni',
     loginfaq_signway_hasproblem: 'Ni akaunti gani uliyotumia kuingia ili kukabiliana na tatizo hili?',
     loginfaq_toast_disappeared: 'Ujumbe gani wa kosa umepokea?',
     loginfaq_I_cancelled: 'Nilisitisha',
@@ -29,7 +53,7 @@ export default {
     loginfaq_cant_log_on_Google_due_to_network: 'Huwezi ingia Google kutokana na masuala ya uunganisho wa mtandao,Tafadhali jaribu tena.',
     loginfaq_yes: 'NDIO',
     loginfaq_no: 'LA',
-    
+
     // 官网
     officialwebsitemobile_selfservice_section: "Huduma ya kujitegemea ya kinga'amuzi",
     officialwebsitemobile_bouquet_section: "mpangilio wa king'amuzi",
