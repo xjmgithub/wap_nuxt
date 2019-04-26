@@ -55,7 +55,7 @@ export default {
     officialwebsitemobile_search: 'Search',
     officialwebsitemobile_select_for_you: 'SELECT FOR YOU',
     officialwebsitemobile_programs_for: 'Programs for',
-    officialwebsitemobile_install_to_watch: 'install to watch',
+    officialwebsitemobile_install_to_watch: 'Install to watch',
     officialwebsitemobile_install: 'Install',
     officialwebsitemobile_serarch_input: 'Please enter keywords',
     officialwebsitemobile_action_share: 'Share',

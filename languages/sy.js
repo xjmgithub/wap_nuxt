@@ -55,7 +55,7 @@ export default {
     officialwebsitemobile_live_channelnumber: ' programu ya mojakwa moja kwenye  app ya StarTimes',
     officialwebsitemobile_list_more: 'Zaidi',
 
-    officialwebsitemobile_search: 'tafuta',
+    officialwebsitemobile_search: 'Tafuta',
     officialwebsitemobile_select_for_you: 'Teua kwa ajili yako',
     officialwebsitemobile_programs_for: 'Kwa Programu',
     officialwebsitemobile_install_to_watch: 'Weka ili uangalie',

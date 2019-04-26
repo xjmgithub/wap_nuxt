@@ -43,12 +43,12 @@ export default {
             position: absolute;
             top: 50%;
             left: 3.5rem;
-            margin-top: -1.2rem;
+            margin-top: -.6rem;
             line-height: 1.3rem;
         }
         .down {
             background-color: #0087eb;
-            width: 6rem;
+            width: 4.5rem;
             color: #ffffff;
             border-radius: 2px;
             height: 2rem;

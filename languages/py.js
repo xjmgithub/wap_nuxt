@@ -54,7 +54,7 @@ export default {
     officialwebsitemobile_live_channelnumber: ' Canais ao vivo no app StarTimes ON',
     officialwebsitemobile_list_more: 'Mais',
 
-    officialwebsitemobile_search: 'procurar',
+    officialwebsitemobile_search: 'Procurar',
     officialwebsitemobile_select_for_you: 'Selecciona',
     officialwebsitemobile_programs_for: 'Programas para',
     officialwebsitemobile_install_to_watch: 'Instalar para assistir',
