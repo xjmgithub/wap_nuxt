@@ -1,22 +1,22 @@
 <template>
     <div>
-        <div v-show="showShare" class="share-layer" @click="closeShare" />
+        <div v-show="showShare" class="share-layer" @click="closeShare"/>
         <div :class="{'share-show':showShare}" class="slide-bar-share">
             <p>Share to:</p>
             <ul>
-                <li>
+                <li @click="shareWithFacebook">
                     <!-- <nuxt-link :class="{checked:$route.path=='/browser/country'}" to="/browser/country">
                         <img :src="country.nationalFlag.replace('http:','https:')">
                         <span>{{country.name}}</span>
-                    </nuxt-link> -->
+                    </nuxt-link>-->
                     <img src="~assets/img/web/app_icon.png">
                     <p>Facebook</p>
                 </li>
-                <li>
+                <li @click="copyLink">
                     <img src="~assets/img/web/app_icon.png">
                     <p>Copy Link</p>
                 </li>
-                <li>
+                <li @click="shareWithTwitter">
                     <img src="~assets/img/web/app_icon.png">
                     <p>Twitter</p>
                 </li>
@@ -25,15 +25,36 @@
     </div>
 </template>
 <script>
+import { initFacebookLogin } from '~/functions/utils'
 export default {
     computed: {
         showShare() {
             return this.$store.state.shareState
         }
     },
+    mounted() {
+        initFacebookLogin()
+    },
     methods: {
         closeShare() {
             this.$store.commit('SET_SHARE_STATE', false)
+        },
+        shareWithFacebook() {
+            // eslint-disable-next-line no-undef
+            FB.ui(
+                {
+                    method: 'share',
+                    display: 'popup',
+                    href: window.location.href
+                },
+                function(response) {}
+            )
+        },
+        copyLink() {
+            // TODO copy Link
+        },
+        shareWithTwitter() {
+            // TODO share with twitter
         }
     }
 }
