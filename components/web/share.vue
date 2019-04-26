@@ -17,7 +17,7 @@
                     <p>Twitter</p>
                 </li>
             </ul>
-            <div id="link">{{link}}</div>
+            <div class="link">{{link}}</div>
         </div>
     </div>
 </template>
@@ -54,7 +54,7 @@ export default {
             )
         },
         copyLink() {
-            const copyText = document.querySelector('#link')
+            const copyText = document.querySelector('.link')
             const range = document.createRange()
             range.selectNode(copyText)
             window.getSelection().addRange(range)
