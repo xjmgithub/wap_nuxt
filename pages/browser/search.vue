@@ -6,7 +6,7 @@
                 <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
             </form>
         </div>
-        <div v-show="!oriKeyword&&!programList.length">
+        <div v-show="!oriKeyword&&programList.length==0">
             <p class="select">{{$store.state.lang.officialwebsitemobile_select_for_you}}</p>
             <ul class="select-word">
                 <li v-for="(item,index) in hotKeyList" :key="index" @click="search(item)">
@@ -148,7 +148,10 @@ export default {
                 })
         },
         search(hotkey) {
-            if (hotkey.replace(/\s/g, '').length === 0 && this.programList.length > 0) {
+            if (
+                (hotkey.replace(/\s/g, '').length === 0 && this.programList.length > 0) ||
+                (hotkey.replace(/\s/g, '').length === 0 && this.noResult)
+            ) {
                 this.oriKeyword = ''
                 return
             } else if (hotkey.replace(/\s/g, '').length === 0) {
@@ -172,7 +175,7 @@ export default {
                         this.programList = this.programList.concat(data)
                         this.highlightValues = res.data.customHighlightValues
                         this.page_number += 1
-                    }else{
+                    } else {
                         this.noResult = true
                     }
                     if (!data || data.length < 10) {
