@@ -8,7 +8,8 @@
             <div class="views">
                 {{channel.liveOnlineUserNumber||0 | formatViewCount}} views
                 <div class="share" @click="toShare">
-                    <img src="~assets/img/web/ic_share_def_g.png"> {{$store.state.lang.officialwebsitemobile_action_share}}
+                    <img src="~assets/img/web/ic_share_def_g.png">
+                    {{$store.state.lang.officialwebsitemobile_action_share}}
                 </div>
             </div>
             <div v-if="channel.id" class="base-info clearfix">
@@ -97,8 +98,6 @@ export default {
     data() {
         return {
             channelID: this.$route.query.channelId,
-            channel: {},
-            platformInfos: [],
             epgList: [],
             epgTime: [],
             progress: 0,
@@ -126,35 +125,26 @@ export default {
             return t
         }
     },
-    async asyncData({ $axios }) {
-        if (process.server) {
-            return { serverTime: new Date().getTime() }
-        } else {
-            const { headers } = await $axios.get('/hybrid/api/getServerTime')
-            return {
-                serverTime: dayjs(headers.date).valueOf()
-            }
+    async asyncData({ app: { $axios }, route, store }) {
+        let data = null
+        let time = new Date().getTime()
+        try {
+            $axios.setHeader('token', store.state.token)
+            const res = await $axios.get(`/cms/vup/v6/channels/${route.query.channelId}`)
+            time = dayjs(res.headers.date).valueOf()
+            data = res.data
+        } catch (e) {
+            data = null
+        }
+        return {
+            serverTime: time,
+            channel: data,
+            platformInfos: data && data.ofAreaTVPlatforms[0].platformInfos
         }
     },
     mounted() {
-        if (this.channelID) {
-            this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios
-                .get(`/cms/vup/v6/channels/${this.channelID}`)
-                .then(res => {
-                    this.$nextTick(() => this.$nuxt.$loading.finish())
-                    if (res.data.id) {
-                        this.channel = res.data
-                        this.platformInfos = res.data.ofAreaTVPlatforms[0].platformInfos
-                    } else {
-                        this.$alert('Channel id is incorrect')
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        } else {
-            this.$alert('Channel id can not be null')
+        if (!this.channel) {
+            this.$alert('Get channel error')
         }
 
         // 处理epgTime
@@ -245,30 +235,36 @@ export default {
         },
         getTvGuide(item, index) {
             this.currentIndex = index
-            this.$axios.get(`/cms/programs?channelID=${this.channelID}&startDate=${item.start}&endDate=${item.end}&count=1000`).then(res => {
-                const data = res.data
-                if (data.length > 0) {
-                    const now = this.serverTime
-                    data.forEach(ele => {
-                        ele.showDetail = false
-                        if (ele.startDate <= now && now <= ele.endDate) {
-                            ele.isCurrent = true
-                            const totalTime = ele.endDate - ele.startDate
-                            const nowTime = now - ele.startDate
-                            this.progress = Math.floor((nowTime / totalTime) * 100)
-                        } else {
-                            ele.isCurrent = false
-                        }
-                    })
-                    this.epgList = data
-                    this.$nextTick(() => {
-                        if (document.querySelector('.epg .current')) {
-                            const current = document.querySelector('.epg .current').parentElement.offsetTop
-                            document.querySelector('.epg-contain').scrollTop = current
-                        }
-                    })
-                }
-            })
+            this.$axios
+                .get(`/cms/programs?channelID=${this.channelID}&startDate=${item.start}&endDate=${item.end}&count=1000`)
+                .then(res => {
+                    this.$nextTick(() => this.$nuxt.$loading.finish())
+                    const data = res.data
+                    if (data.length > 0) {
+                        const now = this.serverTime
+                        data.forEach(ele => {
+                            ele.showDetail = false
+                            if (ele.startDate <= now && now <= ele.endDate) {
+                                ele.isCurrent = true
+                                const totalTime = ele.endDate - ele.startDate
+                                const nowTime = now - ele.startDate
+                                this.progress = Math.floor((nowTime / totalTime) * 100)
+                            } else {
+                                ele.isCurrent = false
+                            }
+                        })
+                        this.epgList = data
+                        this.$nextTick(() => {
+                            if (document.querySelector('.epg .current')) {
+                                const current = document.querySelector('.epg .current').parentElement.offsetTop
+                                document.querySelector('.epg-contain').scrollTop = current
+                            }
+                        })
+                    }
+                })
+                .catch(() => {
+                    this.$nextTick(() => this.$nuxt.$loading.finish())
+                })
         },
         toggleDetail(program) {
             if (program.showDetail === true) {
@@ -298,12 +294,17 @@ export default {
     },
     head() {
         return {
-            title: 'Live',
+            title: this.channel.name,
             meta: [
-                { property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:') },
-                { property: 'twitter:card', content: 'summary' },
-                { property: 'og:title', content: 'Live' }
+                { name: 'description', property: 'description', content: this.channel.description },
+                { name: 'og:description', property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:')
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary' },
+                { name: 'og:title', property: 'og:title', content: this.channel.name }
             ]
         }
     }
@@ -318,14 +319,14 @@ export default {
     position: relative;
     img {
         width: 100%;
-        height: 12rem;
         & + img {
             position: absolute;
             width: 3rem;
-            top: 4.5rem;
+            top: 50%;
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
+            margin-top: -1.5rem;
         }
     }
 }
