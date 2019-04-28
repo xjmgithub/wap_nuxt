@@ -2,7 +2,7 @@
     <div>
         <div class="poster">
             <div v-if="sPoster" class="pic" @click="confirmDown">
-                <img :src="cdnPicSrc(sPoster)" class="cover">
+                <img :src="sPoster&&cdnPicSrc(sPoster)" class="cover">
                 <img src="~assets/img/web/ic_play.png">
             </div>
             <div class="clearfix">
@@ -18,7 +18,7 @@
             <nuxt-link :to="`/browser/program/detail/${pid}`">
                 <span class="program-name">{{pName}}</span>
                 <p>
-                    <img :src="cdnPicSrc(pPoster)" align="right" hspace="8" vspace="8">
+                    <img :src="pPoster&&cdnPicSrc(pPoster)" align="right" hspace="8" vspace="8">
                     {{pDescription}}
                 </p>
             </nuxt-link>
@@ -29,7 +29,7 @@
                 <li v-for="(item,index) in subProgram" :key="index">
                     <nuxt-link :to="`/browser/program/subdetail/${item.id}`">
                         <div>
-                            <img :src="cdnPicSrc(item.poster.resources[0].url)">
+                            <img :src="item.poster&&cdnPicSrc(item.poster.resources[0].url)">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -76,7 +76,8 @@ export default {
             }
         } catch (e) {
             return {
-                pid: ''
+                pid: '',
+                seoData: {}
             }
         }
     },
@@ -126,7 +127,7 @@ export default {
                             this.subProgram = data
                             this.subProgram.forEach(ele => {
                                 if (ele.id == this.id) {
-                                    this.sPoster = ele.poster.resources[0].url
+                                    this.sPoster = ele.poster && ele.poster.resources[0].url
                                     this.sName = ele.description || ele.name
                                     this.sDescription = ele.summary
                                 }
@@ -143,7 +144,7 @@ export default {
                         this.subProgram = val
                         this.subProgram.forEach(ele => {
                             if (ele.id == this.id) {
-                                this.sPoster = ele.poster.resources[0].url
+                                this.sPoster = ele.poster && ele.poster.resources[0].url
                                 this.sName = ele.description || ele.name
                                 this.sDescription = ele.summary
                             }
@@ -176,7 +177,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.seoData.poster.replace('http:', 'https:')
+                    content: this.seoData.poster && this.seoData.poster.replace('http:', 'https:')
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.seoData.name }

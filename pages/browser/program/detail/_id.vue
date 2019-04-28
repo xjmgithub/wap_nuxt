@@ -64,8 +64,12 @@ export default {
                 }
             } catch (e) {
                 return {
-                    pData: null
+                    pData: {}
                 }
+            }
+        } else {
+            return {
+                pData: {}
             }
         }
     },
@@ -73,7 +77,7 @@ export default {
         initFacebookLogin()
         if (this.pid) {
             initDB()
-            if (this.pData) {
+            if (this.pData.name) {
                 localforage.setItem('program_' + this.pid, this.pData)
             }
             cacheDateUpdate.call(this, this.getData)
@@ -159,7 +163,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.pData.poster.replace('http:', 'https:')
+                    content: this.pData.poster && this.pData.poster.replace('http:', 'https:')
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.pData.name }
