@@ -29,7 +29,7 @@
                         data-id="item.id"
                     >
                         <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
-                            <img :pre-src="cdnPic(item.icon)" class="icon">
+                            <img :src="cdnPic(item.icon)" class="icon">
                             <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                         </div>
                         <span class="player-name">{{item.name.split('&')[0]}}</span>
