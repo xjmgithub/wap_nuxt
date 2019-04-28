@@ -119,8 +119,7 @@ export default {
         }
     }
 }
-.map-link {
-    position: fixed;
-    left: -1000px;
+.map-link{
+    color:white;
 }
 </style>
