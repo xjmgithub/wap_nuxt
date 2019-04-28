@@ -29,7 +29,7 @@
                         data-id="item.id"
                     >
                         <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
-                            <img :data-src="cdnPic(item.icon)" class="lasy-load icon">
+                            <img :pre-src="cdnPic(item.icon)" class="icon">
                             <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
                         </div>
                         <span class="player-name">{{item.name.split('&')[0]}}</span>
@@ -54,7 +54,7 @@
                     <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,1)">
                         <div class="left">
                             <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
-                            <img v-show="index<3" :data-src="cdnPic(item.icon)" class="lasy-load icon">
+                            <img v-show="index<3" :pre-src="cdnPic(item.icon)" class="icon">
                             <div v-if="index<3" class="name">
                                 <p>{{item.name.split('&')[0]}}</p>
                                 <p>& {{item.name.split('&')[1]}}</p>
@@ -84,7 +84,7 @@
                 <ul class="clearfix">
                     <li v-for="(item,index) in clipsList" :key="index">
                         <div @click="toPlayer(item.link_vod_code,'video_click',item.name||item.description,10)">
-                            <img class="lasy-load url" :data-src="cdnPic(item.link_url)">
+                            <img class="url" :pre-src="cdnPic(item.link_url)">
                             <img src="~assets/img/vote/ic_play_small_white.png" class="player">
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -260,6 +260,7 @@ export default {
                     this.$nextTick(() => {
                         this.bscroll.refresh()
                     })
+                this.lasyLoadImg()
             })
         },
         // 投票提交
