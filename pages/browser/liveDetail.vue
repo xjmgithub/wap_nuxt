@@ -8,7 +8,8 @@
             <div class="views">
                 {{channel.liveOnlineUserNumber||0 | formatViewCount}} views
                 <div class="share" @click="toShare">
-                    <img src="~assets/img/web/ic_share_def_g.png"> {{$store.state.lang.officialwebsitemobile_action_share}}
+                    <img src="~assets/img/web/ic_share_def_g.png">
+                    {{$store.state.lang.officialwebsitemobile_action_share}}
                 </div>
             </div>
             <div v-if="channel.id" class="base-info clearfix">
@@ -126,36 +127,28 @@ export default {
             return t
         }
     },
-    async asyncData({ $axios }) {
-        if (process.server) {
-            return { serverTime: new Date().getTime() }
-        } else {
-            const { headers } = await $axios.get('/hybrid/api/getServerTime')
-            return {
-                serverTime: dayjs(headers.date).valueOf()
-            }
+    async asyncData({ app: { $axios }, route, store }) {
+        let data = null
+        let time = new Date().getTime()
+        try {
+            $axios.setHeader('token', store.state.token)
+            const res = await $axios.get(`/cms/vup/v6/channels/${route.query.channelId}`)
+            time = dayjs(res.headers.date).valueOf()
+            data = res.data
+        } catch (e) {
+            data = null
+        }
+        return {
+            serverTime: time,
+            channel: data,
+            platformInfos: data && data.ofAreaTVPlatforms[0].platformInfos
         }
     },
     mounted() {
-        if (this.channelID) {
-            this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios
-                .get(`/cms/vup/v6/channels/${this.channelID}`)
-                .then(res => {
-                    this.$nextTick(() => this.$nuxt.$loading.finish())
-                    if (res.data.id) {
-                        this.channel = res.data
-                        this.platformInfos = res.data.ofAreaTVPlatforms[0].platformInfos
-                    } else {
-                        this.$alert('Channel id is incorrect')
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        } else {
-            this.$alert('Channel id can not be null')
+        if (!this.channel) {
+            this.$alert('Get channel error')
         }
+        this.$nextTick(() => this.$nuxt.$loading.finish())
 
         // 处理epgTime
         this.epgTime.push(
@@ -318,14 +311,14 @@ export default {
     position: relative;
     img {
         width: 100%;
-        height: 12rem;
         & + img {
             position: absolute;
             width: 3rem;
-            top: 4.5rem;
+            top: 50%;
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
+            margin-top:-1.5rem;
         }
     }
 }
