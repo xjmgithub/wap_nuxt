@@ -3,6 +3,7 @@
         <div>
             <img src="~assets/img/web/app_icon.png">
             <div>
+                <p>StarTimes ON App</p>
                 <span> {{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
             </div>
             <span class="down">{{$store.state.lang.officialwebsitemobile_install}}</span>
@@ -40,10 +41,9 @@ export default {
             font-weight: bold;
             width: 45%;
             font-size: 0.88rem;
-            position: absolute;
-            top: 50%;
-            left: 3.5rem;
-            margin-top: -.6rem;
+            margin-left: 0.5rem;
+            display: inline-block;
+            vertical-align: middle;
             line-height: 1.3rem;
         }
         .down {
