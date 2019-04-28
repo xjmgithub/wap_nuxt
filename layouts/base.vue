@@ -1,6 +1,6 @@
 <template>
     <div>
-        <nuxt v-if="!needLoginAlert" />
+        <nuxt v-if="!needLoginAlert"/>
         <div v-if="needLoginAlert" class="authfail">
             <img src="~assets/img/pay/img_failed_def_b.png">
             <p class="fail">
@@ -8,10 +8,10 @@
                 <a href="javascript:void(0)" @click="toNativeLogin">Log in First.</a>
             </p>
         </div>
-        <alert ref="alert" />
-        <confirm ref="confirm" />
-        <toast ref="toast" />
-        <shadowLayer v-show="layer" />
+        <alert ref="alert"/>
+        <confirm ref="confirm"/>
+        <toast ref="toast"/>
+        <shadowLayer v-show="layer"/>
     </div>
 </template>
 <script>
@@ -64,14 +64,29 @@ export default {
         const user = this.$store.state.user
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
-            if(!user.roleName&&this.$store.state.appType){
-                this.$alert('Your user authentication has expired. Please log in again.',()=>{
+            if (!user.roleName && this.$store.state.appType) {
+                this.$alert('Your user authentication has expired. Please log in again.', () => {
                     this.toNativeLogin()
                 })
             }
+
+            this.getPic()
+            document.addEventListener('scroll', () => {
+                this.getPic()
+            })
         })
     },
     methods: {
+        getPic() {
+            const lasyImg = document.querySelectorAll('.lasy-load')
+            const screenHeight = window.screen.availHeight
+            lasyImg.forEach(el => {
+                const top = el.getBoundingClientRect().top
+                if (top < screenHeight) {
+                    el.src = el.getAttribute('data-src')
+                }
+            })
+        },
         toNativeLogin() {
             this.sendEvLog({
                 category: 'h5_jump',
