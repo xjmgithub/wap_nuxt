@@ -20,7 +20,7 @@
                 <li v-for="(item,index) in subProgram" :key="index">
                     <nuxt-link :to="`/browser/program/subdetail/${item.id}`">
                         <div>
-                            <img :src="cdnPicSrc(item.poster.resources[0].url)">
+                            <img :src="item.poster && cdnPicSrc(item.poster.resources[0].url)">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description || item.name}}</span>
@@ -54,10 +54,28 @@ export default {
             showShare: false
         }
     },
+    async asyncData({ app: { $axios }, route, store }) {
+        if (process.server) {
+            try {
+                $axios.setHeader('token', store.state.token)
+                const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
+                return {
+                    pData: res.data
+                }
+            } catch (e) {
+                return {
+                    pData: null
+                }
+            }
+        }
+    },
     mounted() {
         initFacebookLogin()
         if (this.pid) {
             initDB()
+            if (this.pData) {
+                localforage.setItem('program_' + this.pid, this.pData)
+            }
             cacheDateUpdate.call(this, this.getData)
         }
     },
@@ -65,6 +83,7 @@ export default {
         getData() {
             this.$nextTick(() => this.$nuxt.$loading.start())
             let loadNum = 2
+
             localforage.getItem('program_' + this.pid).then(val => {
                 if (!val) {
                     this.$axios.get(`/cms/program_detail/${this.pid}`).then(res => {
@@ -133,12 +152,17 @@ export default {
     },
     head() {
         return {
-            title: this.pName,
+            title: this.pData.name,
             meta: [
-                { hid: 'description', name: 'description', content: this.pDescription },
-                { property: 'og:description', content: this.pDescription + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.pPoster.replace('http:', 'https:') },
-                { property: 'twitter:card', content: 'summary' }
+                { name: 'description', property: 'description', content: this.pData.programSummary },
+                { name: 'og:description', property: 'og:description', content: this.pData.programSummary + '#StarTimes ON Live TV & football' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.pData.poster.replace('http:', 'https:')
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: this.pData.name }
             ]
         }
     }
