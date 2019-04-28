@@ -6,7 +6,7 @@
                 <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
             </form>
         </div>
-        <div v-show="!programList.length">
+        <div v-show="!oriKeyword&&!programList.length">
             <p class="select">{{$store.state.lang.officialwebsitemobile_select_for_you}}</p>
             <ul class="select-word">
                 <li v-for="(item,index) in hotKeyList" :key="index" @click="search(item)">
@@ -40,7 +40,7 @@
             </ul>
             <div v-show="!endedState" class="loading-end">loading…</div>
         </div>
-        <div v-show="oriKeyword&&programList.length==0" class="noResult">
+        <div v-show="oriKeyword&&programList.length==0&&noResult" class="noResult">
             <img src="~assets/img/web/noresult.png" alt>
         </div>
     </div>
@@ -71,7 +71,8 @@ export default {
             highlightValues: [],
             programList: [],
             endedState: false,
-            loadstate: false
+            loadstate: false,
+            noResult: false
         }
     },
     watch: {
@@ -171,6 +172,8 @@ export default {
                         this.programList = this.programList.concat(data)
                         this.highlightValues = res.data.customHighlightValues
                         this.page_number += 1
+                    }else{
+                        this.noResult = true
                     }
                     if (!data || data.length < 10) {
                         this.endedState = true
@@ -217,7 +220,7 @@ export default {
         img {
             display: block;
             width: 65%;
-            margin: 2rem auto 2rem;
+            margin: 3rem auto 2rem;
         }
     }
     .select {
