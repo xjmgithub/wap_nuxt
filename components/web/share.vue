@@ -17,18 +17,12 @@
                     <p>Twitter</p>
                 </li>
             </ul>
-            <div class="map-link">{{link}}</div>
         </div>
     </div>
 </template>
 <script>
 import { initFacebookLogin } from '~/functions/utils'
 export default {
-    data() {
-        return {
-            link: ''
-        }
-    },
     computed: {
         showShare() {
             return this.$store.state.shareState
@@ -36,7 +30,6 @@ export default {
     },
     mounted() {
         initFacebookLogin()
-        this.link = window.location.href
     },
     methods: {
         closeShare() {
@@ -54,13 +47,13 @@ export default {
             )
         },
         copyLink() {
-            this.link = window.location.href
             this.$nextTick(() => {
-                const copyText = document.querySelector('.map-link')
-                const range = document.createRange()
-                range.selectNode(copyText)
-                window.getSelection().addRange(range)
+                const input = document.createElement('input')
+                document.body.appendChild(input)
+                input.setAttribute('value', window.location.href)
+                input.select()
                 const successful = document.execCommand('copy')
+                document.body.removeChild(input)
                 window.getSelection().removeAllRanges()
                 if (successful) {
                     this.$toast('Copied')
@@ -118,8 +111,5 @@ export default {
             }
         }
     }
-}
-.map-link{
-    color:white;
 }
 </style>
