@@ -2,7 +2,7 @@
     <div class="page">
         <div class="search">
             <form @submit.prevent="search(keyword)">
-                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_serarch_input">
+                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_serarch_input" @input="changeWord">
                 <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
             </form>
         </div>
@@ -39,6 +39,9 @@
                 </li>
             </ul>
             <div v-show="!endedState" class="loading-end">loading…</div>
+        </div>
+        <div v-show="oriKeyword&&programList.length==0" class="noResult">
+            <img src="~assets/img/web/noresult.png" alt>
         </div>
     </div>
 </template>
@@ -95,6 +98,12 @@ export default {
         next()
     },
     methods: {
+        changeWord() {
+            if (this.keyword.length >= 100) {
+                this.$toast('输入字符不可超过100个')
+                this.keyword = this.keyword.substr(0, 100)
+            }
+        },
         listener() {
             const bot = document.querySelector('.clips').getBoundingClientRect().bottom
             const screenHeight = window.screen.availHeight
@@ -181,6 +190,7 @@ export default {
         input {
             width: 100%;
             padding-left: 1rem;
+            padding-right: 2.5rem;
             border-radius: 4px;
             border: 1px solid #979797;
             height: 2.5rem;
@@ -199,6 +209,15 @@ export default {
                 height: 1.5rem;
                 margin-top: -0.75rem;
             }
+        }
+    }
+    .noResult {
+        text-align: center;
+        color: #333333;
+        img {
+            display: block;
+            width: 65%;
+            margin: 2rem auto 2rem;
         }
     }
     .select {
