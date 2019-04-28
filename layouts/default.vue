@@ -2,7 +2,7 @@
     <div class="frame">
         <mheader/>
         <download class="clearfix"/>
-        <nuxt class="page-main"/>
+        <nuxt class="page-main" />
         <div v-show="showNav" class="nav-layer" @click="closeNav"/>
         <div :class="{'nav-show':showNav}" class="slide-bar">
             <ul>

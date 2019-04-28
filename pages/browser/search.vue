@@ -1,22 +1,23 @@
 <template>
     <div class="page">
         <div class="search">
-            <form @submit.prevent="search(keyword)">
+            <form @submit.prevent="toSearch()">
                 <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_serarch_input" @input="changeWord">
-                <img src="~assets/img/web/ic_search.png" @click="search(keyword)">
+                <img src="~assets/img/web/ic_search.png" @click="toSearch()">
             </form>
         </div>
-        <div v-show="!oriKeyword&&programList.length==0">
+        <div v-show="!oriKeyword">
             <p class="select">{{$store.state.lang.officialwebsitemobile_select_for_you}}</p>
             <ul class="select-word">
-                <li v-for="(item,index) in hotKeyList" :key="index" @click="search(item)">
+                <li v-for="(item,index) in hotKeyList" :key="index" @click="clickKeyword(item)">
                     <img src="~assets/img/web/ic_search_b.png">
                     <span>{{item}}</span>
                 </li>
             </ul>
         </div>
         <div v-show="programList.length>0" class="clips">
-            <p class="title">{{$store.state.lang.officialwebsitemobile_programs_for}}
+            <p class="title">
+                {{$store.state.lang.officialwebsitemobile_programs_for}}
                 <span class="highlight">{{highlightValues.join(' ')}}</span>
             </p>
             <ul class="clearfix">
@@ -26,15 +27,15 @@
                             <img v-if="item.fields.pro_picture_url" :src="item.fields.pro_picture_url">
                             <img v-else src="~assets/img/web/def.png">
                         </div>
-                        <p class="title" v-html="highlight(getName(item))" />
+                        <p class="title" v-html="highlight(getName(item))"/>
                     </nuxt-link>
-                    <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/1111?subId=${item.fields.subpro_id}`">
+                    <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/${item.fields.subpro_id}`">
                         <div>
                             <img v-if="item.fields.subpro_picture_url" :src="item.fields.subpro_picture_url">
                             <img v-else src="~assets/img/web/def.png">
                             <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
-                        <p class="title" v-html="highlight(getName(item))" />
+                        <p class="title" v-html="highlight(getName(item))"/>
                     </nuxt-link>
                 </li>
             </ul>
@@ -65,7 +66,6 @@ export default {
         return {
             hotKeyList: [],
             keyword: '',
-            oriKeyword: '',
             page_number: 1,
             page_size: 10,
             highlightValues: [],
@@ -75,14 +75,26 @@ export default {
             noResult: false
         }
     },
+    computed: {
+        oriKeyword() {
+            return this.$route.query.keyword
+        }
+    },
     watch: {
         oriKeyword(nv, ov) {
             this.page_number = 1
             this.programList = []
+            this.search(this.oriKeyword)
         }
     },
     mounted() {
-        this.getHotKeyList()
+        if (this.oriKeyword) {
+            this.keyword = this.oriKeyword
+            this.search()
+        } else {
+            this.getHotKeyList()
+        }
+
         this.$nextTick(() => {
             document.addEventListener('scroll', this.listener)
         })
@@ -99,6 +111,15 @@ export default {
         next()
     },
     methods: {
+        clickKeyword(item) {
+            this.keyword = item
+            this.toSearch()
+        },
+        toSearch() {
+            // TODO KEYWORD FORMAT
+            const keyword = this.keyword
+            this.$router.replace(`/browser/search?keyword=${keyword}`)
+        },
         changeWord() {
             if (this.keyword.length >= 100) {
                 this.$toast('输入字符不可超过100个')
@@ -111,7 +132,7 @@ export default {
             if (bot - screenHeight < 100) {
                 if (this.loadstate || this.endedState || !this.programList.length) return false
                 this.loadstate = true
-                this.search(this.oriKeyword)
+                this.search()
             }
         },
         getName(obj) {
@@ -123,15 +144,17 @@ export default {
             }
         },
         highlight(name) {
-            this.highlightValues.forEach(ele => {
-                const index = name.toLowerCase().indexOf(ele.toLowerCase())
-                let tmp
-                if (index >= 0) {
-                    tmp = name.substr(index, ele.length)
-                }
-                const replaceString = '<span class="light" style="color:#0087eb">' + tmp + '</span>'
-                name = name.replace(tmp, replaceString)
-            })
+            if (name) {
+                this.highlightValues.forEach(ele => {
+                    const index = name.toLowerCase().indexOf(ele.toLowerCase())
+                    let tmp
+                    if (index >= 0) {
+                        tmp = name.substr(index, ele.length)
+                    }
+                    const replaceString = '<span class="light" style="color:#0087eb">' + tmp + '</span>'
+                    name = name.replace(tmp, replaceString)
+                })
+            }
             return name
         },
         getHotKeyList() {
@@ -147,23 +170,15 @@ export default {
                     this.hotKeyList = res.data
                 })
         },
-        search(hotkey) {
-            if (
-                (hotkey.replace(/\s/g, '').length === 0 && this.programList.length > 0) ||
-                (hotkey.replace(/\s/g, '').length === 0 && this.noResult)
-            ) {
-                this.oriKeyword = ''
-                return
-            } else if (hotkey.replace(/\s/g, '').length === 0) {
+        search() {
+            if (this.oriKeyword.replace(/\s/g, '').length === 0) {
                 return
             }
-            this.keyword = hotkey
-            this.oriKeyword = hotkey
             const time = dayjs.utc().format()
             this.$nextTick(() => this.$nuxt.$loading.start())
             this.$axios
                 .get(
-                    `/search-service/v1/search-by-source-type?search_value=${hotkey}&page_number=${this.page_number}&page_size=${
+                    `/search-service/v1/search-by-source-type?search_value=${this.oriKeyword}&page_number=${this.page_number}&page_size=${
                         this.page_size
                     }&local_zero_utc=${time}&source_type=PROGRAM&request_source=WEB`
                 )
