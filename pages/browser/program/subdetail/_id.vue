@@ -71,7 +71,8 @@ export default {
         try {
             const { data } = await $axios.get(`/cms/program_detail/byvod/${route.params.id}`)
             return {
-                pid: data.id
+                pid: data.id,
+                seoData: data
             }
         } catch (e) {
             return {
@@ -168,12 +169,17 @@ export default {
     },
     head() {
         return {
-            title: this.sName,
+            title: this.seoData.name,
             meta: [
-                { hid: 'description', name: 'description', content: this.sDescription },
-                { property: 'og:description', content: this.sDescription + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.sPoster.replace('http:', 'https:') },
-                { property: 'twitter:card', content: 'summary' }
+                { name: 'description', property: 'description', content: this.seoData.programSummary },
+                { name: 'og:description', property: 'og:description', content: this.seoData.programSummary + '#StarTimes ON Live TV & football' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.seoData.poster.replace('http:', 'https:')
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: this.seoData.name }
             ]
         }
     }
