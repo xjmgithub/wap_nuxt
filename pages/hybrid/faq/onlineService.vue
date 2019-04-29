@@ -10,9 +10,10 @@
                 </div>
                 <div class="questions">
                     <div v-for="(item,index) in faqTags" v-show="item.checked" :key="index">
-                        <ul>
+                        <ul v-if="item.faqs.length>0">
                             <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)" v-html="item2.thema"/>
                         </ul>
+                        <loading v-else/>
                     </div>
                 </div>
             </div>
@@ -27,10 +28,12 @@
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
 import { getFaqLogLabel, getFaqAnswerLabel, getFaqBlockLogLabel } from '~/functions/utils'
+import loading from '~/components/loading'
 export default {
     layout: 'base',
     components: {
-        serviceBlock
+        serviceBlock,
+        loading
     },
     data: function() {
         return {
@@ -271,7 +274,7 @@ export default {
         -webkit-box-flex: 1;
         overflow: hidden;
         position: relative;
-        div {
+        > div {
             overflow-y: auto;
             position: absolute;
             top: 0;

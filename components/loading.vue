@@ -26,7 +26,6 @@ export default {
     display: block;
     width: 3rem;
     height: 3rem;
-    position: relative;
     left: 50%;
     top: 50%;
     position: absolute;
