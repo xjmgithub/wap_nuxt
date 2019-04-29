@@ -2,14 +2,14 @@
     <div class="wrapper">
         <div class="container">
             <serviceBlock :service="service" :show-more="true"/>
-            <div v-if="faqTagsData" class="service">
+            <div v-if="faqTags" class="service">
                 <div id="nav">
-                    <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
+                    <a v-for="(item,index) in faqTags" :key="index" :class="{on:item.checked}" @click="changeTag(item.id)">
                         <div :class="item.class"/>
                     </a>
                 </div>
                 <div class="questions">
-                    <div v-for="(item,index) in faqTagsData" v-show="item.checked" :key="index">
+                    <div v-for="(item,index) in faqTags" v-show="item.checked" :key="index">
                         <ul>
                             <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)" v-html="item2.thema"/>
                         </ul>
@@ -34,11 +34,9 @@ export default {
     },
     data: function() {
         return {
-            faqsByTag: {},
             pageSize: 20,
             isLoading: false,
-            entranceId: this.$route.query.entrance_id || '',
-            service: {}
+            entranceId: this.$route.query.entrance_id || ''
         }
     },
     async asyncData({ app: { $axios }, route, store }) {
@@ -49,7 +47,7 @@ export default {
             pay: 'tab_pay',
             account: 'tab_account'
         }
-        let arr = []
+        let tags = []
         let service = {}
 
         try {
@@ -59,7 +57,7 @@ export default {
             const res1 = await $axios.get(`/ocs/v1/faqs/Tags`)
             const res2 = await $axios.get(`/ocs/v1/service/module/show?entranceId=${route.query.entrance_id}`)
             res1.data.data.forEach((item, index) => {
-                arr.push({
+                tags.push({
                     id: item.tagging_id,
                     name: item.tagging_name,
                     checked: index <= 0,
@@ -71,18 +69,17 @@ export default {
             })
             service = res2.data.data
         } catch (e) {
-            arr = []
+            tags = [] // TODO 跳转失败页面
             service = {}
         }
         return {
-            faqTagsData: arr || [],
+            faqTags: tags || [],
             service: service
         }
     },
     mounted() {
         document.querySelector('.wrapper').style.height = window.innerHeight + 'px'
-        sessionStorage.removeItem('faq_question')
-        sessionStorage.removeItem('morefaqs')
+
         this.sendEvLog({
             category: 'onlineService',
             action: `dialog_${this.entranceId || ''}_show`,
@@ -90,7 +87,11 @@ export default {
             value: 1
         })
 
-        this.changeServiceTag(this.faqTagsData[0].id || 1)
+        sessionStorage.removeItem('faq_question')
+        sessionStorage.removeItem('morefaqs')
+
+        this.changeTag(this.faqTags[0].id || 1)
+
         this.$nextTick(() => {
             const collect = document.querySelectorAll('.questions div')
             for (let i = 0; i < collect.length; i++) {
@@ -117,16 +118,17 @@ export default {
         }
     },
     methods: {
-        getfaqsByTag(tagid, moretag) {
+        getfaqsByTag(tagId, moretag) {
             let tag = {}
-            this.faqTagsData.forEach(item => {
-                if (item.id === tagid) {
+            this.faqTags.forEach(item => {
+                item.checked = item.id == tagId
+                if (item.id == tagId) {
                     tag = item
                 }
             })
             if (!moretag && tag.page > 1) return
             if (tag.untilTotal) return
-            this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagid}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
+            this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagId}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
                 this.isLoading = false
                 if (res.data) {
                     tag.faqs = tag.faqs.concat(res.data.data.rows)
@@ -137,22 +139,13 @@ export default {
                 }
             })
         },
-        changeServiceTag(tagId) {
-            this.faqTagsData.forEach(item => {
-                if (item.id === tagId) {
-                    item.checked = true
-                } else {
-                    item.checked = false
-                }
-            })
-
+        changeTag(tagId) {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `cat_${tagId || ''}_click`,
                 label: getFaqLogLabel.call(this),
                 value: 1
             })
-
             this.getfaqsByTag(tagId)
         },
         handleScroll(evt) {
@@ -164,7 +157,7 @@ export default {
             if (childHeight - scrollTop - container.offsetHeight <= 150 && this.isLoading === false) {
                 this.isLoading = true
                 let checkedId = null
-                this.faqTagsData.forEach(item => {
+                this.faqTags.forEach(item => {
                     if (item.checked === true) {
                         checkedId = item.id
                     }
