@@ -105,16 +105,10 @@ export default {
         if (this.service && this.service.service_module) {
             sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
             sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
-            this.sendEvLog({
-                category: 'onlineService',
-                action: `block_${this.entranceId || ''}_show`,
-                label: getFaqBlockLogLabel.call(this),
-                value: 1
-            })
 
             this.sendEvLog({
                 category: 'onlineService',
-                action: `block_moreorders_${this.entranceId || ''}_show`,
+                action: `block_${this.entranceId || ''}_show`,
                 label: getFaqBlockLogLabel.call(this),
                 value: 1
             })
