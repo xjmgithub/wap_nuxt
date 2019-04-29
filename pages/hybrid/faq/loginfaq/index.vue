@@ -136,6 +136,7 @@ export default {
 body,html {
     background:#eeeeee;
     min-height:100%;
+    height:100vh;
 }
 </style>
 <style lang="less" scoped>

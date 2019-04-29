@@ -43,13 +43,12 @@ export default {
 
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
-        '@nuxtjs/axios',
-        ['@nuxtjs/pwa', { icon: false, meta: false }]
+        '@nuxtjs/axios'
     ],
 
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
-        baseURL: env.apiURL,
+        baseURL: process.env.NODE_ENV !== 'production' ? env.apiURL : env.proxyHost,
         browserBaseURL: '/',
         proxy: process.env.NODE_ENV !== 'production'
     },

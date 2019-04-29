@@ -65,7 +65,7 @@
             <p>Note:</p>
             <p v-html="selected&&selected.description"/>
         </div>
-        <div class="btn-box">
+        <div v-if="ewalletChannel.id" class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{ formatAmount(paymentAmount)}}</span>
             <div :class="{disabled:!canPay}" class="pay-btn" @click="pay">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
@@ -163,7 +163,7 @@ export default {
     },
     methods: {
         choose(item, card) {
-            this.selected = item 
+            this.selected = item
             this.chooseCard = card ? card.authorizationCode : ''
         },
         chargeWallet() {

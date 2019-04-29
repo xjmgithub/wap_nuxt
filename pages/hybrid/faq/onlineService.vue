@@ -2,17 +2,18 @@
     <div class="wrapper">
         <div class="container">
             <serviceBlock :service="service" :show-more="true"/>
-            <div v-if="faqTagsData" class="service">
+            <div v-if="faqTags" class="service">
                 <div id="nav">
-                    <a v-for="(item,index) in faqTagsData" :key="index" :class="{on:item.checked}" @click="changeServiceTag(item.id)">
+                    <a v-for="(item,index) in faqTags" :key="index" :class="{on:item.checked}" @click="changeTag(item.id)">
                         <div :class="item.class"/>
                     </a>
                 </div>
                 <div class="questions">
-                    <div v-for="(item,index) in faqTagsData" v-show="item.checked" :key="index">
-                        <ul>
+                    <div v-for="(item,index) in faqTags" v-show="item.checked" :key="index">
+                        <ul v-if="item.faqs.length>0">
                             <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)" v-html="item2.thema"/>
                         </ul>
+                        <loading v-else/>
                     </div>
                 </div>
             </div>
@@ -27,25 +28,60 @@
 <script>
 import serviceBlock from '~/components/faq/serviceBlock'
 import { getFaqLogLabel, getFaqAnswerLabel, getFaqBlockLogLabel } from '~/functions/utils'
+import loading from '~/components/loading'
 export default {
     layout: 'base',
     components: {
-        serviceBlock
+        serviceBlock,
+        loading
     },
     data: function() {
         return {
-            faqTagsData: [],
-            faqsByTag: {},
             pageSize: 20,
             isLoading: false,
-            entranceId: this.$route.query.entrance_id || '',
-            service: {}
+            entranceId: this.$route.query.entrance_id || ''
+        }
+    },
+    async asyncData({ app: { $axios }, route, store }) {
+        const logoMap = {
+            hot: 'tab_hot',
+            on: 'tab_on',
+            tv: 'tab_tv',
+            pay: 'tab_pay',
+            account: 'tab_account'
+        }
+        let tags = []
+        let service = {}
+
+        try {
+            $axios.setHeader('token', store.state.token)
+            $axios.setHeader('x-clientType', 1)
+            $axios.setHeader('x-appVersion', 51120)
+            const res1 = await $axios.get(`/ocs/v1/faqs/Tags`)
+            const res2 = await $axios.get(`/ocs/v1/service/module/show?entranceId=${route.query.entrance_id}`)
+            res1.data.data.forEach((item, index) => {
+                tags.push({
+                    id: item.tagging_id,
+                    name: item.tagging_name,
+                    checked: index <= 0,
+                    class: logoMap[item.tagging_name.toLowerCase()] || 'tab_hot',
+                    page: 1,
+                    untilTotal: false,
+                    faqs: []
+                })
+            })
+            service = res2.data.data
+        } catch (e) {
+            tags = [] // TODO 跳转失败页面
+            service = {}
+        }
+        return {
+            faqTags: tags || [],
+            service: service
         }
     },
     mounted() {
         document.querySelector('.wrapper').style.height = window.innerHeight + 'px'
-        sessionStorage.removeItem('faq_question')
-        sessionStorage.removeItem('morefaqs')
 
         this.sendEvLog({
             category: 'onlineService',
@@ -54,83 +90,42 @@ export default {
             value: 1
         })
 
-        this.$axios.get('/ocs/v1/faqs/Tags').then(res => {
-            if (res.data) {
-                const arr = []
-                let firstTagId = null
-                res.data.data.forEach((item, index) => {
-                    const checked = index <= 0
-                    if (index === 0) firstTagId = item.tagging_id
-                    const logoMap = {
-                        hot: 'tab_hot',
-                        on: 'tab_on',
-                        tv: 'tab_tv',
-                        pay: 'tab_pay',
-                        account: 'tab_account'
-                    }
+        sessionStorage.removeItem('faq_question')
+        sessionStorage.removeItem('morefaqs')
 
-                    arr.push({
-                        id: item.tagging_id,
-                        name: item.tagging_name,
-                        checked: checked,
-                        class: logoMap[item.tagging_name.toLowerCase()] || 'tab_hot',
-                        page: 1,
-                        untilTotal: false,
-                        faqs: []
-                    })
-                })
-                this.faqTagsData = arr
-                this.changeServiceTag(firstTagId)
+        this.changeTag(this.faqTags[0].id || 1)
 
-                this.$nextTick(() => {
-                    const collect = document.querySelectorAll('.questions div')
-                    for (let i = 0; i < collect.length; i++) {
-                        collect[i].addEventListener('scroll', this.handleScroll)
-                    }
-                })
+        this.$nextTick(() => {
+            const collect = document.querySelectorAll('.questions div')
+            for (let i = 0; i < collect.length; i++) {
+                collect[i].addEventListener('scroll', this.handleScroll)
             }
         })
 
-        this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`, {
-                headers: {
-                    'x-clientType': 1,
-                    'x-appVersion': '51120'
-                }
-            })
-            .then(res => {
-                if (res.data && res.data.data) {
-                    this.service = res.data.data
-                    sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
-                    sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
+        if (this.service && this.service.service_module) {
+            sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
+            sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
 
-                    this.sendEvLog({
-                        category: 'onlineService',
-                        action: `block_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel.call(this),
-                        value: 1
-                    })
-
-                    this.sendEvLog({
-                        category: 'onlineService',
-                        action: `block_moreorders_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel.call(this),
-                        value: 1
-                    })
-                }
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `block_${this.entranceId || ''}_show`,
+                label: getFaqBlockLogLabel.call(this),
+                value: 1
             })
+        }
     },
     methods: {
-        getfaqsByTag(tagid, moretag) {
+        getfaqsByTag(tagId, moretag) {
             let tag = {}
-            this.faqTagsData.forEach(item => {
-                if (item.id === tagid) {
+            this.faqTags.forEach(item => {
+                item.checked = item.id == tagId
+                if (item.id == tagId) {
                     tag = item
                 }
             })
             if (!moretag && tag.page > 1) return
             if (tag.untilTotal) return
-            this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagid}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
+            this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagId}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
                 this.isLoading = false
                 if (res.data) {
                     tag.faqs = tag.faqs.concat(res.data.data.rows)
@@ -141,22 +136,13 @@ export default {
                 }
             })
         },
-        changeServiceTag(tagId) {
-            this.faqTagsData.forEach(item => {
-                if (item.id === tagId) {
-                    item.checked = true
-                } else {
-                    item.checked = false
-                }
-            })
-
+        changeTag(tagId) {
             this.sendEvLog({
                 category: 'onlineService',
                 action: `cat_${tagId || ''}_click`,
                 label: getFaqLogLabel.call(this),
                 value: 1
             })
-
             this.getfaqsByTag(tagId)
         },
         handleScroll(evt) {
@@ -168,7 +154,7 @@ export default {
             if (childHeight - scrollTop - container.offsetHeight <= 150 && this.isLoading === false) {
                 this.isLoading = true
                 let checkedId = null
-                this.faqTagsData.forEach(item => {
+                this.faqTags.forEach(item => {
                     if (item.checked === true) {
                         checkedId = item.id
                     }
@@ -282,12 +268,12 @@ export default {
         -webkit-box-flex: 1;
         overflow: hidden;
         position: relative;
-        div {
+        > div {
             overflow-y: auto;
             position: absolute;
             top: 0;
             bottom: 0;
-            width:100%;
+            width: 100%;
         }
         li {
             overflow: hidden;

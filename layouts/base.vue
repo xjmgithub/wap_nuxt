@@ -54,6 +54,10 @@ export default {
         Vue.prototype.cdnPicSrc = value => {
             return cdnPicSrc.call(this, value)
         }
+        Vue.prototype.lasyLoadImg = ()=>{
+            this.getPic()
+        }
+
         this.$axios.setHeader('token', this.$store.state.token)
     },
     mounted() {
@@ -73,9 +77,25 @@ export default {
                     this.toNativeLogin()
                 })
             }
+            
+            this.getPic()
+            document.addEventListener('scroll', () => {
+                this.getPic()
+            })
+            
         })
     },
     methods: {
+        getPic() {
+            const lasyImg = document.querySelectorAll('img[pre-src]')
+            const screenHeight = window.screen.availHeight
+            lasyImg.forEach(el => {
+                const top = el.getBoundingClientRect().top
+                if (top < screenHeight) {
+                    el.src = el.getAttribute('pre-src')
+                }
+            })
+        },
         toNativeLogin() {
             this.sendEvLog({
                 category: 'h5_jump',
@@ -93,16 +113,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@font-face {
-    font-family: Roboto;
-    src: url('~assets/fonts/Roboto-Regular.ttf');
-    font-style: 'normal';
-}
 html,
 body {
     margin: 0px;
     padding: 0px;
-    font-family: system, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Sans-serif;
 }
 .clearfix:after {
     display: block;

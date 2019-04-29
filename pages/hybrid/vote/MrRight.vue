@@ -84,7 +84,7 @@
                 <ul class="clearfix">
                     <li v-for="(item,index) in clipsList" :key="index">
                         <div @click="toPlayer(item.link_vod_code,'video_click',item.name||item.description,10)">
-                            <img :src="cdnPic(item.link_url)" class="url">
+                            <img class="url" :src="cdnPic(item.link_url)">
                             <img src="~assets/img/vote/ic_play_small_white.png" class="player">
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -260,6 +260,7 @@ export default {
                     this.$nextTick(() => {
                         this.bscroll.refresh()
                     })
+                this.lasyLoadImg()
             })
         },
         // 投票提交
