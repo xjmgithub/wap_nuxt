@@ -48,7 +48,7 @@ export default {
 
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
-        baseURL: env.apiURL,
+        baseURL: process.env.NODE_ENV !== 'production' ? env.apiURL : env.proxyHost,
         browserBaseURL: '/',
         proxy: process.env.NODE_ENV !== 'production'
     },
