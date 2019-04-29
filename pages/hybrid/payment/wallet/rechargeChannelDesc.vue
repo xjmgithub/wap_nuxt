@@ -17,7 +17,7 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import clipboard from 'clipboard'
+// import clipboard from 'clipboard'
 export default {
     layout: 'base',
     components: {
@@ -40,7 +40,7 @@ export default {
         this.type = channelInfo.channelType
         this.ussd = channelInfo.ussd
         
-        clipboard('#copy-button')
+        // clipboard('#copy-button')
     },
     methods: {
         copyCode(ussd) {},
