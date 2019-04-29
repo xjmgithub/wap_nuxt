@@ -32,7 +32,7 @@
         "less": "^3.8.1",
         "less-loader": "^4.1.0",
         "localforage": "^1.7.3",
-        "nuxt": "^2.5.1",
+        "nuxt": "^2.6.3",
         "qs": "^6.6.0"
     },
     "devDependencies": {
