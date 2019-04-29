@@ -34,7 +34,6 @@ export default {
     },
     data: function() {
         return {
-            faqTagsData: [],
             faqsByTag: {},
             pageSize: 20,
             isLoading: false,
@@ -42,11 +41,48 @@ export default {
             service: {}
         }
     },
+    async asyncData({ app: { $axios }, route, store }) {
+        const logoMap = {
+            hot: 'tab_hot',
+            on: 'tab_on',
+            tv: 'tab_tv',
+            pay: 'tab_pay',
+            account: 'tab_account'
+        }
+        let arr = []
+        let service = {}
+
+        try {
+            $axios.setHeader('token', store.state.token)
+            $axios.setHeader('x-clientType', 1)
+            $axios.setHeader('x-appVersion', 51120)
+            const res1 = await $axios.get(`/ocs/v1/faqs/Tags`)
+            const res2 = await $axios.get(`/ocs/v1/service/module/show?entranceId=${route.query.entrance_id}`)
+            res1.data.data.forEach((item, index) => {
+                arr.push({
+                    id: item.tagging_id,
+                    name: item.tagging_name,
+                    checked: index <= 0,
+                    class: logoMap[item.tagging_name.toLowerCase()] || 'tab_hot',
+                    page: 1,
+                    untilTotal: false,
+                    faqs: []
+                })
+            })
+            service = res2.data.data
+        } catch (e) {
+            arr = []
+            service = {}
+        }
+        return {
+            faqTagsData: arr || [],
+            service: service
+        }
+    },
     mounted() {
         document.querySelector('.wrapper').style.height = window.innerHeight + 'px'
         sessionStorage.removeItem('faq_question')
         sessionStorage.removeItem('morefaqs')
-
         this.sendEvLog({
             category: 'onlineService',
             action: `dialog_${this.entranceId || ''}_show`,
@@ -54,71 +90,31 @@ export default {
             value: 1
         })
 
-        this.$axios.get('/ocs/v1/faqs/Tags').then(res => {
-            if (res.data) {
-                const arr = []
-                let firstTagId = null
-                res.data.data.forEach((item, index) => {
-                    const checked = index <= 0
-                    if (index === 0) firstTagId = item.tagging_id
-                    const logoMap = {
-                        hot: 'tab_hot',
-                        on: 'tab_on',
-                        tv: 'tab_tv',
-                        pay: 'tab_pay',
-                        account: 'tab_account'
-                    }
-
-                    arr.push({
-                        id: item.tagging_id,
-                        name: item.tagging_name,
-                        checked: checked,
-                        class: logoMap[item.tagging_name.toLowerCase()] || 'tab_hot',
-                        page: 1,
-                        untilTotal: false,
-                        faqs: []
-                    })
-                })
-                this.faqTagsData = arr
-                this.changeServiceTag(firstTagId)
-
-                this.$nextTick(() => {
-                    const collect = document.querySelectorAll('.questions div')
-                    for (let i = 0; i < collect.length; i++) {
-                        collect[i].addEventListener('scroll', this.handleScroll)
-                    }
-                })
+        this.changeServiceTag(this.faqTagsData[0].id || 1)
+        this.$nextTick(() => {
+            const collect = document.querySelectorAll('.questions div')
+            for (let i = 0; i < collect.length; i++) {
+                collect[i].addEventListener('scroll', this.handleScroll)
             }
         })
 
-        this.$axios
-            .get(`/ocs/v1/service/module/show?entranceId=${this.entranceId}`, {
-                headers: {
-                    'x-clientType': 1,
-                    'x-appVersion': '51120'
-                }
+        if (this.service && this.service.service_module) {
+            sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
+            sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `block_${this.entranceId || ''}_show`,
+                label: getFaqBlockLogLabel.call(this),
+                value: 1
             })
-            .then(res => {
-                if (res.data && res.data.data) {
-                    this.service = res.data.data
-                    sessionStorage.setItem('serviceModuleId', this.service.service_module.id)
-                    sessionStorage.setItem('orderMsg', JSON.stringify(this.service.order_info))
 
-                    this.sendEvLog({
-                        category: 'onlineService',
-                        action: `block_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel.call(this),
-                        value: 1
-                    })
-
-                    this.sendEvLog({
-                        category: 'onlineService',
-                        action: `block_moreorders_${this.entranceId || ''}_show`,
-                        label: getFaqBlockLogLabel.call(this),
-                        value: 1
-                    })
-                }
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `block_moreorders_${this.entranceId || ''}_show`,
+                label: getFaqBlockLogLabel.call(this),
+                value: 1
             })
+        }
     },
     methods: {
         getfaqsByTag(tagid, moretag) {
@@ -287,7 +283,7 @@ export default {
             position: absolute;
             top: 0;
             bottom: 0;
-            width:100%;
+            width: 100%;
         }
         li {
             overflow: hidden;
