@@ -517,7 +517,6 @@ export const initDB = function() {
     })
 }
 
-
 export const normalToAppStore = function(page) {
     const ua = navigator.userAgent.toLowerCase()
     const _this = this
@@ -543,9 +542,9 @@ export const normalToAppStore = function(page) {
     callLib.open({
         path: path,
         callback() {
-            if(appType==2){
+            if (appType == 2) {
                 window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-            }else{
+            } else {
                 _this.$axios.get('/cms/public/app').then(res => {
                     let url = res.data.apkUrl
                     if (url) {

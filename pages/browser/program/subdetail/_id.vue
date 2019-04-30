@@ -42,7 +42,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { formatTime, normalToAppStore, initFacebookLogin, initDB, cacheDateUpdate } from '~/functions/utils'
+import { formatTime, normalToAppStore, initDB, cacheDateUpdate } from '~/functions/utils'
 import localforage from 'localforage'
 export default {
     components: {
@@ -82,7 +82,6 @@ export default {
         }
     },
     mounted() {
-        initFacebookLogin()
         if (this.pid) {
             initDB()
             cacheDateUpdate.call(this, this.getData)
