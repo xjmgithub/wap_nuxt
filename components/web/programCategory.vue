@@ -2,9 +2,7 @@
     <div class="navContain">
         <ul>
             <li v-for="item in showList" :key="item.id" :class="{choosed:item.id==choosedId}">
-                <nuxt-link :to="{path:`/browser/program/list/${item.id}`}">
-                    {{item.name}}
-                </nuxt-link>
+                <nuxt-link :to="{path:`/browser/program/list/${item.id}`}">{{item.name}}</nuxt-link>
             </li>
             <li style="float:right" @click="toggleAll">
                 <img :class="{updown:showAll}" src="~assets/img/ic_menuarrow_def_w.png">
@@ -13,23 +11,19 @@
     </div>
 </template>
 <script>
-import { getQaCategory, getOnlineCategory } from '~/functions/program/category'
-import env from '~/env'
 export default {
+    props: {
+        list: {
+            required: true,
+            type: Array
+        }
+    },
     data() {
         let choosedId = this.$route.params.id || 0
-        let list = getOnlineCategory()
-        if (env.proxyHost.indexOf('qa') > 0 || env.proxyHost.indexOf('dev') > 0) {
-            list = getQaCategory()
-        }
-        list.sort((a, b) => {
-            return a.weight - b.weight
-        })
-        choosedId = choosedId || list[0].id
+        choosedId = choosedId || this.list[0].id
         return {
             showAll: true,
-            choosedId: choosedId,
-            list: list
+            choosedId: choosedId
         }
     },
     computed: {

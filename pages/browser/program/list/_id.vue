@@ -1,6 +1,6 @@
 <template>
     <div class="untrim-page">
-        <program-category ref="category"/>
+        <program-category ref="category" :list="tags"/>
         <div class="program-list">
             <div v-for="(item,index) in programList" :key="index" class="program">
                 <nuxt-link :to="`/browser/program/detail/${item.id}`">
@@ -36,6 +36,19 @@ export default {
             perSize: 10,
             endedState: false,
             loadstate: false
+        }
+    },
+    async asyncData({ app: { $axios }, route, store }) {
+        try {
+            $axios.setHeader('token', store.state.token)
+            const res = await $axios.get(`/vup/admin/v1/public_list/tags/by-vod-content-type`)
+            return {
+                tags: res.data.data || []
+            }
+        } catch (e) {
+            return {
+                tags: []
+            }
         }
     },
     mounted() {
