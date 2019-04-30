@@ -42,7 +42,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { formatTime, downApp, initFacebookLogin, initDB, cacheDateUpdate } from '~/functions/utils'
+import { formatTime, normalToAppStore, initFacebookLogin, initDB, cacheDateUpdate } from '~/functions/utils'
 import localforage from 'localforage'
 export default {
     components: {
@@ -160,7 +160,7 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    downApp.call(this)
+                    normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.id)
                 },
                 () => {},
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,

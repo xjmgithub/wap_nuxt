@@ -4,18 +4,34 @@
             <img src="~assets/img/web/app_icon.png">
             <div>
                 <p>StarTimes ON App</p>
-                <span> {{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
+                <span>{{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
             </div>
             <span class="down">{{$store.state.lang.officialwebsitemobile_install}}</span>
         </div>
     </div>
 </template>
 <script>
-import { downApp } from '~/functions/utils'
+import { normalToAppStore } from '~/functions/utils'
+import localforage from 'localforage'
 export default {
     methods: {
         down() {
-            downApp.call(this)
+            if (this.$route.path.indexOf('program/subdetail/') >= 0) {
+                normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.$route.params.id)
+            } else if (this.$route.path.indexOf('program/detail/') >= 0) {
+                localforage
+                    .getItem('program_' + this.$route.params.id)
+                    .then(val => {
+                        if (val.defaultVod.id) {
+                            normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + val.defaultVod.id)
+                        } else {
+                            normalToAppStore.call(this)
+                        }
+                    })
+                    .catch(e => {
+                        normalToAppStore.call(this)
+                    })
+            }
         }
     }
 }

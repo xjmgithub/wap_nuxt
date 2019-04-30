@@ -33,7 +33,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { formatTime, downApp, initFacebookLogin, initDB, cacheDateUpdate } from '~/functions/utils'
+import { formatTime, normalToAppStore, initFacebookLogin, initDB, cacheDateUpdate } from '~/functions/utils'
 import localforage from 'localforage'
 export default {
     components: {
@@ -142,11 +142,14 @@ export default {
             this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         },
         confirmDown() {
-            const _this = this
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    downApp.call(_this)
+                    if (this.pData.defaultVod.id) {
+                        normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.pData.defaultVod.id)
+                    } else {
+                        normalToAppStore.call(this)
+                    }
                 },
                 () => {},
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
