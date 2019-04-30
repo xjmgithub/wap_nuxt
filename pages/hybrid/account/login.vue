@@ -26,7 +26,7 @@
     </div>
 </template>
 <script>
-import { login, initGoogleLogin, initFacebookLogin } from '~/functions/utils'
+import { login, initGoogleLogin } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -60,7 +60,6 @@ export default {
             _this.loginByThird(userId, nickname, 3)
         })
 
-        initFacebookLogin()
     },
     methods: {
         byfacebook() {

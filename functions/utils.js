@@ -134,18 +134,6 @@ export const initGoogleLogin = (elm, callback) => {
     }
 }
 
-export const initFacebookLogin = () => {
-    // eslint-disable-next-line no-undef
-    FB.init({
-        appId: '159785064477978',
-        xfbml: true,
-        cookie: true,
-        version: 'v3.1'
-    })
-    // eslint-disable-next-line no-undef
-    FB.AppEvents.logPageView()
-}
-
 export const downloadApk = app => {
     app.$axios
         .get('/cms/public/app')

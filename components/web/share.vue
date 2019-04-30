@@ -21,15 +21,11 @@
     </div>
 </template>
 <script>
-import { initFacebookLogin } from '~/functions/utils'
 export default {
     computed: {
         showShare() {
             return this.$store.state.shareState
         }
-    },
-    mounted() {
-        initFacebookLogin()
     },
     methods: {
         closeShare() {
