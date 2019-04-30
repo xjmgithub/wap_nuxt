@@ -24,14 +24,14 @@
                 <li v-for="(item,index) in programList" :key="index">
                     <nuxt-link v-show="item.fields.program_type=='PROGRAM'" :to="`/browser/program/detail/${item.fields.pro_id}`">
                         <div>
-                            <img v-if="item.fields.pro_picture_url" :src="item.fields.pro_picture_url">
+                            <img v-if="item.fields.pro_picture_url" :pre-src="item.fields.pro_picture_url">
                             <img v-else src="~assets/img/web/def.png">
                         </div>
                         <p class="title" v-html="highlight(getName(item))"/>
                     </nuxt-link>
                     <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/${item.fields.subpro_id}`">
                         <div>
-                            <img v-if="item.fields.subpro_picture_url" :src="item.fields.subpro_picture_url">
+                            <img v-if="item.fields.subpro_picture_url" :pre-src="item.fields.subpro_picture_url">
                             <img v-else src="~assets/img/web/def.png">
                             <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
@@ -183,7 +183,7 @@ export default {
                     }&local_zero_utc=${time}&source_type=PROGRAM&request_source=WEB`
                 )
                 .then(res => {
-                    this.$nextTick(() => this.$nuxt.$loading.finish())
+                    
                     this.loadstate = false
                     const data = res.data.sources
                     if (data && data.length > 0) {
@@ -196,6 +196,11 @@ export default {
                     if (!data || data.length < 10) {
                         this.endedState = true
                     }
+                    this.$nextTick(() => {
+                        this.$nuxt.$loading.finish()
+                        this.lasyLoadImg()
+                    })
+                    
                 })
         }
     }

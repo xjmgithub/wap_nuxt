@@ -2,7 +2,7 @@
     <div class="frame">
         <mheader/>
         <download class="clearfix"/>
-        <nuxt class="page-main" />
+        <nuxt class="page-main"/>
         <div v-show="showNav" class="nav-layer" @click="closeNav"/>
         <div :class="{'nav-show':showNav}" class="slide-bar">
             <ul>
@@ -124,6 +124,9 @@ export default {
         Vue.prototype.cdnPicSrc = value => {
             return cdnPicSrc.call(this, value)
         }
+        Vue.prototype.lasyLoadImg = () => {
+            this.getPic()
+        }
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {
@@ -131,8 +134,25 @@ export default {
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.faq_url = 'http://qa.upms.startimestv.com/wap/faq.php'
         }
+
+        this.$nextTick(() => {
+            this.getPic()
+            document.addEventListener('scroll', () => {
+                this.getPic()
+            })
+        })
     },
     methods: {
+        getPic() {
+            const lasyImg = document.querySelectorAll('img[pre-src]')
+            const screenHeight = window.screen.availHeight
+            lasyImg.forEach(el => {
+                const top = el.getBoundingClientRect().top
+                if (top < screenHeight) {
+                    el.src = el.getAttribute('pre-src')
+                }
+            })
+        },
         closeNav() {
             this.$store.commit('SET_NAV_STATE', false)
         }
