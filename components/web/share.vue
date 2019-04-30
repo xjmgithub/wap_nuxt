@@ -56,7 +56,7 @@ export default {
                 document.body.removeChild(input)
                 window.getSelection().removeAllRanges()
                 if (successful) {
-                    this.$toast('Copied')
+                    this.$toast(this.$store.state.lang.officialwebsitemobile_copylink_copied)
                 } else {
                     this.$toast('Copylink is not support on your browser')
                 }

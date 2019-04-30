@@ -85,6 +85,8 @@ export default {
     officialwebsitemobile_install: 'Install',
     officialwebsitemobile_serarch_input: 'Please enter keywords',
     officialwebsitemobile_action_share: 'Share',
+    officialwebsitemobile_search_too_many: 'Sorry, you have entered too many words.',
+    officialwebsitemobile_copylink_copied: 'Copied',
 
     // dvb recharge
     // bind
