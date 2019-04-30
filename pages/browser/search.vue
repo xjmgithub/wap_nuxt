@@ -122,7 +122,7 @@ export default {
         },
         changeWord() {
             if (this.keyword.length >= 100) {
-                this.$toast('输入字符不可超过100个')
+                this.$toast(this.$store.state.lang.officialwebsitemobile_search_too_many)
                 this.keyword = this.keyword.substr(0, 100)
             }
         },

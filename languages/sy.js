@@ -86,6 +86,8 @@ export default {
     officialwebsitemobile_install: 'Simika',
     officialwebsitemobile_serarch_input: 'Ingiza neno la siri',
     officialwebsitemobile_action_share: 'Shirikisha',
+    officialwebsitemobile_search_too_many: 'Samahani,Umeingiza maneno mengi zaidi',
+    officialwebsitemobile_copylink_copied: 'Nakiliwa',
 
     // dvb recharge
     // bind
