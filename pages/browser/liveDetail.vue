@@ -319,6 +319,7 @@ export default {
     position: relative;
     img {
         width: 100%;
+        height:15rem;
         & + img {
             position: absolute;
             width: 3rem;
