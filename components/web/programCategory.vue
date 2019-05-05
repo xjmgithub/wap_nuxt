@@ -20,7 +20,7 @@ export default {
     },
     data() {
         let choosedId = this.$route.params.id || 0
-        choosedId = choosedId || this.list[0].id
+        choosedId = choosedId || (this.list.length > 0 ? this.list[0].id : 0)
         return {
             showAll: true,
             choosedId: choosedId
@@ -36,8 +36,9 @@ export default {
         }
     },
     mounted() {
+        
         this.showList.forEach((item, index) => {
-            if (item.id === this.choosedId) {
+            if (item.id == this.choosedId) {
                 if (index > 6) {
                     this.showAll = true
                 } else {
