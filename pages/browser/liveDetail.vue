@@ -1,7 +1,7 @@
 <template>
     <div class="untrim-page">
         <div v-if="channel.poster&&channel.poster.resources[0].url" class="poster" @click="confirmDown">
-            <img :src="channel.poster&&cdnPicSrc(channel.poster.resources[0].url)" alt>
+            <img :src="channel.poster&&cdnPicSrc(channel.poster.resources[0].url)">
             <img src="~assets/img/web/ic_play.png">
         </div>
         <div class="container-main">
@@ -317,11 +317,13 @@ export default {
 }
 .poster {
     position: relative;
+    padding-top:55%;
     img {
         width: 100%;
-        height:15rem;
+        height:100%;
+        top:0;
+        position: absolute;
         & + img {
-            position: absolute;
             width: 3rem;
             top: 50%;
             height: 3rem;
