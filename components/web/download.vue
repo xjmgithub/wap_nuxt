@@ -31,6 +31,8 @@ export default {
                     .catch(e => {
                         normalToAppStore.call(this)
                     })
+            }else{
+                normalToAppStore.call(this)
             }
         }
     }
