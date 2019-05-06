@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap" :style="{display:style,'margin-left':offsetLeft,'margin-top':offsetTop}" v-html="tip"/>
+    <div class="toast" :style="{display:style,'margin-left':offsetLeft,'margin-top':offsetTop}" v-html="tip"/>
 </template>
 <script>
 export default {
@@ -33,14 +33,14 @@ export default {
 }
 </script>
 <style scoped>
-.wrap {
+.toast {
     position: fixed;
     left: 50%;
     top: 50%;
     background: rgba(0, 0, 0, 0.65);
-    padding: 10px;
-    border-radius: 5px;
-    width: 15rem;
+    padding: 0.6rem 1.5rem;
+    border-radius: 3px;
+    max-width: 15rem;
     color: #fff;
 }
 </style>

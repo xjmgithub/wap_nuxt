@@ -146,12 +146,13 @@ export default {
         getPic() {
             const lasyImg = document.querySelectorAll('img[pre-src]')
             const screenHeight = window.screen.availHeight
-            lasyImg.forEach(el => {
+            for (let i = 0; i < lasyImg.length; i++) {
+                const el = lasyImg[i]
                 const top = el.getBoundingClientRect().top
                 if (top < screenHeight) {
                     el.src = el.getAttribute('pre-src')
                 }
-            })
+            }
         },
         closeNav() {
             this.$store.commit('SET_NAV_STATE', false)
