@@ -143,7 +143,6 @@ export default {
                         this.subProgram = val
                         this.subProgram.forEach(ele => {
                             if (ele.id == this.id) {
-                                alert(ele.poster.resources)
                                 this.sPoster = ele.poster && ele.poster.resources[0].url
                                 this.sName = ele.description || ele.name
                                 this.sDescription = ele.summary

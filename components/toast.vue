@@ -1,31 +1,31 @@
 <template>
-    <div class="toast" :style="{display:style,'margin-left':offsetLeft,'margin-top':offsetTop}" v-html="tip"/>
+    <div v-show="tip" class="toast" :style="{'margin-left':offsetLeft,'margin-top':offsetTop}">{{tip}}</div>
 </template>
 <script>
 export default {
     data() {
         return {
             tip: '',
-            style: 'none',
             timer: null,
             offsetLeft: 0,
             offsetTop: 0
         }
     },
+    updated(){
+        const dialog = this.$el
+        const dh = dialog.offsetHeight
+        const dw = dialog.offsetWidth
+        this.offsetLeft = -dw / 2 + 'px'
+        this.offsetTop = -dh / 2 + 'px'
+    },
     methods: {
         show(text, duration = 2000) {
             clearInterval(this.timer)
             const _this = this
-            this.style = 'block'
             this.tip = text
             this.$nextTick(() => {
-                const dialog = _this.$el
-                const dh = dialog.offsetHeight
-                const dw = dialog.offsetWidth
-                _this.offsetLeft = -dw / 2 + 'px'
-                _this.offsetTop = -dh / 2 + 'px'
                 this.timer = setTimeout(() => {
-                    _this.style = 'none'
+                    _this.tip = ''
                 }, duration)
             })
         }
