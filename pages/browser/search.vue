@@ -56,9 +56,9 @@ export default {
             const tmpHour = item.fields.subpro_duration_hour
             const tmpMin = item.fields.subpro_duration_minute
             const tmpSec = item.fields.subpro_duration_second
-            const hour = tmpHour > 0 ? tmpHour : '0' + tmpHour
-            const min = tmpMin > 0 ? tmpMin : '0' + tmpMin
-            const sec = tmpSec > 0 ? tmpSec : '0' + tmpSec
+            const hour = tmpHour > 10 ? tmpHour : '0' + tmpHour
+            const min = tmpMin > 10 ? tmpMin : '0' + tmpMin
+            const sec = tmpSec > 10 ? tmpSec : '0' + tmpSec
             return hour + ':' + min + ':' + sec
         }
     },
@@ -140,7 +140,7 @@ export default {
             if (item.fields.program_type == 'PROGRAM') {
                 return item.fields.pro_name.en
             } else if (item.fields.program_type == 'SUBPROGRAM') {
-                return item.fields.subpro_name.en
+                return item.fields.subpro_bright_spot.en
             }
         },
         highlight(name) {
