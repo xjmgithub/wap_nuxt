@@ -500,7 +500,7 @@ export const cacheDateUpdate = function(callback) {
 
 export const initDB = function() {
     localforage.config({
-        driver: [localforage.INDEXEDDB, localforage.WEBSQL],
+        driver: [localforage.WEBSQL],  // indexDB在android4.4上保存不全
         name: 'StarTimes'
     })
 }

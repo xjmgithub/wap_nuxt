@@ -29,7 +29,7 @@
                 <li v-for="(item,index) in subProgram" :key="index">
                     <nuxt-link :to="`/browser/program/subdetail/${item.id}`">
                         <div>
-                            <img :src="item.poster&&cdnPicSrc(item.poster.resources[0].url)">
+                            <img :src="item.poster.resources&&cdnPicSrc(item.poster.resources[0].url)">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -143,6 +143,7 @@ export default {
                         this.subProgram = val
                         this.subProgram.forEach(ele => {
                             if (ele.id == this.id) {
+                                alert(ele.poster.resources)
                                 this.sPoster = ele.poster && ele.poster.resources[0].url
                                 this.sName = ele.description || ele.name
                                 this.sDescription = ele.summary
