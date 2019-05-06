@@ -129,7 +129,7 @@ export default {
         let data = null
         let time = new Date().getTime()
         try {
-            $axios.setHeader('token', store.state.token)
+            $axios.setHeader('token', store.state.gtoken)
             const res = await $axios.get(`/cms/vup/v6/channels/${route.query.channelId}`)
             time = dayjs(res.headers.date).valueOf()
             data = res.data

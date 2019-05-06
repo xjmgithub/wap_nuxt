@@ -57,7 +57,7 @@ export default {
     async asyncData({ app: { $axios }, route, store }) {
         if (process.server) {
             try {
-                $axios.setHeader('token', store.state.token)
+                $axios.setHeader('token', store.state.gtoken)
                 const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
                 return {
                     pData: res.data

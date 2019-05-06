@@ -67,7 +67,7 @@ export default {
         }
     },
     async asyncData({ app: { $axios }, route, store }) {
-        $axios.setHeader('token', store.state.token)
+        $axios.setHeader('token', store.state.gtoken)
         try {
             const { data } = await $axios.get(`/cms/program_detail/byvod/${route.params.id}`)
             return {

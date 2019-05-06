@@ -40,7 +40,7 @@ export default {
     },
     async asyncData({ app: { $axios }, route, store }) {
         try {
-            $axios.setHeader('token', store.state.token)
+            $axios.setHeader('token', store.state.gtoken)
             const res = await $axios.get(`/vup/admin/v1/public_list/tags/by-vod-content-type`)
             return {
                 tags: res.data.data || []
