@@ -27,7 +27,7 @@
                             <img v-if="item.fields.pro_picture_url" :pre-src="item.fields.pro_picture_url">
                             <img v-else src="~assets/img/web/def.png">
                         </div>
-                        <p class="title" v-html="highlight(getName(item))"/>
+                        <p class="title" v-html="highlight(getName(item))" />
                     </nuxt-link>
                     <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/${item.fields.subpro_id}`">
                         <div>
@@ -35,7 +35,7 @@
                             <img v-else src="~assets/img/web/def.png">
                             <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
-                        <p class="title" v-html="highlight(getName(item))"/>
+                        <p class="title" v-html="highlight(getName(item))" />
                     </nuxt-link>
                 </li>
             </ul>
@@ -150,9 +150,9 @@ export default {
                     let tmp
                     if (index >= 0) {
                         tmp = name.substr(index, ele.length)
+                        const replaceString = tmp.fontcolor('#0087eb')
+                        name = name.replace(tmp, replaceString)
                     }
-                    const replaceString = '<span class="light" style="color:#0087eb">' + tmp + '</span>'
-                    name = name.replace(tmp, replaceString)
                 })
             }
             return name
@@ -183,7 +183,6 @@ export default {
                     }&local_zero_utc=${time}&source_type=PROGRAM&request_source=WEB`
                 )
                 .then(res => {
-                    
                     this.loadstate = false
                     const data = res.data.sources
                     if (data && data.length > 0) {
@@ -200,7 +199,6 @@ export default {
                         this.$nuxt.$loading.finish()
                         this.lasyLoadImg()
                     })
-                    
                 })
         }
     }
