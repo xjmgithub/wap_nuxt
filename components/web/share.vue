@@ -45,6 +45,7 @@ export default {
         copyLink() {
             this.$nextTick(() => {
                 const input = document.createElement('input')
+                input.setAttribute('readOnly',true)
                 document.body.appendChild(input)
                 input.setAttribute('value', window.location.href)
                 input.select()
