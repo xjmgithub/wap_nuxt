@@ -163,9 +163,9 @@ export default {
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
                     if (this.pData.defaultVod.id) {
-                        normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.pData.defaultVod.id,2)
+                        normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.pData.defaultVod.id, 2)
                     } else {
-                        normalToAppStore.call(this,'',2)
+                        normalToAppStore.call(this, '', 2)
                     }
                     this.sendEvLog({
                         category: document.title,
