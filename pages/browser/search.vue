@@ -18,7 +18,7 @@
         <div v-show="programList.length>0" class="clips">
             <p class="title">
                 {{$store.state.lang.officialwebsitemobile_programs_for}}
-                <span class="highlight">{{highlightValues.join(' ')}}</span>
+                <span class="highlight">{{oriKeyword}}</span>
             </p>
             <ul class="clearfix">
                 <li v-for="(item,index) in programList" :key="index">
@@ -84,6 +84,7 @@ export default {
         oriKeyword(nv, ov) {
             this.page_number = 1
             this.programList = []
+            this.endedState = false
             this.search(this.oriKeyword)
         }
     },
@@ -146,12 +147,14 @@ export default {
         highlight(name) {
             if (name) {
                 this.highlightValues.forEach(ele => {
-                    const index = name.toLowerCase().indexOf(ele.toLowerCase())
-                    let tmp
-                    if (index >= 0) {
-                        tmp = name.substr(index, ele.length)
-                        const replaceString = tmp.fontcolor('#0087eb')
-                        name = name.replace(tmp, replaceString)
+                    const allVal = name.match(new RegExp(ele, 'ig'))
+                    if (allVal) {
+                        for (let j = 0; j < allVal.length; j++) {
+                            name = name.replace(allVal[j], '[*' + j + '*]')
+                        }
+                        for (let i = 0; i < allVal.length; i++) {
+                            name = name.replace('[*' + i + '*]', allVal[i].fontcolor('#0087eb'))
+                        }
                     }
                 })
             }
