@@ -303,7 +303,7 @@ export default {
                     property: 'og:image',
                     content: this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:')
                 },
-                { name: 'twitter:card', property: 'twitter:card', content: 'summary' },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.channel.name }
             ]
         }
