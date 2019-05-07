@@ -56,9 +56,9 @@ export default {
             const tmpHour = item.fields.subpro_duration_hour
             const tmpMin = item.fields.subpro_duration_minute
             const tmpSec = item.fields.subpro_duration_second
-            const hour = tmpHour > 10 ? tmpHour : '0' + tmpHour
-            const min = tmpMin > 10 ? tmpMin : '0' + tmpMin
-            const sec = tmpSec > 10 ? tmpSec : '0' + tmpSec
+            const hour = tmpHour >= 10 ? tmpHour : '0' + tmpHour
+            const min = tmpMin >= 10 ? tmpMin : '0' + tmpMin
+            const sec = tmpSec >= 10 ? tmpSec : '0' + tmpSec
             return hour + ':' + min + ':' + sec
         }
     },
