@@ -343,6 +343,12 @@ export const downApp = function() {
                 window.location.href = failback
             } else {
                 _this.$axios.get('/cms/public/app').then(res => {
+                    _this.sendEvLog({
+                        category: document.title,
+                        action: 'install_activated',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
                     let url = res.data.apkUrl
                     if (url) {
                         if (url.indexOf('google') > 0) {
@@ -350,6 +356,7 @@ export const downApp = function() {
                         }
                         window.location.href = url
                     }
+                    
                 })
             }
         }
@@ -500,12 +507,12 @@ export const cacheDateUpdate = function(callback) {
 
 export const initDB = function() {
     localforage.config({
-        driver: [localforage.WEBSQL,localforage.LOCALSTORAGE],  // indexDB在android4.4上保存不全
+        driver: [localforage.WEBSQL, localforage.LOCALSTORAGE], // indexDB在android4.4上保存不全
         name: 'StarTimes'
     })
 }
 
-export const normalToAppStore = function(page) {
+export const normalToAppStore = function(page, pos) {
     const ua = navigator.userAgent.toLowerCase()
     const _this = this
 
@@ -534,6 +541,12 @@ export const normalToAppStore = function(page) {
                 window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
             } else {
                 _this.$axios.get('/cms/public/app').then(res => {
+                    _this.sendEvLog({
+                        category: document.title,
+                        action: 'install_activated',
+                        label: UAType() + '_' + (pos || 1),
+                        value: 1
+                    })
                     let url = res.data.apkUrl
                     if (url) {
                         if (url.indexOf('google') > 0) {
@@ -545,4 +558,9 @@ export const normalToAppStore = function(page) {
             }
         }
     })
+}
+
+export const UAType = function() {
+    const ua = navigator.userAgent
+    return ua.includes('iPhone') || ua.includes('iPad') ? 2 : 1
 }

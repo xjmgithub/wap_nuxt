@@ -11,11 +11,25 @@
     </div>
 </template>
 <script>
-import { normalToAppStore } from '~/functions/utils'
+import { normalToAppStore, UAType } from '~/functions/utils'
 import localforage from 'localforage'
 export default {
+    mounted() {
+        this.sendEvLog({
+            category: document.title,
+            action: 'install_promo_show',
+            label: UAType() + '_1',
+            value: 1
+        })
+    },
     methods: {
         down() {
+            this.sendEvLog({
+                category: document.title,
+                action: 'install_promo_click',
+                label: UAType() + '_1',
+                value: 1
+            })
             if (this.$route.path.indexOf('program/subdetail/') >= 0) {
                 normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.$route.params.id)
             } else if (this.$route.path.indexOf('program/detail/') >= 0) {
@@ -31,7 +45,7 @@ export default {
                     .catch(e => {
                         normalToAppStore.call(this)
                     })
-            }else{
+            } else {
                 normalToAppStore.call(this)
             }
         }
