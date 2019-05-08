@@ -37,6 +37,7 @@
                         </div>
                         <p class="title" v-html="highlight(getName(item))"/>
                     </nuxt-link>
+                    <span v-if="item.fields.subpro_corner_mark" class="mark">{{item.fields.subpro_corner_mark}}</span>
                 </li>
             </ul>
             <div v-show="!endedState" class="loading-end">loading…</div>
@@ -282,6 +283,7 @@ export default {
             float: left;
             width: 48%;
             line-height: 1.1rem;
+            position: relative;
             &:nth-child(2n) {
                 float: right;
             }
@@ -320,6 +322,18 @@ export default {
                 -webkit-line-clamp: 2;
                 /* autoprefixer: off */
                 -webkit-box-orient: vertical;
+            }
+            .mark {
+                position: absolute;
+                right: 0;
+                top: 0;
+                background: #0087eb;
+                width: auto;
+                color: white;
+                font-size: 0.8rem;
+                padding: 0 0.3rem;
+                height: 1rem;
+                line-height: 1rem;
             }
         }
     }
