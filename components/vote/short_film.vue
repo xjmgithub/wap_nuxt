@@ -22,7 +22,13 @@
 export default {
     filters: {
         formatVotes(val) {
-            return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+            if (val <= 100000) {
+                return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+            } else if (val > 100000 && val <= 1000000) {
+                const x = Math.floor(val / 10000)
+                const y = Math.round(Math.floor(val % 10000) / 100)
+                return x + '.' + y + ' w'
+            }
         }
     },
     props: {
@@ -142,7 +148,7 @@ export default {
                         height: 3.3rem;
                         -webkit-line-clamp: 4;
                         word-break: break-all;
-                         /* autoprefixer: off */
+                        /* autoprefixer: off */
                         -webkit-box-orient: vertical;
                     }
                 }
