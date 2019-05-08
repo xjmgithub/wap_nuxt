@@ -67,7 +67,7 @@ export default {
             hotKeyList: [],
             keyword: '',
             page_number: 1,
-            page_size: 10,
+            page_size: 20,
             highlightValues: [],
             programList: [],
             endedState: false,
