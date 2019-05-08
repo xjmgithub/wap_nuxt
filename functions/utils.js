@@ -471,7 +471,7 @@ export const animateCSS = function(element, animationName, callback) {
 export const cdnPicSrc = function(src) {
     if (src) {
         const app = (this.$store && this.$store.state.appType) || 0
-        if (app <= 0 || (typeof Promise !== "undefined" && Promise.toString().indexOf("[native code]") !== -1)) {
+        if (app <= 0 || (window && window.indexedDB)) {
             return src.replace('http:', 'https:')
         } else {
             return src
