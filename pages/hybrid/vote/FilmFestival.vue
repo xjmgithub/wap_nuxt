@@ -1,43 +1,33 @@
 <template>
     <div class="page-wrapper">
         <!-- <mVoteSwiper :vote_id="vote_id" /> -->
+        <div>
+            <div class="rules">
+                <span>About</span>
+                <span>Vote Rules</span>
+            </div>
+        </div>
         <nav id="nav">
             <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex === index}" @click="handleTab(index)">
                 <span>{{item.name}}</span>
             </a>
         </nav>
-        <!-- <template v-for="(item,index) in tabList">
-            <mVote
-                v-if="item.type=='normal_vote'"
-                v-show="boxIndex==index"
-                :key="index"
-                :tab_msg="item"
-                :share="share"
-            />
-            <mRank
-                v-if="item.type=='rank'"
-                v-show="boxIndex==index"
-                :key="index"
-                :tab_msg="item"
-                :share="share"
-            />
-            <mViceVote
-                v-if="item.type=='vice_vote'"
-                v-show="boxIndex==index"
-                :key="index"
-                :tab_msg="item"
-                :share="share"
-            />
-        </template> -->
+        <div class="leftvote">
+            <span>Left vote:13</span>
+        </div>
+        <template v-for="(item,index) in tabList">
+            <mFilm v-if="item.type=='normal_Film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
+        </template>
     </div>
 </template>
 <script>
 // import mVoteSwiper from '~/components/vote/vote_swiper'
+import mFilm from '~/components/vote/film'
 export default {
     layout: 'base',
-    // components: {
-    //     mVoteSwiper
-    // },
+    components: {
+        mFilm
+    },
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
@@ -68,6 +58,21 @@ export default {
     methods: {
         handleTab(index) {
             this.tabIndex = index
+        },
+        getVoteLeft() {
+            if (this.isLogin) {
+                this.$axios({
+                    url: `/voting/v1/ballot/user-ballot-nums?vote_id=${this.tab_msg.vote_id}`,
+                    method: 'get',
+                    data: {}
+                }).then(res => {
+                    if (res.data.code === 0) {
+                        this.leftflower = res.data.data + ''
+                    } else {
+                        this.leftflower = '-'
+                    }
+                })
+            }
         }
     },
     head() {
@@ -93,6 +98,19 @@ html {
         }
     }
 }
+.rules {
+    height: 2rem;
+    line-height: 2rem;
+    background: linear-gradient(360deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    font-size: 0.88rem;
+    color: #ffffff;
+    span {
+        display: inline-block;
+        text-align: center;
+        width: 33%;
+        text-decoration: underline;
+    }
+}
 #nav {
     height: 2rem;
     background: linear-gradient(to bottom, #9d802a, #c9ab6f);
@@ -107,6 +125,8 @@ html {
         display: block;
         float: left;
         font-weight: 600;
+        text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
+        font-size: 0.88rem;
         &:link,
         &:active,
         &:visited,
@@ -127,5 +147,14 @@ html {
             }
         }
     }
+}
+.leftvote {
+    padding-right: 0.8rem;
+    height: 2rem;
+    line-height: 2rem;
+    background: linear-gradient(to bottom, #000000, #4e4e4e);
+    font-size: 0.88rem;
+    color: #ffffff;
+    text-align: right;
 }
 </style>
