@@ -10,23 +10,32 @@
         <nav id="nav">
             <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex === index}" @click="handleTab(index)">
                 <span>{{item.name}}</span>
+                <p/>
             </a>
         </nav>
         <div class="leftvote">
-            <span>Left vote:13</span>
+            <span>Left vote:{{leftVote}}</span>
         </div>
         <template v-for="(item,index) in tabList">
             <mFilm v-if="item.type=='normal_Film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
+            <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
         </template>
+        <div ref="box" class="share" :style="{'left':left, 'top':top}" @mousedown="down" @touchstart="down" @mousemove="move" @touchmove="move" @mouseup="end" @touchend="end">
+            <div>
+                SHARE
+            </div>
+        </div>
     </div>
 </template>
 <script>
 // import mVoteSwiper from '~/components/vote/vote_swiper'
 import mFilm from '~/components/vote/film'
+import sFilm from '~/components/vote/short_film'
 export default {
     layout: 'base',
     components: {
-        mFilm
+        mFilm,
+        sFilm
     },
     data() {
         return {
@@ -51,11 +60,49 @@ export default {
                 }
             ],
             tabIndex: 0,
-            vote_id: 2
+            vote_id: 2,
+            leftVote: 13,
+            canMove: false,
+            left: '',
+            top: ''
         }
     },
     mounted() {},
     methods: {
+        down() {
+            this.canMove = true
+        },
+        move(event) {
+            if (this.canMove) {
+                let e
+                if (event.touches) {
+                    e = event.touches[0]
+                } else {
+                    e = event
+                }
+                const x = e.clientX - this.$refs.box.offsetWidth / 2
+                const y = e.clientY - this.$refs.box.offsetHeight / 2
+                const dw = document.body.clientWidth - this.$refs.box.offsetWidth
+                const dh = document.body.clientHeight - this.$refs.box.offsetHeight
+                if (x <= dw && x >= 0) {
+                    this.left = x + 'px'
+                } else if (x > dw) {
+                    this.left = dw + 'px'
+                } else {
+                    this.left = 0
+                }
+                if (y <= dh && y >= 0) {
+                    this.top = y + 'px'
+                } else if (x > dh) {
+                    this.top = dh + 'px'
+                } else if (y < 0) {
+                    this.top = 0
+                }
+            }
+        },
+        end() {
+            this.canMove = false
+        },
         handleTab(index) {
             this.tabIndex = index
         },
@@ -67,9 +114,9 @@ export default {
                     data: {}
                 }).then(res => {
                     if (res.data.code === 0) {
-                        this.leftflower = res.data.data + ''
+                        this.leftVote = res.data.data + ''
                     } else {
-                        this.leftflower = '-'
+                        this.leftVote = '-'
                     }
                 })
             }
@@ -139,11 +186,13 @@ html {
             border-left: 1px solid rgba(255, 255, 210, 0.5);
         }
         &.on {
-            span {
-                border-bottom: 0.2rem solid #ffffff;
-                padding-bottom: 0.1rem;
-                color: #ffffff;
-                border-radius: 10%;
+            color: #ffffff;
+            p {
+                width: 1.5rem;
+                height: 0.2rem;
+                background: #ffffff;
+                border-radius: 3px;
+                margin: 0 auto;
             }
         }
     }
@@ -156,5 +205,26 @@ html {
     font-size: 0.88rem;
     color: #ffffff;
     text-align: right;
+}
+.share {
+    width: 4rem;
+    height: 4rem;
+    text-align: center;
+    color: #666666;
+    font-size: 0.8rem;
+    font-weight: bold;
+    position: fixed;
+    bottom: 3rem;
+    right: 1rem;
+    border-radius: 100%;
+    background: linear-gradient(to top, #c8c8c8, #979797);
+    div {
+        width: 3.6rem;
+        height: 3.6rem;
+        line-height: 3.6rem;
+        margin: 0.2rem auto;
+        background: linear-gradient(to bottom, #d8d8d8, #afafaf);
+        border-radius: 100%;
+    }
 }
 </style>

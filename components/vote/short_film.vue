@@ -1,15 +1,16 @@
 <template>
-    <div id="film">
+    <div id="show-film">
         <ul>
             <li v-for="(item,index) in filmList" :key="index" data-id="item.id" class="clearfix">
                 <div class="left">
                     <!-- <img :src="item.icon.replace('http:','https:')" class="icon"> -->
-                    <img src="~assets/img/vote/film.png" class="icon">
+                    <img src="~assets/img/vote/sfilm.png" class="icon">
                     <span :class="{first:index==0,second:index==1,third:index==2,normal:index>2}">No {{index+1}}</span>
                 </div>
                 <div class="right">
                     <p class="film-name">{{item.filmName}}</p>
                     <p class="film-author">{{item.filmAuthor}}</p>
+                    <p class="film-des">{{item.des}}</p>
                     <span class="votes">{{item.votes | formatVotes}}</span>
                     <span class="vote-btn">VOTE</span>
                 </div>
@@ -40,22 +41,21 @@ export default {
                 {
                     filmName: 'Boda Boda thieves',
                     filmAuthor: 'James Tayler&Donal Mugisha',
+                    des:
+                        "takes up the responsibility of manning the family 'boda boda' to provide for the family takes up the responsibility of manning the fam…..qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop",
                     votes: 1123123
                 },
                 {
                     filmName: 'Boda Boda thieves',
                     filmAuthor: 'James Tayler&Donal Mugisha',
+                    des: "takes up the responsibility of manning the family 'boda boda' to provide for…..",
                     votes: 234563
                 },
                 {
                     filmName: 'Boda Boda thieves',
                     filmAuthor: 'James Tayler&Donal Mugisha',
+                    des: "takes up the responsibility of manning the family 'boda boda' to provide for…..",
                     votes: 34525
-                },
-                {
-                    filmName: 'Boda Boda thieves',
-                    filmAuthor: 'James Tayler&Donal Mugisha',
-                    votes: 4563
                 }
             ]
         }
@@ -78,14 +78,14 @@ export default {
 }
 </script>
 <style lang="less">
-#film {
+#show-film {
     ul {
         padding: 0.5rem 0.8rem;
         li {
             margin-bottom: 1rem;
             .left {
                 float: left;
-                width: 48%;
+                width: 33%;
                 border: 1px solid #b99942;
                 border-radius: 2px;
                 position: relative;
@@ -121,7 +121,7 @@ export default {
             }
             .right {
                 float: right;
-                width: 48%;
+                width: 65%;
                 p {
                     color: #f6d36d;
                     &.film-name {
@@ -131,7 +131,19 @@ export default {
                     }
                     &.film-author {
                         font-size: 0.7rem;
-                        margin-bottom: 0.7rem;
+                        margin-bottom: 0.5rem;
+                    }
+                    &.film-des {
+                        font-size: 0.7rem;
+                        margin-bottom: 0.5rem;
+                        color: rgba(246, 211, 109, 0.4);
+                        display: -webkit-box;
+                        overflow: hidden;
+                        height: 3.3rem;
+                        -webkit-line-clamp: 4;
+                        word-break: break-all;
+                         /* autoprefixer: off */
+                        -webkit-box-orient: vertical;
                     }
                 }
                 span {
