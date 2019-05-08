@@ -24,9 +24,8 @@ export default {
             if (val <= 100000) {
                 return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
             } else if (val > 100000 && val <= 1000000) {
-                const x = Math.floor(val / 10000)
-                const y = Math.round(Math.floor(val % 10000) / 100)
-                return x + '.' + y + ' w'
+                const x = val / 10000
+                return x.toFixed(2) + ' w'
             }
         }
     },
