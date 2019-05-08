@@ -42,7 +42,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { formatTime, normalToAppStore, initDB, cacheDateUpdate } from '~/functions/utils'
+import { formatTime, normalToAppStore, initDB, cacheDateUpdate, UAType } from '~/functions/utils'
 import localforage from 'localforage'
 export default {
     components: {
@@ -132,6 +132,14 @@ export default {
                                 }
                             })
                         }
+                        if (this.sPoster) {
+                            this.sendEvLog({
+                                category: document.title,
+                                action: 'install_promo_show',
+                                label: UAType() + '_2',
+                                value: 1
+                            })
+                        }
                         localforage.setItem('subprograms_' + this.pid, data)
                     })
                 } else {
@@ -148,6 +156,14 @@ export default {
                                 this.sDescription = ele.summary
                             }
                         })
+                        if (this.sPoster) {
+                            this.sendEvLog({
+                                category: document.title,
+                                action: 'install_promo_show',
+                                label: UAType() + '_2',
+                                value: 1
+                            })
+                        }
                     }
                 }
             })
@@ -159,12 +175,31 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.id)
+                    normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.id,2)
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_install',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
                 },
-                () => {},
+                () => {
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_cancel',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
+                },
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
+            this.sendEvLog({
+                category: document.title,
+                action: 'install_promo_click',
+                label: UAType() + '_2',
+                value: 1
+            })
         }
     },
     head() {

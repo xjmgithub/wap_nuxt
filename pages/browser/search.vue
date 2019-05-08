@@ -27,7 +27,7 @@
                             <img v-if="item.fields.pro_picture_url" :pre-src="item.fields.pro_picture_url">
                             <img v-else src="~assets/img/web/def.png">
                         </div>
-                        <p class="title" v-html="highlight(getName(item))" />
+                        <p class="title" v-html="highlight(getName(item))"/>
                     </nuxt-link>
                     <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/${item.fields.subpro_id}`">
                         <div>
@@ -35,7 +35,7 @@
                             <img v-else src="~assets/img/web/def.png">
                             <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
-                        <p class="title" v-html="highlight(getName(item))" />
+                        <p class="title" v-html="highlight(getName(item))"/>
                     </nuxt-link>
                 </li>
             </ul>
@@ -203,6 +203,11 @@ export default {
                         this.lasyLoadImg()
                     })
                 })
+        }
+    },
+    head() {
+        return {
+            title: 'Search'
         }
     }
 }

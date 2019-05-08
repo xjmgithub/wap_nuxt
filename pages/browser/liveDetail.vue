@@ -77,7 +77,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { downApp } from '~/functions/utils'
+import { downApp, UAType } from '~/functions/utils'
 import dayjs from 'dayjs'
 export default {
     components: {
@@ -199,6 +199,15 @@ export default {
             )
         )
         this.getTvGuide(this.epgTime[3], 3)
+
+        if (this.channel.poster && this.channel.poster.resources[0].url) {
+            this.sendEvLog({
+                category: document.title,
+                action: 'install_promo_show',
+                label: UAType() + '_2',
+                value: 1
+            })
+        }
     },
     methods: {
         toShare() {
@@ -280,16 +289,34 @@ export default {
             }
         },
         confirmDown() {
-            const _this = this
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    downApp.call(_this)
+                    downApp.call(this)
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_install',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
                 },
-                () => {},
+                () => {
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_cancel',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
+                },
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
+            this.sendEvLog({
+                category: document.title,
+                action: 'install_promo_click',
+                label: UAType() + '_2',
+                value: 1
+            })
         }
     },
     head() {
@@ -317,11 +344,11 @@ export default {
 }
 .poster {
     position: relative;
-    padding-top:55%;
+    padding-top: 55%;
     img {
         width: 100%;
-        height:100%;
-        top:0;
+        height: 100%;
+        top: 0;
         position: absolute;
         & + img {
             width: 3rem;
