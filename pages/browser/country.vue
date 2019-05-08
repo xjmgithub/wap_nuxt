@@ -4,7 +4,7 @@
             <p class="title">Choose your country</p>
             <ul>
                 <li v-for="(item,index) in countryList" v-show="item.id!=8" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag.replace('http:','https:')" alt class="nationalFlag">
+                    <img :src="cdnPicSrc(item.nationalFlag)" alt class="nationalFlag">
                     {{item.name}}
                     <img src="~assets/img/web/ic_categary.png" class="arrows">
                 </li>

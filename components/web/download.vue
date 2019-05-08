@@ -1,24 +1,61 @@
 <template>
     <div class="download" @click="down">
-        <div class="max-width">{{$store.state.lang.officialwebsitemobile_downloadpromo}}</div>
-        <span>{{$store.state.lang.officialwebsitemobile_go}} &gt;</span>
+        <div>
+            <img src="~assets/img/web/app_icon.png">
+            <div>
+                <p>StarTimes ON App</p>
+                <span>{{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
+            </div>
+            <span class="down">{{$store.state.lang.officialwebsitemobile_install}}</span>
+        </div>
     </div>
 </template>
 <script>
-import { downApp } from '~/functions/utils'
+import { normalToAppStore, UAType } from '~/functions/utils'
+import localforage from 'localforage'
 export default {
+    mounted() {
+        this.sendEvLog({
+            category: document.title,
+            action: 'install_promo_show',
+            label: UAType() + '_1',
+            value: 1
+        })
+    },
     methods: {
         down() {
-            downApp.call(this)
+            this.sendEvLog({
+                category: document.title,
+                action: 'install_promo_click',
+                label: UAType() + '_1',
+                value: 1
+            })
+            if (this.$route.path.indexOf('program/subdetail/') >= 0) {
+                normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.$route.params.id)
+            } else if (this.$route.path.indexOf('program/detail/') >= 0) {
+                localforage
+                    .getItem('program_' + this.$route.params.id)
+                    .then(val => {
+                        if (val.defaultVod.id) {
+                            normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + val.defaultVod.id)
+                        } else {
+                            normalToAppStore.call(this)
+                        }
+                    })
+                    .catch(e => {
+                        normalToAppStore.call(this)
+                    })
+            } else {
+                normalToAppStore.call(this)
+            }
         }
     }
 }
 </script>
 <style lang="less" scoped>
 .download {
-    padding: 0rem 0.8rem;
-    background-color: #ffbe19;
-    font-weight: bold;
+    padding: 0.5rem 0.8rem;
+    background-color: #b7b7b7;
     color: #333333;
     overflow: hidden;
     zoom: 1;
@@ -26,15 +63,33 @@ export default {
     position: fixed;
     width: 100%;
     z-index: 999;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    div {
-        width: auto;
-        float: left;
-    }
-    span {
-        color: #0087eb;
-        float: right;
+    height: 4rem;
+    & > div {
+        position: relative;
+        img {
+            width: 3rem;
+        }
+        div {
+            font-weight: bold;
+            width: 45%;
+            font-size: 0.88rem;
+            margin-left: 0.5rem;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1.3rem;
+        }
+        .down {
+            background-color: #0087eb;
+            width: 4.5rem;
+            color: #ffffff;
+            border-radius: 2px;
+            height: 2rem;
+            position: absolute;
+            right: 0;
+            top: 0.5rem;
+            line-height: 2rem;
+            text-align: center;
+        }
     }
 }
 </style>

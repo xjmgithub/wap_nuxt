@@ -104,7 +104,7 @@ export default {
     },
     methods: {
         loadImg() {
-            this.$refs.dataimg.src = this.item.logo.resources[0].url.replace('http:', 'https:')
+            this.$refs.dataimg.src = this.cdnPicSrc(this.item.logo.resources[0].url)
         },
         getEPG() {
             const top = this.$el.getBoundingClientRect().top

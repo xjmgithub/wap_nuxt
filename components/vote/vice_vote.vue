@@ -7,7 +7,7 @@
         <ul class="clearfix">
             <li v-for="(item,index) in advisorList" :key="index" data-id="item.id">
                 <div class="img-box">
-                    <img :src="item.icon.replace('http:','https:')" class="icon">
+                    <img :src="cdnPicSrc(item.icon)" class="icon">
                 </div>
                 <span class="player-name">{{item.name}}</span>
                 <div class="flowers">

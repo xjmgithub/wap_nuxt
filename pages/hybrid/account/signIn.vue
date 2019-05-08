@@ -12,7 +12,7 @@
         </div>
         <div v-show="type==0" class="by_tel">
             <div v-if="country" class="country_choose" @click="countryDialogStatus=true">
-                <img :src="country.nationalFlag.replace('http:','https:')">
+                <img :src="cdnPicSrc(country.nationalFlag)">
                 <span>{{country.name}}</span>
             </div>
             <div class="img-box">
@@ -34,26 +34,20 @@
                 <input v-model="password" type="password" placeholder="Password">
             </div>
         </div>
-        <div class="next-btn" @click="login">
-            SIGN IN
-        </div>
+        <div class="next-btn" @click="login">SIGN IN</div>
         <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/account/resetpass">
-                Forgot password?
-            </nuxt-link>
+            <nuxt-link to="/hybrid/account/resetpass">Forgot password?</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
-            <div class="dialog-title">
-                Country List
-            </div>
+            <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="item.nationalFlag.replace('http:','https:')">
+                    <img :src="cdnPicSrc(item.nationalFlag)">
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
     </div>
 </template>
 <script>

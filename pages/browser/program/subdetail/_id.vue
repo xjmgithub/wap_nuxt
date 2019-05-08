@@ -1,27 +1,35 @@
 <template>
     <div>
-        <div class="poster" @click="confirmDown">
-            <img :src="sPoster.replace('http:','https:')" alt class="cover">
-            <img v-show="sPoster" src="~assets/img/web/ic_play.png">
-            <span class="program-name">{{sName}}</span>
+        <div class="poster">
+            <div v-if="sPoster" class="pic" @click="confirmDown">
+                <img :src="sPoster&&cdnPicSrc(sPoster)" class="cover">
+                <img src="~assets/img/web/ic_play.png">
+            </div>
+            <div class="clearfix">
+                <span class="program-name title">{{sName}}</span>
+                <div class="share" @click="toShare">
+                    <img src="~assets/img/web/ic_share_def_g.png">
+                    {{$store.state.lang.officialwebsitemobile_action_share}}
+                </div>
+            </div>
             <p>{{sDescription}}</p>
         </div>
-        <div class="poster father">
+        <div class="poster father clearfix">
             <nuxt-link :to="`/browser/program/detail/${pid}`">
                 <span class="program-name">{{pName}}</span>
-                <div class="clearfix">
-                    <p>{{pDescription}}</p>
-                    <img :src="pPoster.replace('http:','https:')">
-                </div>
+                <p>
+                    <img :src="pPoster&&cdnPicSrc(pPoster)" align="right" hspace="8" vspace="8">
+                    {{pDescription}}
+                </p>
             </nuxt-link>
         </div>
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
             <ul class="clearfix">
                 <li v-for="(item,index) in subProgram" :key="index">
-                    <nuxt-link :to="`/browser/program/subdetail/${pid}?subId=${item.id}`">
+                    <nuxt-link :to="`/browser/program/subdetail/${item.id}`">
                         <div>
-                            <img :src="item.poster.resources[0].url.replace('http:','https:')">
+                            <img :src="item.poster.resources&&cdnPicSrc(item.poster.resources[0].url)">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -29,11 +37,17 @@
                 </li>
             </ul>
         </div>
+        <mShare :show="showShare"/>
     </div>
 </template>
 <script>
-import { formatTime, downApp,initFacebookLogin,shareFacebook } from '~/functions/utils'
+import mShare from '~/components/web/share.vue'
+import { formatTime, normalToAppStore, initDB, cacheDateUpdate, UAType } from '~/functions/utils'
+import localforage from 'localforage'
 export default {
+    components: {
+        mShare
+    },
     filters: {
         formatShowTime(val) {
             return formatTime(val)
@@ -41,82 +55,166 @@ export default {
     },
     data() {
         return {
-            pid: this.$route.params.id,
+            id: this.$route.params.id,
             sPoster: '',
             sName: '',
             sDescription: '',
-            subProgram: []
-        }
-    },
-    computed: {
-        sid() {
-            return this.$route.query.subId
-        }
-    },
-    watch: {
-        sid(nv, ov) {
-            this.$router.go(0)
+            subProgram: [],
+            pPoster: '',
+            pName: '',
+            pDescription: '',
+            showShare: false
         }
     },
     async asyncData({ app: { $axios }, route, store }) {
-        $axios.setHeader('token', store.state.token)
-        let data = {}
+        $axios.setHeader('token', store.state.gtoken)
         try {
-            const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
-            data = res.data
+            const { data } = await $axios.get(`/cms/program_detail/byvod/${route.params.id}`)
+            return {
+                pid: data.id,
+                seoData: data
+            }
         } catch (e) {
-            data = {}
-        }
-        return {
-            pPoster: data.poster || '',
-            pName: data.name || '',
-            pDescription: data.programSummary || ''
+            return {
+                pid: '',
+                seoData: {}
+            }
         }
     },
     mounted() {
-        initFacebookLogin()
         if (this.pid) {
-            this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
-                this.$nextTick(() => this.$nuxt.$loading.finish())
-                const data = res.data.data
-                if (data && data.length > 0) {
-                    this.subProgram = data
-                    this.subProgram.forEach(ele => {
-                        if (ele.id == this.sid) {
-                            this.sPoster = ele.poster.resources[0].url
-                            this.sName = ele.description || ele.name
-                            this.sDescription = ele.summary
-                        }
-                    })
-                }
-            })
+            initDB()
+            cacheDateUpdate.call(this, this.getData)
         }
     },
     methods: {
-        share(){
-            shareFacebook()
+        getData() {
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            let loadNum = 2
+            localforage.getItem('program_' + this.pid).then(val => {
+                if (!val) {
+                    this.$axios.get(`/cms/program_detail/${this.pid}`).then(res => {
+                        loadNum--
+                        if (loadNum <= 0) {
+                            this.$nextTick(() => this.$nuxt.$loading.finish())
+                        }
+                        this.pPoster = res.data.poster || ''
+                        this.pName = res.data.name || ''
+                        this.pDescription = res.data.programSummary || ''
+                        localforage.setItem('program_' + this.pid, res.data)
+                    })
+                } else {
+                    loadNum--
+                    if (loadNum <= 0) {
+                        this.$nextTick(() => this.$nuxt.$loading.finish())
+                    }
+                    this.pPoster = val.poster || ''
+                    this.pName = val.name || ''
+                    this.pDescription = val.programSummary || ''
+                }
+            })
+
+            localforage.getItem('subprograms_' + this.pid).then(val => {
+                if (!val) {
+                    this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
+                        loadNum--
+                        if (loadNum <= 0) {
+                            this.$nextTick(() => this.$nuxt.$loading.finish())
+                        }
+                        const data = res.data.data
+                        if (data && data.length > 0) {
+                            this.subProgram = data
+                            this.subProgram.forEach(ele => {
+                                if (ele.id == this.id) {
+                                    this.sPoster = ele.poster && ele.poster.resources[0].url
+                                    this.sName = ele.description || ele.name
+                                    this.sDescription = ele.summary
+                                }
+                            })
+                        }
+                        if (this.sPoster) {
+                            this.sendEvLog({
+                                category: document.title,
+                                action: 'install_promo_show',
+                                label: UAType() + '_2',
+                                value: 1
+                            })
+                        }
+                        localforage.setItem('subprograms_' + this.pid, data)
+                    })
+                } else {
+                    loadNum--
+                    if (loadNum <= 0) {
+                        this.$nextTick(() => this.$nuxt.$loading.finish())
+                    }
+                    if (val && val.length > 0) {
+                        this.subProgram = val
+                        this.subProgram.forEach(ele => {
+                            if (ele.id == this.id) {
+                                this.sPoster = ele.poster && ele.poster.resources[0].url
+                                this.sName = ele.description || ele.name
+                                this.sDescription = ele.summary
+                            }
+                        })
+                        if (this.sPoster) {
+                            this.sendEvLog({
+                                category: document.title,
+                                action: 'install_promo_show',
+                                label: UAType() + '_2',
+                                value: 1
+                            })
+                        }
+                    }
+                }
+            })
+        },
+        toShare() {
+            this.$store.commit('SET_SHARE_STATE', true)
         },
         confirmDown() {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    downApp.call(this)
+                    normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.id,2)
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_install',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
                 },
-                () => {},
+                () => {
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_cancel',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
+                },
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
+            this.sendEvLog({
+                category: document.title,
+                action: 'install_promo_click',
+                label: UAType() + '_2',
+                value: 1
+            })
         }
     },
     head() {
         return {
-            title: this.sName,
+            title: this.seoData.name,
             meta: [
-                { hid: 'description', name: 'description', content: this.sDescription },
-                { property: 'og:description', content: this.sDescription + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.sPoster.replace('http:', 'https:') },
-                { property: 'twitter:card', content: "summary" }
+                { name: 'description', property: 'description', content: this.seoData.programSummary },
+                { name: 'og:description', property: 'og:description', content: this.seoData.programSummary + '#StarTimes ON Live TV & football' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.seoData.poster && this.seoData.poster.replace('http:', 'https:')
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: this.seoData.name }
             ]
         }
     }
@@ -128,11 +226,12 @@ img {
 }
 .poster {
     border-bottom: 1px solid #d8d8d8;
-    margin: 0.8rem 0;
-    position: relative;
+    margin: 0.8rem 0 0.5rem;
+    .pic {
+        position: relative;
+    }
     .cover {
         width: 100%;
-        margin-bottom: 0.5rem;
         & + img {
             position: absolute;
             width: 3rem;
@@ -140,14 +239,33 @@ img {
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
-            margin-top: -3rem;
+            margin-top: -1.5rem;
         }
     }
     .program-name {
         font-weight: bold;
         color: #333333;
-        margin: 0.5rem 0;
-        line-height: 2rem;
+        line-height: 1.5rem;
+        padding: 0.5rem 0;
+        &.title {
+            display: block;
+            width: 85%;
+            float: left;
+        }
+    }
+    .share {
+        float: right;
+        width: 14%;
+        color: #666666;
+        font-size: 0.8rem;
+        line-height: 0.8rem;
+        padding: 0.3rem 0;
+        text-align: center;
+        img {
+            display: block;
+            width: 1.5rem;
+            margin: 0 auto;
+        }
     }
     p {
         color: #666666;
@@ -156,20 +274,15 @@ img {
         -webkit-line-clamp: 2;
         overflow: hidden;
         font-size: 0.9rem;
+        padding: 0 0 0.5rem 0;
     }
     &.father {
         padding-bottom: 0.5rem;
-        p {
-            width: 60%;
-            float: left;
-            font-size: 0.85rem;
-            height: auto;
-            word-break: break-all;
-        }
+        margin-top: 0;
+        font-size: 0.85rem;
+        line-height: 1.2rem;
         img {
-            display: block;
-            width: 38%;
-            float: right;
+            width: 40%;
         }
     }
 }

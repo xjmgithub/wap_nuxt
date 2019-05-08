@@ -1,18 +1,26 @@
 <template>
     <div>
         <div class="poster" @click="confirmDown">
-            <img :src="pPoster.replace('http:','https:')">
-            <img v-show="pPoster" src="~assets/img/web/ic_play.png">
-            <span class="program-name">{{pName}}</span>
+            <div v-if="pPoster" class="pic" @click="confirmDown">
+                <img :src="cdnPicSrc(pPoster)">
+                <img src="~assets/img/web/ic_play.png">
+            </div>
+            <div class="clearfix">
+                <span class="program-name title">{{pName}}</span>
+                <div class="share" @click.stop="toShare">
+                    <img src="~assets/img/web/ic_share_def_g.png">
+                    {{$store.state.lang.officialwebsitemobile_action_share}}
+                </div>
+            </div>
             <p>{{pDescription}}</p>
         </div>
         <div class="clips">
             <p>{{$store.state.lang.officialwebsitemobile_subprogramdetails_clips}}</p>
             <ul class="clearfix">
                 <li v-for="(item,index) in subProgram" :key="index">
-                    <nuxt-link :to="`/browser/program/subdetail/${pid}?subId=${item.id}`">
+                    <nuxt-link :to="`/browser/program/subdetail/${item.id}`">
                         <div>
-                            <img :src="item.poster.resources[0].url.replace('http:','https:')">
+                            <img :src="item.poster && cdnPicSrc(item.poster.resources[0].url)">
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description || item.name}}</span>
@@ -20,11 +28,17 @@
                 </li>
             </ul>
         </div>
+        <mShare :show="showShare"/>
     </div>
 </template>
 <script>
-import { formatTime, downApp,initFacebookLogin,shareFacebook } from '~/functions/utils'
+import mShare from '~/components/web/share.vue'
+import { formatTime, normalToAppStore, initDB, cacheDateUpdate, UAType } from '~/functions/utils'
+import localforage from 'localforage'
 export default {
+    components: {
+        mShare
+    },
     filters: {
         formatShowTime(val) {
             return formatTime(val)
@@ -33,65 +47,165 @@ export default {
     data() {
         return {
             pid: this.$route.params.id,
-            subProgram: []
+            subProgram: [],
+            pPoster: '',
+            pName: '',
+            pDescription: '',
+            showShare: false
         }
     },
     async asyncData({ app: { $axios }, route, store }) {
-        $axios.setHeader('token', store.state.token)
-        let data = {}
-        try {
-            const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
-            data = res.data
-        } catch (e) {
-            data = {}
-        }
-        return {
-            pPoster: data.poster || '',
-            pName: data.description || data.name || '',
-            pDescription: data.programSummary || ''
+        if (process.server) {
+            try {
+                $axios.setHeader('token', store.state.gtoken)
+                const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
+                return {
+                    pData: res.data
+                }
+            } catch (e) {
+                return {
+                    pData: {}
+                }
+            }
+        } else {
+            return {
+                pData: {}
+            }
         }
     },
     mounted() {
-        initFacebookLogin()
         if (this.pid) {
-            this.$nextTick(() => this.$nuxt.$loading.start())
-            this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
-                this.$nextTick(() => this.$nuxt.$loading.finish())
-                const data = res.data.data
-                if (data && data.length > 0) {
-                    this.subProgram = data
-                }
-            })
+            initDB()
+            if (this.pData.name) {
+                localforage.setItem('program_' + this.pid, this.pData)
+            }
+            cacheDateUpdate.call(this, this.getData)
         }
     },
     methods: {
-        share(){
-            shareFacebook()
+        getData() {
+            this.$nextTick(() => this.$nuxt.$loading.start())
+            let loadNum = 2
+
+            localforage.getItem('program_' + this.pid).then(val => {
+                if (!val) {
+                    this.$axios.get(`/cms/program_detail/${this.pid}`).then(res => {
+                        loadNum--
+                        if (loadNum <= 0) {
+                            this.$nextTick(() => this.$nuxt.$loading.finish())
+                        }
+                        this.pPoster = res.data.poster || ''
+                        this.pName = res.data.name || ''
+                        this.pDescription = res.data.programSummary || ''
+                        localforage.setItem('program_' + this.pid, res.data)
+
+                        if (this.pPoster) {
+                            this.sendEvLog({
+                                category: document.title,
+                                action: 'install_promo_show',
+                                label: UAType() + '_2',
+                                value: 1
+                            })
+                        }
+                    })
+                } else {
+                    loadNum--
+                    if (loadNum <= 0) {
+                        this.$nextTick(() => this.$nuxt.$loading.finish())
+                    }
+                    this.pPoster = val.poster || ''
+                    this.pName = val.name || ''
+                    this.pDescription = val.programSummary || ''
+
+                    if (this.pPoster) {
+                        this.sendEvLog({
+                            category: document.title,
+                            action: 'install_promo_show',
+                            label: UAType() + '_2',
+                            value: 1
+                        })
+                    }
+                }
+            })
+
+            localforage.getItem('subprograms_' + this.pid).then(val => {
+                if (!val) {
+                    this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
+                        loadNum--
+                        if (loadNum <= 0) {
+                            this.$nextTick(() => this.$nuxt.$loading.finish())
+                        }
+                        const data = res.data.data
+                        if (data && data.length > 0) {
+                            this.subProgram = data
+                        }
+                        localforage.setItem('subprograms_' + this.pid, data)
+                    })
+                } else {
+                    loadNum--
+                    if (loadNum <= 0) {
+                        this.$nextTick(() => this.$nuxt.$loading.finish())
+                    }
+                    if (val && val.length > 0) {
+                        this.subProgram = val
+                    }
+                }
+            })
+        },
+        toShare() {
+            this.$store.commit('SET_SHARE_STATE', true)
         },
         toSubProgramDetail(id) {
             this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
         },
         confirmDown() {
-            const _this = this
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    downApp.call(_this)
+                    if (this.pData.defaultVod.id) {
+                        normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.pData.defaultVod.id, 2)
+                    } else {
+                        normalToAppStore.call(this, '', 2)
+                    }
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_install',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
                 },
-                () => {},
+                () => {
+                    this.sendEvLog({
+                        category: document.title,
+                        action: 'install_dialog_cancel',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
+                },
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
+            this.sendEvLog({
+                category: document.title,
+                action: 'install_promo_click',
+                label: UAType() + '_2',
+                value: 1
+            })
         }
     },
     head() {
         return {
-            title: this.pName,
+            title: this.pData.name,
             meta: [
-                { hid: 'description', name: 'description', content: this.pDescription },
-                { property: 'og:description', content: this.pDescription + '#StarTimes ON Live TV & football' },
-                { property: 'og:image', content: this.pPoster.replace('http:','https:') },
-                { property: 'twitter:card', content: "summary" }
+                { name: 'description', property: 'description', content: this.pData.programSummary },
+                { name: 'og:description', property: 'og:description', content: this.pData.programSummary + '#StarTimes ON Live TV & football' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.pData.poster && this.pData.poster.replace('http:', 'https:')
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: this.pData.name }
             ]
         }
     }
@@ -104,7 +218,9 @@ img {
 .poster {
     border-bottom: 1px solid #d8d8d8;
     padding: 0.8rem 0;
-    position: relative;
+    .pic {
+        position: relative;
+    }
     img {
         width: 100%;
         margin-bottom: 0.5rem;
@@ -115,14 +231,33 @@ img {
             height: 3rem;
             left: 50%;
             margin-left: -1.5rem;
-            margin-top: -3rem;
+            margin-top: -1.5rem;
         }
     }
     .program-name {
         font-weight: bold;
         color: #333333;
-        margin: 0.5rem 0;
-        line-height: 2rem;
+        line-height: 1.5rem;
+        padding: 0.5rem 0;
+        &.title {
+            display: block;
+            width: 85%;
+            float: left;
+        }
+    }
+    .share {
+        float: right;
+        width: 14%;
+        color: #666666;
+        font-size: 0.8rem;
+        line-height: 0.8rem;
+        padding: 0.4rem 0;
+        text-align: center;
+        img {
+            display: block;
+            width: 1.5rem;
+            margin: 0 auto;
+        }
     }
     p {
         color: #666666;
@@ -131,7 +266,8 @@ img {
         -webkit-line-clamp: 2;
         overflow: hidden;
         font-size: 0.9rem;
-        word-break: break-all;
+        padding: 0 0 0.5rem 0;
+        line-height: 1.2rem;
     }
 }
 .clips {

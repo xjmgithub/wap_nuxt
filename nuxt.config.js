@@ -20,13 +20,7 @@ export default {
                 content: '461626275431-sngbv2nv2bmecefaiu01r67cu1n88rja.apps.googleusercontent.com'
             }
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-        script: [
-            {
-                src: '/res_nuxt/sdk.js',
-                async: true
-            }
-        ]
+        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
     },
 
     loading: '~/components/loading.vue',
@@ -39,7 +33,12 @@ export default {
     },
 
     // Plugins to load before mounting the App
-    plugins: [{ src: '~plugins/analysis.js', ssr: false }, { src: '~plugins/axios.js', ssr: false }, { src: '~plugins/others.js', ssr: false }],
+    plugins: [
+        { src: '~plugins/analysis.js', ssr: false },
+        { src: '~plugins/axios.js', ssr: false },
+        { src: '~plugins/others.js', ssr: false },
+        { src: '~plugins/facebook.js', ssr: false }
+    ],
 
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
@@ -69,6 +68,7 @@ export default {
         '/adm/': env.proxyHost,
         '/self/': env.proxyHost,
         '/channel/': env.proxyHost,
+        '/search-service/': env.proxyHost,
         '/wxorder/': env.proxyHost
     },
     router: {

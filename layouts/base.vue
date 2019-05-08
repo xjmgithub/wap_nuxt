@@ -20,7 +20,7 @@ import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import toast from '~/components/toast'
 import shadowLayer from '~/components/shadow-layer'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage, cdnPicSrc } from '~/functions/utils'
 export default {
     components: {
         alert,
@@ -51,6 +51,9 @@ export default {
             this.$refs.toast.show(msg, duration)
         }
         
+        Vue.prototype.cdnPicSrc = value => {
+            return cdnPicSrc.call(this, value)
+        }
         Vue.prototype.lasyLoadImg = ()=>{
             this.getPic()
         }

@@ -1,9 +1,9 @@
 <template>
     <div v-if="loading" class="lds-ring">
-        <div />
-        <div />
-        <div />
-        <div />
+        <div/>
+        <div/>
+        <div/>
+        <div/>
     </div>
 </template>
 <script>
@@ -28,7 +28,7 @@ export default {
     height: 3rem;
     left: 50%;
     top: 50%;
-    position: absolute;
+    position: fixed;
     z-index: 1001;
     margin-left: -1.5rem;
     margin-top: -1.5rem;

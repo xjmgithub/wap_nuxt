@@ -9,7 +9,7 @@
                 <li>
                     <div>
                         <div class="user_info">
-                            <img v-if="user" :src="user.head.replace('http:','https:')">
+                            <img v-if="user" :src="cdnPicSrc(user.head)">
                             <nuxt-link v-else to="/hybrid/account/login">
                                 <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
                             </nuxt-link>
@@ -20,7 +20,7 @@
                 <li class="country">
                     <nuxt-link :class="{checked:$route.path=='/browser/country'}" to="/browser/country">
                         <span>{{country.name}}</span>
-                        <img :src="country.nationalFlag.replace('http:','https:')">
+                        <img :src="cdnPicSrc(country.nationalFlag)">
                     </nuxt-link>
                 </li>
                 <li>
@@ -38,6 +38,7 @@
         </div>
         <alert ref="alert"/>
         <confirm ref="confirm"/>
+        <toast ref="toast"/>
         <shadowLayer v-show="layer"/>
     </div>
 </template>
@@ -48,14 +49,16 @@ import confirm from '~/components/confirm'
 import mheader from '~/components/web/header.vue'
 import download from '~/components/web/download'
 import shadowLayer from '~/components/shadow-layer'
-import { setCookie } from '~/functions/utils'
+import toast from '~/components/toast'
+import { setCookie, cdnPicSrc } from '~/functions/utils'
 export default {
     components: {
         alert,
         confirm,
         mheader,
         download,
-        shadowLayer
+        shadowLayer,
+        toast
     },
     data() {
         return {
@@ -115,6 +118,15 @@ export default {
             this.$refs.confirm.show(msg, callback, cancel, yes, no)
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
+        Vue.prototype.$toast = (msg, duration) => {
+            this.$refs.toast.show(msg, duration)
+        }
+        Vue.prototype.cdnPicSrc = value => {
+            return cdnPicSrc.call(this, value)
+        }
+        Vue.prototype.lasyLoadImg = () => {
+            this.getPic()
+        }
         this.$axios.setHeader('token', this.$store.state.gtoken)
     },
     mounted() {
@@ -122,8 +134,26 @@ export default {
         if (host.indexOf('qa') >= 0 || host.indexOf('dev') >= 0 || host.indexOf('localhost') >= 0) {
             this.faq_url = 'http://qa.upms.startimestv.com/wap/faq.php'
         }
+
+        this.$nextTick(() => {
+            this.getPic()
+            document.addEventListener('scroll', () => {
+                this.getPic()
+            })
+        })
     },
     methods: {
+        getPic() {
+            const lasyImg = document.querySelectorAll('img[pre-src]')
+            const screenHeight = window.screen.availHeight
+            for (let i = 0; i < lasyImg.length; i++) {
+                const el = lasyImg[i]
+                const top = el.getBoundingClientRect().top
+                if (top < screenHeight) {
+                    el.src = el.getAttribute('pre-src')
+                }
+            }
+        },
         closeNav() {
             this.$store.commit('SET_NAV_STATE', false)
         }
@@ -182,7 +212,7 @@ export default {
     padding-right: 0;
 }
 .page-main {
-    padding: 0 0.8rem;
+    padding: 1.4rem 0.8rem;
     background: white;
 }
 .country {

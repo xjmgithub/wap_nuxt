@@ -1,6 +1,6 @@
 <template>
     <div class="channel">
-        <nuxt-link :to="`/browser/liveDetail?channelId=${channel.channelId}&epg=${channel.programVO&&channel.programVO.id||''}`">
+        <nuxt-link :to="`/browser/liveDetail?channelId=${channel.channelId}`">
             <div class="title">
                 {{channel.name}}
             </div>

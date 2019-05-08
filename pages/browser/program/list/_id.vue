@@ -1,6 +1,6 @@
 <template>
     <div class="untrim-page">
-        <program-category ref="category"/>
+        <program-category ref="category" :list="tags"/>
         <div class="program-list">
             <div v-for="(item,index) in programList" :key="index" class="program">
                 <nuxt-link :to="`/browser/program/detail/${item.id}`">
@@ -11,7 +11,7 @@
                 </nuxt-link>
                 <ul>
                     <li v-for="(subPro,i) in item.subPrograms" v-show="i < 3" :key="i">
-                        <nuxt-link :to="`/browser/program/subdetail/${item.id}?subId=${subPro.id}`">
+                        <nuxt-link :to="`/browser/program/subdetail/${subPro.id}`">
                             <span>{{subPro.description || subPro.name}}</span>
                             <span class="arrows">&gt;&gt;</span>
                         </nuxt-link>
@@ -36,6 +36,19 @@ export default {
             perSize: 10,
             endedState: false,
             loadstate: false
+        }
+    },
+    async asyncData({ app: { $axios }, route, store }) {
+        try {
+            $axios.setHeader('token', store.state.gtoken)
+            const res = await $axios.get(`/vup/admin/v1/public_list/tags/by-vod-content-type`)
+            return {
+                tags: res.data.data || []
+            }
+        } catch (e) {
+            return {
+                tags: []
+            }
         }
     },
     mounted() {
