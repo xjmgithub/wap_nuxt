@@ -178,7 +178,7 @@ export default {
     },
     methods: {
         cdnPic(src) {
-            return cdnPicSrc(src)
+            return cdnPicSrc.call(this, src)
         },
         mSendEvLog(action, label, Value) {
             this.sendEvLog({
