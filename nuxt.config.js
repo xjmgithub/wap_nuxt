@@ -77,7 +77,8 @@ export default {
     serverMiddleware: [
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' },
-        { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' }
+        { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' },
+        { path: '/hybrid/vote/FilmFestival', handler: '~/api/film/index.js' }
     ],
     hooks: {
         listen(server) {
