@@ -22,11 +22,16 @@
 export default {
     filters: {
         formatVotes(val) {
-            if (val <= 100000) {
+            if (val < 10000) {
+                // 1w
                 return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
-            } else if (val > 100000 && val <= 1000000) {
-                const x = val / 10000
-                return x.toFixed(2) + ' w'
+            } else if (val >= 10000 && val < 1000000) {
+                // 1w-100w (K)
+                const x = (val / 1000).toFixed(1) % 1000
+                return x == 0 ? '1.0M' : x + 'K'
+            } else if (val >= 1000000) {
+                // 100w (M)
+                return (val / 1000000).toFixed(1) + 'M'
             }
         }
     },
@@ -48,7 +53,7 @@ export default {
                     filmAuthor: 'James Tayler&Donal Mugisha',
                     des:
                         "takes up the responsibility of manning the family 'boda boda' to provide for the family takes up the responsibility of manning the fam…..qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop",
-                    votes: 799999
+                    votes: 7999997
                 },
                 {
                     filmName: 'Boda Boda thieves',
