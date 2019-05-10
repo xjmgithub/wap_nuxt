@@ -1,7 +1,7 @@
 <template>
     <Swiper v-if="banners.length > 0" :auto-play="true" @changeIndex="changeIndex">
         <Slide v-for="(item,index) in banners" :key="index" @click="clickBanner(item)">
-            <img :src="cdnPicSrc(item.materials)">
+            <img :src="cdnPicSrc(item.materials)+1">
         </Slide>
     </Swiper>
 </template>
@@ -84,6 +84,6 @@ img::after {
     position: absolute;
     left: 0;
     top: 0;
-    background: url('~assets/img/ic_show_def_g.png') #686b6e no-repeat center;
+    background: url('~assets/img/water-logo.png') #686b6e no-repeat center;
 }
 </style>

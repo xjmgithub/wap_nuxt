@@ -1,4 +1,20 @@
+import axios from 'axios'
+import env from '../../env.js'
 export default function(req, res, next) {
-    req.headers.found = 123
-    next()
+    // 
+    axios
+        .get(`${env.apiURL}voting/v1/token`, {
+            headers: {
+                token:
+                    'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjEsInVpZCI6MTIzNSwiY2NvZGUiOiJUWiIsInJvbGUiOjIsImRldiI6ImFuZG9yaWRfNERBQ0ZBQzYtNUM5OS00NUY0LUI0NzEtQjNDRTY1MEIwRUNDIiwiY3JlYXRlZCI6MTUyNDczNDI4MTAyNiwiZXhwIjoxODQwMDk0MjgxLCJjaWQiOjN9.hl9TS3duu8A0dUKas2UhKZewGEda2K-3fppPRuIgOxsM0F4dB0EqlocifN53Xawqn0AhUgpriwdglZkHxaVzQA'
+            }
+        })
+        .then(res => {
+            req.headers.vote_sign = res.data.data
+            next()
+        })
+        .catch(err => {
+            console.log(err)
+            next()
+        })
 }

@@ -125,7 +125,7 @@ export default {
             clientHeight: 0
         }
     },
-    async asyncData({ app: { $axios }, route, store }) {
+    async asyncData({ app: { $axios }, route, store,req }) {
         $axios.setHeader('token', store.state.token)
         let banners = []
         try {
@@ -134,11 +134,13 @@ export default {
                 banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
             }
             return {
-                banners: banners.data.data
+                banners: banners.data.data,
+                vote_sign:req.headers.vote_sign
             }
         } catch (e) {
             return {
-                banners: banners
+                banners: banners,
+                vote_sign:req.headers.vote_sign
             }
         }
     },
