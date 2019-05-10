@@ -369,8 +369,8 @@ html {
     width: 100%;
     text-align: center;
     background: linear-gradient(180deg, rgba(78, 78, 78, 0) 0%,rgba(78, 78, 78, 1) 72% ,rgba(78, 78, 78, 1) 100%);
-    height: 1.5rem;
-    line-height: 1.5rem;
+    height: 3.8rem;
+    line-height: 6rem;
     font-size:0.8rem;
     span{
         color:white;
