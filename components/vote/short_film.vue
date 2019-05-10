@@ -1,17 +1,16 @@
 <template>
     <div id="show-film">
         <ul>
-            <li v-for="(item,index) in filmList" :key="index" data-id="item.id" class="clearfix">
+            <li v-for="(item,index) in dataList" :key="index" data-id="item.id" class="clearfix">
                 <div class="left">
-                    <!-- <img :src="item.icon.replace('http:','https:')" class="icon"> -->
-                    <img src="~assets/img/vote/sfilm.png" class="icon">
+                    <img :src="cdnPicSrc(item.icon)" class="icon">
                     <span :class="{first:index==0,second:index==1,third:index==2,normal:index>2}">No {{index+1}}</span>
                 </div>
                 <div class="right">
-                    <p class="film-name">{{item.filmName}}</p>
-                    <p class="film-author">{{item.filmAuthor}}</p>
-                    <p class="film-des">{{item.des}}</p>
-                    <span class="votes">{{item.votes | formatVotes}}</span>
+                    <p class="film-name">{{item.name}}</p>
+                    <p class="film-author">{{item.brief}}</p>
+                    <p class="film-des">{{item.description}}</p>
+                    <span class="votes">{{item.ballot_num | formatVotes}}</span>
                     <span class="vote-btn">VOTE</span>
                 </div>
             </li>
@@ -35,33 +34,16 @@ export default {
             }
         }
     },
-    data() {
-        return {
-            filmList: [
-                {
-                    filmName: 'Boda Boda thieves',
-                    filmAuthor: 'James Tayler&Donal Mugisha',
-                    des:
-                        "takes up the responsibility of manning the family 'boda boda' to provide for the family takes up the responsibility of manning the fam…..qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop",
-                    votes: 7999997
-                },
-                {
-                    filmName: 'Boda Boda thieves',
-                    filmAuthor: 'James Tayler&Donal Mugisha',
-                    des: "takes up the responsibility of manning the family 'boda boda' to provide for…..",
-                    votes: 234563
-                },
-                {
-                    filmName: 'Boda Boda thieves',
-                    filmAuthor: 'James Tayler&Donal Mugisha',
-                    des: "takes up the responsibility of manning the family 'boda boda' to provide for…..",
-                    votes: 34525
-                }
-            ]
+    props: {
+        dataList: {
+            type: Array,
+            default: () => {
+                return []
+            }
         }
     },
     methods: {
-        handleViceVote(film) {},
+        handleViceVote(film) {}
     }
 }
 </script>

@@ -17,9 +17,9 @@
             <span>Left vote:{{leftVote}}</span>
         </div>
         <template v-for="(item,index) in tabList">
-            <mFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
-            <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
-            <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
+            <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" />
+            <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" />
+            <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" />
         </template>
         <!-- <div 
             v-show="appType!=2" 
@@ -70,7 +70,7 @@
                 <span><img src="~assets/img/vote/ic_ti_def.png"></span>
             </div>
         </mcard>
-        <div v-show="showMore" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
+        <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
             <span>View More</span>
         </div>
     </div>
@@ -81,6 +81,7 @@ import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
 import { shareInvite } from '~/functions/utils'
+
 export default {
     layout: 'base',
     components: {
@@ -93,7 +94,7 @@ export default {
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
-            appType: this.$store.state.appType,
+            appType: this.$store.state.appType || 0,
             tabList: [
                 {
                     name: 'Film',
@@ -122,10 +123,13 @@ export default {
             rulesCard: false,
             shareCard: false,
             showMore: true,
-            clientHeight: 0
+            clientHeight: 0,
+            filmList: [],
+            sFilmList: [],
+            mvList: []
         }
     },
-    async asyncData({ app: { $axios }, route, store,req }) {
+    async asyncData({ app: { $axios }, route, store, req }) {
         $axios.setHeader('token', store.state.token)
         let banners = []
         try {
@@ -135,12 +139,12 @@ export default {
             }
             return {
                 banners: banners.data.data,
-                vote_sign:req.headers.vote_sign
+                vote_sign: req.headers.vote_sign
             }
         } catch (e) {
             return {
                 banners: banners,
-                vote_sign:req.headers.vote_sign
+                vote_sign: req.headers.vote_sign
             }
         }
     },
@@ -152,9 +156,27 @@ export default {
                 this.showMore = false
             }
         })
+        this.getAllList()
     },
     methods: {
         loadMore() {},
+        // 获取投票单元数据
+        getAllList() {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {
+                if (res.data.data.length > 0) {
+                    const data = res.data.data
+                    data.forEach(ele => {
+                        if (ele.type === 'FILM') {
+                            this.filmList.push(ele)
+                        } else if (ele.type === 'SHORT_FILM') {
+                            this.sFilmList.push(ele)
+                        } else if (ele.type === 'MV') {
+                            this.mvList.push(ele)
+                        }
+                    })
+                }
+            })
+        },
         toShare() {
             if (this.appType === 1) {
                 process.client &&
@@ -368,12 +390,12 @@ html {
     position: absolute;
     width: 100%;
     text-align: center;
-    background: linear-gradient(180deg, rgba(78, 78, 78, 0) 0%,rgba(78, 78, 78, 1) 72% ,rgba(78, 78, 78, 1) 100%);
+    background: linear-gradient(180deg, rgba(78, 78, 78, 0) 0%, rgba(78, 78, 78, 1) 72%, rgba(78, 78, 78, 1) 100%);
     height: 3.8rem;
     line-height: 6rem;
-    font-size:0.8rem;
-    span{
-        color:white;
+    font-size: 0.8rem;
+    span {
+        color: white;
         animation-timing-function: ease-in-out;
         animation-name: breathe;
         animation-duration: 1000ms;
