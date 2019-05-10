@@ -85,6 +85,7 @@ export default {
         sFilm,
         mCard
     },
+    
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
@@ -117,6 +118,9 @@ export default {
             rulesCard: false,
             shareCard: false
         }
+    },
+    asyncData (context) {
+        console.log(context)
     },
     mounted() {},
     methods: {
