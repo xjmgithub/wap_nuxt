@@ -301,6 +301,7 @@ html {
         right: 1rem;
         border-radius: 100%;
         background: linear-gradient(to top, #c8c8c8, #979797);
+        z-index:10;
         div {
             width: 3.6rem;
             height: 3.6rem;
