@@ -33,7 +33,7 @@ export default {
     color: #666666;
     width: 75%;
     background: #ffffff;
-    position: absolute;
+    position: fixed;
     max-height: 22rem;
     top: 50%;
     left: 50%;

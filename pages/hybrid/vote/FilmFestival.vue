@@ -16,7 +16,7 @@
         <div class="leftvote">
             <span>Left vote:{{leftVote}}</span>
         </div>
-        <div class="pit"/>
+        <div class="pit" />
         <template v-for="(item,index) in tabList">
             <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" />
             <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" />
@@ -54,8 +54,8 @@
             <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, </p>
             <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for </p>
             <p>manning the family boda boda to provide for </p>
-            <div v-show="appType==0" class="share-btn" @click="rulesCard=false,shareCard=true">SHARE NOW</div>
-            <div v-show="appType==1" class="download-btn">
+            <div v-show="appType==1" class="share-btn" @click="rulesCard=false,shareCard=true">SHARE NOW</div>
+            <div v-show="appType==0" class="download-btn">
                 <p>DOWNLOAD APP</p>
                 vote for you favourite content
             </div>
@@ -65,7 +65,7 @@
             <p>点击Facebook按钮，调起h5页面Facebook分享流程</p>
             <p>点击Twitter按钮，调起h5页面Twitter分享流程</p>
             <p>点击copy link按钮，复制分享链接至剪贴板，弹出toast：copied</p>
-            <div v-show="appType==0" class="share-way">
+            <div v-show="appType==1" class="share-way">
                 <span><img src="~assets/img/vote/ic_facebook_def.png"></span>
                 <span><img src="~assets/img/vote/ic_copylink_def copy.png"></span>
                 <span><img src="~assets/img/vote/ic_ti_def.png"></span>
@@ -73,6 +73,19 @@
         </mcard>
         <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
             <span>View More</span>
+        </div>
+        <div class="open">
+            <div class="top">
+                <img src="~assets/img/vote/open_top.png">
+                <p>
+                    <span>{{time}}s</span>
+                    <span @click="aboutCard = true">About</span>
+                </p>
+                <div class="btn">JOIN NOW!</div>
+            </div>
+            <div class="bot">
+                <img src="~assets/img/vote/open_bot.png">
+            </div>
         </div>
     </div>
 </template>
@@ -127,7 +140,8 @@ export default {
             clientHeight: 0,
             filmList: [],
             sFilmList: [],
-            mvList: []
+            mvList: [],
+            time: 4
         }
     },
     async asyncData({ app: { $axios }, route, store, req }) {
@@ -156,22 +170,29 @@ export default {
             if (scollTop > 0) {
                 this.showMore = false
             }
-            
+
             const stickyTop = document.querySelector('.wh_content').getBoundingClientRect().bottom
             const h = document.querySelector('.rules').offsetHeight
-            if(stickyTop-h<=0){
+            if (stickyTop - h <= 0) {
                 document.querySelector('.top').classList.add('unfixed')
                 document.querySelector('#nav').classList.add('fixed')
                 document.querySelector('.leftvote').classList.add('fixed')
                 document.querySelector('.pit').classList.add('fixed')
-            }else{
+            } else {
                 document.querySelector('.top').classList.remove('unfixed')
                 document.querySelector('#nav').classList.remove('fixed')
                 document.querySelector('.leftvote').classList.remove('fixed')
                 document.querySelector('.pit').classList.remove('fixed')
             }
-            
         })
+        const timer = setInterval(() => {
+            if (this.time <= 0) {
+                clearInterval(timer)
+                return
+            }
+            this.time--
+        }, 1000)
+
         this.getAllList()
     },
     methods: {
@@ -292,10 +313,10 @@ html {
                 text-decoration: underline;
             }
         }
-        &.unfixed{
+        &.unfixed {
             position: static;
-            .rules{
-                top:0;
+            .rules {
+                top: 0;
                 position: fixed;
                 background: rgba(0, 0, 0);
             }
@@ -339,10 +360,10 @@ html {
                 }
             }
         }
-        &.fixed{
-            position:fixed;
-            top:2rem;
-            width:100%;
+        &.fixed {
+            position: fixed;
+            top: 2rem;
+            width: 100%;
             z-index: 1;
         }
     }
@@ -354,17 +375,17 @@ html {
         font-size: 0.88rem;
         color: #ffffff;
         text-align: right;
-        &.fixed{
+        &.fixed {
             position: fixed;
-            top:4rem;
-            width:100%;
+            top: 4rem;
+            width: 100%;
             z-index: 1;
         }
     }
-    .pit{
-        height:0;
-        &.fixed{
-            height:4rem;
+    .pit {
+        height: 0;
+        &.fixed {
+            height: 4rem;
         }
     }
     .share {
@@ -389,71 +410,117 @@ html {
             border-radius: 100%;
         }
     }
-}
-.card {
-    .share-btn {
-        width: 70%;
-        margin: 0 auto;
-        color: #ffffff;
-        height: 2.5rem;
-        line-height: 2.5rem;
-        background: #bc9525;
+    .card {
+        .share-btn {
+            width: 70%;
+            margin: 0 auto;
+            color: #ffffff;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            background: #bc9525;
+            font-size: 0.8rem;
+            text-align: center;
+            border-radius: 3px;
+        }
+        .download-btn {
+            margin-top: 1rem;
+            text-align: center;
+            color: #979797;
+            font-size: 0.88rem;
+            p {
+                color: #0087eb;
+                margin: 0;
+            }
+        }
+        .share-way {
+            width: 95%;
+            margin: 0 auto;
+            text-align: center;
+            span {
+                display: inline-block;
+                width: 30%;
+                &:nth-child(2) {
+                    margin: 0 2%;
+                }
+                img {
+                    width: 65%;
+                }
+            }
+        }
+    }
+    .more {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        background: linear-gradient(180deg, rgba(78, 78, 78, 0) 0%, rgba(78, 78, 78, 1) 72%, rgba(78, 78, 78, 1) 100%);
+        height: 3.8rem;
+        line-height: 6rem;
         font-size: 0.8rem;
-        text-align: center;
-        border-radius: 3px;
-    }
-    .download-btn {
-        margin-top: 1rem;
-        text-align: center;
-        color: #979797;
-        font-size: 0.88rem;
-        p {
-            color: #0087eb;
-            margin: 0;
-        }
-    }
-    .share-way {
-        width: 95%;
-        margin: 0 auto;
-        text-align: center;
         span {
-            display: inline-block;
-            width: 30%;
-            &:nth-child(2) {
-                margin: 0 2%;
-            }
-            img {
-                width: 65%;
-            }
+            color: white;
+            animation-timing-function: ease-in-out;
+            animation-name: breathe;
+            animation-duration: 1000ms;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+    }
+    @keyframes breathe {
+        0% {
+            opacity: 0.3;
+            text-shadow: 0px 0px 0px;
+        }
+
+        100% {
+            opacity: 1;
+            text-shadow: 0px 0px 10px;
         }
     }
 }
-.more {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    background: linear-gradient(180deg, rgba(78, 78, 78, 0) 0%, rgba(78, 78, 78, 1) 72%, rgba(78, 78, 78, 1) 100%);
-    height: 3.8rem;
-    line-height: 6rem;
-    font-size: 0.8rem;
-    span {
-        color: white;
-        animation-timing-function: ease-in-out;
-        animation-name: breathe;
-        animation-duration: 1000ms;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-    }
-}
-@keyframes breathe {
-    0% {
-        opacity: 0.3;
-        text-shadow: 0px 0px 0px;
-    }
 
-    100% {
-        opacity: 1;
-        text-shadow: 0px 0px 10px;
+.open {
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background: #000000;
+    .top {
+        position: fixed;
+        top: 0;
+        z-index: 1;
+        p {
+            position: fixed;
+            top: 0;
+            padding: 1rem;
+            color: #ffffff;
+            font-weight: bold;
+            width: 100%;
+            span {
+                &:nth-child(2) {
+                    float: right;
+                    text-decoration: underline;
+                }
+            }
+        }
+        .btn {
+            width: 80%;
+            text-align: center;
+            background: #c79e5f;
+            color: #ffffff;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            margin: 0 auto;
+        }
+    }
+    .bot {
+        position: fixed;
+        bottom: 0;
+    }
+    img {
+        width: 100%;
     }
 }
 </style>
