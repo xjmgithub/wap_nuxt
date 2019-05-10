@@ -21,7 +21,12 @@
 export default {
     filters: {
         formatVotes(val) {
-            return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+            if (val <= 100000) {
+                return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+            } else if (val > 100000 && val <= 1000000) {
+                const x = val / 10000
+                return x.toFixed(2) + ' w'
+            }
         }
     },
     props: {
@@ -40,7 +45,7 @@ export default {
                 {
                     filmName: 'Boda Boda thieves',
                     filmAuthor: 'James Tayler&Donal Mugisha',
-                    votes: 1123123
+                    votes: 123123
                 },
                 {
                     filmName: 'Boda Boda thieves',
