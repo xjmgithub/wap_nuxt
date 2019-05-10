@@ -1,7 +1,7 @@
 <template>
     <Swiper v-if="banners.length > 0" :auto-play="true" @changeIndex="changeIndex">
         <Slide v-for="(item,index) in banners" :key="index" @click="clickBanner(item)">
-            <img :src="cdnPicSrc(item.materials)+1">
+            <img :src="cdnPicSrc(item.materials)">
         </Slide>
     </Swiper>
 </template>
