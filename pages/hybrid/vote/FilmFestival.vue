@@ -1,6 +1,6 @@
 <template>
     <div class="page-wrapper">
-        <!-- <mVoteSwiper :vote_id="vote_id" /> -->
+        <mVoteSwiper :banners="banners" :name="'Film Festival Vote'" />
         <div>
             <div class="rules">
                 <span @click="showAbout=true">About</span>
@@ -17,15 +17,23 @@
             <span>Left vote:{{leftVote}}</span>
         </div>
         <template v-for="(item,index) in tabList">
-            <mFilm v-if="item.type=='normal_Film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
-            <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
+            <mFilm v-if="item.type=='normal_Film'" v-show="tabIndex==index" :key="index" :tab_msg="item"/>
+            <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :tab_msg="item"/>
         </template>
-        <div ref="box" class="share" :style="{'left':left, 'top':top}" @mousedown="canMove=true" @touchstart="canMove=true" @mousemove="move" @touchmove="move" @mouseup="canMove = false" @touchend="canMove = false">
-            <div>
-                SHARE
-            </div>
+        <div
+            ref="box"
+            class="share"
+            :style="{'left':left, 'top':top}"
+            @mousedown="canMove=true"
+            @touchstart="canMove=true"
+            @mousemove="move"
+            @touchmove="move"
+            @mouseup="canMove = false"
+            @touchend="canMove = false"
+        >
+            <div>SHARE</div>
         </div>
-        <div v-show="showAbout" class="share-layer" @click="showAbout=false" />
+        <div v-show="showAbout" class="share-layer" @click="showAbout=false"/>
         <div v-show="showAbout" class="about">
             <img src="~assets/img/vote/ic_close.png" class="close" @click="showAbout=false">
             <h4>ABOUT</h4>
@@ -35,16 +43,17 @@
     </div>
 </template>
 <script>
-// import mVoteSwiper from '~/components/vote/vote_swiper'
+import mVoteSwiper from '~/components/vote/vote_swiper'
 import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
 export default {
     layout: 'base',
     components: {
         mFilm,
-        sFilm
+        sFilm,
+        mVoteSwiper
     },
-    
+
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
@@ -68,7 +77,7 @@ export default {
                 }
             ],
             tabIndex: 0,
-            vote_id: 2,
+            vote_id: 8,
             leftVote: 13,
             canMove: false,
             left: '',
@@ -76,10 +85,26 @@ export default {
             showAbout: false
         }
     },
-    asyncData (context) {
-        console.log(context)
+    async asyncData({ app: { $axios }, route, store }) {
+        $axios.setHeader('token', store.state.token)
+        let banners = []
+        try {
+            const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
+            if (data.data.banner) {
+                banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
+            }
+            return {
+                banners: banners.data.data
+            }
+        } catch (e) {
+            return {
+                banners: banners
+            }
+        }
     },
-    mounted() {},
+    mounted() {
+        console.log(this.banners)
+    },
     methods: {
         move(event) {
             if (this.canMove) {
@@ -238,7 +263,7 @@ html {
     left: 0;
     bottom: 0;
     z-index: 1000;
-    background: rgba(0, 0, 0, .3)
+    background: rgba(0, 0, 0, 0.3);
 }
 .about {
     padding: 1rem;
@@ -247,11 +272,11 @@ html {
     width: 80%;
     background: #ffffff;
     position: absolute;
-    height:22rem;
-    top:50%;
-    left:50%;
-    margin-top:-11rem;
-    margin-left:-40%;
+    height: 22rem;
+    top: 50%;
+    left: 50%;
+    margin-top: -11rem;
+    margin-left: -40%;
     h4 {
         font-size: 1rem;
         margin-bottom: 0.4rem;
@@ -260,7 +285,7 @@ html {
     }
     p {
         font-size: 0.88rem;
-        height:10rem;
+        height: 10rem;
         overflow-y: scroll;
     }
     img {

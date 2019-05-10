@@ -1,12 +1,13 @@
 <template>
-    <Swiper v-if="bannerList.length > 0" :auto-play="false">
-        <Slide v-for="(item,index) in bannerList" :key="index" @click="clickBanner(item)">
-            <img :src="cdnPicSrc(item.materials)" alt>
+    <Swiper v-if="banners.length > 0" :auto-play="true" @changeIndex="changeIndex">
+        <Slide v-for="(item,index) in banners" :key="index" @click="clickBanner(item)">
+            <img :src="cdnPicSrc(item.materials)">
         </Slide>
     </Swiper>
 </template>
 <script>
 import { Swiper, Slide } from '~/components/swiper'
+import { toNativePage } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -14,71 +15,52 @@ export default {
         Slide
     },
     props: {
-        voteId: {
-            type: Number,
-            default: 2
+        banners: {
+            type: Array,
+            requred: true,
+            default: () => []
+        },
+        name: {
+            type: String,
+            requred: true,
+            default: ''
         }
     },
-    data() {
-        return {
-            bannerList: []
+    computed: {
+        platform() {
+            if (this.$store.state.appType == 1) {
+                return 'Android'
+            } else if (this.$store.state.appType == 2) {
+                return 'iOS'
+            } else {
+                return 'web'
+            }
         }
     },
     mounted() {
-        this.getVote()
+        this.changeIndex(1)
     },
     methods: {
-        getVote() {
-            this.$axios({
-                url: `/voting/v1/vote?vote_id=${this.vote_id}`,
-                method: 'get',
-                data: {}
-            }).then(res => {
-                if (res.data.code === 0) {
-                    if (res.data.data.banner) {
-                        const bannerUUID = res.data.data.banner
-                        this.getBanner(bannerUUID)
-                    }
-                }
-            })
-        },
-        getBanner(bannerUUID) {
-            this.$axios({
-                url: `/adm/v1/units/${bannerUUID}/materials`,
-                method: 'get',
-                data: {}
-            }).then(res => {
-                if (res.data.code === 0) {
-                    // const shareLink = res.data.data[0].materials
-                    // this.bannerList = res.data.data
-                    // for (let i = 0; i < res.data.data.length; i++) {
-                    //     const bannerName = res.data.data[i].name
-                    //     this.sendEvLog({
-                    //         category: 'vote_Bongostar',
-                    //         action: 'banner_show',
-                    //         label: 'banner_' + bannerName,
-                    //         value: 10
-                    //     })
-                    // }
-                }
-            })
-        },
         clickBanner(banner) {
             const href = banner.link
             const bannerName = banner.name
             this.sendEvLog({
-                category: 'vote_Bongostar',
+                category: `vote_${this.name}_${this.platform}`,
                 action: 'banner_click',
                 label: 'banner_' + bannerName,
-                value: 10
+                value: 1
             })
-            if (href.indexOf('com.star.mobile') === 0) {
-                if (this.appType === 1) {
-                    // TODO 点击banner操作 materials ??
-                    // skip4(3, href, "", INITCONFIG.PLAT);
-                }
-            } else {
-                window.location.href = href
+            toNativePage(href)
+        },
+        changeIndex(index) {
+            if (index <= this.banners.length && index > 0) {
+                const bannerName = this.banners[index - 1].name
+                this.sendEvLog({
+                    category: `vote_${this.name}_${this.platform}`,
+                    action: 'banner_show',
+                    label: 'banner_' + bannerName,
+                    value: 1
+                })
             }
         }
     }
