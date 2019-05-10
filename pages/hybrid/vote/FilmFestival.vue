@@ -71,7 +71,7 @@
             </div>
         </mcard>
         <div v-show="showMore" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
-            view more
+            <span>View More</span>
         </div>
     </div>
 </template>
@@ -368,10 +368,28 @@ html {
     position: absolute;
     width: 100%;
     text-align: center;
-    color: #cccccc;
     background: linear-gradient(180deg, rgba(78, 78, 78, 0) 0%,rgba(78, 78, 78, 1) 72% ,rgba(78, 78, 78, 1) 100%);
-    height: 3.8rem;
-    line-height: 6rem;
-    text-shadow: 1px 2px 0px rgba(255, 255, 255, 0.3);
+    height: 1.5rem;
+    line-height: 1.5rem;
+    font-size:0.8rem;
+    span{
+        color:white;
+        animation-timing-function: ease-in-out;
+        animation-name: breathe;
+        animation-duration: 1000ms;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+    }
+}
+@keyframes breathe {
+    0% {
+        opacity: 0.3;
+        text-shadow: 0px 0px 0px;
+    }
+
+    100% {
+        opacity: 1;
+        text-shadow: 0px 0px 10px;
+    }
 }
 </style>
