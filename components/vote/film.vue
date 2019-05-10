@@ -34,18 +34,8 @@ export default {
             }
         }
     },
-    props: {
-        tabMsg: {
-            type: Object,
-            default: () => {
-                return {}
-            }
-        }
-    },
     data() {
         return {
-            isLogin: this.$store.state.user.type || false,
-            app: this.$store.state.appType,
             filmList: [
                 {
                     filmName: 'Boda Boda thieves',
@@ -75,20 +65,8 @@ export default {
             ]
         }
     },
-    mounted() {
-        // this.getFilmList()
-    },
     methods: {
         handleViceVote(film) {},
-        handleInvite() {},
-        getFilmList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.tabMsg.vote_id}`).then(res => {
-                // this.$nuxt.$loading.finish()
-                if (res.data.code === 0) {
-                    this.filmList = res.data.data
-                }
-            })
-        }
     }
 }
 </script>

@@ -3,8 +3,8 @@
         <!-- <mVoteSwiper :vote_id="vote_id" /> -->
         <div>
             <div class="rules">
-                <span @click="showAbout=true">About</span>
-                <span>Vote Rules</span>
+                <span @click="aboutCard = true">About</span>
+                <span @click="rulesCard = true">Vote Rules</span>
             </div>
         </div>
         <nav id="nav">
@@ -17,32 +17,73 @@
             <span>Left vote:{{leftVote}}</span>
         </div>
         <template v-for="(item,index) in tabList">
-            <mFilm v-if="item.type=='normal_Film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
+            <mFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
             <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
+            <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
         </template>
-        <div ref="box" class="share" :style="{'left':left, 'top':top}" @mousedown="canMove=true" @touchstart="canMove=true" @mousemove="move" @touchmove="move" @mouseup="canMove = false" @touchend="canMove = false">
+        <!-- <div 
+            v-show="appType!=2" 
+            ref="box" 
+            class="share" 
+            :style="{'left':left, 'top':top}" 
+            @click="toShare" 
+            @mousedown="canMove=true" 
+            @touchstart="canMove=true" 
+            @mousemove="move" 
+            @touchmove="move" 
+            @mouseup="canMove = false" 
+            @touchend="canMove = false"
+        > -->
+        <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove="move" @touchend="canMove = false">
             <div>
                 SHARE
             </div>
         </div>
-        <div v-show="showAbout" class="share-layer" @click="showAbout=false" />
-        <div v-show="showAbout" class="about">
-            <img src="~assets/img/vote/ic_close.png" class="close" @click="showAbout=false">
+        <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
             <h4>ABOUT</h4>
             <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for --Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-            <img src="~assets/img/vote/about.png">
-        </div>
+            <img src="~assets/img/vote/about.png" class="poster">
+            <div v-show="appType==0" class="download-btn">
+                <p>DOWNLOAD APP</p>
+                vote for you favourite content
+            </div>
+        </mcard>
+        <mCard v-show="rulesCard" class="card" @closeCard="rulesCard=false">
+            <h4>VOTE RULES</h4>
+            <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, </p>
+            <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for </p>
+            <p>manning the family boda boda to provide for </p>
+            <div v-show="appType==0" class="share-btn" @click="rulesCard=false,shareCard=true">SHARE NOW</div>
+            <div v-show="appType==1" class="download-btn">
+                <p>DOWNLOAD APP</p>
+                vote for you favourite content
+            </div>
+        </mcard>
+        <mCard v-show="shareCard" class="card" @closeCard="shareCard=false">
+            <h4>Tell friends earn vote</h4>
+            <p>点击Facebook按钮，调起h5页面Facebook分享流程</p>
+            <p>点击Twitter按钮，调起h5页面Twitter分享流程</p>
+            <p>点击copy link按钮，复制分享链接至剪贴板，弹出toast：copied</p>
+            <div v-show="appType==0" class="share-way">
+                <span><img src="~assets/img/vote/ic_facebook_def.png"></span>
+                <span><img src="~assets/img/vote/ic_copylink_def copy.png"></span>
+                <span><img src="~assets/img/vote/ic_ti_def.png"></span>
+            </div>
+        </mcard>
     </div>
 </template>
 <script>
 // import mVoteSwiper from '~/components/vote/vote_swiper'
 import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
+import mCard from '~/components/vote/card'
+import { shareInvite } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
         mFilm,
-        sFilm
+        sFilm,
+        mCard
     },
     data() {
         return {
@@ -51,7 +92,7 @@ export default {
             tabList: [
                 {
                     name: 'Film',
-                    type: 'normal_Film',
+                    type: 'film',
                     vote_id: 2,
                     main_vote: true
                 },
@@ -62,7 +103,7 @@ export default {
                 },
                 {
                     name: 'MV',
-                    type: 'normal_Film',
+                    type: 'mv',
                     vote_id: 3
                 }
             ],
@@ -72,11 +113,26 @@ export default {
             canMove: false,
             left: '',
             top: '',
-            showAbout: false
+            aboutCard: false,
+            rulesCard: false,
+            shareCard: false
         }
     },
     mounted() {},
     methods: {
+        toShare() {
+            if (this.appType === 1) {
+                process.client &&
+                    shareInvite(
+                        window.location.href,
+                        'Film Festival Vote',
+                        'Vote & Win Big Prizes',
+                        window.location.origin + '/res_nuxt/img/mrshare.jpg',
+                        'Film Festival Vote'
+                    )
+            } else if (this.appType === 0) {
+            }
+        },
         move(event) {
             if (this.canMove) {
                 let e
@@ -226,48 +282,41 @@ html {
         }
     }
 }
-.share-layer {
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    z-index: 1000;
-    background: rgba(0, 0, 0, .3)
-}
-.about {
-    padding: 1rem;
-    z-index: 1001;
-    color: #666666;
-    width: 80%;
-    background: #ffffff;
-    position: absolute;
-    height:22rem;
-    top:50%;
-    left:50%;
-    margin-top:-11rem;
-    margin-left:-40%;
-    h4 {
-        font-size: 1rem;
-        margin-bottom: 0.4rem;
-        margin-top: 0;
+.card {
+    .share-btn {
+        width: 70%;
+        margin: 0 auto;
+        color: #ffffff;
+        height: 2.5rem;
+        line-height: 2.5rem;
+        background: #bc9525;
+        font-size: 0.8rem;
         text-align: center;
+        border-radius: 3px;
     }
-    p {
+    .download-btn {
+        margin-top: 1rem;
+        text-align: center;
+        color: #979797;
         font-size: 0.88rem;
-        height:10rem;
-        overflow-y: scroll;
+        p {
+            color: #0087eb;
+            margin: 0;
+        }
     }
-    img {
-        width: 100%;
-        margin-top: 0.8rem;
-        &.close {
-            width: 1.5rem;
-            position: absolute;
-            right: 0.4rem;
-            top: 0;
-            margin-top: 0.4rem;
+    .share-way {
+        width: 95%;
+        margin: 0 auto;
+        text-align: center;
+        span {
+            display: inline-block;
+            width: 30%;
+            &:nth-child(2) {
+                margin: 0 2%;
+            }
+            img {
+                width: 65%;
+            }
         }
     }
 }
