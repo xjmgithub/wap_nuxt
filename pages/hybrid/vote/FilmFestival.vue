@@ -175,7 +175,7 @@ export default {
                 }
                 if (y <= dh && y >= 0) {
                     this.top = y + 'px'
-                } else if (x > dh) {
+                } else if (y > dh) {
                     this.top = dh + 'px'
                 } else if (y < 0) {
                     this.top = 0
