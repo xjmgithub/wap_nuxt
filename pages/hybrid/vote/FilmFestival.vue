@@ -16,6 +16,7 @@
         <div class="leftvote">
             <span>Left vote:{{leftVote}}</span>
         </div>
+        <div class="pit"/>
         <template v-for="(item,index) in tabList">
             <mFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
             <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :tab_msg="item" />
@@ -151,6 +152,21 @@ export default {
             if (scollTop > 0) {
                 this.showMore = false
             }
+            
+            const stickyTop = document.querySelector('.wh_content').getBoundingClientRect().bottom
+            const h = document.querySelector('.rules').offsetHeight
+            if(stickyTop-h<=0){
+                document.querySelector('.top').classList.add('unfixed')
+                document.querySelector('#nav').classList.add('fixed')
+                document.querySelector('.leftvote').classList.add('fixed')
+                document.querySelector('.pit').classList.add('fixed')
+            }else{
+                document.querySelector('.top').classList.remove('unfixed')
+                document.querySelector('#nav').classList.remove('fixed')
+                document.querySelector('.leftvote').classList.remove('fixed')
+                document.querySelector('.pit').classList.remove('fixed')
+            }
+            
         })
     },
     methods: {
@@ -254,6 +270,14 @@ html {
                 text-decoration: underline;
             }
         }
+        &.unfixed{
+            position: static;
+            .rules{
+                top:0;
+                position: fixed;
+                background: rgba(0, 0, 0);
+            }
+        }
     }
     #nav {
         height: 2rem;
@@ -293,6 +317,12 @@ html {
                 }
             }
         }
+        &.fixed{
+            position:fixed;
+            top:2rem;
+            width:100%;
+            z-index: 1;
+        }
     }
     .leftvote {
         padding-right: 0.8rem;
@@ -302,6 +332,18 @@ html {
         font-size: 0.88rem;
         color: #ffffff;
         text-align: right;
+        &.fixed{
+            position: fixed;
+            top:4rem;
+            width:100%;
+            z-index: 1;
+        }
+    }
+    .pit{
+        height:0;
+        &.fixed{
+            height:4rem;
+        }
     }
     .share {
         width: 4rem;
