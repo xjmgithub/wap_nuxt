@@ -66,3 +66,24 @@ export default {
     }
 }
 </script>
+<style lang="less" scoped>
+img {
+    position: relative;
+}
+img::before {
+    content: '';
+    display: inline-block;
+    padding-bottom: 56%;
+    width: 0.1px;
+    vertical-align: middle;
+}
+img::after {
+    content: '';
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url('~assets/img/ic_show_def_g.png') #686b6e no-repeat center;
+}
+</style>

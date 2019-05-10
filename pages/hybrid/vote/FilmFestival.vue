@@ -34,7 +34,7 @@
             @mouseup="canMove = false" 
             @touchend="canMove = false"
         > -->
-        <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove="move" @touchend="canMove = false">
+        <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
             <div>
                 SHARE
             </div>
