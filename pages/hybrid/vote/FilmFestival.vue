@@ -1,7 +1,7 @@
 <template>
     <div class="page-wrapper">
-        <mVoteSwiper :banners="banners" :name="'Film Festival Vote'" />
         <div>
+            <mVoteSwiper :banners="banners" :name="'Film Festival Vote'" />
             <div class="rules">
                 <span @click="aboutCard = true">About</span>
                 <span @click="rulesCard = true">Vote Rules</span>
