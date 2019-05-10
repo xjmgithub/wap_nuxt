@@ -1,6 +1,6 @@
 <template>
     <div class="page-wrapper">
-        <div>
+        <div class="top">
             <mVoteSwiper :banners="banners" :name="'Film Festival Vote'" />
             <div class="rules">
                 <span @click="aboutCard = true">About</span>
@@ -220,17 +220,25 @@ html {
             background-color: #4e4e4e;
         }
     }
-    .rules {
-        height: 2rem;
-        line-height: 2rem;
-        background: linear-gradient(360deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
-        font-size: 0.88rem;
-        color: #ffffff;
-        span {
-            display: inline-block;
-            text-align: center;
-            width: 33%;
-            text-decoration: underline;
+    .top {
+        position: relative;
+        .rules {
+            height: 2rem;
+            line-height: 2rem;
+            background: linear-gradient(360deg, rgba(0, 0, 0), rgba(0, 0, 0, 0.1));
+            font-size: 0.88rem;
+            color: #ffffff;
+            position: absolute;
+            left:0;
+            bottom:0;
+            z-index:10;
+            width:100%;
+            span {
+                display: inline-block;
+                text-align: center;
+                width: 33%;
+                text-decoration: underline;
+            }
         }
     }
     #nav {
