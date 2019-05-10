@@ -70,6 +70,9 @@
                 <span><img src="~assets/img/vote/ic_ti_def.png"></span>
             </div>
         </mcard>
+        <div v-show="showMore" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
+            view more
+        </div>
     </div>
 </template>
 <script>
@@ -117,7 +120,9 @@ export default {
             top: '',
             aboutCard: false,
             rulesCard: false,
-            shareCard: false
+            shareCard: false,
+            showMore: true,
+            clientHeight: 0
         }
     },
     async asyncData({ app: { $axios }, route, store }) {
@@ -138,9 +143,16 @@ export default {
         }
     },
     mounted() {
-        console.log(this.banners)
+        this.clientHeight = document.body.clientHeight
+        document.addEventListener('scroll', () => {
+            const scollTop = document.body.scrollTop || document.documentElement.scrollTop
+            if (scollTop > 0) {
+                this.showMore = false
+            }
+        })
     },
     methods: {
+        loadMore() {},
         toShare() {
             if (this.appType === 1) {
                 process.client &&
@@ -229,10 +241,10 @@ html {
             font-size: 0.88rem;
             color: #ffffff;
             position: absolute;
-            left:0;
-            bottom:0;
-            z-index:10;
-            width:100%;
+            left: 0;
+            bottom: 0;
+            z-index: 10;
+            width: 100%;
             span {
                 display: inline-block;
                 text-align: center;
@@ -301,7 +313,7 @@ html {
         right: 1rem;
         border-radius: 100%;
         background: linear-gradient(to top, #c8c8c8, #979797);
-        z-index:10;
+        z-index: 10;
         div {
             width: 3.6rem;
             height: 3.6rem;
@@ -349,5 +361,15 @@ html {
             }
         }
     }
+}
+.more {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: #cccccc;
+    background: linear-gradient(180deg, rgba(78, 78, 78, 0) 0%,rgba(78, 78, 78, 1) 72% ,rgba(78, 78, 78, 1) 100%);
+    height: 3.8rem;
+    line-height: 6rem;
+    text-shadow: 1px 2px 0px rgba(255, 255, 255, 0.3);
 }
 </style>
