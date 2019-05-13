@@ -1,7 +1,6 @@
 <template>
     <div>
         <div id="box" ref="box" :style="{'left':left, 'top':top}" @touchstart="down" @mousedown="down" @touchmove="move" @mousemove="move" @touchend="up" @mouseup="up" />
-        <div class="open-layer" />
         <div class="open">
             <div class="top">
                 <img src="~assets/img/vote/open_top.png">
@@ -91,62 +90,15 @@ body {
     height: 100px;
     background: red;
 }
-.open1 {
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    background: #000000;
-    z-index: 100;
-    .top {
-        position: fixed;
-        top: 0;
-        z-index: 101;
-        p {
-            position: fixed;
-            top: 0;
-            padding: 1rem;
-            color: #ffffff;
-            font-weight: bold;
-            width: 100%;
-            span {
-                &:nth-child(2) {
-                    float: right;
-                    text-decoration: underline;
-                }
-            }
-        }
-        .btn {
-            width: 80%;
-            text-align: center;
-            background: #c79e5f;
-            color: #ffffff;
-            height: 2.5rem;
-            line-height: 2.5rem;
-            margin: 0 auto;
-        }
-    }
-    .bot {
-        position: fixed;
-        bottom: 0;
-    }
-    img {
-        width: 100%;
-    }
-}
-.open-layer {
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    background: #000000;
-}
 .open {
-    z-index: 1001;
+    z-index: 11;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background: #000000;
     .top {
         position: fixed;
         top: 0;

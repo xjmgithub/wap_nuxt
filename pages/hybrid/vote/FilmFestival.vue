@@ -1,10 +1,11 @@
 <template>
     <div class="page-wrapper">
+        <download class="clearfix filmload" />
         <div class="top">
             <mVoteSwiper :banners="banners" :name="'Film Festival Vote'" />
             <div class="rules">
-                <span @click="aboutCard = true">About</span>
-                <span @click="rulesCard = true">Vote Rules</span>
+                <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
+                <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
             </div>
         </div>
         <nav id="nav">
@@ -14,7 +15,7 @@
             </a>
         </nav>
         <div class="leftvote">
-            <span>Left vote:{{leftVote}}</span>
+            <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
         </div>
         <div class="pit" />
         <template v-for="(item,index) in tabList">
@@ -22,49 +23,34 @@
             <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" />
             <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" />
         </template>
-        <!-- <div 
-            v-show="appType!=2" 
-            ref="box" 
-            class="share" 
-            :style="{'left':left, 'top':top}" 
-            @click="toShare" 
-            @mousedown="canMove=true" 
-            @touchstart="canMove=true" 
-            @mousemove="move" 
-            @touchmove="move" 
-            @mouseup="canMove = false" 
-            @touchend="canMove = false"
-        > -->
         <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
             <div>
-                SHARE
+                {{$store.state.lang.vote_share}}
             </div>
         </div>
         <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
-            <h4>ABOUT</h4>
+            <h4>{{$store.state.lang.vote_about}}</h4>
             <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for --Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
             <img src="~assets/img/vote/about.png" class="poster">
             <div v-show="appType==0" class="download-btn">
-                <p>DOWNLOAD APP</p>
-                vote for you favourite content
+                <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                {{$store.state.lang.vote_downloadbtn_tips}}
             </div>
         </mcard>
         <mCard v-show="rulesCard" class="card" @closeCard="rulesCard=false">
-            <h4>VOTE RULES</h4>
+            <h4>{{$store.state.lang.vote_voterules}}</h4>
             <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, </p>
             <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for </p>
             <p>manning the family boda boda to provide for </p>
-            <div v-show="appType==1" class="share-btn" @click="rulesCard=false,shareCard=true">SHARE NOW</div>
+            <div v-show="appType==1" class="share-btn" @click="rulesCard=false,shareCard=true">{{$store.state.lang.vote_sharebtn}}</div>
             <div v-show="appType==0" class="download-btn">
-                <p>DOWNLOAD APP</p>
-                vote for you favourite content
+                <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                {{$store.state.lang.vote_downloadbtn_tips}}
             </div>
         </mcard>
         <mCard v-show="shareCard" class="card" @closeCard="shareCard=false">
-            <h4>Tell friends earn vote</h4>
-            <p>点击Facebook按钮，调起h5页面Facebook分享流程</p>
-            <p>点击Twitter按钮，调起h5页面Twitter分享流程</p>
-            <p>点击copy link按钮，复制分享链接至剪贴板，弹出toast：copied</p>
+            <h4>{{$store.state.lang.vote_earnvote_tt}}</h4>
+            <p>{{$store.state.lang.vote_appshare_words}}</p>
             <div v-show="appType==1" class="share-way">
                 <span><img src="~assets/img/vote/ic_facebook_def.png"></span>
                 <span><img src="~assets/img/vote/ic_copylink_def copy.png"></span>
@@ -72,16 +58,16 @@
             </div>
         </mcard>
         <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
-            <span>View More</span>
+            <span>{{$store.state.lang.vote_view_more}}</span>
         </div>
-        <div class="open">
+        <div class="open" :class="{showd:openPicShowd}">
             <div class="top">
                 <img src="~assets/img/vote/open_top.png">
                 <p>
                     <span>{{time}}s</span>
-                    <span @click="aboutCard = true">About</span>
+                    <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                 </p>
-                <div class="btn">JOIN NOW!</div>
+                <div class="btn">{{$store.state.lang.vote_join_now}}</div>
             </div>
             <div class="bot">
                 <img src="~assets/img/vote/open_bot.png">
@@ -94,7 +80,8 @@ import mVoteSwiper from '~/components/vote/vote_swiper'
 import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
-import { shareInvite } from '~/functions/utils'
+import { shareInvite, setCookie, getCookie } from '~/functions/utils'
+import download from '~/components/vote/download'
 
 export default {
     layout: 'base',
@@ -102,7 +89,8 @@ export default {
         mFilm,
         sFilm,
         mVoteSwiper,
-        mCard
+        mCard,
+        download
     },
 
     data() {
@@ -111,18 +99,18 @@ export default {
             appType: this.$store.state.appType || 0,
             tabList: [
                 {
-                    name: 'Film',
+                    name: this.$store.state.lang.vote_tab_film,
                     type: 'film',
                     vote_id: 2,
                     main_vote: true
                 },
                 {
-                    name: 'Short Film',
+                    name: this.$store.state.lang.vote_tab_shortfilm,
                     type: 'short_film',
                     vote_id: 2
                 },
                 {
-                    name: 'MV',
+                    name: this.$store.state.lang.vote_tab_mv,
                     type: 'mv',
                     vote_id: 3
                 }
@@ -141,7 +129,8 @@ export default {
             filmList: [],
             sFilmList: [],
             mvList: [],
-            time: 4
+            time: 4,
+            openPicShowd: false
         }
     },
     async asyncData({ app: { $axios }, route, store, req }) {
@@ -163,8 +152,10 @@ export default {
             }
         }
     },
+
     mounted() {
         this.clientHeight = document.body.clientHeight
+        this.openPicShowd = getCookie('vote_screen_8')
         document.addEventListener('scroll', () => {
             const scollTop = document.body.scrollTop || document.documentElement.scrollTop
             if (scollTop > 0) {
@@ -173,7 +164,8 @@ export default {
 
             const stickyTop = document.querySelector('.wh_content').getBoundingClientRect().bottom
             const h = document.querySelector('.rules').offsetHeight
-            if (stickyTop - h <= 0) {
+            const dh = document.querySelector('.filmload').offsetHeight
+            if (stickyTop - dh - h <= 0) {
                 document.querySelector('.top').classList.add('unfixed')
                 document.querySelector('#nav').classList.add('fixed')
                 document.querySelector('.leftvote').classList.add('fixed')
@@ -188,6 +180,8 @@ export default {
         const timer = setInterval(() => {
             if (this.time <= 0) {
                 clearInterval(timer)
+                setCookie('vote_screen_8', true)
+                this.openPicShowd = true
                 return
             }
             this.time--
@@ -278,7 +272,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
 html {
     font-size: 20px;
@@ -293,8 +287,14 @@ html {
             background-color: #4e4e4e;
         }
     }
+    .filmload {
+        // position: static;
+        top: 0;
+        z-index: 2;
+    }
     .top {
         position: relative;
+        margin-top: 4rem;
         .rules {
             height: 2rem;
             line-height: 2rem;
@@ -316,7 +316,8 @@ html {
         &.unfixed {
             position: static;
             .rules {
-                top: 0;
+                // top: 0;
+                top: 4rem;
                 position: fixed;
                 background: rgba(0, 0, 0);
             }
@@ -362,7 +363,8 @@ html {
         }
         &.fixed {
             position: fixed;
-            top: 2rem;
+            // top: 2rem;
+            top: 6rem;
             width: 100%;
             z-index: 1;
         }
@@ -377,7 +379,8 @@ html {
         text-align: right;
         &.fixed {
             position: fixed;
-            top: 4rem;
+            // top: 4rem;
+            top: 8rem;
             width: 100%;
             z-index: 1;
         }
@@ -487,6 +490,9 @@ html {
     left: 0;
     bottom: 0;
     background: #000000;
+    &.showd {
+        display: none;
+    }
     .top {
         position: fixed;
         top: 0;
