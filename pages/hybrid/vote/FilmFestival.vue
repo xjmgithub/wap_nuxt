@@ -31,8 +31,7 @@
         <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
             <h4>{{$store.state.lang.vote_about}}</h4>
             <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for --Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-            <img src="~assets/img/vote/about.png" class="poster">
-            <div v-show="appType==0" class="download-btn">
+            <div v-show="appType==0" class="download-btn" @click="download">
                 <p>{{$store.state.lang.vote_downloadbtn}}</p>
                 {{$store.state.lang.vote_downloadbtn_tips}}
             </div>
@@ -42,8 +41,8 @@
             <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, </p>
             <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for </p>
             <p>manning the family boda boda to provide for </p>
-            <div v-show="appType==1" class="share-btn" @click="rulesCard=false,shareCard=true">{{$store.state.lang.vote_sharebtn}}</div>
-            <div v-show="appType==0" class="download-btn">
+            <div v-show="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
+            <div v-show="appType==0" class="download-btn" @click="download">
                 <p>{{$store.state.lang.vote_downloadbtn}}</p>
                 {{$store.state.lang.vote_downloadbtn_tips}}
             </div>
@@ -51,7 +50,7 @@
         <mCard v-show="shareCard" class="card" @closeCard="shareCard=false">
             <h4>{{$store.state.lang.vote_earnvote_tt}}</h4>
             <p>{{$store.state.lang.vote_appshare_words}}</p>
-            <div v-show="appType==1" class="share-way">
+            <div class="share-way">
                 <span><img src="~assets/img/vote/ic_facebook_def.png"></span>
                 <span><img src="~assets/img/vote/ic_copylink_def copy.png"></span>
                 <span><img src="~assets/img/vote/ic_ti_def.png"></span>
@@ -65,9 +64,9 @@
                 <img src="~assets/img/vote/open_top.png">
                 <p>
                     <span>{{time}}s</span>
-                    <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
+                    <span @click="setVoteScreen('about')">{{$store.state.lang.vote_about}}</span>
                 </p>
-                <div class="btn">{{$store.state.lang.vote_join_now}}</div>
+                <div class="btn" @click="setVoteScreen">{{$store.state.lang.vote_join_now}}</div>
             </div>
             <div class="bot">
                 <img src="~assets/img/vote/open_bot.png">
@@ -180,8 +179,7 @@ export default {
         const timer = setInterval(() => {
             if (this.time <= 0) {
                 clearInterval(timer)
-                setCookie('vote_screen_8', true)
-                this.openPicShowd = true
+                this.setVoteScreen()
                 return
             }
             this.time--
@@ -190,7 +188,20 @@ export default {
         this.getAllList()
     },
     methods: {
+        download() {
+            // TODO download
+            this.rulesCard = false
+            this.aboutCard = false
+            this.$confirm(this.$store.state.lang.vote_apk, () => {}, () => {}, this.$store.state.lang.vote_ok, this.$store.state.lang.vote_cancel)
+        },
         loadMore() {},
+        setVoteScreen(type) {
+            if(type==='about'){
+                this.aboutCard = true
+            }
+            setCookie('vote_screen_8', true)
+            this.openPicShowd = true
+        },
         // 获取投票单元数据
         getAllList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {
@@ -219,6 +230,8 @@ export default {
                         'Film Festival Vote'
                     )
             } else if (this.appType === 0) {
+                this.rulesCard = false
+                this.shareCard = true
             }
         },
         move(event) {
