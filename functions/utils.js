@@ -318,7 +318,9 @@ export const playVodinApp = function(appType, vod) {
     } else if (appType == 2) {
         window.location.href = 'startimes://player?vodId=' + vod
     } else {
-        downApp()
+        callApp('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
+            downloadApk()
+        })
     }
 }
 
@@ -382,7 +384,7 @@ export const initDB = function() {
     })
 }
 
-export const downloadApk = function() {
+export const downloadApk = function(callback) {
     const voteDownTag = getCookie('vote_share_down')
     const user = getCookie('vote_share_user')
     if (voteDownTag && voteDownTag != -1) {
@@ -420,6 +422,8 @@ export const downloadApk = function() {
         .catch(() => {
             this.$alert('Download error.Please retry.')
         })
+
+    if (callback) callback()
 }
 
 export const callApp = function(page, failback) {
@@ -443,46 +447,6 @@ export const callApp = function(page, failback) {
         path: path,
         callback() {
             if (failback) failback()
-        }
-    })
-}
-
-export const downApp = function() {
-    let scheme = 'starvideo'
-    let failback = ''
-    const _this = this
-    const ua = navigator.userAgent.toLowerCase()
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-        failback = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-    }
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-    callLib.open({
-        path: 'platformapi/webtoapp',
-        callback() {
-            if (failback) {
-                window.location.href = failback
-            } else {
-                _this.$axios.get('/cms/public/app').then(res => {
-                    _this.sendEvLog({
-                        category: document.title,
-                        action: 'install_activated',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
-                    let url = res.data.apkUrl
-                    if (url) {
-                        if (url.indexOf('google') > 0) {
-                            url = url.replace('google', 'officialWap')
-                        }
-                        window.location.href = url
-                    }
-                })
-            }
         }
     })
 }
@@ -586,20 +550,13 @@ export const normalToAppStore = function(page, pos) {
             if (appType == 2) {
                 window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
             } else {
-                _this.$axios.get('/cms/public/app').then(res => {
+                downloadApk(() => {
                     _this.sendEvLog({
                         category: document.title,
                         action: 'install_activated',
                         label: UAType() + '_' + (pos || 1),
                         value: 1
                     })
-                    let url = res.data.apkUrl
-                    if (url) {
-                        if (url.indexOf('google') > 0) {
-                            url = url.replace('google', 'officialWap')
-                        }
-                        window.location.href = url
-                    }
                 })
             }
         }
