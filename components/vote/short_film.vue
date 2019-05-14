@@ -11,7 +11,8 @@
                     <p class="film-author">{{item.brief}}</p>
                     <p class="film-des">{{item.description}}</p>
                     <span class="votes">{{item.ballot_num | formatVotes}}</span>
-                    <span class="vote-btn">VOTE</span>
+                    <span v-if="item.user_ballot_num>0" class="vote-btn" @click="handleViceVote(item)">VOTED</span>
+                    <span v-else class="vote-btn" @click="handleViceVote(item)">VOTE</span>
                 </div>
             </li>
         </ul>
@@ -43,7 +44,9 @@ export default {
         }
     },
     methods: {
-        handleViceVote(film) {}
+        handleViceVote(item) {
+            this.$emit('onVote', item)
+        }
     }
 }
 </script>
