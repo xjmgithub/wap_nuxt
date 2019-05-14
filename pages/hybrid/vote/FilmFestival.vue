@@ -143,25 +143,25 @@ export default {
             if (data.data.banner) {
                 banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
             }
-            // const { res } = await $axios({
-            //     url: `/voting/v1/ticket/sign-in`,
-            //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            //     method: 'POST',
-            //     data: qs.stringify({
-            //         vote_id: 8
-            //     })
-            // })
+            const leftVote = await $axios({
+                url: `/voting/v1/ticket/sign-in`,
+                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                method: 'POST',
+                data: qs.stringify({
+                    vote_id: 8
+                })
+            })
 
             return {
-                banners: [] || banners.data.data,
-                vote_sign: req.headers.vote_sign
-                // leftVote: res.data.data
+                banners: banners.data.data || [],
+                vote_sign: req.headers.vote_sign,
+                leftVote: leftVote.data.data || 0
             }
         } catch (e) {
             return {
-                banners: [] || banners,
-                vote_sign: req.headers.vote_sign
-                // leftVote: 0
+                banners: banners || [],
+                vote_sign: req.headers.vote_sign,
+                leftVote: 0
             }
         }
     },
@@ -170,27 +170,39 @@ export default {
         this.clientHeight = document.body.clientHeight
         this.openPicShowd = getCookie('vote_screen_8')
         this.mounted = true
+
         document.addEventListener('scroll', () => {
             const scollTop = document.body.scrollTop || document.documentElement.scrollTop
             if (scollTop > 0) {
                 this.showMore = false
             }
-
-            const stickyTop = document.querySelector('.wh_content').getBoundingClientRect().bottom
-            const h = document.querySelector('.rules').offsetHeight
-            const dh = document.querySelector('.filmload').offsetHeight
-            if (stickyTop - dh - h <= 0) {
+            const bannerContain = document.querySelector('.wh_content')
+            if (bannerContain) {
+                const stickyTop = bannerContain.getBoundingClientRect().bottom
+                const h = document.querySelector('.rules').offsetHeight
+                const dh = document.querySelector('.filmload').offsetHeight
+                if (stickyTop - dh - h <= 0) {
+                    document.querySelector('.top').classList.add('unfixed')
+                    document.querySelector('#nav').classList.add('fixed')
+                    document.querySelector('.leftvote').classList.add('fixed')
+                    document.querySelector('.pit').classList.add('fixed')
+                } else {
+                    document.querySelector('.top').classList.remove('unfixed')
+                    document.querySelector('#nav').classList.remove('fixed')
+                    document.querySelector('.leftvote').classList.remove('fixed')
+                    document.querySelector('.pit').classList.remove('fixed')
+                }
+            }
+        })
+        if (this.banners.length <= 0) {
+            this.$nextTick(() => {
                 document.querySelector('.top').classList.add('unfixed')
                 document.querySelector('#nav').classList.add('fixed')
                 document.querySelector('.leftvote').classList.add('fixed')
                 document.querySelector('.pit').classList.add('fixed')
-            } else {
-                document.querySelector('.top').classList.remove('unfixed')
-                document.querySelector('#nav').classList.remove('fixed')
-                document.querySelector('.leftvote').classList.remove('fixed')
-                document.querySelector('.pit').classList.remove('fixed')
-            }
-        })
+            })
+        }
+
         const timer = setInterval(() => {
             if (this.time <= 0) {
                 clearInterval(timer)
@@ -375,7 +387,6 @@ html {
     }
     .top {
         position: relative;
-        margin-top: 4rem;
         min-height: 2rem;
         .rules {
             height: 2rem;
