@@ -2,9 +2,9 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download v-if="!appType" class="clearfix filmload" @onload="loadConfirm"/>
+            <download v-if="!appType" class="clearfix filmload" @onload="loadConfirm" />
             <div class="top" :class="{mtop:!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'"/>
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'" />
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                     <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
@@ -19,31 +19,20 @@
             <div v-if="appType" class="leftvote">
                 <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
             </div>
-            <div class="pit"/>
+            <div class="pit" />
             <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote"/>
-                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote"/>
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote"/>
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" />
+                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote" />
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" />
             </template>
-            <div
-                v-show="appType!=2"
-                ref="box"
-                class="share"
-                :style="{'left':left, 'top':top}"
-                @click="toShare"
-                @touchstart="canMove=true"
-                @touchmove.prevent="move"
-                @touchend="canMove = false"
-            >
+            <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
                 <div>{{$store.state.lang.vote_share}}</div>
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
                     <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old</p>
                     <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-                    <img
-                        src="https://s3-eu-west-1.amazonaws.com/tenbreportal/cms_back/html/files/img/group1/M00/04/C5/wKggGVtxpsqAXvq1AAJLZ725Yeo216.JPG"
-                    >
+                    <img src="https://s3-eu-west-1.amazonaws.com/tenbreportal/cms_back/html/files/img/group1/M00/04/C5/wKggGVtxpsqAXvq1AAJLZ725Yeo216.JPG">
                     <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
@@ -82,6 +71,10 @@
                         <span @click="shareWithTwitter">
                             <img src="~assets/img/vote/ic_ti_def.png">
                         </span>
+                    </div>
+                    <div v-if="appType==0" class="download-btn" @click="loadConfirm">
+                        <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                        {{$store.state.lang.vote_downloadbtn_tips}}
                     </div>
                 </template>
             </mCard>
