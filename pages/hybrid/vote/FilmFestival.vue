@@ -330,7 +330,6 @@ html {
     }
     .top {
         position: relative;
-        margin-top: 4rem;
         min-height: 2rem;
         .rules {
             height: 2rem;
