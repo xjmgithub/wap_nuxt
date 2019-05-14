@@ -2,9 +2,9 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download class="clearfix filmload"/>
-            <div class="top">
-                <mVoteSwiper :banners="banners" :name="'Film Festival Vote'"/>
+            <download v-if="!appType" class="clearfix filmload"/>
+            <div class="top" :class="{mtop:!appType}">
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'"/>
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                     <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
@@ -97,7 +97,7 @@ import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
 import { shareInvite, setCookie, getCookie } from '~/functions/utils'
 import download from '~/components/vote/download'
-// import qs from 'qs'
+import qs from 'qs'
 export default {
     layout: 'base',
     components: {
@@ -151,25 +151,25 @@ export default {
             if (data.data.banner) {
                 banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
             }
-            // const { res } = await $axios({
-            //     url: `/voting/v1/ticket/sign-in`,
-            //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            //     method: 'POST',
-            //     data: qs.stringify({
-            //         vote_id: 8
-            //     })
-            // })
+            const { res } = await $axios({
+                url: `/voting/v1/ticket/sign-in`,
+                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                method: 'POST',
+                data: qs.stringify({
+                    vote_id: 8
+                })
+            })
 
             return {
                 banners: banners.data.data,
-                vote_sign: req.headers.vote_sign
-                // leftVote: res.data.data
+                vote_sign: req.headers.vote_sign,
+                leftVote: res.data.data
             }
         } catch (e) {
             return {
                 banners: banners,
-                vote_sign: req.headers.vote_sign
-                // leftVote: 0
+                vote_sign: req.headers.vote_sign,
+                leftVote: 0
             }
         }
     },
@@ -312,6 +312,9 @@ html {
         // position: static;
         top: 0;
         z-index: 11;
+    }
+    .mtop {
+        margin-top: 4rem;
     }
     .top {
         position: relative;

@@ -356,7 +356,6 @@ export const downApp = function() {
                         }
                         window.location.href = url
                     }
-                    
                 })
             }
         }
@@ -471,7 +470,7 @@ export const animateCSS = function(element, animationName, callback) {
 export const cdnPicSrc = function(src) {
     if (src) {
         const app = (this.$store && this.$store.state.appType) || 0
-        if (app <= 0 || (window && window.indexedDB)) {
+        if (app <= 0) {
             return src.replace('http:', 'https:')
         } else {
             return src
