@@ -315,7 +315,7 @@ export default {
             this.$confirm(this.$store.state.lang.vote_apk, () => {}, () => {}, this.$store.state.lang.vote_ok, this.$store.state.lang.vote_cancel)
         },
         loadMore() {
-            window.scrollBy(0,document.body.clientHeight) // 想下滚动一屏
+            window.scrollBy(0, document.body.clientHeight) // 想下滚动一屏
         },
         setVoteScreen(type) {
             if (type === 'about') {
@@ -326,11 +326,11 @@ export default {
         },
         // 获取投票单元数据
         getAllList() {
-            this.filmList = []
-            this.sFilmList = []
-            this.mvList = []
             this.$axios.get(`/voting/v1/candidates-show?vote_id=8`).then(res => {
                 if (res.data.data.length > 0) {
+                    this.filmList = []
+                    this.sFilmList = []
+                    this.mvList = []
                     const data = res.data.data
                     data.forEach(ele => {
                         if (ele.type === 'FILM') {
