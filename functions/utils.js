@@ -51,7 +51,6 @@ export const updateWalletConf = (v, account, callback) => {
 
 export const toNativePage = page => {
     if (page.indexOf('com.star.mobile.video') >= 0) {
-        // TODO toAppPage 参数确定
         window.getChannelId && window.getChannelId.toAppPage(3, page, '')
     } else {
         window.location.href = page
@@ -134,26 +133,6 @@ export const initGoogleLogin = (elm, callback) => {
     }
 }
 
-export const downloadApk = app => {
-    app.$axios
-        .get('/cms/public/app')
-        .then(res => {
-            let url = res.data.apkUrl
-            if (url) {
-                if (url.indexOf('google') > 0) {
-                    url = url.replace('google', 'officialWap')
-                }
-
-                window.location.href = url
-            } else {
-                this.$alert('Download error.Please retry.')
-            }
-        })
-        .catch(() => {
-            this.$alert('Download error.Please retry.')
-        })
-}
-
 export const login = (v, opt) => {
     v.$axios.post('/ums/v3/user/login', opt).then(res => {
         res.data.code !== 0 && v.$alert(res.data.message)
@@ -210,6 +189,7 @@ export const formatTime = val => {
         return hour + ':' + min + ':' + sec
     }
 }
+
 // client 端使用
 export const parseUA = (isApp, appversion) => {
     let dstr = ''
@@ -322,122 +302,12 @@ export const getFaqAnswerLabel = function(question) {
     )
 }
 
-export const downApp = function() {
-    let scheme = 'starvideo'
-    let failback = ''
-    const _this = this
-    const ua = navigator.userAgent.toLowerCase()
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-        failback = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-    }
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-    callLib.open({
-        path: 'platformapi/webtoapp',
-        callback() {
-            if (failback) {
-                window.location.href = failback
-            } else {
-                _this.$axios.get('/cms/public/app').then(res => {
-                    _this.sendEvLog({
-                        category: document.title,
-                        action: 'install_activated',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
-                    let url = res.data.apkUrl
-                    if (url) {
-                        if (url.indexOf('google') > 0) {
-                            url = url.replace('google', 'officialWap')
-                        }
-                        window.location.href = url
-                    }
-                })
-            }
-        }
-    })
-}
-
 export const shareFacebook = function() {
     // eslint-disable-next-line no-undef
     FB.ui({
         method: 'share',
         display: 'popup',
         href: window.location.href
-    })
-}
-export const toAppStore = function(page) {
-    const ua = navigator.userAgent.toLowerCase()
-    const _this = this
-
-    let source = ''
-    let scheme = 'starvideo'
-    let appType = 1
-    let path = 'platformapi/webtoapp'
-    if (page) {
-        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
-    }
-
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-        appType = 2
-        // path = '?player?vod='+ page
-    }
-
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-
-    callLib.open({
-        path: path,
-        callback() {
-            if (location.href.indexOf('referrer') > 0) {
-                source = location.search
-            } else if (location.href.indexOf('utm_source') > 0) {
-                source = '&referrer=' + encodeURIComponent(location.search.substr(1))
-            } else {
-                source = '&' + location.search.substr(1)
-            }
-
-            _this.sendEvLog({
-                category: _this.vote_name,
-                action: 'downloadpopup_show',
-                label: '',
-                Value: 1
-            })
-
-            _this.$confirm(
-                appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
-                () => {
-                    _this.sendEvLog({
-                        category: _this.vote_name,
-                        action: 'downloadpopup_click',
-                        label: 'go',
-                        Value: 1
-                    })
-                    window.location.href =
-                        appType == 1
-                            ? 'market://details?id=com.star.mobile.video' + source
-                            : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-                },
-                () => {
-                    _this.sendEvLog({
-                        category: _this.vote_name,
-                        action: 'downloadpopup_click',
-                        label: 'not now',
-                        Value: 1
-                    })
-                },
-                _this.$store.state.lang.mrright_go,
-                _this.$store.state.lang.mrright_not_now
-            )
-        }
     })
 }
 
@@ -508,6 +378,162 @@ export const initDB = function() {
     localforage.config({
         driver: [localforage.WEBSQL, localforage.LOCALSTORAGE], // indexDB在android4.4上保存不全
         name: 'StarTimes'
+    })
+}
+
+export const downloadApk = function() {
+    this.$axios
+        .get('/cms/public/app')
+        .then(res => {
+            let url = res.data.apkUrl
+            if (url) {
+                if (url.indexOf('google') > 0) {
+                    url = url.replace('google', 'officialWap')
+                }
+
+                window.location.href = url
+            } else {
+                this.$alert('Download error.Please retry.')
+            }
+        })
+        .catch(() => {
+            this.$alert('Download error.Please retry.')
+        })
+}
+
+export const callApp = function(page, failback) {
+    const ua = navigator.userAgent.toLowerCase()
+    let scheme = 'starvideo'
+    let path = 'platformapi/webtoapp'
+
+    if (page) {
+        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
+    }
+
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        scheme = 'startimes'
+    }
+    const callLib = new CallApp({
+        scheme: {
+            protocol: scheme
+        }
+    })
+    callLib.open({
+        path: path,
+        callback() {
+            if (failback) failback()
+        }
+    })
+}
+
+export const downApp = function() {
+    let scheme = 'starvideo'
+    let failback = ''
+    const _this = this
+    const ua = navigator.userAgent.toLowerCase()
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        scheme = 'startimes'
+        failback = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+    }
+    const callLib = new CallApp({
+        scheme: {
+            protocol: scheme
+        }
+    })
+    callLib.open({
+        path: 'platformapi/webtoapp',
+        callback() {
+            if (failback) {
+                window.location.href = failback
+            } else {
+                _this.$axios.get('/cms/public/app').then(res => {
+                    _this.sendEvLog({
+                        category: document.title,
+                        action: 'install_activated',
+                        label: UAType() + '_2',
+                        value: 1
+                    })
+                    let url = res.data.apkUrl
+                    if (url) {
+                        if (url.indexOf('google') > 0) {
+                            url = url.replace('google', 'officialWap')
+                        }
+                        window.location.href = url
+                    }
+                })
+            }
+        }
+    })
+}
+
+export const toAppStore = function(page) {
+    const ua = navigator.userAgent.toLowerCase()
+    const _this = this
+
+    let source = ''
+    let scheme = 'starvideo'
+    let appType = 1
+    let path = 'platformapi/webtoapp'
+    if (page) {
+        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
+    }
+
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        scheme = 'startimes'
+        appType = 2
+        // path = '?player?vod='+ page
+    }
+
+    const callLib = new CallApp({
+        scheme: {
+            protocol: scheme
+        }
+    })
+
+    callLib.open({
+        path: path,
+        callback() {
+            if (location.href.indexOf('referrer') > 0) {
+                source = location.search
+            } else if (location.href.indexOf('utm_source') > 0) {
+                source = '&referrer=' + encodeURIComponent(location.search.substr(1))
+            } else {
+                source = '&' + location.search.substr(1)
+            }
+
+            _this.sendEvLog({
+                category: _this.vote_name,
+                action: 'downloadpopup_show',
+                label: '',
+                Value: 1
+            })
+
+            _this.$confirm(
+                appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
+                () => {
+                    _this.sendEvLog({
+                        category: _this.vote_name,
+                        action: 'downloadpopup_click',
+                        label: 'go',
+                        Value: 1
+                    })
+                    window.location.href =
+                        appType == 1
+                            ? 'market://details?id=com.star.mobile.video' + source
+                            : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+                },
+                () => {
+                    _this.sendEvLog({
+                        category: _this.vote_name,
+                        action: 'downloadpopup_click',
+                        label: 'not now',
+                        Value: 1
+                    })
+                },
+                _this.$store.state.lang.mrright_go,
+                _this.$store.state.lang.mrright_not_now
+            )
+        }
     })
 }
 

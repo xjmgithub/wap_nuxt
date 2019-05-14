@@ -102,7 +102,7 @@ import mVoteSwiper from '~/components/vote/vote_swiper'
 import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
-import { shareInvite, setCookie, getCookie } from '~/functions/utils'
+import { shareInvite, setCookie, getCookie, callApp, downloadApk } from '~/functions/utils'
 import download from '~/components/vote/download'
 import qs from 'qs'
 export default {
@@ -301,10 +301,19 @@ export default {
             }
         },
         loadConfirm() {
-            // TODO download
-            this.rulesCard = false
-            this.aboutCard = false
-            this.$confirm(this.$store.state.lang.vote_apk, () => {}, () => {}, this.$store.state.lang.vote_ok, this.$store.state.lang.vote_cancel)
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
+                this.rulesCard = false
+                this.aboutCard = false
+                this.$confirm(
+                    this.$store.state.lang.vote_apk,
+                    () => {
+                        downloadApk.call(this)
+                    },
+                    () => {},
+                    this.$store.state.lang.vote_ok,
+                    this.$store.state.lang.vote_cancel
+                )
+            })
         },
         loadMore() {
             window.scrollBy(0, document.body.clientHeight) // 向下滚动一屏
