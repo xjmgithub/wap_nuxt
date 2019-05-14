@@ -435,7 +435,18 @@ export default {
     },
     head() {
         return {
-            title: 'Film Festival Vote'
+            title: 'Film Festival Vote',
+            meta: [
+                { name: 'description', property: 'description', content: this.$store.state.lang.vote_appshare_words },
+                { name: 'og:description', property: 'og:description', content: this.$store.state.lang.vote_appshare_words },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.banners.length > 0 && this.baners[0].materials.replace('http:', 'https:')
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: 'Film Festival Vote' }
+            ]
         }
     }
 }
