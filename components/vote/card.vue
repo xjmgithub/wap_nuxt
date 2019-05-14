@@ -1,14 +1,27 @@
 <template>
     <div>
-        <div class="card-layer" @click="closeCard" />
+        <div class="card-layer" @click="closeCard"/>
         <div class="slide-bar-card">
             <img src="~assets/img/vote/ic_close.png" class="close" @click="closeCard">
-            <slot/>
+            <h4 v-if="title">{{title}}</h4>
+            <div class="content" @scroll.prevent>
+                <slot name="content"/>
+            </div>
+            <div class="buttons">
+                <slot name="buttons"/>
+            </div>
         </div>
     </div>
 </template>
 <script>
 export default {
+    props: {
+        title: {
+            required: false,
+            type: String,
+            default: ''
+        }
+    },
     methods: {
         closeCard() {
             this.$emit('closeCard')
@@ -34,25 +47,37 @@ export default {
     width: 75%;
     background: #ffffff;
     position: fixed;
-    max-height: 22rem;
     top: 50%;
     left: 50%;
-    margin-top: -11rem;
+    margin-top: -12rem;
     margin-left: -37.5%;
-    overflow-y: auto;
     h4 {
-        font-size: 1rem;
-        margin-bottom: 0.4rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
         margin-top: 0;
         text-align: center;
     }
-    p {
-        font-size: 0.8rem;
-        max-height: 10rem;
-        overflow-y: auto;
-        line-height: 1rem;
+    .content {
         margin-bottom: 0.4rem;
+        max-height: 18rem;
+        min-height: 12rem;
+        overflow: auto;
+        p {
+            font-size: 0.9rem;
+            line-height: 1.2rem;
+            margin: 0.5rem 0;
+        }
+        img {
+            width: 100%;
+            display: block;
+            margin: 0.3rem 0;
+        }
     }
+
+    .buttons {
+        padding: 0.2rem 0 0.5rem;
+    }
+
     img {
         &.poster {
             width: 100%;

@@ -37,28 +37,43 @@
             >
                 <div>{{$store.state.lang.vote_share}}</div>
             </div>
-            <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
-                <h4>{{$store.state.lang.vote_about}}</h4>
-                <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for --Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-                <div v-show="appType==0" class="download-btn" @click="loadConfirm">
-                    <p>{{$store.state.lang.vote_downloadbtn}}</p>
-                    {{$store.state.lang.vote_downloadbtn_tips}}
-                </div>
+            <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
+                <template v-slot:content>
+                    <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old</p>
+                    <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
+                    <img
+                        src="https://s3-eu-west-1.amazonaws.com/tenbreportal/cms_back/html/files/img/group1/M00/04/C5/wKggGVtxpsqAXvq1AAJLZ725Yeo216.JPG"
+                    >
+                    <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
+                </template>
+                <template v-if="appType==0" v-slot:buttons>
+                    <div class="download-btn" @click="loadConfirm">
+                        <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                        {{$store.state.lang.vote_downloadbtn_tips}}
+                    </div>
+                </template>
             </mCard>
-            <mCard v-show="rulesCard" class="card" @closeCard="rulesCard=false">
-                <h4>{{$store.state.lang.vote_voterules}}</h4>
-                <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old,</p>
-                <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-                <p>manning the family boda boda to provide for</p>
-                <div v-show="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
-                <div v-show="appType==0" class="download-btn" @click="loadConfirm">
-                    <p>{{$store.state.lang.vote_downloadbtn}}</p>
-                    {{$store.state.lang.vote_downloadbtn_tips}}
-                </div>
+            <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
+                <template v-slot:content>
+                    <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old,</p>
+                    <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
+                    <p>manning the family boda boda to provide for</p>
+                </template>
+                <template v-slot:buttons>
+                    <div v-if="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
+                    <div v-if="appType==0" class="download-btn" @click="loadConfirm">
+                        <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                        {{$store.state.lang.vote_downloadbtn_tips}}
+                    </div>
+                </template>
             </mCard>
-            <mCard v-show="shareCard" class="card" @closeCard="shareCard=false">
-                <h4>{{$store.state.lang.vote_earnvote_tt}}</h4>
-                <p>{{$store.state.lang.vote_appshare_words}}</p>
+            <mCard
+                v-show="shareCard"
+                :title="$store.state.lang.vote_earnvote_tt"
+                :content="`<p>${$store.state.lang.vote_appshare_words}}</p>`"
+                class="card"
+                @closeCard="shareCard=false"
+            >
                 <div class="share-way">
                     <span>
                         <img src="~assets/img/vote/ic_facebook_def.png">
@@ -402,7 +417,6 @@ html {
         }
     }
     .filmload {
-        // position: static;
         top: 0;
         z-index: 11;
     }
