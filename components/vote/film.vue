@@ -7,8 +7,8 @@
                     <span :class="{first:index==0,second:index==1,third:index==2,normal:index>2}">No {{index+1}}</span>
                 </div>
                 <div class="right">
-                    <p class="film-name">{{item.name}}</p>
-                    <p class="film-author">{{item.brief}}</p>
+                    <p class="film-name" @click="toPlayer(item.link_vod_code,item.name)">{{item.name}}</p>
+                    <p class="film-author" @click="toPlayer(item.link_vod_code,item.name)">{{item.brief}}</p>
                     <span class="votes">{{item.ballot_num | formatVotes}}</span>
                     <span v-if="item.user_ballot_num>0" class="vote-btn" @click="handleViceVote(item)">VOTED</span>
                     <span v-else class="vote-btn" @click="handleViceVote(item)">VOTE</span>
