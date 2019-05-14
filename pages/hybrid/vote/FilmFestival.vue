@@ -15,7 +15,8 @@
             </a>
         </nav>
         <div class="leftvote">
-            <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
+            <!-- <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span> -->
+            <span>{{$store.state.lang.vote_leftvote}}:0</span>
         </div>
         <div class="pit" />
         <template v-for="(item,index) in tabList">
@@ -81,7 +82,7 @@ import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
 import { shareInvite, setCookie, getCookie } from '~/functions/utils'
 import download from '~/components/vote/download'
-
+// import qs from 'qs'
 export default {
     layout: 'base',
     components: {
@@ -99,24 +100,18 @@ export default {
             tabList: [
                 {
                     name: this.$store.state.lang.vote_tab_film,
-                    type: 'film',
-                    vote_id: 2,
-                    main_vote: true
+                    type: 'film'
                 },
                 {
                     name: this.$store.state.lang.vote_tab_shortfilm,
-                    type: 'short_film',
-                    vote_id: 2
+                    type: 'short_film'
                 },
                 {
                     name: this.$store.state.lang.vote_tab_mv,
-                    type: 'mv',
-                    vote_id: 3
+                    type: 'mv'
                 }
             ],
             tabIndex: 0,
-            vote_id: 8,
-            leftVote: 13,
             canMove: false,
             left: '',
             top: '',
@@ -140,14 +135,25 @@ export default {
             if (data.data.banner) {
                 banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
             }
+            // const { res } = await $axios({
+            //     url: `/voting/v1/ticket/sign-in`,
+            //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            //     method: 'POST',
+            //     data: qs.stringify({
+            //         vote_id: 8
+            //     })
+            // })
+
             return {
                 banners: banners.data.data,
                 vote_sign: req.headers.vote_sign
+                // leftVote: res.data.data
             }
         } catch (e) {
             return {
                 banners: banners,
                 vote_sign: req.headers.vote_sign
+                // leftVote: 0
             }
         }
     },
@@ -196,7 +202,7 @@ export default {
         },
         loadMore() {},
         setVoteScreen(type) {
-            if(type==='about'){
+            if (type === 'about') {
                 this.aboutCard = true
             }
             setCookie('vote_screen_8', true)
@@ -204,7 +210,7 @@ export default {
         },
         // 获取投票单元数据
         getAllList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=8`).then(res => {
                 if (res.data.data.length > 0) {
                     const data = res.data.data
                     data.forEach(ele => {
@@ -261,21 +267,6 @@ export default {
                     this.top = 0
                 }
             }
-        },
-        getVoteLeft() {
-            if (this.isLogin) {
-                this.$axios({
-                    url: `/voting/v1/ballot/user-ballot-nums?vote_id=${this.vote_id}`,
-                    method: 'get',
-                    data: {}
-                }).then(res => {
-                    if (res.data.code === 0) {
-                        this.leftVote = res.data.data + ''
-                    } else {
-                        this.leftVote = '-'
-                    }
-                })
-            }
         }
     },
     head() {
@@ -303,11 +294,12 @@ html {
     .filmload {
         // position: static;
         top: 0;
-        z-index: 2;
+        z-index: 11;
     }
     .top {
         position: relative;
         margin-top: 4rem;
+        min-height: 2rem;
         .rules {
             height: 2rem;
             line-height: 2rem;
