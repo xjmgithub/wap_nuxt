@@ -2,7 +2,7 @@
     <div id="film">
         <ul>
             <li v-for="(item,index) in dataList" :key="index" data-id="item.id" class="clearfix">
-                <div class="left">
+                <div class="left" @click="toPlayer(item.link_vod_code,item.name)">
                     <img :src="cdnPicSrc(item.icon)" class="icon">
                     <span :class="{first:index==0,second:index==1,third:index==2,normal:index>2}">No {{index+1}}</span>
                 </div>
@@ -18,6 +18,7 @@
     </div>
 </template>
 <script>
+import { playVodinApp, toAppStore } from '~/functions/utils'
 export default {
     filters: {
         formatVotes(val) {
@@ -45,6 +46,16 @@ export default {
     methods: {
         handleViceVote(item) {
             this.$emit('onVote', item)
+        },
+        toPlayer(vod, name) {
+            if (vod) {
+                if (this.$store.state.appType > 0) {
+                    playVodinApp(this.$store.state.appType, vod)
+                } else {
+                    toAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
+                }
+                // TODO evlog
+            }
         }
     }
 }
