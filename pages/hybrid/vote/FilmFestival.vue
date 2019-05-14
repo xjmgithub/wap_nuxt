@@ -181,14 +181,12 @@ export default {
                 })
                 leftVote = leftVote.data.data || 0
             }
-            console.log(req)
             return {
                 banners: banners.data.data || [],
                 vote_sign: (req && req.headers.vote_sign) || '',
                 leftVote: leftVote
             }
         } catch (e) {
-            console.log(e)
             return {
                 banners: banners || [],
                 vote_sign: (req && req.headers.vote_sign) || '',
@@ -201,6 +199,14 @@ export default {
         this.clientHeight = document.body.clientHeight
         this.openPicShowd = getCookie('vote_screen_8')
         this.mounted = true
+
+        const voteShareDown = getCookie('vote_share_down')
+        if (!voteShareDown) {
+            setCookie('vote_share_down', this.vote_sign)
+        }
+        if(this.$route.query.pin){
+            setCookie('vote_share_user', this.$route.query.pin)
+        }
 
         document.addEventListener('scroll', () => {
             const scollTop = document.body.scrollTop || document.documentElement.scrollTop

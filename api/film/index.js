@@ -5,7 +5,7 @@ import env from '../../env.js'
 export default function(req, res, next) {
     const urlobj = new URL('http://localhost' + req.url)
     const query = qs.parse(urlobj.search.substr(1))
-    if (query.pin) {
+    if (query.pin && req.headers.cookie.indexOf('vote_share_down') < 0) {
         axios
             .get(`${env.apiURL}voting/v1/token`, {
                 headers: {

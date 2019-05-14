@@ -2,6 +2,7 @@ import CallApp from 'callapp-lib'
 import { Base64 } from 'js-base64'
 import localforage from 'localforage'
 import dayjs from 'dayjs'
+import qs from 'qs'
 
 export const setCookie = (name, value, time) => {
     if (!name) {
@@ -382,6 +383,26 @@ export const initDB = function() {
 }
 
 export const downloadApk = function() {
+    const voteDownTag = getCookie('vote_share_down')
+    const user = getCookie('vote_share_user')
+    if (voteDownTag && voteDownTag != -1) {
+        // 下载记票
+        this.$axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded',
+                token: this.$store.state.token,
+                'X-Secret': voteDownTag
+            },
+            data: qs.stringify({
+                vote_id: 8,
+                target: user,
+                action: 'SHARE_DOWNLOAD'
+            }),
+            url: '/voting/v1/ticket'
+        })
+    }
+
     this.$axios
         .get('/cms/public/app')
         .then(res => {
