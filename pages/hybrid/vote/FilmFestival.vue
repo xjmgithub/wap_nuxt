@@ -2,8 +2,8 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download class="clearfix filmload"/>
-            <div class="top">
+            <download v-if="!appType" class="clearfix filmload"/>
+            <div class="top" :class="{mtop:!appType}">
                 <mVoteSwiper :banners="banners" :name="'Film Festival Vote'"/>
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
@@ -323,9 +323,11 @@ html {
         top: 0;
         z-index: 2;
     }
+    .mtop {
+        margin-top: 4rem;
+    }
     .top {
         position: relative;
-        margin-top: 4rem;
         .rules {
             height: 2rem;
             line-height: 2rem;
