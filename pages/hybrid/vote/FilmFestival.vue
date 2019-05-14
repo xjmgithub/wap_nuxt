@@ -259,10 +259,11 @@ export default {
     },
     methods: {
         handleVote(film) {
-            // if (this.appType <= 0) {
-            //     // 判断是否安装app 否则弹出下载提示框  loadConfirm
-            //     return
-            // }
+            if (this.appType <= 0) {
+                // 判断是否安装app 否则弹出下载提示框  loadConfirm
+                this.loadConfirm(1)
+                return
+            }
             if (this.leftVote <= 0) {
                 this.$confirm(
                     this.$store.state.lang.vote_fail + this.$store.state.lang.vote_success_0,
@@ -312,17 +313,19 @@ export default {
                     })
             }
         },
-        loadConfirm() {
+        loadConfirm(vote) {
+            const text = vote ? this.$store.state.lang.vote_webshare_words : this.$store.state.lang.vote_apk
+            const btn = vote ? this.$store.state.lang.download_apk : this.$store.state.lang.vote_ok
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 this.rulesCard = false
                 this.aboutCard = false
                 this.$confirm(
-                    this.$store.state.lang.vote_apk,
+                    text,
                     () => {
                         downloadApk.call(this)
                     },
                     () => {},
-                    this.$store.state.lang.vote_ok,
+                    btn,
                     this.$store.state.lang.vote_cancel
                 )
             })
