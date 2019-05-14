@@ -136,7 +136,7 @@ export default {
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         downloadApk() {
-            downloadApk(this)
+            downloadApk.call(this)
         },
         getPrograms() {
             const tmp = new Date().toLocaleDateString()
