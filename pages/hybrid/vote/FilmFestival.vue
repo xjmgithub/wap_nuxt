@@ -314,7 +314,9 @@ export default {
             this.aboutCard = false
             this.$confirm(this.$store.state.lang.vote_apk, () => {}, () => {}, this.$store.state.lang.vote_ok, this.$store.state.lang.vote_cancel)
         },
-        loadMore() {},
+        loadMore() {
+            window.scrollBy(0,document.body.clientHeight) // 想下滚动一屏
+        },
         setVoteScreen(type) {
             if (type === 'about') {
                 this.aboutCard = true
@@ -354,7 +356,14 @@ export default {
             if (this.appType === 1) {
                 this.rulesCard = false // 弹层消失
                 const img = this.banners.length > 0 ? this.banners[0].materials : ''
-                process.client && shareInvite(`${window.location.href}?pin=${this.$store.state.user.id}` , 'Film Festival Vote', 'Vote & Win Big Prizes', img, 'Film Festival Vote')
+                process.client &&
+                    shareInvite(
+                        `${window.location.href}?pin=${this.$store.state.user.id}`,
+                        'Film Festival Vote',
+                        'Vote & Win Big Prizes',
+                        img,
+                        'Film Festival Vote'
+                    )
             } else if (this.appType === 0) {
                 this.rulesCard = false
                 this.shareCard = true
