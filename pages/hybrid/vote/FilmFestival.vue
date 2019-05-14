@@ -151,7 +151,7 @@ export default {
             if (data.data.banner) {
                 banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
             }
-            const { res } = await $axios({
+            const leftVote = await $axios({
                 url: `/voting/v1/ticket/sign-in`,
                 headers: { 'content-type': 'application/x-www-form-urlencoded' },
                 method: 'POST',
@@ -163,7 +163,7 @@ export default {
             return {
                 banners: [] || banners.data.data,
                 vote_sign: req.headers.vote_sign,
-                leftVote: res.data.data
+                leftVote: leftVote.data.data || 0
             }
         } catch (e) {
             return {
