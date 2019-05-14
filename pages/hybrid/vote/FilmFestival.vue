@@ -4,7 +4,7 @@
         <div v-show="appType||mounted">
             <download v-if="!appType" class="clearfix filmload" @onload="loadConfirm"/>
             <div class="top" :class="{mtop:!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'" />
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'"/>
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                     <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
@@ -19,13 +19,22 @@
             <div v-if="appType" class="leftvote">
                 <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
             </div>
-            <div class="pit" />
+            <div class="pit"/>
             <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" />
-                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote" />
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" />
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote"/>
+                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote"/>
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote"/>
             </template>
-            <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
+            <div
+                v-show="appType!=2"
+                ref="box"
+                class="share"
+                :style="{'left':left, 'top':top}"
+                @click="toShare"
+                @touchstart="canMove=true"
+                @touchmove.prevent="move"
+                @touchend="canMove = false"
+            >
                 <div>{{$store.state.lang.vote_share}}</div>
             </div>
             <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
@@ -137,28 +146,32 @@ export default {
     async asyncData({ app: { $axios }, route, store, req }) {
         $axios.setHeader('token', store.state.token)
         let banners = []
+        let leftVote = 0
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
             if (data.data.banner) {
                 banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
             }
-            const leftVote = await $axios({
-                url: `/voting/v1/ticket/sign-in`,
-                headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                method: 'POST',
-                data: qs.stringify({
-                    vote_id: 8
+            if (store.state.appType) {
+                leftVote = await $axios({
+                    url: `/voting/v1/ticket/sign-in`,
+                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                    method: 'POST',
+                    data: qs.stringify({
+                        vote_id: 8
+                    })
                 })
-            })
+                leftVote = leftVote.data.data || 0
+            }
 
             return {
-                banners: [] || banners.data.data || [],
+                banners: banners.data.data || [],
                 vote_sign: req.headers.vote_sign,
-                leftVote: leftVote.data.data || 0
+                leftVote: leftVote
             }
         } catch (e) {
             return {
-                banners: [] || banners || [],
+                banners: banners || [],
                 vote_sign: req.headers.vote_sign,
                 leftVote: 0
             }
