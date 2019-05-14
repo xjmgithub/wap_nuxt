@@ -67,24 +67,23 @@
                     </div>
                 </template>
             </mCard>
-            <mCard
-                v-show="shareCard"
-                :title="$store.state.lang.vote_earnvote_tt"
-                :content="`<p>${$store.state.lang.vote_appshare_words}}</p>`"
-                class="card"
-                @closeCard="shareCard=false"
-            >
-                <div class="share-way">
-                    <span>
-                        <img src="~assets/img/vote/ic_facebook_def.png">
-                    </span>
-                    <span>
-                        <img src="~assets/img/vote/ic_copylink_def copy.png">
-                    </span>
-                    <span>
-                        <img src="~assets/img/vote/ic_ti_def.png">
-                    </span>
-                </div>
+            <mCard v-show="shareCard" :title="$store.state.lang.vote_earnvote_tt" class="card" @closeCard="shareCard=false">
+                <template v-slot:content>
+                    <p>{{$store.state.lang.vote_appshare_words}}</p>
+                </template>
+                <template v-slot:buttons>
+                    <div class="share-way">
+                        <span @click="shareWithFacebook">
+                            <img src="~assets/img/vote/ic_facebook_def.png">
+                        </span>
+                        <span @click="copyLink">
+                            <img src="~assets/img/vote/ic_copylink_def copy.png">
+                        </span>
+                        <span @click="shareWithTwitter">
+                            <img src="~assets/img/vote/ic_ti_def.png">
+                        </span>
+                    </div>
+                </template>
             </mCard>
             <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
                 <span>{{$store.state.lang.vote_view_more}}</span>
@@ -315,7 +314,7 @@ export default {
             this.$confirm(this.$store.state.lang.vote_apk, () => {}, () => {}, this.$store.state.lang.vote_ok, this.$store.state.lang.vote_cancel)
         },
         loadMore() {
-            window.scrollBy(0, document.body.clientHeight) // 想下滚动一屏
+            window.scrollBy(0, document.body.clientHeight) // 向下滚动一屏
         },
         setVoteScreen(type) {
             if (type === 'about') {
@@ -396,6 +395,42 @@ export default {
                     this.top = 0
                 }
             }
+        },
+        shareWithFacebook() {
+            this.shareCard = false
+            // eslint-disable-next-line no-undef
+            FB.ui(
+                {
+                    method: 'share',
+                    display: 'popup',
+                    href: window.location.href
+                },
+                function(response) {}
+            )
+        },
+        copyLink() {
+            this.shareCard = false
+            this.$nextTick(() => {
+                const input = document.createElement('input')
+                input.setAttribute('readOnly', true)
+                document.body.appendChild(input)
+                input.setAttribute('value', window.location.href)
+                input.select()
+                const successful = document.execCommand('copy')
+                document.body.removeChild(input)
+                window.getSelection().removeAllRanges()
+                if (successful) {
+                    this.$toast(this.$store.state.lang.officialwebsitemobile_copylink_copied)
+                } else {
+                    this.$toast('Copylink is not support on your browser')
+                }
+                this.$store.commit('SET_SHARE_STATE', false)
+            })
+        },
+        shareWithTwitter() {
+            this.shareCard = false
+            window.location.href =
+                'http://twitter.com/share?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(document.title)
         }
     },
     head() {
