@@ -4,7 +4,7 @@
         <div v-show="appType||mounted">
             <download v-if="!appType" class="clearfix filmload"/>
             <div class="top" :class="{mtop:!appType}">
-                <mVoteSwiper :banners="banners" :name="'Film Festival Vote'"/>
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'"/>
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                     <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
