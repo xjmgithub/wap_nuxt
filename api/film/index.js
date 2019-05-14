@@ -21,7 +21,7 @@ export default function(req, res, next) {
                 console.log(err)
                 next()
             })
-    }else{
+    } else {
         next()
     }
 }
