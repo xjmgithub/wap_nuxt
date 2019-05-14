@@ -319,7 +319,7 @@ export const playVodinApp = function(appType, vod) {
         window.location.href = 'startimes://player?vodId=' + vod
     } else {
         callApp('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
-            downloadApk()
+            downloadApk.call(this)
         })
     }
 }
@@ -550,7 +550,7 @@ export const normalToAppStore = function(page, pos) {
             if (appType == 2) {
                 window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
             } else {
-                downloadApk(() => {
+                downloadApk.call(_this,() => {
                     _this.sendEvLog({
                         category: document.title,
                         action: 'install_activated',
