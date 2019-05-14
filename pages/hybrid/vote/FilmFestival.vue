@@ -2,9 +2,9 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download v-if="!appType" class="clearfix filmload"/>
+            <download v-if="!appType" class="clearfix filmload" @onload="loadConfirm"/>
             <div class="top" :class="{mtop:!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'"/>
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'" />
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                     <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
@@ -19,28 +19,19 @@
             <div v-if="appType" class="leftvote">
                 <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
             </div>
-            <div class="pit"/>
+            <div class="pit" />
             <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList"/>
-                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList"/>
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList"/>
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" />
+                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote" />
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" />
             </template>
-            <div
-                v-show="appType!=2"
-                ref="box"
-                class="share"
-                :style="{'left':left, 'top':top}"
-                @click="toShare"
-                @touchstart="canMove=true"
-                @touchmove.prevent="move"
-                @touchend="canMove = false"
-            >
+            <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
                 <div>{{$store.state.lang.vote_share}}</div>
             </div>
             <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
                 <h4>{{$store.state.lang.vote_about}}</h4>
                 <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for --Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-                <div v-show="appType==0" class="download-btn" @click="download">
+                <div v-show="appType==0" class="download-btn" @click="loadConfirm">
                     <p>{{$store.state.lang.vote_downloadbtn}}</p>
                     {{$store.state.lang.vote_downloadbtn_tips}}
                 </div>
@@ -51,7 +42,7 @@
                 <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
                 <p>manning the family boda boda to provide for</p>
                 <div v-show="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
-                <div v-show="appType==0" class="download-btn" @click="download">
+                <div v-show="appType==0" class="download-btn" @click="loadConfirm">
                     <p>{{$store.state.lang.vote_downloadbtn}}</p>
                     {{$store.state.lang.vote_downloadbtn_tips}}
                 </div>
@@ -235,7 +226,61 @@ export default {
         this.getAllList()
     },
     methods: {
-        download() {
+        handleVote(film) {
+            // if (this.appType <= 0) {
+            //     // 判断是否安装app 否则弹出下载提示框  loadConfirm
+            //     return
+            // }
+            if (this.leftVote <= 0) {
+                this.$confirm(
+                    this.$store.state.lang.vote_fail + this.$store.state.lang.vote_success_0,
+                    () => {
+                        this.toShare()
+                    },
+                    () => {},
+                    this.$store.state.lang.vote_share,
+                    this.$store.state.lang.vote_cancel
+                )
+            } else {
+                this.$axios({
+                    url: '/voting/v1/ballot',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        candidate_id: film.id,
+                        vote_id: 8
+                    })
+                })
+                    .then(res => {
+                        if (res.data.code === 0) {
+                            this.getAllList()
+                            if (this.leftVote <= 1) {
+                                this.leftVote--
+                                this.$confirm(
+                                    this.$store.state.lang.vote_success + this.$store.state.lang.vote_success_0,
+                                    () => {
+                                        this.toShare()
+                                    },
+                                    () => {},
+                                    this.$store.state.lang.vote_share,
+                                    this.$store.state.lang.vote_cancel
+                                )
+                            } else {
+                                this.leftVote--
+                                this.$toast(this.$store.state.lang.vote_success + ',' + this.$store.state.lang.vote_leftvote + ':' + this.leftVote)
+                            }
+                        } else {
+                            this.$toast(res.data.message)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
+        loadConfirm() {
             // TODO download
             this.rulesCard = false
             this.aboutCard = false
@@ -251,6 +296,9 @@ export default {
         },
         // 获取投票单元数据
         getAllList() {
+            this.filmList = []
+            this.sFilmList = []
+            this.mvList = []
             this.$axios.get(`/voting/v1/candidates-show?vote_id=8`).then(res => {
                 if (res.data.data.length > 0) {
                     const data = res.data.data
@@ -263,7 +311,15 @@ export default {
                             this.mvList.push(ele)
                         }
                     })
+                    this.sort(this.filmList)
+                    this.sort(this.sFilmList)
+                    this.sort(this.mvList)
                 }
+            })
+        },
+        sort(list) {
+            list.sort(function(a, b) {
+                return b.ballot_num - a.ballot_num
             })
         },
         toShare() {

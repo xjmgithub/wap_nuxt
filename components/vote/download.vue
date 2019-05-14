@@ -23,22 +23,9 @@ export default {
     },
     methods: {
         down() {
-            this.sendEvLog({
-                category: document.title,
-                action: 'install_promo_click',
-                label: UAType() + '_1',
-                value: 1
-            })
-            this.$confirm(
-                this.$store.state.lang.vote_apk,
-                () => {
-                    // TODO download
-                },
-                () => {},
-                this.$store.state.lang.vote_ok,
-                this.$store.state.lang.vote_cancel
-            )
+            this.$emit('onload')
         }
+            
     }
 }
 </script>
