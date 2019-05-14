@@ -1,65 +1,81 @@
 <template>
     <div class="page-wrapper">
-        <download class="clearfix filmload" />
-        <div class="top">
-            <mVoteSwiper :banners="banners" :name="'Film Festival Vote'" />
-            <div class="rules">
-                <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
-                <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
+        <!-- 客户端或者浏览器端判断完开屏 -->
+        <div v-show="appType||mounted">
+            <download class="clearfix filmload"/>
+            <div class="top">
+                <mVoteSwiper :banners="banners" :name="'Film Festival Vote'"/>
+                <div class="rules">
+                    <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
+                    <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
+                </div>
+            </div>
+            <nav id="nav">
+                <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex === index}" @click="tabIndex = index">
+                    <span>{{item.name}}</span>
+                    <p/>
+                </a>
+            </nav>
+            <div class="leftvote">
+                <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
+            </div>
+            <div class="pit"/>
+            <template v-for="(item,index) in tabList">
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList"/>
+                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList"/>
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList"/>
+            </template>
+            <div
+                v-show="appType!=2"
+                ref="box"
+                class="share"
+                :style="{'left':left, 'top':top}"
+                @click="toShare"
+                @touchstart="canMove=true"
+                @touchmove.prevent="move"
+                @touchend="canMove = false"
+            >
+                <div>{{$store.state.lang.vote_share}}</div>
+            </div>
+            <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
+                <h4>{{$store.state.lang.vote_about}}</h4>
+                <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for --Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
+                <div v-show="appType==0" class="download-btn" @click="download">
+                    <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                    {{$store.state.lang.vote_downloadbtn_tips}}
+                </div>
+            </mCard>
+            <mCard v-show="rulesCard" class="card" @closeCard="rulesCard=false">
+                <h4>{{$store.state.lang.vote_voterules}}</h4>
+                <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old,</p>
+                <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
+                <p>manning the family boda boda to provide for</p>
+                <div v-show="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
+                <div v-show="appType==0" class="download-btn" @click="download">
+                    <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                    {{$store.state.lang.vote_downloadbtn_tips}}
+                </div>
+            </mCard>
+            <mCard v-show="shareCard" class="card" @closeCard="shareCard=false">
+                <h4>{{$store.state.lang.vote_earnvote_tt}}</h4>
+                <p>{{$store.state.lang.vote_appshare_words}}</p>
+                <div class="share-way">
+                    <span>
+                        <img src="~assets/img/vote/ic_facebook_def.png">
+                    </span>
+                    <span>
+                        <img src="~assets/img/vote/ic_copylink_def copy.png">
+                    </span>
+                    <span>
+                        <img src="~assets/img/vote/ic_ti_def.png">
+                    </span>
+                </div>
+            </mCard>
+            <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
+                <span>{{$store.state.lang.vote_view_more}}</span>
             </div>
         </div>
-        <nav id="nav">
-            <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex === index}" @click="tabIndex = index">
-                <span>{{item.name}}</span>
-                <p/>
-            </a>
-        </nav>
-        <div class="leftvote">
-            <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
-        </div>
-        <div class="pit" />
-        <template v-for="(item,index) in tabList">
-            <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" />
-            <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" />
-            <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" />
-        </template>
-        <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
-            <div>
-                {{$store.state.lang.vote_share}}
-            </div>
-        </div>
-        <mCard v-show="aboutCard" class="card" @closeCard="aboutCard=false">
-            <h4>{{$store.state.lang.vote_about}}</h4>
-            <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for --Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-            <div v-show="appType==0" class="download-btn" @click="download">
-                <p>{{$store.state.lang.vote_downloadbtn}}</p>
-                {{$store.state.lang.vote_downloadbtn_tips}}
-            </div>
-        </mcard>
-        <mCard v-show="rulesCard" class="card" @closeCard="rulesCard=false">
-            <h4>{{$store.state.lang.vote_voterules}}</h4>
-            <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, </p>
-            <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for </p>
-            <p>manning the family boda boda to provide for </p>
-            <div v-show="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
-            <div v-show="appType==0" class="download-btn" @click="download">
-                <p>{{$store.state.lang.vote_downloadbtn}}</p>
-                {{$store.state.lang.vote_downloadbtn_tips}}
-            </div>
-        </mcard>
-        <mCard v-show="shareCard" class="card" @closeCard="shareCard=false">
-            <h4>{{$store.state.lang.vote_earnvote_tt}}</h4>
-            <p>{{$store.state.lang.vote_appshare_words}}</p>
-            <div class="share-way">
-                <span><img src="~assets/img/vote/ic_facebook_def.png"></span>
-                <span><img src="~assets/img/vote/ic_copylink_def copy.png"></span>
-                <span><img src="~assets/img/vote/ic_ti_def.png"></span>
-            </div>
-        </mcard>
-        <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
-            <span>{{$store.state.lang.vote_view_more}}</span>
-        </div>
-        <div class="open" :class="{showd:openPicShowd}">
+        <div v-if="!appType&&mounted" class="open" :class="{showd:openPicShowd}">
             <div class="top">
                 <img src="~assets/img/vote/open_top.png">
                 <p>
@@ -129,7 +145,8 @@ export default {
             sFilmList: [],
             mvList: [],
             time: 4,
-            openPicShowd: false
+            openPicShowd: false,
+            mounted: false
         }
     },
     async asyncData({ app: { $axios }, route, store, req }) {
@@ -155,6 +172,7 @@ export default {
     mounted() {
         this.clientHeight = document.body.clientHeight
         this.openPicShowd = getCookie('vote_screen_8')
+        this.mounted = true
         document.addEventListener('scroll', () => {
             const scollTop = document.body.scrollTop || document.documentElement.scrollTop
             if (scollTop > 0) {
@@ -196,7 +214,7 @@ export default {
         },
         loadMore() {},
         setVoteScreen(type) {
-            if(type==='about'){
+            if (type === 'about') {
                 this.aboutCard = true
             }
             setCookie('vote_screen_8', true)
@@ -503,8 +521,9 @@ html {
     left: 0;
     bottom: 0;
     background: #000000;
+    transition: transform 400ms;
     &.showd {
-        display: none;
+        transform: translateY(-100%);
     }
     .top {
         position: fixed;
