@@ -352,14 +352,9 @@ export default {
         },
         toShare() {
             if (this.appType === 1) {
-                process.client &&
-                    shareInvite(
-                        window.location.href,
-                        'Film Festival Vote',
-                        'Vote & Win Big Prizes',
-                        window.location.origin + '/res_nuxt/img/mrshare.jpg',
-                        'Film Festival Vote'
-                    )
+                this.rulesCard = false // 弹层消失
+                const img = this.banners.length > 0 ? this.banners[0].materials : ''
+                process.client && shareInvite(`${window.location.href}?pin=${this.$store.state.user.id}` , 'Film Festival Vote', 'Vote & Win Big Prizes', img, 'Film Festival Vote')
             } else if (this.appType === 0) {
                 this.rulesCard = false
                 this.shareCard = true
