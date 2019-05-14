@@ -50,11 +50,11 @@ export default {
         Vue.prototype.$toast = (msg, duration) => {
             this.$refs.toast.show(msg, duration)
         }
-        
+
         Vue.prototype.cdnPicSrc = value => {
             return cdnPicSrc.call(this, value)
         }
-        Vue.prototype.lasyLoadImg = ()=>{
+        Vue.prototype.lasyLoadImg = () => {
             this.getPic()
         }
 
@@ -77,24 +77,24 @@ export default {
                     this.toNativeLogin()
                 })
             }
-            
+
             this.getPic()
             document.addEventListener('scroll', () => {
                 this.getPic()
             })
-            
         })
     },
     methods: {
         getPic() {
             const lasyImg = document.querySelectorAll('img[pre-src]')
             const screenHeight = window.screen.availHeight
-            lasyImg.forEach(el => {
+            for (let i = 0; i < lasyImg.length; i++) {
+                const el = lasyImg[i]
                 const top = el.getBoundingClientRect().top
                 if (top < screenHeight) {
                     el.src = el.getAttribute('pre-src')
                 }
-            })
+            }
         },
         toNativeLogin() {
             this.sendEvLog({

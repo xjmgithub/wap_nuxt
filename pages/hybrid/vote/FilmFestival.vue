@@ -16,7 +16,7 @@
                     <p/>
                 </a>
             </nav>
-            <div class="leftvote">
+            <div v-if="appType" class="leftvote">
                 <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
             </div>
             <div class="pit"/>
@@ -161,13 +161,13 @@ export default {
             })
 
             return {
-                banners: banners.data.data || [],
+                banners: [] || banners.data.data || [],
                 vote_sign: req.headers.vote_sign,
                 leftVote: leftVote.data.data || 0
             }
         } catch (e) {
             return {
-                banners: banners || [],
+                banners: [] || banners || [],
                 vote_sign: req.headers.vote_sign,
                 leftVote: 0
             }
@@ -187,27 +187,39 @@ export default {
             const bannerContain = document.querySelector('.wh_content')
             if (bannerContain) {
                 const stickyTop = bannerContain.getBoundingClientRect().bottom
+
                 const h = document.querySelector('.rules').offsetHeight
-                const dh = document.querySelector('.filmload').offsetHeight
+                const dh = (!this.appType && document.querySelector('.filmload').offsetHeight) || 0
+                let className = 'fixed'
+                if (dh == 0) {
+                    className = 'fixedapp'
+                }
                 if (stickyTop - dh - h <= 0) {
-                    document.querySelector('.top').classList.add('unfixed')
-                    document.querySelector('#nav').classList.add('fixed')
-                    document.querySelector('.leftvote').classList.add('fixed')
-                    document.querySelector('.pit').classList.add('fixed')
+                    document.querySelector('.top').classList.add(className)
+                    document.querySelector('#nav').classList.add(className)
+                    this.appType && document.querySelector('.leftvote').classList.add(className)
+                    document.querySelector('.pit').classList.add(className)
                 } else {
-                    document.querySelector('.top').classList.remove('unfixed')
-                    document.querySelector('#nav').classList.remove('fixed')
-                    document.querySelector('.leftvote').classList.remove('fixed')
-                    document.querySelector('.pit').classList.remove('fixed')
+                    document.querySelector('.top').classList.remove(className)
+                    document.querySelector('#nav').classList.remove(className)
+                    this.appType && document.querySelector('.leftvote').classList.remove(className)
+                    document.querySelector('.pit').classList.remove(className)
                 }
             }
         })
         if (this.banners.length <= 0) {
             this.$nextTick(() => {
-                document.querySelector('.top').classList.add('unfixed')
-                document.querySelector('#nav').classList.add('fixed')
-                document.querySelector('.leftvote').classList.add('fixed')
-                document.querySelector('.pit').classList.add('fixed')
+                if (this.appType) {
+                    document.querySelector('.top').classList.add('fixedapp')
+                    document.querySelector('#nav').classList.add('fixedapp')
+                    this.appType && document.querySelector('.leftvote').classList.add('fixedapp')
+                    document.querySelector('.pit').classList.add('fixedapp')
+                } else {
+                    document.querySelector('.top').classList.add('fixed')
+                    document.querySelector('#nav').classList.add('fixed')
+                    this.appType && document.querySelector('.leftvote').classList.add('fixed')
+                    document.querySelector('.pit').classList.add('fixed')
+                }
             })
         }
 
@@ -349,13 +361,20 @@ html {
                 text-decoration: underline;
             }
         }
-        &.unfixed {
+        &.fixed {
             position: static;
             .rules {
-                // top: 0;
                 top: 4rem;
                 position: fixed;
-                background: rgba(0, 0, 0);
+                background: black;
+            }
+        }
+        &.fixedapp {
+            position: static;
+            .rules {
+                top: 0;
+                position: fixed;
+                background: black;
             }
         }
     }
@@ -399,8 +418,13 @@ html {
         }
         &.fixed {
             position: fixed;
-            // top: 2rem;
             top: 6rem;
+            width: 100%;
+            z-index: 1;
+        }
+        &.fixedapp {
+            position: fixed;
+            top: 2rem;
             width: 100%;
             z-index: 1;
         }
@@ -415,8 +439,13 @@ html {
         text-align: right;
         &.fixed {
             position: fixed;
-            // top: 4rem;
             top: 8rem;
+            width: 100%;
+            z-index: 1;
+        }
+        &.fixedapp {
+            position: fixed;
+            top: 4rem;
             width: 100%;
             z-index: 1;
         }
@@ -424,6 +453,9 @@ html {
     .pit {
         height: 0;
         &.fixed {
+            height: 4rem;
+        }
+        &.fixedapp {
             height: 4rem;
         }
     }
