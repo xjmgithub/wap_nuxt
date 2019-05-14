@@ -131,8 +131,7 @@ export default {
             mvList: [],
             time: 4,
             openPicShowd: false,
-            mounted: false,
-            leftVote:12
+            mounted: false
         }
     },
     async asyncData({ app: { $axios }, route, store, req }) {
