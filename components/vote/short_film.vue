@@ -1,7 +1,7 @@
 <template>
     <div id="show-film">
         <ul>
-            <li v-for="(item,index) in dataList" :key="index" data-id="item.id" class="clearfix" @click="vodDetail(item.link_vod_code)">
+            <li v-for="(item,index) in dataList" :key="index" data-id="item.id" class="clearfix" @click="vodDetail(item)">
                 <div class="left">
                     <img :src="cdnPicSrc(item.icon)" class="icon">
                     <span :class="{first:index==0,second:index==1,third:index==2,normal:index>2}">No {{index+1}}</span>
@@ -47,8 +47,8 @@ export default {
         handleViceVote(item) {
             this.$emit('onVote', item)
         },
-        vodDetail(vod) {
-            this.$emit('toPlay',vod)
+        vodDetail(item) {
+            this.$emit('toPlay',item)
         }
     }
 }

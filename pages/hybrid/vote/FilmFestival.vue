@@ -56,7 +56,7 @@
                     <p>We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p>
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
-                    <div class="download-btn" @click="loadConfirm()">
+                    <div class="download-btn" @click="loadConfirm('','about')">
                         <p>{{$store.state.lang.vote_downloadbtn}}</p>
                         {{$store.state.lang.vote_downloadbtn_tips}}
                     </div>
@@ -72,7 +72,7 @@
                 </template>
                 <template v-slot:buttons>
                     <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
-                    <div v-if="appType==0" class="download-btn" @click="loadConfirm()">
+                    <div v-if="appType==0" class="download-btn" @click="loadConfirm('','rules')">
                         <p>{{$store.state.lang.vote_downloadbtn}}</p>
                         {{$store.state.lang.vote_downloadbtn_tips}}
                     </div>
@@ -94,7 +94,7 @@
                             <img src="~assets/img/vote/ic_ti_def.png">
                         </span>
                     </div>
-                    <div v-if="appType==0" class="download-btn" @click="loadConfirm()">
+                    <div v-if="appType==0" class="download-btn" @click="loadConfirm('','share')">
                         <p>{{$store.state.lang.vote_downloadbtn}}</p>
                         {{$store.state.lang.vote_downloadbtn_tips}}
                     </div>
@@ -306,7 +306,7 @@ export default {
         handleVote(film) {
             if (this.appType <= 0) {
                 // 判断是否安装app 否则弹出下载提示框  loadConfirm
-                this.loadConfirm(1)
+                this.loadConfirm(1, 'vote')
                 return
             }
 
@@ -383,29 +383,78 @@ export default {
                 this.loadConfirm(1)
             }
         },
-        loadConfirm(vote) {
+        loadConfirm(vote, pos) {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'callApp',
+                label: pos,
+                value: 1
+            })
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 this.rulesCard = false
                 this.aboutCard = false
                 if (vote) {
+                    this.sendEvLog({
+                        category: `vote_${this.voteTitle}_${this.platform}`,
+                        action: 'downloadpopup_show',
+                        label: pos,
+                        value: 1
+                    })
                     this.$confirm(
                         this.$store.state.lang.vote_webshare_words,
                         () => {
+                            this.sendEvLog({
+                                category: `vote_${this.voteTitle}_${this.platform}`,
+                                action: 'downloadpopup_clickok',
+                                label: pos,
+                                value: 1
+                            })
+                            this.sendEvLog({
+                                category: `vote_${this.voteTitle}_${this.platform}`,
+                                action: 'toMarket',
+                                label: pos,
+                                value: 1
+                            })
                             callMarket.call(this)
                         },
-                        () => {},
+                        () => {
+                            this.sendEvLog({
+                                category: `vote_${this.voteTitle}_${this.platform}`,
+                                action: 'downloadpopup_clicknot',
+                                label: pos,
+                                value: 1
+                            })
+                        },
                         this.$store.state.lang.download_apk,
                         this.$store.state.lang.vote_cancel
                     )
                 } else {
+                    this.sendEvLog({
+                        category: `vote_${this.voteTitle}_${this.platform}`,
+                        action: 'toMarket',
+                        label: pos,
+                        value: 1
+                    })
                     callMarket.call(this)
                 }
             })
         },
         downloadBanner() {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'callApp',
+                label: 'download_tips',
+                value: 1
+            })
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 this.rulesCard = false
                 this.aboutCard = false
+                this.sendEvLog({
+                    category: `vote_${this.voteTitle}_${this.platform}`,
+                    action: 'toMarket',
+                    label: 'download_tips',
+                    value: 1
+                })
                 callMarket.call(this)
             })
         },
