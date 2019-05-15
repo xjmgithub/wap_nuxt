@@ -11,8 +11,7 @@
                     <p class="film-author" @click="vodDetail(item)">{{item.brief}}</p>
                     <p class="film-des" @click="vodDetail(item)">{{item.description}}</p>
                     <span class="votes" @click="vodDetail(item)">{{item.ballot_num | formatVotes}}</span>
-                    <span v-if="item.user_ballot_num>0" class="vote-btn" @click.prevent="handleViceVote(item)">VOTED</span>
-                    <span v-else class="vote-btn" @click.prevent="handleViceVote(item)">VOTE</span>
+                    <span class="vote-btn" @click.prevent="handleViceVote(item)">VOTE</span>
                 </div>
             </li>
         </ul>
@@ -101,7 +100,7 @@ export default {
                 p {
                     color: #f6d36d;
                     &.film-name {
-                        font-size: 0.8rem;
+                        font-size: 0.88rem;
                         font-weight: bold;
                         margin-bottom: 0.2rem;
                         overflow: hidden;
@@ -109,19 +108,19 @@ export default {
                         white-space: nowrap;
                     }
                     &.film-author {
-                        font-size: 0.7rem;
+                        font-size: 0.8rem;
                         margin-bottom: 0.5rem;
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
                     }
                     &.film-des {
-                        font-size: 0.7rem;
-                        margin-bottom: 0.5rem;
+                        font-size: 0.8rem;
+                        margin-bottom: 1rem;
                         color: rgba(246, 211, 109, 0.4);
                         display: -webkit-box;
                         overflow: hidden;
-                        height: 3rem;
+                        height: 3.5rem;
                         -webkit-line-clamp: 4;
                         word-break: break-all;
                         /* autoprefixer: off */
@@ -136,7 +135,7 @@ export default {
                     }
                     &.vote-btn {
                         float: right;
-                        padding: 0.2rem 0.5rem;
+                        padding: 0.3rem 0.8rem;
                         background: #c7a867;
                         border-radius: 4px;
                         font-size: 0.8rem;
