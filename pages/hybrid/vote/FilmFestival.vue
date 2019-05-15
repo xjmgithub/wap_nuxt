@@ -100,7 +100,7 @@
                     </div>
                 </template>
             </mCard>
-            <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':clientHeight}" @click="loadMore">
+            <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':0}" @click="loadMore">
                 <span>{{$store.state.lang.vote_view_more}}</span>
             </div>
         </div>
@@ -138,7 +138,6 @@ export default {
     },
     data() {
         return {
-            isLogin: this.$store.state.user.type || false,
             appType: this.$store.state.appType || 0,
             tabList: [
                 {
@@ -162,7 +161,6 @@ export default {
             rulesCard: false,
             shareCard: false,
             showMore: true,
-            clientHeight: 0,
             filmList: [],
             sFilmList: [],
             mvList: [],
@@ -193,15 +191,14 @@ export default {
             })
         }
     },
-    async asyncData({ app: { $axios }, route, store, req }) {
-        $axios.setHeader('token', store.state.token)
+    async asyncData({ app: { $axios }, store, req }) {
         let banners = []
         let leftVote = 0
+        $axios.setHeader('token', store.state.token)
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
-            if (data.data.banner) {
-                banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-            }
+            if (data.data.banner) banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
+
             if (store.state.appType) {
                 leftVote = await $axios({
                     url: `/voting/v1/ticket/sign-in`,
@@ -215,18 +212,17 @@ export default {
             }
             return {
                 banners: banners.data.data || [],
-                vote_sign: (req && req.headers.vote_sign) || '',
+                vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 leftVote: leftVote
             }
         } catch (e) {
             return {
-                banners: banners || [],
+                banners: [],
                 vote_sign: (req && req.headers.vote_sign) || '',
                 leftVote: 0
             }
         }
     },
-
     mounted() {
         this.sendEvLog({
             category: `vote_${this.voteTitle}_${this.platform}`,
@@ -235,27 +231,16 @@ export default {
             value: 1
         })
 
-        this.clientHeight = document.body.clientHeight
-        this.openPicShowd = getCookie('vote_screen_8')
         this.mounted = true
-
-        const voteShareDown = getCookie('vote_share_down')
-        if (!voteShareDown) {
-            setCookie('vote_share_down', this.vote_sign)
-        }
-        if (this.$route.query.pin) {
-            setCookie('vote_share_user', this.$route.query.pin)
-        }
+        this.openPicShowd = getCookie('vote_screen_8') // 是否显示过开屏
+        this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin)  // 分享源用户记录
+        !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
 
         document.addEventListener('scroll', () => {
-            const scollTop = document.body.scrollTop || document.documentElement.scrollTop
-            if (scollTop > 0) {
-                this.showMore = false
-            }
+            this.showMore = false
             const bannerContain = document.querySelector('.wh_content')
             if (bannerContain) {
                 const stickyTop = bannerContain.getBoundingClientRect().bottom
-
                 const h = document.querySelector('.rules').offsetHeight
                 const dh = (!this.appType && document.querySelector('.filmload').offsetHeight) || 0
                 let className = 'fixed'
@@ -290,7 +275,9 @@ export default {
                 }
             })
         }
+        
 
+        // TODO 优化这个性能
         const timer = setInterval(() => {
             if (this.time <= 0) {
                 clearInterval(timer)
@@ -584,7 +571,10 @@ export default {
         shareWithTwitter() {
             this.shareCard = false
             window.location.href =
-                'http://twitter.com/share?url=' + encodeURIComponent(window.location.origin + window.location.pathname) + '&text=' + encodeURIComponent(document.title)
+                'http://twitter.com/share?url=' +
+                encodeURIComponent(window.location.origin + window.location.pathname) +
+                '&text=' +
+                encodeURIComponent(document.title)
         }
     },
     head() {
@@ -853,7 +843,7 @@ html {
         position: fixed;
         top: 0;
         z-index: 1;
-        width:100%;
+        width: 100%;
         p {
             position: fixed;
             top: 0;
