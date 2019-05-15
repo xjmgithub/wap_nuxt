@@ -4,7 +4,7 @@
         <div v-show="appType||mounted">
             <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner"/>
             <div class="top" :class="{mtop:!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'"/>
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle"/>
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                     <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
@@ -22,7 +22,14 @@
             <div class="pit"/>
             <template v-for="(item,index) in tabList">
                 <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo"/>
-                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="toVideo" @toPlay="handleVote"/>
+                <sFilm
+                    v-if="item.type=='short_film'"
+                    v-show="tabIndex==index"
+                    :key="index"
+                    :data-list="sFilmList"
+                    @onVote="toVideo"
+                    @toPlay="handleVote"
+                />
                 <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo"/>
             </template>
             <div
@@ -64,7 +71,7 @@
                     <p>Real-time ranking of votes, and top 1 voted will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>
                 </template>
                 <template v-slot:buttons>
-                    <div v-if="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
+                    <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
                     <div v-if="appType==0" class="download-btn" @click="loadConfirm()">
                         <p>{{$store.state.lang.vote_downloadbtn}}</p>
                         {{$store.state.lang.vote_downloadbtn_tips}}
@@ -129,7 +136,6 @@ export default {
         mCard,
         download
     },
-
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
@@ -162,7 +168,29 @@ export default {
             mvList: [],
             time: 4,
             openPicShowd: false,
-            mounted: false
+            mounted: false,
+            voteTitle: 'Film Festival Vote'
+        }
+    },
+    computed: {
+        platform() {
+            if (this.appType == 1) {
+                return 'Android'
+            } else if (this.appType == 2) {
+                return 'iOS'
+            } else {
+                return 'web'
+            }
+        }
+    },
+    watch: {
+        tabIndex(nv, ov) {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'tab_click',
+                label: (nv == 0 && 'film') || (nv == 1 && 'short film') || (nv == 2 && 'MV'),
+                value: 1
+            })
         }
     },
     async asyncData({ app: { $axios }, route, store, req }) {
@@ -200,6 +228,13 @@ export default {
     },
 
     mounted() {
+        this.sendEvLog({
+            category: `vote_${this.voteTitle}_${this.platform}`,
+            action: 'homepage_show',
+            label: '',
+            value: 1
+        })
+
         this.clientHeight = document.body.clientHeight
         this.openPicShowd = getCookie('vote_screen_8')
         this.mounted = true
@@ -274,11 +309,19 @@ export default {
                 this.loadConfirm(1)
                 return
             }
+
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'votebtn_click',
+                label: film.name,
+                value: 1
+            })
+
             if (this.leftVote <= 0) {
                 this.$confirm(
                     this.$store.state.lang.vote_fail + this.$store.state.lang.vote_success_0,
                     () => {
-                        this.toShare()
+                        this.toShare('votefail')
                     },
                     () => {},
                     this.$store.state.lang.vote_share,
@@ -304,7 +347,7 @@ export default {
                                 this.$confirm(
                                     this.$store.state.lang.vote_success + this.$store.state.lang.vote_success_0,
                                     () => {
-                                        this.toShare()
+                                        this.toShare('0leftvote')
                                     },
                                     () => {},
                                     this.$store.state.lang.vote_share,
@@ -323,7 +366,15 @@ export default {
                     })
             }
         },
-        toVideo(vod){
+        toVideo(item) {
+            const vod = item.link_vod_code
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'votepic_click',
+                label: item.name,
+                value: 1
+            })
+
             if (this.appType == 1) {
                 window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
             } else if (this.appType == 2) {
@@ -396,17 +447,24 @@ export default {
                 return b.ballot_num - a.ballot_num
             })
         },
-        toShare() {
+        toShare(pos) {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'share_click',
+                label: pos,
+                value: 1
+            })
+
             if (this.appType === 1) {
                 this.rulesCard = false // 弹层消失
                 const img = this.banners.length > 0 ? this.banners[0].materials : ''
                 process.client &&
                     shareInvite(
                         `${window.location.href}?pin=${this.$store.state.user.id}`,
-                        'Film Festival Vote',
+                        this.voteTitle,
                         'Vote & Win Big Prizes',
                         img,
-                        'Film Festival Vote'
+                        this.voteTitle
                     )
             } else if (this.appType === 0) {
                 this.rulesCard = false
@@ -480,7 +538,7 @@ export default {
     },
     head() {
         return {
-            title: 'Film Festival Vote',
+            title: this.voteTitle,
             meta: [
                 { name: 'description', property: 'description', content: this.$store.state.lang.vote_appshare_words },
                 { name: 'og:description', property: 'og:description', content: this.$store.state.lang.vote_appshare_words },
@@ -490,7 +548,7 @@ export default {
                     content: this.banners.length > 0 && this.banners[0].materials.replace('http:', 'https:')
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Film Festival Vote' }
+                { name: 'og:title', property: 'og:title', content: this.voteTitle }
             ]
         }
     }

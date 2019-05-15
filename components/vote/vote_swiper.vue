@@ -47,7 +47,7 @@ export default {
             this.sendEvLog({
                 category: `vote_${this.name}_${this.platform}`,
                 action: 'banner_click',
-                label: 'banner_' + bannerName,
+                label: bannerName,
                 value: 1
             })
             toNativePage(href)
@@ -58,7 +58,7 @@ export default {
                 this.sendEvLog({
                     category: `vote_${this.name}_${this.platform}`,
                     action: 'banner_show',
-                    label: 'banner_' + bannerName,
+                    label: bannerName,
                     value: 1
                 })
             }
