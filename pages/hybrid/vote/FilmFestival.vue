@@ -27,8 +27,8 @@
                     v-show="tabIndex==index"
                     :key="index"
                     :data-list="sFilmList"
-                    @onVote="toVideo"
-                    @toPlay="handleVote"
+                    @onVote="handleVote"
+                    @toPlay="toVideo"
                 />
                 <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo"/>
             </template>
@@ -512,9 +512,10 @@ export default {
                     shareInvite(
                         `${window.location.href}?pin=${this.$store.state.user.id}`,
                         this.voteTitle,
-                        'Vote & Win Big Prizes',
+                        '',
                         img,
-                        this.voteTitle
+                        this.voteTitle,
+                        `utm_source=VOTE&utm_medium=${this.voteTitle}&utm_campaign=${this.platform}`
                     )
             } else if (this.appType === 0) {
                 this.rulesCard = false

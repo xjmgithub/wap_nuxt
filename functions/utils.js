@@ -71,9 +71,15 @@ export const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min
 }
 
-export const shareInvite = (link, shareTitle, shareContent, shareImg, channel) => {
+export const shareInvite = (link, shareTitle, shareContent, shareImg, channel, sourceParam) => {
     if (link.indexOf('?') > 0) {
-        link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
+        if (sourceParam) {
+            link += '&' + sourceParam
+        } else {
+            link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
+        }
+    } else if (sourceParam) {
+        link += '?' + sourceParam
     } else {
         link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
     }
@@ -442,7 +448,7 @@ export const callMarket = function() {
     } else {
         source = '&' + location.search.substr(1)
     }
-    
+
     this.$axios({
         method: 'POST',
         headers: {
