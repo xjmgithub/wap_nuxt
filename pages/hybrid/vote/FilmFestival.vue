@@ -624,7 +624,7 @@ html {
             height: 2rem;
             line-height: 2rem;
             background: linear-gradient(360deg, rgba(0, 0, 0), rgba(0, 0, 0, 0.1));
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             color: #ffffff;
             position: absolute;
             left: 0;
@@ -634,7 +634,7 @@ html {
             span {
                 display: inline-block;
                 text-align: center;
-                width: 33%;
+                width: 33.33%;
                 text-decoration: underline;
             }
         }
@@ -656,21 +656,21 @@ html {
         }
     }
     #nav {
-        height: 2rem;
+        height: 2.4rem;
         background: linear-gradient(to bottom, #9d802a, #c9ab6f);
         padding: 0.4rem 0;
         a {
             text-align: center;
             cursor: pointer;
-            height: 1.2rem;
-            line-height: 1.2rem;
-            width: 33%;
+            height: 1.6rem;
+            line-height: 1.6rem;
+            width: 33.33%;
             color: #ffe189;
             display: block;
             float: left;
             font-weight: 600;
             text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
-            font-size: 0.88rem;
+            font-size: 0.92rem;
             &:link,
             &:active,
             &:visited,

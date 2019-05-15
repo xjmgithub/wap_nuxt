@@ -207,8 +207,8 @@ export default {
 }
 .wh_indicator_item {
     display: inline-block;
-    width: 0.25rem;
-    height: 0.25rem;
+    width: 6px;
+    height: 6px;
     margin: 1px 3px;
     cursor: pointer;
     border-radius: 100%;
