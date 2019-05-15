@@ -426,6 +426,42 @@ export const downloadApk = function(callback) {
     if (callback) callback()
 }
 
+export const callMarket = function() {
+    const ua = navigator.userAgent.toLowerCase()
+    let appType = 1
+    let source = ''
+    const voteDownTag = getCookie('vote_share_down')
+    const user = getCookie('vote_share_user')
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        appType = 2
+    }
+    if (location.href.indexOf('referrer') > 0) {
+        source = location.search
+    } else if (location.href.indexOf('utm_source') > 0) {
+        source = '&referrer=' + encodeURIComponent(location.search.substr(1))
+    } else {
+        source = '&' + location.search.substr(1)
+    }
+    
+    this.$axios({
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            token: this.$store.state.token,
+            'X-Secret': voteDownTag
+        },
+        data: qs.stringify({
+            vote_id: 8,
+            target: user,
+            action: 'SHARE_DOWNLOAD'
+        }),
+        url: '/voting/v1/ticket'
+    })
+
+    window.location.href =
+        appType == 1 ? 'market://details?id=com.star.mobile.video' + source : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+}
+
 export const callApp = function(page, failback) {
     const ua = navigator.userAgent.toLowerCase()
     let scheme = 'starvideo'
@@ -550,7 +586,7 @@ export const normalToAppStore = function(page, pos) {
             if (appType == 2) {
                 window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
             } else {
-                downloadApk.call(_this,() => {
+                downloadApk.call(_this, () => {
                     _this.sendEvLog({
                         category: document.title,
                         action: 'install_activated',

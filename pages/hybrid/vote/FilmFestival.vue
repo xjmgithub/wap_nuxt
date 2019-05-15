@@ -2,9 +2,9 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download v-if="!appType" class="clearfix filmload" @onload="loadConfirm"/>
+            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner"/>
             <div class="top" :class="{mtop:!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="'Film Festival Vote'"/>
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle"/>
                 <div class="rules">
                     <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
                     <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
@@ -21,9 +21,16 @@
             </div>
             <div class="pit"/>
             <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote"/>
-                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote"/>
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote"/>
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo"/>
+                <sFilm
+                    v-if="item.type=='short_film'"
+                    v-show="tabIndex==index"
+                    :key="index"
+                    :data-list="sFilmList"
+                    @onVote="toVideo"
+                    @toPlay="handleVote"
+                />
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo"/>
             </template>
             <div
                 v-show="appType!=2"
@@ -39,15 +46,17 @@
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
-                    <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old</p>
-                    <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
+                    <p>Pan Africa ONline Film Festival (PAOFF) invites all online users to vote for your favorites via StarTimes ON, show your interest and support for your favorite stars in this incredible event. Awards are categorized into three types:</p>
+                    <p>1- The Best Movie in Africa,</p>
+                    <p>2- The Best Short Film in Africa</p>
+                    <p>3- The Best MV in Africa.</p>
                     <img
                         src="https://s3-eu-west-1.amazonaws.com/tenbreportal/cms_back/html/files/img/group1/M00/04/C5/wKggGVtxpsqAXvq1AAJLZ725Yeo216.JPG"
                     >
-                    <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
+                    <p>We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p>
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
-                    <div class="download-btn" @click="loadConfirm">
+                    <div class="download-btn" @click="loadConfirm('','about')">
                         <p>{{$store.state.lang.vote_downloadbtn}}</p>
                         {{$store.state.lang.vote_downloadbtn_tips}}
                     </div>
@@ -55,13 +64,15 @@
             </mCard>
             <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
                 <template v-slot:content>
-                    <p>Even though he is only 15 years old, when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for Even though he is only 15 years old,</p>
-                    <p>when his father is injured in a road accident Abel takes up the responsibility of manning the family boda boda to provide for</p>
-                    <p>manning the family boda boda to provide for</p>
+                    <p>From June 1st to July 31st you have 5 votes each day. Vote for your favorite producer and shows!</p>
+                    <p>Share the link with your friends to get more votes! You can get 5 extra votes for each new install on phone by sharing the link. More installations via the link you share, more votes you will gain!</p>
+                    <p>Votes can be accumulated and is valid until the deadline.</p>
+                    <p>Votes can be cast for any shows you like.</p>
+                    <p>Real-time ranking of votes, and top 1 voted will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>
                 </template>
                 <template v-slot:buttons>
-                    <div v-if="appType==1" class="share-btn" @click="toShare">{{$store.state.lang.vote_sharebtn}}</div>
-                    <div v-if="appType==0" class="download-btn" @click="loadConfirm">
+                    <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
+                    <div v-if="appType==0" class="download-btn" @click="loadConfirm('','rules')">
                         <p>{{$store.state.lang.vote_downloadbtn}}</p>
                         {{$store.state.lang.vote_downloadbtn_tips}}
                     </div>
@@ -83,7 +94,7 @@
                             <img src="~assets/img/vote/ic_ti_def.png">
                         </span>
                     </div>
-                    <div v-if="appType==0" class="download-btn" @click="loadConfirm">
+                    <div v-if="appType==0" class="download-btn" @click="loadConfirm('','share')">
                         <p>{{$store.state.lang.vote_downloadbtn}}</p>
                         {{$store.state.lang.vote_downloadbtn_tips}}
                     </div>
@@ -113,7 +124,7 @@ import mVoteSwiper from '~/components/vote/vote_swiper'
 import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
-import { shareInvite, setCookie, getCookie, callApp, downloadApk } from '~/functions/utils'
+import { shareInvite, setCookie, getCookie, callApp, callMarket } from '~/functions/utils'
 import download from '~/components/vote/download'
 import qs from 'qs'
 export default {
@@ -125,7 +136,6 @@ export default {
         mCard,
         download
     },
-
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
@@ -158,7 +168,29 @@ export default {
             mvList: [],
             time: 4,
             openPicShowd: false,
-            mounted: false
+            mounted: false,
+            voteTitle: 'Film Festival Vote'
+        }
+    },
+    computed: {
+        platform() {
+            if (this.appType == 1) {
+                return 'Android'
+            } else if (this.appType == 2) {
+                return 'iOS'
+            } else {
+                return 'web'
+            }
+        }
+    },
+    watch: {
+        tabIndex(nv, ov) {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'tab_click',
+                label: (nv == 0 && 'film') || (nv == 1 && 'short film') || (nv == 2 && 'MV'),
+                value: 1
+            })
         }
     },
     async asyncData({ app: { $axios }, route, store, req }) {
@@ -196,6 +228,13 @@ export default {
     },
 
     mounted() {
+        this.sendEvLog({
+            category: `vote_${this.voteTitle}_${this.platform}`,
+            action: 'homepage_show',
+            label: '',
+            value: 1
+        })
+
         this.clientHeight = document.body.clientHeight
         this.openPicShowd = getCookie('vote_screen_8')
         this.mounted = true
@@ -204,7 +243,7 @@ export default {
         if (!voteShareDown) {
             setCookie('vote_share_down', this.vote_sign)
         }
-        if(this.$route.query.pin){
+        if (this.$route.query.pin) {
             setCookie('vote_share_user', this.$route.query.pin)
         }
 
@@ -267,14 +306,22 @@ export default {
         handleVote(film) {
             if (this.appType <= 0) {
                 // 判断是否安装app 否则弹出下载提示框  loadConfirm
-                this.loadConfirm(1)
+                this.loadConfirm(1, 'vote')
                 return
             }
+
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'votebtn_click',
+                label: film.name,
+                value: 1
+            })
+
             if (this.leftVote <= 0) {
                 this.$confirm(
                     this.$store.state.lang.vote_fail + this.$store.state.lang.vote_success_0,
                     () => {
-                        this.toShare()
+                        this.toShare('votefail')
                     },
                     () => {},
                     this.$store.state.lang.vote_share,
@@ -300,7 +347,7 @@ export default {
                                 this.$confirm(
                                     this.$store.state.lang.vote_success + this.$store.state.lang.vote_success_0,
                                     () => {
-                                        this.toShare()
+                                        this.toShare('0leftvote')
                                     },
                                     () => {},
                                     this.$store.state.lang.vote_share,
@@ -319,22 +366,97 @@ export default {
                     })
             }
         },
-        loadConfirm(vote) {
-            const text = vote ? this.$store.state.lang.vote_webshare_words : this.$store.state.lang.vote_apk
-            const btn = vote ? this.$store.state.lang.download_apk : this.$store.state.lang.vote_ok
+        toVideo(item) {
+            const vod = item.link_vod_code
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'votepic_click',
+                label: item.name,
+                value: 1
+            })
+
+            if (this.appType == 1) {
+                window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+            } else if (this.appType == 2) {
+                window.location.href = 'startimes://player?vodId=' + vod
+            } else {
+                this.loadConfirm(1)
+            }
+        },
+        loadConfirm(vote, pos) {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'callApp',
+                label: pos,
+                value: 1
+            })
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 this.rulesCard = false
                 this.aboutCard = false
                 this.shareCard = false
-                this.$confirm(
-                    text,
-                    () => {
-                        downloadApk.call(this)
-                    },
-                    () => {},
-                    btn,
-                    this.$store.state.lang.vote_cancel
-                )
+                if (vote) {
+                    this.sendEvLog({
+                        category: `vote_${this.voteTitle}_${this.platform}`,
+                        action: 'downloadpopup_show',
+                        label: pos,
+                        value: 1
+                    })
+                    this.$confirm(
+                        this.$store.state.lang.vote_webshare_words,
+                        () => {
+                            this.sendEvLog({
+                                category: `vote_${this.voteTitle}_${this.platform}`,
+                                action: 'downloadpopup_clickok',
+                                label: pos,
+                                value: 1
+                            })
+                            this.sendEvLog({
+                                category: `vote_${this.voteTitle}_${this.platform}`,
+                                action: 'toMarket',
+                                label: pos,
+                                value: 1
+                            })
+                            callMarket.call(this)
+                        },
+                        () => {
+                            this.sendEvLog({
+                                category: `vote_${this.voteTitle}_${this.platform}`,
+                                action: 'downloadpopup_clicknot',
+                                label: pos,
+                                value: 1
+                            })
+                        },
+                        this.$store.state.lang.download_apk,
+                        this.$store.state.lang.vote_cancel
+                    )
+                } else {
+                    this.sendEvLog({
+                        category: `vote_${this.voteTitle}_${this.platform}`,
+                        action: 'toMarket',
+                        label: pos,
+                        value: 1
+                    })
+                    callMarket.call(this)
+                }
+            })
+        },
+        downloadBanner() {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'callApp',
+                label: 'download_tips',
+                value: 1
+            })
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
+                this.rulesCard = false
+                this.aboutCard = false
+                this.sendEvLog({
+                    category: `vote_${this.voteTitle}_${this.platform}`,
+                    action: 'toMarket',
+                    label: 'download_tips',
+                    value: 1
+                })
+                callMarket.call(this)
             })
         },
         loadMore() {
@@ -375,17 +497,24 @@ export default {
                 return b.ballot_num - a.ballot_num
             })
         },
-        toShare() {
+        toShare(pos) {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'share_click',
+                label: pos,
+                value: 1
+            })
+
             if (this.appType === 1) {
                 this.rulesCard = false // 弹层消失
                 const img = this.banners.length > 0 ? this.banners[0].materials : ''
                 process.client &&
                     shareInvite(
                         `${window.location.href}?pin=${this.$store.state.user.id}`,
-                        'Film Festival Vote',
+                        this.voteTitle,
                         'Vote & Win Big Prizes',
                         img,
-                        'Film Festival Vote'
+                        this.voteTitle
                     )
             } else if (this.appType === 0) {
                 this.rulesCard = false
@@ -459,7 +588,7 @@ export default {
     },
     head() {
         return {
-            title: 'Film Festival Vote',
+            title: this.voteTitle,
             meta: [
                 { name: 'description', property: 'description', content: this.$store.state.lang.vote_appshare_words },
                 { name: 'og:description', property: 'og:description', content: this.$store.state.lang.vote_appshare_words },
@@ -469,7 +598,7 @@ export default {
                     content: this.banners.length > 0 && this.banners[0].materials.replace('http:', 'https:')
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Film Festival Vote' }
+                { name: 'og:title', property: 'og:title', content: this.voteTitle }
             ]
         }
     }
