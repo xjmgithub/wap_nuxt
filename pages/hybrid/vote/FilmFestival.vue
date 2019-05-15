@@ -557,7 +557,7 @@ export default {
                 {
                     method: 'share',
                     display: 'popup',
-                    href: window.location.href
+                    href: window.location.origin + window.location.pathname
                 },
                 function(response) {}
             )
@@ -568,7 +568,7 @@ export default {
                 const input = document.createElement('input')
                 input.setAttribute('readOnly', true)
                 document.body.appendChild(input)
-                input.setAttribute('value', window.location.href)
+                input.setAttribute('value', window.location.origin + window.location.pathname)
                 input.select()
                 const successful = document.execCommand('copy')
                 document.body.removeChild(input)
@@ -584,7 +584,7 @@ export default {
         shareWithTwitter() {
             this.shareCard = false
             window.location.href =
-                'http://twitter.com/share?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(document.title)
+                'http://twitter.com/share?url=' + encodeURIComponent(window.location.origin + window.location.pathname) + '&text=' + encodeURIComponent(document.title)
         }
     },
     head() {
