@@ -104,10 +104,16 @@ export default {
                         font-size: 0.8rem;
                         font-weight: bold;
                         margin-bottom: 0.2rem;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                     &.film-author {
                         font-size: 0.7rem;
                         margin-bottom: 0.5rem;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                     &.film-des {
                         font-size: 0.7rem;
@@ -115,7 +121,7 @@ export default {
                         color: rgba(246, 211, 109, 0.4);
                         display: -webkit-box;
                         overflow: hidden;
-                        height: 3.3rem;
+                        height: 3rem;
                         -webkit-line-clamp: 4;
                         word-break: break-all;
                         /* autoprefixer: off */

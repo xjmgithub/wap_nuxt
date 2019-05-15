@@ -99,6 +99,9 @@ export default {
                 width: 48%;
                 p {
                     color: #f6d36d;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                     &.film-name {
                         font-size: 0.8rem;
                         font-weight: bold;

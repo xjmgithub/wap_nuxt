@@ -393,6 +393,7 @@ export default {
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 this.rulesCard = false
                 this.aboutCard = false
+                this.shareCard = false
                 if (vote) {
                     this.sendEvLog({
                         category: `vote_${this.voteTitle}_${this.platform}`,
