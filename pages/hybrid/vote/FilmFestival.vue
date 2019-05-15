@@ -27,8 +27,8 @@
                     v-show="tabIndex==index"
                     :key="index"
                     :data-list="sFilmList"
-                    @onVote="toVideo"
-                    @toPlay="handleVote"
+                    @onVote="handleVote"
+                    @toPlay="toVideo"
                 />
                 <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo"/>
             </template>
