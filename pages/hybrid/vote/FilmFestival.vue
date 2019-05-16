@@ -11,7 +11,7 @@
                         <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
                     </div>
                     <nav id="nav">
-                        <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex === index}" @click="tabIndex = index">
+                        <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="tabIndex=index">
                             <span>{{item.name}}</span>
                             <p/>
                         </a>
@@ -232,10 +232,14 @@ export default {
             value: 1
         })
 
+        this.getAllList() // 获取投票单元
+
         this.mounted = true
         this.openPicShowd = getCookie('vote_screen_8') // 是否显示过开屏
         this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin) // 分享源用户记录
         !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
+
+        this.banners.length <= 0 && document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
 
         document.addEventListener('scroll', () => {
             this.showMore = false
@@ -252,17 +256,6 @@ export default {
                 }
             }
         })
-        if (this.banners.length <= 0) {
-            this.$nextTick(() => {
-                if (this.appType) {
-                    document.querySelector('.sticky').classList.add('fixed1')
-                } else {
-                    document.querySelector('.sticky').classList.add('fixed2')
-                }
-            })
-        }
-
-        this.getAllList()
     },
     methods: {
         screenTimer() {
@@ -347,7 +340,7 @@ export default {
             } else if (this.appType == 2) {
                 window.location.href = 'startimes://player?vodId=' + vod
             } else {
-                this.loadConfirm(1)
+                this.loadConfirm(1) // TODO 差一个pos
             }
         },
         loadConfirm(vote, pos) {
@@ -473,15 +466,14 @@ export default {
             if (this.appType === 1) {
                 this.rulesCard = false // 弹层消失
                 const img = this.banners.length > 0 ? this.banners[0].materials : ''
-                process.client &&
-                    shareInvite(
-                        `${window.location.href}?pin=${this.$store.state.user.id}`,
-                        this.voteTitle,
-                        '',
-                        img,
-                        this.voteTitle,
-                        `utm_source=VOTE&utm_medium=${this.voteTitle}&utm_campaign=${this.platform}`
-                    )
+                shareInvite(
+                    `${window.location.href}?pin=${this.$store.state.user.id}`,
+                    this.voteTitle,
+                    '',
+                    img,
+                    this.voteTitle,
+                    encodeURIComponent(`utm_source=VOTE&utm_medium=${this.voteTitle}&utm_campaign=${this.platform}`)
+                )
             } else if (this.appType === 0) {
                 this.rulesCard = false
                 this.shareCard = true
@@ -596,17 +588,17 @@ html {
         margin-top: 4rem;
     }
     .topContain {
-        padding-bottom: 4.4rem;
+        padding-bottom: 4.8rem; /* 2.4 + 2.4 */
         position: relative;
         .sticky {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 6.4rem;
+            height: 7.2rem; /* 2.4 + 2.4 + 2.4 */
             z-index: 1;
             .rules {
-                height: 2rem;
-                line-height: 2rem;
+                height: 2.4rem;
+                line-height: 2.4rem;
                 background: linear-gradient(360deg, rgba(0, 0, 0), rgba(0, 0, 0, 0.1));
                 font-size: 0.9rem;
                 color: #ffffff;
@@ -618,6 +610,54 @@ html {
                     text-decoration: underline;
                 }
             }
+            #nav {
+                height: 2.4rem;
+                background: linear-gradient(to bottom, #9d802a, #c9ab6f);
+                padding: 0.4rem 0;
+                a {
+                    text-align: center;
+                    height: 1.6rem;
+                    line-height: 1.6rem;
+                    width: 33.33%;
+                    color: #ffe189;
+                    display: block;
+                    float: left;
+                    font-weight: 600;
+                    text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
+                    font-size: 0.92rem;
+                    &:link,
+                    &:active,
+                    &:visited,
+                    &:hover {
+                        background: none;
+                        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
+                    }
+                    &:nth-child(2) {
+                        border-right: 1px solid rgba(255, 255, 210, 0.5);
+                        border-left: 1px solid rgba(255, 255, 210, 0.5);
+                    }
+                    &.on {
+                        color: #ffffff;
+                        p {
+                            width: 1.5rem;
+                            height: 0.2rem;
+                            background: #ffffff;
+                            border-radius: 3px;
+                            margin: 0 auto;
+                        }
+                    }
+                }
+            }
+            .leftvote {
+                padding-right: 0.8rem;
+                height: 2.4rem;
+                line-height: 2.4rem;
+                background: linear-gradient(to bottom, #000000, #4e4e4e);
+                font-size: 0.95rem;
+                color: #ffffff;
+                text-align: right;
+            }
+
             &.fixed1 {
                 position: fixed;
                 top: 0;
@@ -632,54 +672,6 @@ html {
                     background: black;
                 }
             }
-        }
-        #nav {
-            height: 2.4rem;
-            background: linear-gradient(to bottom, #9d802a, #c9ab6f);
-            padding: 0.4rem 0;
-            a {
-                text-align: center;
-                cursor: pointer;
-                height: 1.6rem;
-                line-height: 1.6rem;
-                width: 33.33%;
-                color: #ffe189;
-                display: block;
-                float: left;
-                font-weight: 600;
-                text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
-                font-size: 0.92rem;
-                &:link,
-                &:active,
-                &:visited,
-                &:hover {
-                    background: none;
-                    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
-                }
-                &:nth-child(2) {
-                    border-right: 1px solid rgba(255, 255, 210, 0.5);
-                    border-left: 1px solid rgba(255, 255, 210, 0.5);
-                }
-                &.on {
-                    color: #ffffff;
-                    p {
-                        width: 1.5rem;
-                        height: 0.2rem;
-                        background: #ffffff;
-                        border-radius: 3px;
-                        margin: 0 auto;
-                    }
-                }
-            }
-        }
-        .leftvote {
-            padding-right: 0.8rem;
-            height: 2rem;
-            line-height: 2rem;
-            background: linear-gradient(to bottom, #000000, #4e4e4e);
-            font-size: 0.88rem;
-            color: #ffffff;
-            text-align: right;
         }
     }
     .share {
