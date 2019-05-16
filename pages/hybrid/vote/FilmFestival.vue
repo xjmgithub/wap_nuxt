@@ -167,8 +167,7 @@ export default {
             mvList: [],
             time: 5,
             openPicShowd: false,
-            mounted: false,
-            voteTitle: 'Film Festival Vote'
+            mounted: false
         }
     },
     computed: {
@@ -199,7 +198,6 @@ export default {
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
             if (data.data.banner) banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-
             if (store.state.appType) {
                 leftVote = await $axios({
                     url: `/voting/v1/ticket/sign-in`,
@@ -214,13 +212,15 @@ export default {
             return {
                 banners: banners.data.data || [],
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
-                leftVote: leftVote
+                leftVote: leftVote,
+                voteTitle: data.data.name
             }
         } catch (e) {
             return {
                 banners: [],
                 vote_sign: (req && req.headers.vote_sign) || '',
-                leftVote: 0
+                leftVote: 0,
+                voteTitle: 'Pan Africa Online Film Festival'
             }
         }
     },
@@ -467,12 +467,10 @@ export default {
                 this.rulesCard = false // 弹层消失
                 const img = this.banners.length > 0 ? this.banners[0].materials : ''
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}`,
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
                     this.voteTitle,
                     '',
-                    img,
-                    this.voteTitle,
-                    encodeURIComponent(`utm_source=VOTE&utm_medium=${this.voteTitle}&utm_campaign=${this.platform}`)
+                    img
                 )
             } else if (this.appType === 0) {
                 this.rulesCard = false

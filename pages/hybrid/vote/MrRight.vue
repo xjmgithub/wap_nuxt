@@ -192,11 +192,10 @@ export default {
             this.mSendEvLog('share_click', 1, 10)
             process.client &&
                 shareInvite(
-                    window.location.href,
+                    window.location.href + '?utm_source=startimes_app&utm_medium=share&utm_campaign=Hello Mr. Right',
                     'Hello Mr. Right',
                     'Vote & Win Big Prizes',
-                    window.location.origin + '/res_nuxt/img/mrshare.jpg',
-                    'Hello Mr. Right'
+                    window.location.origin + '/res_nuxt/img/mrshare.jpg'
                 )
         },
         // 获取投票单元数据

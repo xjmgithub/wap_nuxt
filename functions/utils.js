@@ -71,21 +71,10 @@ export const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min
 }
 
-export const shareInvite = (link, shareTitle, shareContent, shareImg, channel, sourceParam) => {
-    if (link.indexOf('?') > 0) {
-        if (sourceParam) {
-            link += '&' + sourceParam
-        } else {
-            link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
-        }
-    } else if (sourceParam) {
-        link += '?' + sourceParam
-    } else {
-        link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
-    }
+export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
     if (window.getChannelId && window.getChannelId.showCustorm) {
         const content = '【' + shareTitle + '】' + shareContent + ' ' + link
-        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', channel)
+        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', shareTitle)
     }
 }
 
