@@ -318,7 +318,7 @@ export default {
                                 this.$store.state.lang.vote_cancel
                             )
                         } else {
-                            this.$toast(this.$store.state.lang.vote_success + ',' + this.$store.state.lang.vote_leftvote + ':' + this.leftVote)
+                            this.$toast(this.$store.state.lang.vote_success + this.$store.state.lang.vote_leftvote + ':' + this.leftVote)
                         }
                     } else {
                         this.$toast(res.data.message)
