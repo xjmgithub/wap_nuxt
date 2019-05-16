@@ -78,6 +78,35 @@ export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
     }
 }
 
+export const shareByFacebook = function(link) {
+    // eslint-disable-next-line no-undef
+    FB.ui({
+        method: 'share',
+        display: 'popup',
+        href: link
+    })
+}
+
+export const shareByTwitter = function(text, link) {
+    window.location.href = 'http://twitter.com/share?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text)
+}
+
+export const copyClipboard = function(text) {
+    const input = document.createElement('input')
+    input.setAttribute('readOnly', true)
+    document.body.appendChild(input)
+    input.setAttribute('value', text)
+    input.select()
+    const successful = document.execCommand('copy')
+    document.body.removeChild(input)
+    window.getSelection().removeAllRanges()
+    if (successful) {
+        this.$toast(this.$store.state.lang.officialwebsitemobile_copylink_copied)
+    } else {
+        this.$toast('Copy text is not support on your browser')
+    }
+}
+
 export const initGoogleLogin = (elm, callback) => {
     // google sign in
     // https://developers.google.com/identity/sign-in/web/build-button
@@ -296,15 +325,6 @@ export const getFaqAnswerLabel = function(question) {
         '_' +
         (this.$store.state.user.activationInfo && this.$store.state.user.activationInfo.ottStatus ? 1 : 0)
     )
-}
-
-export const shareFacebook = function() {
-    // eslint-disable-next-line no-undef
-    FB.ui({
-        method: 'share',
-        display: 'popup',
-        href: window.location.href
-    })
 }
 
 export const playVodinApp = function(appType, vod) {

@@ -125,7 +125,7 @@ import mVoteSwiper from '~/components/vote/vote_swiper'
 import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
-import { shareInvite, setCookie, getCookie, callApp, callMarket } from '~/functions/utils'
+import { shareInvite, setCookie, getCookie, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 import download from '~/components/vote/download'
 import qs from 'qs'
 export default {
@@ -464,18 +464,29 @@ export default {
             })
 
             if (this.appType === 1) {
-                this.rulesCard = false // 弹层消失
-                const img = this.banners.length > 0 ? this.banners[0].materials : ''
+                this.rulesCard = false
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
                     this.voteTitle,
                     this.$store.state.lang.vote_webshare_words,
-                    img
+                    this.banners.length > 0 ? this.banners[0].materials : ''
                 )
             } else if (this.appType === 0) {
                 this.rulesCard = false
                 this.shareCard = true
             }
+        },
+        shareWithFacebook() {
+            this.shareCard = false
+            shareByFacebook(window.location.origin + window.location.pathname)
+        },
+        copyLink() {
+            this.shareCard = false
+            copyClipboard(window.location.origin + window.location.pathname)
+        },
+        shareWithTwitter() {
+            this.shareCard = false
+            shareByTwitter(document.title, window.location.origin + window.location.pathname)
         },
         move(event) {
             if (this.canMove) {
@@ -504,45 +515,6 @@ export default {
                     this.top = 0
                 }
             }
-        },
-        shareWithFacebook() {
-            this.shareCard = false
-            // eslint-disable-next-line no-undef
-            FB.ui(
-                {
-                    method: 'share',
-                    display: 'popup',
-                    href: window.location.origin + window.location.pathname
-                },
-                function(response) {}
-            )
-        },
-        copyLink() {
-            this.shareCard = false
-            this.$nextTick(() => {
-                const input = document.createElement('input')
-                input.setAttribute('readOnly', true)
-                document.body.appendChild(input)
-                input.setAttribute('value', window.location.origin + window.location.pathname)
-                input.select()
-                const successful = document.execCommand('copy')
-                document.body.removeChild(input)
-                window.getSelection().removeAllRanges()
-                if (successful) {
-                    this.$toast(this.$store.state.lang.officialwebsitemobile_copylink_copied)
-                } else {
-                    this.$toast('Copylink is not support on your browser')
-                }
-                this.$store.commit('SET_SHARE_STATE', false)
-            })
-        },
-        shareWithTwitter() {
-            this.shareCard = false
-            window.location.href =
-                'http://twitter.com/share?url=' +
-                encodeURIComponent(window.location.origin + window.location.pathname) +
-                '&text=' +
-                encodeURIComponent(document.title)
         }
     },
     head() {
