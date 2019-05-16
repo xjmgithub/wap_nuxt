@@ -469,7 +469,7 @@ export default {
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
                     this.voteTitle,
-                    '',
+                    this.$store.state.lang.vote_webshare_words,
                     img
                 )
             } else if (this.appType === 0) {
