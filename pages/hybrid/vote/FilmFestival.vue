@@ -645,11 +645,11 @@ html {
         }
     }
     .share {
-        width: 4rem;
-        height: 4rem;
+        width: 4.2rem;
+        height: 4.2rem;
         text-align: center;
         color: #666666;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: bold;
         position: fixed;
         bottom: 3rem;
@@ -658,9 +658,9 @@ html {
         background: linear-gradient(to top, #c8c8c8, #979797);
         z-index: 10;
         div {
-            width: 3.6rem;
-            height: 3.6rem;
-            line-height: 3.6rem;
+            width: 3.7rem;
+            height: 3.7rem;
+            line-height: 3.7rem;
             margin: 0.2rem auto;
             background: linear-gradient(to bottom, #d8d8d8, #afafaf);
             border-radius: 100%;

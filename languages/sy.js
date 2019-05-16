@@ -23,7 +23,7 @@ export default {
     vote_apk: 'Pakua apk sasa (11 M)',
     vote_earnvote_tt: 'Waambie marafiki kupata kura',
     vote_webshare_words: 'Pakua StarTimes ON na piga kura kwa filamu za ndani za Nigeria na tamthilia za kwenye TV',
-    vote_share: 'Shirikisha',
+    vote_share: 'SHIRIKISHA',
     vote_view_more: 'ONA ZAIDI',
     vote_ok: 'Sawa',
     vote_cancel: 'SITISHA',

@@ -23,7 +23,7 @@ export default {
     vote_apk: 'Download apk now（11M） ',
     vote_earnvote_tt: 'Tell friends to earn votes',
     vote_webshare_words: 'Download StarTimes ON and vote for Nigerian local films and TV series!',
-    vote_share:'Share',
+    vote_share:'SHARE',
     vote_view_more:'VIEW MORE',
     vote_ok:'OK',
     vote_cancel:'CANCEL',

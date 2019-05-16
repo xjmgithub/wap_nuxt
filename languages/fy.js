@@ -25,7 +25,7 @@ export default {
     vote_earnvote_tt: 'Parlez à vos amis pour obtenir des votes',
     vote_webshare_words: 'Téléchargez StarTimes ON et votez pour les films et séries télévisées locales nigérianes !',
 
-    vote_share:'Partager',
+    vote_share:'PARTAGER',
     vote_view_more:'AFFICHER PLUS',
     vote_ok:'OK',
     vote_cancel:'ANNULER',

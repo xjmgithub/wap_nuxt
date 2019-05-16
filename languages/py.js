@@ -23,7 +23,7 @@ export default {
     vote_apk: 'Descarregar apk agora (11M)',
     vote_earnvote_tt: 'Convidar amigos para ganharem votos',
     vote_webshare_words: 'Descarregue StarTimes ON e vote para filmes e séries de TV nigerianos!',
-    vote_share: 'Partilhar',
+    vote_share: 'PARTILHAR',
     vote_view_more: 'VEJA MAIS',
     vote_ok: 'OK',
     vote_cancel: 'CANCEL',
