@@ -661,7 +661,7 @@ html {
             width: 3.8rem;
             height: 3.8rem;
             line-height: 3.8rem;
-            margin: 0.2rem auto;
+            margin: 0.25rem auto;
             background: linear-gradient(to bottom, #d8d8d8, #afafaf);
             border-radius: 100%;
         }
