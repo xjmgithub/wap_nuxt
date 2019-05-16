@@ -34,22 +34,6 @@ export const delCookie = name => {
     document.cookie = name + '=; Max-Age=-99999999;'
 }
 
-export const updateWalletAccount = (v, callback) => {
-    v.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
-        if (res.data) {
-            localStorage.setItem('wallet_account', JSON.stringify(res.data))
-        }
-        if (callback) callback(res.data)
-    })
-}
-
-export const updateWalletConf = (v, account, callback) => {
-    v.$axios.get(`/mobilewallet/v1/accounts/${account}/prop-details`).then(res => {
-        localStorage.setItem('wallet_config', JSON.stringify(res.data))
-        if (callback) callback(res.data)
-    })
-}
-
 export const toNativePage = page => {
     if (page.indexOf('com.star.mobile.video') >= 0) {
         window.getChannelId && window.getChannelId.toAppPage(3, page, '')
