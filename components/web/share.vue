@@ -33,14 +33,14 @@ export default {
             this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithFacebook() {
-            shareByFacebook(window.location.href)
+            shareByFacebook.call(this,window.location.href)
         },
         copyLink() {
-            copyClipboard(window.location.href)
+            copyClipboard.call(this,window.location.href)
             this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithTwitter() {
-            shareByTwitter(document.title, window.location.href)
+            shareByTwitter.call(this,document.title, window.location.href)
         }
     }
 }

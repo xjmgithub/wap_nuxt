@@ -478,15 +478,15 @@ export default {
         },
         shareWithFacebook() {
             this.shareCard = false
-            shareByFacebook(window.location.origin + window.location.pathname)
+            shareByFacebook.call(this, window.location.origin + window.location.pathname)
         },
         copyLink() {
             this.shareCard = false
-            copyClipboard(window.location.origin + window.location.pathname)
+            copyClipboard.call(this, window.location.origin + window.location.pathname)
         },
         shareWithTwitter() {
             this.shareCard = false
-            shareByTwitter(document.title, window.location.origin + window.location.pathname)
+            shareByTwitter.call(this, document.title, window.location.origin + window.location.pathname)
         },
         move(event) {
             if (this.canMove) {
