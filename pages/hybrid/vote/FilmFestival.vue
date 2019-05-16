@@ -649,7 +649,7 @@ html {
         height: 4.2rem;
         text-align: center;
         color: #666666;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: bold;
         position: fixed;
         bottom: 3rem;
