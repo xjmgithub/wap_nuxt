@@ -4,7 +4,7 @@
         <div class="slide-bar-card">
             <img src="~assets/img/vote/ic_close.png" class="close" @click="closeCard">
             <h4 v-if="title">{{title}}</h4>
-            <div class="content" @scroll.prevent>
+            <div class="content">
                 <slot name="content"/>
             </div>
             <div class="buttons">

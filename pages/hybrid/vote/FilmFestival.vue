@@ -189,7 +189,16 @@ export default {
                 label: (nv == 0 && 'film') || (nv == 1 && 'short film') || (nv == 2 && 'MV'),
                 value: 1
             })
-        }
+        },
+        aboutCard(nv, ov) {
+            document.body.style.overflow = nv ? 'hidden' : 'auto'
+        },
+        rulesCard(nv, ov) {
+            document.body.style.overflow = nv ? 'hidden' : 'auto'
+        },
+        shareCard(nv, ov) {
+            document.body.style.overflow = nv ? 'hidden' : 'auto'
+        },
     },
     async asyncData({ app: { $axios }, store, req }) {
         let banners = []
