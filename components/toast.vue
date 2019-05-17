@@ -42,5 +42,6 @@ export default {
     border-radius: 3px;
     max-width: 15rem;
     color: #fff;
+    z-index:9999;
 }
 </style>
