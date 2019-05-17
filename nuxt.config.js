@@ -36,8 +36,7 @@ export default {
     plugins: [
         { src: '~plugins/analysis.js', ssr: false },
         { src: '~plugins/axios.js', ssr: false },
-        { src: '~plugins/others.js', ssr: false },
-        { src: '~plugins/facebook.js', ssr: false }
+        { src: '~plugins/others.js', ssr: false }
     ],
 
     modules: [
