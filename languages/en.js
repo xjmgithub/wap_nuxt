@@ -28,6 +28,7 @@ export default {
     vote_ok:'OK',
     vote_cancel:'CANCEL',
     vote_join_now:'JOIN NOW!',
+    vote_notstart_btn:'Stay tuned! Voting begins on June 1st.',
 
 
     // Mr Right

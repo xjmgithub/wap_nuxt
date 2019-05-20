@@ -28,6 +28,7 @@ export default {
     vote_ok: 'Sawa',
     vote_cancel: 'SITISHA',
     vote_join_now: 'JOIN NOW!',
+    vote_notstart_btn:'NOT START 文案待定',
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',

@@ -2,9 +2,9 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner"/>
+            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner" />
             <div class="topContain" :class="{'mtop':!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle"/>
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
                 <div class="sticky">
                     <div class="rules">
                         <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
@@ -22,27 +22,11 @@
                 </div>
             </div>
             <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo"/>
-                <sFilm
-                    v-if="item.type=='short_film'"
-                    v-show="tabIndex==index"
-                    :key="index"
-                    :data-list="sFilmList"
-                    @onVote="handleVote"
-                    @toPlay="toVideo"
-                />
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo"/>
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo" />
+                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote" @toPlay="toVideo" />
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo" />
             </template>
-            <div
-                v-show="appType!=2"
-                ref="box"
-                class="share"
-                :style="{'left':left, 'top':top}"
-                @click="toShare"
-                @touchstart="canMove=true"
-                @touchmove.prevent="move"
-                @touchend="canMove = false"
-            >
+            <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
                 <div>{{$store.state.lang.vote_share}}</div>
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
@@ -51,9 +35,7 @@
                     <p>1- The Best Movie in Africa,</p>
                     <p>2- The Best Short Film in Africa</p>
                     <p>3- The Best MV in Africa.</p>
-                    <img
-                        src="https://s3-eu-west-1.amazonaws.com/tenbreportal/cms_back/html/files/img/group1/M00/04/C5/wKggGVtxpsqAXvq1AAJLZ725Yeo216.JPG"
-                    >
+                    <img src="https://s3-eu-west-1.amazonaws.com/tenbreportal/cms_back/html/files/img/group1/M00/04/C5/wKggGVtxpsqAXvq1AAJLZ725Yeo216.JPG">
                     <p>We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p>
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
@@ -198,7 +180,7 @@ export default {
         },
         shareCard(nv, ov) {
             document.body.style.overflow = nv ? 'hidden' : 'auto'
-        },
+        }
     },
     async asyncData({ app: { $axios }, store, req }) {
         let banners = []
@@ -283,6 +265,10 @@ export default {
                 this.loadConfirm(1, 'vote')
                 return
             }
+            if (film.state === -1) {
+                this.$toast(this.$store.state.lang.vote_notstart_btn)
+                return
+            }
 
             this.sendEvLog({
                 category: `vote_${this.voteTitle}_${this.platform}`,
@@ -316,7 +302,7 @@ export default {
                     if (res.data.code === 0) {
                         this.getAllList()
                         this.leftVote--
-                        if (this.leftVote < 1) {
+                        if (this.leftVote < 1 && this.appType == 1) {
                             this.$confirm(
                                 this.$store.state.lang.vote_success + this.$store.state.lang.vote_success_0,
                                 () => {
@@ -326,6 +312,8 @@ export default {
                                 this.$store.state.lang.vote_share,
                                 this.$store.state.lang.vote_cancel
                             )
+                        } else if (this.leftVote < 1 && this.appType == 2) {
+                            this.$alert(this.$store.state.lang.vote_success, () => {}, this.$store.state.lang.vote_ok)
                         } else {
                             this.$toast(this.$store.state.lang.vote_success + this.$store.state.lang.vote_leftvote + ':' + this.leftVote)
                         }
@@ -344,9 +332,9 @@ export default {
                 value: 1
             })
 
-            if (this.appType == 1) {
+            if (this.appType == 1 && vod) {
                 window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
-            } else if (this.appType == 2) {
+            } else if (this.appType == 2 && vod) {
                 window.location.href = 'startimes://player?vodId=' + vod
             } else {
                 this.loadConfirm(1) // TODO 差一个pos
@@ -587,6 +575,9 @@ html {
                     text-align: center;
                     width: 33.33%;
                     text-decoration: underline;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
             }
             #nav {

@@ -28,7 +28,7 @@ export default {
     vote_ok: 'OK',
     vote_cancel: 'CANCEL',
     vote_join_now: 'JOIN NOW!',
-
+    vote_notstart_btn: 'NOT START 文案待定',
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
     mrright_votes: 'votes',
