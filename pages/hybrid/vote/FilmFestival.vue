@@ -278,15 +278,19 @@ export default {
             })
 
             if (this.leftVote <= 0) {
-                this.$confirm(
-                    this.$store.state.lang.vote_fail + this.$store.state.lang.vote_success_0,
-                    () => {
-                        this.toShare('votefail')
-                    },
-                    () => {},
-                    this.$store.state.lang.vote_share,
-                    this.$store.state.lang.vote_cancel
-                )
+                if (this.appType == 1) {
+                    this.$confirm(
+                        this.$store.state.lang.vote_fail + this.$store.state.lang.vote_success_0,
+                        () => {
+                            this.toShare('votefail')
+                        },
+                        () => {},
+                        this.$store.state.lang.vote_share,
+                        this.$store.state.lang.vote_cancel
+                    )
+                }else if(this.appType == 2){
+                    this.$alert(this.$store.state.lang.vote_fail, () => {}, this.$store.state.lang.vote_ok)
+                }
             } else {
                 this.$axios({
                     url: '/voting/v1/ballot',
