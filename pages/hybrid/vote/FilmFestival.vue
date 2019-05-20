@@ -288,7 +288,7 @@ export default {
                         this.$store.state.lang.vote_share,
                         this.$store.state.lang.vote_cancel
                     )
-                }else if(this.appType == 2){
+                } else if (this.appType == 2) {
                     this.$alert(this.$store.state.lang.vote_fail, () => {}, this.$store.state.lang.vote_ok)
                 }
             } else {
@@ -336,13 +336,22 @@ export default {
                 value: 1
             })
 
-            if (this.appType == 1 && vod) {
-                window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
-            } else if (this.appType == 2 && vod) {
-                window.location.href = 'startimes://player?vodId=' + vod
-            } else {
+            if (vod && this.appType>0) {
+                if (this.appType == 1) {
+                    window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+                } else if (this.appType == 2) {
+                    window.location.href = 'startimes://player?vodId=' + vod
+                }
+            }else if(this.appType<=0){
                 this.loadConfirm(1) // TODO 差一个pos
             }
+            // if (this.appType == 1) {
+            //     window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+            // } else if (this.appType == 2) {
+            //     window.location.href = 'startimes://player?vodId=' + vod
+            // } else {
+            //     this.loadConfirm(1) // TODO 差一个pos
+            // }
         },
         loadConfirm(vote, pos) {
             this.sendEvLog({
