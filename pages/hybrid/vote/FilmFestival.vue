@@ -345,13 +345,6 @@ export default {
             }else if(this.appType<=0){
                 this.loadConfirm(1) // TODO 差一个pos
             }
-            // if (this.appType == 1) {
-            //     window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
-            // } else if (this.appType == 2) {
-            //     window.location.href = 'startimes://player?vodId=' + vod
-            // } else {
-            //     this.loadConfirm(1) // TODO 差一个pos
-            // }
         },
         loadConfirm(vote, pos) {
             this.sendEvLog({
