@@ -7,9 +7,9 @@
                     <span>{{item.name}}</span>
                 </a>
             </nav>
-            <div id="leftvote" :class="{'line':tabIndex==1 }" class="clearfix">
-                <span v-if="tabIndex==0">left votes:{{leftVote}}</span>
-                <span class="invited">invite friends to vote</span>
+            <div v-if="tabIndex!=1" id="leftvote" :class="{'line':tabIndex==2 }" class="clearfix">
+                <span>Votes left:{{leftVote}}</span>
+                <!-- <span class="invited">invite friends to vote</span> -->
             </div>
             <template v-for="(item,index) in tabList">
                 <mVote v-if="item.type=='vote'" v-show="tabIndex==index" :key="index" :data-list="playerList" @onVote="handleVote" @toPlay="toVideo" />
@@ -17,7 +17,7 @@
                 <mAboutWord v-if="item.type=='about_word'" v-show="tabIndex==index" :key="index" :document="document" />
             </template>
         </div>
-    </div>
+    </div> 
 </template>
 <script>
 import mVote from '~/components/vote/vote'
@@ -38,16 +38,16 @@ export default {
             appType: this.$store.state.appType || 0,
             tabList: [
                 {
-                    name: 'vote',
+                    name: 'Vote',
                     type: 'vote'
                 },
                 {
-                    name: 'rank',
-                    type: 'rank'
+                    name: 'About',
+                    type: 'about_vod'
                 },
                 {
-                    name: 'about',
-                    type: 'about_vod'
+                    name: 'Rank',
+                    type: 'rank'
                 }
             ],
             tabIndex: 0,
@@ -169,8 +169,9 @@ export default {
 <style lang="less">
 @import '~assets/less/vote/normal.less';
 @import '~assets/less/vote/love.less';
-@navBackgound: #689e32;
-@navActiveBackground: rgba(63, 109, 17, 0.5);
-@navActiveColor: #fbc042;
+@navBackgound: linear-gradient(to bottom,#fd7d63,#CF2181);
+@navActiveBackground: rgba(253, 125, 99, 0.11);
+@navActiveColor: #ffffff;
 @invitedColor: #0087eb;
+@voteleftColor: #FD60A1;
 </style>

@@ -4,10 +4,9 @@
             <li v-for="(item,index) in dataList" :key="index" data-id="item.id">
                 <div class="img-box" @click="playVod(item)">
                     <img :src="cdnPicSrc(item.icon)" class="icon">
-                    <img src="~assets/img/vote/ic_play_small_white.png" class="playbutton">
+                    <img src="~assets/img/vote/playButton.png" class="playbutton">
                 </div>
                 <span class="player-name">{{item.name}}</span>
-                <span class="votes">{{item.ballot_num }}</span>
                 <span
                     :class="{'vote':item.state >= 1,'voted':item.state <=0}"
                     class="vote-state"

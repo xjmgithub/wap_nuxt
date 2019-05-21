@@ -1,7 +1,8 @@
-@navBackgound: #689e32;
-@navActiveBackground: rgba(63, 109, 17, 0.5);
-@navActiveColor: #fbc042;
+@navBackgound: linear-gradient(to bottom,#fd7d63,#CF2181);
+@navActiveBackground: rgba(253, 125, 99, 0.11);
+@navActiveColor: #ffffff;
 @invitedColor: #0087eb;
+@voteleftColor: #FD60A1;
 
 .clearfix:after {
     display: block;
@@ -23,12 +24,12 @@ html {
     body {
         margin: 0;
         padding: 0;
-        background-color: #fff;
+        background-color: #300A18;
         .page-wrapper {
             height: 100%;
             min-height: 100vh;
             margin: 0 auto;
-            background-color: #fff;
+            background-color: #300A18;
         }
     }
 }
@@ -74,7 +75,9 @@ html {
             width: 100%;
             overflow: hidden;
             position: relative;
-            border: 4px solid @navActiveColor;
+            background:linear-gradient(#f4a754, #ce1fa0);
+            padding:2px;
+            border-radius: 5%;
             .icon {
                 width: 100%;
                 display: block;
@@ -97,24 +100,19 @@ html {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: #333333;
-        }
-        &.votes {
-            font-size: 0.7rem;
-            height: 1rem;
-            line-height: 1rem;
-            color: #333333;
-            text-align: center;
+            color: #ffffff;
         }
         &.vote-state {
-            width: 95%;
+            width: 70%;
             height: 1.4rem;
             line-height: 1.4rem;
             font-size: 0.6rem;
             cursor: pointer;
             border-radius: 2px;
+            color:#ffffff;
+            font-weight: bold;
             &.vote {
-                background: @navBackgound;
+                background: linear-gradient(to bottom,#FF62A2,#CE1EA0);
                 border-radius: 0.2rem;
             }
             &.voted,
@@ -127,24 +125,29 @@ html {
     }
 }
 #leftvote {
-    width: 95%;
+    width: 94%;
     margin: 0 auto;
-    height: 1.6rem;
-    line-height: 1.6rem;
-    &.line {
-        border-bottom: 1px solid @navBackgound;
-    }
-    .invited {
-        color: @invitedColor;
-        font-size: 0.8rem;
-        font-weight: 600;
+    height: 1.8rem;
+    line-height: 1.8rem;
+    color:@voteleftColor;
+    span{
         float: right;
-        text-decoration: underline;
-        text-decoration-color: @invitedColor;
+        font-weight: bold;
     }
+    &.line {
+        border-bottom: 1px solid #DD3D78;
+    }
+    // .invited {
+    //     color: @invitedColor;
+    //     font-size: 0.8rem;
+    //     font-weight: 600;
+    //     float: right;
+    //     text-decoration: underline;
+    //     text-decoration-color: @invitedColor;
+    // }
 }
 #show-rank {
-    width: 95%;
+    width: 94%;
     margin: 0 auto;
     .ranking-list {
         margin-top: 0.8rem;
@@ -152,12 +155,13 @@ html {
         font-size: 0.88rem;
         height: 0.88rem;
         line-height: 0.88rem;
+        color:#ffffff;
         span {
             display: block;
             float: left;
         }
         .ranking {
-            width: 1.3rem;
+            width: 1.5rem;
             box-sizing: border-box;
             &.first {
                 color: #61605c;
@@ -174,7 +178,6 @@ html {
             text-overflow: ellipsis;
             white-space: nowrap;
             width: 80%;
-            color: #333333;
         }
         .ranking-poll {
             float: right;
