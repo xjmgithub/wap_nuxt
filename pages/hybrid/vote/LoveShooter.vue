@@ -14,10 +14,16 @@
             <template v-for="(item,index) in tabList">
                 <mVote v-if="item.type=='vote'" v-show="tabIndex==index" :key="index" :data-list="playerList" @onVote="handleVote" @toPlay="toVideo" />
                 <mRank v-if="item.type=='rank'" v-show="tabIndex==index" :key="index" :data-list="playerList" />
-                <mAboutWord v-if="item.type=='about_word'" v-show="tabIndex==index" :key="index" :document="document" />
+                <mAboutWord v-if="item.type=='about'" v-show="tabIndex==index" :key="index">
+                    <template v-slot:content>
+                        <p>Vote for your favorite Miss Mama Africa! You could vote ONCE per day whereas you are welcome to vote every day</p>
+                        <p> Each Saturday evening we’ll open voting channels of weekly candidates. In mid-September, final stage of voting, we’ll open voting channels of all candidates. Note: The online voting process is completely independent from TV show, and the voting results are irrelevant to the results on TV show and the results DO NOT affect each other. </p>
+                        <p> Each Saturday evening we’ll open voting channels of weekly candidates. In mid-September, final stage of voting, we’ll open voting channels of all candidates. Note: The online voting process is completely independent from TV show, and the voting results are irrelevant to the results on TV show and the results DO NOT affect each other. </p>
+                    </template>
+                </mAboutWord>
             </template>
         </div>
-    </div> 
+    </div>
 </template>
 <script>
 import mVote from '~/components/vote/vote'
@@ -43,7 +49,7 @@ export default {
                 },
                 {
                     name: 'About',
-                    type: 'about_vod'
+                    type: 'about'
                 },
                 {
                     name: 'Rank',
@@ -54,27 +60,7 @@ export default {
             leftVote: '-',
             playerList: [],
             banners: [],
-            voteTitle: 'Love Shooter',
-            document: [
-                {
-                    word: 'Predict which participants become a couple.',
-                    class: ''
-                },
-                {
-                    word:
-                        'Everyone has one chance to predict which participants become a couple everyday and can only predict one couple per time. The fastest ten users who guess right can win a monthly sports bouquet on StarTimes ON app',
-                    class: 'predict'
-                },
-                {
-                    word: 'Vote for your favorite couple',
-                    class: ''
-                },
-                {
-                    word:
-                        'Everyone only has one chance to vote for your favorite couple after each episode and can only vote for one couple. And we will reward the top 3 favorite couples a package of solar products after ten episodes. Join us and help your favorite couple to get the gift.',
-                    class: ''
-                }
-            ]
+            voteTitle: 'Love Shooter'
         }
     },
     computed: {
@@ -169,9 +155,9 @@ export default {
 <style lang="less">
 @import '~assets/less/vote/normal.less';
 @import '~assets/less/vote/love.less';
-@navBackgound: linear-gradient(to bottom,#fd7d63,#CF2181);
+@navBackgound: linear-gradient(to bottom, #fd7d63, #cf2181);
 @navActiveBackground: rgba(253, 125, 99, 0.11);
 @navActiveColor: #ffffff;
 @invitedColor: #0087eb;
-@voteleftColor: #FD60A1;
+@voteleftColor: #fd60a1;
 </style>

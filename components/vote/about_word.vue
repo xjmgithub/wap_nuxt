@@ -1,8 +1,8 @@
 <template>
     <div id="about">
-        <p v-for="(item,index) in document" :key="index" :class="item.class">
-            {{item.word}}
-        </p>
+        <div class="content" @scroll.prevent>
+            <slot name="content"/>
+        </div>
     </div>
 </template>
 <script>
