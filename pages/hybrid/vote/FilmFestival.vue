@@ -42,9 +42,7 @@
             </mCard>
             <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
                 <template v-slot:content>
-                    <p>
-                        <p>{{$store.state.lang.vote_rule_word}}</p>
-                    </p>
+                    <p v-html="$store.state.lang.vote_rule_word"/>
                 </template>
                 <template v-slot:buttons>
                     <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
@@ -594,13 +592,13 @@ html {
                     font-weight: 600;
                     text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
                     font-size: 0.92rem;
-                    &:link,
-                    &:active,
-                    &:visited,
-                    &:hover {
-                        background: none;
-                        // -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
-                    }
+                    // &:link,
+                    // &:active,
+                    // &:visited,
+                    // &:hover {
+                    //     background: none;
+                    //     -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
+                    // }
                     &:nth-child(2) {
                         border-right: 1px solid rgba(255, 255, 210, 0.5);
                         border-left: 1px solid rgba(255, 255, 210, 0.5);
