@@ -31,7 +31,7 @@
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
-                    <p>{{$store.state.lang.vote_about_word}}</p>
+                    <p v-html="$store.state.lang.vote_about_word"/>
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
                     <div class="download-btn" @click="loadConfirm('','about')">
@@ -42,7 +42,9 @@
             </mCard>
             <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
                 <template v-slot:content>
-                    <p><p>{{$store.state.lang.vote_rule_word}}</p></p>
+                    <p>
+                        <p>{{$store.state.lang.vote_rule_word}}</p>
+                    </p>
                 </template>
                 <template v-slot:buttons>
                     <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
@@ -327,13 +329,13 @@ export default {
                 value: 1
             })
 
-            if (vod && this.appType>0) {
+            if (vod && this.appType > 0) {
                 if (this.appType == 1) {
                     window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
                 } else if (this.appType == 2) {
                     window.location.href = 'startimes://player?vodId=' + vod
                 }
-            }else if(this.appType<=0){
+            } else if (this.appType <= 0) {
                 this.loadConfirm(1) // TODO 差一个pos
             }
         },
