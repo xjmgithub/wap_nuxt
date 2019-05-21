@@ -13,7 +13,7 @@
             </div>
             <template v-for="(item,index) in tabList">
                 <mVote v-if="item.type=='vote'" v-show="tabIndex==index" :key="index" :data-list="playerList" @onVote="handleVote" @toPlay="toVideo" />
-                <mRank v-if="item.type=='rank'" v-show="tabIndex==index" :key="index" :data-list="playerList" />
+                <mRank v-if="item.type=='rank'" v-show="tabIndex==index" :key="index" :data-list="rankList" />
                 <mAboutWord v-if="item.type=='about'" v-show="tabIndex==index" :key="index">
                     <template v-slot:content>
                         <p>Vote for your favorite Miss Mama Africa! You could vote ONCE per day whereas you are welcome to vote every day</p>
@@ -59,6 +59,7 @@ export default {
             tabIndex: 0,
             leftVote: '-',
             playerList: [],
+            rankList: [],
             banners: [],
             voteTitle: 'Love Shooter'
         }
@@ -100,8 +101,10 @@ export default {
         getAllList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=9`).then(res => {
                 if (res.data.data.length > 0) {
-                    this.playerList = res.data.data
-                    this.playerList.sort(function(a, b) {
+                    const data = res.data.data
+                    this.playerList = data.concat([])
+                    this.rankList = data.concat([])
+                    this.rankList.sort(function(a, b) {
                         return b.ballot_num - a.ballot_num
                     })
                 }
