@@ -10,7 +10,6 @@ export default {
     vote_tab_film: 'Films',
     vote_tab_shortfilm: 'Courts métrages',
     vote_tab_mv: 'Clips',
-    vote_leftvote: 'Votes restants',
     vote_voterules: 'Règles de vote',
     vote_sharebtn: 'PARTAGER MAINTENANT',
     vote_success: 'Vous avez voté !',
@@ -24,13 +23,17 @@ export default {
     vote_apk: "Télécharger l'application maintenant（11M） ",
     vote_earnvote_tt: 'Parlez à vos amis pour obtenir des votes',
     vote_webshare_words: 'Téléchargez StarTimes ON et votez pour les films et séries télévisées locales nigérianes !',
-
     vote_share:'PARTAGER',
     vote_view_more:'AFFICHER PLUS',
     vote_ok:'OK',
     vote_cancel:'ANNULER',
-    vote_join_now:'JOIN NOW!',
     vote_notstart_btn:'NOT START 文案待定',
+    
+    vote_leftvote: 'Votes restants',
+    vote_vote_btn: 'VOTER',
+    vote_join_now:'Choisissez votre candidat',
+    vote_about_word:'Le Festival pan-africain du film en ligne (PAOFF) invite tous les internautes à voter pour leurs films préférés par le biais de l\'application StarTimes ON, pour manifester votre intérêt et soutenir vos stars favorites dans cet incroyable événement. Les prix sont classés en trois catégories : \n 1 - Le meilleur film Africain, \n 2 - Le meilleur court-métrage Africain \n 3 - Le meilleur Clip Africain.\n  Cette année, on est en train de célébrer le fabuleux gala  au Nigeria. La plateforme StarTimes ON comptera les votes et assurera une plate-forme transparente avec impartialité et équité.',
+    vote_rule_word:'Du 1er juin au 31 juillet, vous avez 5 votes par jour. Votez pour votre producteur et émissions préférés ! \n  Partagez le lien avec vos amis pour obtenir plus de votes ! Vous pouvez obtenir 5 votes supplémentaires pour chaque nouvel utilisateur (ceux qui n\'ont pas installé l\'APPLICATION sur leur téléphone) en partageant le lien. Plus de nouveaux utilisateurs installent l\'application via le lien que vous partagez, plus vous obtiendrez de votes !\n Les votes peuvent être cumulés et sont valables jusqu\'à la date limite. Vous pouvez voter pour tous les spectacles que vous voulez.\n Le classement des votes des différents types de spectacles sera mis à jour en temps réel, et les meilleurs spectacles avec le plus grand nombre de votes remporteront le prix du meilleur film africain, du meilleur court métrage africain et du meilleur Clip africain.',
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',

@@ -7,10 +7,9 @@ export default {
 
     // vote film
     vote_about: 'Kuhusu',
-    vote_tab_film: 'Filamu',
+    vote_tab_film: 'Sinema',
     vote_tab_shortfilm: 'Filamu fupi',
     vote_tab_mv: 'MV',
-    vote_leftvote: 'Kura zinazobaki',
     vote_voterules: 'Kanuni za Kupiga kura',
     vote_sharebtn: 'SAMBAZA SASA',
     vote_success: 'Umepiga kura!',
@@ -27,8 +26,13 @@ export default {
     vote_view_more: 'ONA ZAIDI',
     vote_ok: 'Sawa',
     vote_cancel: 'SITISHA',
-    vote_join_now: 'JOIN NOW!',
     vote_notstart_btn:'NOT START 文案待定',
+    
+    vote_leftvote: 'Kura zinazobaki',
+    vote_vote_btn: 'PIGA KURA',
+    vote_join_now: 'Chagua mteule wako',
+    vote_about_word:'',
+    vote_rule_word:'',
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',

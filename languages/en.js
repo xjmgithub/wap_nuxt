@@ -7,10 +7,9 @@ export default {
 
     // vote film
     vote_about: 'About',
-    vote_tab_film: 'Films',
+    vote_tab_film: 'Movies',
     vote_tab_shortfilm: 'Short Films',
     vote_tab_mv: 'MV',
-    vote_leftvote: 'Remaining Votes',
     vote_voterules: 'Voting Rules',
     vote_sharebtn: 'SHARE NOW',
     vote_success: "You've voted!",
@@ -27,9 +26,13 @@ export default {
     vote_view_more:'VIEW MORE',
     vote_ok:'OK',
     vote_cancel:'CANCEL',
-    vote_join_now:'JOIN NOW!',
     vote_notstart_btn:'Stay tuned! Voting begins on June 1st.',
-
+    
+    vote_leftvote: 'Remaining Votes',
+    vote_vote_btn: 'VOTE',
+    vote_join_now:'Pick Your Nominee ',
+    vote_about_word:'Pan Africa ONline Film Festival (PAOFF) invites all online users to vote for your favorites via StarTimes ON, show your interest and support for your favorite stars in this incredible event. Awards are categorized into three types: \n 1- The Best Movie in Africa, \n2- The Best Short Film in Africa \n 3- The Best MV in Africa. \n We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.',
+    vote_rule_word:'From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows! \n Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven\'t installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get! \n Votes can be accumulated and are valid until the deadline.You can vote for any shows you like. \n Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.',
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',

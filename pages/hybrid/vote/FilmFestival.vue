@@ -606,7 +606,7 @@ html {
                     &:visited,
                     &:hover {
                         background: none;
-                        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
+                        // -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
                     }
                     &:nth-child(2) {
                         border-right: 1px solid rgba(255, 255, 210, 0.5);

@@ -10,7 +10,7 @@
                     <p class="film-name" @click="vodDetail(item)">{{item.name}}</p>
                     <p class="film-author" @click="vodDetail(item)">{{item.brief}}</p>
                     <span class="votes" @click="vodDetail(item)">{{item.ballot_num | formatVotes}}</span>
-                    <span class="vote-btn" @click.prevent="handleViceVote(item)">VOTE</span>
+                    <span class="vote-btn" @click.prevent="handleViceVote(item)">{{$store.state.lang.vote_vote_btn}}</span>
                 </div>
             </li>
         </ul>

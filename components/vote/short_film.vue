@@ -11,7 +11,7 @@
                     <p class="film-author" @click="vodDetail(item)">{{item.brief}}</p>
                     <p class="film-des" @click="vodDetail(item)">{{item.description}}</p>
                     <span class="votes" @click="vodDetail(item)">{{item.ballot_num | formatVotes}}</span>
-                    <span class="vote-btn" @click.prevent="handleViceVote(item)">VOTE</span>
+                    <span class="vote-btn" @click.prevent="handleViceVote(item)">{{$store.state.lang.vote_vote_btn}}</span>
                 </div>
             </li>
         </ul>
