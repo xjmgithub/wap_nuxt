@@ -79,7 +79,7 @@ export default {
             this.sendEvLog({
                 category: `vote_${this.voteTitle}_${this.platform}`,
                 action: 'tab_click',
-                label: (nv == 0 && 'vote') || (nv == 1 && 'rank') || (nv == 2 && 'about'),
+                label: (nv == 0 && 'vote') || (nv == 1 && 'about') || (nv == 2 && 'rank'),
                 value: 1
             })
         }
