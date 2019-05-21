@@ -31,12 +31,7 @@
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
-                    <p>Pan Africa ONline Film Festival (PAOFF) invites all online users to vote for your favorites via StarTimes ON, show your interest and support for your favorite stars in this incredible event. Awards are categorized into three types:</p>
-                    <p>1- The Best Movie in Africa,</p>
-                    <p>2- The Best Short Film in Africa</p>
-                    <p>3- The Best MV in Africa.</p>
-                    <img src="https://s3-eu-west-1.amazonaws.com/tenbreportal/cms_back/html/files/img/group1/M00/04/C5/wKggGVtxpsqAXvq1AAJLZ725Yeo216.JPG">
-                    <p>We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p>
+                    <p>{{$store.state.lang.vote_about_word}}</p>
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
                     <div class="download-btn" @click="loadConfirm('','about')">
@@ -47,11 +42,7 @@
             </mCard>
             <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
                 <template v-slot:content>
-                    <p>From June 1st to July 31st you have 5 votes each day. Vote for your favorite producer and shows!</p>
-                    <p>Share the link with your friends to get more votes! You can get 5 extra votes for each new install on phone by sharing the link. More installations via the link you share, more votes you will gain!</p>
-                    <p>Votes can be accumulated and is valid until the deadline.</p>
-                    <p>Votes can be cast for any shows you like.</p>
-                    <p>Real-time ranking of votes, and top 1 voted will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>
+                    <p><p>{{$store.state.lang.vote_rule_word}}</p></p>
                 </template>
                 <template v-slot:buttons>
                     <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
