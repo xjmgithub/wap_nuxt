@@ -128,7 +128,7 @@ export default {
     },
     data() {
         return {
-            appType: this.$store.state.appType || 0,
+            appType: 1 || this.$store.state.appType || 0,
             tabList: [
                 {
                     name: this.$store.state.lang.vote_tab_film,
@@ -239,7 +239,11 @@ export default {
 
         this.$nextTick(() => {
             this.banners.length <= 0 && document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
-            !this.appType && document.querySelector('.mtop').setAttribute('style', 'padding-bottom:6rem')
+            if (this.appType) {
+                document.querySelector('.topContain').setAttribute('style', 'padding-bottom:7.2rem')
+            } else {
+                document.querySelector('.topContain').setAttribute('style', 'padding-bottom:6rem')
+            }
         })
 
         document.addEventListener('scroll', () => {
