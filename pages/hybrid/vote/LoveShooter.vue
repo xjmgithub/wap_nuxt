@@ -7,9 +7,8 @@
                     <span>{{item.name}}</span>
                 </a>
             </nav>
-            <div v-if="tabIndex!=1" id="leftvote" :class="{'line':tabIndex==2 }" class="clearfix">
+            <div v-if="tabIndex!=2" id="leftvote" :class="{'line':tabIndex==1 }" class="clearfix">
                 <span>Votes left:{{leftVote}}</span>
-                <!-- <span class="invited">invite friends to vote</span> -->
             </div>
             <template v-for="(item,index) in tabList">
                 <mVote v-if="item.type=='vote'" v-show="tabIndex==index" :key="index" :data-list="playerList" @onVote="handleVote" @toPlay="toVideo" />
@@ -47,13 +46,14 @@ export default {
                     name: 'Vote',
                     type: 'vote'
                 },
-                {
-                    name: 'About',
-                    type: 'about'
-                },
+
                 {
                     name: 'Rank',
                     type: 'rank'
+                },
+                {
+                    name: 'About',
+                    type: 'about'
                 }
             ],
             tabIndex: 0,
@@ -80,7 +80,7 @@ export default {
             this.sendEvLog({
                 category: `vote_${this.voteTitle}_${this.platform}`,
                 action: 'tab_click',
-                label: (nv == 0 && 'vote') || (nv == 1 && 'about') || (nv == 2 && 'rank'),
+                label: (nv == 0 && 'vote') || (nv == 1 && 'rank') || (nv == 2 && 'about'),
                 value: 1
             })
         }
