@@ -128,7 +128,7 @@ export default {
     },
     data() {
         return {
-            appType: 1 || this.$store.state.appType || 0,
+            appType: this.$store.state.appType || 0,
             tabList: [
                 {
                     name: this.$store.state.lang.vote_tab_film,
