@@ -2,9 +2,9 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner" />
+            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner"/>
             <div class="topContain" :class="{'mtop':!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle"/>
                 <div class="sticky">
                     <div class="rules">
                         <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
@@ -22,11 +22,27 @@
                 </div>
             </div>
             <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo" />
-                <sFilm v-if="item.type=='short_film'" v-show="tabIndex==index" :key="index" :data-list="sFilmList" @onVote="handleVote" @toPlay="toVideo" />
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo" />
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo"/>
+                <sFilm
+                    v-if="item.type=='short_film'"
+                    v-show="tabIndex==index"
+                    :key="index"
+                    :data-list="sFilmList"
+                    @onVote="handleVote"
+                    @toPlay="toVideo"
+                />
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo"/>
             </template>
-            <div v-show="appType!=2" ref="box" class="share" :style="{'left':left, 'top':top}" @click="toShare" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
+            <div
+                v-show="appType!=2"
+                ref="box"
+                class="share"
+                :style="{'left':left, 'top':top}"
+                @click="toShare"
+                @touchstart="canMove=true"
+                @touchmove.prevent="move"
+                @touchend="canMove = false"
+            >
                 <div>{{$store.state.lang.vote_share}}</div>
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
@@ -221,7 +237,10 @@ export default {
         this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin) // 分享源用户记录
         !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
 
-        this.banners.length <= 0 && document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
+        this.$nextTick(() => {
+            this.banners.length <= 0 && document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
+            !this.appType && document.querySelector('.mtop').setAttribute('style', 'padding-bottom:6rem')
+        })
 
         document.addEventListener('scroll', () => {
             this.showMore = false
@@ -548,9 +567,7 @@ html {
         top: 0;
         z-index: 11;
     }
-    .mtop {
-        margin-top: 4rem;
-    }
+
     .topContain {
         padding-bottom: 4.8rem; /* 2.4 + 2.4 */
         position: relative;
@@ -560,6 +577,7 @@ html {
             width: 100%;
             height: 7.2rem; /* 2.4 + 2.4 + 2.4 */
             z-index: 1;
+
             .rules {
                 height: 2.4rem;
                 line-height: 2.4rem;
@@ -581,7 +599,7 @@ html {
                 height: 2.4rem;
                 background: linear-gradient(to bottom, #9d802a, #c9ab6f);
                 padding: 0.4rem 0;
-                -webkit-tap-highlight-color: rgba(0,0,0,0);
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
                 a {
                     text-align: center;
                     height: 1.6rem;
@@ -598,7 +616,7 @@ html {
                     &:visited,
                     &:hover {
                         background: none;
-                        -webkit-tap-highlight-color: rgba(0,0,0,0);
+                        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
                     }
                     &:nth-child(2) {
                         border-right: 1px solid rgba(255, 255, 210, 0.5);
@@ -639,6 +657,14 @@ html {
                 .rules {
                     background: black;
                 }
+            }
+        }
+
+        &.mtop {
+            margin-top: 4rem;
+            padding-bottom: 3.6em; /* 2.4 + 1.2 */
+            .sticky {
+                height: 6rem; /* 2.4 + 2.4 + 1.2 */
             }
         }
     }
