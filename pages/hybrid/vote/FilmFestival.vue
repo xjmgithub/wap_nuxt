@@ -581,6 +581,7 @@ html {
                 height: 2.4rem;
                 background: linear-gradient(to bottom, #9d802a, #c9ab6f);
                 padding: 0.4rem 0;
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
                 a {
                     text-align: center;
                     height: 1.6rem;
