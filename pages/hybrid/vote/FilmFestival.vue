@@ -180,22 +180,40 @@ export default {
             })
         },
         aboutCard(nv, ov) {
-            const t = document.body.scrollTop
             document.body.style.overflow = nv ? 'hidden' : 'auto'
-            document.body.style.position = nv ? 'fixed' : 'static'
-            document.body.style.top = nv ? - t +'px' : 0
+            if (nv) {
+                const t = document.body.scrollTop
+                document.body.style.position = 'fixed'
+                document.body.style.top = - t + 'px'
+            } else {
+                const t1 = document.body.style.top
+                document.body.style.position = 'static'
+                window.scrollTo(0, -parseInt(t1))
+            }
         },
         rulesCard(nv, ov) {
-            const t = document.body.scrollTop
             document.body.style.overflow = nv ? 'hidden' : 'auto'
-            document.body.style.position = nv ? 'fixed' : 'static'
-            document.body.style.top = nv ? - t +'px' : 0
+            if (nv) {
+                const t = document.body.scrollTop
+                document.body.style.position = 'fixed'
+                document.body.style.top = - t + 'px'
+            } else {
+                const t1 = document.body.style.top
+                document.body.style.position = 'static'
+                window.scrollTo(0, -parseInt(t1))
+            }
         },
         shareCard(nv, ov) {
-            const t = document.body.scrollTop
             document.body.style.overflow = nv ? 'hidden' : 'auto'
-            document.body.style.position = nv ? 'fixed' : 'static'
-            document.body.style.top = nv ? - t +'px' : 0
+            if (nv) {
+                const t = document.body.scrollTop
+                document.body.style.position = 'fixed'
+                document.body.style.top = - t + 'px'
+            } else {
+                const t1 = document.body.style.top
+                document.body.style.position = 'static'
+                window.scrollTo(0, -parseInt(t1))
+            }
         }
     },
     async asyncData({ app: { $axios }, store, req }) {
