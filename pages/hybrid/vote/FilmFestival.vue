@@ -180,16 +180,22 @@ export default {
             })
         },
         aboutCard(nv, ov) {
+            const t = document.body.scrollTop
             document.body.style.overflow = nv ? 'hidden' : 'auto'
-            // document.body.style.position = nv ? 'fixed' : 'static'
+            document.body.style.position = nv ? 'fixed' : 'static'
+            document.body.style.top = nv ? - t +'px' : 0
         },
         rulesCard(nv, ov) {
+            const t = document.body.scrollTop
             document.body.style.overflow = nv ? 'hidden' : 'auto'
-            // document.body.style.position = nv ? 'fixed' : 'static'
+            document.body.style.position = nv ? 'fixed' : 'static'
+            document.body.style.top = nv ? - t +'px' : 0
         },
         shareCard(nv, ov) {
+            const t = document.body.scrollTop
             document.body.style.overflow = nv ? 'hidden' : 'auto'
-            // document.body.style.position = nv ? 'fixed' : 'static'
+            document.body.style.position = nv ? 'fixed' : 'static'
+            document.body.style.top = nv ? - t +'px' : 0
         }
     },
     async asyncData({ app: { $axios }, store, req }) {
