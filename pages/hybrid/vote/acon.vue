@@ -1,13 +1,23 @@
 <template>
     <div id="game">
-        <canvas id="canvas" class="ani_hack" width="1360" height="640"/>
+        <canvas id="canvas" class="ani_hack" width="1360" height="640" />
+        
+        <template v-for="(item,index) in tabList">
+            <mRank v-if="item.type=='country'" v-show="boxIndex==index" :key="index" />
+        </template>
     </div>
 </template>
 <script>
+import mRank from '~/components/vote/rank'
 export default {
     layout: 'base',
+    components: {
+        mRank
+    },
     data() {
-        return {}
+        return {
+            tabList: [{ type: 'country',name:'TOP TEAMS' }]
+        }
     },
     mounted() {
         /* eslint-disable */
@@ -44,6 +54,7 @@ export default {
 #game {
     width: 100vw;
     height: 100vh;
+    background: #3a8956;
 }
 #canvas {
     width: 1920px;
