@@ -339,7 +339,7 @@ export default {
         toPlayer(vod, action, label, value) {
             if (vod) {
                 if (this.$store.state.appType > 0) {
-                    playVodinApp.call(this.$store.state.appType, vod)
+                    playVodinApp.call(this,this.$store.state.appType, vod)
                 } else {
                     toAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
                 }
