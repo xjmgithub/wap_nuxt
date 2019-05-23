@@ -50,11 +50,11 @@ export default {
         Vue.prototype.$toast = (msg, duration) => {
             this.$refs.toast.show(msg, duration)
         }
-        
+
         Vue.prototype.cdnPicSrc = value => {
             return cdnPicSrc.call(this, value)
         }
-        Vue.prototype.lasyLoadImg = ()=>{
+        Vue.prototype.lasyLoadImg = () => {
             this.getPic()
         }
 
@@ -69,6 +69,23 @@ export default {
                 value: this.needLoginAlert ? 0 : 1
             })
         }
+
+        if(this.$store.state.appType<=0){
+            /* eslint-disable */
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '159785064477978',
+                    status: true,
+                    xfbml: true,
+                    version: 'v3.2'
+                })
+            }
+            const script = document.createElement('script')
+            script.src = 'https://connect.facebook.net/en_US/sdk.js'
+            const firstScript = document.getElementsByTagName('script')[0]
+            firstScript.parentNode.insertBefore(script, firstScript)
+        }
+
         const user = this.$store.state.user
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
@@ -77,24 +94,24 @@ export default {
                     this.toNativeLogin()
                 })
             }
-            
+
             this.getPic()
             document.addEventListener('scroll', () => {
                 this.getPic()
             })
-            
         })
     },
     methods: {
         getPic() {
             const lasyImg = document.querySelectorAll('img[pre-src]')
             const screenHeight = window.screen.availHeight
-            lasyImg.forEach(el => {
+            for (let i = 0; i < lasyImg.length; i++) {
+                const el = lasyImg[i]
                 const top = el.getBoundingClientRect().top
                 if (top < screenHeight) {
                     el.src = el.getAttribute('pre-src')
                 }
-            })
+            }
         },
         toNativeLogin() {
             this.sendEvLog({

@@ -160,3 +160,21 @@ export const payWithBalance = function(walletAccountNo, data, password, callback
             this.$alert(err)
         })
 }
+
+export const updateWalletAccount = function(callback) {
+    this.$axios &&
+        this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
+            if (res.data) {
+                localStorage.setItem('wallet_account', JSON.stringify(res.data))
+            }
+            if (callback) callback(res.data)
+        })
+}
+
+export const updateWalletConf = function(account, callback) {
+    this.$axios &&
+        this.$axios.get(`/mobilewallet/v1/accounts/${account}/prop-details`).then(res => {
+            localStorage.setItem('wallet_config', JSON.stringify(res.data))
+            if (callback) callback(res.data)
+        })
+}

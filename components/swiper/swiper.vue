@@ -1,10 +1,10 @@
 <template>
     <section class="wh_content" @touchmove="fn">
         <div :class="className" class="wh_swiper" @touchstart="s" @touchmove="m" @touchend="e">
-            <slot />
+            <slot/>
         </div>
         <div v-if="showIndicator" class="wh_indicator">
-            <div v-for="(tag,ind) in slidesLength" :key="ind" class="wh_indicator_item" />
+            <div v-for="(tag,ind) in slidesLength" :key="ind" class="wh_indicator_item" :class="{selected:index==(ind+1)}"/>
         </div>
     </section>
 </template>
@@ -47,6 +47,13 @@ export default {
                 e: 0
             },
             index: 1
+        }
+    },
+    watch: {
+        index(nv, ov) {
+            this.$nextTick(()=>{
+                this.$emit('changeIndex', nv)
+            })
         }
     },
     mounted() {
@@ -171,7 +178,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
 .wh_content {
     position: relative;
     z-index: 1;
@@ -194,17 +201,21 @@ export default {
     position: absolute;
     bottom: 8px;
     width: 100%;
-    text-align: center;
+    text-align: right;
     background: 0 0;
+    padding-right: 0.5rem;
 }
 .wh_indicator_item {
     display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin: 1px 7px;
+    width: 6px;
+    height: 6px;
+    margin: 1px 3px;
     cursor: pointer;
     border-radius: 100%;
-    background: #aaa;
+    background: rgba(255, 255, 255, 0.67);
+    &.selected {
+        background: white;
+    }
 }
 .wh_show_bgcolor {
     background: #0fc37c;
