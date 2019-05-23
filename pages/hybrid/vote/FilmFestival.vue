@@ -357,7 +357,7 @@ export default {
                     window.location.href = 'startimes://player?vodId=' + vod
                 }
             } else if (this.appType <= 0) {
-                this.loadConfirm(1) // TODO 差一个pos
+                this.loadConfirm(1,'pic') // TODO 差一个pos
             }
         },
         loadConfirm(vote, pos) {
@@ -375,7 +375,7 @@ export default {
                     this.sendEvLog({
                         category: `vote_${this.voteTitle}_${this.platform}`,
                         action: 'downloadpopup_show',
-                        label: pos,
+                        label: pos || '',
                         value: 1
                     })
                     this.$confirm(
@@ -473,10 +473,11 @@ export default {
             })
         },
         toShare(pos) {
+            const pos1 = pos instanceof String ? pos : 'box'
             this.sendEvLog({
                 category: `vote_${this.voteTitle}_${this.platform}`,
                 action: 'share_click',
-                label: pos,
+                label: pos1,
                 value: 1
             })
 
