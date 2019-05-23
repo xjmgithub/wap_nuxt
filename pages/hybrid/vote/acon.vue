@@ -245,7 +245,7 @@ canvas {
             }
             .right {
                 float: right;
-                width: 30%;
+                width: 34%;
                 .soccer {
                     width: 1.5rem;
                 }
