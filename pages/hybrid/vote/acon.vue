@@ -15,13 +15,15 @@
                     <b>NO.1</b> now.
                     <span class="rules">TEAM AWARDS</span>
                 </p>
-                <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
-                    <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                    <img :src="item.logo">
-                    <span>{{item.name}}</span>
-                    <div class="right">
-                        <img src="~assets/img/vote/soccer.png" class="soccer">
-                        <span> x {{item.ballot_num}}</span>
+                <div class="box">
+                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
+                        <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
+                        <img :src="item.logo">
+                        <span>{{item.name}}</span>
+                        <div class="right">
+                            <img src="~assets/img/vote/soccer.png" class="soccer">
+                            <span> x {{item.ballot_num}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,7 +119,7 @@ export default {
 <style lang="less" scoped>
 #game {
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     background: #3a8956;
 }
 #canvas,
@@ -197,6 +199,11 @@ canvas {
                 font-size: 0.8rem;
                 font-weight: bold;
             }
+        }
+        .box {
+            height: 50vh;
+            padding-bottom: 4.8rem;
+            overflow-y: scroll;
         }
         .cty-list {
             color: #66a578;
