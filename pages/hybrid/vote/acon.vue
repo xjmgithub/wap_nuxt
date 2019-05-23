@@ -19,7 +19,7 @@
                     <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
                         <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                         <img :src="item.logo">
-                        <span>{{item.name}}</span>
+                        <span>{{item.ctyName}}</span>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
                             <span> x {{item.ballot_num}}</span>
@@ -67,15 +67,27 @@ export default {
             // alert(score)
             // alert(goal)
         })
-
         this.getCountryList()
     },
     methods: {
         getCountryMsg(item) {
             this.countrys.forEach(ele => {
-                if (ele.code == item.code) {
+                if (ele.code == item.name) {
                     item.logo = cdnPicSrc.call(this, ele.nationalFlag)
-                    item.name = ele.name
+                    item.ctyName = ele.name
+                }
+            })
+        },
+        getCountryList() {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
+                if (res.data.data.length > 0) {
+                    this.countryList = res.data.data
+                    this.countryList.sort(function(a, b) {
+                        return b.ballot_num - a.ballot_num
+                    })
+                    this.countryList.forEach(ele => {
+                        this.getCountryMsg(ele)
+                    })
                 }
             })
         },
