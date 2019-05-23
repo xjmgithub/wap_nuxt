@@ -19,7 +19,7 @@
                     <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
                         <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                         <img :src="item.logo">
-                        <span>{{item.name}}</span>
+                        <span>{{item.ctyName}}</span>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
                             <span> x {{item.ballot_num}}</span>
@@ -40,38 +40,7 @@ export default {
             tabList: [{ type: 'country', name: 'TOP TEAMS' }],
             countrys: countrys,
             country: this.$store.state.country,
-            countryList: [
-                {
-                    name: 'Nigeria',
-                    code: '2',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_nigera.png',
-                    ballot_num: 189
-                },
-                {
-                    name: 'Tanzania',
-                    code: '1',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_tanzania.png',
-                    ballot_num: 829
-                },
-                {
-                    name: 'Uganda',
-                    code: '3',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_uganda.png',
-                    ballot_num: 859
-                },
-                {
-                    name: 'Rwanda',
-                    code: '5',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_rwanda.png',
-                    ballot_num: 389
-                },
-                {
-                    name: 'Kenya',
-                    code: '6',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_kenya.png',
-                    ballot_num: 89
-                }
-            ],
+            countryList: [],
             tabIndex: 0
         }
     },
@@ -97,13 +66,27 @@ export default {
             // alert(score)
             // alert(goal)
         })
+        this.getCountryList()
     },
     methods: {
         getCountryMsg(item) {
             this.countrys.forEach(ele => {
-                if (ele.code == item.code) {
+                if (ele.code == item.name) {
                     item.logo = cdnPicSrc.call(this, ele.nationalFlag)
-                    item.name = ele.name
+                    item.ctyName = ele.name
+                }
+            })
+        },
+        getCountryList() {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
+                if (res.data.data.length > 0) {
+                    this.countryList = res.data.data
+                    this.countryList.sort(function(a, b) {
+                        return b.ballot_num - a.ballot_num
+                    })
+                    this.countryList.forEach(ele => {
+                        this.getCountryMsg(ele)
+                    })
                 }
             })
         }
