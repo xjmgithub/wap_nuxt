@@ -38,9 +38,13 @@ import { cdnPicSrc } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
+        const obj = {}
+        countrys.forEach(item=>{
+            obj[item.id] = item
+        })
         return {
             tabList: [{ type: 'country', name: 'TOP TEAMS' }],
-            countrys: countrys,
+            countrys: obj,
             country: this.$store.state.country,
             countryList: [],
             tabIndex: 0
@@ -54,9 +58,6 @@ export default {
         })
         window.sizeHandler()
 
-        $(game).on('game_start', function(evt) {
-            // alert('game_start')
-        })
         $(game).on('save_score', function(evt, a) {
             alert(a)
         })
@@ -89,6 +90,30 @@ export default {
                     this.countryList.forEach(ele => {
                         this.getCountryMsg(ele)
                     })
+                }
+            })
+        },
+        getCountryList(){
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
+                if(res.data.code==0){
+                    let result = []
+                    const vlist = res.data.data
+                    vlist.forEach(item=>{
+                        if(item.show){
+                            const country = this.countrys[item.name]
+                            result.push({
+                                name: country.name,
+                                code: item.name,
+                                logo: country.nationalFlag,
+                                ballot_num: item.ballot_num
+                            })
+                        }
+                    })
+                    
+                    this.countryList = result
+
+                }else{
+                    this.$alert('Top Team get error')
                 }
             })
         }
