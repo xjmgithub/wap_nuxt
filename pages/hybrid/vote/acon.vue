@@ -16,10 +16,12 @@
                     <span class="rules">TEAM AWARDS</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
-                        <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                        <img :src="item.logo">
-                        <span>{{item.ctyName}}</span>
+                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.name===country.code}" class="cty-list">
+                        <div class="left">
+                            <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
+                            <img :src="item.logo">
+                            <span>{{item.ctyName}}</span>
+                        </div>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
                             <span> x {{item.ballot_num}}</span>
@@ -194,38 +196,51 @@ canvas {
             &.my-cty {
                 border-left: 5px solid #94e6ac;
                 background: rgba(148, 230, 172, 0.1);
+                .left {
+                    .ranking {
+                        margin-left: 0.6rem;
+                    }
+                }
             }
             span {
                 display: inline-block;
             }
-            .ranking {
-                width: 2rem;
-                box-sizing: border-box;
-                color: #94e6ac;
-                background: url('~assets/img/vote/others.png') no-repeat center;
-                background-size: contain;
-                text-align: center;
-                margin: 0 1rem;
-                &.first {
-                    color: #ffffff;
-                    background: url('~assets/img/vote/first.png') no-repeat center;
+            .left {
+                float: left;
+                width: 64%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                .ranking {
+                    width: 2rem;
+                    box-sizing: border-box;
+                    color: #94e6ac;
+                    background: url('~assets/img/vote/others.png') no-repeat center;
                     background-size: contain;
-                }
-                &.second {
-                    color: #ffffff;
-                    background: url('~assets/img/vote/second.png') no-repeat center;
-                    background-size: contain;
-                }
-                &.third {
-                    color: #ffffff;
-                    background: url('~assets/img/vote/third.png') no-repeat center;
-                    background-size: contain;
-                }
-                & + img {
-                    width: 2.5rem;
-                    margin-right: 1rem;
+                    text-align: center;
+                    margin: 0 1rem;
+                    &.first {
+                        color: #ffffff;
+                        background: url('~assets/img/vote/first.png') no-repeat center;
+                        background-size: contain;
+                    }
+                    &.second {
+                        color: #ffffff;
+                        background: url('~assets/img/vote/second.png') no-repeat center;
+                        background-size: contain;
+                    }
+                    &.third {
+                        color: #ffffff;
+                        background: url('~assets/img/vote/third.png') no-repeat center;
+                        background-size: contain;
+                    }
+                    & + img {
+                        width: 2.5rem;
+                        margin-right: 1rem;
+                    }
                 }
             }
+
             .right {
                 float: right;
                 width: 34%;
