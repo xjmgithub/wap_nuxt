@@ -11,19 +11,17 @@
             </nav>
             <div v-show="tabIndex==0" class="cty-rank">
                 <p>
-                    <span class="cty">Nigeria </span>ranks
+                    <span class="cty">{{country.name}} </span>ranks
                     <b>NO.1</b> now.
                     <span class="rules">TEAM AWARDS</span>
                 </p>
-                <div class="box">
-                    <div v-for="(item,index) in countryList" :key="index" class="cty-list">
-                        <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                        <img :src="item.logo">
-                        <span>{{item.name}}</span>
-                        <div class="right">
-                            <img src="~assets/img/vote/soccer.png" class="soccer">
-                            <span> x {{item.ballot_num}}</span>
-                        </div>
+                <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
+                    <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
+                    <img :src="item.logo">
+                    <span>{{item.name}}</span>
+                    <div class="right">
+                        <img src="~assets/img/vote/soccer.png" class="soccer">
+                        <span> x {{item.ballot_num}}</span>
                     </div>
                 </div>
             </div>
@@ -183,12 +181,12 @@ canvas {
     .cty-rank {
         background: #252e28;
         border-top: 1px solid #252e28;
-        padding: 0 5%;
         p {
             margin: 0.2rem;
             color: #94e6ac;
             height: 2.4rem;
             line-height: 2.4rem;
+            padding: 0 5%;
             .cty {
                 color: #ffe050;
             }
@@ -200,13 +198,14 @@ canvas {
                 font-weight: bold;
             }
         }
-        .box {
-            overflow-y: scroll;
-        }
         .cty-list {
             color: #66a578;
             height: 4.8rem;
             line-height: 4.8rem;
+            &.my-cty {
+                border-left: 5px solid #94e6ac;
+                background: rgba(148, 230, 172, 0.1);
+            }
             span {
                 display: inline-block;
             }
@@ -217,7 +216,7 @@ canvas {
                 background: url('~assets/img/vote/others.png') no-repeat center;
                 background-size: contain;
                 text-align: center;
-                margin-right: 1rem;
+                margin: 0 1rem;
                 &.first {
                     color: #ffffff;
                     background: url('~assets/img/vote/first.png') no-repeat center;
