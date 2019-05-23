@@ -16,11 +16,11 @@
                     <span class="rules">TEAM AWARDS</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.name===country.code}" class="cty-list">
+                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code==country.id}" class="cty-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <img :src="item.logo">
-                            <span>{{item.ctyName}}</span>
+                            <span>{{item.name}}</span>
                         </div>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
@@ -34,7 +34,6 @@
 </template>
 <script>
 import countrys from '~/functions/countrys.json'
-import { cdnPicSrc } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -72,27 +71,6 @@ export default {
         this.getCountryList()
     },
     methods: {
-        getCountryMsg(item) {
-            this.countrys.forEach(ele => {
-                if (ele.code == item.name) {
-                    item.logo = cdnPicSrc.call(this, ele.nationalFlag)
-                    item.ctyName = ele.name
-                }
-            })
-        },
-        getCountryList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
-                if (res.data.data.length > 0) {
-                    this.countryList = res.data.data
-                    this.countryList.sort(function(a, b) {
-                        return b.ballot_num - a.ballot_num
-                    })
-                    this.countryList.forEach(ele => {
-                        this.getCountryMsg(ele)
-                    })
-                }
-            })
-        },
         getCountryList(){
             this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
                 if(res.data.code==0){
@@ -109,7 +87,9 @@ export default {
                             })
                         }
                     })
-                    
+                    result.sort(function(a, b) {
+                        return b.ballot_num - a.ballot_num
+                    })
                     this.countryList = result
 
                 }else{
