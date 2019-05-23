@@ -151,8 +151,7 @@ canvas {
 }
 .contain {
     position: fixed;
-    background: #3a8956;
-    top: 44%;
+    top: 43%;
     width: 95%;
     margin: 0 2.5%;
     #nav {
@@ -196,7 +195,7 @@ canvas {
                 color: #f34c02;
                 text-decoration: underline;
                 float: right;
-                font-size: 0.8rem;
+                font-size: 0.7rem;
                 font-weight: bold;
             }
         }
