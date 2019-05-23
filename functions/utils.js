@@ -2,6 +2,7 @@ import CallApp from 'callapp-lib'
 import { Base64 } from 'js-base64'
 import localforage from 'localforage'
 import dayjs from 'dayjs'
+import qs from 'qs'
 
 export const setCookie = (name, value, time) => {
     if (!name) {
@@ -33,25 +34,8 @@ export const delCookie = name => {
     document.cookie = name + '=; Max-Age=-99999999;'
 }
 
-export const updateWalletAccount = (v, callback) => {
-    v.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
-        if (res.data) {
-            localStorage.setItem('wallet_account', JSON.stringify(res.data))
-        }
-        if (callback) callback(res.data)
-    })
-}
-
-export const updateWalletConf = (v, account, callback) => {
-    v.$axios.get(`/mobilewallet/v1/accounts/${account}/prop-details`).then(res => {
-        localStorage.setItem('wallet_config', JSON.stringify(res.data))
-        if (callback) callback(res.data)
-    })
-}
-
 export const toNativePage = page => {
     if (page.indexOf('com.star.mobile.video') >= 0) {
-        // TODO toAppPage 参数确定
         window.getChannelId && window.getChannelId.toAppPage(3, page, '')
     } else {
         window.location.href = page
@@ -71,15 +55,39 @@ export const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min
 }
 
-export const shareInvite = (link, shareTitle, shareContent, shareImg, channel) => {
-    if (link.indexOf('?') > 0) {
-        link += '&utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
-    } else {
-        link += '?utm_source=startimes_app&utm_medium=share&utm_campaign=' + channel
-    }
+export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
     if (window.getChannelId && window.getChannelId.showCustorm) {
         const content = '【' + shareTitle + '】' + shareContent + ' ' + link
-        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', channel)
+        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', shareTitle)
+    }
+}
+
+export const shareByFacebook = function(link) {
+    // eslint-disable-next-line no-undef
+    FB.ui({
+        method: 'share',
+        display: 'popup',
+        href: link
+    })
+}
+
+export const shareByTwitter = function(text, link) {
+    window.location.href = 'http://twitter.com/share?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text)
+}
+
+export const copyClipboard = function(text) {
+    const input = document.createElement('input')
+    input.setAttribute('readOnly', true)
+    document.body.appendChild(input)
+    input.setAttribute('value', text)
+    input.select()
+    const successful = document.execCommand('copy')
+    document.body.removeChild(input)
+    window.getSelection().removeAllRanges()
+    if (successful) {
+        this.$toast(this.$store.state.lang.officialwebsitemobile_copylink_copied)
+    } else {
+        this.$toast('Copy text is not support on your browser')
     }
 }
 
@@ -132,26 +140,6 @@ export const initGoogleLogin = (elm, callback) => {
     if (!window.gapi) {
         document.getElementsByTagName('head')[0].appendChild(script)
     }
-}
-
-export const downloadApk = app => {
-    app.$axios
-        .get('/cms/public/app')
-        .then(res => {
-            let url = res.data.apkUrl
-            if (url) {
-                if (url.indexOf('google') > 0) {
-                    url = url.replace('google', 'officialWap')
-                }
-
-                window.location.href = url
-            } else {
-                this.$alert('Download error.Please retry.')
-            }
-        })
-        .catch(() => {
-            this.$alert('Download error.Please retry.')
-        })
 }
 
 export const login = (v, opt) => {
@@ -210,6 +198,7 @@ export const formatTime = val => {
         return hour + ':' + min + ':' + sec
     }
 }
+
 // client 端使用
 export const parseUA = (isApp, appversion) => {
     let dstr = ''
@@ -322,14 +311,167 @@ export const getFaqAnswerLabel = function(question) {
     )
 }
 
-export const downApp = function() {
-    let scheme = 'starvideo'
-    let failback = ''
-    const _this = this
+export const playVodinApp = function(appType, vod) {
+    if (appType == 1) {
+        window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+    } else if (appType == 2) {
+        window.location.href = 'startimes://player?vodId=' + vod
+    } else {
+        callApp('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
+            downloadApk.call(this)
+        })
+    }
+}
+
+export const animateCSS = function(element, animationName, callback) {
+    const node = element
+
+    function handleAnimationEnd() {
+        node.classList.remove('animated', animationName)
+        node.removeEventListener('animationend', handleAnimationEnd)
+        node.removeEventListener('webkitAnimationEnd', handleAnimationEnd)
+
+        if (typeof callback === 'function') callback()
+    }
+
+    node.addEventListener('animationend', handleAnimationEnd)
+    node.addEventListener('webkitAnimationEnd', handleAnimationEnd)
+    node.classList.add('animated', animationName)
+}
+
+export const cdnPicSrc = function(src) {
+    if (src) {
+        const app = (this.$store && this.$store.state.appType) || 0
+        if (app <= 0) {
+            return src.replace('http:', 'https:')
+        } else {
+            return src
+        }
+    } else {
+        return ''
+    }
+}
+
+export const cacheDateUpdate = function(callback) {
+    localforage
+        .getItem('dbtime')
+        .then(val => {
+            if (val) {
+                if (val != dayjs(this.serverTime).format('YYYY-MM-DD')) {
+                    // DELETE CACHE
+                    localforage.clear().then(() => {
+                        localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
+                        callback && callback()
+                    })
+                } else {
+                    callback && callback()
+                }
+            } else {
+                localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
+                callback && callback()
+            }
+        })
+        .catch(err => {
+            this.$alert(err)
+        })
+}
+
+export const initDB = function() {
+    localforage.config({
+        driver: [localforage.WEBSQL, localforage.LOCALSTORAGE], // indexDB在android4.4上保存不全
+        name: 'StarTimes'
+    })
+}
+
+export const downloadApk = function(callback) {
+    const voteDownTag = getCookie('vote_share_down')
+    const user = getCookie('vote_share_user')
+    if (voteDownTag && voteDownTag != -1) {
+        // 下载记票
+        this.$axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded',
+                token: this.$store.state.token,
+                'X-Secret': voteDownTag
+            },
+            data: qs.stringify({
+                vote_id: 8,
+                target: user,
+                action: 'SHARE_DOWNLOAD'
+            }),
+            url: '/voting/v1/ticket'
+        })
+    }
+
+    this.$axios
+        .get('/cms/public/app')
+        .then(res => {
+            let url = res.data.apkUrl
+            if (url) {
+                if (url.indexOf('google') > 0) {
+                    url = url.replace('google', 'officialWap')
+                }
+
+                window.location.href = url
+            } else {
+                this.$alert('Download error.Please retry.')
+            }
+        })
+        .catch(() => {
+            this.$alert('Download error.Please retry.')
+        })
+
+    if (callback) callback()
+}
+
+export const callMarket = function() {
     const ua = navigator.userAgent.toLowerCase()
+    let appType = 1
+    let source = ''
+    const voteDownTag = getCookie('vote_share_down')
+    const user = getCookie('vote_share_user')
+    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
+        appType = 2
+    }
+    if (location.href.indexOf('referrer') > 0) {
+        source = location.search
+    } else if (location.href.indexOf('utm_source') > 0) {
+        source = '&referrer=' + encodeURIComponent(location.search.substr(1))
+    } else {
+        source = '&' + location.search.substr(1)
+    }
+
+    this.$axios({
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            token: this.$store.state.token,
+            'X-Secret': voteDownTag
+        },
+        data: qs.stringify({
+            vote_id: 8,
+            target: user,
+            action: 'SHARE_DOWNLOAD'
+        }),
+        url: '/voting/v1/ticket'
+    })
+
+    window.location.href =
+        appType == 1 ? 'market://details?id=com.star.mobile.video' + source : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+}
+
+export const callApp = function(page, failback) {
+    const ua = navigator.userAgent.toLowerCase()
+    let scheme = 'starvideo'
+    let path = 'platformapi/webtoapp'
+
+    if (page) {
+        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
+    }
+
     if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
         scheme = 'startimes'
-        failback = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
     }
     const callLib = new CallApp({
         scheme: {
@@ -337,40 +479,13 @@ export const downApp = function() {
         }
     })
     callLib.open({
-        path: 'platformapi/webtoapp',
+        path: path,
         callback() {
-            if (failback) {
-                window.location.href = failback
-            } else {
-                _this.$axios.get('/cms/public/app').then(res => {
-                    _this.sendEvLog({
-                        category: document.title,
-                        action: 'install_activated',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
-                    let url = res.data.apkUrl
-                    if (url) {
-                        if (url.indexOf('google') > 0) {
-                            url = url.replace('google', 'officialWap')
-                        }
-                        window.location.href = url
-                    }
-                    
-                })
-            }
+            if (failback) failback()
         }
     })
 }
 
-export const shareFacebook = function() {
-    // eslint-disable-next-line no-undef
-    FB.ui({
-        method: 'share',
-        display: 'popup',
-        href: window.location.href
-    })
-}
 export const toAppStore = function(page) {
     const ua = navigator.userAgent.toLowerCase()
     const _this = this
@@ -442,76 +557,6 @@ export const toAppStore = function(page) {
     })
 }
 
-export const playVodinApp = function(appType, vod) {
-    if (appType == 1) {
-        window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
-    } else if (appType == 2) {
-        window.location.href = 'startimes://player?vodId=' + vod
-    } else {
-        downApp()
-    }
-}
-
-export const animateCSS = function(element, animationName, callback) {
-    const node = element
-
-    function handleAnimationEnd() {
-        node.classList.remove('animated', animationName)
-        node.removeEventListener('animationend', handleAnimationEnd)
-        node.removeEventListener('webkitAnimationEnd', handleAnimationEnd)
-
-        if (typeof callback === 'function') callback()
-    }
-
-    node.addEventListener('animationend', handleAnimationEnd)
-    node.addEventListener('webkitAnimationEnd', handleAnimationEnd)
-    node.classList.add('animated', animationName)
-}
-
-export const cdnPicSrc = function(src) {
-    if (src) {
-        const app = (this.$store && this.$store.state.appType) || 0
-        if (app <= 0 || (window && window.indexedDB)) {
-            return src.replace('http:', 'https:')
-        } else {
-            return src
-        }
-    } else {
-        return ''
-    }
-}
-
-export const cacheDateUpdate = function(callback) {
-    localforage
-        .getItem('dbtime')
-        .then(val => {
-            if (val) {
-                if (val != dayjs(this.serverTime).format('YYYY-MM-DD')) {
-                    // DELETE CACHE
-                    localforage.clear().then(() => {
-                        localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
-                        callback && callback()
-                    })
-                } else {
-                    callback && callback()
-                }
-            } else {
-                localforage.setItem('dbtime', dayjs(this.serverTime).format('YYYY-MM-DD'))
-                callback && callback()
-            }
-        })
-        .catch(err => {
-            this.$alert(err)
-        })
-}
-
-export const initDB = function() {
-    localforage.config({
-        driver: [localforage.WEBSQL, localforage.LOCALSTORAGE], // indexDB在android4.4上保存不全
-        name: 'StarTimes'
-    })
-}
-
 export const normalToAppStore = function(page, pos) {
     const ua = navigator.userAgent.toLowerCase()
     const _this = this
@@ -540,20 +585,13 @@ export const normalToAppStore = function(page, pos) {
             if (appType == 2) {
                 window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
             } else {
-                _this.$axios.get('/cms/public/app').then(res => {
+                downloadApk.call(_this, () => {
                     _this.sendEvLog({
                         category: document.title,
                         action: 'install_activated',
                         label: UAType() + '_' + (pos || 1),
                         value: 1
                     })
-                    let url = res.data.apkUrl
-                    if (url) {
-                        if (url.indexOf('google') > 0) {
-                            url = url.replace('google', 'officialWap')
-                        }
-                        window.location.href = url
-                    }
                 })
             }
         }
