@@ -238,11 +238,13 @@ export default {
         !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
 
         this.$nextTick(() => {
-            this.banners.length <= 0 && document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
-            if (this.appType) {
-                document.querySelector('.topContain').setAttribute('style', 'padding-bottom:7.2rem')
-            } else {
-                document.querySelector('.topContain').setAttribute('style', 'padding-bottom:6rem')
+            if (this.banners.length <= 0) {
+                document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
+                if (this.appType) {
+                    document.querySelector('.topContain').setAttribute('style', 'padding-bottom:7.2rem')
+                } else {
+                    document.querySelector('.topContain').setAttribute('style', 'padding-bottom:6rem')
+                }
             }
         })
 
