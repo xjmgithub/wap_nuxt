@@ -38,7 +38,7 @@
                 ref="box"
                 class="share"
                 :style="{'left':left, 'top':top}"
-                @click="toShare"
+                @click="toShare()"
                 @touchstart="canMove=true"
                 @touchmove.prevent="move"
                 @touchend="canMove = false"
@@ -357,7 +357,7 @@ export default {
                     window.location.href = 'startimes://player?vodId=' + vod
                 }
             } else if (this.appType <= 0) {
-                this.loadConfirm(1,'pic') // TODO 差一个pos
+                this.loadConfirm(1, 'pic') // TODO 差一个pos
             }
         },
         loadConfirm(vote, pos) {
@@ -473,11 +473,10 @@ export default {
             })
         },
         toShare(pos) {
-            const pos1 = pos instanceof String ? pos : 'box'
             this.sendEvLog({
                 category: `vote_${this.voteTitle}_${this.platform}`,
                 action: 'share_click',
-                label: pos1,
+                label: pos || '',
                 value: 1
             })
 
