@@ -36,42 +36,15 @@ import { cdnPicSrc } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
+        const obj = {}
+        countrys.forEach(item=>{
+            obj[item.id] = item
+        })
         return {
             tabList: [{ type: 'country', name: 'TOP TEAMS' }],
-            countrys: countrys,
+            countrys: obj,
             country: this.$store.state.country,
-            countryList: [
-                {
-                    name: 'Nigeria',
-                    code: '2',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_nigera.png',
-                    ballot_num: 189
-                },
-                {
-                    name: 'Tanzania',
-                    code: '1',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_tanzania.png',
-                    ballot_num: 829
-                },
-                {
-                    name: 'Uganda',
-                    code: '3',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_uganda.png',
-                    ballot_num: 859
-                },
-                {
-                    name: 'Rwanda',
-                    code: '5',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_rwanda.png',
-                    ballot_num: 389
-                },
-                {
-                    name: 'Kenya',
-                    code: '6',
-                    logo: 'http://cdn.startimestv.com/static/image/flag_kenya.png',
-                    ballot_num: 89
-                }
-            ],
+            countryList: [],
             tabIndex: 0
         }
     },
@@ -83,9 +56,6 @@ export default {
         })
         window.sizeHandler()
 
-        $(game).on('game_start', function(evt) {
-            // alert('game_start')
-        })
         $(game).on('save_score', function(evt, a) {
             alert(a)
         })
@@ -97,6 +67,8 @@ export default {
             // alert(score)
             // alert(goal)
         })
+
+        this.getCountryList()
     },
     methods: {
         getCountryMsg(item) {
@@ -104,6 +76,30 @@ export default {
                 if (ele.code == item.code) {
                     item.logo = cdnPicSrc.call(this, ele.nationalFlag)
                     item.name = ele.name
+                }
+            })
+        },
+        getCountryList(){
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
+                if(res.data.code==0){
+                    let result = []
+                    const vlist = res.data.data
+                    vlist.forEach(item=>{
+                        if(item.show){
+                            const country = this.countrys[item.name]
+                            result.push({
+                                name: country.name,
+                                code: item.name,
+                                logo: country.nationalFlag,
+                                ballot_num: item.ballot_num
+                            })
+                        }
+                    })
+                    
+                    this.countryList = result
+
+                }else{
+                    this.$alert('Top Team get error')
                 }
             })
         }
