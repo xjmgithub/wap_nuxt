@@ -47,7 +47,7 @@
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
-                    <p v-html="$store.state.lang.vote_about_word"/>
+                    <div v-html="$store.state.lang.vote_about_word"/>
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
                     <div class="download-btn" @click="loadConfirm('','about')">
@@ -58,7 +58,7 @@
             </mCard>
             <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
                 <template v-slot:content>
-                    <p v-html="$store.state.lang.vote_rule_word"/>
+                    <div v-html="$store.state.lang.vote_rule_word"/>
                 </template>
                 <template v-slot:buttons>
                     <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
@@ -70,7 +70,7 @@
             </mCard>
             <mCard v-show="shareCard" :title="$store.state.lang.vote_earnvote_tt" class="card" @closeCard="shareCard=false">
                 <template v-slot:content>
-                    <p>{{$store.state.lang.vote_appshare_words}}</p>
+                    <div v-html="$store.state.lang.vote_appshare_words"/>
                 </template>
                 <template v-slot:buttons>
                     <div class="share-way">
@@ -181,12 +181,15 @@ export default {
         },
         aboutCard(nv, ov) {
             document.body.style.overflow = nv ? 'hidden' : 'auto'
+            // document.body.style.position = nv ? 'fixed' : 'static'
         },
         rulesCard(nv, ov) {
             document.body.style.overflow = nv ? 'hidden' : 'auto'
+            // document.body.style.position = nv ? 'fixed' : 'static'
         },
         shareCard(nv, ov) {
             document.body.style.overflow = nv ? 'hidden' : 'auto'
+            // document.body.style.position = nv ? 'fixed' : 'static'
         }
     },
     async asyncData({ app: { $axios }, store, req }) {

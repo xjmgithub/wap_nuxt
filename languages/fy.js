@@ -27,13 +27,13 @@ export default {
     vote_view_more:'AFFICHER PLUS',
     vote_ok:'OK',
     vote_cancel:'ANNULER',
-    vote_notstart_btn:'NOT START 文案待定',
+    vote_notstart_btn:'Restez branchés ! Le vote commence le 1er juin.',
     
-    vote_leftvote: 'Votes restants',
+    vote_leftvote: 'Votes Restants',
     vote_vote_btn: 'VOTER',
     vote_join_now:'Choisissez votre candidat',
-    vote_about_word:'Le Festival pan-africain du film en ligne (PAOFF) invite tous les internautes à voter pour leurs films préférés par le biais de l\'application StarTimes ON, pour manifester votre intérêt et soutenir vos stars favorites dans cet incroyable événement. Les prix sont classés en trois catégories : </br>1 - Le meilleur film Africain, </br>2 - Le meilleur court-métrage Africain </br>3 - Le meilleur Clip Africain.</br>Cette année, on est en train de célébrer le fabuleux gala  au Nigeria. La plateforme StarTimes ON comptera les votes et assurera une plate-forme transparente avec impartialité et équité.',
-    vote_rule_word:'Du 1er juin au 31 juillet, vous avez 5 votes par jour. Votez pour votre producteur et émissions préférés !</br>Partagez le lien avec vos amis pour obtenir plus de votes ! Vous pouvez obtenir 5 votes supplémentaires pour chaque nouvel utilisateur (ceux qui n\'ont pas installé l\'APPLICATION sur leur téléphone) en partageant le lien. Plus de nouveaux utilisateurs installent l\'application via le lien que vous partagez, plus vous obtiendrez de votes !</br>Les votes peuvent être cumulés et sont valables jusqu\'à la date limite. Vous pouvez voter pour tous les spectacles que vous voulez.</br>Le classement des votes des différents types de spectacles sera mis à jour en temps réel, et les meilleurs spectacles avec le plus grand nombre de votes remporteront le prix du meilleur film africain, du meilleur court métrage africain et du meilleur Clip africain.',
+    vote_about_word:"<p>Le Festival pan-africain du film en ligne (PAOFF) invite tous les internautes à voter pour leurs films préférés par le biais de l'application StarTimes ON, pour manifester votre intérêt et soutenir vos stars favorites dans cet incroyable événement. Les prix sont classés en trois catégories : </p><p>1 - Le meilleur film Africain, </p><p>2 - Le meilleur court-métrage Africain </p><p>3 - Le meilleur Clip Africain.</p><p>Cette année, on est en train de célébrer le fabuleux gala  au Nigeria. La plateforme StarTimes ON comptera les votes et assurera une plate-forme transparente avec impartialité et équité.</p>",
+    vote_rule_word:"<p>1.Du 1er juin au 31 juillet, vous avez 5 votes par jour. Votez pour votre producteur et émissions préférés !</p><p>2.Partagez le lien avec vos amis pour obtenir plus de votes ! Vous pouvez obtenir 5 votes supplémentaires pour chaque nouvel utilisateur (ceux qui n'ont pas installé l'APPLICATION sur leur téléphone) en partageant le lien. Plus de nouveaux utilisateurs installent l'application via le lien que vous partagez, plus vous obtiendrez de votes !</p><p>3.Les votes peuvent être cumulés et sont valables jusqu'à la date limite. Vous pouvez voter pour tous les spectacles que vous voulez.</p><p>4.Le classement des votes des différents types de spectacles sera mis à jour en temps réel, et les meilleurs spectacles avec le plus grand nombre de votes remporteront le prix du meilleur film africain, du meilleur court métrage africain et du meilleur Clip africain.</p>",
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',

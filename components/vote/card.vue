@@ -62,7 +62,7 @@ export default {
         max-height: 18rem;
         min-height: 12rem;
         overflow: auto;
-        p {
+        div {
             font-size: 0.9rem;
             line-height: 1.2rem;
             margin: 0.5rem 0;

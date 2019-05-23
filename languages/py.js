@@ -26,13 +26,13 @@ export default {
     vote_view_more: 'VEJA MAIS',
     vote_ok: 'OK',
     vote_cancel: 'CANCEL',
-    vote_notstart_btn: 'NOT START 文案待定',
+    vote_notstart_btn: 'Atenção! A votação começa no dia 1º de junho.',
     
-    vote_leftvote: 'Votos Restantes',
+    vote_leftvote: 'Votos restantes',
     vote_vote_btn: 'VOTE',
     vote_join_now: 'Escolha o seu candidato',
-    vote_about_word:'Festival Pan Africano de Filmes  ONline (PAOFF) convida a todos os usuários on-line a votarem nos  seus favoritos via StarTimes ON, mostrem o vosso interesse e apoio às vossas estrelas favoritas neste evento incrível.Os prêmios são categorizados em três tipos: </br>1-Melhor Filme da África </br>2- Melhor Curta Metragem da África</br>3- Melhor Vídeo Musical da África</br>Nós estamos a celebrar a fabulosa gala na Nigéria este ano, a plataforma do StarTimes ON vai contar os votos e garantir uma plataforma transparente com imparcialidade e equidade.',
-    vote_rule_word:'De 1 de junho a 31 de julho, você tem 5 votos por cada dia. Vote nos seus produtores e shows favoritos!</br>Partilhe o link com os seus amigos para conseguir mais votos! Pode conseguir mais 5 votos por cada ultilizador novo (Aqueles que nunca instalaram o APP nos seus telemóveis) por partilhar o link. Quanto mais usuários novos instalarem o app via link que você partilhou, mais votos você conseguirá! </br>Os votos podem ser acumulados e são válidos até ao prazo final.</br>Você pode votar qualquer show de que goste.</br>classificação dos votos dos diferentes shows vai ser atualizada em tempo real, e os melhores shows que tenham o maior número de votos vão ganhar o prêmio do Melhor Filme da África, Melhor Curta Metragem da África e Melhor Vídeo Musical da África.',
+    vote_about_word:"<p>Festival Pan Africano de Filmes  ONline (PAOFF) convida a todos os usuários on-line a votarem nos  seus favoritos via StarTimes ON, mostrem o vosso interesse e apoio às vossas estrelas favoritas neste evento incrível.Os prêmios são categorizados em três tipos:</p><p>1-Melhor Filme da África</p><p>2- Melhor Curta Metragem da África</p><p>3- Melhor Vídeo Musical da África </p><p>Nós estamos a celebrar a fabulosa gala na Nigéria este ano, a plataforma do StarTimes ON vai contar os votos e garantir uma plataforma transparente com imparcialidade e equidade.</p>",
+    vote_rule_word:"<p>1.De 1 de junho a 31 de julho, você tem 5 votos por cada dia. Vote nos seus produtores e shows favoritos! </p><p>2.Partilhe o link com os seus amigos para conseguir mais votos! Pode conseguir mais 5 votos por cada ultilizador novo (Aqueles que nunca instalaram o APP nos seus telemóveis) por partilhar o link. Quanto mais usuários novos instalarem o app via link que você partilhou, mais votos você conseguirá!</p><p>3.Os votos podem ser acumulados e são válidos até ao prazo final.  Você pode votar qualquer show de que goste.</p><p>4.A classificação dos votos dos diferentes shows vai ser atualizada em tempo real, e os melhores shows que tenham o maior número de votos vão ganhar o prêmio do Melhor Filme da África, Melhor Curta Metragem da África e Melhor Vídeo Musical da África.</p>",
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
