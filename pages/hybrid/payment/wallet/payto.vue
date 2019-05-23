@@ -26,7 +26,7 @@
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
-import { updateWalletAccount, updateWalletConf } from '~/functions/utils'
+import { updateWalletAccount, updateWalletConf } from '~/functions/pay'
 export default {
     layout: 'base',
     components: {
@@ -82,10 +82,10 @@ export default {
             }
         }
 
-        updateWalletAccount(this, account => {
+        updateWalletAccount.call(this, account => {
             this.balance = account.amount
             this.balanceCurrency = account.currencySymbol
-            updateWalletConf(this, account.accountNo)
+            updateWalletConf.call(this, account.accountNo)
         })
 
         this.$axios

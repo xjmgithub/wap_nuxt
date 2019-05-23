@@ -36,8 +36,7 @@ export default {
     plugins: [
         { src: '~plugins/analysis.js', ssr: false },
         { src: '~plugins/axios.js', ssr: false },
-        { src: '~plugins/others.js', ssr: false },
-        { src: '~plugins/facebook.js', ssr: false }
+        { src: '~plugins/others.js', ssr: false }
     ],
 
     modules: [
@@ -77,7 +76,8 @@ export default {
     serverMiddleware: [
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' },
-        { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' }
+        { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' },
+        { path: '/hybrid/vote/FilmFestival', handler: '~/api/film/index.js' }
     ],
     hooks: {
         listen(server) {

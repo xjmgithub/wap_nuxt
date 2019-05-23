@@ -192,11 +192,10 @@ export default {
             this.mSendEvLog('share_click', 1, 10)
             process.client &&
                 shareInvite(
-                    window.location.href,
+                    window.location.href + '?utm_source=startimes_app&utm_medium=share&utm_campaign=Hello Mr. Right',
                     'Hello Mr. Right',
                     'Vote & Win Big Prizes',
-                    window.location.origin + '/res_nuxt/img/mrshare.jpg',
-                    'Hello Mr. Right'
+                    window.location.origin + '/res_nuxt/img/mrshare.jpg'
                 )
         },
         // 获取投票单元数据
@@ -340,7 +339,7 @@ export default {
         toPlayer(vod, action, label, value) {
             if (vod) {
                 if (this.$store.state.appType > 0) {
-                    playVodinApp(this.$store.state.appType, vod)
+                    playVodinApp.call(this,this.$store.state.appType, vod)
                 } else {
                     toAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
                 }
