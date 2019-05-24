@@ -7,6 +7,7 @@
 </template>
 <script>
 import CallApp from 'callapp-lib'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     data() {
@@ -27,7 +28,7 @@ export default {
                     target= target+ '&' + i + '='+ this.$route.query[i]
                 }
             }
-            path = path + '?target=' + encodeURIComponent(target)
+            path = path + '?target=' + Base64.encode(target.replace(/&/g, '**'))
         }
         
         const callLib = new CallApp({
