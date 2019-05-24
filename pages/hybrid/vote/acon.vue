@@ -1,7 +1,7 @@
 <template>
     <div id="game">
         <div class="canvas">
-            <canvas id="canvas" class="ani_hack" width="1360" height="640" />
+            <canvas id="canvas" class="ani_hack" width="1360" height="640"/>
         </div>
         <div class="contain">
             <nav id="nav">
@@ -11,18 +11,19 @@
             </nav>
             <div v-show="tabIndex==0" class="cty-rank">
                 <p>
-                    <span class="cty">{{country.name}} </span>ranks
+                    <span class="cty">{{country.name}}</span>ranks
                     <b>NO.1</b> now.
                     <span class="rules">TEAM AWARDS</span>
                 </p>
                 <div class="box">
                     <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
                         <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                        <img :src="item.logo">
+                        <img v-if="item.logo" :src="item.logo">
+                        <img v-else src="~assets/img/flag_others.png">
                         <span>{{item.ctyName}}</span>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
-                            <span> x {{item.ballot_num}}</span>
+                            <span>x {{item.ballot_num}}</span>
                         </div>
                     </div>
                 </div>
@@ -33,11 +34,12 @@
 <script>
 import countrys from '~/functions/countrys.json'
 import { cdnPicSrc } from '~/functions/utils'
+import qs from 'qs'
 export default {
     layout: 'base',
     data() {
         const obj = {}
-        countrys.forEach(item=>{
+        countrys.forEach(item => {
             obj[item.id] = item
         })
         return {
@@ -56,17 +58,17 @@ export default {
         })
         window.sizeHandler()
 
-        $(game).on('save_score', function(evt, a) {
-            alert(a)
+        $(game).on('save_score', (evt, goal, score) => {
+            this.vote(goal)
         })
-        $(game).on('level_end', function(evt, goal, score) {
-            alert(score)
-            alert(goal)
+
+        $(game).on('level_end', (evt, goal, score) => {
+            this.vote(goal)
         })
-        $(game).on('goal', function(evt, goal, score) {
-            // alert(score)
-            // alert(goal)
-        })
+        // $(game).on('goal', function(evt, goal, score) {
+        //     // alert(score)
+        //     alert(goal)
+        // })
         this.getCountryList()
     },
     methods: {
@@ -91,13 +93,13 @@ export default {
                 }
             })
         },
-        getCountryList(){
+        getCountryList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
-                if(res.data.code==0){
+                if (res.data.code == 0) {
                     let result = []
                     const vlist = res.data.data
-                    vlist.forEach(item=>{
-                        if(item.show){
+                    vlist.forEach(item => {
+                        if (item.show) {
                             const country = this.countrys[item.name]
                             result.push({
                                 name: country.name,
@@ -107,13 +109,32 @@ export default {
                             })
                         }
                     })
-                    
-                    this.countryList = result
 
-                }else{
+                    this.countryList = result
+                } else {
                     this.$alert('Top Team get error')
                 }
             })
+        },
+        vote(goal) {
+            if (goal > 0) {
+                this.$axios({
+                    url: '/voting/v1/ballot',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        candidate_id: this.country.id,
+                        vote_id: 10,
+                        weight: goal
+                    })
+                }).then(res => {
+                    if (res.data.code === 0) {
+                        this.getCountryList()
+                    }
+                })
+            }
         }
     },
     head() {
