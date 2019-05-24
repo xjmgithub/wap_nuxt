@@ -77,7 +77,6 @@ export default {
                 }
             })
         },
-        // 获取投票单元数据
         getAllList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=9`).then(res => {
                 if (res.data.data.length > 0) {
@@ -105,9 +104,14 @@ export default {
                         vote_id: 9
                     })
                 }).then(res => {
+                    
                     if (res.data.code === 0) {
-                        this.getAllList()
+                        // this.getAllList()
+                        
+                        console.log(this.leftVote)
                         this.leftVote--
+                        console.log(this.leftVote)
+
                         this.$toast('Vote success' + ':' + this.leftVote)
                     } else {
                         this.$toast(res.data.message)
