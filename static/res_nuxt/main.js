@@ -2041,7 +2041,7 @@ function CEndPanel(a, e) {
         k.addEventListener(ON_MOUSE_UP, this._onExit, this)
         this.refreshButtonPos(s_iOffsetX, s_iOffsetY)
     }
-    this.show = function(a) {
+    this.show = function(a, g) {
         ;(!1 !== DISABLE_SOUND_MOBILE && !1 !== s_bMobile) || createjs.Sound.play('game_over')
         //l.text = TEXT_SCORE + a;
         //f.text = TEXT_SCORE + a;

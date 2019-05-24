@@ -1,7 +1,7 @@
 <template>
     <div id="game">
         <div class="canvas">
-            <canvas id="canvas" class="ani_hack" width="1360" height="640" />
+            <canvas id="canvas" class="ani_hack" width="1360" height="640"/>
         </div>
         <div class="contain">
             <nav id="nav">
@@ -19,8 +19,12 @@
                     <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code==country.id}" class="cty-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                            <span v-if="item.logo"><img :src="item.logo"></span>
-                            <span v-else><img src="~assets/img/flag_others.png"></span>
+                            <span v-if="item.logo">
+                                <img :src="item.logo">
+                            </span>
+                            <span v-else>
+                                <img src="~assets/img/flag_others.png">
+                            </span>
                             <span class="cty-name">{{item.name}}</span>
                         </div>
                         <div class="right">
@@ -64,8 +68,8 @@ export default {
     computed: {
         candidate() {
             let r = {}
-            this.countryList.forEach(item=>{
-                if(item.code==this.country.id){
+            this.countryList.forEach(item => {
+                if (item.code == this.country.id) {
                     r = item
                 }
             })
@@ -80,6 +84,8 @@ export default {
         })
         window.sizeHandler()
 
+        document.querySelector('.contain').style.top = document.querySelector('canvas').style.height
+
         $(game).on('save_score', (evt, goal, score) => {
             this.vote(goal)
         })
@@ -87,10 +93,7 @@ export default {
         $(game).on('level_end', (evt, goal, score) => {
             this.vote(goal)
         })
-        // $(game).on('goal', function(evt, goal, score) {
-        //     // alert(score)
-        //     alert(goal)
-        // })
+        // $(game).on('goal', function(evt, goal, score) {})
         this.getCountryList()
     },
     methods: {
@@ -107,7 +110,7 @@ export default {
                                 code: item.name,
                                 logo: country.nationalFlag,
                                 ballot_num: item.ballot_num,
-                                candidate_id:item.id
+                                candidate_id: item.id
                             })
                         }
                     })
