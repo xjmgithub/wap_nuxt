@@ -249,7 +249,7 @@ canvas {
                     }
                 }
                 .ranking {
-                    width: 2rem;
+                    width: 1.7rem;
                     box-sizing: border-box;
                     color: #94e6ac;
                     background: url('~assets/img/vote/others.png') no-repeat center;
