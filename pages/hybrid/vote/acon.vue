@@ -11,7 +11,7 @@
             </nav>
             <div v-show="tabIndex==0" class="cty-rank">
                 <p>
-                    <span class="cty">{{country.name}} </span>ranks
+                    <span class="cty">{{country.name}}</span>ranks
                     <b>NO.1</b> now.
                     <span class="rules" @click="awardsCard=true">TEAM AWARDS</span>
                 </p>
@@ -19,12 +19,13 @@
                     <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code==country.id}" class="cty-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                            <span><img :src="item.logo"></span>
-                            <span class="cty-name">{{item.name}}</span>
+                            <span v-if="item.logo"><img :src="item.logo"></span>
+                            <span v-else><img src="~assets/img/flag_others.png"></span>
+                            <span>{{item.name}}</span>
                         </div>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
-                            <span> x {{item.ballot_num}}</span>
+                            <span>x {{item.ballot_num}}</span>
                         </div>
                     </div>
                 </div>
@@ -40,6 +41,7 @@
 <script>
 import mCard from '~/components/vote/card'
 import countrys from '~/functions/countrys.json'
+import qs from 'qs'
 export default {
     layout: 'base',
     components: {
@@ -56,7 +58,7 @@ export default {
             country: this.$store.state.country,
             countryList: [],
             tabIndex: 0,
-            awardsCard:false
+            awardsCard: false
         }
     },
     mounted() {
@@ -67,17 +69,17 @@ export default {
         })
         window.sizeHandler()
 
-        $(game).on('save_score', function(evt, a) {
-            alert(a)
+        $(game).on('save_score', (evt, goal, score) => {
+            this.vote(goal)
         })
-        $(game).on('level_end', function(evt, goal, score) {
-            alert(score)
-            alert(goal)
+
+        $(game).on('level_end', (evt, goal, score) => {
+            this.vote(goal)
         })
-        $(game).on('goal', function(evt, goal, score) {
-            // alert(score)
-            // alert(goal)
-        })
+        // $(game).on('goal', function(evt, goal, score) {
+        //     // alert(score)
+        //     alert(goal)
+        // })
         this.getCountryList()
     },
     methods: {
@@ -105,6 +107,26 @@ export default {
                     this.$alert('Top Team get error')
                 }
             })
+        },
+        vote(goal) {
+            if (goal > 0) {
+                this.$axios({
+                    url: '/voting/v1/ballot',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        candidate_id: this.country.id,
+                        vote_id: 10,
+                        weight: goal
+                    })
+                }).then(res => {
+                    if (res.data.code === 0) {
+                        this.getCountryList()
+                    }
+                })
+            }
         }
     },
     head() {

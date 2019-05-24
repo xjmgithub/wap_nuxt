@@ -1645,7 +1645,7 @@ function CGame(a, e) {
             ? (m++,
               (q = 0),
               m === NUM_LEVEL
-                  ? ((c = 0), (L = CEndPanel(s_oSpriteLibrary.getSprite('bg_win'), s_oSpriteLibrary.getSprite('you_win'))), L.win(b))
+                  ? ((c = 0), (L = CEndPanel(s_oSpriteLibrary.getSprite('bg_win'), s_oSpriteLibrary.getSprite('you_win'))), L.win(b,g))
                   : (this.unload(), this._init()))
             : 1 >= k && this.gameOver()
         1 < k && (k--, q++, this.unload(), this._init())
@@ -1683,7 +1683,7 @@ function CGame(a, e) {
     this.gameOver = function() {
         c = q = 0
         L = CEndPanel(s_oSpriteLibrary.getSprite('bg_next_level'), s_oSpriteLibrary.getSprite('game_over'))
-        L.show(b)
+        L.show(b,g)
     }
     this.setUpdate = function() {
         u = !u
@@ -2039,7 +2039,7 @@ function CEndPanel(a, e) {
 
         this.refreshButtonPos(s_iOffsetX, s_iOffsetY)
     }
-    this.show = function(a) {
+    this.show = function(a,g) {
         ;(!1 !== DISABLE_SOUND_MOBILE && !1 !== s_bMobile) || createjs.Sound.play('game_over')
         l.text = TEXT_SCORE + a
         f.text = TEXT_SCORE + a
@@ -2052,9 +2052,9 @@ function CEndPanel(a, e) {
                 500
             )
             .call(function() {})
-        $(s_oMain).trigger('save_score', [a])
+        $(s_oMain).trigger('save_score', [g,a])
     }
-    this.win = function(a) {
+    this.win = function(a,g) {
         ;(!1 !== DISABLE_SOUND_MOBILE && !1 !== s_bMobile) || createjs.Sound.play('applause')
         l.text = TEXT_SCORE + a
         l.x = CANVAS_WIDTH / 2 - 150
@@ -2073,7 +2073,7 @@ function CEndPanel(a, e) {
                 500
             )
             .call(function() {})
-        $(s_oMain).trigger('save_score', [a])
+        $(s_oMain).trigger('save_score', [g,a])
     }
     this._onExit = function() {
         s_oStage.removeChild(h)
