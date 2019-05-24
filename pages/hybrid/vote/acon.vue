@@ -11,8 +11,8 @@
             </nav>
             <div v-show="tabIndex==0" class="cty-rank">
                 <p>
-                    <span class="cty">{{country.name}}</span>ranks
-                    <b>NO.1</b> now.
+                    <span class="cty">{{country.name}}</span>&nbsp;ranks
+                    <b>NO.{{ctyRank}}</b> now.
                     <span class="rules" @click="awardsCard=true">TEAM AWARDS</span>
                 </p>
                 <div class="box">
@@ -62,7 +62,8 @@ export default {
             country: this.$store.state.country,
             countryList: [],
             tabIndex: 0,
-            awardsCard: false
+            awardsCard: false,
+            ctyRank: '-'
         }
     },
     computed: {
@@ -102,7 +103,10 @@ export default {
                 if (res.data.code == 0) {
                     let result = []
                     const vlist = res.data.data
-                    vlist.forEach(item => {
+                    vlist.sort(function(a, b) {
+                        return b.ballot_num - a.ballot_num
+                    })
+                    vlist.forEach((item, index) => {
                         if (item.show) {
                             const country = this.countrys[item.name]
                             result.push({
@@ -113,9 +117,9 @@ export default {
                                 candidate_id: item.id
                             })
                         }
-                    })
-                    result.sort(function(a, b) {
-                        return b.ballot_num - a.ballot_num
+                        if (this.country.id == item.name) {
+                            this.ctyRank = index + 1
+                        }
                     })
                     this.countryList = result
                 } else {
