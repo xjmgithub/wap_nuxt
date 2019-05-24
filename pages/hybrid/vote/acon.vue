@@ -150,7 +150,7 @@ export default {
     },
     head() {
         return {
-            title: 'Hello Mr. Right',
+            title: 'StarTimes ON Soccer Cup',
             script: [{ src: '/res_nuxt/jquery-3.4.1.min.js' }, { src: '/res_nuxt/createjs-2014.12.12.min.js' }, { src: '/res_nuxt/main.js' }]
         }
     }
@@ -243,6 +243,7 @@ canvas {
             height: 50vh;
             padding-bottom: 4.8rem;
             overflow-y: scroll;
+            clear:both;
         }
         .cty-list {
             color: #66a578;
@@ -296,7 +297,7 @@ canvas {
                     overflow: hidden;
                     white-space: nowrap;
                     width: 54%;
-                    font-weight:bold;
+                    font-weight: bold;
                 }
             }
 
