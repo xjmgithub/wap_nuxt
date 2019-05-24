@@ -47,8 +47,22 @@ export default {
             leftVote: '-',
             playerList: [],
             rankList: [],
-            banners: [],
             voteTitle: 'Love Shooter'
+        }
+    },
+    async asyncData({ app: { $axios }, store, req }) {
+        let banners = []
+        $axios.setHeader('token', store.state.token)
+        try {
+            const { data } = await $axios.get(`/voting/v1/vote?vote_id=9`)
+            if (data.data.banner) banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
+            return {
+                banners: banners.data.data || [],
+            }
+        } catch (e) {
+            return {
+                banners: [],
+            }
         }
     },
     mounted() {
@@ -107,7 +121,7 @@ export default {
                 window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
             } else if (this.appType == 2 && vod) {
                 window.location.href = 'startimes://player?vodId=' + vod
-            } 
+            }
         }
     },
     head() {
