@@ -150,7 +150,7 @@ export default {
     },
     head() {
         return {
-            title: 'Hello Mr. Right',
+            title: 'StarTimes ON Soccer Cup',
             script: [{ src: '/res_nuxt/jquery-3.4.1.min.js' }, { src: '/res_nuxt/createjs-2014.12.12.min.js' }, { src: '/res_nuxt/main.js' }]
         }
     }
