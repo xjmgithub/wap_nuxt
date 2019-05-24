@@ -16,11 +16,13 @@
                     <span class="rules">TEAM AWARDS</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code===country.code}" class="cty-list">
-                        <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                        <img v-if="item.logo" :src="item.logo">
-                        <img v-else src="~assets/img/flag_others.png">
-                        <span>{{item.ctyName}}</span>
+                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code==country.id}" class="cty-list">
+                        <div class="left">
+                            <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
+                            <img v-if="item.logo" :src="item.logo">
+                            <img v-else src="~assets/img/flag_others.png">
+                            <span>{{item.name}}</span>
+                        </div>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
                             <span>x {{item.ballot_num}}</span>
@@ -33,7 +35,6 @@
 </template>
 <script>
 import countrys from '~/functions/countrys.json'
-import { cdnPicSrc } from '~/functions/utils'
 import qs from 'qs'
 export default {
     layout: 'base',
@@ -72,27 +73,6 @@ export default {
         this.getCountryList()
     },
     methods: {
-        getCountryMsg(item) {
-            this.countrys.forEach(ele => {
-                if (ele.code == item.name) {
-                    item.logo = cdnPicSrc.call(this, ele.nationalFlag)
-                    item.ctyName = ele.name
-                }
-            })
-        },
-        getCountryList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
-                if (res.data.data.length > 0) {
-                    this.countryList = res.data.data
-                    this.countryList.sort(function(a, b) {
-                        return b.ballot_num - a.ballot_num
-                    })
-                    this.countryList.forEach(ele => {
-                        this.getCountryMsg(ele)
-                    })
-                }
-            })
-        },
         getCountryList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
                 if (res.data.code == 0) {
@@ -109,7 +89,9 @@ export default {
                             })
                         }
                     })
-
+                    result.sort(function(a, b) {
+                        return b.ballot_num - a.ballot_num
+                    })
                     this.countryList = result
                 } else {
                     this.$alert('Top Team get error')
@@ -240,38 +222,51 @@ canvas {
             &.my-cty {
                 border-left: 5px solid #94e6ac;
                 background: rgba(148, 230, 172, 0.1);
+                .left {
+                    .ranking {
+                        margin-left: 0.6rem;
+                    }
+                }
             }
             span {
                 display: inline-block;
             }
-            .ranking {
-                width: 2rem;
-                box-sizing: border-box;
-                color: #94e6ac;
-                background: url('~assets/img/vote/others.png') no-repeat center;
-                background-size: contain;
-                text-align: center;
-                margin: 0 1rem;
-                &.first {
-                    color: #ffffff;
-                    background: url('~assets/img/vote/first.png') no-repeat center;
+            .left {
+                float: left;
+                width: 64%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                .ranking {
+                    width: 2rem;
+                    box-sizing: border-box;
+                    color: #94e6ac;
+                    background: url('~assets/img/vote/others.png') no-repeat center;
                     background-size: contain;
-                }
-                &.second {
-                    color: #ffffff;
-                    background: url('~assets/img/vote/second.png') no-repeat center;
-                    background-size: contain;
-                }
-                &.third {
-                    color: #ffffff;
-                    background: url('~assets/img/vote/third.png') no-repeat center;
-                    background-size: contain;
-                }
-                & + img {
-                    width: 2.5rem;
-                    margin-right: 1rem;
+                    text-align: center;
+                    margin: 0 1rem;
+                    &.first {
+                        color: #ffffff;
+                        background: url('~assets/img/vote/first.png') no-repeat center;
+                        background-size: contain;
+                    }
+                    &.second {
+                        color: #ffffff;
+                        background: url('~assets/img/vote/second.png') no-repeat center;
+                        background-size: contain;
+                    }
+                    &.third {
+                        color: #ffffff;
+                        background: url('~assets/img/vote/third.png') no-repeat center;
+                        background-size: contain;
+                    }
+                    & + img {
+                        width: 2.5rem;
+                        margin-right: 1rem;
+                    }
                 }
             }
+
             .right {
                 float: right;
                 width: 34%;
