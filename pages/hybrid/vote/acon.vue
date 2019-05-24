@@ -51,6 +51,17 @@ export default {
             tabIndex: 0
         }
     },
+    computed: {
+        candidate() {
+            let r = {}
+            this.countryList.forEach(item=>{
+                if(item.code==this.country.id){
+                    r = item
+                }
+            })
+            return r
+        }
+    },
     mounted() {
         /* eslint-disable */
         const game = new window.CMain({
@@ -85,7 +96,8 @@ export default {
                                 name: country.name,
                                 code: item.name,
                                 logo: country.nationalFlag,
-                                ballot_num: item.ballot_num
+                                ballot_num: item.ballot_num,
+                                candidate_id:item.id
                             })
                         }
                     })
@@ -107,7 +119,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     data: qs.stringify({
-                        candidate_id: this.country.id,
+                        candidate_id: this.candidate.candidate_id,
                         vote_id: 10,
                         weight: goal
                     })

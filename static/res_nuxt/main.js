@@ -501,8 +501,12 @@ var CANVAS_WIDTH = 1360,
     MSG_BOX_HEIGHT = 450,
     GOAL_WIDTH = 390,
     GOAL_HEIGHT = 145,
-    PLAYER_WIDTH = 160,
-    PLAYER_HEIGHT = 239,
+    PLAYER_WIDTH = 172,
+    PLAYER_HEIGHT = 453,
+    PLAYER_WIDTH2 = 120,
+    PLAYER_HEIGHT2 = 318,
+    PLAYER_SHOT_WIDTH = 214,
+    PLAYER_SHOT_HEIGHT = 290,
     WALL_WIDTH = 119,
     WALL_HEIGHT = 179,
     BALL_WIDTH = 60,
@@ -517,7 +521,7 @@ var CANVAS_WIDTH = 1360,
     CURSOR_X = 41,
     CURSOR_Y = 41,
     PLAYER_X_POSITION_IN_SELECTION = CANVAS_WIDTH / 2,
-    PLAYER_Y_POSITION_IN_SELECTION = 350,
+    PLAYER_Y_POSITION_IN_SELECTION = 230,
     ARGENTINA = 0,
     BRAZIL = 1,
     GERMANY = 2,
@@ -617,7 +621,7 @@ TEXT_SCORE = 'SCORE: '
 TEXT_PAUSE = 'PAUSE'
 HELP_TEXT_DESKTOP = 'PRESS SPACEBAR TO CHOSE POINT WHERE KICKING BALL ON HORIZONTAL AND VERTICAL AXIS!!'
 HELP_TEXT_MOBILE = 'TAP ON THE SCREEN TO CHOSE POINT WHERE KICKING BALL ON HORIZONTAL AND VERTICAL AXIS!!'
-HELP_TEXT = 'TRY TO BE QUICK! THE BONUS MULTIPLIER DECREASES RAPIDLY EACH SECOND. EVERY GOAL INCREASES YOUR SCORE, MULTIPLYING IT BY THE MULTIPLIER!'
+HELP_TEXT = 'TRY TO BE QUICK! THE PONINTS MULTIPLIER DECREASES RAPIDLY EACH SECOND. MORE PONINTS YOU SCORED MORE SKILLED YOU PLAYED!'
 
 function CPreloader() {
     var a, e, b, c, g, h, k
@@ -659,7 +663,7 @@ function CPreloader() {
         d = s_oSpriteLibrary.getSprite('progress_bar')
         c = createBitmap(d)
         c.x = CANVAS_WIDTH / 2 - d.width / 2
-        c.y = CANVAS_HEIGHT - 145
+        c.y = CANVAS_HEIGHT - 225
         k.addChild(c)
         a = d.width
         e = d.height
@@ -667,10 +671,10 @@ function CPreloader() {
         g.graphics.beginFill('rgba(255,255,255,0.01)').drawRect(c.x, c.y, 1, e)
         k.addChild(g)
         c.mask = g
-        b = new createjs.Text('', '30px Arial', '#fff')
+        b = new createjs.Text('', '24px Arial', '#7DF4BD')
         b.x = CANVAS_WIDTH / 2
-        b.y = CANVAS_HEIGHT - 150
-        b.shadow = new createjs.Shadow('#000', 2, 2, 2)
+        b.y = CANVAS_HEIGHT - 230
+        //b.shadow = new createjs.Shadow("#fff", 2, 2, 2);
         b.textBaseline = 'alphabetic'
         b.textAlign = 'center'
         k.addChild(b)
@@ -773,6 +777,7 @@ function CMain(a) {
         s_oSpriteLibrary.addSprite('bg_game', '/res_nuxt/acon/sprites/bg_game.jpg')
         s_oSpriteLibrary.addSprite('bg_select_team', '/res_nuxt/acon/sprites/bg_select_team.jpg')
         s_oSpriteLibrary.addSprite('bg_next_level', '/res_nuxt/acon/sprites/bg_next_level.jpg')
+        s_oSpriteLibrary.addSprite('bg_last_level', '/res_nuxt/acon/sprites/bg_last_level.jpg')
         s_oSpriteLibrary.addSprite('bg_win', '/res_nuxt/acon/sprites/bg_win.jpg')
         s_oSpriteLibrary.addSprite('you_win', '/res_nuxt/acon/sprites/you_win.png')
         s_oSpriteLibrary.addSprite('game_over', '/res_nuxt/acon/sprites/game_over.png')
@@ -798,11 +803,17 @@ function CMain(a) {
         s_oSpriteLibrary.addSprite('missed_text', '/res_nuxt/acon/sprites/missed_text.png')
         s_oSpriteLibrary.addSprite('out_text', '/res_nuxt/acon/sprites/out_text.png')
         s_oSpriteLibrary.addSprite('argentina_idle', '/res_nuxt/acon/sprites/players/argentina_idle.png')
+        s_oSpriteLibrary.addSprite('argentina_idle2', '/res_nuxt/acon/sprites/players/argentina_idle2.png')
         s_oSpriteLibrary.addSprite('brazil_idle', '/res_nuxt/acon/sprites/players/brazil_idle.png')
+        s_oSpriteLibrary.addSprite('brazil_idle2', '/res_nuxt/acon/sprites/players/brazil_idle2.png')
         s_oSpriteLibrary.addSprite('germany_idle', '/res_nuxt/acon/sprites/players/germany_idle.png')
+        s_oSpriteLibrary.addSprite('germany_idle2', '/res_nuxt/acon/sprites/players/germany_idle2.png')
         s_oSpriteLibrary.addSprite('england_idle', '/res_nuxt/acon/sprites/players/england_idle.png')
+        s_oSpriteLibrary.addSprite('england_idle2', '/res_nuxt/acon/sprites/players/england_idle2.png')
         s_oSpriteLibrary.addSprite('italy_idle', '/res_nuxt/acon/sprites/players/italy_idle.png')
+        s_oSpriteLibrary.addSprite('italy_idle2', '/res_nuxt/acon/sprites/players/italy_idle2.png')
         s_oSpriteLibrary.addSprite('france_idle', '/res_nuxt/acon/sprites/players/france_idle.png')
+        s_oSpriteLibrary.addSprite('france_idle2', '/res_nuxt/acon/sprites/players/france_idle2.png')
         s_oSpriteLibrary.addSprite('argentina_shot', '/res_nuxt/acon/sprites/players/argentina_shot.png')
         s_oSpriteLibrary.addSprite('brazil_shot', '/res_nuxt/acon/sprites/players/brazil_shot.png')
         s_oSpriteLibrary.addSprite('germany_shot', '/res_nuxt/acon/sprites/players/germany_shot.png')
@@ -1141,7 +1152,7 @@ function CMenu() {
         g = createBitmap(s_oSpriteLibrary.getSprite('bg_menu'))
         s_oStage.addChild(g)
         var f = s_oSpriteLibrary.getSprite('but_play')
-        a = CANVAS_WIDTH / 2 + 300
+        a = CANVAS_WIDTH / 2 + 320
         e = CANVAS_HEIGHT - 110
         h = new CGfxButton(a, e, f)
         h.addEventListener(ON_MOUSE_UP, this._onButPlayRelease, this)
@@ -1228,24 +1239,24 @@ function CSelectTeam() {
         d = new CPlayer(k)
         d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, s_szTeamSelectedSprite)
         g = s_oSpriteLibrary.getSprite('argentina')
-        l = new CToggle(CANVAS_WIDTH / 2 - 150, CANVAS_HEIGHT / 2 - 125, g, !1)
+        l = new CToggle(CANVAS_WIDTH / 2 - 175, CANVAS_HEIGHT / 2 - 180, g, !1)
         l.addEventListenerWithParams(ON_MOUSE_UP, this._onModeToggle, this, ARGENTINA)
         g = s_oSpriteLibrary.getSprite('brazil')
-        m = new CToggle(CANVAS_WIDTH / 2 + 120, CANVAS_HEIGHT / 2 - 125, g, !0)
+        m = new CToggle(CANVAS_WIDTH / 2 + 177, CANVAS_HEIGHT / 2 - 180, g, !0)
         m.addEventListenerWithParams(ON_MOUSE_UP, this._onModeToggle, this, BRAZIL)
         g = s_oSpriteLibrary.getSprite('germany')
-        t = new CToggle(CANVAS_WIDTH / 2 - 210, CANVAS_HEIGHT / 2, g, !0)
+        t = new CToggle(CANVAS_WIDTH / 2 - 275, CANVAS_HEIGHT / 2 - 30, g, !0)
         t.addEventListenerWithParams(ON_MOUSE_UP, this._onModeToggle, this, GERMANY)
         g = s_oSpriteLibrary.getSprite('england')
-        q = new CToggle(CANVAS_WIDTH / 2 + 180, CANVAS_HEIGHT / 2, g, !0)
+        q = new CToggle(CANVAS_WIDTH / 2 + 275, CANVAS_HEIGHT / 2 - 30, g, !0)
         q.addEventListenerWithParams(ON_MOUSE_UP, this._onModeToggle, this, ENGLAND)
         g = s_oSpriteLibrary.getSprite('italy')
-        n = new CToggle(CANVAS_WIDTH / 2 - 175, CANVAS_HEIGHT / 2 + 125, g, !0)
+        n = new CToggle(CANVAS_WIDTH / 2 - 175, CANVAS_HEIGHT / 2 + 95, g, !0)
         n.addEventListenerWithParams(ON_MOUSE_UP, this._onModeToggle, this, ITALY)
         g = s_oSpriteLibrary.getSprite('france')
-        r = new CToggle(CANVAS_WIDTH / 2 + 150, CANVAS_HEIGHT / 2 + 125, g, !0)
+        r = new CToggle(CANVAS_WIDTH / 2 + 175, CANVAS_HEIGHT / 2 + 95, g, !0)
         r.addEventListenerWithParams(ON_MOUSE_UP, this._onModeToggle, this, FRANCE)
-        h = new createjs.Text('ARGENTINA', ' 25px ' + TEXT, '#080863')
+        h = new createjs.Text('', ' 25px ' + TEXT, '#080863')
         h.x = CANVAS_WIDTH / 2 - 10
         h.y = CANVAS_HEIGHT / 2 + 150
         h.textAlign = 'center'
@@ -1264,7 +1275,7 @@ function CSelectTeam() {
                 n.setActive(!0)
                 r.setActive(!0)
                 g = ARGENTINA
-                h.text = 'ARGENTINA'
+                //h.text = "ARGENTINA";
                 d.unload()
                 d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, 'argentina')
                 break
@@ -1276,7 +1287,7 @@ function CSelectTeam() {
                 n.setActive(!0)
                 r.setActive(!0)
                 g = BRAZIL
-                h.text = 'BRAZIL'
+                //h.text = "BRAZIL";
                 d.unload()
                 d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, 'brazil')
                 break
@@ -1288,7 +1299,7 @@ function CSelectTeam() {
                 n.setActive(!0)
                 r.setActive(!0)
                 g = GERMANY
-                h.text = 'GERMANY'
+                //h.text = "GERMANY";
                 d.unload()
                 d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, 'germany')
                 break
@@ -1300,7 +1311,7 @@ function CSelectTeam() {
                 n.setActive(!0)
                 r.setActive(!0)
                 g = ENGLAND
-                h.text = 'ENGLAND'
+                //h.text = "ENGLAND";
                 d.unload()
                 d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, 'england')
                 break
@@ -1312,21 +1323,21 @@ function CSelectTeam() {
                 n.setActive(!1)
                 r.setActive(!0)
                 g = ITALY
-                h.text = 'ITALY'
+                //h.text = "ITALY";
                 d.unload()
                 d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, 'italy')
                 break
             case 5:
-                l.setActive(!0),
-                    m.setActive(!0),
-                    t.setActive(!0),
-                    q.setActive(!0),
-                    n.setActive(!0),
-                    r.setActive(!1),
-                    (g = FRANCE),
-                    (h.text = 'FRANCE'),
-                    d.unload(),
-                    d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, 'france')
+                l.setActive(!0)
+                m.setActive(!0)
+                t.setActive(!0)
+                q.setActive(!0)
+                n.setActive(!0)
+                r.setActive(!1)
+                g = FRANCE
+                //h.text = "FRANCE";
+                d.unload()
+                d.showIdle(PLAYER_X_POSITION_IN_SELECTION, PLAYER_Y_POSITION_IN_SELECTION, 'france')
         }
         s_iTeamSelected = g
     }
@@ -1381,7 +1392,7 @@ var s_oSelectTeam = null
 function CGame(a, e) {
     var b = 0, // 得分
         c,
-        g = 0,  // 进球
+        g = 0, // 进球
         h = 0,
         k = 0,
         d = 0,
@@ -1435,7 +1446,6 @@ function CGame(a, e) {
         var a = createBitmap(s_oSpriteLibrary.getSprite('bg_game'))
         s_oStage.addChild(a)
         W = new CCrowd()
-
         0 === q ? this._initLevel() : ((x = new CInterface(m)), this.createViewThings())
         this._initKickPoints()
     }
@@ -1477,7 +1487,7 @@ function CGame(a, e) {
         N = new createjs.Container()
         s_oStage.addChild(N)
         C = new CPlayer(N)
-        C.showIdle(D.x, D.y, e)
+        C.showIdle2(D.x, D.y - 100, e)
         1 === t.getPlayerPosIndex(m, q) && C.changeAlpha()
         x.viewScore(b)
         x.viewGoalScored(g, h)
@@ -1524,7 +1534,7 @@ function CGame(a, e) {
     }
     this.showMessage = function(a) {
         v = !1
-        C.showIdle(D.x, D.y, e)
+        C.showIdle2(D.x, D.y - 100, e)
         var d = this
         !0 === a
             ? (y.fadeOut(),
@@ -1645,13 +1655,13 @@ function CGame(a, e) {
             ? (m++,
               (q = 0),
               m === NUM_LEVEL
-                  ? ((c = 0), (L = CEndPanel(s_oSpriteLibrary.getSprite('bg_win'), s_oSpriteLibrary.getSprite('you_win'))), L.win(b,g))
+                  ? ((c = 0), (L = CEndPanel(s_oSpriteLibrary.getSprite('bg_win'), s_oSpriteLibrary.getSprite('you_win'))), L.win(b))
                   : (this.unload(), this._init()))
             : 1 >= k && this.gameOver()
         1 < k && (k--, q++, this.unload(), this._init())
     }
     this._initKickPoints = function() {
-        $(s_oMain).trigger('goal',[g,b])
+        $(s_oMain).trigger('goal', [g, b])
         A = []
         for (var a = 0; a < RANGE_WIDTH; a++) {
             A[a] = []
@@ -1682,8 +1692,8 @@ function CGame(a, e) {
     }
     this.gameOver = function() {
         c = q = 0
-        L = CEndPanel(s_oSpriteLibrary.getSprite('bg_next_level'), s_oSpriteLibrary.getSprite('game_over'))
-        L.show(b,g)
+        L = CEndPanel(s_oSpriteLibrary.getSprite('bg_last_level'), s_oSpriteLibrary.getSprite('game_over'))
+        L.show(b, g)
     }
     this.setUpdate = function() {
         u = !u
@@ -1846,7 +1856,7 @@ function CInterface(a) {
     }
     this.viewScoreBonus = function(a, b) {
         1 === b
-            ? ((t = new createjs.Text('BONUS x ' + a, ' 25px ' + TEXT, '#000000')),
+            ? ((t = new createjs.Text('Pts. x ' + a, ' 25px ' + TEXT, '#000000')),
               (t.x = p),
               (t.y = 50),
               (t.textAlign = 'left'),
@@ -1854,14 +1864,14 @@ function CInterface(a) {
               (t.lineWidth = 650),
               (t.outline = 3),
               s_oStage.addChild(t),
-              (r = new createjs.Text('BONUS x ' + a, ' 25px ' + TEXT, '#ffffff')),
+              (r = new createjs.Text('Pts. x ' + a, ' 25px ' + TEXT, '#ffffff')),
               (r.x = p),
               (r.y = 50),
               (r.textAlign = 'left'),
               (r.textBaseline = 'alphabetic'),
               (r.lineWidth = 650),
               s_oStage.addChild(r))
-            : ((t.text = 'BONUS x ' + a), (r.text = 'BONUS x ' + a))
+            : ((t.text = 'Pts. x ' + a), (r.text = 'Pts. x ' + a))
     }
     this.viewScore = function(a) {
         q = new createjs.Text('SCORE: ' + a, ' 25px ' + TEXT, '#000000')
@@ -2029,20 +2039,12 @@ function CEndPanel(a, e) {
         c = CANVAS_HEIGHT - 130
         k = new CGfxButton(b, c, r)
         k.addEventListener(ON_MOUSE_UP, this._onExit, this)
-
-        // TODO
-        // var r1 = s_oSpriteLibrary.getSprite("icon_kick");
-        // b1 = CANVAS_WIDTH / 2 + 300;
-        // c1 = CANVAS_HEIGHT - 230;
-        // k1 = new CGfxButton(b1, c1, r1);
-        // k1.addEventListener(ON_MOUSE_UP, this._onExit, this);
-
         this.refreshButtonPos(s_iOffsetX, s_iOffsetY)
     }
-    this.show = function(a,g) {
+    this.show = function(a) {
         ;(!1 !== DISABLE_SOUND_MOBILE && !1 !== s_bMobile) || createjs.Sound.play('game_over')
-        l.text = TEXT_SCORE + a
-        f.text = TEXT_SCORE + a
+        //l.text = TEXT_SCORE + a;
+        //f.text = TEXT_SCORE + a;
         h.visible = !0
         createjs.Tween.get(h)
             .to(
@@ -2052,9 +2054,9 @@ function CEndPanel(a, e) {
                 500
             )
             .call(function() {})
-        $(s_oMain).trigger('save_score', [g,a])
+        $(s_oMain).trigger('save_score', [g, a])
     }
-    this.win = function(a,g) {
+    this.win = function(a, g) {
         ;(!1 !== DISABLE_SOUND_MOBILE && !1 !== s_bMobile) || createjs.Sound.play('applause')
         l.text = TEXT_SCORE + a
         l.x = CANVAS_WIDTH / 2 - 150
@@ -2073,7 +2075,7 @@ function CEndPanel(a, e) {
                 500
             )
             .call(function() {})
-        $(s_oMain).trigger('save_score', [g,a])
+        $(s_oMain).trigger('save_score', [g, a])
     }
     this._onExit = function() {
         s_oStage.removeChild(h)
@@ -2127,15 +2129,36 @@ function CPlayer(a) {
         c.currentAnimationFrame = 0
         a.addChild(c)
     }
+    this.showIdle2 = function(g, h, k) {
+        e = {
+            images: [s_oSpriteLibrary.getSprite(k + '_idle2')],
+            framerate: 10,
+            frames: {
+                width: PLAYER_WIDTH2,
+                height: PLAYER_HEIGHT2,
+                regX: PLAYER_WIDTH2 / 2,
+                regY: PLAYER_WIDTH2
+            },
+            animations: {
+                idle: [0, 23, 'idle']
+            }
+        }
+        b = new createjs.SpriteSheet(e)
+        null === c ? (c = new createjs.Sprite(b, 'idle')) : (c.spriteSheet = b)
+        c.x = g
+        c.y = h
+        c.currentAnimationFrame = 0
+        a.addChild(c)
+    }
     this.showShot = function(g, h, k) {
         e = {
             images: [s_oSpriteLibrary.getSprite(k + '_shot')],
             framerate: 15,
             frames: {
-                width: PLAYER_WIDTH,
-                height: PLAYER_HEIGHT,
-                regX: PLAYER_WIDTH / 2,
-                regY: PLAYER_WIDTH
+                width: PLAYER_SHOT_WIDTH,
+                height: PLAYER_SHOT_HEIGHT,
+                regX: PLAYER_SHOT_WIDTH / 2,
+                regY: PLAYER_SHOT_WIDTH
             },
             animations: {
                 idle: [0, 20, 'idle']
@@ -2223,7 +2246,6 @@ function CGoalKeeper(a) {
 }
 s_oPlayer = null
 
-// 初始化level 的类
 function CLevel(a, e, b) {
     var c,
         g,
@@ -2470,31 +2492,31 @@ function CLevel(a, e, b) {
         t.textBaseline = 'alphabetic'
         t.lineWidth = 650
         t.outline = 3
-        b.addChild(t)
+        //b.addChild(t);
         n = new createjs.Text('CONGRATULATIONS!! ', ' 60px ' + TEXT, '#ffe51f')
         n.x = CANVAS_WIDTH / 2 - 350
         n.y = 175
         n.textAlign = 'left'
         n.textBaseline = 'alphabetic'
         n.lineWidth = 650
-        b.addChild(n)
-        u = new createjs.Text('GOAL SCORED: ', ' 40px ' + TEXT, '#000000')
-        u.x = CANVAS_WIDTH / 2 - 300
-        u.y = 275
-        u.textAlign = 'left'
+        //b.addChild(n);
+        u = new createjs.Text('GOAL SCORED for team Nigeria: ', ' 30px ' + TEXT, '#BF7029')
+        u.x = CANVAS_WIDTH / 2
+        u.y = 75
+        u.textAlign = 'center'
         u.textBaseline = 'alphabetic'
         u.lineWidth = 650
         u.outline = 3
         b.addChild(u)
-        v = new createjs.Text('GOAL SCORED: ', ' 40px ' + TEXT, '#ffe51f')
-        v.x = CANVAS_WIDTH / 2 - 300
-        v.y = 275
-        v.textAlign = 'left'
+        v = new createjs.Text('GOAL SCORED for team Nigeria: ', ' 30px ' + TEXT, '#FFE050')
+        v.x = CANVAS_WIDTH / 2
+        v.y = 75
+        v.textAlign = 'center'
         v.textBaseline = 'alphabetic'
         v.lineWidth = 650
         b.addChild(v)
         for (d = 0; d < e; d++, a += 26)
-            z.push(createBitmap(s_oSpriteLibrary.getSprite('ball_kick_left'))), (z[d].x = CANVAS_WIDTH / 2 + 50 + a), (z[d].y = 250), b.addChild(z[d])
+            z.push(createBitmap(s_oSpriteLibrary.getSprite('ball_kick_left'))), (z[d].x = CANVAS_WIDTH / 2 - 25 + a), (z[d].y = 95), b.addChild(z[d])
     }
     this.refreshButtonPos = function(a, b) {
         q.setPosition(c, g - b)
@@ -2799,7 +2821,7 @@ function CShotIndicatorController(a, e) {
             t = createBitmap(f)
             r.addChild(t)
             r.x = 290
-            r.y = CANVAS_HEIGHT / 2 - 170
+            r.y = CANVAS_HEIGHT / 2 - 200
             f = s_oSpriteLibrary.getSprite('arrow_bar')
             n = createBitmap(f)
             n.x = 0
