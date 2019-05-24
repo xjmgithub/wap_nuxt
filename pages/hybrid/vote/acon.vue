@@ -243,6 +243,7 @@ canvas {
             height: 50vh;
             padding-bottom: 4.8rem;
             overflow-y: scroll;
+            clear:both;
         }
         .cty-list {
             color: #66a578;
@@ -264,7 +265,7 @@ canvas {
                     float: left;
                     img {
                         width: 2.5rem;
-                        margin-right: 1rem;
+                        margin-right: .8rem;
                     }
                 }
                 .ranking {
@@ -274,7 +275,7 @@ canvas {
                     background: url('~assets/img/vote/others.png') no-repeat center;
                     background-size: contain;
                     text-align: center;
-                    margin: 0 1rem;
+                    margin: 0 .8rem;
                     &.first {
                         color: #ffffff;
                         background: url('~assets/img/vote/first.png') no-repeat center;
@@ -295,7 +296,7 @@ canvas {
                     text-overflow: ellipsis;
                     overflow: hidden;
                     white-space: nowrap;
-                    width: 54%;
+                    width: 48%;
                     font-weight:bold;
                 }
             }
