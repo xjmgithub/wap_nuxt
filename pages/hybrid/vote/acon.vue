@@ -222,6 +222,7 @@ canvas {
     .cty-rank {
         background: #252e28;
         border-top: 1px solid #252e28;
+        border-top-right-radius:15px;
         p {
             margin: 0.2rem;
             color: #94e6ac;
@@ -243,14 +244,14 @@ canvas {
             height: 50vh;
             padding-bottom: 4.8rem;
             overflow-y: scroll;
-            clear:both;
+            clear: both;
         }
         .cty-list {
             color: #66a578;
-            height: 4.8rem;
-            line-height: 4.8rem;
+            height: 4rem;
+            line-height: 4rem;
             &.my-cty {
-                border-left: 5px solid #94e6ac;
+                border-left: 3px solid #94e6ac;
                 background: rgba(148, 230, 172, 0.1);
                 .left {
                     .ranking {
@@ -264,8 +265,8 @@ canvas {
                 span {
                     float: left;
                     img {
-                        width: 2.5rem;
-                        margin-right: .8rem;
+                        width: 2.2rem;
+                        margin-right: 0.5rem;
                     }
                 }
                 .ranking {
@@ -275,7 +276,7 @@ canvas {
                     background: url('~assets/img/vote/others.png') no-repeat center;
                     background-size: contain;
                     text-align: center;
-                    margin: 0 .8rem;
+                    margin: 0 0.8rem;
                     &.first {
                         color: #ffffff;
                         background: url('~assets/img/vote/first.png') no-repeat center;
@@ -296,8 +297,8 @@ canvas {
                     text-overflow: ellipsis;
                     overflow: hidden;
                     white-space: nowrap;
-                    width: 48%;
-                    font-weight:bold;
+                    width: 58%;
+                    font-weight: bold;
                 }
             }
 
