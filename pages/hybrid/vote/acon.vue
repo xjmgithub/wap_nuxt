@@ -1,7 +1,7 @@
 <template>
     <div id="game">
         <div class="canvas">
-            <canvas id="canvas" class="ani_hack" width="1360" height="640"/>
+            <canvas id="canvas" class="ani_hack" width="1360" height="640" />
         </div>
         <div class="contain">
             <nav id="nav">
@@ -13,15 +13,15 @@
                 <p>
                     <span class="cty">{{country.name}}</span>ranks
                     <b>NO.1</b> now.
-                    <span class="rules">TEAM AWARDS</span>
+                    <span class="rules" @click="awardsCard=true">TEAM AWARDS</span>
                 </p>
                 <div class="box">
                     <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code==country.id}" class="cty-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                            <img v-if="item.logo" :src="item.logo">
-                            <img v-else src="~assets/img/flag_others.png">
-                            <span>{{item.name}}</span>
+                            <span v-if="item.logo"><img :src="item.logo"></span>
+                            <span v-else><img src="~assets/img/flag_others.png"></span>
+                            <span class="cty-name">{{item.name}}</span>
                         </div>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
@@ -31,13 +31,22 @@
                 </div>
             </div>
         </div>
+        <mCard v-show="awardsCard" :title="'TEAM AWARDS'" class="card" @closeCard="awardsCard=false">
+            <template v-slot:content>
+                <p>每个用户每天可以不限制的玩一次游戏，该游戏每轮有最低进球数要求，如果已经完成最低进球可以开始下一轮，直到无法完成最低进球数，用户无法继续玩游戏。除了最基本的每日一次游戏机会，每个用户在分享游戏后可拥有重新开始一次游戏的机会。玩游戏过程中产生的所有进球数，将为自己定位的国家进行投票，一个进球为一张票，每日票数不限，根据进球数进行累加。（进球数类等于票数）</p>
+            </template>
+        </mCard>
     </div>
 </template>
 <script>
+import mCard from '~/components/vote/card'
 import countrys from '~/functions/countrys.json'
 import qs from 'qs'
 export default {
     layout: 'base',
+    components: {
+        mCard
+    },
     data() {
         const obj = {}
         countrys.forEach(item => {
@@ -48,7 +57,8 @@ export default {
             countrys: obj,
             country: this.$store.state.country,
             countryList: [],
-            tabIndex: 0
+            tabIndex: 0,
+            awardsCard: false
         }
     },
     computed: {
@@ -240,17 +250,18 @@ canvas {
                     }
                 }
             }
-            span {
-                display: inline-block;
-            }
             .left {
                 float: left;
-                width: 64%;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
+                width: 65%;
+                span {
+                    float: left;
+                    img {
+                        width: 2.5rem;
+                        margin-right: 1rem;
+                    }
+                }
                 .ranking {
-                    width: 2rem;
+                    width: 1.7rem;
                     box-sizing: border-box;
                     color: #94e6ac;
                     background: url('~assets/img/vote/others.png') no-repeat center;
@@ -272,10 +283,12 @@ canvas {
                         background: url('~assets/img/vote/third.png') no-repeat center;
                         background-size: contain;
                     }
-                    & + img {
-                        width: 2.5rem;
-                        margin-right: 1rem;
-                    }
+                }
+                .cty-name {
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    width: 35%;
                 }
             }
 
