@@ -19,18 +19,19 @@ export default {
     mounted() {
         const scheme = 'starba'
         let path = 'platformapi/webtoapp'
-        
-        if(this.$route.query.target){
+
+        if (this.$route.query.target) {
             let target = this.$route.query.target
-            for(const i in this.$route.query){
-                if(i!='target'){
-                    target.indexOf('?')>0? target= target+ '?' + i + '='+ this.$route.query[i] :
-                    target= target+ '&' + i + '='+ this.$route.query[i]
+            for (const i in this.$route.query) {
+                if (i != 'target') {
+                    target.indexOf('?') > 0
+                        ? (target = target + '&' + i + '=' + this.$route.query[i])
+                        : (target = target + '?' + i + '=' + this.$route.query[i])
                 }
             }
             path = path + '?target=' + Base64.encode(target.replace(/&/g, '**'))
         }
-        
+
         const callLib = new CallApp({
             scheme: {
                 protocol: scheme
@@ -51,8 +52,9 @@ export default {
 }
 </script>
 <style>
-html,body{
-    background:linear-gradient(to right, #698aad,#2d5078);
+html,
+body {
+    background: linear-gradient(to right, #698aad, #2d5078);
 }
 </style>
 <style lang="less" scoped>
