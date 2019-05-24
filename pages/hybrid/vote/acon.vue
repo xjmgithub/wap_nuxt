@@ -21,7 +21,7 @@
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.logo"><img :src="item.logo"></span>
                             <span v-else><img src="~assets/img/flag_others.png"></span>
-                            <span>{{item.name}}</span>
+                            <span class="cty-name">{{item.name}}</span>
                         </div>
                         <div class="right">
                             <img src="~assets/img/vote/soccer.png" class="soccer">
