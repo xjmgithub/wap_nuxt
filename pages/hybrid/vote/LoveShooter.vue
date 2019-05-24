@@ -13,13 +13,6 @@
             <template v-for="(item,index) in tabList">
                 <mVote v-if="item.type=='vote'" v-show="tabIndex==index" :key="index" :data-list="playerList" @onVote="handleVote" @toPlay="toVideo" />
                 <mRank v-if="item.type=='rank'" v-show="tabIndex==index" :key="index" :data-list="rankList" />
-                <mAboutWord v-if="item.type=='about'" v-show="tabIndex==index" :key="index">
-                    <template v-slot:content>
-                        <p>Vote for your favorite Miss Mama Africa! You could vote ONCE per day whereas you are welcome to vote every day</p>
-                        <p> Each Saturday evening we’ll open voting channels of weekly candidates. In mid-September, final stage of voting, we’ll open voting channels of all candidates. Note: The online voting process is completely independent from TV show, and the voting results are irrelevant to the results on TV show and the results DO NOT affect each other. </p>
-                        <p> Each Saturday evening we’ll open voting channels of weekly candidates. In mid-September, final stage of voting, we’ll open voting channels of all candidates. Note: The online voting process is completely independent from TV show, and the voting results are irrelevant to the results on TV show and the results DO NOT affect each other. </p>
-                    </template>
-                </mAboutWord>
             </template>
         </div>
     </div>
@@ -28,14 +21,12 @@
 import mVote from '~/components/vote/vote'
 import mRank from '~/components/vote/rank'
 import mVoteSwiper from '~/components/vote/vote_swiper'
-import mAboutWord from '~/components/vote/about_word'
 import qs from 'qs'
 export default {
     layout: 'base',
     components: {
         mVote,
         mRank,
-        mAboutWord,
         mVoteSwiper
     },
     data() {
@@ -50,10 +41,6 @@ export default {
                 {
                     name: 'Rank',
                     type: 'rank'
-                },
-                {
-                    name: 'About',
-                    type: 'about'
                 }
             ],
             tabIndex: 0,
@@ -62,27 +49,6 @@ export default {
             rankList: [],
             banners: [],
             voteTitle: 'Love Shooter'
-        }
-    },
-    computed: {
-        platform() {
-            if (this.appType == 1) {
-                return 'Android'
-            } else if (this.appType == 2) {
-                return 'iOS'
-            } else {
-                return 'web'
-            }
-        }
-    },
-    watch: {
-        tabIndex(nv, ov) {
-            this.sendEvLog({
-                category: `vote_${this.voteTitle}_${this.platform}`,
-                action: 'tab_click',
-                label: (nv == 0 && 'vote') || (nv == 1 && 'rank') || (nv == 2 && 'about'),
-                value: 1
-            })
         }
     },
     mounted() {
@@ -111,9 +77,7 @@ export default {
             })
         },
         handleVote(item) {
-            if (item.state === -1) {
-                this.$toast('not start yet')
-            } else if (this.leftVote <= 0) {
+            if (this.leftVote <= 0) {
                 this.$toast('left vote not enough')
             } else {
                 this.$axios({
@@ -143,9 +107,7 @@ export default {
                 window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
             } else if (this.appType == 2 && vod) {
                 window.location.href = 'startimes://player?vodId=' + vod
-            } else {
-                // TODO 处理浏览器逻辑
-            }
+            } 
         }
     },
     head() {
