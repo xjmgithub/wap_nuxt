@@ -96,6 +96,8 @@ export default {
         })
         // $(game).on('goal', function(evt, goal, score) {})
         this.getCountryList()
+
+        window.soccer_cup_country = this.country.name
     },
     methods: {
         getCountryList() {

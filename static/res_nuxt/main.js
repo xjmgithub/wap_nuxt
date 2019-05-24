@@ -2500,7 +2500,7 @@ function CLevel(a, e, b) {
         n.textBaseline = 'alphabetic'
         n.lineWidth = 650
         //b.addChild(n);
-        u = new createjs.Text('GOAL SCORED for team Nigeria: ', ' 30px ' + TEXT, '#BF7029')
+        u = new createjs.Text('GOAL SCORED for team ' + window.soccer_cup_country + ': ', ' 30px ' + TEXT, '#BF7029')
         u.x = CANVAS_WIDTH / 2
         u.y = 75
         u.textAlign = 'center'
@@ -2508,7 +2508,7 @@ function CLevel(a, e, b) {
         u.lineWidth = 650
         u.outline = 3
         b.addChild(u)
-        v = new createjs.Text('GOAL SCORED for team Nigeria: ', ' 30px ' + TEXT, '#FFE050')
+        v = new createjs.Text('GOAL SCORED for team ' + window.soccer_cup_country + ': ', ' 30px ' + TEXT, '#FFE050')
         v.x = CANVAS_WIDTH / 2
         v.y = 75
         v.textAlign = 'center'
