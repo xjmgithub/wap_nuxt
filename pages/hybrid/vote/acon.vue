@@ -273,6 +273,9 @@ canvas {
                 }
                 .ranking {
                     width: 1.7rem;
+                    line-height:4.1rem;
+                    height:4rem;
+                    font-size:0.9rem;
                     box-sizing: border-box;
                     color: #94e6ac;
                     background: url('~assets/img/vote/others.png') no-repeat center;
