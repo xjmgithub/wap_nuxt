@@ -77,7 +77,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { downApp, UAType } from '~/functions/utils'
+import { normalToAppStore, UAType } from '~/functions/utils'
 import dayjs from 'dayjs'
 export default {
     components: {
@@ -292,7 +292,7 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    downApp.call(this)
+                    normalToAppStore.call(this)
                     this.sendEvLog({
                         category: document.title,
                         action: 'install_dialog_install',

@@ -21,6 +21,7 @@
     </div>
 </template>
 <script>
+import { shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 export default {
     computed: {
         showShare() {
@@ -32,37 +33,14 @@ export default {
             this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithFacebook() {
-            // eslint-disable-next-line no-undef
-            FB.ui(
-                {
-                    method: 'share',
-                    display: 'popup',
-                    href: window.location.href
-                },
-                function(response) {}
-            )
+            shareByFacebook.call(this,window.location.href)
         },
         copyLink() {
-            this.$nextTick(() => {
-                const input = document.createElement('input')
-                input.setAttribute('readOnly',true)
-                document.body.appendChild(input)
-                input.setAttribute('value', window.location.href)
-                input.select()
-                const successful = document.execCommand('copy')
-                document.body.removeChild(input)
-                window.getSelection().removeAllRanges()
-                if (successful) {
-                    this.$toast(this.$store.state.lang.officialwebsitemobile_copylink_copied)
-                } else {
-                    this.$toast('Copylink is not support on your browser')
-                }
-                this.$store.commit('SET_SHARE_STATE', false)
-            })
+            copyClipboard.call(this,window.location.href)
+            this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithTwitter() {
-            window.location.href =
-                'http://twitter.com/share?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(document.title)
+            shareByTwitter.call(this,document.title, window.location.href)
         }
     }
 }

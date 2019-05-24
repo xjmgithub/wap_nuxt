@@ -96,7 +96,7 @@ export default {
                 label: window.location.pathname
             })
 
-            downloadApk(this)
+            downloadApk.call(this)
         }
     },
     head() {
