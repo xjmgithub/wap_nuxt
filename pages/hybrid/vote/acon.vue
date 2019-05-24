@@ -191,14 +191,14 @@ canvas {
     width: 95%;
     margin: 0 2.5%;
     #nav {
-        height: 2rem;
+        height: 2.3rem;
         a {
             background: #174427;
             text-align: center;
             cursor: pointer;
             height: 2.4rem;
-            line-height: 2.4rem;
-            width: 45%;
+            line-height: 2.6rem;
+            width: 48%;
             color: #66a578;
             display: block;
             border-radius: 15px 15px 0 0;
@@ -255,7 +255,7 @@ canvas {
             }
             .left {
                 float: left;
-                width: 65%;
+                width: 68%;
                 span {
                     float: left;
                     img {
@@ -291,13 +291,14 @@ canvas {
                     text-overflow: ellipsis;
                     overflow: hidden;
                     white-space: nowrap;
-                    width: 35%;
+                    width: 54%;
+                    font-weight:bold;
                 }
             }
 
             .right {
                 float: right;
-                width: 34%;
+                width: 32%;
                 .soccer {
                     width: 1.5rem;
                 }
