@@ -92,7 +92,7 @@ export default {
         },
         handleVote(item) {
             if (this.leftVote <= 0) {
-                this.$toast('left vote not enough')
+                this.$toast('Left vote not enough')
             } else {
                 this.$axios({
                     url: '/voting/v1/ballot',
@@ -108,7 +108,7 @@ export default {
                     if (res.data.code === 0) {
                         this.getAllList()
                         this.leftVote--
-                        this.$toast('vote_success' + ':' + this.leftVote)
+                        this.$toast('Vote success' + ':' + this.leftVote)
                     } else {
                         this.$toast(res.data.message)
                     }
