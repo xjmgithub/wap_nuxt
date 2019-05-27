@@ -2,7 +2,7 @@
     <div class="pay-cont">
         <div class="channels">
             <div v-for="(item,i) in renderChannels" :key="i" class="channel">
-                <div v-if="item.fkPayChannelId>9001&&item.fkPayChannelId<9035">
+                <div v-if="isLogin&&item.fkPayChannelId>9001&&item.fkPayChannelId<9035||osv5&&addCardChannel.id">
                     <div class="channel-name">{{item.name}}</div>
                     <mLine style="clear:both"/>
                     <div v-if="isLogin" class="radio-box">
@@ -55,7 +55,7 @@
                         <div class="arrows"/>
                     </div>
                 </div>
-                <div v-else @click="payHandle(item)">
+                <div v-if="item.fkPayChannelId<=9001||item.fkPayChannelId>=9035" @click="payHandle(item)">
                     <div class="channel-name">{{item.name}}</div>
                     <div class="arrows"/>
                 </div>
