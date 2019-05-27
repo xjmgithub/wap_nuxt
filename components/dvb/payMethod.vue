@@ -67,10 +67,14 @@ export default {
             return (this.wallet && this.wallet.amount) || 0
         },
         canPay() {
-            if (this.selected.fkPayChannelId > 9001 && this.selected.fkPayChannelId < 9035 && this.balance < this.paymentAmount) {
+            if (this.selected.fkPayChannelId) {
+                if (this.selected.fkPayChannelId > 9001 && this.selected.fkPayChannelId < 9035 && this.balance < this.paymentAmount) {
+                    return false
+                } else {
+                    return true
+                }
+            }else{
                 return false
-            } else {
-                return true
             }
         },
         ewalletRender() {
@@ -95,7 +99,7 @@ export default {
                 if (this.isLogin) {
                     if (addCardPay) {
                         addCardPay.payChannelCardAuthDtoList.forEach(item => {
-                            item = Object.assign(item,addCardPay)
+                            item = Object.assign(item, addCardPay)
                         })
                         ewallet.addCardPay = this.osv5 && addCardPay
                         if (addCardPay.lastSuccessPay) {
