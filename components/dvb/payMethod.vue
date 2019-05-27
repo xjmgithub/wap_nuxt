@@ -5,7 +5,7 @@
                 <div v-if="item.fkPayChannelId>9001&&item.fkPayChannelId<9035">
                     <div class="channel-name">{{item.name}}</div>
                     <mLine style="clear:both"/>
-                    <div class="radio-box">
+                    <div v-if="isLogin" class="radio-box">
                         <div v-if="!lastPayByCard">
                             <label class="radio">
                                 <div class="balance img-box"/>
