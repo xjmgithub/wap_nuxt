@@ -95,8 +95,7 @@ export default {
                 if (this.isLogin) {
                     if (addCardPay) {
                         addCardPay.payChannelCardAuthDtoList.forEach(item => {
-                            item.fkPayChannelId = item.fkPayChannel
-                            item.description = addCardPay.description
+                            item = Object.assign(item,addCardPay)
                         })
                         ewallet.addCardPay = this.osv5 && addCardPay
                         if (addCardPay.lastSuccessPay) {
