@@ -41,6 +41,8 @@ import cardInput from '~/components/dvb/input'
 import goods from '~/components/dvb/goods'
 import moreMethods from '~/components/dvb/moreMethods'
 import { formatAmount, toNativePage } from '~/functions/utils'
+import countryArr from '~/functions/countrys.json'
+import tokens from '~/functions/token.json'
 export default {
     layout: 'base',
     components: {
@@ -85,7 +87,22 @@ export default {
             }
         }
     },
-    async asyncData({ app: { $axios }, store }) {
+    async asyncData({ app: { $axios }, store, route }) {
+        if (route.query.country) {
+            const countryMap = {}
+            countryArr.forEach(item => {
+                countryMap[item.country] = item
+            })
+            const t = tokens[route.query.country.toUpperCase()]
+            const c = countryMap[route.query.country.toUpperCase()]
+
+            if (t && c) {
+                store.commit('SET_TOKEN', t)
+                store.commit('SET_GTOKEN', t)
+                store.commit('SET_AREA_INFO', c)
+            }
+        }
+
         $axios.setHeader('token', store.state.token)
         let data = []
         try {
