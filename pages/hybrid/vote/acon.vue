@@ -54,6 +54,10 @@
                 <p>9. StarTimes ON reserves all the right for the final explanation.</p>
             </template>
         </mCard>
+        <div class="bot-down">
+            <div class="bot-down-text">The more friends you call, the higher winning probability will be.</div>
+            <div class="bot-down-btn">CALL NOW!</div>
+        </div>
     </div>
 </template>
 <script>
@@ -391,6 +395,35 @@ canvas {
                 }
             }
         }
+    }
+}
+
+.bot-down {
+    position: fixed;
+    bottom: 0;
+    height: 3rem;
+    padding: 0.5rem 3%;
+    display: -webkit-box;
+    background: #3a8956;
+    z-index: 200;
+    box-shadow: 0 -2px 4px #232323cf;
+    .bot-down-text {
+        -webkit-box-flex: 4;
+        font-size: 0.8rem;
+        color: #ffd91f;
+        margin-right:0.3rem;
+    }
+    .bot-down-btn {
+        -webkit-box-flex: 1;
+        width: 8.2rem;
+        height: 2rem;
+        line-height:2rem;
+        font-size:0.9rem;
+        text-align: center;
+        color: #ff5c05;
+        background: #ffd91f;
+        border-radius: 3px;
+        font-weight: bold;
     }
 }
 </style>
