@@ -85,6 +85,15 @@ export default {
     },
     mounted() {
         /* eslint-disable */
+
+        const first_in = localStorage.getItem('acon_first')
+        if (!first_in) {
+            this.$alert(
+                `Welcome to the 'CRAZY FREEKICK'! As a country hero, You'll represent for Team ${this.country.name}. Any goal you score will be added to your country. The higher ranking your team reaches, the more VIP FREE Coupons will be sent to people who have scored.`
+            )
+            localStorage.setItem('acon_first', 1)
+        }
+
         const game = new window.CMain({
             shot_indicator_spd: 1000,
             decrease_shot_indicator_spd: 100
@@ -171,7 +180,7 @@ export default {
         },
         vote(goal) {
             if (goal > 0) {
-                this.$alert('asdfasdfa', () => {
+                this.$alert(`You've scroed ${goal} goals for ${this.country.name}. Thanks for the contribution for your country, Hero.`, () => {
                     this.animateBall(() => {
                         this.$axios({
                             url: '/voting/v1/ballot',
