@@ -16,7 +16,13 @@
                     <span class="rules" @click="awardsCard=true">TEAM AWARDS</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in countryList" :key="index" :class="{'my-cty':item.code==country.id}" class="cty-list">
+                    <div
+                        v-for="(item,index) in countryList"
+                        :id="`c-${item.name}`"
+                        :key="index"
+                        :class="{'my-cty':item.code==country.id}"
+                        class="cty-list"
+                    >
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.logo">
@@ -100,6 +106,32 @@ export default {
         window.soccer_cup_country = this.country.name
     },
     methods: {
+        animateBall(callback) {
+            var box = document.createElement('img')
+            box.setAttribute('src', '/res_nuxt/acon/sprites/ball_kick_left_old.png')
+            box.style.setProperty('width', '1.5rem')
+            box.style.setProperty('position', 'fixed')
+            box.style.setProperty('z-index', '10000')
+            document.querySelector('#game').appendChild(box)
+            function animate(time) {
+                requestAnimationFrame(animate)
+                TWEEN.update(time)
+            }
+            requestAnimationFrame(animate)
+
+            const dest = document.querySelector('#c-' + this.country.name + ' .right img')
+            var coords = { x: dest.getBoundingClientRect().left, y: 150 }
+            var tween = new TWEEN.Tween(coords)
+                .to({ x: dest.getBoundingClientRect().left, y: dest.getBoundingClientRect().top }, 1500)
+                .easing(TWEEN.Easing.Bounce.Out)
+                .onUpdate(function() {
+                    box.style.setProperty('transform', 'translate(' + coords.x + 'px, ' + coords.y + 'px)')
+                })
+                .onComplete(function() {
+                    callback()
+                })
+                .start()
+        },
         getCountryList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
                 if (res.data.code == 0) {
@@ -131,21 +163,23 @@ export default {
         },
         vote(goal) {
             if (goal > 0) {
-                this.$axios({
-                    url: '/voting/v1/ballot',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    data: qs.stringify({
-                        candidate_id: this.candidate.candidate_id,
-                        vote_id: 10,
-                        weight: goal
+                this.animateBall(() => {
+                    this.$axios({
+                        url: '/voting/v1/ballot',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: qs.stringify({
+                            candidate_id: this.candidate.candidate_id,
+                            vote_id: 10,
+                            weight: goal
+                        })
+                    }).then(res => {
+                        if (res.data.code === 0) {
+                            this.getCountryList()
+                        }
                     })
-                }).then(res => {
-                    if (res.data.code === 0) {
-                        this.getCountryList()
-                    }
                 })
             }
         }
@@ -153,7 +187,12 @@ export default {
     head() {
         return {
             title: 'StarTimes ON Soccer Cup',
-            script: [{ src: '/res_nuxt/jquery-3.4.1.min.js' }, { src: '/res_nuxt/createjs-2014.12.12.min.js' }, { src: '/res_nuxt/main.js' }]
+            script: [
+                { src: '/res_nuxt/jquery-3.4.1.min.js' },
+                { src: '/res_nuxt/createjs-2014.12.12.min.js' },
+                { src: '/res_nuxt/main.js' },
+                { src: 'https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js' }
+            ]
         }
     }
 }
@@ -224,7 +263,7 @@ canvas {
     .cty-rank {
         background: #252e28;
         border-top: 1px solid #252e28;
-        border-top-right-radius:15px;
+        border-top-right-radius: 15px;
         p {
             margin: 0.2rem;
             color: #94e6ac;
@@ -273,9 +312,9 @@ canvas {
                 }
                 .ranking {
                     width: 1.7rem;
-                    line-height:4.1rem;
-                    height:4rem;
-                    font-size:0.9rem;
+                    line-height: 4.1rem;
+                    height: 4rem;
+                    font-size: 0.9rem;
                     box-sizing: border-box;
                     color: #94e6ac;
                     background: url('~assets/img/vote/others.png') no-repeat center;
@@ -310,6 +349,9 @@ canvas {
             .right {
                 float: right;
                 width: 32%;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
                 .soccer {
                     width: 1.5rem;
                 }
