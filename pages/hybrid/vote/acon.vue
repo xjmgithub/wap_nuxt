@@ -142,6 +142,7 @@ export default {
                     box.style.setProperty('transform', 'translate(' + coords.x + 'px, ' + coords.y + 'px)')
                 })
                 .onComplete(function() {
+                    document.querySelector('#game').removeChild(box)
                     callback()
                 })
                 .start()
