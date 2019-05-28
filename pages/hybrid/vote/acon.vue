@@ -222,7 +222,7 @@ export default {
                 `${window.location.origin}/hybrid/lands/soccercup?utm_source=startimes_app&utm_medium=activity&utm_campaign=soccercup1`,
                 `【StarTimes ON Cup - Crazy Freekick】Join us as a Country Hero and score for the Team ${this.country.name} to win the cup.`,
                 '',
-                `${window.location.origin}/res_nuxt/acon/sprites/supporters/supporters_13.png`
+                `${window.location.origin}/res_nuxt/img/soccercup.png`
             )
         }
     },
