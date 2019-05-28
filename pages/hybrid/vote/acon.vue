@@ -196,7 +196,7 @@ export default {
     },
     head() {
         return {
-            title: 'StarTimes ON Soccer Cup',
+            title: 'StarTimes ON Cup - Crazy Freekick',
             script: [
                 { src: '/res_nuxt/jquery-3.4.1.min.js' },
                 { src: '/res_nuxt/createjs-2014.12.12.min.js' },
