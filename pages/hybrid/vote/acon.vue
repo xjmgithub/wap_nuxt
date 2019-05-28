@@ -341,7 +341,7 @@ canvas {
                     text-overflow: ellipsis;
                     overflow: hidden;
                     white-space: nowrap;
-                    width: 58%;
+                    width: 54%;
                     font-weight: bold;
                 }
             }
