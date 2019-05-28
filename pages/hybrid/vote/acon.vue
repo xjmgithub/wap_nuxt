@@ -104,6 +104,20 @@ export default {
         this.getCountryList()
 
         window.soccer_cup_country = this.country.name
+
+        // document.addEventListener('visibilitychange', function () {
+        //     // 用户离开了当前页面
+        //     alert(123)
+
+        //     if (document.visibilityState === 'hidden') {
+        //         document.title = '页面不可见';
+        //     }
+
+        //     // 用户打开或回到页面
+        //     if (document.visibilityState === 'visible') {
+        //         document.title = '页面可见';
+        //     }
+        // });
     },
     methods: {
         animateBall(callback) {
@@ -341,7 +355,7 @@ canvas {
                     text-overflow: ellipsis;
                     overflow: hidden;
                     white-space: nowrap;
-                    width: 54%;
+                    width: 53%;
                     font-weight: bold;
                 }
             }
