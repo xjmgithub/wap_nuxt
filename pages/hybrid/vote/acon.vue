@@ -116,7 +116,7 @@ export default {
             }
 
             var box = document.createElement('img')
-            box.setAttribute('src', '/res_nuxt/acon/sprites/ball_kick_left_old.png')
+            box.setAttribute('src', '/res_nuxt/acon/sprites/ball_kick_left.png')
             box.style.setProperty('width', '1.5rem')
             box.style.setProperty('position', 'fixed')
             box.style.setProperty('z-index', '10000')
