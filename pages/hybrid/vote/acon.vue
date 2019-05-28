@@ -41,9 +41,17 @@
                 </div>
             </div>
         </div>
-        <mCard v-show="awardsCard" :title="'TEAM AWARDS'" class="card" @closeCard="awardsCard=false">
+        <mCard v-show="awardsCard" :title="'AWARD RULES'" class="card" @closeCard="awardsCard=false">
             <template v-slot:content>
-                <p>每个用户每天可以不限制的玩一次游戏，该游戏每轮有最低进球数要求，如果已经完成最低进球可以开始下一轮，直到无法完成最低进球数，用户无法继续玩游戏。除了最基本的每日一次游戏机会，每个用户在分享游戏后可拥有重新开始一次游戏的机会。玩游戏过程中产生的所有进球数，将为自己定位的国家进行投票，一个进球为一张票，每日票数不限，根据进球数进行累加。（进球数类等于票数）</p>
+                <p>1. Activity time: 2019.5.29 00:00:00-2019.6.3 23:59:59</p>
+                <p>2. Each user represents his own country, and each time he scores a goal, he scores 1 goal for the country.</p>
+                <p>3. There is no limit on the number of times per person per day, can always play during the event</p>
+                <p>4. After the event, 299 users in Champion country team will receive 1 FREE MAX VIP monthly coupon, 199 in the second country, 99 in the third country, and no more than 50 users in the 4th to 15th countries.</p>
+                <p>5. The winning users will be randomly selected from the users who have scored for the country, only one per person. The winning probability will be based on the goals you contribute and the friends you invited to the game.</p>
+                <p>6. Coupon issuance time: 2019-06-04.</p>
+                <p>7. MAX VIP Coupon is specified to StarTimes ON MAX VIP, which contains all VIP contents on StarTimes ON that includes all the 30+ VIP live TV channels (ST World Football, AMC Movies, STAR LIFE, ST Swahili, BBC World News, NGW and many more).</p>
+                <p>8. MAX VIP is only available for StarTimes ON APP.</p>
+                <p>9. StarTimes ON reserves all the right for the final explanation.</p>
             </template>
         </mCard>
     </div>
@@ -89,7 +97,9 @@ export default {
         const first_in = localStorage.getItem('acon_first')
         if (!first_in) {
             this.$alert(
-                `Welcome to the 'CRAZY FREEKICK'! As a country hero, You'll represent for Team ${this.country.name}. Any goal you score will be added to your country. The higher ranking your team reaches, the more VIP FREE Coupons will be sent to people who have scored.`
+                `Welcome to the 'CRAZY FREEKICK'! As a country hero, You'll represent for Team ${
+                    this.country.name
+                }. Any goal you score will be added to your country. The higher ranking your team reaches, the more VIP FREE Coupons will be sent to people who have scored.`
             )
             localStorage.setItem('acon_first', 1)
         }
