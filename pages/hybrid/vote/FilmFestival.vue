@@ -43,7 +43,7 @@
                 @touchmove.prevent="move"
                 @touchend="canMove = false"
             >
-                <div>{{$store.state.lang.vote_share}}</div>
+                {{$store.state.lang.vote_share}}
             </div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
@@ -702,26 +702,22 @@ html {
         }
     }
     .share {
-        width: 4.3rem;
-        height: 4.3rem;
+        width: 5rem;
+        height: 5rem;
         text-align: center;
         color: #666666;
         font-size: 0.65rem;
         font-weight: bold;
         position: fixed;
         bottom: 3rem;
-        right: 1rem;
+        right: 1.5rem;
         border-radius: 100%;
-        background: linear-gradient(to top, #c8c8c8, #979797);
+        line-height: 5rem;
+        background:url('~assets/img/vote/share.png') no-repeat center;
+        background-size: cover;
+        color:white;
+        box-shadow: 0.6rem 0.6rem 0.6rem #222323;
         z-index: 10;
-        div {
-            width: 3.8rem;
-            height: 3.8rem;
-            line-height: 3.8rem;
-            margin: 0.25rem auto;
-            background: linear-gradient(to bottom, #d8d8d8, #afafaf);
-            border-radius: 100%;
-        }
     }
     .card {
         .share-btn {
