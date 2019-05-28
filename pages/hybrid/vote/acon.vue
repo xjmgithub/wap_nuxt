@@ -56,7 +56,7 @@
         </mCard>
         <div class="bot-down">
             <div class="bot-down-text">The more friends you call, the higher winning probability will be.</div>
-            <div class="bot-down-btn">CALL NOW!</div>
+            <div class="bot-down-btn" @click="share">CALL NOW!</div>
         </div>
     </div>
 </template>
@@ -64,6 +64,7 @@
 import mCard from '~/components/vote/card'
 import countrys from '~/functions/countrys.json'
 import qs from 'qs'
+import { shareInvite } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -215,6 +216,14 @@ export default {
                     })
                 })
             }
+        },
+        share() {
+            shareInvite(
+                `${window.location.origin}/hybrid/lands/soccercup?utm_source=startimes_app&utm_medium=activity&utm_campaign=soccercup1`,
+                `【StarTimes ON Cup - Crazy Freekick】Join us as a Country Hero and score for the Team ${this.country.name} to win the cup.`,
+                '',
+                `${window.location.origin}/res_nuxt/acon/sprites/supporters/supporters_13.png`
+            )
         }
     },
     head() {
@@ -411,14 +420,14 @@ canvas {
         -webkit-box-flex: 4;
         font-size: 0.8rem;
         color: #ffd91f;
-        margin-right:0.3rem;
+        margin-right: 0.3rem;
     }
     .bot-down-btn {
         -webkit-box-flex: 1;
         width: 8.2rem;
         height: 2rem;
-        line-height:2rem;
-        font-size:0.9rem;
+        line-height: 2rem;
+        font-size: 0.9rem;
         text-align: center;
         color: #ff5c05;
         background: #ffd91f;
