@@ -6,7 +6,7 @@ export default {
     download_apk: 'Baixar',
 
     // vote film
-    vote_about: 'Acerca de',
+    vote_about: 'Sobre o PAOFF',
     vote_tab_film: 'Filmes',
     vote_tab_shortfilm: 'Filmes curtos',
     vote_tab_mv: 'MV',
@@ -15,13 +15,13 @@ export default {
     vote_success: 'Votou com sucesso!',
     vote_success_0: 'Você tem 0 voto, convide os seus amigos para ganharem votos extras.',
     vote_fail: 'Ops! A votação falhou!',
-    vote_appshare_words: 'Descarregue StarTimes ON e ajude-me a ganhar votos extras para apoiar os filmes e séries de TV nigerianos.',
+    vote_appshare_words: 'Uau. Isso é tão fixe. Junte-se a mim agora para votar no seu vídeo favorito.',
     vote_downloadbtn: 'DESCARREGAR App',
     vote_downloadbtn_tips: 'Vote para o seu conteúdo favorito',
     vote_downloadtips: 'Descarregar StarTimes ON!',
     vote_apk: 'Descarregar apk agora (11M)',
     vote_earnvote_tt: 'Convidar amigos para ganharem votos',
-    vote_webshare_words: 'Descarregue StarTimes ON e vote para filmes e séries de TV nigerianos!',
+    vote_webshare_words: 'Estamos claramente em sintonia. Eu já votei, clique para se juntar a mim!',
     vote_share: 'PARTILHAR',
     vote_view_more: 'VEJA MAIS',
     vote_ok: 'OK',
@@ -31,7 +31,7 @@ export default {
     vote_leftvote: 'Votos restantes',
     vote_vote_btn: 'VOTE',
     vote_join_now: 'Escolha o seu candidato',
-    vote_about_word:"<p>Festival Pan Africano de Filmes  ONline (PAOFF) convida a todos os usuários on-line a votarem nos  seus favoritos via StarTimes ON, mostrem o vosso interesse e apoio às vossas estrelas favoritas neste evento incrível.Os prêmios são categorizados em três tipos:</p><p>1-Melhor Filme da África</p><p>2- Melhor Curta Metragem da África</p><p>3- Melhor Vídeo Musical da África</p><p>Nós estamos a celebrar a fabulosa gala na Nigéria este ano, a plataforma do StarTimes ON vai contar os votos e garantir uma plataforma transparente com imparcialidade e equidade.</p>",
+    vote_about_word: "<p>O Festival Pan-Africano de Filmes Online (PAOFF) é um prémio online exclusivo da StarTimes ON, que visa premiar a excelente produção feita por produtores africanos que, por sua vez, apoiarão e promoverão o desenvolvimento da indústria cinematográfica e musical em toda a África.</p><p>O prêmio é uma iniciativa da operadora principal de TV digital da África, a StarTimes, e concentrar-se-á em três categorias: Melhor Filme da África, Melhor Curta Metragem da África, Melhor Vídeo Musical da África. </p><p>Temos a honra de convidar todos os usuários on-line para votar e apoiar o seu favorito via StarTimes ON. Estamos a celebrar a gala fabulosa na Nigéria este ano, a plataforma StarTimes ON contará os votos e garantirá uma plataforma transparente com imparcialidade e equidade.</p><p>©2019 por StarTimes Todos os Direitos Reservados</p>",
     vote_rule_word:"<p>1.De 1 de junho a 31 de julho, você tem 5 votos por cada dia. Vote nos seus produtores e shows favoritos! </p><p>2.Partilhe o link com os seus amigos para conseguir mais votos! Pode conseguir mais 5 votos por cada ultilizador novo (Aqueles que nunca instalaram o APP nos seus telemóveis) por partilhar o link. Quanto mais usuários novos instalarem o app via link que você partilhou, mais votos você conseguirá!</p><p>3.Os votos podem ser acumulados e são válidos até ao prazo final.  Você pode votar qualquer show de que goste.</p><p>4.A classificação dos votos dos diferentes shows vai ser atualizada em tempo real, e os melhores shows que tenham o maior número de votos vão ganhar o prêmio do Melhor Filme da África, Melhor Curta Metragem da África e Melhor Vídeo Musical da África.</p>",
 
     // Mr Right

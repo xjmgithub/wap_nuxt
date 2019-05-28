@@ -6,7 +6,7 @@ export default {
     download_apk: 'Download Now',
 
     // vote film
-    vote_about: 'About',
+    vote_about: 'About PAOFF',
     vote_tab_film: 'Movies',
     vote_tab_shortfilm: 'Short Films',
     vote_tab_mv: 'MV',
@@ -15,13 +15,13 @@ export default {
     vote_success: "You've voted!",
     vote_success_0: 'You have 0 vote left, invite friends to earn extra votes',
     vote_fail: 'Oops! Vote failed!',
-    vote_appshare_words: 'Download StarTimes ON and help me gain extra votes to support Nigerian local films and TV series.',
+    vote_appshare_words: 'Wow. This is so cool. Join me now to vote for your favorite video.',
     vote_downloadbtn: 'DOWNLOAD App',
     vote_downloadbtn_tips: 'Vote for your favourite content',
     vote_downloadtips: 'Download StarTimes ON!',
     vote_apk: 'Download apk now（11M） ',
     vote_earnvote_tt: 'Tell friends to earn votes',
-    vote_webshare_words: 'Download StarTimes ON and vote for Nigerian local films and TV series!',
+    vote_webshare_words: "We're clearly in tune.I've already voted, click to JOIN ME!",
     vote_share:'SHARE',
     vote_view_more:'VIEW MORE',
     vote_ok:'OK',
@@ -31,7 +31,7 @@ export default {
     vote_leftvote: 'Remaining Votes',
     vote_vote_btn: 'VOTE',
     vote_join_now:'Pick Your Nominee ',
-    vote_about_word:'<p>Pan Africa ONline Film Festival (PAOFF) invites all online users to vote for your favorites via StarTimes ON, show your interest and support for your favorite stars in this incredible event. Awards are categorized into three types:</p><p>1- The Best African Movie</p><p>2- The Best African Short Film</p><p>3- The Best African MV</p><p>We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p>',
+    vote_about_word:'<p> The Pan African Online Film Festival (PAOFF) is an online awards exclusive to StarTimes ON which aims to reward outstanding production done by African producers which will in turn support and promote the development of the film and music industry across Africa.</p><p>The award is an initiative of Africa’s leading digital TV operator, StarTimes and will focus on 3 categories which are Best African Movie, Best African Short Film & Best African MV. </p><p>We are honored to invite all online users to vote and support for your favorite via StarTimes ON. We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p><p>©2019 by StarTimes All Rights Reserved</p>"',
     vote_rule_word:"<p>1.From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows!</p><p>2.Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven't installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get!</p><p>3.Votes can be accumulated and are valid until the deadline.You can vote for any shows you like.</p><p>4.Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>",
 
     // Mr Right

@@ -6,7 +6,7 @@ export default {
     download_apk: 'Kupakua',
 
     // vote film
-    vote_about: 'Kuhusu',
+    vote_about: 'Kuhusu PAOFF',
     vote_tab_film: 'Sinema',
     vote_tab_shortfilm: 'Filamu fupi',
     vote_tab_mv: 'MV',
@@ -15,13 +15,13 @@ export default {
     vote_success: 'Umepiga kura!',
     vote_success_0: 'Una kura 0 iliyobaki, waalike marafiki ili kupata kura za ziada',
     vote_fail: 'Oops! Kura imeshindikana!',
-    vote_appshare_words: 'Pakua StarTimes ON na nisaidie kupata kura za ziada ili kuzisaidia filamu za ndani za Nigeria na tamthilia za kwenye TV',
+    vote_appshare_words: 'Wow. Hii ni nzuri sana. Jiunge nami sasa kuipigia kura video yako uipendayo. ',
     vote_downloadbtn: 'Pakua App',
     vote_downloadbtn_tips: 'Piga kura kwa ajili ya maudhui unayoyapenda',
     vote_downloadtips: 'Pakua StarTimes ON!',
     vote_apk: 'Pakua apk sasa (11 M)',
     vote_earnvote_tt: 'Waambie marafiki kupata kura',
-    vote_webshare_words: 'Pakua StarTimes ON na piga kura kwa filamu za ndani za Nigeria na tamthilia za kwenye TV',
+    vote_webshare_words: 'Bila shaka tuko pamoja. Nimepiga kura tayari, bonyeza ili UJIUNGE NAMI!',
     vote_share: 'SHIRIKISHA',
     vote_view_more: 'ONA ZAIDI',
     vote_ok: 'Sawa',
@@ -31,7 +31,7 @@ export default {
     vote_leftvote: 'Kura zilizobakia',
     vote_vote_btn: 'PIGA KURA',
     vote_join_now: 'Chagua mteule wako',
-    vote_about_word:"<p>Pan Africa Online Film Festival (PAOFF) inawaalika watumiaji wote wa mtandaoni kuipigia kura waipendayo kupitia StarTimes ON, dhihirisha chaguo lako na umuunge mkono nyota wako umpendaye katika tukio hili. Zawadi ziitakuwa katika awamu tatu:</p><p> 1 - Filamu Bora zaidi Afrika,</p><p> 2 - Filamu fupi bora zaidi Afrika </p><p> 3 - Video ya Muziki bora zaidi Afrika. </p><p>Sherehe ya kutoa zawadi mwaka huu utaandaliwa nchini Nigeria, jukuwa la StarTimes ON itahesabu kura zote na kuwahakikisha wapiga kura uwazi pamoja na usawa usioegemea upande wowote.</p>",
+    vote_about_word:"<p>The Pan African Online Film Festival (PAOFF) ni tuzo la kipekee la mtandaoni kwenye StarTimes ON ambalo lina lenga  kuzawadia uzalishaji bora kutoka kwa wazalishaji barani Afrika ambapo kwa njia hiyo imelenga kuisaidia na kukuza maendeleo ya sekata ya filamu na muziki kote Afrika.  </p><p>Tuzo hili ni jitihada za shirika inayoongoza katika televisheni ya kidigitali Afrika, StarTimes na italenga makundi matatu ambazo ni Filamu Bora zaidi Afrika, Filamu fupi bora zaidi Afrika na  Video ya Muziki bora zaidi Afrika.</p><p>Ni furaha yetu kuwaalika watumiaji wote mtandaoni kupiga kura na kuiunga mkono waipendayo kupitia StarTimes ON. Sherehe ya kutoa zawadi mwaka huu utaandaliwa nchini Nigeria, jukuwa la StarTimes ON itahesabu kura zote na kuhakikisha uwazi kwa wapiga kura pamoja na usawa usioegemea upande wowote.</p><p>©2019 na StarTimes Haki Zote Zimehifadhiwa</p>",
     vote_rule_word:"<p>1.Kuanzia Juni 1 hadi Julai 31, utapata kura 5 kila siku. Mpigie kura mtayarishi wako umpendaye na shoo uipendayo! </p><p>2.Shirikisha kiunganishi kwa marafiki ili upate kura zaidi! Unaweza kujishindia kura 5 zaidi kwa kila mtumiaji mpya (wale ambao hawajaipakua APU katika simu zao) kupitia kushirikisha kiunganishi. Watumiaji wengi zaidi wanaopakua apu kupitia kwa kiunganishi unayoishirikisha, ndivyo utakavyojishindia kura zaidi! </p><p>3.Kura zinaweza kujumulishwa na vitaweza kutumika hadi siku ya mwisho. Unaweza kuipigia kura shoo yoyote uipendayo. </p><p>4.Hesabu za kura katika shoo tofauti zitajumulishwa moja kwa moja, na shoo iliyo bora zaidi yenye kujishindia kura za juu itajinyakulia zawadi ya  Filamu bora zaidi Afrika, Filamu fupi bora zaidi Afrika na Video ya muziki bora zaidi Afrika. </p>",
 
     // Mr Right
