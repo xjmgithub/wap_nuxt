@@ -104,10 +104,17 @@ export default {
         this.getCountryList()
 
         window.soccer_cup_country = this.country.name
-
     },
     methods: {
         animateBall(callback) {
+            const dest = document.querySelector('#c-' + this.country.name + ' .right img').getBoundingClientRect()
+            const Contain = document.querySelector('.box').getBoundingClientRect()
+
+            if (dest.top < Contain.top || dest.bottom > Contain.bottom) {
+                callback && callback()
+                return false
+            }
+
             var box = document.createElement('img')
             box.setAttribute('src', '/res_nuxt/acon/sprites/ball_kick_left_old.png')
             box.style.setProperty('width', '1.5rem')
@@ -120,10 +127,9 @@ export default {
             }
             requestAnimationFrame(animate)
 
-            const dest = document.querySelector('#c-' + this.country.name + ' .right img')
-            var coords = { x: dest.getBoundingClientRect().left, y: 150 }
+            var coords = { x: dest.left, y: 150 }
             var tween = new TWEEN.Tween(coords)
-                .to({ x: dest.getBoundingClientRect().left, y: dest.getBoundingClientRect().top }, 1500)
+                .to({ x: dest.left, y: dest.top }, 1500)
                 .easing(TWEEN.Easing.Bounce.Out)
                 .onUpdate(function() {
                     box.style.setProperty('transform', 'translate(' + coords.x + 'px, ' + coords.y + 'px)')
@@ -165,22 +171,24 @@ export default {
         },
         vote(goal) {
             if (goal > 0) {
-                this.animateBall(() => {
-                    this.$axios({
-                        url: '/voting/v1/ballot',
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        data: qs.stringify({
-                            candidate_id: this.candidate.candidate_id,
-                            vote_id: 10,
-                            weight: goal
+                this.$alert('asdfasdfa', () => {
+                    this.animateBall(() => {
+                        this.$axios({
+                            url: '/voting/v1/ballot',
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            data: qs.stringify({
+                                candidate_id: this.candidate.candidate_id,
+                                vote_id: 10,
+                                weight: goal
+                            })
+                        }).then(res => {
+                            if (res.data.code === 0) {
+                                this.getCountryList()
+                            }
                         })
-                    }).then(res => {
-                        if (res.data.code === 0) {
-                            this.getCountryList()
-                        }
                     })
                 })
             }
@@ -352,7 +360,7 @@ canvas {
                 float: right;
                 width: 32%;
                 overflow: hidden;
-                text-overflow:ellipsis;
+                text-overflow: ellipsis;
                 white-space: nowrap;
                 .soccer {
                     width: 1.5rem;
