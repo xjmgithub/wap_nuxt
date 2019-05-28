@@ -207,6 +207,11 @@ export default {
     }
 }
 </script>
+<style>
+html {
+    background: #3a8956;
+}
+</style>
 <style lang="less" scoped>
 #game {
     width: 100vw;
