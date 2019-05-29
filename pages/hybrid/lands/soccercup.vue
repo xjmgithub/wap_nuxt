@@ -22,7 +22,7 @@
             <img src="~assets/img/landpage/game.png">
             <div class="btn" @click="down(2)">DETAIL RULES</div>
         </div>
-        <img class="ball-btn" @click="down(3)" src="~assets/img/landpage/ball_btn.png">
+        <img class="ball-btn" src="~assets/img/landpage/ball_btn.png" @click="down(3)">
     </div>
 </template>
 <script>
@@ -34,7 +34,7 @@ export default {
     },
     methods: {
         down(num) {
-            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/vote/acon`, () => {
                 this.sendEvLog({
                     category: `vote_soccercup`,
                     action: 'downloadpopup_show',
