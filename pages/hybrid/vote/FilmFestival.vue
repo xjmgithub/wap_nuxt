@@ -497,7 +497,7 @@ export default {
         sort(list) {
             list.sort(function(a, b) {
                 if (b.ballot_num - a.ballot_num == 0) {
-                    return a.ballot_num - b.ballot_num
+                    return a.index - b.index
                 } else {
                     return b.ballot_num - a.ballot_num
                 }
