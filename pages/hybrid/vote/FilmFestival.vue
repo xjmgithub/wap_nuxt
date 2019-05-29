@@ -68,7 +68,7 @@
             </mCard>
             <mCard v-show="shareCard" :title="$store.state.lang.vote_earnvote_tt" class="card" @closeCard="shareCard=false">
                 <template v-slot:content>
-                    <div v-html="$store.state.lang.vote_appshare_words"/>
+                    <div v-html="$store.state.lang.vote_rule_word"/>
                 </template>
                 <template v-slot:buttons>
                     <div class="share-way">
@@ -534,7 +534,7 @@ export default {
         },
         shareWithTwitter() {
             this.shareCard = false
-            shareByTwitter.call(this, document.title, window.location.origin + window.location.pathname)
+            shareByTwitter.call(this, this.$store.state.lang.vote_appshare_words, window.location.origin + window.location.pathname)
         },
         move(event) {
             if (this.canMove) {
