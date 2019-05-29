@@ -42,9 +42,7 @@
                 @touchstart="canMove=true"
                 @touchmove.prevent="move"
                 @touchend="canMove = false"
-            >
-                {{$store.state.lang.vote_share}}
-            </div>
+            >{{$store.state.lang.vote_share}}</div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
                     <div v-html="$store.state.lang.vote_about_word"/>
@@ -184,7 +182,7 @@ export default {
             if (nv) {
                 const t = document.body.scrollTop
                 document.body.style.position = 'fixed'
-                document.body.style.top = - t + 'px'
+                document.body.style.top = -t + 'px'
             } else {
                 const t1 = document.body.style.top
                 document.body.style.position = 'static'
@@ -196,7 +194,7 @@ export default {
             if (nv) {
                 const t = document.body.scrollTop
                 document.body.style.position = 'fixed'
-                document.body.style.top = - t + 'px'
+                document.body.style.top = -t + 'px'
             } else {
                 const t1 = document.body.style.top
                 document.body.style.position = 'static'
@@ -208,7 +206,7 @@ export default {
             if (nv) {
                 const t = document.body.scrollTop
                 document.body.style.position = 'fixed'
-                document.body.style.top = - t + 'px'
+                document.body.style.top = -t + 'px'
             } else {
                 const t1 = document.body.style.top
                 document.body.style.position = 'static'
@@ -498,7 +496,11 @@ export default {
         },
         sort(list) {
             list.sort(function(a, b) {
-                return b.ballot_num - a.ballot_num
+                if (b.ballot_num - a.ballot_num == 0) {
+                    return a.ballot_num - b.ballot_num
+                } else {
+                    return b.ballot_num - a.ballot_num
+                }
             })
         },
         toShare(pos) {
@@ -713,9 +715,9 @@ html {
         right: 1.5rem;
         border-radius: 100%;
         line-height: 5rem;
-        background:url('~assets/img/vote/share.png') no-repeat center;
+        background: url('~assets/img/vote/share.png') no-repeat center;
         background-size: cover;
-        color:white;
+        color: white;
         box-shadow: 0.6rem 0.6rem 0.6rem #222323;
         z-index: 10;
     }
