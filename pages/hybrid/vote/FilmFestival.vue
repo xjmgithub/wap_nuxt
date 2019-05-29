@@ -302,12 +302,13 @@ export default {
             }, 1000)
         },
         handleVote(film) {
-            if (this.appType <= 0) {
-                this.loadConfirm(1, 'vote')
-                return
-            }
+            
             if (film.state === -1) {
                 this.$toast(this.$store.state.lang.vote_notstart_btn)
+                return
+            }
+            if (this.appType <= 0) {
+                this.loadConfirm(1, 'vote')
                 return
             }
 
