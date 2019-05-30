@@ -126,7 +126,7 @@ export default {
             this.vote(goal)
         })
         // $(game).on('goal', function(evt, goal, score) {})
-        this.getCountryList()
+        this.getCountryList(1)
 
         window.soccer_cup_country = this.country.name
     },
@@ -165,7 +165,7 @@ export default {
                 })
                 .start()
         },
-        getCountryList() {
+        getCountryList(init) {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
                 if (res.data.code == 0) {
                     let result = []
@@ -189,11 +189,12 @@ export default {
                         }
                     })
                     this.countryList = result
-
-                    this.$nextTick(() => {
-                        const t = document.querySelector('.my-cty')
-                        document.querySelector('.box').scrollTo(0, t.getAttribute('data-index') * t.offsetHeight)
-                    })
+                    if (init) {
+                        this.$nextTick(() => {
+                            const t = document.querySelector('.my-cty')
+                            document.querySelector('.box').scrollTo(0, t.getAttribute('data-index') * t.offsetHeight)
+                        })
+                    }
                 } else {
                     this.$alert('Top Team get error')
                 }
