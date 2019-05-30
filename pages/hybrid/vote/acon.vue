@@ -20,6 +20,7 @@
                         v-for="(item,index) in countryList"
                         :id="`c-${item.name}`"
                         :key="index"
+                        :data-index="index"
                         :class="{'my-cty':item.code==country.id}"
                         class="cty-list"
                     >
@@ -188,6 +189,11 @@ export default {
                         }
                     })
                     this.countryList = result
+
+                    this.$nextTick(() => {
+                        const t = document.querySelector('.my-cty')
+                        document.querySelector('.box').scrollTo(0, t.getAttribute('data-index') * t.offsetHeight)
+                    })
                 } else {
                     this.$alert('Top Team get error')
                 }
@@ -330,7 +336,7 @@ canvas {
         }
         .box {
             height: 50vh;
-            padding-bottom: 4.8rem;
+            padding-bottom: 7rem;
             overflow-y: scroll;
             clear: both;
         }
