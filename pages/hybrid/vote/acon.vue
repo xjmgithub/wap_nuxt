@@ -192,7 +192,7 @@ export default {
                     if (init) {
                         this.$nextTick(() => {
                             const t = document.querySelector('.my-cty')
-                            document.querySelector('.box').scrollTo(0, t.getAttribute('data-index') * t.getBoundingClientRect().height)
+                            document.querySelector('.box').scrollTop = t.getAttribute('data-index') * t.getBoundingClientRect().height
                         })
                     }
                 } else {
