@@ -1,22 +1,25 @@
 <template>
     <div id="asintado">
         <div class="container">
-            <div v-for="(item,index) in quesList" :key="index">
-                <div v-show="currIndex==index" class="question">
+            <div class="box">
+                <div v-for="(item,index) in quesList" :key="index" v-show="currIndex==index" class="question">
                     <div>
                         <span class="num">{{index+1}}. </span>{{item.question}}
                     </div>
                     <p @click="answer()">{{item.A}}</p>
                     <p @click="answer()">{{item.B}}</p>
                 </div>
-            </div>
-            <div class="progress">
-                <div class="line">
-                    <span v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-1+'%'}" />
+                <div class="progress">
+                    <div class="line">
+                        <span v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-1+'%'}" />
+                    </div>
+                    <p>
+                        <span class="now">{{currIndex+1}}</span>/{{quesList.length}}
+                    </p>
                 </div>
-                <p>
-                    <span class="now">{{currIndex+1}}</span>/{{quesList.length}}
-                </p>
+            </div>
+            <div class="share" @click="toShare()">
+                <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
         </div>
     </div>
@@ -67,7 +70,8 @@ export default {
             if (index + 1 <= this.quesList.length - 1) {
                 this.currIndex++
             }
-        }
+        },
+        toShare(){}
     },
     head() {
         return {
@@ -88,12 +92,15 @@ html {
         top: 43%;
         width: 90%;
         margin: 0 5%;
-        padding: 0 3%;
-        background: #ffffff;
-        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
-        border-radius: 13px;
-        color: #3c3c3c;
-        font-size: 0.95rem;
+        text-align: center;
+        .box {
+            padding: 0 3%;
+            background: #ffffff;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
+            border-radius: 13px;
+            color: #3c3c3c;
+            font-size: 0.95rem;
+        }
         .question {
             padding: 1rem 0;
             .num {
@@ -148,6 +155,22 @@ html {
                     color: #8451ae;
                 }
             }
+        }
+    }
+    .share {
+        display: inline-block;
+        padding:0 1rem;
+        color: #63428a;
+        font-size: 0.95rem;
+        vertical-align: middle;
+        background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
+        border-radius: 20px;
+        font-weight: bold;
+        margin-top:1rem;
+        height:2.5rem;
+        line-height: 2.5rem;
+        img {
+            width: 1.5rem;
         }
     }
 }
