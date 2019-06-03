@@ -103,6 +103,7 @@ html {
         }
         .question {
             padding: 1rem 0;
+            text-align: left;
             .num {
                 color: #8451ae;
                 font-size: 1rem;
