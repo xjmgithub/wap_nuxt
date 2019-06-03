@@ -55,8 +55,7 @@ export const mutations = {
     SET_DEVICE: function(state, deviceId) {
         state.deviceId = deviceId || ''
     },
-    SET_LANG: function(state, lang='en') {
-        
+    SET_LANG: function(state, lang = 'en') {
         if (lang.indexOf('fr') >= 0) {
             state.lang = LANG.fy
             state.langType = 'fr'
@@ -218,10 +217,13 @@ export const actions = {
             }
         }
 
+        // country = 'KE' // app外更改国家信息 同时需要设置对应国家的token
+
         await getMe(state.token)
         if (state.user.countryCode && countryMap[state.user.countryCode]) {
             commit('SET_AREA_INFO', countryMap[state.user.countryCode])
         } else if (countryMap[country]) {
+            // 匿名用户不存在用户信息接口返回204
             commit('SET_AREA_INFO', countryMap[country])
         } else {
             commit('SET_AREA_INFO', countryMap.NG)

@@ -1,71 +1,41 @@
 <template>
     <div class="pay-cont">
-        <div class="channels">
-            <div v-for="(item,i) in renderChannels" :key="i" class="channel">
-                <div v-if="item.fkPayChannelId>9001&&item.fkPayChannelId<9035">
-                    <div class="channel-name">{{item.name}}</div>
-                    <mLine style="clear:both"/>
-                    <div class="radio-box">
-                        <div v-if="!lastPayByCard">
-                            <label class="radio">
-                                <div class="balance img-box"/>
-                                <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
-                                <input
-                                    :checked="item.fkPayChannelId==selected.fkPayChannelId"
-                                    type="radio"
-                                    name="pay-options"
-                                    @click="choose(ewalletChannel,'')"
-                                >
-                                <i/>
-                                <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
-                            </label>
-                        </div>
-                        <div v-for="(card,iv) in cardList" :key="iv">
-                            <label class="radio">
-                                <div :class="card.brand" class="img-box"/>
-                                <span>{{card.cardType}}({{card.last4}})</span>
-                                <input
-                                    :checked="card.authorizationCode==chooseCard"
-                                    type="radio"
-                                    name="pay-options"
-                                    @click="choose(addCardChannel,card)"
-                                >
-                                <i/>
-                            </label>
-                        </div>
-                        <div v-if="lastPayByCard">
-                            <label class="radio">
-                                <div class="balance img-box"/>
-                                <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
-                                <input
-                                    :checked="item.fkPayChannelId==selected.fkPayChannelId"
-                                    type="radio"
-                                    name="pay-options"
-                                    @click="choose(ewalletChannel,'')"
-                                >
-                                <i/>
-                                <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
-                            </label>
-                        </div>
-                    </div>
-                    <div v-if="osv5&&addCardChannel.id" class="addCard" @click="payHandle(addCardChannel,'',1)">
-                        <div class="img-box"/>
-                        <span v-if="isLogin&cardList.length>0">Pay with Another Card</span>
-                        <span v-else>Add a Bank Card</span>
-                        <div class="arrows"/>
-                    </div>
+        <div class="channel">
+            <div v-if="ewalletRender.name">
+                <div class="channel-name">{{ewalletRender.name}}</div>
+                <mLine style="clear:both"/>
+                <div v-for="(card,iv) in ewalletRender.radioList" :key="iv" class="radio-box">
+                    <label v-if="card.authorizationCode" class="radio">
+                        <div :class="card.brand" class="img-box"/>
+                        <span>{{card.cardType}}({{card.last4}})</span>
+                        <input :checked="card.authorizationCode==selected.authorizationCode" type="radio" name="pay-options" @click="choose(card)">
+                        <i/>
+                    </label>
+                    <label v-else class="radio">
+                        <div class="balance img-box"/>
+                        <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
+                        <input :checked="card.fkPayChannelId==selected.fkPayChannelId" type="radio" name="pay-options" @click="choose(card)">
+                        <i/>
+                        <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
+                    </label>
                 </div>
-                <div v-else @click="payHandle(item)">
-                    <div class="channel-name">{{item.name}}</div>
+                <div v-if="ewalletRender.addCardPay" class="addCard" @click="payHandle(ewalletRender.addCardPay,'',1)">
+                    <div class="img-box"/>
+                    <span v-if="ewalletRender.radioList.length>1">Pay with Another Card</span>
+                    <span v-else>Add a Bank Card</span>
                     <div class="arrows"/>
                 </div>
+            </div>
+            <div v-for="(item,index) in outChannels" :key="index" @click="payHandle(item)">
+                <div class="channel-name">{{item.name}}</div>
+                <div class="arrows"/>
             </div>
         </div>
         <div v-show="selected&&selected.description" class="note">
             <p>Note:</p>
             <p v-html="selected&&selected.description"/>
         </div>
-        <div v-if="ewalletChannel.id" class="btn-box">
+        <div v-if="ewalletRender.name" class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
             <span class="total">{{ currency }}{{ formatAmount(paymentAmount)}}</span>
             <div :class="{disabled:!canPay}" class="pay-btn" @click="pay">{{$store.state.lang.dvb_recharge_btn_pay}}</div>
@@ -89,13 +59,7 @@ export default {
             currency: this.$store.state.country.currencySymbol,
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             osv5: false,
-            channels: [],
-            chooseCard: '',
-            cardList: [],
-            lastPayByCard: false,
-            addCardChannel: {},
-            ewalletChannel: {},
-            renderChannels: []
+            channels: []
         }
     },
     computed: {
@@ -103,11 +67,66 @@ export default {
             return (this.wallet && this.wallet.amount) || 0
         },
         canPay() {
-            if (this.selected.fkPayChannelId > 9001 && this.selected.fkPayChannelId < 9035 && this.balance < this.paymentAmount) {
+            if (this.selected.fkPayChannelId) {
+                if (this.selected.fkPayChannelId > 9001 && this.selected.fkPayChannelId < 9035 && this.balance < this.paymentAmount) {
+                    return false
+                } else {
+                    return true
+                }
+            }else{
                 return false
-            } else {
-                return true
             }
+        },
+        ewalletRender() {
+            const ewallet = {
+                name: null,
+                radioList: [],
+                addCardPay: null
+            }
+            let ewalletPay = null
+            let addCardPay = null
+            this.channels.forEach(item => {
+                if (item.fkPayChannelId > 9001 && item.fkPayChannelId < 9035) {
+                    ewalletPay = item
+                }
+                if (item.isSupportCardBind > 0) {
+                    addCardPay = item
+                }
+            })
+
+            if (ewalletPay) {
+                ewallet.name = ewalletPay.name
+                if (this.isLogin) {
+                    if (addCardPay) {
+                        addCardPay.payChannelCardAuthDtoList.forEach(item => {
+                            item = Object.assign(item, addCardPay)
+                        })
+                        ewallet.addCardPay = this.osv5 && addCardPay
+                        if (addCardPay.lastSuccessPay) {
+                            ewallet.radioList = [].concat(addCardPay.payChannelCardAuthDtoList || []).concat(ewalletPay)
+                        } else {
+                            ewallet.radioList = [].concat(ewalletPay).concat(addCardPay.payChannelCardAuthDtoList || [])
+                        }
+                    } else {
+                        ewallet.radioList = [ewalletPay]
+                    }
+                } else if (addCardPay && this.osv5) {
+                    ewallet.addCardPay = addCardPay
+                } else {
+                    ewallet.name = null
+                }
+            }
+
+            ewallet.radioList && ewallet.radioList.length > 0 && this.choose(ewallet.radioList[0])
+
+            return ewallet
+        },
+        outChannels() {
+            const r = []
+            this.channels.forEach(item => {
+                !(item.isSupportCardBind > 0 || (item.fkPayChannelId > 9001 && item.fkPayChannelId < 9035)) && r.push(item)
+            })
+            return r
         }
     },
     mounted() {
@@ -124,37 +143,10 @@ export default {
                 service_type: 'Recharge'
             })
         }
-        this.$axios
-            .get(`/wxorder/v2/payment_channels`)
-            .then(res => {
-                if (res.data && res.data.length > 0) {
-                    this.channels = res.data
-                } else {
-                    this.channels = []
-                }
 
-                this.channels.forEach((item, index) => {
-                    if (item.isSupportCardBind > 0) {
-                        this.cardList = item.payChannelCardAuthDtoList || []
-                        this.lastPayByCard = item.lastSuccessPay
-                        this.addCardChannel = item
-                    } else {
-                        if (item.fkPayChannelId > 9001 && item.fkPayChannelId < 9035) {
-                            this.ewalletChannel = item
-                        }
-                        this.renderChannels.push(item)
-                    }
-                })
-
-                if (this.lastPayByCard) {
-                    this.choose(this.addCardChannel, this.cardList[0])
-                } else {
-                    this.choose(this.ewalletChannel, '')
-                }
-            })
-            .catch(() => {
-                this.channels = []
-            })
+        this.$axios.get(`/wxorder/v2/payment_channels`).then(res => {
+            this.channels = res.data || []
+        })
 
         this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
             this.wallet = res.data
@@ -162,9 +154,8 @@ export default {
         })
     },
     methods: {
-        choose(item, card) {
+        choose(item) {
             this.selected = item
-            this.chooseCard = card ? card.authorizationCode : ''
         },
         chargeWallet() {
             chargeWallet.call(this, () => {
@@ -232,7 +223,7 @@ export default {
             })
         },
         pay() {
-            this.canPay && this.payHandle(this.selected, this.chooseCard)
+            this.canPay && this.payHandle(this.selected, this.selected.authorizationCode)
         },
         formatAmount(num) {
             return formatAmount(num)
@@ -245,43 +236,41 @@ export default {
     margin: 0 auto;
     padding: 0 0.8rem 5rem;
 }
-.channels {
-    .channel {
-        position: relative;
+.channel {
+    position: relative;
+    > div {
+        overflow: hidden;
+        zoom: 1;
         border-bottom: 1px solid #e0e0e0;
-        > div {
-            overflow: hidden;
-            zoom: 1;
-        }
-        .channel-name {
-            line-height: 3rem;
-            font-size: 1.1rem;
-            width: 85%;
-            float: left;
-        }
-        .arrows {
-            float: right;
+    }
+    .channel-name {
+        line-height: 3rem;
+        font-size: 1.1rem;
+        width: 85%;
+        float: left;
+    }
+    .arrows {
+        float: right;
+        width: 1.3rem;
+        height: 3rem;
+        background: url('~assets/img/dvb/ic_right_def_r.png') no-repeat center center;
+        background-size: auto;
+    }
+    .addCard {
+        font-size: 0.95rem;
+        height: 2.7rem;
+        line-height: 2.2rem;
+        position: relative;
+        .img-box {
+            display: inline-block;
+            vertical-align: middle;
+            height: 1.3rem;
             width: 1.3rem;
-            height: 3rem;
-            background: url('~assets/img/dvb/ic_right_def_r.png') no-repeat center center;
-            background-size: auto;
+            background-size: 100% !important;
+            background: url('~assets/img/dvb/ic_ewallet_add.png') no-repeat;
         }
-        .addCard {
-            font-size: 0.95rem;
-            height: 2.7rem;
-            line-height: 2.2rem;
-            position: relative;
-            .img-box {
-                display: inline-block;
-                vertical-align: middle;
-                height: 1.3rem;
-                width: 1.3rem;
-                background-size: 100% !important;
-                background: url('~assets/img/dvb/ic_ewallet_add.png') no-repeat;
-            }
-            span {
-                margin-left: 0.5rem;
-            }
+        span {
+            margin-left: 0.5rem;
         }
     }
 }

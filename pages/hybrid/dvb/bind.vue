@@ -41,6 +41,8 @@ import cardInput from '~/components/dvb/input'
 import goods from '~/components/dvb/goods'
 import moreMethods from '~/components/dvb/moreMethods'
 import { formatAmount, toNativePage } from '~/functions/utils'
+import countryArr from '~/functions/countrys.json'
+import tokens from '~/functions/token.json'
 export default {
     layout: 'base',
     components: {
@@ -85,7 +87,22 @@ export default {
             }
         }
     },
-    async asyncData({ app: { $axios }, store }) {
+    async asyncData({ app: { $axios }, store, route }) {
+        if (route.query.country) {
+            const countryMap = {}
+            countryArr.forEach(item => {
+                countryMap[item.country] = item
+            })
+            const t = tokens[route.query.country.toUpperCase()]
+            const c = countryMap[route.query.country.toUpperCase()]
+
+            if (t && c) {
+                store.commit('SET_TOKEN', t)
+                store.commit('SET_GTOKEN', t)
+                store.commit('SET_AREA_INFO', c)
+            }
+        }
+
         $axios.setHeader('token', store.state.token)
         let data = []
         try {
@@ -200,12 +217,8 @@ export default {
 
             sessionStorage.setItem('order-info', JSON.stringify(params))
 
-            if (this.$store.state.appType == 1) {
-                // TODO app内缓存有问题，莫名其妙，暂时解决方案, 貌似webview对spa支持不好
-                window.location.href = '/hybrid/dvb/order'
-            } else {
-                this.$router.push('/hybrid/dvb/order')
-            }
+            // TODO app内缓存有问题，莫名其妙，暂时解决方案, 貌似webview对spa支持不好
+            window.location.href = '/hybrid/dvb/order'
         },
         logSmartInput(card, val, err) {
             const newUser = this.$refs.cardInput.newUser

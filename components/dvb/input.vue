@@ -48,7 +48,7 @@ export default {
         }
     },
     data() {
-        const initCard = this.list[0] || ''
+        const initCard = this.$route.query.smartcard || this.list[0] || ''
         return {
             cardNum: this.formatCard(initCard),
             showList: false,
