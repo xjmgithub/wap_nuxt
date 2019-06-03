@@ -1,0 +1,154 @@
+<template>
+    <div id="asintado">
+        <div class="container">
+            <div v-for="(item,index) in quesList" :key="index">
+                <div v-show="currIndex==index" class="question">
+                    <div>
+                        <span class="num">{{index+1}}. </span>{{item.question}}
+                    </div>
+                    <p @click="answer()">{{item.A}}</p>
+                    <p @click="answer()">{{item.B}}</p>
+                </div>
+            </div>
+            <div class="progress">
+                <div class="line">
+                    <span v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-1+'%'}" />
+                </div>
+                <p>
+                    <span class="now">{{currIndex+1}}</span>/{{quesList.length}}
+                </p>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    layout: 'base',
+    data() {
+        return {
+            currIndex: 0,
+            quesList: [
+                {
+                    question: 'Are you a girl or a boy?',
+                    A: 'Girl',
+                    B: 'Boy'
+                },
+                {
+                    question: 'How close are you with your family?',
+                    A: 'We get along well',
+                    B: "It's...complicated"
+                },
+                {
+                    question: "If someone gets in your way, what's your first reaction?",
+                    A: 'I will push back hard to get what I want.',
+                    B: 'I will keep my temper well to find another way.'
+                },
+                {
+                    question: 'Who are you to your friends?',
+                    A: "I'm always loyal and helping them.",
+                    B: 'I always point out their problems.'
+                },
+                {
+                    question: 'What is your bigges fear?',
+                    A: 'Hurting someone.',
+                    B: 'Letting people down.'
+                },
+                {
+                    question: "Who's your better date choice?",
+                    A: 'Someone who is smart.',
+                    B: 'Someone who is good-looking.'
+                }
+            ]
+        }
+    },
+    methods: {
+        answer() {
+            const index = this.currIndex
+            if (index + 1 <= this.quesList.length - 1) {
+                this.currIndex++
+            }
+        }
+    },
+    head() {
+        return {
+            title: 'Characteristic Test'
+        }
+    }
+}
+</script>
+<style>
+html {
+    background: linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
+}
+</style>
+<style lang="less" scoped>
+#asintado {
+    .container {
+        position: fixed;
+        top: 43%;
+        width: 90%;
+        margin: 0 5%;
+        padding: 0 3%;
+        background: #ffffff;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
+        border-radius: 13px;
+        color: #3c3c3c;
+        font-size: 0.95rem;
+        .question {
+            padding: 1rem 0;
+            .num {
+                color: #8451ae;
+                font-size: 1rem;
+                font-weight: bold;
+            }
+            p {
+                border-radius: 20px;
+                border: 1px solid #c9a23e;
+                padding: 0.8rem;
+                text-align: center;
+                margin: 0.8rem 0;
+                &:active {
+                    background: #ebc956;
+                    opacity: 0.6175;
+                }
+            }
+        }
+        .progress {
+            height: 4.5rem;
+            padding: 0.5rem 0;
+            width: 95%;
+            margin: 0 2.5%;
+            .line {
+                width: 100%;
+                position: relative;
+                height: 3px;
+                background: #cba543;
+                span {
+                    position: absolute;
+                    width: 0.56rem;
+                    height: 0.56rem;
+                    background: #d8d8d8;
+                    border-radius: 100%;
+                    top: -0.2rem;
+                    &.now {
+                        width: 0.75rem;
+                        height: 0.75rem;
+                        background: #c3a041;
+                        top: -0.3rem;
+                    }
+                }
+            }
+            p {
+                text-align: right;
+                font-size: 0.95rem;
+                font-weight: bold;
+                margin-top: 0.5rem;
+                color: #af8006;
+                .now {
+                    color: #8451ae;
+                }
+            }
+        }
+    }
+}
+</style>
