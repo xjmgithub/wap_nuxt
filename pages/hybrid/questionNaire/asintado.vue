@@ -2,12 +2,12 @@
     <div id="asintado">
         <div class="container">
             <div class="box">
-                <div v-for="(item,index) in quesList" :key="index" v-show="currIndex==index" class="question">
+                <div v-for="(item,index) in quesList" v-show="currIndex==index" :key="index" class="question">
                     <div>
                         <span class="num">{{index+1}}. </span>{{item.question}}
                     </div>
-                    <p @click="answer()">{{item.A}}</p>
-                    <p @click="answer()">{{item.B}}</p>
+                    <p @click="answer('girl')">{{item.A}}</p>
+                    <p @click="answer('boy')">{{item.B}}</p>
                 </div>
                 <div class="progress">
                     <div class="line">
@@ -61,17 +61,23 @@ export default {
                     A: 'Someone who is smart.',
                     B: 'Someone who is good-looking.'
                 }
-            ]
+            ],
+            userGender: ''
         }
     },
     methods: {
-        answer() {
+        answer(sex) {
             const index = this.currIndex
+            if (index === 0) {
+                this.userGender = sex
+            }
             if (index + 1 <= this.quesList.length - 1) {
                 this.currIndex++
+            } else {
+                this.$router.push(`/hybrid/questionNaire/asintadoResult?gender=${this.userGender}`)
             }
         },
-        toShare(){}
+        toShare() {}
     },
     head() {
         return {
@@ -129,7 +135,7 @@ html {
             .line {
                 width: 100%;
                 position: relative;
-                height: 3px;
+                height: 1px;
                 background: #cba543;
                 span {
                     position: absolute;
@@ -137,12 +143,12 @@ html {
                     height: 0.56rem;
                     background: #d8d8d8;
                     border-radius: 100%;
-                    top: -0.2rem;
+                    top: -0.22rem;
                     &.now {
                         width: 0.75rem;
                         height: 0.75rem;
                         background: #c3a041;
-                        top: -0.3rem;
+                        top: -0.37rem;
                     }
                 }
             }
@@ -160,15 +166,15 @@ html {
     }
     .share {
         display: inline-block;
-        padding:0 1rem;
+        padding: 0 1rem;
         color: #63428a;
         font-size: 0.95rem;
         vertical-align: middle;
         background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
         border-radius: 20px;
         font-weight: bold;
-        margin-top:1rem;
-        height:2.5rem;
+        margin-top: 1rem;
+        height: 2.5rem;
         line-height: 2.5rem;
         img {
             width: 1.5rem;
