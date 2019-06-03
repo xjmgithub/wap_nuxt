@@ -13,14 +13,17 @@ export default {
     layout: 'base',
     data() {
         return {
-            userGender: this.$route.query.userGender,
+            userGender: this.$route.query.gender,
             result:[]
         }
     },
     mounted(){
         const tmp = asintado()
         const data = tmp[this.userGender]
-        console.log(data)
+        this.result.push(data.Avengers[Math.floor(Math.random()*data.Avengers.length)])
+        this.result.push(data.GOT[Math.floor(Math.random()*data.GOT.length)])
+        this.result.push(data.Asintado[Math.floor(Math.random()*data.Asintado.length)])
+        console.log(this.result)
     },
     methods: {
         toShare() {}
