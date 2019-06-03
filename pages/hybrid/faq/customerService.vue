@@ -352,7 +352,6 @@ export default {
                                 // 未登录状态缓存操作历史
                                 let cacheHisory = JSON.parse(localStorage.getItem('historys'))
                                 if (cacheHisory) {
-                                    cacheHisory = JSON.parse(cacheHisory)
                                     if (cacheHisory.indexOf(res.data.data) < 0) {
                                         cacheHisory.push(res.data.data)
                                     }
@@ -458,7 +457,7 @@ export default {
                 } else if (this.$store.state.appType === 2) {
                     toNativePage('startimes://login')
                 } else {
-                    this.$route.push('/hybrid/account/login')
+                    this.$router.push('/hybrid/account/login')
                 }
                 return false
             }
