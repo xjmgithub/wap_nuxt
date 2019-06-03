@@ -477,6 +477,19 @@ export default {
                 .then(res => {
                     if (res.data.statusCode === 0) {
                         this.chatLink = res.data
+                        this.sendEvLog({
+                            category: 'onlineService',
+                            action: `chat_msg`,
+                            label: this.chatLink.chatId,
+                            value: JSON.stringify({
+                                alias: this.chatLink.alias,
+                                operationName: 'GetChat',
+                                secureKey: this.chatLink.secureKey,
+                                tenantName: 'Resources',
+                                userId: this.chatLink.userId
+                            })
+                        })
+
                         this.$axios
                             .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}/messages`, {
                                 alias: this.chatLink.alias,
@@ -563,6 +576,19 @@ export default {
             }
         },
         pullReply() {
+            this.sendEvLog({
+                category: 'onlineService',
+                action: `chat_msg`,
+                label: this.chatLink.chatId,
+                value: JSON.stringify({
+                    alias: this.chatLink.alias,
+                    operationName: 'GetChat',
+                    secureKey: this.chatLink.secureKey,
+                    tenantName: 'Resources',
+                    userId: this.chatLink.userId,
+                    transcriptPosition: this.nextPosition
+                })
+            })
             this.$axios
                 .post(`/genesys-proxy/v1/chats/${this.chatLink.chatId}/messages`, {
                     alias: this.chatLink.alias,
