@@ -139,13 +139,11 @@ export default {
     }
 }
 </script>
-<style>
-html {
-    background: linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
-}
-</style>
 <style lang="less" scoped>
 #result {
+    background: url('~assets/img/naire/background2.png') no-repeat, linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
+    background-size: contain;
+    min-height: 100vh;
     .container {
         width: 95%;
         margin: 0 2.5%;
@@ -153,8 +151,7 @@ html {
     }
     .des {
         text-align: left;
-        padding: 0 0.5rem;
-        margin: 1rem 0;
+        padding: 1rem 0.5rem;
         p {
             background: linear-gradient(360deg, rgba(191, 143, 22, 1) 0%, rgba(237, 213, 154, 1) 100%);
             background-clip: text;
@@ -188,10 +185,10 @@ html {
         background: #ffffff;
         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
         border-radius: 13px;
-        &>p{
-            color:#333333;
+        & > p {
+            color: #333333;
             font-weight: bold;
-            padding:.5rem 0;
+            padding: 0.5rem 0;
         }
         li {
             list-style: none;
@@ -217,7 +214,7 @@ html {
                     bottom: 0;
                     right: 0;
                     padding: 0 0.2rem;
-                    background: rgba(0, 0, 0, .6);
+                    background: rgba(0, 0, 0, 0.6);
                     color: #ffffff;
                     font-size: 0.8rem;
                 }
