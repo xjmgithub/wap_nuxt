@@ -6,8 +6,8 @@
                     <div>
                         <span class="num">{{index+1}}. </span>{{item.question}}
                     </div>
-                    <p @click="answer('girl')">{{item.A}}</p>
-                    <p @click="answer('boy')">{{item.B}}</p>
+                    <p @click="answer(item.A)">{{item.A}}</p>
+                    <p @click="answer(item.B)">{{item.B}}</p>
                 </div>
                 <div class="progress">
                     <div class="line">
@@ -69,7 +69,7 @@ export default {
         answer(sex) {
             const index = this.currIndex
             if (index === 0) {
-                this.userGender = sex
+                this.userGender = sex.toLowerCase()
             }
             if (index + 1 <= this.quesList.length - 1) {
                 this.currIndex++
