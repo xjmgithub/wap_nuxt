@@ -1,5 +1,12 @@
 <template>
     <div id="result">
+        <div class="character">
+            <div class="guide">
+                <div class="logo">I AM...</div>
+                <span class="try">TRY AGAIN</span>
+            </div>
+            <div class="atlas"></div>
+        </div>
         <div class="container">
             <div class="des">
                 <p>My Charactersitics:</p>
@@ -144,96 +151,122 @@ export default {
     background: url('~assets/img/naire/background2.png') no-repeat, linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
     background-size: contain;
     min-height: 100vh;
+    .character {
+        width: 100%;
+        padding: 0.8rem 0;
+        .guide {
+            height: 2.5rem;
+            line-height: 2.5rem;
+            .logo {
+                color: #ffffff;
+                background: url('~assets/img/naire/group.png') no-repeat;
+                background-size: contain;
+                width: 25%;
+                text-align: center;
+                height: 2.5rem;
+                line-height: 2.5rem;
+                font-weight: bold;
+                display: inline-block;
+            }
+            .try {
+                float: right;
+                color: #ffffff;
+                font-weight: bold;
+                text-decoration: underline;
+                margin-right: 1rem;
+            }
+        }
+    }
     .container {
         width: 95%;
         margin: 0 2.5%;
         text-align: center;
-    }
-    .des {
-        text-align: left;
-        padding: 1rem 0.5rem;
-        p {
-            background: linear-gradient(360deg, rgba(191, 143, 22, 1) 0%, rgba(237, 213, 154, 1) 100%);
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        span {
-            color: #ffffff;
-        }
-    }
-    .share {
-        display: inline-block;
-        padding: 0 1rem;
-        color: #63428a;
-        font-size: 0.95rem;
-        vertical-align: middle;
-        background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
-        border-radius: 20px;
-        font-weight: bold;
-        margin: 1rem 0;
-        height: 2.5rem;
-        line-height: 2.5rem;
-        img {
-            width: 1.5rem;
-        }
-    }
-    .clips {
-        text-align: left;
-        padding: 0 3% 1rem;
-        background: #ffffff;
-        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
-        border-radius: 13px;
-        & > p {
-            color: #333333;
-            font-weight: bold;
-            padding: 0.5rem 0;
-        }
-        li {
-            list-style: none;
-            float: left;
-            width: 48%;
-            line-height: 1.1rem;
-            position: relative;
-            &:nth-child(2n) {
-                float: right;
+        .des {
+            text-align: left;
+            padding: 1rem 0.5rem;
+            p {
+                background: linear-gradient(360deg, rgba(191, 143, 22, 1) 0%, rgba(237, 213, 154, 1) 100%);
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 0.5rem;
+                font-weight: bold;
             }
-            div {
+            span {
+                color: #ffffff;
+            }
+        }
+        .share {
+            display: inline-block;
+            padding: 0 1rem;
+            color: #63428a;
+            font-size: 0.95rem;
+            vertical-align: middle;
+            background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 1rem 0;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            img {
+                width: 1.5rem;
+            }
+        }
+        .clips {
+            text-align: left;
+            padding: 0 3% 1rem;
+            background: #ffffff;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
+            border-radius: 13px;
+            & > p {
+                color: #333333;
+                font-weight: bold;
+                padding: 0.5rem 0;
+            }
+            li {
+                list-style: none;
+                float: left;
+                width: 48%;
+                line-height: 1.1rem;
                 position: relative;
-                width: 100%;
-                &:before {
-                    content: '';
-                    display: inline-block;
-                    padding-bottom: 56%;
-                    width: 0.1px;
-                    vertical-align: middle;
+                &:nth-child(2n) {
+                    float: right;
                 }
-                .show-time {
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                    padding: 0 0.2rem;
-                    background: rgba(0, 0, 0, 0.6);
-                    color: #ffffff;
-                    font-size: 0.8rem;
-                }
-                img {
+                div {
+                    position: relative;
                     width: 100%;
-                    position: absolute;
-                    height: 100%;
+                    &:before {
+                        content: '';
+                        display: inline-block;
+                        padding-bottom: 56%;
+                        width: 0.1px;
+                        vertical-align: middle;
+                    }
+                    .show-time {
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                        padding: 0 0.2rem;
+                        background: rgba(0, 0, 0, 0.6);
+                        color: #ffffff;
+                        font-size: 0.8rem;
+                    }
+                    img {
+                        width: 100%;
+                        position: absolute;
+                        height: 100%;
+                    }
                 }
-            }
-            .title {
-                font-size: 0.95rem;
-                color: #666666;
-                display: -webkit-box;
-                overflow: hidden;
-                height: 2.6rem;
-                padding-top: 0.4rem;
-                -webkit-line-clamp: 2;
-                /* autoprefixer: off */
-                -webkit-box-orient: vertical;
+                .title {
+                    font-size: 0.95rem;
+                    color: #666666;
+                    display: -webkit-box;
+                    overflow: hidden;
+                    height: 2.6rem;
+                    padding-top: 0.4rem;
+                    -webkit-line-clamp: 2;
+                    /* autoprefixer: off */
+                    -webkit-box-orient: vertical;
+                }
             }
         }
     }

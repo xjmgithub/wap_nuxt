@@ -11,7 +11,10 @@
                 </div>
                 <div class="progress">
                     <div class="line">
-                        <span v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-1+'%'}" />
+                        <div v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-2+'%'}">
+                            <img src="~assets/img/naire/ic-point.png">
+                            <span/>
+                        </div>
                     </div>
                     <p>
                         <span class="now">{{currIndex+1}}</span>/{{quesList.length}}
@@ -89,16 +92,16 @@ export default {
 </script>
 <style lang="less" scoped>
 #asintado {
-    background: url("~assets/img/naire/background2.png") no-repeat,linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%) ;
+    background: url('~assets/img/naire/background2.png') no-repeat, linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
     background-size: contain;
-    min-height:100vh;
-    .bg-top{
-        width:100%;
+    min-height: 100vh;
+    .bg-top {
+        width: 100%;
     }
-    .bg-bom{
-        width:100%;
+    .bg-bom {
+        width: 100%;
         position: fixed;
-        bottom:0;
+        bottom: 0;
     }
     .container {
         position: fixed;
@@ -106,7 +109,7 @@ export default {
         width: 90%;
         margin: 0 5%;
         text-align: center;
-        z-index:99;
+        z-index: 99;
         .box {
             padding: 0 3%;
             background: #ffffff;
@@ -136,27 +139,40 @@ export default {
             }
         }
         .progress {
-            height: 4.5rem;
+            height: 3rem;
             padding: 0.5rem 0;
             width: 95%;
-            margin: 0 2.5%;
+            margin: .5rem 2.5%;
             .line {
                 width: 100%;
                 position: relative;
                 height: 1px;
                 background: #cba543;
-                span {
+                div {
                     position: absolute;
-                    width: 0.56rem;
-                    height: 0.56rem;
-                    background: #d8d8d8;
-                    border-radius: 100%;
-                    top: -0.22rem;
+                    top: -1.5rem;
+                    span {
+                        display: inline-block;
+                        width: 0.7rem;
+                        height: 0.7rem;
+                        background: #d8d8d8;
+                        border-radius: 100%;
+                    }
+                    img {
+                        width: 1rem;
+                        display: block;
+                        opacity:0;
+                        margin-bottom: .2rem;
+                    }
                     &.now {
-                        width: 0.75rem;
-                        height: 0.75rem;
-                        background: #c3a041;
-                        top: -0.37rem;
+                        span {
+                            width: 0.8rem;
+                            height: 0.8rem;
+                            background: #c3a041;
+                        }
+                        img {
+                            opacity: 1;
+                        }
                     }
                 }
             }
@@ -164,7 +180,7 @@ export default {
                 text-align: right;
                 font-size: 0.95rem;
                 font-weight: bold;
-                margin-top: 0.5rem;
+                margin-top: 0.8rem;
                 color: #af8006;
                 .now {
                     color: #8451ae;
