@@ -22,6 +22,7 @@
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
         </div>
+        <img src="~assets/img/naire/background1.png" class="bg-bom">
     </div>
 </template>
 <script>
@@ -86,19 +87,26 @@ export default {
     }
 }
 </script>
-<style>
-html {
-    background: linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
-}
-</style>
 <style lang="less" scoped>
 #asintado {
+    background: url("~assets/img/naire/background2.png") no-repeat,linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%) ;
+    background-size: contain;
+    min-height:100vh;
+    .bg-top{
+        width:100%;
+    }
+    .bg-bom{
+        width:100%;
+        position: fixed;
+        bottom:0;
+    }
     .container {
         position: fixed;
         top: 43%;
         width: 90%;
         margin: 0 5%;
         text-align: center;
+        z-index:99;
         .box {
             padding: 0 3%;
             background: #ffffff;
