@@ -5,7 +5,18 @@
                 <div class="logo">I AM...</div>
                 <span class="try">TRY AGAIN</span>
             </div>
-            <div class="atlas"></div>
+            <div class="atlas">
+                <div class="asintado">
+                    <img src="~assets/img/naire/Ana.png" alt="">
+                </div>
+                <div class="other">
+                    <img src="~assets/img/naire/Daenerys.png" alt="">
+                </div>
+                <div class="other">
+                    <img src="~assets/img/naire/Yvonne.png" alt="">
+                </div>
+                <img src="~assets/img/naire/triangle.png" class="triangle">
+            </div>
         </div>
         <div class="container">
             <div class="des">
@@ -151,6 +162,7 @@ export default {
     background: url('~assets/img/naire/background2.png') no-repeat, linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
     background-size: contain;
     min-height: 100vh;
+    width: 100%;
     .character {
         width: 100%;
         padding: 0.8rem 0;
@@ -174,6 +186,29 @@ export default {
                 font-weight: bold;
                 text-decoration: underline;
                 margin-right: 1rem;
+            }
+        }
+        .atlas {
+            text-align: center;
+            position: relative;
+            clear: both;
+            .asintado {
+                width: 50%;
+                margin: 0 auto;
+            }
+            .other {
+                width: 50%;
+                float: left;
+            }
+            img {
+                width: 60%;
+                &.triangle {
+                    width: 54%;
+                    position: absolute;
+                    left: 23%;
+                    top: 2.8rem;
+                    z-index: 1;
+                }
             }
         }
     }
