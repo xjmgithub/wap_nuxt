@@ -9,6 +9,22 @@
             <div class="share" @click="toShare()">
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
+            <div v-show="programList.length>0" class="clips">
+                <p>Highlights</p>
+                <ul class="clearfix">
+                    <li v-for="(item,index) in programList" :key="index">
+                        <nuxt-link :to="`/browser/program/detail/${item.pro_id}`">
+                            <div>
+                                <img v-if="item.poster">
+                                <img v-else src="~assets/img/web/pic3.png">
+                                <!-- <span class="show-time">{{item | formatShowTime}}</span> -->
+                                <span class="show-time">{{item.time}}</span>
+                            </div>
+                            <p class="title" v-html="item.name" />
+                        </nuxt-link>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -21,7 +37,69 @@ export default {
         return {
             userGender: this.$route.query.gender,
             result: [],
-            rolePercent: ''
+            rolePercent: '',
+            programList: [
+                {
+                    name: 'Wild beasts',
+                    poster: '',
+                    id: 371,
+                    time: '30:26'
+                },
+                {
+                    name: 'Highlights for 3rd Julu',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'Highlights for 3rd Julu',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'King Kong Mc Dancing to One Rand S2',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'Highlights for 3rd Julu',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'King Kong Mc Dancing to One Rand S2',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'Highlights for 3rd Julu',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'King Kong Mc Dancing to One Rand S2',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'Highlights for 3rd Julu',
+                    poster: '',
+                    id: 371,
+                    time: '50:26'
+                },
+                {
+                    name: 'King Kong Mc Dancing to One Rand S2',
+                    poster: '',
+                    id: 371,
+                    time: '34:06'
+                }
+            ]
         }
     },
     mounted() {
@@ -97,11 +175,69 @@ html {
         background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
         border-radius: 20px;
         font-weight: bold;
-        margin-top: 1rem;
+        margin: 1rem 0;
         height: 2.5rem;
         line-height: 2.5rem;
         img {
             width: 1.5rem;
+        }
+    }
+    .clips {
+        text-align: left;
+        padding: 0 3% 1rem;
+        background: #ffffff;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
+        border-radius: 13px;
+        &>p{
+            color:#333333;
+            font-weight: bold;
+            padding:.5rem 0;
+        }
+        li {
+            list-style: none;
+            float: left;
+            width: 48%;
+            line-height: 1.1rem;
+            position: relative;
+            &:nth-child(2n) {
+                float: right;
+            }
+            div {
+                position: relative;
+                width: 100%;
+                &:before {
+                    content: '';
+                    display: inline-block;
+                    padding-bottom: 56%;
+                    width: 0.1px;
+                    vertical-align: middle;
+                }
+                .show-time {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    padding: 0 0.2rem;
+                    background: rgba(0, 0, 0, .6);
+                    color: #ffffff;
+                    font-size: 0.8rem;
+                }
+                img {
+                    width: 100%;
+                    position: absolute;
+                    height: 100%;
+                }
+            }
+            .title {
+                font-size: 0.95rem;
+                color: #666666;
+                display: -webkit-box;
+                overflow: hidden;
+                height: 2.6rem;
+                padding-top: 0.4rem;
+                -webkit-line-clamp: 2;
+                /* autoprefixer: off */
+                -webkit-box-orient: vertical;
+            }
         }
     }
 }
