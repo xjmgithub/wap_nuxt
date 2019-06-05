@@ -248,6 +248,7 @@ export default {
                 background: linear-gradient(180deg, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
+                font-size: 1rem;
                 &.name {
                     font-weight: bold;
                 }
@@ -341,15 +342,15 @@ export default {
             }
         }
         .comments {
-            margin:.8rem 0;
+            margin: 0.8rem 0;
             p {
                 font-size: 1rem;
                 font-weight: bold;
             }
             li {
-                width:95%;
-                padding:.3rem;
-                margin:.3rem auto;
+                width: 95%;
+                padding: 0.3rem;
+                margin: 0.3rem auto;
                 & > img {
                     width: 11%;
                 }
@@ -360,8 +361,8 @@ export default {
                     background: #ffffff;
                     color: #666666;
                     border-radius: 16px;
-                    width:80%;
-                    padding:.5rem .8rem;
+                    width: 80%;
+                    padding: 0.5rem 0.8rem;
                     vertical-align: middle;
                     img {
                         position: absolute;
