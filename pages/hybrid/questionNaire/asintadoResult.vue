@@ -4,7 +4,7 @@
             <div class="guide">
                 <p v-show="sharePin" class="title">Who Am I In These Series?</p>
                 <div class="logo">I AM...</div>
-                <nuxt-link :to="`/hybrid/questionNaire/asintado`">
+                <nuxt-link v-show="!sharePin" :to="`/hybrid/questionNaire/asintado`">
                     <span class="try">TRY AGAIN</span>
                 </nuxt-link>
                 <div v-show="sharePin" class="share">
@@ -352,9 +352,9 @@ export default {
             }
         }
         .line {
-            width: 85%;
+            width: 90%;
             height: 2px;
-            margin: 1.5rem auto;
+            margin: 0 auto 1.5rem;
             background: linear-gradient(
                 270deg,
                 rgba(131, 86, 23, 0) 0%,
