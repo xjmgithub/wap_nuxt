@@ -3,9 +3,11 @@
         <div class="character">
             <div class="guide">
                 <div class="logo">I AM...</div>
-                <span class="try">TRY AGAIN</span>
+                <nuxt-link :to="`/hybrid/questionNaire/asintado`">
+                    <span class="try">TRY AGAIN</span>
+                </nuxt-link>
             </div>
-            <div class="atlas">
+            <div class="atlas clearfix">
                 <div class="asintado">
                     <img src="~assets/img/naire/Ana.png" alt="">
                 </div>
@@ -22,7 +24,7 @@
             <div class="des">
                 <p>My Charactersitics:</p>
                 <span>{{rolePercent}}</span>
-                <span v-for="(item,index) in result" :key="index">{{item.desLong}}</span>
+                <span v-for="(item,index) in result" :key="index">{{item.long_des}}</span>
             </div>
             <div class="share" @click="toShare()">
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
@@ -47,13 +49,11 @@
     </div>
 </template>
 <script>
-import asintado from '~/functions/asintado'
 export default {
     layout: 'base',
     filters: {},
     data() {
         return {
-            userGender: this.$route.query.gender,
             result: [],
             rolePercent: '',
             programList: [
@@ -117,36 +117,31 @@ export default {
                     id: 371,
                     time: '34:06'
                 }
-            ]
+            ],
+            ikey: this.$route.query.ikey
         }
     },
     mounted() {
-        const characterResult = localStorage.getItem('character_result')
-        if (!characterResult) {
-            const tmp = asintado()
-            const data = tmp[this.userGender]
-            this.result.push(data.Asintado[Math.floor(Math.random() * data.Asintado.length)])
-            this.result.push(data.GOT[Math.floor(Math.random() * data.GOT.length)])
-            this.result.push(data.Avengers[Math.floor(Math.random() * data.Avengers.length)])
-            console.log(this.result)
-            localStorage.setItem('character_result', JSON.stringify(this.result))
-        } else {
-            this.result = JSON.parse(characterResult)
-        }
-        this.getPercent()
+        this.$axios.get(`./hybrid/api/episode/result?ikey=${this.ikey}`).then(res => {
+            if (res.data && res.data.length > 0) {
+                this.result = res.data
+                this.getPercent()
+            }
+        })
     },
     methods: {
         getPercent() {
-            const percent = localStorage.getItem('percent')
-            if (!percent) {
-                const p1 = Math.floor(Math.floor(Math.random() * 33))
-                const p2 = Math.floor(Math.floor(Math.random() * 33))
-                const p3 = 100 - p1 - p2 // 最大值
-                this.rolePercent = `You're ${p3}%${this.result[0].roleName},${p1}%${this.result[1].roleName},${p2}%${this.result[2].roleName}.`
-                localStorage.setItem('percent', this.rolePercent)
-            } else {
-                this.rolePercent = percent
-            }
+            let asin, got, aven
+            this.result.forEach(ele => {
+                if (ele.fk_episode == 1) {
+                    asin = ele.percent + '%' + ele.name
+                } else if (ele.fk_episode == 2) {
+                    got = ele.percent + '%' + ele.name
+                } else {
+                    aven = ele.percent + '%' + ele.name
+                }
+            })
+            this.rolePercent = `You're ${asin},${got},${aven}.`
         },
         toShare() {}
     },
@@ -165,7 +160,7 @@ export default {
     width: 100%;
     .character {
         width: 100%;
-        padding: 0.8rem 0;
+        padding-top: 0.8rem ;
         .guide {
             height: 2.5rem;
             line-height: 2.5rem;
@@ -218,7 +213,7 @@ export default {
         text-align: center;
         .des {
             text-align: left;
-            padding: 1rem 0.5rem;
+            padding: 1rem 0.5rem 0;
             p {
                 background: linear-gradient(360deg, rgba(191, 143, 22, 1) 0%, rgba(237, 213, 154, 1) 100%);
                 background-clip: text;
@@ -304,6 +299,16 @@ export default {
                 }
             }
         }
+    }
+    .clearfix:after {
+        display: block;
+        visibility: hidden;
+        clear: both;
+        height: 0;
+        content: '';
+    }
+    .clearfix {
+        zoom: 1;
     }
 }
 </style>

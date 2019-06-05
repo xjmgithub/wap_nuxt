@@ -6,8 +6,8 @@
                     <div>
                         <span class="num">{{index+1}}. </span>{{item.question}}
                     </div>
-                    <p @click="answer(item.A)">{{item.A}}</p>
-                    <p @click="answer(item.B)">{{item.B}}</p>
+                    <p @click="answer(1)">{{item.A}}</p>
+                    <p @click="answer(0)">{{item.B}}</p>
                 </div>
                 <div class="progress">
                     <div class="line">
@@ -73,12 +73,16 @@ export default {
         answer(sex) {
             const index = this.currIndex
             if (index === 0) {
-                this.userGender = sex.toLowerCase()
+                this.userGender = sex
             }
             if (index + 1 <= this.quesList.length - 1) {
                 this.currIndex++
             } else {
-                this.$router.push(`/hybrid/questionNaire/asintadoResult?gender=${this.userGender}`)
+                this.$axios.get(`/hybrid/api/episode/submit?sex=${this.userGender}`).then(res => {
+                    if (res.data.code == 200) {
+                        this.$router.push(`/hybrid/questionNaire/asintadoResult?ikey=${res.data.data}`)
+                    }
+                })
             }
         },
         toShare() {}
@@ -142,7 +146,7 @@ export default {
             height: 3rem;
             padding: 0.5rem 0;
             width: 95%;
-            margin: .5rem 2.5%;
+            margin: 0.5rem 2.5%;
             .line {
                 width: 100%;
                 position: relative;
@@ -161,8 +165,8 @@ export default {
                     img {
                         width: 1rem;
                         display: block;
-                        opacity:0;
-                        margin-bottom: .2rem;
+                        opacity: 0;
+                        margin-bottom: 0.2rem;
                     }
                     &.now {
                         span {
