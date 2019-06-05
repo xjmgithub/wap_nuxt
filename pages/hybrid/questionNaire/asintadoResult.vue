@@ -2,15 +2,15 @@
     <div id="result">
         <div class="character">
             <div class="guide">
-                <p class="title">Who Am I In These Series?</p>
+                <p v-show="sharePin" class="title">Who Am I In These Series?</p>
                 <div class="logo">I AM...</div>
-                <nuxt-link :to="`/hybrid/questionNaire/asintado`" v-show="appType!=0">
+                <nuxt-link :to="`/hybrid/questionNaire/asintado`">
                     <span class="try">TRY AGAIN</span>
                 </nuxt-link>
-                <div v-show="appType==0" class="share">
-                    <img src="~assets/img/naire/ic_facebook_def.png">
-                    <img src="~assets/img/naire/ic_Twitter_def.png">
-                    <img src="~assets/img/naire/ic_copylink_def.png">
+                <div v-show="sharePin" class="share">
+                    <img src="~assets/img/naire/ic_facebook_def.png" @click="shareWithFacebook">
+                    <img src="~assets/img/naire/ic_Twitter_def.png" @click="shareWithTwitter">
+                    <img src="~assets/img/naire/ic_copylink_def.png" @click="copyLink">
                 </div>
             </div>
             <div class="atlas clearfix">
@@ -23,20 +23,20 @@
             </div>
         </div>
         <div class="container">
-            <div class="des">
+            <div v-show="!sharePin" class="des">
                 <p>My Charactersitics:</p>
                 <span>{{rolePercent}}</span>
                 <span v-for="(item,index) in result" :key="index">{{item.long_des}}</span>
             </div>
-            <div class="share" @click="toShare()">
+            <div v-show="!sharePin" class="share" @click="toShare()">
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
-            <nuxt-link :to="`/hybrid/questionNaire/asintado`" v-show="appType==0">
+            <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                 <div class="play">KNOW WHO AM I IN ASTINTADO</div>
             </nuxt-link>
-            <div class="line"></div>
+            <div v-show="sharePin" class="line"/>
         </div>
-        <div class="asintado">
+        <div v-show="sharePin" class="asintado">
             <div class="introduction">
                 <img src="~assets/img/naire/poster.png">
                 <div>
@@ -46,13 +46,13 @@
             <div class="comments">
                 <p>Comments</p>
                 <ul>
-                    <li><img src="~assets/img/naire/ic_facebook_def.png">
+                    <li @click="toVideo('vod')"><img src="~assets/img/naire/ic_facebook_def.png">
                         <div><img src="~assets/img/faq/Triangle.png">You're timid and naive when young. But then you break the chains and grow stronger. </div>
                     </li>
-                    <li> <img src="~assets/img/naire/ic_Twitter_def.png">
+                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/ic_Twitter_def.png">
                         <div> <img src="~assets/img/faq/Triangle.png">Great series! I love it!</div>
                     </li>
-                    <li> <img src="~assets/img/naire/ic_copylink_def.png">
+                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/ic_copylink_def.png">
                         <div>
                             <img src="~assets/img/faq/Triangle.png"> Great series! I love it!
                         </div>
@@ -63,15 +63,13 @@
         <div v-show="programList.length>0" class="clips">
             <p>Highlights</p>
             <ul class="clearfix">
-                <li v-for="(item,index) in programList" :key="index">
-                    <nuxt-link :to="`/browser/program/detail/${item.pro_id}`">
-                        <div>
-                            <img v-if="item.poster">
-                            <img v-else src="~assets/img/web/pic3.png">
-                            <span class="show-time">{{item | formatShowTime}}</span>
-                        </div>
-                        <p class="title" v-html="item.name" />
-                    </nuxt-link>
+                <li v-for="(item,index) in programList" :key="index" @click="toVideo(item.vod)">
+                    <div>
+                        <img v-if="item.poster">
+                        <img v-else src="~assets/img/web/pic3.png">
+                        <span class="show-time">{{item | formatShowTime}}</span>
+                    </div>
+                    <p class="title" v-html="item.name" />
                 </li>
             </ul>
         </div>
@@ -79,6 +77,7 @@
     </div>
 </template>
 <script>
+import { shareInvite, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 export default {
     layout: 'base',
     filters: {
@@ -144,7 +143,8 @@ export default {
                     time: '34:06'
                 }
             ],
-            ikey: this.$route.query.ikey
+            ikey: this.$route.query.ikey,
+            sharePin:this.$route.query.pin 
         }
     },
     mounted() {
@@ -169,7 +169,48 @@ export default {
             })
             this.rolePercent = `You're ${asin},${got},${aven}.`
         },
-        toShare() {}
+        toVideo(vod) {
+            if (vod && this.appType > 0) {
+                if (this.appType == 1) {
+                    window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+                } else if (this.appType == 2) {
+                    window.location.href = 'startimes://player?vodId=' + vod
+                }
+            } else if (this.appType <= 0) {
+                this.loadConfirm()
+            }
+        },
+        loadConfirm() {
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
+                this.$confirm(
+                    'Download StarTimes ON Now!',
+                    () => {
+                        callMarket.call(this)
+                    },
+                    () => {},
+                    'Download Now',
+                    'CANCEL'
+                )
+            })
+        },
+        toShare() {
+            // TODO 分享结果
+            shareInvite(
+                `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
+                '',
+                '',
+                ''
+            )
+        },
+        shareWithFacebook() {
+            shareByFacebook.call(this, window.location.origin + window.location.pathname)
+        },
+        copyLink() {
+            copyClipboard.call(this, window.location.origin + window.location.pathname)
+        },
+        shareWithTwitter() {
+            shareByTwitter.call(this, 'Characteristic Test', window.location.origin + window.location.pathname)
+        }
     },
     head() {
         return {
@@ -281,6 +322,7 @@ export default {
         .des {
             text-align: left;
             padding: 1rem 0.5rem 0;
+            margin-bottom:1rem;
             p {
                 background: linear-gradient(360deg, rgba(191, 143, 22, 1) 0%, rgba(237, 213, 154, 1) 100%);
                 background-clip: text;

@@ -1,5 +1,8 @@
 <template>
     <div id="asintado">
+        <div class="character">
+            <p class="title">Who Are You In These Series?</p>
+        </div>
         <div class="container">
             <div class="box">
                 <div v-for="(item,index) in quesList" v-show="currIndex==index" :key="index" class="question">
@@ -99,8 +102,18 @@ export default {
     background: url('~assets/img/naire/background2.png') no-repeat, linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
     background-size: contain;
     min-height: 100vh;
-    .bg-top {
-        width: 100%;
+    .character {
+        .title {
+            color: #ffffff;
+            font-size: 1.3rem;
+            text-align: center;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to bottom, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            line-height: 2.5rem;
+        }
     }
     .bg-bom {
         width: 100%;
