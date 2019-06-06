@@ -28,7 +28,7 @@
                 <span>{{rolePercent}}</span>
                 <span v-for="(item,index) in result" :key="index">{{item.long_des}}</span>
             </div>
-            <div v-show="!sharePin" class="share" @click="toShare()">
+            <div v-show="!sharePin&&appType!=2" class="share" @click="toShare()">
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
             <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
@@ -73,10 +73,11 @@
                 </li>
             </ul>
         </div>
-    </div>
+        <mShare />
     </div>
 </template>
 <script>
+import mShare from '~/components/web/share.vue'
 import { shareInvite, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard, cdnPicSrc } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -87,6 +88,9 @@ export default {
         getFkName(code) {
             return code == 1 ? 'Asintado' : code == 2 ? 'GOT' : code == 3 ? 'Avengers' : ''
         }
+    },
+    components: {
+        mShare
     },
     data() {
         return {
@@ -157,12 +161,16 @@ export default {
         },
         toShare() {
             // TODO 分享结果
-            shareInvite(
-                `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
-                '',
-                '',
-                ''
-            )
+            if (this.appType > 0) {
+                shareInvite(
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
+                    '',
+                    '',
+                    ''
+                )
+            } else {
+                this.$store.commit('SET_SHARE_STATE', true)
+            }
         },
         shareWithFacebook() {
             shareByFacebook.call(this, window.location.origin + window.location.pathname)
@@ -364,7 +372,7 @@ export default {
                     color: #666666;
                     border-radius: 16px;
                     width: 75%;
-                    padding:0.8rem;
+                    padding: 0.8rem;
                     vertical-align: middle;
                     img {
                         position: absolute;

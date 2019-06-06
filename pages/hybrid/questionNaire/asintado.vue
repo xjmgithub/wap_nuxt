@@ -25,17 +25,24 @@
                     </p>
                 </div>
             </div>
-            <div class="share" @click="toShare()">
+            <div v-show="appType!=2" class="share" @click="toShare()">
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
         </div>
+        <mShare />
     </div>
 </template>
 <script>
+import mShare from '~/components/web/share.vue'
+import { shareInvite } from '~/functions/utils'
 export default {
     layout: 'base',
+    components: {
+        mShare
+    },
     data() {
         return {
+            appType: this.$store.state.appType || 0,
             currIndex: 0,
             quesList: [
                 {
@@ -88,7 +95,19 @@ export default {
                 })
             }
         },
-        toShare() {}
+        toShare() {
+            // TODO 分享结果
+            if (this.appType > 0) {
+                shareInvite(
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
+                    '',
+                    '',
+                    ''
+                )
+            } else {
+                this.$store.commit('SET_SHARE_STATE', true)
+            }
+        }
     },
     head() {
         return {
@@ -114,10 +133,10 @@ export default {
             font-weight: bold;
             line-height: 2.5rem;
         }
-        img{
+        img {
             display: block;
-            width:90%;
-            margin:0 auto;
+            width: 90%;
+            margin: 0 auto;
         }
     }
     .container {
@@ -126,7 +145,7 @@ export default {
         width: 100%;
         padding: 0 5%;
         text-align: center;
-        height:60vh;
+        height: 60vh;
         .box {
             padding: 0 3%;
             background: #ffffff;
