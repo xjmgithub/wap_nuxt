@@ -16,9 +16,9 @@
             <div class="atlas clearfix">
                 <div v-for="(item,index) in result" :key="index" :class="{'asintado':item.fk_episode==1,'other':item.fk_episode!=1}">
                     <p class="name">{{item.name}}</p>
-                    <p>{{item.fk_episode | getFkName}}</p>
+                    <p :class="{'episode':!sharePin}">{{item.fk_episode | getFkName}}</p>
                     <img :src="item.avatar">
-                    <span class="short">{{item.short_des}}</span>
+                    <span v-show="sharePin" class="short">{{item.short_des}}</span>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
             <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                 <div class="play">KNOW WHO AM I IN ASTINTADO</div>
             </nuxt-link>
-            <div v-show="sharePin" class="line"/>
+            <div v-show="sharePin" class="line" />
         </div>
         <div v-show="sharePin" class="asintado">
             <div class="introduction">
@@ -144,7 +144,7 @@ export default {
                 }
             ],
             ikey: this.$route.query.ikey,
-            sharePin:this.$route.query.pin 
+            sharePin: this.$route.query.pin
         }
     },
     mounted() {
@@ -227,19 +227,9 @@ export default {
     padding-bottom: 2rem;
     .character {
         width: 100%;
-        width: 100%;
         padding-top: 0.8rem;
-        &::before {
-            content: '';
-            background: url('~assets/img/naire/background2.png') no-repeat;
-            background-size: contain;
-            opacity: 0.4;
-            width: 100%;
-            height: 300px;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-        }
+        background: url('~assets/img/naire/background4.png') no-repeat;
+        background-size: contain;
         .guide {
             line-height: 2.5rem;
             .title {
@@ -293,6 +283,11 @@ export default {
                 &.name {
                     font-weight: bold;
                 }
+                &.episode {
+                    background: linear-gradient(360deg, #BF8F16 0%,#EDD59A 100%);
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
             }
             .short {
                 font-weight: bold;
@@ -311,7 +306,7 @@ export default {
                 float: left;
             }
             img {
-                width: 60%;
+                width: 50%;
             }
         }
     }
@@ -322,7 +317,7 @@ export default {
         .des {
             text-align: left;
             padding: 1rem 0.5rem 0;
-            margin-bottom:1rem;
+            margin-bottom: 1rem;
             p {
                 background: linear-gradient(360deg, rgba(191, 143, 22, 1) 0%, rgba(237, 213, 154, 1) 100%);
                 background-clip: text;
@@ -350,6 +345,9 @@ export default {
             img {
                 width: 1.5rem;
             }
+        }
+        .play{
+             margin: 2rem 0;
         }
         .line {
             width: 90%;
@@ -410,7 +408,7 @@ export default {
                         position: absolute;
                         width: 0.6rem;
                         top: 52%;
-                        left: -0.5rem;
+                        left: -0.4rem;
                         margin-top: -0.4rem;
                     }
                 }
