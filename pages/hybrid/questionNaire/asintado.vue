@@ -2,6 +2,7 @@
     <div id="asintado">
         <div class="character">
             <p class="title">Who Are You In These Series?</p>
+            <img src="~assets/img/naire/role.png">
         </div>
         <div class="container">
             <div class="box">
@@ -28,7 +29,6 @@
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
         </div>
-        <img src="~assets/img/naire/background1.png" class="bg-bom">
     </div>
 </template>
 <script>
@@ -114,19 +114,19 @@ export default {
             font-weight: bold;
             line-height: 2.5rem;
         }
-    }
-    .bg-bom {
-        width: 100%;
-        position: fixed;
-        bottom: 0;
+        img{
+            display: block;
+            width:90%;
+            margin:0 auto;
+        }
     }
     .container {
-        position: fixed;
-        top: 43%;
-        width: 90%;
-        margin: 0 5%;
+        background: url('~assets/img/naire/background1.png') no-repeat bottom;
+        background-size: contain;
+        width: 100%;
+        padding: 0 5%;
         text-align: center;
-        z-index: 99;
+        height:60vh;
         .box {
             padding: 0 3%;
             background: #ffffff;

@@ -46,13 +46,13 @@
             <div class="comments">
                 <p>Comments</p>
                 <ul>
-                    <li @click="toVideo('vod')"><img src="~assets/img/naire/ic_facebook_def.png">
+                    <li @click="toVideo('vod')"><img src="~assets/img/naire/boy.png">
                         <div><img src="~assets/img/faq/Triangle.png">You're timid and naive when young. But then you break the chains and grow stronger. </div>
                     </li>
-                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/ic_Twitter_def.png">
+                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/girl.png">
                         <div> <img src="~assets/img/faq/Triangle.png">Great series! I love it!</div>
                     </li>
-                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/ic_copylink_def.png">
+                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/girl.png">
                         <div>
                             <img src="~assets/img/faq/Triangle.png"> Great series! I love it!
                         </div>
@@ -63,13 +63,13 @@
         <div v-show="programList.length>0" class="clips">
             <p>Highlights</p>
             <ul class="clearfix">
-                <li v-for="(item,index) in programList" :key="index" @click="toVideo(item.vod)">
+                <li v-for="(item,index) in programList" :key="index" @click="toVideo(item.link_vod_code)">
                     <div>
-                        <img v-if="item.poster">
-                        <img v-else src="~assets/img/web/pic3.png">
+                        <img v-if="item.link_url" :src="cdnPic(item.link_url)">
+                        <img v-else src="~assets/img/web/def.png">
                         <span class="show-time">{{item | formatShowTime}}</span>
                     </div>
-                    <p class="title" v-html="item.name" />
+                    <p class="title">{{item.description||item.name}}</p>
                 </li>
             </ul>
         </div>
@@ -77,7 +77,7 @@
     </div>
 </template>
 <script>
-import { shareInvite, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
+import { shareInvite, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard, cdnPicSrc } from '~/functions/utils'
 export default {
     layout: 'base',
     filters: {
@@ -93,56 +93,7 @@ export default {
             appType: this.$store.state.appType || 0,
             result: [],
             rolePercent: '',
-            programList: [
-                {
-                    name: 'Wild beasts',
-                    poster: '',
-                    id: 371,
-                    time: '30:26'
-                },
-                {
-                    name: 'Highlights for 3rd Julu',
-                    poster: '',
-                    id: 371,
-                    time: '50:26'
-                },
-                {
-                    name: 'Highlights for 3rd Julu',
-                    poster: '',
-                    id: 371,
-                    time: '50:26'
-                },
-                {
-                    name: 'King Kong Mc Dancing to One Rand S2',
-                    poster: '',
-                    id: 371,
-                    time: '50:26'
-                },
-                {
-                    name: 'Highlights for 3rd Julu',
-                    poster: '',
-                    id: 371,
-                    time: '50:26'
-                },
-                {
-                    name: 'King Kong Mc Dancing to One Rand S2',
-                    poster: '',
-                    id: 371,
-                    time: '50:26'
-                },
-                {
-                    name: 'Highlights for 3rd Julu',
-                    poster: '',
-                    id: 371,
-                    time: '50:26'
-                },
-                {
-                    name: 'King Kong Mc Dancing to One Rand S2',
-                    poster: '',
-                    id: 371,
-                    time: '34:06'
-                }
-            ],
+            programList: [],
             ikey: this.$route.query.ikey,
             sharePin: this.$route.query.pin
         }
@@ -154,8 +105,19 @@ export default {
                 this.getPercent()
             }
         })
+        this.getVideoList()
     },
     methods: {
+        cdnPic(src) {
+            return cdnPicSrc.call(this, src)
+        },
+        getVideoList() {
+            this.$axios.get(`/voting/v1/program?vote_id=7`).then(res => {
+                if (res.data.code === 0) {
+                    this.programList = res.data.data
+                }
+            })
+        },
         getPercent() {
             let asin, got, aven
             this.result.forEach(ele => {
@@ -284,7 +246,7 @@ export default {
                     font-weight: bold;
                 }
                 &.episode {
-                    background: linear-gradient(360deg, #BF8F16 0%,#EDD59A 100%);
+                    background: linear-gradient(360deg, #bf8f16 0%, #edd59a 100%);
                     background-clip: text;
                     -webkit-text-fill-color: transparent;
                 }
@@ -346,8 +308,8 @@ export default {
                 width: 1.5rem;
             }
         }
-        .play{
-             margin: 2rem 0;
+        .play {
+            margin: 2rem 0;
         }
         .line {
             width: 90%;
