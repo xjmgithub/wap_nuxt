@@ -2,7 +2,7 @@
     <div @click="showgif=false">
         <div class="pannel">
             <img class="result" src="~assets/img/vote/game_result.png">
-            <img class="rules" @click.stop="showgif=true" src="~assets/img/vote/showgif.png">
+            <img class="rules" src="~assets/img/vote/showgif.png" @click.stop="showgif=true">
         </div>
         <div class="bot-down">
             <div class="bot-down-text">Eid Mubarak!! Share to more friends for the great honor of your country.</div>
@@ -11,7 +11,7 @@
         <sharePannel/>
         <div v-show="showgif" class="gif" @click.stop>
             <img class="pic" src="~assets/img/vote/shuoming.gif">
-            <img class="close" @click="showgif=false" src="~assets/img/dvb/delete.png">
+            <img class="close" src="~assets/img/dvb/delete.png" @click="showgif=false">
         </div>
     </div>
 </template>
