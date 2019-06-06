@@ -354,7 +354,7 @@ export default {
                 padding: 0.3rem;
                 margin: 0.3rem auto;
                 & > img {
-                    width: 11%;
+                    width: 15%;
                 }
                 div {
                     display: inline-block;
@@ -363,8 +363,8 @@ export default {
                     background: #ffffff;
                     color: #666666;
                     border-radius: 16px;
-                    width: 80%;
-                    padding: 0.5rem 0.8rem;
+                    width: 75%;
+                    padding:0.8rem;
                     vertical-align: middle;
                     img {
                         position: absolute;
