@@ -47,14 +47,14 @@
                 <p>Comments</p>
                 <ul>
                     <li @click="toVideo('vod')"><img src="~assets/img/naire/boy.png">
-                        <div><img src="~assets/img/faq/Triangle.png">You're timid and naive when young. But then you break the chains and grow stronger. </div>
+                        <div><img src="~assets/img/faq/Triangle.png">From Wildflower to Asintado, interesting series from Startimes ON. </div>
                     </li>
                     <li @click="toVideo('vod')"> <img src="~assets/img/naire/girl.png">
-                        <div> <img src="~assets/img/faq/Triangle.png">Great series! I love it!</div>
+                        <div> <img src="~assets/img/faq/Triangle.png">Very very interest can't miss it for anything.</div>
                     </li>
                     <li @click="toVideo('vod')"> <img src="~assets/img/naire/girl.png">
                         <div>
-                            <img src="~assets/img/faq/Triangle.png"> Great series! I love it!
+                            <img src="~assets/img/faq/Triangle.png">Great! I watch Asintado with my phone on StarTimes ON app!
                         </div>
                     </li>
                 </ul>
