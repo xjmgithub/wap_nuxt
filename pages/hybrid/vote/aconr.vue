@@ -1,6 +1,6 @@
 <template>
     <div @click="showgif=false">
-        <div class="download" @click="down(1)">
+        <div v-if="appType==0" class="download" @click="down(1)">
             <div>
                 <img src="~assets/img/web/app_icon.png">
                 <div>
@@ -10,7 +10,7 @@
                 <span class="down">{{$store.state.lang.officialwebsitemobile_install}}</span>
             </div>
         </div>
-        <div class="holder">&nbsp;</div>
+        <div v-if="appType==0" class="holder">&nbsp;</div>
         <div class="pannel">
             <img class="result" src="~assets/img/vote/game_result.png">
             <img class="rules" src="~assets/img/vote/showgif.png" @click.stop="showgif=true">
@@ -36,7 +36,8 @@ export default {
     },
     data() {
         return {
-            showgif: false
+            showgif: false,
+            appType: this.$store.state.appType
         }
     },
     methods: {
@@ -190,8 +191,8 @@ html {
         width: 2rem;
     }
 }
-.holder{
-    height:3.6rem;
+.holder {
+    height: 3.6rem;
 }
 .download {
     padding: 0.5rem 0.8rem;
