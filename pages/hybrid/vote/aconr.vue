@@ -1,5 +1,16 @@
 <template>
     <div @click="showgif=false">
+        <div class="download" @click="down(1)">
+            <div>
+                <img src="~assets/img/web/app_icon.png">
+                <div>
+                    <p>StarTimes ON App</p>
+                    <span>{{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
+                </div>
+                <span class="down">{{$store.state.lang.officialwebsitemobile_install}}</span>
+            </div>
+        </div>
+        <div class="holder">&nbsp;</div>
         <div class="pannel">
             <img class="result" src="~assets/img/vote/game_result.png">
             <img class="rules" src="~assets/img/vote/showgif.png" @click.stop="showgif=true">
@@ -16,7 +27,7 @@
     </div>
 </template>
 <script>
-import { shareInvite } from '~/functions/utils'
+import { shareInvite, callMarket, callApp } from '~/functions/utils'
 import sharePannel from '~/components/web/share'
 export default {
     layout: 'base',
@@ -41,6 +52,44 @@ export default {
                 this.showShare = true
                 this.$store.commit('SET_SHARE_STATE', true)
             }
+        },
+        down() {
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/vote/acon`, () => {
+                this.sendEvLog({
+                    category: `vote_soccercup`,
+                    action: 'downloadpopup_show',
+                    label: 1,
+                    value: 1
+                })
+                this.$confirm(
+                    'Download StarTimes ON and join us and get the Champion !',
+                    () => {
+                        this.sendEvLog({
+                            category: `vote_soccercup`,
+                            action: 'downloadpopup_clickok',
+                            label: 1,
+                            value: 1
+                        })
+                        this.sendEvLog({
+                            category: `vote_soccercup`,
+                            action: 'toMarket',
+                            label: 1,
+                            value: 1
+                        })
+                        callMarket.call(this)
+                    },
+                    () => {
+                        this.sendEvLog({
+                            category: `vote_soccercup`,
+                            action: 'downloadpopup_clicknot',
+                            label: 1,
+                            value: 1
+                        })
+                    },
+                    this.$store.state.lang.download_apk,
+                    this.$store.state.lang.vote_cancel
+                )
+            })
         }
     },
     head() {
@@ -60,7 +109,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: '/res_nuxt/img/soccercup.png'
+                    content: 'https://m.startimestv.com/res_nuxt/img/soccercup.png'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: 'StarTimes ON Cup - Crazy Freekick' }
@@ -139,6 +188,49 @@ html {
         right: 0;
         display: block;
         width: 2rem;
+    }
+}
+.holder{
+    height:3.6rem;
+}
+.download {
+    padding: 0.5rem 0.8rem;
+    background-color: #216948;
+    color: #333333;
+    overflow: hidden;
+    zoom: 1;
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+    height: 3.6rem;
+    & > div {
+        position: relative;
+        img {
+            width: 2.6rem;
+            border-radius: 4px;
+        }
+        div {
+            width: 45%;
+            font-size: 0.88rem;
+            margin-left: 0.5rem;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1.3rem;
+            color: #ffe050;
+        }
+        .down {
+            background-color: #ffe050;
+            font-weight: bold;
+            width: 5rem;
+            color: #bf7029;
+            border-radius: 1rem;
+            height: 2rem;
+            position: absolute;
+            right: 0;
+            top: 0.4rem;
+            line-height: 2rem;
+            text-align: center;
+        }
     }
 }
 </style>
