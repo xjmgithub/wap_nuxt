@@ -109,7 +109,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: 'https://m.startimestv.com/res_nuxt/img/soccercup.png'
+                    content: 'http://cdn.startimestv.com/banner/soccercup.png'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: 'StarTimes ON Cup - Crazy Freekick' }
