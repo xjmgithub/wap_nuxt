@@ -95,7 +95,7 @@ export default {
     },
     head() {
         return {
-            title: 'StarTimes ON Cup - Crazy Freekick',
+            title: 'Result Of Soccer Game',
             meta: [
                 {
                     name: 'description',
