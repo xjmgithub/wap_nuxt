@@ -11,19 +11,17 @@ export default {
             offsetTop: 0
         }
     },
-    updated(){
-        const dialog = this.$el
-        const dh = dialog.offsetHeight
-        const dw = dialog.offsetWidth
-        this.offsetLeft = -dw / 2 + 'px'
-        this.offsetTop = -dh / 2 + 'px'
-    },
     methods: {
         show(text, duration = 2000) {
             clearInterval(this.timer)
             const _this = this
             this.tip = text
             this.$nextTick(() => {
+                const dialog = _this.$el
+                const dh = dialog.offsetHeight
+                const dw = dialog.offsetWidth
+                _this.offsetLeft = -dw / 2 + 'px'
+                _this.offsetTop = -dh / 2 + 'px'
                 this.timer = setTimeout(() => {
                     _this.tip = ''
                 }, duration)
@@ -42,6 +40,6 @@ export default {
     border-radius: 3px;
     max-width: 15rem;
     color: #fff;
-    z-index:9999;
+    z-index: 9999;
 }
 </style>

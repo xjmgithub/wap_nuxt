@@ -262,6 +262,15 @@ export default {
         this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin) // 分享源用户记录
         !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
 
+        if (!this.openPicShowd) {
+            this.sendEvLog({
+                category: `vote_${this.voteTitle}_${this.platform}`,
+                action: 'screen_show',
+                label: '',
+                value: 1
+            })
+        }
+
         this.$nextTick(() => {
             if (this.banners.length <= 0) {
                 document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
@@ -302,7 +311,6 @@ export default {
             }, 1000)
         },
         handleVote(film) {
-            
             if (film.state === -1) {
                 this.$toast(this.$store.state.lang.vote_notstart_btn)
                 return
