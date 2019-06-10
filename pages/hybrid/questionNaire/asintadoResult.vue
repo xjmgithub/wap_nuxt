@@ -145,7 +145,11 @@ export default {
         getVideoList() {
             this.$axios.get(`/voting/v1/program?vote_id=11`).then(res => {
                 if (res.data.code === 0) {
-                    this.programList = res.data.data
+                    if (this.appType > 0) {
+                        this.programList = res.data.data
+                    } else {
+                        this.programList = res.data.data.slice(0, 4)
+                    }
                 }
             })
         },
