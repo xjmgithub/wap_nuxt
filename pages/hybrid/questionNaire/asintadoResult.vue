@@ -110,20 +110,22 @@ export default {
     async asyncData({ app: { $axios }, store, route }) {
         $axios.setHeader('token', store.state.token)
         try {
-            const { data } = await $axios.get(`./hybrid/api/episode/result?ikey=${route.query.ikey}`)
+            const { data } = await $axios.get(`/hybrid/api/episode/result?ikey=${route.query.ikey}`)
+            const result = Object(data)
             let asin, got, aven
-            data.forEach(ele => {
+            result.forEach(ele => {
                 if (ele.fk_episode == 1) {
-                    asin = ele.percent + '%' + ele.name
+                    asin = ele.percent + '% ' + ele.name
                 } else if (ele.fk_episode == 2) {
-                    got = ele.percent + '%' + ele.name
+                    got = ele.percent + '% ' + ele.name
                 } else {
-                    aven = ele.percent + '%' + ele.name
+                    aven = ele.percent + '% ' + ele.name
                 }
             })
+
             return {
                 result: data,
-                rolePercent: `You're ${asin},${got},${aven}.`
+                rolePercent: `You're ${asin}, ${got}, ${aven}.`
             }
         } catch (e) {
             return {
