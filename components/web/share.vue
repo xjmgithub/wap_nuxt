@@ -23,6 +23,13 @@
 <script>
 import { shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 export default {
+    props: {
+        shareUrl: {
+            required: false,
+            type: String,
+            default: ''
+        }
+    },
     computed: {
         showShare() {
             return this.$store.state.shareState
@@ -33,14 +40,14 @@ export default {
             this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithFacebook() {
-            shareByFacebook.call(this,window.location.href)
+            shareByFacebook.call(this, this.shareUrl || window.location.href)
         },
         copyLink() {
-            copyClipboard.call(this,window.location.href)
+            copyClipboard.call(this, this.shareUrl || window.location.href)
             this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithTwitter() {
-            shareByTwitter.call(this,document.title, window.location.href)
+            shareByTwitter.call(this, document.title, this.shareUrl || window.location.href)
         }
     }
 }

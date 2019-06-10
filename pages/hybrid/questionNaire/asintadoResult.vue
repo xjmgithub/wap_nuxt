@@ -102,20 +102,37 @@ export default {
     data() {
         return {
             appType: this.$store.state.appType || 0,
-            result: [],
-            rolePercent: '',
             programList: [],
             ikey: this.$route.query.ikey,
             sharePin: this.$route.query.pin
         }
     },
-    mounted() {
-        this.$axios.get(`./hybrid/api/episode/result?ikey=${this.ikey}`).then(res => {
-            if (res.data && res.data.length > 0) {
-                this.result = res.data
-                this.getPercent()
+    async asyncData({ app: { $axios }, store, route }) {
+        $axios.setHeader('token', store.state.token)
+        try {
+            const { data } = await $axios.get(`./hybrid/api/episode/result?ikey=${route.query.ikey}`)
+            let asin, got, aven
+            data.forEach(ele => {
+                if (ele.fk_episode == 1) {
+                    asin = ele.percent + '%' + ele.name
+                } else if (ele.fk_episode == 2) {
+                    got = ele.percent + '%' + ele.name
+                } else {
+                    aven = ele.percent + '%' + ele.name
+                }
+            })
+            return {
+                result: data,
+                rolePercent: `You're ${asin},${got},${aven}.`
             }
-        })
+        } catch (e) {
+            return {
+                result: [],
+                rolePercent: ''
+            }
+        }
+    },
+    mounted() {
         this.getVideoList()
     },
     methods: {
@@ -128,19 +145,6 @@ export default {
                     this.programList = res.data.data
                 }
             })
-        },
-        getPercent() {
-            let asin, got, aven
-            this.result.forEach(ele => {
-                if (ele.fk_episode == 1) {
-                    asin = ele.percent + '%' + ele.name
-                } else if (ele.fk_episode == 2) {
-                    got = ele.percent + '%' + ele.name
-                } else {
-                    aven = ele.percent + '%' + ele.name
-                }
-            })
-            this.rolePercent = `You're ${asin},${got},${aven}.`
         },
         toVideo(vod) {
             if (vod && this.appType > 0) {
@@ -167,12 +171,11 @@ export default {
             })
         },
         toShare() {
-            // TODO 分享结果
             if (this.appType > 0) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
-                    '',
-                    '',
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=charplay`,
+                    'Characteristic Test',
+                    `I got ${this.result[0].name}, ${this.result[1].name} and ${this.result[2].name}!`,
                     ''
                 )
             } else {
@@ -191,7 +194,26 @@ export default {
     },
     head() {
         return {
-            title: 'Characteristic Test Result'
+            title: 'Characteristic Test Result',
+            meta: [
+                {
+                    name: 'description',
+                    property: 'description',
+                    content: `I got ${this.result[0].name}, ${this.result[1].name} and ${this.result[2].name}!`
+                },
+                {
+                    name: 'og:description',
+                    property: 'og:description',
+                    content: `I got ${this.result[0].name}, ${this.result[1].name} and ${this.result[2].name}!`
+                },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: ''
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }
+            ]
         }
     }
 }
@@ -303,11 +325,11 @@ export default {
                 -webkit-text-fill-color: transparent;
                 margin-bottom: 0.5rem;
                 font-weight: bold;
-                font-size:1.2rem;
+                font-size: 1.2rem;
             }
             span {
                 color: #ffffff;
-                line-height:1.35rem;
+                line-height: 1.35rem;
             }
         }
         .share,

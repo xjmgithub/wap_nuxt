@@ -36,7 +36,7 @@
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
         </div>
-        <mShare/>
+        <mShare :share-url="shareUrl"/>
     </div>
 </template>
 <script>
@@ -51,6 +51,7 @@ export default {
         return {
             appType: this.$store.state.appType || 0,
             currIndex: 0,
+            shareUrl: process.client ? location.href : '',
             quesList: [
                 {
                     question: 'Are you a girl or a boy?',
@@ -110,12 +111,11 @@ export default {
             }
         },
         toShare() {
-            // TODO 分享结果
             if (this.appType > 0) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
-                    '',
-                    '',
+                    `${window.location.href}?utm_source=charplay`,
+                    'Characteristic Test',
+                    'Who am I in Asintado, Avengers and Game of Thrones?',
                     ''
                 )
             } else {
@@ -125,7 +125,18 @@ export default {
     },
     head() {
         return {
-            title: 'Characteristic Test'
+            title: 'Characteristic Test',
+            meta: [
+                { name: 'description', property: 'description', content: 'Who am I in Asintado, Avengers and Game of Thrones?' },
+                { name: 'og:description', property: 'og:description', content: 'Who am I in Asintado, Avengers and Game of Thrones?' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: ''
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }
+            ]
         }
     }
 }
