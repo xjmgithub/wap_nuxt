@@ -95,11 +95,18 @@ export default {
             if (index + 1 <= this.quesList.length - 1) {
                 this.currIndex++
             } else {
-                this.$axios.get(`/hybrid/api/episode/submit?sex=${this.userGender}`).then(res => {
-                    if (res.data.code == 200) {
-                        this.$router.push(`/hybrid/questionNaire/asintadoResult?ikey=${res.data.data}`)
-                    }
-                })
+                this.$axios
+                    .get(`/hybrid/api/episode/submit?sex=${this.userGender}`)
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            this.$router.push(`/hybrid/questionNaire/asintadoResult?ikey=${res.data.data}`)
+                        } else {
+                            this.$alert('Try again later')
+                        }
+                    })
+                    .catch(() => {
+                        this.$alert('Try again later')
+                    })
             }
         },
         toShare() {
