@@ -143,7 +143,7 @@ export default {
             return cdnPicSrc.call(this, src)
         },
         getVideoList() {
-            this.$axios.get(`/voting/v1/program?vote_id=7`).then(res => {
+            this.$axios.get(`/voting/v1/program?vote_id=11`).then(res => {
                 if (res.data.code === 0) {
                     this.programList = res.data.data
                 }
