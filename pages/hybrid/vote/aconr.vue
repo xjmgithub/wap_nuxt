@@ -129,6 +129,7 @@ html {
     max-width: 1080px;
     margin: 0 auto;
     position: relative;
+    padding-bottom:3rem;
     .result {
         display: block;
         width: 100%;
