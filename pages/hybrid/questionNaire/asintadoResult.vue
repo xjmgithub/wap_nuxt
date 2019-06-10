@@ -34,7 +34,7 @@
             <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                 <div class="play">KNOW WHO AM I IN ASTINTADO</div>
             </nuxt-link>
-            <div v-show="sharePin" class="line" />
+            <div v-show="sharePin" class="line"/>
         </div>
         <div v-show="sharePin" class="asintado">
             <div class="introduction">
@@ -46,13 +46,20 @@
             <div class="comments">
                 <p>Comments</p>
                 <ul>
-                    <li @click="toVideo('vod')"><img src="~assets/img/naire/boy.png">
-                        <div><img src="~assets/img/faq/Triangle.png">From Wildflower to Asintado, interesting series from Startimes ON. </div>
+                    <li @click="toVideo('vod')">
+                        <img src="~assets/img/naire/boy.png">
+                        <div>
+                            <img src="~assets/img/faq/Triangle.png">From Wildflower to Asintado, interesting series from Startimes ON.
+                        </div>
                     </li>
-                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/girl.png">
-                        <div> <img src="~assets/img/faq/Triangle.png">Very very interest can't miss it for anything.</div>
+                    <li @click="toVideo('vod')">
+                        <img src="~assets/img/naire/girl.png">
+                        <div>
+                            <img src="~assets/img/faq/Triangle.png">Very very interest can't miss it for anything.
+                        </div>
                     </li>
-                    <li @click="toVideo('vod')"> <img src="~assets/img/naire/girl.png">
+                    <li @click="toVideo('vod')">
+                        <img src="~assets/img/naire/girl.png">
                         <div>
                             <img src="~assets/img/faq/Triangle.png">Great! I watch Asintado with my phone on StarTimes ON app!
                         </div>
@@ -73,7 +80,7 @@
                 </li>
             </ul>
         </div>
-        <mShare />
+        <mShare/>
     </div>
 </template>
 <script>
@@ -198,18 +205,18 @@ export default {
     .character {
         width: 100%;
         padding-top: 0.8rem;
-        background: url('~assets/img/naire/background4.png') no-repeat;
-        background-size: contain;
+        background: url('~assets/img/naire/background4.png') no-repeat center -10px;
+        background-size: cover;
         .guide {
             line-height: 2.5rem;
             .title {
                 color: #ffffff;
                 font-size: 1.5rem;
                 text-align: center;
-                text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-                background: linear-gradient(to bottom, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
+                text-shadow: 0px 3px 4px rgba(0, 0, 0, 1);
+                // background: linear-gradient(to bottom, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
+                // background-clip: text;
+                // -webkit-text-fill-color: transparent;
                 font-weight: bold;
             }
             .logo {
@@ -222,6 +229,7 @@ export default {
                 line-height: 2.5rem;
                 font-weight: bold;
                 display: inline-block;
+                box-shadow: -11px 3px 10px rgba(0, 0, 0, 0.5);
             }
             .try {
                 float: right;
@@ -240,23 +248,24 @@ export default {
         }
         .atlas {
             text-align: center;
-            background: url('~assets/img/naire/triangle.png') no-repeat center 55%;
+            background: url('~assets/img/naire/triangle.png') no-repeat center 59%;
             background-size: 65%;
             margin-top: 0.2rem;
             p {
                 color: #ffffff;
-                text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-                background: linear-gradient(180deg, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
+                text-shadow: 0px 3px 4px rgba(0, 0, 0, 0.5);
+                // background: linear-gradient(180deg, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
+                // -webkit-background-clip: text;
+                // -webkit-text-fill-color: transparent;
                 font-size: 1rem;
                 &.name {
                     font-weight: bold;
                 }
                 &.episode {
-                    background: linear-gradient(360deg, #bf8f16 0%, #edd59a 100%);
+                    background: linear-gradient(360deg, #ffbc13 0%, #fff5db 100%);
                     background-clip: text;
                     -webkit-text-fill-color: transparent;
+                    color: #c09017;
                 }
             }
             .short {
@@ -276,7 +285,7 @@ export default {
                 float: left;
             }
             img {
-                width: 50%;
+                width: 60%;
             }
         }
     }
@@ -294,15 +303,17 @@ export default {
                 -webkit-text-fill-color: transparent;
                 margin-bottom: 0.5rem;
                 font-weight: bold;
+                font-size:1.2rem;
             }
             span {
                 color: #ffffff;
+                line-height:1.35rem;
             }
         }
         .share,
         .play {
             display: inline-block;
-            padding: 0 1rem;
+            padding: 0 1.5rem;
             color: #63428a;
             font-size: 0.95rem;
             vertical-align: middle;
