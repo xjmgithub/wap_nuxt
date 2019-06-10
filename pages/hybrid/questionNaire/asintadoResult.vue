@@ -80,7 +80,7 @@
                 </li>
             </ul>
         </div>
-        <mShare/>
+        <mShare :share-url="shareUrl"/>
     </div>
 </template>
 <script>
@@ -104,7 +104,8 @@ export default {
             appType: this.$store.state.appType || 0,
             programList: [],
             ikey: this.$route.query.ikey,
-            sharePin: this.$route.query.pin
+            sharePin: this.$route.query.pin,
+            shareUrl: process.client ? `${location.href}&pin=${this.$store.state.user.id}&utm_source=charplay` : ''
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -185,13 +186,13 @@ export default {
             }
         },
         shareWithFacebook() {
-            shareByFacebook.call(this, window.location.origin + window.location.pathname)
+            shareByFacebook.call(this, window.location.href)
         },
         copyLink() {
-            copyClipboard.call(this, window.location.origin + window.location.pathname)
+            copyClipboard.call(this, window.location.href)
         },
         shareWithTwitter() {
-            shareByTwitter.call(this, 'Characteristic Test', window.location.origin + window.location.pathname)
+            shareByTwitter.call(this, 'Characteristic Test', window.location.href)
         }
     },
     head() {
@@ -374,7 +375,7 @@ export default {
     .asintado {
         width: 95%;
         margin: 0 2.5%;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         color: #ffffff;
         .introduction {
             img {
@@ -383,8 +384,9 @@ export default {
             div {
                 display: inline-block;
                 width: 55%;
-                margin-left: 3%;
+                margin-left: 1%;
                 vertical-align: top;
+                line-height: 1.2rem;
             }
         }
         .comments {
@@ -408,7 +410,7 @@ export default {
                     color: #666666;
                     border-radius: 16px;
                     width: 75%;
-                    padding: 0.8rem;
+                    padding: 0.6rem 0.8rem;
                     vertical-align: middle;
                     img {
                         position: absolute;

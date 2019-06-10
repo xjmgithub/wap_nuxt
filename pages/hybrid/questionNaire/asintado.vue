@@ -36,7 +36,7 @@
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
         </div>
-        <mShare :share-url="shareUrl"/>
+        <mShare/>
     </div>
 </template>
 <script>
@@ -51,7 +51,7 @@ export default {
         return {
             appType: this.$store.state.appType || 0,
             currIndex: 0,
-            shareUrl: process.client ? location.href : '',
+
             quesList: [
                 {
                     question: 'Are you a girl or a boy?',
