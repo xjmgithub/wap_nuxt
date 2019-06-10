@@ -8,20 +8,27 @@
             <div class="box">
                 <div v-for="(item,index) in quesList" v-show="currIndex==index" :key="index" class="question">
                     <div>
-                        <span class="num">{{index+1}}. </span>{{item.question}}
+                        <span class="num">{{index+1}}.</span>
+                        {{item.question}}
                     </div>
                     <p @click="answer(1)">{{item.A}}</p>
                     <p @click="answer(0)">{{item.B}}</p>
                 </div>
                 <div class="progress">
                     <div class="line">
-                        <div v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-2+'%'}">
+                        <div
+                            v-for="(item,index) in quesList.length"
+                            :key="index"
+                            :class="{'now':index==currIndex}"
+                            :style="{left:100/(quesList.length-1)*index-2+'%'}"
+                        >
                             <img src="~assets/img/naire/ic-point.png">
                             <span/>
                         </div>
                     </div>
                     <p>
-                        <span class="now">{{currIndex+1}}</span>/{{quesList.length}}
+                        <span class="now">{{currIndex+1}}</span>
+                        /{{quesList.length}}
                     </p>
                 </div>
             </div>
@@ -29,7 +36,7 @@
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
         </div>
-        <mShare />
+        <mShare/>
     </div>
 </template>
 <script>
@@ -118,24 +125,25 @@ export default {
 </script>
 <style lang="less" scoped>
 #asintado {
-    background: url('~assets/img/naire/background2.png') no-repeat, linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
-    background-size: contain;
+    background: linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
     min-height: 100vh;
     .character {
+        background: url('~assets/img/naire/background2.png') no-repeat top center;
+        background-size: cover;
         .title {
             color: #ffffff;
             font-size: 1.3rem;
             text-align: center;
-            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-            background: linear-gradient(to bottom, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 3px 4px rgba(0, 0, 0, 1);
+            // background: linear-gradient(to bottom, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
+            // background-clip: text;
+            // -webkit-text-fill-color: transparent;
             font-weight: bold;
-            line-height: 2.5rem;
+            line-height: 4rem;
         }
         img {
             display: block;
-            width: 90%;
+            width: 95%;
             margin: 0 auto;
         }
     }
@@ -143,11 +151,11 @@ export default {
         background: url('~assets/img/naire/background1.png') no-repeat bottom;
         background-size: contain;
         width: 100%;
-        padding: 0 5%;
+        padding: 0 4%;
         text-align: center;
         height: 60vh;
         .box {
-            padding: 0 3%;
+            padding: 0 4%;
             background: #ffffff;
             box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
             border-radius: 13px;
@@ -202,8 +210,8 @@ export default {
                     }
                     &.now {
                         span {
-                            width: 0.8rem;
-                            height: 0.8rem;
+                            width: 0.9rem;
+                            height: 0.9rem;
                             background: #c3a041;
                         }
                         img {
@@ -226,7 +234,7 @@ export default {
     }
     .share {
         display: inline-block;
-        padding: 0 1rem;
+        padding: 0 1.5rem;
         color: #63428a;
         font-size: 0.95rem;
         vertical-align: middle;
