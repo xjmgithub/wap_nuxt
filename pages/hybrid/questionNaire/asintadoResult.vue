@@ -175,7 +175,7 @@ export default {
         toShare() {
             if (this.appType > 0) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=charplay`,
+                    `${window.location.href}&pin=${this.$store.state.user.id}&utm_source=charplay`,
                     'Characteristic Test',
                     `I got ${this.result[0].name}, ${this.result[1].name} and ${this.result[2].name}!`,
                     ''
@@ -347,6 +347,7 @@ export default {
             margin: 1rem 0;
             height: 2.5rem;
             line-height: 2.5rem;
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5);
             img {
                 width: 1.5rem;
             }
