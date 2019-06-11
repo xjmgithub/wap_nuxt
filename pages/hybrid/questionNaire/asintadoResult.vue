@@ -183,7 +183,7 @@ export default {
             }
         },
         loadConfirm() {
-            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/questionNaire/asintado`, () => {
                 this.$confirm(
                     'Download StarTimes ON Now!',
                     () => {
