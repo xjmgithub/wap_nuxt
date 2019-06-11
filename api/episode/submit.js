@@ -34,7 +34,9 @@ export default function(req, res, next) {
             .toLocaleUpperCase()
         const percent = [getRandomInt(0, 50), getRandomInt(0, 50)]
         percent.push(100 - percent[0] - percent[1])
-        percent.sort()
+        percent.sort(function(a,b){
+            return a-b
+        })
         const asintado = []
         const got = []
         const avengers = []
