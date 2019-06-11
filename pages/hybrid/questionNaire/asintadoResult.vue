@@ -46,19 +46,19 @@
             <div class="comments">
                 <p>Comments</p>
                 <ul>
-                    <li @click="toVideo('vod')">
+                    <li @click="toVideo()">
                         <img src="~assets/img/naire/boy.png">
                         <div>
                             <img src="~assets/img/faq/Triangle.png">From Wildflower to Asintado, interesting series from Startimes ON.
                         </div>
                     </li>
-                    <li @click="toVideo('vod')">
+                    <li @click="toVideo()">
                         <img src="~assets/img/naire/girl.png">
                         <div>
                             <img src="~assets/img/faq/Triangle.png">Very very interest can't miss it for anything.
                         </div>
                     </li>
-                    <li @click="toVideo('vod')">
+                    <li @click="toVideo()">
                         <img src="~assets/img/naire/girl.png">
                         <div>
                             <img src="~assets/img/faq/Triangle.png">Great! I watch Asintado with my phone on StarTimes ON app!
