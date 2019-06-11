@@ -153,7 +153,7 @@ export default {
                     `${location.origin + location.pathname}?utm_source=charplay`,
                     'Characteristic Test',
                     'Who am I in Asintado, Avengers and Game of Thrones?',
-                    'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
+                    'http://cdn.startimestv.com/banner/asintado.jpg'
                 )
             } else {
                 this.$store.commit('SET_SHARE_STATE', true)
@@ -169,7 +169,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: 'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
+                    content: 'http://cdn.startimestv.com/banner/asintado.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }

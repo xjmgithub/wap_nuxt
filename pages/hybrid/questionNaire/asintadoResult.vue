@@ -207,7 +207,7 @@ export default {
                     `${window.location.origin + window.location.pathname}?ikey=${this.ikey}&pin=${this.$store.state.user.id}&utm_source=charplay`,
                     'Characteristic Test',
                     `I got ${this.result[0].name}, ${this.result[1].name} and ${this.result[2].name}!`,
-                    'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
+                    'http://cdn.startimestv.com/banner/asintado.jpg'
                 )
             } else {
                 this.$store.commit('SET_SHARE_STATE', true)
@@ -240,7 +240,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: 'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
+                    content: 'http://cdn.startimestv.com/banner/asintado.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }
