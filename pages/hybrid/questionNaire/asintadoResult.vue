@@ -205,7 +205,7 @@ export default {
                 })
                 shareInvite(
                     `${window.location.origin + window.location.pathname}?ikey=${this.ikey}&pin=${this.$store.state.user.id}&utm_source=charplay`,
-                    'Characteristic Test',
+                    '100% Precise Me!',
                     `I got ${this.result[0].name}, ${this.result[1].name} and ${this.result[2].name}!`,
                     'http://cdn.startimestv.com/banner/asintado.jpg'
                 )
@@ -220,7 +220,7 @@ export default {
             copyClipboard.call(this, window.location.href)
         },
         shareWithTwitter() {
-            shareByTwitter.call(this, 'Characteristic Test', window.location.href)
+            shareByTwitter.call(this, '100% Precise Me!', window.location.href)
         }
     },
     head() {
@@ -243,7 +243,7 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/asintado.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }
+                { name: 'og:title', property: 'og:title', content: '100% Precise Me!' }
             ]
         }
     }

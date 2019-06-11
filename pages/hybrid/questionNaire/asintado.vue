@@ -151,7 +151,7 @@ export default {
                 })
                 shareInvite(
                     `${location.origin + location.pathname}?utm_source=charplay`,
-                    'Characteristic Test',
+                    '100% Precise Me!',
                     'Who am I in Asintado, Avengers and Game of Thrones?',
                     'http://cdn.startimestv.com/banner/asintado.jpg'
                 )
@@ -172,7 +172,7 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/asintado.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }
+                { name: 'og:title', property: 'og:title', content: '100% Precise Me!' }
             ]
         }
     }
