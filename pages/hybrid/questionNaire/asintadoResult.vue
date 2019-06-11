@@ -179,11 +179,11 @@ export default {
                     window.location.href = 'startimes://player?vodId=' + vod
                 }
             } else if (this.appType <= 0) {
-                this.loadConfirm()
+                this.loadConfirm(vod)
             }
         },
-        loadConfirm() {
-            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/questionNaire/asintado`, () => {
+        loadConfirm(vod) {
+            callApp.call(this, `com.star.mobile.video.player.PlayerVodActivity?vodId=${vod}`, () => {
                 this.$confirm(
                     'Download StarTimes ON Now!',
                     () => {
