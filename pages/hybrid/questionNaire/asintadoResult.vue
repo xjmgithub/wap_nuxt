@@ -103,9 +103,21 @@ export default {
         return {
             appType: this.$store.state.appType || 0,
             programList: [],
+            from: this.$route.query.from || '',
             ikey: this.$route.query.ikey,
             sharePin: this.$route.query.pin,
             shareUrl: process.client ? `${location.href}&pin=${this.$store.state.user.id}&utm_source=charplay` : ''
+        }
+    },
+    computed: {
+        platform() {
+            if (this.appType == 1) {
+                return 'Android'
+            } else if (this.appType == 2) {
+                return 'iOS'
+            } else {
+                return 'web'
+            }
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -136,6 +148,12 @@ export default {
         }
     },
     mounted() {
+        this.sendEvLog({
+            category: 'Characteristic Test',
+            action: 'repage_show',
+            label: this.platform,
+            value: this.from
+        })
         this.getVideoList()
     },
     methods: {
@@ -179,11 +197,17 @@ export default {
         },
         toShare() {
             if (this.appType > 0) {
+                this.sendEvLog({
+                    category: 'Characteristic Test',
+                    action: 'share_click',
+                    label: `${this.platform}_end`,
+                    value: '',
+                })
                 shareInvite(
-                    `${window.location.href}&pin=${this.$store.state.user.id}&utm_source=charplay`,
+                    `${window.location.origin + window.location.pathname}?ikey=${this.ikey}&pin=${this.$store.state.user.id}&utm_source=charplay`,
                     'Characteristic Test',
                     `I got ${this.result[0].name}, ${this.result[1].name} and ${this.result[2].name}!`,
-                    ''
+                    'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
                 )
             } else {
                 this.$store.commit('SET_SHARE_STATE', true)
@@ -216,7 +240,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: ''
+                    content: 'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }

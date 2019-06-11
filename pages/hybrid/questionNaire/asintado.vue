@@ -51,7 +51,7 @@ export default {
         return {
             appType: this.$store.state.appType || 0,
             currIndex: 0,
-
+            from: this.$route.query.from || '',
             quesList: [
                 {
                     question: 'Are you a girl or a boy?',
@@ -87,6 +87,37 @@ export default {
             userGender: ''
         }
     },
+    computed: {
+        platform() {
+            if (this.appType == 1) {
+                return 'Android'
+            } else if (this.appType == 2) {
+                return 'iOS'
+            } else {
+                return 'web'
+            }
+        }
+    },
+    watch: {
+        currIndex(nv, ov) {
+            this.sendEvLog({
+                category: 'Characteristic Test',
+                action: 'qupage_show',
+                label: this.platform,
+                value: nv + 1,
+                from: this.from
+            })
+        }
+    },
+    mounted() {
+        this.sendEvLog({
+            category: 'Characteristic Test',
+            action: 'qupage_show',
+            label: this.platform,
+            value: 1,
+            from: this.from
+        })
+    },
     methods: {
         answer(sex) {
             const index = this.currIndex
@@ -100,7 +131,7 @@ export default {
                     .get(`/hybrid/api/episode/submit?sex=${this.userGender}`)
                     .then(res => {
                         if (res.data.code == 200) {
-                            this.$router.push(`/hybrid/questionNaire/asintadoResult?ikey=${res.data.data}`)
+                            this.$router.push(`/hybrid/questionNaire/asintadoResult?ikey=${res.data.data}&from=${this.from}`)
                         } else {
                             this.$alert('Try again later')
                         }
@@ -112,11 +143,17 @@ export default {
         },
         toShare() {
             if (this.appType > 0) {
+                this.sendEvLog({
+                    category: 'Characteristic Test',
+                    action: 'share_click',
+                    label: `${this.platform}_in`,
+                    value: '',
+                })
                 shareInvite(
-                    `${window.location.href}?utm_source=charplay`,
+                    `${location.origin + location.pathname}?utm_source=charplay`,
                     'Characteristic Test',
                     'Who am I in Asintado, Avengers and Game of Thrones?',
-                    ''
+                    'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
                 )
             } else {
                 this.$store.commit('SET_SHARE_STATE', true)
@@ -132,7 +169,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: ''
+                    content: 'https://static.startimestv.com/static/files/production/poster/2019/6/114124.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: 'Characteristic Test' }

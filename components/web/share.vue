@@ -40,13 +40,31 @@ export default {
             this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithFacebook() {
+            this.sendEvLog({
+                category: 'share',
+                action: 'share_click',
+                label: 'facebook',
+                value: this.shareUrl || window.location.href
+            })
             shareByFacebook.call(this, this.shareUrl || window.location.href)
         },
         copyLink() {
+            this.sendEvLog({
+                category: 'share',
+                action: 'share_click',
+                label: 'copylink',
+                value: this.shareUrl || window.location.href
+            })
             copyClipboard.call(this, this.shareUrl || window.location.href)
             this.$store.commit('SET_SHARE_STATE', false)
         },
         shareWithTwitter() {
+            this.sendEvLog({
+                category: 'share',
+                action: 'share_click',
+                label: 'twitter',
+                value: this.shareUrl || window.location.href
+            })
             shareByTwitter.call(this, document.title, this.shareUrl || window.location.href)
         }
     }
