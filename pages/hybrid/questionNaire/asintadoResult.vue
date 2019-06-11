@@ -32,7 +32,7 @@
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
             <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
-                <div class="play">KNOW WHO AM I IN ASTINTADO</div>
+                <div class="play">Get My Own Result</div>
             </nuxt-link>
             <div v-show="sharePin" class="line"/>
         </div>
