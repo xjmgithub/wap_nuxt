@@ -44,7 +44,7 @@
         </div>
         <mCard v-show="awardsCard" :title="'AWARD RULES'" class="card" @closeCard="awardsCard=false">
             <template v-slot:content>
-                <p>1. Activity time: 2019.5.29 00:00:00-2019.6.3 23:59:59</p>
+                <p>1. Activity Time: 2019-06-11 00:00:00 - 2019.06.19 23:59:59</p>
                 <p>2. Each user represents his own country, and each time he scores a goal, he scores 1 goal for the country.</p>
                 <p>3. There is no limit on the number of times per person per day, can always play during the event</p>
                 <p>4. After the event, 299 users in Champion country team will receive 1 FREE MAX VIP monthly coupon, 199 in the second country, 99 in the third country, and no more than 50 users in the 4th to 15th countries.</p>
@@ -166,7 +166,7 @@ export default {
                 .start()
         },
         getCountryList(init) {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=10`).then(res => {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=12`).then(res => {
                 if (res.data.code == 0) {
                     let result = []
                     const vlist = res.data.data
@@ -212,7 +212,7 @@ export default {
                             },
                             data: qs.stringify({
                                 candidate_id: this.candidate.candidate_id,
-                                vote_id: 10,
+                                vote_id: 12,
                                 weight: goal
                             })
                         }).then(res => {
