@@ -274,15 +274,15 @@ export default {
             }
             .logo {
                 color: #ffffff;
-                background: url('~assets/img/naire/group.png') no-repeat;
-                background-size: contain;
+                background: url('~assets/img/naire/group.png') right repeat-x;
+                background-size: cover;
                 width: 25%;
                 text-align: center;
                 height: 2.5rem;
                 line-height: 2.5rem;
                 font-weight: bold;
                 display: inline-block;
-                box-shadow: -11px 3px 10px rgba(0, 0, 0, 0.5);
+                // box-shadow: -11px 3px 10px rgba(0, 0, 0, 0.5);
             }
             .try {
                 float: right;
