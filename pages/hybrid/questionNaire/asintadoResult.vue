@@ -1,84 +1,86 @@
 <template>
     <div id="result">
-        <div class="character">
-            <div class="guide">
-                <p v-show="sharePin" class="title">Who Am I In These Series?</p>
-                <div class="logo">I AM...</div>
-                <nuxt-link v-show="!sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
-                    <span class="try">TRY AGAIN</span>
+        <div>
+            <div class="character">
+                <div class="guide">
+                    <p v-show="sharePin" class="title">Who Am I In These Series?</p>
+                    <div class="logo">I AM...</div>
+                    <nuxt-link v-show="!sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
+                        <span class="try">TRY AGAIN</span>
+                    </nuxt-link>
+                    <div v-show="sharePin" class="share">
+                        <img src="~assets/img/naire/ic_facebook_def.png" @click="shareWithFacebook">
+                        <img src="~assets/img/naire/ic_Twitter_def.png" @click="shareWithTwitter">
+                        <img src="~assets/img/naire/ic_copylink_def.png" @click="copyLink">
+                    </div>
+                </div>
+                <div class="atlas clearfix">
+                    <div v-for="(item,index) in result" :key="index" :class="{'asintado':item.fk_episode==1,'other':item.fk_episode!=1}">
+                        <p class="name">{{item.name}}</p>
+                        <p :class="{'episode':!sharePin}">{{item.fk_episode | getFkName}}</p>
+                        <img :src="item.avatar">
+                        <span v-show="sharePin" class="short">{{item.short_des}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div v-show="!sharePin" class="des">
+                    <p>My Charactersitics:</p>
+                    <span>{{rolePercent}}</span>
+                    <span v-for="(item,index) in result" :key="index">{{item.long_des}}</span>
+                </div>
+                <div v-show="!sharePin&&appType!=2" class="share" @click="toShare()">
+                    <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
+                </div>
+                <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
+                    <div class="play">Get My Own Result</div>
                 </nuxt-link>
-                <div v-show="sharePin" class="share">
-                    <img src="~assets/img/naire/ic_facebook_def.png" @click="shareWithFacebook">
-                    <img src="~assets/img/naire/ic_Twitter_def.png" @click="shareWithTwitter">
-                    <img src="~assets/img/naire/ic_copylink_def.png" @click="copyLink">
+                <div v-show="sharePin" class="line"/>
+            </div>
+            <div v-show="sharePin" class="asintado">
+                <div class="introduction">
+                    <img src="~assets/img/naire/poster.png">
+                    <div>
+                        <b>Asintado</b>( transl. Sharpshooter) is a 2018 Philippine action drama television series starring Julia Montes, Shaina Magdayao, Paulo Avelino and Aljur Abrenica
+                    </div>
+                </div>
+                <div class="comments">
+                    <p>Comments</p>
+                    <ul>
+                        <li @click="toVideo()">
+                            <img src="~assets/img/naire/boy.png">
+                            <div>
+                                <img src="~assets/img/faq/Triangle.png">From Wildflower to Asintado, interesting series from Startimes ON.
+                            </div>
+                        </li>
+                        <li @click="toVideo()">
+                            <img src="~assets/img/naire/girl.png">
+                            <div>
+                                <img src="~assets/img/faq/Triangle.png">Very very interest can't miss it for anything.
+                            </div>
+                        </li>
+                        <li @click="toVideo()">
+                            <img src="~assets/img/naire/girl.png">
+                            <div>
+                                <img src="~assets/img/faq/Triangle.png">Great! I watch Asintado with my phone on StarTimes ON app!
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="atlas clearfix">
-                <div v-for="(item,index) in result" :key="index" :class="{'asintado':item.fk_episode==1,'other':item.fk_episode!=1}">
-                    <p class="name">{{item.name}}</p>
-                    <p :class="{'episode':!sharePin}">{{item.fk_episode | getFkName}}</p>
-                    <img :src="item.avatar">
-                    <span v-show="sharePin" class="short">{{item.short_des}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div v-show="!sharePin" class="des">
-                <p>My Charactersitics:</p>
-                <span>{{rolePercent}}</span>
-                <span v-for="(item,index) in result" :key="index">{{item.long_des}}</span>
-            </div>
-            <div v-show="!sharePin&&appType!=2" class="share" @click="toShare()">
-                <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
-            </div>
-            <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
-                <div class="play">Get My Own Result</div>
-            </nuxt-link>
-            <div v-show="sharePin" class="line"/>
-        </div>
-        <div v-show="sharePin" class="asintado">
-            <div class="introduction">
-                <img src="~assets/img/naire/poster.png">
-                <div>
-                    <b>Asintado</b>( transl. Sharpshooter) is a 2018 Philippine action drama television series starring Julia Montes, Shaina Magdayao, Paulo Avelino and Aljur Abrenica
-                </div>
-            </div>
-            <div class="comments">
-                <p>Comments</p>
-                <ul>
-                    <li @click="toVideo()">
-                        <img src="~assets/img/naire/boy.png">
+            <div v-show="programList.length>0" class="clips">
+                <p>Highlights</p>
+                <ul class="clearfix">
+                    <li v-for="(item,index) in programList" :key="index" @click="toVideo(item.link_vod_code)">
                         <div>
-                            <img src="~assets/img/faq/Triangle.png">From Wildflower to Asintado, interesting series from Startimes ON.
+                            <img v-if="item.link_url" :src="cdnPic(item.link_url)">
+                            <img v-else src="~assets/img/web/def.png">
+                            <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
-                    </li>
-                    <li @click="toVideo()">
-                        <img src="~assets/img/naire/girl.png">
-                        <div>
-                            <img src="~assets/img/faq/Triangle.png">Very very interest can't miss it for anything.
-                        </div>
-                    </li>
-                    <li @click="toVideo()">
-                        <img src="~assets/img/naire/girl.png">
-                        <div>
-                            <img src="~assets/img/faq/Triangle.png">Great! I watch Asintado with my phone on StarTimes ON app!
-                        </div>
+                        <p class="title">{{item.description||item.name}}</p>
                     </li>
                 </ul>
             </div>
-        </div>
-        <div v-show="programList.length>0" class="clips">
-            <p>Highlights</p>
-            <ul class="clearfix">
-                <li v-for="(item,index) in programList" :key="index" @click="toVideo(item.link_vod_code)">
-                    <div>
-                        <img v-if="item.link_url" :src="cdnPic(item.link_url)">
-                        <img v-else src="~assets/img/web/def.png">
-                        <span class="show-time">{{item | formatShowTime}}</span>
-                    </div>
-                    <p class="title">{{item.description||item.name}}</p>
-                </li>
-            </ul>
         </div>
         <mShare :share-url="shareUrl"/>
     </div>
@@ -86,6 +88,7 @@
 <script>
 import mShare from '~/components/web/share.vue'
 import { shareInvite, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard, cdnPicSrc } from '~/functions/utils'
+import BScroll from 'better-scroll'
 export default {
     layout: 'base',
     filters: {
@@ -106,7 +109,8 @@ export default {
             from: this.$route.query.from || '',
             ikey: this.$route.query.ikey,
             sharePin: this.$route.query.pin,
-            shareUrl: process.client ? `${location.href}&pin=${this.$store.state.user.id}&utm_source=charplay` : ''
+            shareUrl: process.client ? `${location.href}&pin=${this.$store.state.user.id}&utm_source=charplay` : '',
+            bscroll: null
         }
     },
     computed: {
@@ -135,12 +139,12 @@ export default {
                     aven = ele.percent + '% ' + ele.name
                 }
             })
-
             return {
                 result: data,
                 rolePercent: `You're ${asin}, ${got}, ${aven}.`
             }
         } catch (e) {
+            console.log(e)
             return {
                 result: [],
                 rolePercent: ''
@@ -168,6 +172,28 @@ export default {
                     } else {
                         this.programList = res.data.data.slice(0, 4)
                     }
+                }
+                if (
+                    navigator.userAgent.indexOf('Android 6') > 0 ||
+                    navigator.userAgent.indexOf('Android 7') > 0 ||
+                    navigator.userAgent.indexOf('Android 8') > 0 ||
+                    navigator.userAgent.indexOf('Android 9') > 0
+                ) {
+                    document.querySelector('#result').style.height = '100vh'
+                    this.$nextTick(() => {
+                        this.bscroll = new BScroll('#result', {
+                            startY: 0,
+                            bounce: {
+                                top: false,
+                                bottom: false,
+                                left: false,
+                                right: false
+                            },
+                            click: true,
+                            tap: true,
+                            observeDOM: false
+                        })
+                    })
                 }
             })
         },
