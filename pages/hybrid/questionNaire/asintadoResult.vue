@@ -4,7 +4,7 @@
             <div class="guide">
                 <p v-show="sharePin" class="title">Who Am I In These Series?</p>
                 <div class="logo">I AM...</div>
-                <nuxt-link v-show="!sharePin" :to="`/hybrid/questionNaire/asintado`">
+                <nuxt-link v-show="!sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
                     <span class="try">TRY AGAIN</span>
                 </nuxt-link>
                 <div v-show="sharePin" class="share">
@@ -31,7 +31,7 @@
             <div v-show="!sharePin&&appType!=2" class="share" @click="toShare()">
                 <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
             </div>
-            <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
+            <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
                 <div class="play">Get My Own Result</div>
             </nuxt-link>
             <div v-show="sharePin" class="line"/>
@@ -201,7 +201,7 @@ export default {
                     category: 'Characteristic Test',
                     action: 'share_click',
                     label: `${this.platform}_end`,
-                    value: '',
+                    value: ''
                 })
                 shareInvite(
                     `${window.location.origin + window.location.pathname}?ikey=${this.ikey}&pin=${this.$store.state.user.id}&utm_source=charplay`,

@@ -131,7 +131,7 @@ export default {
                     .get(`/hybrid/api/episode/submit?sex=${this.userGender}`)
                     .then(res => {
                         if (res.data.code == 200) {
-                            this.$router.push(`/hybrid/questionNaire/asintadoResult?ikey=${res.data.data}&from=${this.from}`)
+                            this.$router.replace(`/hybrid/questionNaire/asintadoResult?ikey=${res.data.data}&from=${this.from}`)
                         } else {
                             this.$alert('Try again later')
                         }
