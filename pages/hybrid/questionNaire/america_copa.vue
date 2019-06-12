@@ -6,6 +6,14 @@
                 <span class="prize">VIEW PRIZE</span>
                 <span class="share">SHARE</span>
             </div>
+            <div v-for="(item,index) in quesList" :key="index" class="question">
+                <div>
+                    <span class="num">{{index+1}}.</span>
+                    {{item.question}}
+                </div>
+                <p @click="answer(1)">{{item.A}}</p>
+                <p @click="answer(0)">{{item.B}}</p>
+            </div>
             <div class="bot-down">
                 <div class="bot-down-rule">
                     <div class="dot">‧</div>
@@ -26,7 +34,40 @@ export default {
     layout: 'base',
 
     data() {
-        return {}
+        return {
+            quesList: [
+                {
+                    question: 'Are you a girl or a boy?',
+                    A: 'Girl',
+                    B: 'Boy'
+                },
+                {
+                    question: 'How close are you with your family?',
+                    A: 'We get along well',
+                    B: "It's...complicated"
+                },
+                {
+                    question: "If someone gets in your way, what's your first reaction?",
+                    A: 'I will push back hard to get what I want.',
+                    B: 'I will keep my temper well to find another way.'
+                },
+                {
+                    question: 'Who are you to your friends?',
+                    A: "I'm always loyal and helping them.",
+                    B: 'I always point out their problems.'
+                },
+                {
+                    question: 'What is your bigges fear?',
+                    A: 'Hurting someone.',
+                    B: 'Letting people down.'
+                },
+                {
+                    question: "Who's your better date choice?",
+                    A: 'Someone who is smart.',
+                    B: 'Someone who is good-looking.'
+                }
+            ]
+        }
     },
     mounted() {},
     methods: {
@@ -57,7 +98,7 @@ html {
 <style lang="less" scoped>
 #america {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     background: #042c85;
     .bg-pic {
         display: block;
@@ -68,12 +109,13 @@ html {
         background: rgba(3, 3, 3, 0.5);
         border-radius: 2px 2px 0px 0px;
         margin: 0 auto;
-        left:2%;
-        height: 100vh;
+        left: 2%;
+        min-height: 100vh;
         font-size: 0.95rem;
         border: 1px solid transparent;
         position: fixed;
-        top:40%;
+        top: 40%;
+        overflow: auto;
         .top {
             text-align: right;
             padding: 0.5rem 0;
@@ -93,7 +135,27 @@ html {
                 margin-left: 0.5rem;
             }
         }
-
+        .question {
+            padding: 1rem;
+            background: #FFFFFF;
+            margin-bottom:1.6rem;
+            .num {
+                color: #8451ae;
+                font-size: 1rem;
+                font-weight: bold;
+            }
+            p {
+                border-radius: 20px;
+                border: 1px solid #c9a23e;
+                padding: 0.8rem;
+                text-align: center;
+                margin: 0.8rem 0;
+                &:active {
+                    background: #ebc956;
+                    opacity: 0.6175;
+                }
+            }
+        }
         .bot-down {
             width: 100%;
             color: #ffffff;
