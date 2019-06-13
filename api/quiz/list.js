@@ -13,6 +13,7 @@ export default function(req, res, next) {
     const urlobj = new URL('http://localhost' + req.url)
     const query = qs.parse(urlobj.search.substr(1))
     const quizId = query.quizId
+    const userId = query.userId
 
     if (quizId) {
         connection.query(`SELECT * FROM quiz_match_question WHERE fk_match="${quizId}"`, function(error, questionList) {
@@ -68,33 +69,53 @@ export default function(req, res, next) {
                                         })
                                     )
                                 } else {
-                                    console.log(nums)
-                                    const numObj = {}
-                                    nums.forEach(item => {
-                                        numObj[item.fk_answer] = item.num
-                                    })
+                                    connection.query(`SELECT * FROM quiz_match_result WHERE user_id=${userId} AND fk_match=${quizId}`, function(
+                                        error,
+                                        user
+                                    ) {
+                                        if (error) {
+                                            res.end(
+                                                JSON.stringify({
+                                                    code: 104,
+                                                    message: 'search error',
+                                                    data: error
+                                                })
+                                            )
+                                        } else {
+                                            const numObj = {}
+                                            const userObj = {}
+                                            nums.forEach(item => {
+                                                numObj[item.fk_answer] = item.num
+                                            })
 
-                                    anwsers.forEach(item => {
-                                        item.count = numObj[item.id] || 0
-                                    })
+                                            user.forEach(item => {
+                                                userObj[item.fk_question] = item.fk_answer
+                                            })
 
-                                    questionList.forEach(item => {
-                                        const arr = []
-                                        anwsers.forEach(anwser => {
-                                            if (anwser.fk_question == item.id) {
-                                                arr.push(anwser)
-                                            }
-                                        })
-                                        item.anwsers = arr
-                                    })
+                                            anwsers.forEach(item => {
+                                                item.count = numObj[item.id] || 0
+                                            })
 
-                                    res.end(
-                                        JSON.stringify({
-                                            code: 200,
-                                            message: '123',
-                                            data: questionList
-                                        })
-                                    )
+                                            questionList.forEach(item => {
+                                                const arr = []
+                                                anwsers.forEach(anwser => {
+                                                    if (anwser.fk_question == item.id) {
+                                                        arr.push(anwser)
+                                                    }
+                                                })
+                                                item.guess = userObj[item.id] || ''
+                                                item.anwsers = arr
+                                            })
+
+                                            res.end(
+                                                JSON.stringify({
+                                                    code: 200,
+                                                    message: '123',
+                                                    data: questionList
+                                                })
+                                            )
+                                        }
+                                    })
                                 }
                             }
                         )
