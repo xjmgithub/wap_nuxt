@@ -14,14 +14,25 @@
             </div>
             <div class="box">
                 <div v-for="(item,index) in quesList" :key="index" class="question">
-                    <span class="state" :class="{'closed':item.state=='Waiting Result'||item.state=='not started','progress':item.state=='in progress','ended':item.state=='ended'}">{{item.state }}
+                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}">{{item.state | formatState}}
                         <span class="triangle" /></span>
-                    <span class="topic">{{index+1}}.{{item.question}}</span>
-                    <span class="joined">{{item.people | formatPeople}} people joined</span>
-                    <p @click="answer(1)">A. {{item.A}}</p>
-                    <p @click="answer(0)">B. {{item.B}}</p>
+                    <span class="topic">{{index+1}}.{{item.title}}</span>
+                    <span class="joined">{{item.total | formatPeople}} people joined</span>
+
+                    <div v-for="(a,i) in item.anwsers" :key="i" :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.userResult,'pa':item.userResult,}" @click="answer(a.label)">
+                        <p :style="{'width':(a.count/item.total) * 100 +'%'}" />
+                        <span class="vaule">{{a.label}}. {{a.value}}
+                            <img v-if="item.result==item.userResult && item.state=='ended'" src="~assets/img/naire/ic_right.png">
+                            <img v-else-if="item.result!=item.userResult && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
+                        </span>
+                        <span v-if="item.state=='unstart'" />
+                        <span v-else-if="item.state!='unstart' && item.total>0" class="percent">{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span>
+                        <span v-else class="percent">0%</span>
+                        <!-- <span v-if="item.total>0" class="percent">{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span> -->
+                    </div>
+
                     <span class="close">Close at
-                        <a href="#"> 2019.06.15 02:10:00</a>
+                        <a href="#" :class="{'close':item.state=='closed' || item.state=='ended'}">{{item.end_time | formatTime}}</a>
                     </span>
                 </div>
 
@@ -63,57 +74,61 @@ export default {
     filters: {
         formatPeople(val) {
             return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+        },
+        formatState(val) {
+            const ss =
+                val == 'closed'
+                    ? 'Waiting Result'
+                    : val == 'unstart' ? 'Not Start' : val == 'progress' ? 'In Progress' : val == 'ended' ? 'ended' : ''
+            return ss
+        },
+        formatTime(val) {
+            const t = new Date(val)
+            const yy = t.getFullYear()
+            const mm = t.getMonth() + 1 < 10 ? '0' + (t.getMonth() + 1) : t.getMonth() + 1
+            const dd = t.getDate() < 10 ? '0' + t.getDate() : t.getDate()
+            const hh = t.getHours() < 10 ? '0' + t.getHours() : t.getHours()
+            const mi = t.getMinutes() < 10 ? '0' + t.getMinutes() : t.getMinutes()
+            const ss = t.getSeconds() < 10 ? '0' + t.getSeconds() : t.getSeconds()
+            return ' ' + yy + '.' + mm + '.' + dd + ' ' + hh + ':' + mi + ':' + ss
         }
     },
     data() {
         return {
             showRule: false,
             showPrize: false,
-            quesList: [
-                {
-                    question: 'Are you a girl or a boy?',
-                    people: 7564,
-                    state: 'not started',
-                    A: 'Girl',
-                    B: 'Boy'
-                },
-                {
-                    question: 'How close are you with your family?',
-                    people: 22331,
-                    state: 'in progress',
-                    A: 'We get along well',
-                    B: "It's...complicated"
-                },
-                {
-                    question: "If someone gets in your way, what's your first reaction?",
-                    people: 234,
-                    state: 'In progress',
-                    A: 'I will push back hard to get what I want.',
-                    B: 'I will keep my temper well to find another way.'
-                },
-                {
-                    question: 'Who are you to your friends?',
-                    people: 5634,
-                    state: 'Waiting Result',
-                    A: "I'm always loyal and helping them.",
-                    B: 'I always point out their problems.'
-                },
-                {
-                    question: 'What is your bigges fear?',
-                    people: 42323,
-                    state: 'ended',
-                    A: 'Hurting someone.',
-                    B: 'Letting people down.'
-                },
-                {
-                    question: "Who's your better date choice?",
-                    people: 54787,
-                    state: 'ended',
-                    A: 'Someone who is smart.',
-                    B: 'Someone who is good-looking.'
-                }
-            ]
+            userId: this.$store.state.user.id,
+            quesList: []
         }
+    },
+    mounted() {
+        this.getQuestion()
+    },
+    methods: {
+        getQuestion() {
+            this.$axios
+                .get(`/hybrid/api/quiz/list?quizId=1&userid=${this.userId}`)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        const data = res.data.data
+                        data.forEach(ques => {
+                            let total = 0
+                            ques.anwsers.forEach(ans => {
+                                total = total + ans.count
+                            })
+                            ques.total = total
+                        })
+                        this.quesList = res.data.data
+                        console.log(this.quesList)
+                    } else {
+                        this.$alert('Try again later')
+                    }
+                })
+                .catch(() => {
+                    this.$alert('Try again later')
+                })
+        },
+        answer(ans) {}
     },
     head() {
         return {
@@ -144,7 +159,6 @@ html {
         margin: 0 auto;
         left: 2%;
         padding: 0 2%;
-        min-height: 100vh;
         border: 1px solid transparent;
         position: fixed;
         top: 40%;
@@ -179,7 +193,7 @@ html {
         .box {
             height: 60vh;
             overflow-y: scroll;
-            padding: 1rem 0 7rem;
+            padding: 1rem 0 3rem;
             .question {
                 padding: 1rem;
                 background: #ffffff;
@@ -201,6 +215,9 @@ html {
                         color: #999999;
                         a {
                             color: #62a6e6;
+                            &.close {
+                                color: #999999;
+                            }
                         }
                     }
                 }
@@ -215,7 +232,7 @@ html {
                 }
                 .state {
                     color: #ffffff;
-                    width: 6rem;
+                    width: 8rem;
                     height: 2rem;
                     line-height: 2rem;
                     padding: 0 0.5rem;
@@ -242,11 +259,52 @@ html {
                         }
                     }
                 }
-                p {
+                div {
                     border-radius: 2px;
-                    padding: 0.8rem;
                     background: #f5f5f5;
                     margin: 0.8rem 0;
+                    position: relative;
+                    height: 2.2rem;
+                    line-height: 2.2rem;
+                    font-size: 0.95rem;
+                    &.unstart {
+                        p {
+                            background: none;
+                        }
+                    }
+                    &.pn {
+                        p {
+                            background: #e3e3e3;
+                        }
+                    }
+                    &.pa {
+                        background: #d5ecfa;
+                        p {
+                            background: #58bbf7;
+                        }
+                    }
+                    p {
+                        height: 100%;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                    }
+                    .vaule {
+                        position: absolute;
+                        top: 0;
+                        left: 0.5rem;
+                        color: #333333;
+                        img {
+                            width: 1rem;
+                            margin-left: .8rem;
+                        }
+                    }
+                    .percent {
+                        position: absolute;
+                        top: 0;
+                        right: 0.5rem;
+                        color: #999999;
+                    }
                 }
             }
         }
