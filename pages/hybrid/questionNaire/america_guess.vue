@@ -3,8 +3,8 @@
         <div class="top">
             <img src="~assets/img/naire/bg_guess.png" class="bg-pic">
             <div>
-                <p>EXCLUSIVE ON STARTIMES</p>
-                <span>GUESS NOW</span>
+                <span><img src="~assets/img/naire/ic_crown.png" class="crown"> EXCLUSIVE ON STARTIMES</span>
+                <p>GUESS NOW</p>
             </div>
         </div>
         <div class="bot-down">
@@ -63,20 +63,26 @@ html {
         }
         div {
             position: absolute;
-            bottom: 0;
+            bottom: 1rem;
             width: 100%;
-            p {
-                color: #ffffff;
-                margin-bottom: 0.8rem;
-            }
             span {
-                display: block;
+                color: #ffffff;
+                margin-bottom: 0.5rem;
+                position: relative;
+                img {
+                    width: 1rem;
+                    position: absolute;
+                    left: -0.8rem;
+                    top: -0.4rem;
+                }
+            }
+            p {
                 background: #fffefe;
                 color: #204db2;
                 height: 2.5rem;
                 line-height: 2.5rem;
                 width: 45%;
-                margin: 0 auto;
+                margin: 0.8rem auto 0;
                 border-radius: 2px;
             }
         }
@@ -85,7 +91,6 @@ html {
         width: 90%;
         margin: 0 auto;
         color: #ffffff;
-        margin-top: 0.8rem;
         font-size: 0.95rem;
         .bot-down-rule {
             background: rgba(255, 255, 255, 0.2);
