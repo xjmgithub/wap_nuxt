@@ -35,7 +35,7 @@
                 <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                     <div class="play">Get My Own Result</div>
                 </nuxt-link>
-                <div v-show="sharePin" class="line"/>
+                <div v-show="sharePin" class="line" />
             </div>
             <div v-show="sharePin" class="asintado">
                 <div class="introduction">
@@ -82,7 +82,7 @@
                 </ul>
             </div>
         </div>
-        <mShare :share-url="shareUrl"/>
+        <mShare :share-url="shareUrl" />
     </div>
 </template>
 <script>
@@ -282,7 +282,7 @@ export default {
 </script>
 <style lang="less" scoped>
 #result {
-    background: #9c9187;
+    background: -webkit-linear-gradient(270deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
     min-height: 100vh;
     width: 100%;
     padding-bottom: 2rem;
@@ -348,6 +348,7 @@ export default {
                 font-size: 1.25rem;
                 display: block;
                 color: #dfa71a;
+                text-shadow: 0px 3px 4px rgba(0, 0, 0, 0.5);
             }
             .asintado {
                 width: 50%;
@@ -375,6 +376,7 @@ export default {
                 font-weight: bold;
                 font-size: 1.2rem;
                 color: rgba(191, 143, 22, 1);
+                text-shadow: 0px 3px 4px rgba(0, 0, 0, 0.5);
             }
             span {
                 color: #ffffff;
@@ -394,7 +396,7 @@ export default {
             height: 2.5rem;
             line-height: 2.5rem;
             box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5);
-            background: rgba(235, 202, 77, 1);
+            background: -webkit-linear-gradient(270deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
             img {
                 width: 1.5rem;
             }
@@ -406,8 +408,8 @@ export default {
             width: 90%;
             height: 2px;
             margin: 0 auto 1.5rem;
-            background: linear-gradient(
-                270deg,
+            background: -webkit-linear-gradient(
+                360deg,
                 rgba(131, 86, 23, 0) 0%,
                 rgba(218, 178, 79, 1) 13%,
                 rgba(224, 201, 158, 1) 29%,
