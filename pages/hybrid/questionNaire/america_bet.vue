@@ -3,7 +3,7 @@
         <img src="~assets/img/naire/bg_bet.png" class="bg-pic">
         <div class="contain">
             <div class="top">
-                <p class="prize">
+                <p  @click="showRule=true" class="prize">
                     <img src="~assets/img/naire/ic_prize.png">
                     <span>VIEW PRIZE</span>
                 </p>
@@ -24,18 +24,21 @@
                         <a href="#"> 2019.06.15 02:10:00</a>
                     </span>
                 </div>
-                <div class="bot-down">
-                    <div class="bot-down-rule">
-                        <div class="dot">‧</div>
-                        <p>You will get free VIP coupon if you select the correct answer to each question.</p>
-                        <div class="dot">‧</div>
-                        <p>If you select all correct answers of questions today, you would get a free 1-day MAX VIP!</p>
-                        <div class="dot">‧</div>
-                        <p>With the VIP, you will be able to watch more wonderful contents when they start.</p>
-                    </div>
-                    <div class="bot-down-btn" @click="share">Click here and share to your friends</div>
-                </div>
+
             </div>
+        </div>
+        <div v-show="showRule==true" class="card-layer" @click="showRule=false" />
+        <div v-show="showRule==true" class="card-rule">
+            <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
+            <div class="rule">
+                <div class="dot">‧</div>
+                <p>You will get free VIP coupon if you select the correct answer to each question.</p>
+                <div class="dot">‧</div>
+                <p>If you select all correct answers of questions today, you would get a free 1-day MAX VIP!</p>
+                <div class="dot">‧</div>
+                <p>With the VIP, you will be able to watch more wonderful contents when they start.</p>
+            </div>
+
         </div>
     </div>
 </template>
@@ -54,6 +57,7 @@ export default {
     },
     data() {
         return {
+            showRule: false,
             quesList: [
                 {
                     question: 'Are you a girl or a boy?',
@@ -134,6 +138,7 @@ html {
     .bg-pic {
         display: block;
         width: 100%;
+        z-index: 100;
     }
     .contain {
         width: 96%;
@@ -169,7 +174,7 @@ html {
                 font-weight: bold;
                 border-radius: 2px;
                 margin-left: 0.5rem;
-                span{
+                span {
                     vertical-align: middle;
                 }
             }
@@ -248,36 +253,44 @@ html {
                 }
             }
         }
-
-        .bot-down {
-            width: 100%;
-            color: #ffffff;
-            margin-top: 0.8rem;
-            font-size: 0.95rem;
-            .bot-down-rule {
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 2px;
-                padding: 0.8rem 0.8rem 0.1rem;
-            }
+    }
+    .card-layer {
+        width: 100%;
+        height: 100%;
+        min-height: 100vh;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.3);
+    }
+    .card-rule {
+        font-size: 0.95rem;
+        z-index: 1001;
+        color: #333333;
+        width: 75%;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -12rem;
+        margin-left: -37.5%;
+        img {
+            width: 2rem;
+            float: right;
+        }
+        .rule {
+            padding: 1rem 0.8rem 0.5rem;
+            background: #ffffff;
+            margin-top:3rem;
+            border-radius: 4px;
             p {
-                margin: 0 0 0.8rem 0.8rem;
+                margin: 0 0 0.8rem 1rem;
             }
             .dot {
                 font-size: 2.5rem;
                 height: 2.5rem;
                 line-height: 1rem;
                 float: left;
-            }
-            .bot-down-btn {
-                background: linear-gradient(225deg, rgba(241, 175, 31, 1) 0%, rgba(240, 118, 41, 1) 100%);
-                border-radius: 2px;
-                width: 85%;
-                margin: 0 auto;
-                text-align: center;
-                font-size: 0.95rem;
-                height: 2.5rem;
-                line-height: 2.5rem;
-                margin-top: 1rem;
             }
         }
     }
