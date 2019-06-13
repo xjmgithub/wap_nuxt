@@ -18,7 +18,7 @@
                     <div v-for="(item,index) in result" :key="index" :class="{'asintado':item.fk_episode==1,'other':item.fk_episode!=1}">
                         <p class="name">{{item.name}}</p>
                         <p :class="{'episode':!sharePin}">{{item.fk_episode | getFkName}}</p>
-                        <img :src="item.avatar">
+                        <img :src="item.avatar" @load="refreshScroll">
                         <span v-show="sharePin" class="short">{{item.short_des}}</span>
                     </div>
                 </div>
@@ -144,7 +144,6 @@ export default {
                 rolePercent: `You're ${asin}, ${got}, ${aven}.`
             }
         } catch (e) {
-            console.log(e)
             return {
                 result: [],
                 rolePercent: ''
@@ -163,6 +162,12 @@ export default {
     methods: {
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
+        },
+        refreshScroll() {
+            this.bscroll &&
+                this.$nextTick(() => {
+                    this.bscroll.refresh()
+                })
         },
         getVideoList() {
             this.$axios.get(`/voting/v1/program?vote_id=11`).then(res => {
