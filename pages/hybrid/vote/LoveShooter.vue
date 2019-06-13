@@ -108,10 +108,7 @@ export default {
                     if (res.data.code === 0) {
                         // this.getAllList()
                         
-                        console.log(this.leftVote)
                         this.leftVote--
-                        console.log(this.leftVote)
-
                         this.$toast('Vote success' + ':' + this.leftVote)
                     } else {
                         this.$toast(res.data.message)

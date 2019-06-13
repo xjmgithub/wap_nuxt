@@ -33,11 +33,7 @@ export default {
     },
 
     // Plugins to load before mounting the App
-    plugins: [
-        { src: '~plugins/analysis.js', ssr: false },
-        { src: '~plugins/axios.js', ssr: false },
-        { src: '~plugins/others.js', ssr: false }
-    ],
+    plugins: [{ src: '~plugins/analysis.js', ssr: false }, { src: '~plugins/axios.js', ssr: false }, { src: '~plugins/others.js', ssr: false }],
 
     modules: [
         // Doc: https://github.com/nuxt-community/axios-module#usage
@@ -77,7 +73,9 @@ export default {
         { path: '/hybrid/api/twitter/oauth/request_token', handler: '~/api/twitter/request_token.js' },
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' },
         { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' },
-        { path: '/hybrid/vote/FilmFestival', handler: '~/api/film/index.js' }
+        { path: '/hybrid/vote/FilmFestival', handler: '~/api/film/index.js' },
+        { path: '/hybrid/api/episode/submit', handler: '~/api/episode/submit.js' },
+        { path: '/hybrid/api/episode/result', handler: '~/api/episode/result.js' }
     ],
     hooks: {
         listen(server) {

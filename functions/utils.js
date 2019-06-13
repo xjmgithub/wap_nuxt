@@ -76,7 +76,6 @@ export const shareByTwitter = function(text, link) {
 }
 
 export const copyClipboard = function(text) {
-    
     const input = document.createElement('input')
     input.setAttribute('readOnly', true)
     document.body.appendChild(input)
@@ -85,7 +84,7 @@ export const copyClipboard = function(text) {
     const successful = document.execCommand('copy')
     document.body.removeChild(input)
     window.getSelection().removeAllRanges()
-    
+
     if (successful) {
         this.$toast(this.$store.state.lang.officialwebsitemobile_copylink_copied)
     } else {
@@ -347,7 +346,7 @@ export const cdnPicSrc = function(src) {
         if (app <= 0) {
             return src.replace('http:', 'https:')
         } else {
-            return src
+            return src.replace('https:', 'http:')
         }
     } else {
         return ''
