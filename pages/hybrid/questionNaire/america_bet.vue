@@ -3,11 +3,11 @@
         <img src="~assets/img/naire/bg_bet.png" class="bg-pic">
         <div class="contain">
             <div class="top">
-                <p  @click="showRule=true" class="prize">
+                <p class="prize" @click="showRule=true">
                     <img src="~assets/img/naire/ic_prize.png">
                     <span>VIEW PRIZE</span>
                 </p>
-                <p class="share">
+                <p class="share" @click="showPrize=true">
                     <img src="~assets/img/naire/ic_share.png">
                     <span>SHARE</span>
                 </p>
@@ -27,7 +27,7 @@
 
             </div>
         </div>
-        <div v-show="showRule==true" class="card-layer" @click="showRule=false" />
+        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false" />
         <div v-show="showRule==true" class="card-rule">
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
             <div class="rule">
@@ -38,26 +38,37 @@
                 <div class="dot">‧</div>
                 <p>With the VIP, you will be able to watch more wonderful contents when they start.</p>
             </div>
-
+        </div>
+        <div v-show="showPrize==true" class="card-prize">
+            <img src="~assets/img/naire/ic_close.png" class="close" @click="showPrize=false">
+            <div class="prize">
+                <img src="~assets/img/naire/bg_popup.png" class="bg" @click="showPrize=false">
+                <div class="receive">
+                    <img src="~assets/img/naire/Daenerys.png" class="photo">
+                    <p class="user">Daenerys</p>
+                    <p class="congra">Congratulations!</p>
+                    <p class="total">In total 147233 people won this guess, and you will get:</p>
+                    <img src="~assets/img/naire/ic_MAX.png" class="max">
+                    <p class="vip">MAX VIP</p>
+                    <div class="btn">CHECK PRIZE</div>
+                    <span>How to redeem my prize?</span>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <script>
-import { shareInvite } from '~/functions/utils'
 export default {
     layout: 'base',
     filters: {
         formatPeople(val) {
             return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
         }
-        // ,
-        // formatstate(val) {
-        //     return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
-        // }
     },
     data() {
         return {
             showRule: false,
+            showPrize: false,
             quesList: [
                 {
                     question: 'Are you a girl or a boy?',
@@ -104,20 +115,6 @@ export default {
             ]
         }
     },
-    mounted() {},
-    methods: {
-        getCountryList(init) {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=12`).then(res => {})
-        },
-        share() {
-            shareInvite(
-                `${window.location.origin}/hybrid/lands/soccercup?utm_source=startimes_app&utm_medium=activity&utm_campaign=soccercup1`,
-                'StarTimes ON Cup - Crazy Freekick',
-                `Join us as a Country Hero and score for the Team ${this.country.name} to win the cup.`,
-                `${window.location.origin}/res_nuxt/img/soccercup.png`
-            )
-        }
-    },
     head() {
         return {
             title: 'Crazy Bet'
@@ -157,7 +154,7 @@ html {
             p {
                 display: inline-block;
             }
-            padding: 0.5rem 0;
+            padding-top: 0.5rem;
             img {
                 width: 1rem;
             }
@@ -170,7 +167,7 @@ html {
             .share {
                 color: #ffffff;
                 background: #2fb2f8;
-                padding: 0.2rem;
+                padding: 0.3rem 0.5rem;
                 font-weight: bold;
                 border-radius: 2px;
                 margin-left: 0.5rem;
@@ -281,7 +278,7 @@ html {
         .rule {
             padding: 1rem 0.8rem 0.5rem;
             background: #ffffff;
-            margin-top:3rem;
+            margin-top: 3rem;
             border-radius: 4px;
             p {
                 margin: 0 0 0.8rem 1rem;
@@ -291,6 +288,76 @@ html {
                 height: 2.5rem;
                 line-height: 1rem;
                 float: left;
+            }
+        }
+    }
+    .card-prize {
+        font-size: 0.95rem;
+        z-index: 1001;
+        width: 80%;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -12rem;
+        margin-left: -40%;
+        text-align: right;
+        .close {
+            width: 2rem;
+            margin-right: 1rem;
+        }
+        .prize {
+            font-size: 0.95rem;
+            position: relative;
+            text-align: center;
+            .bg {
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .receive {
+                position: absolute;
+                width: 80%;
+                left: 10%;
+                /* bottom: -20rem; */
+                margin-top: 3rem;
+                .photo {
+                    width: 3rem;
+                }
+                .user {
+                    color: #ffffff;
+                    margin-bottom: 0.5rem;
+                }
+                .congra {
+                    color: #ffbe19;
+                    font-weight: bold;
+                    font-size: 1rem;
+                    margin-bottom: 0.5rem;
+                }
+                .total,
+                .vip {
+                    color: #ffffff;
+                    margin-bottom: 0.5rem;
+                }
+                .max {
+                    width: 3rem;
+                    margin-bottom: 0.5rem;
+                }
+                .btn {
+                    width: 65%;
+                    color: #248c6f;
+                    font-weight: bold;
+                    background: #ffffff;
+                    border-radius: 2px;
+                    margin: 0 auto;
+                    margin-bottom: 0.5rem;
+                    height: 2.2rem;
+                    line-height: 2.2rem;
+                }
+                span {
+                    color: #0d4e3c;
+                    text-decoration: underline;
+                }
             }
         }
     }
