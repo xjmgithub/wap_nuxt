@@ -35,7 +35,7 @@
                 <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                     <div class="play">Get My Own Result</div>
                 </nuxt-link>
-                <div v-show="sharePin" class="line" />
+                <div v-show="sharePin" class="line"/>
             </div>
             <div v-show="sharePin" class="asintado">
                 <div class="introduction">
@@ -82,7 +82,7 @@
                 </ul>
             </div>
         </div>
-        <mShare :share-url="shareUrl" />
+        <mShare :share-url="shareUrl"/>
     </div>
 </template>
 <script>
@@ -125,9 +125,16 @@ export default {
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
-        $axios.setHeader('token', store.state.token)
         try {
-            const { data } = await $axios.get(`/hybrid/api/episode/result?ikey=${route.query.ikey}`)
+            let data = {}
+            if (process.client) {
+                const res = await $axios.get(`/hybrid/api/episode/result?ikey=${route.query.ikey}`)
+                data = res.data
+            } else {
+                const res = await $axios.get(`http://localhost:3000/hybrid/api/episode/result?ikey=${route.query.ikey}`)
+                data = res.data
+            }
+
             const result = Object(data)
             let asin, got, aven
             result.forEach(ele => {
