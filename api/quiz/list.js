@@ -110,7 +110,7 @@ export default function(req, res, next) {
                                             res.end(
                                                 JSON.stringify({
                                                     code: 200,
-                                                    message: '123',
+                                                    message: 'success',
                                                     data: questionList
                                                 })
                                             )
