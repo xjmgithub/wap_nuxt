@@ -14,7 +14,7 @@
             </div>
             <div class="box">
                 <div v-for="(item,index) in quesList" :key="index" class="question">
-                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='not started','progress':item.state=='in progress','ended':item.state=='ended'}">{{item.state }}
+                    <span class="state" :class="{'closed':item.state=='Waiting Result'||item.state=='not started','progress':item.state=='in progress','ended':item.state=='ended'}">{{item.state }}
                         <span class="triangle" /></span>
                     <span class="topic">{{index+1}}.{{item.question}}</span>
                     <span class="joined">{{item.people | formatPeople}} people joined</span>
@@ -32,11 +32,11 @@
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
             <div class="rule">
                 <div class="dot">‧</div>
-                <p>You will get free VIP coupon if you select the correct answer to each question.</p>
+                <p>There are several questions in each match day, the more questions you guess correctly, the more prizes you will get;</p>
                 <div class="dot">‧</div>
-                <p>If you select all correct answers of questions today, you would get a free 1-day MAX VIP!</p>
+                <p>If you guess the correct answer to some of the questions in a match day, you will get a discount coupon. </p>
                 <div class="dot">‧</div>
-                <p>With the VIP, you will be able to watch more wonderful contents when they start.</p>
+                <p>If you guess the correct answer to all questions in a match day, you will get a 1-day FREE VIP coupon.</p>
             </div>
         </div>
         <div v-show="showPrize==true" class="card-prize">
@@ -47,9 +47,9 @@
                     <img src="~assets/img/naire/Daenerys.png" class="photo">
                     <p class="user">Daenerys</p>
                     <p class="congra">Congratulations!</p>
-                    <p class="total">In total 147233 people won this guess, and you will get:</p>
+                    <p class="total">In total 147233 people won this guess, and you have got:</p>
                     <img src="~assets/img/naire/ic_MAX.png" class="max">
-                    <p class="vip">MAX VIP</p>
+                    <p class="vip">Already sent to your account</p>
                     <div class="btn">CHECK PRIZE</div>
                     <span>How to redeem my prize?</span>
                 </div>
@@ -87,14 +87,14 @@ export default {
                 {
                     question: "If someone gets in your way, what's your first reaction?",
                     people: 234,
-                    state: 'in progress',
+                    state: 'In progress',
                     A: 'I will push back hard to get what I want.',
                     B: 'I will keep my temper well to find another way.'
                 },
                 {
                     question: 'Who are you to your friends?',
                     people: 5634,
-                    state: 'closed',
+                    state: 'Waiting Result',
                     A: "I'm always loyal and helping them.",
                     B: 'I always point out their problems.'
                 },

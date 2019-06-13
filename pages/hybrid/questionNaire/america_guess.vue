@@ -10,11 +10,11 @@
         <div class="bot-down">
             <div class="bot-down-rule">
                 <div class="dot">‧</div>
-                <p>You will get free VIP coupon if you select the correct answer to each question.</p>
+                <p>There are several questions in each match day, the more questions you guess correctly, the more prizes you will get;</p>
                 <div class="dot">‧</div>
-                <p>If you select all correct answers of questions today, you would get a free 1-day MAX VIP!</p>
+                <p>If you guess the correct answer to some of the questions in a match day, you will get a discount coupon. </p>
                 <div class="dot">‧</div>
-                <p>With the VIP, you will be able to watch more wonderful contents when they start.</p>
+                <p>If you guess the correct answer to all questions in a match day, you will get a 1-day FREE VIP coupon.</p>
             </div>
             <div class="bot-down-btn" @click="share">Click here and share to your friends</div>
         </div>
