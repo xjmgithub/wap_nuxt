@@ -16,12 +16,7 @@
                 </div>
                 <div class="progress">
                     <div class="line">
-                        <div
-                            v-for="(item,index) in quesList.length"
-                            :key="index"
-                            :class="{'now':index==currIndex}"
-                            :style="{left:100/(quesList.length-1)*index-2+'%'}"
-                        >
+                        <div v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-2+'%'}">
                             <img src="~assets/img/naire/ic-point.png">
                             <span/>
                         </div>
@@ -147,7 +142,7 @@ export default {
                     category: 'Characteristic Test',
                     action: 'share_click',
                     label: `${this.platform}_in`,
-                    value: '',
+                    value: ''
                 })
                 shareInvite(
                     `${location.origin + location.pathname}?utm_source=charplay`,
@@ -180,8 +175,9 @@ export default {
 </script>
 <style lang="less" scoped>
 #asintado {
-    background:#9c9187;
+    background: #9c9187;
     min-height: 100vh;
+    padding-bottom: 5rem;
     .character {
         background: url('~assets/img/naire/background2.png') no-repeat top center;
         background-size: cover;
