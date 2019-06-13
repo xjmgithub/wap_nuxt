@@ -32,8 +32,10 @@ export default function(req, res, next) {
             .toString(36)
             .substr(2)
             .toLocaleUpperCase()
-        const percent = [getRandomInt(0, 50), getRandomInt(0, 50)]
-        percent.push(100 - percent[0] - percent[1])
+        
+        const firstPercent = getRandomInt(20, 60)
+        const secondPercent = getRandomInt(20, Math.ceil((100-firstPercent)/2))
+        const percent = [firstPercent, secondPercent,100-firstPercent-secondPercent]
         percent.sort(function(a,b){
             return a-b
         })

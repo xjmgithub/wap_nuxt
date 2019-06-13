@@ -16,12 +16,7 @@
                 </div>
                 <div class="progress">
                     <div class="line">
-                        <div
-                            v-for="(item,index) in quesList.length"
-                            :key="index"
-                            :class="{'now':index==currIndex}"
-                            :style="{left:100/(quesList.length-1)*index-2+'%'}"
-                        >
+                        <div v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-2+'%'}">
                             <img src="~assets/img/naire/ic-point.png">
                             <span/>
                         </div>
@@ -147,7 +142,7 @@ export default {
                     category: 'Characteristic Test',
                     action: 'share_click',
                     label: `${this.platform}_in`,
-                    value: '',
+                    value: ''
                 })
                 shareInvite(
                     `${location.origin + location.pathname}?utm_source=charplay`,
@@ -180,8 +175,9 @@ export default {
 </script>
 <style lang="less" scoped>
 #asintado {
-    background: linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
+    background: -webkit-linear-gradient(270deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
     min-height: 100vh;
+    padding-bottom: 5rem;
     .character {
         background: url('~assets/img/naire/background2.png') no-repeat top center;
         background-size: cover;
@@ -190,9 +186,6 @@ export default {
             font-size: 1.3rem;
             text-align: center;
             text-shadow: 0px 3px 4px rgba(0, 0, 0, 1);
-            // background: linear-gradient(to bottom, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
-            // background-clip: text;
-            // -webkit-text-fill-color: transparent;
             font-weight: bold;
             line-height: 4rem;
         }
@@ -293,7 +286,7 @@ export default {
         color: #63428a;
         font-size: 0.95rem;
         vertical-align: middle;
-        background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
+        background: -webkit-linear-gradient(270deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
         border-radius: 20px;
         font-weight: bold;
         margin-top: 1rem;
