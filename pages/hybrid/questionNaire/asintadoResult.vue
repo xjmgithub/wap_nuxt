@@ -18,7 +18,7 @@
                     <div v-for="(item,index) in result" :key="index" :class="{'asintado':item.fk_episode==1,'other':item.fk_episode!=1}">
                         <p class="name">{{item.name}}</p>
                         <p :class="{'episode':!sharePin}">{{item.fk_episode | getFkName}}</p>
-                        <img :src="item.avatar">
+                        <img :src="item.avatar" @load="refreshScroll">
                         <span v-show="sharePin" class="short">{{item.short_des}}</span>
                     </div>
                 </div>
@@ -144,7 +144,6 @@ export default {
                 rolePercent: `You're ${asin}, ${got}, ${aven}.`
             }
         } catch (e) {
-            console.log(e)
             return {
                 result: [],
                 rolePercent: ''
@@ -163,6 +162,12 @@ export default {
     methods: {
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
+        },
+        refreshScroll() {
+            this.bscroll &&
+                this.$nextTick(() => {
+                    this.bscroll.refresh()
+                })
         },
         getVideoList() {
             this.$axios.get(`/voting/v1/program?vote_id=11`).then(res => {
@@ -277,7 +282,7 @@ export default {
 </script>
 <style lang="less" scoped>
 #result {
-    background:#9c9187;
+    background: #9c9187;
     min-height: 100vh;
     width: 100%;
     padding-bottom: 2rem;
@@ -342,7 +347,7 @@ export default {
                 font-weight: bold;
                 font-size: 1.25rem;
                 display: block;
-                color:#dfa71a;
+                color: #dfa71a;
             }
             .asintado {
                 width: 50%;
@@ -369,7 +374,7 @@ export default {
                 margin-bottom: 0.5rem;
                 font-weight: bold;
                 font-size: 1.2rem;
-                color:rgba(191, 143, 22, 1);
+                color: rgba(191, 143, 22, 1);
             }
             span {
                 color: #ffffff;
