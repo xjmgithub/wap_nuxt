@@ -5,9 +5,9 @@
                 <div class="guide">
                     <p v-show="sharePin" class="title">Who Am I In These Series?</p>
                     <div class="logo">I AM...</div>
-                    <nuxt-link v-show="!sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
+                    <a v-show="!sharePin" href="javascript:void(0)" @click="$router.go(-1)">
                         <span class="try">TRY AGAIN</span>
-                    </nuxt-link>
+                    </a>
                     <div v-show="sharePin" class="share">
                         <img src="~assets/img/naire/ic_facebook_def.png" @click="shareWithFacebook">
                         <img src="~assets/img/naire/ic_Twitter_def.png" @click="shareWithTwitter">
@@ -32,7 +32,7 @@
                 <div v-show="!sharePin&&appType!=2" class="share" @click="toShare()">
                     <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
                 </div>
-                <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`" replace>
+                <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                     <div class="play">Get My Own Result</div>
                 </nuxt-link>
                 <div v-show="sharePin" class="line"/>
