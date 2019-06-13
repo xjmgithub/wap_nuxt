@@ -23,14 +23,14 @@
                     </span>
                     <span class="topic">{{index+1}}.{{item.title}}</span>
                     <span class="joined">{{item.total | formatPeople}} people joined</span>
-
                     <div
                         v-for="(a,i) in item.anwsers"
                         :key="i"
-                        :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.userResult,'pa':item.userResult,}"
-                        @click="answer(a.label)"
+                        :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.userResult&&!a.clicked,'pa':item.userResult,'clicked':a.clicked}"
+                        class="answer"
+                        @click="showBetBtn(item,a)"
                     >
-                        <p :style="{'width':(a.count/item.total) * 100 +'%'}"/>
+                        <p :style="{'width':(a.count/item.total).toFixed(1) * 100 +'%'}"/>
                         <span class="vaule">
                             {{a.label}}. {{a.value}}
                             <img
@@ -40,14 +40,19 @@
                             <img v-else-if="item.result!=item.userResult && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
                         </span>
                         <span v-if="item.state=='unstart'"/>
-                        <span v-else-if="item.state!='unstart' && item.total>0" class="percent">{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span>
+                        <span
+                            v-else-if="item.state!='unstart' && item.total>0 && !a.clicked"
+                            class="percent"
+                        >{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span>
                         <span v-else class="percent">0%</span>
-                        <!-- <span v-if="item.total>0" class="percent">{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span> -->
+                        <div class="bet-btn" @click="answer(item.id,a.id)">BET</div>
                     </div>
-
                     <span class="close">
                         Close at
-                        <a href="#" :class="{'close':item.state=='closed' || item.state=='ended'}">{{item.end_time | formatTime}}</a>
+                        <a
+                            href="javascript:void(0)"
+                            :class="{'close':item.state=='closed' || item.state=='ended'}"
+                        >{{item.end_time | formatTime}}</a>
                     </span>
                 </div>
             </div>
@@ -140,6 +145,7 @@ export default {
                     let total = 0
                     ques.anwsers.forEach(ans => {
                         total = total + ans.count
+                        ans.clicked = false
                     })
                     ques.total = total
                 })
@@ -186,7 +192,28 @@ export default {
                     this.$alert('Try again later')
                 })
         },
-        answer(ans) {}
+        showBetBtn(question, answer) {
+            if (question.state == 'progress') {
+                question.anwsers.forEach(item => {
+                    item.clicked = false
+                })
+                answer.clicked = true
+            }
+        },
+        answer(question, anwser) {
+            this.$axios
+                .get(`/hybrid/api/quiz/bet?userId=${this.userId}&quizId=${this.quizId}&questionId=${question}&answerId=${anwser}`)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        // 已经投票了
+                    } else {
+                        this.$alert('Try again later')
+                    }
+                })
+                .catch(() => {
+                    this.$alert('Try again later')
+                })
+        }
     },
     head() {
         return {
@@ -243,12 +270,12 @@ html {
                 font-weight: bold;
                 border-radius: 2px;
                 margin-left: 0.5rem;
-                img{
-                    width:1.5rem;
+                img {
+                    width: 1.5rem;
                 }
                 span {
                     vertical-align: middle;
-                    font-size:0.98rem;
+                    font-size: 0.98rem;
                 }
             }
         }
@@ -268,7 +295,7 @@ html {
                         color: #333333;
                         font-weight: bold;
                         margin: 0.5rem 0;
-                        line-height:1.3rem;
+                        line-height: 1.3rem;
                     }
                     &.joined {
                         font-size: 0.9rem;
@@ -304,7 +331,7 @@ html {
                     top: -1rem;
                     left: 0;
                     text-align: center;
-                    box-shadow: 0 1px 0px rgba(0,0,0,0.2);
+                    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
                     border-bottom-left-radius: 3px;
                     border-bottom-right-radius: 3px;
                     &.ended {
@@ -326,13 +353,27 @@ html {
                         }
                     }
                 }
-                div {
+                .answer {
                     border-radius: 2px;
                     background: #f5f5f5;
                     margin: 0.8rem 0;
                     position: relative;
                     height: 2.6rem;
                     line-height: 2.6rem;
+                    .bet-btn {
+                        background: #58bbf7;
+                        width: 4rem;
+                        text-align: center;
+                        height: 1.8rem;
+                        line-height: 1.8rem;
+                        position: absolute;
+                        right: 0.35rem;
+                        top: 0.35rem;
+                        z-index: 100;
+                        display: none;
+                        font-size: 0.95rem;
+                        border-radius: 3px;
+                    }
                     &.unstart {
                         p {
                             background: none;
@@ -347,6 +388,13 @@ html {
                         background: #d5ecfa;
                         p {
                             background: #58bbf7;
+                        }
+                    }
+                    &.clicked {
+                        border: #58bbf7 solid 1px;
+                        background: #d5ecfa;
+                        .bet-btn {
+                            display: block;
                         }
                     }
                     p {
