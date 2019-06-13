@@ -1,19 +1,26 @@
 <template>
     <div id="america">
-        <img src="~assets/img/naire/bg.png" class="bg-pic">
+        <img src="~assets/img/naire/bg_bet.png" class="bg-pic">
         <div class="contain">
             <div class="top">
-                <span class="prize">VIEW PRIZE</span>
-                <span class="share">SHARE</span>
+                <p class="prize">
+                    <img src="~assets/img/naire/ic_prize.png">
+                    <span>VIEW PRIZE</span>
+                </p>
+                <p class="share">
+                    <img src="~assets/img/naire/ic_share.png">
+                    <span>SHARE</span>
+                </p>
             </div>
             <div class="box">
                 <div v-for="(item,index) in quesList" :key="index" class="question">
-                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='not started','progress':item.state=='in progress','ended':item.state=='ended'}">{{item.state }} </span>
+                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='not started','progress':item.state=='in progress','ended':item.state=='ended'}">{{item.state }}
+                        <span class="triangle" /></span>
                     <span class="topic">{{index+1}}.{{item.question}}</span>
                     <span class="joined">{{item.people | formatPeople}} people joined</span>
                     <p @click="answer(1)">A. {{item.A}}</p>
                     <p @click="answer(0)">B. {{item.B}}</p>
-                    <span class="close">Close at 
+                    <span class="close">Close at
                         <a href="#"> 2019.06.15 02:10:00</a>
                     </span>
                 </div>
@@ -51,42 +58,42 @@ export default {
                 {
                     question: 'Are you a girl or a boy?',
                     people: 7564,
-                    state:'not started',
+                    state: 'not started',
                     A: 'Girl',
                     B: 'Boy'
                 },
                 {
                     question: 'How close are you with your family?',
                     people: 22331,
-                    state:'in progress',
+                    state: 'in progress',
                     A: 'We get along well',
                     B: "It's...complicated"
                 },
                 {
                     question: "If someone gets in your way, what's your first reaction?",
                     people: 234,
-                    state:'in progress',
+                    state: 'in progress',
                     A: 'I will push back hard to get what I want.',
                     B: 'I will keep my temper well to find another way.'
                 },
                 {
                     question: 'Who are you to your friends?',
                     people: 5634,
-                    state:'closed',
+                    state: 'closed',
                     A: "I'm always loyal and helping them.",
                     B: 'I always point out their problems.'
                 },
                 {
                     question: 'What is your bigges fear?',
                     people: 42323,
-                    state:'ended',
+                    state: 'ended',
                     A: 'Hurting someone.',
                     B: 'Letting people down.'
                 },
                 {
                     question: "Who's your better date choice?",
                     people: 54787,
-                    state:'ended',
+                    state: 'ended',
                     A: 'Someone who is smart.',
                     B: 'Someone who is good-looking.'
                 }
@@ -142,7 +149,13 @@ html {
         overflow-y: scroll;
         .top {
             text-align: right;
+            p {
+                display: inline-block;
+            }
             padding: 0.5rem 0;
+            img {
+                width: 1rem;
+            }
             .prize {
                 font-size: 0.95rem;
                 color: #ffcf49;
@@ -155,14 +168,16 @@ html {
                 padding: 0.2rem;
                 font-weight: bold;
                 border-radius: 2px;
-                display: inline-block;
                 margin-left: 0.5rem;
+                span{
+                    vertical-align: middle;
+                }
             }
         }
         .box {
             height: 60vh;
             overflow-y: scroll;
-            padding:1rem 0 7rem;
+            padding: 1rem 0 7rem;
             .question {
                 padding: 1rem;
                 background: #ffffff;
@@ -176,35 +191,53 @@ html {
                         margin: 0.2rem 0;
                     }
                     &.joined {
-                        font-size: .8rem;
+                        font-size: 0.8rem;
                         color: #999999;
                     }
                     &.close {
-                        font-size: .8rem;
+                        font-size: 0.8rem;
                         color: #999999;
-                        a{
-                            color:#62A6E6;
+                        a {
+                            color: #62a6e6;
                         }
                     }
                 }
-                .state{
-                    color:#ffffff;
-                    width:6rem;
-                    height:2rem;
-                    line-height: 2rem;
-                    padding:0 .5rem;
+                .triangle {
+                    width: 0;
+                    height: 0;
+                    border: 0.5rem solid;
+                    border-color: transparent transparent #8f4c09 #8f4c09;
                     position: absolute;
-                    top:-1rem;
-                    left:0;
+                    top: 0;
+                    left: 100%;
+                }
+                .state {
+                    color: #ffffff;
+                    width: 6rem;
+                    height: 2rem;
+                    line-height: 2rem;
+                    padding: 0 0.5rem;
+                    position: absolute;
+                    top: -1rem;
+                    left: 0;
                     text-align: center;
-                    &.ended{
-                        background: #969BA3;
+                    &.ended {
+                        background: #969ba3;
+                        .triangle {
+                            border-color: transparent transparent #565a61 #565a61;
+                        }
                     }
-                    &.closed{
-                        background: #F49B1E;
+                    &.closed {
+                        background: #f49b1e;
+                        .triangle {
+                            border-color: transparent transparent #8f4c09 #8f4c09;
+                        }
                     }
-                    &.progress{
-                        background: #89C712;
+                    &.progress {
+                        background: #89c712;
+                        .triangle {
+                            border-color: transparent transparent #507903 #507903;
+                        }
                     }
                 }
                 p {
