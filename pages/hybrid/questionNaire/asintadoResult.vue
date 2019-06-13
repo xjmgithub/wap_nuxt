@@ -335,18 +335,12 @@ export default {
                     font-weight: bold;
                 }
                 &.episode {
-                    background: linear-gradient(360deg, #ffbc13 0%, #fff5db 100%);
-                    background-clip: text;
-                    -webkit-text-fill-color: transparent;
                     color: #c09017;
                 }
             }
             .short {
                 font-weight: bold;
                 font-size: 1.25rem;
-                background: linear-gradient(360deg, #dfa71a 0%, #ffe49f 71%, #edd59a 100%);
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
                 display: block;
                 color:#dfa71a;
             }
@@ -372,9 +366,6 @@ export default {
             padding: 1rem 0.5rem 0;
             margin-bottom: 1rem;
             p {
-                background: linear-gradient(360deg, rgba(191, 143, 22, 1) 0%, rgba(237, 213, 154, 1) 100%);
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
                 margin-bottom: 0.5rem;
                 font-weight: bold;
                 font-size: 1.2rem;
