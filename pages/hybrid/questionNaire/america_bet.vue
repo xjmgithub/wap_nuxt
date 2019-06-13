@@ -14,38 +14,52 @@
             </div>
             <div class="box">
                 <div v-for="(item,index) in quesList" :key="index" class="question">
-                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}">{{item.state | formatState}}
-                        <span class="triangle" /></span>
+                    <span
+                        class="state"
+                        :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
+                    >
+                        {{item.state | formatState}}
+                        <span class="triangle"/>
+                    </span>
                     <span class="topic">{{index+1}}.{{item.title}}</span>
                     <span class="joined">{{item.total | formatPeople}} people joined</span>
 
-                    <div v-for="(a,i) in item.anwsers" :key="i" :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.userResult,'pa':item.userResult,}" @click="answer(a.label)">
-                        <p :style="{'width':(a.count/item.total) * 100 +'%'}" />
-                        <span class="vaule">{{a.label}}. {{a.value}}
-                            <img v-if="item.result==item.userResult && item.state=='ended'" src="~assets/img/naire/ic_right.png">
+                    <div
+                        v-for="(a,i) in item.anwsers"
+                        :key="i"
+                        :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.userResult,'pa':item.userResult,}"
+                        @click="answer(a.label)"
+                    >
+                        <p :style="{'width':(a.count/item.total) * 100 +'%'}"/>
+                        <span class="vaule">
+                            {{a.label}}. {{a.value}}
+                            <img
+                                v-if="item.result==item.userResult && item.state=='ended'"
+                                src="~assets/img/naire/ic_right.png"
+                            >
                             <img v-else-if="item.result!=item.userResult && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
                         </span>
-                        <span v-if="item.state=='unstart'" />
+                        <span v-if="item.state=='unstart'"/>
                         <span v-else-if="item.state!='unstart' && item.total>0" class="percent">{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span>
                         <span v-else class="percent">0%</span>
                         <!-- <span v-if="item.total>0" class="percent">{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span> -->
                     </div>
 
-                    <span class="close">Close at
+                    <span class="close">
+                        Close at
                         <a href="#" :class="{'close':item.state=='closed' || item.state=='ended'}">{{item.end_time | formatTime}}</a>
                     </span>
                 </div>
-
             </div>
         </div>
-        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false" />
+        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false"/>
         <div v-show="showRule==true" class="card-rule">
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
             <div class="rule">
                 <div class="dot">‧</div>
                 <p>There are several questions in each match day, the more questions you guess correctly, the more prizes you will get;</p>
                 <div class="dot">‧</div>
-                <p>If you guess the correct answer to some of the questions in a match day, you will get a discount coupon. </p>
+                <p>If you guess the correct answer to some of the questions in a match day, you will get a discount coupon.</p>
                 <div class="dot">‧</div>
                 <p>If you guess the correct answer to all questions in a match day, you will get a 1-day FREE VIP coupon.</p>
             </div>
@@ -79,7 +93,13 @@ export default {
             const ss =
                 val == 'closed'
                     ? 'Waiting Result'
-                    : val == 'unstart' ? 'Not Start' : val == 'progress' ? 'In Progress' : val == 'ended' ? 'ended' : ''
+                    : val == 'unstart'
+                        ? 'Not Start'
+                        : val == 'progress'
+                            ? 'In Progress'
+                            : val == 'ended'
+                                ? 'ended'
+                                : ''
             return ss
         },
         formatTime(val) {
@@ -98,11 +118,49 @@ export default {
             showRule: false,
             showPrize: false,
             userId: this.$store.state.user.id,
-            quesList: []
+            quesList: [],
+            quizId: this.$route.query.quizId || 1
+        }
+    },
+    async asyncData({ app: { $axios }, store, route }) {
+        try {
+            let data = {}
+            if (process.client) {
+                const res = await $axios.get(`/hybrid/api/quiz/list?quizId=${route.query.quizId || 1}&userId=${store.state.user.id}`)
+                data = res.data
+            } else {
+                const res = await $axios.get(
+                    `http://localhost:3000/hybrid/api/quiz/list?quizId=${route.query.quizId || 1}&userId=${store.state.user.id}`
+                )
+                data = res.data
+            }
+            if (data.code == 200) {
+                const result = data.data
+                result.forEach(ques => {
+                    let total = 0
+                    ques.anwsers.forEach(ans => {
+                        total = total + ans.count
+                    })
+                    ques.total = total
+                })
+
+                return {
+                    quesList: result
+                }
+            } else {
+                return {
+                    quesList: []
+                }
+            }
+        } catch (e) {
+            return {
+                quesList: []
+            }
         }
     },
     mounted() {
-        this.getQuestion()
+        console.log(this.quesList)
+        // this.getQuestion()
     },
     methods: {
         getQuestion() {
@@ -155,13 +213,13 @@ html {
     .contain {
         width: 96%;
         background: rgba(3, 3, 3, 0.5);
-        border-radius: 2px 2px 0px 0px;
+        border-radius: 3px 3px 0px 0px;
         margin: 0 auto;
         left: 2%;
         padding: 0 2%;
         border: 1px solid transparent;
         position: fixed;
-        top: 40%;
+        top: 30%;
         overflow-y: scroll;
         .top {
             text-align: right;
@@ -181,33 +239,39 @@ html {
             .share {
                 color: #ffffff;
                 background: #2fb2f8;
-                padding: 0.3rem 0.5rem;
+                padding: 0.1rem 0.6rem;
                 font-weight: bold;
                 border-radius: 2px;
                 margin-left: 0.5rem;
+                img{
+                    width:1.5rem;
+                }
                 span {
                     vertical-align: middle;
+                    font-size:0.98rem;
                 }
             }
         }
         .box {
             height: 60vh;
             overflow-y: scroll;
-            padding: 1rem 0 3rem;
+            padding: 1rem 0;
             .question {
                 padding: 1rem;
                 background: #ffffff;
                 margin-bottom: 1.6rem;
                 position: relative;
+                border-radius: 3px;
                 span {
                     display: block;
                     &.topic {
                         color: #333333;
                         font-weight: bold;
-                        margin: 0.2rem 0;
+                        margin: 0.5rem 0;
+                        line-height:1.3rem;
                     }
                     &.joined {
-                        font-size: 0.8rem;
+                        font-size: 0.9rem;
                         color: #999999;
                     }
                     &.close {
@@ -240,6 +304,9 @@ html {
                     top: -1rem;
                     left: 0;
                     text-align: center;
+                    box-shadow: 0 1px 0px rgba(0,0,0,0.2);
+                    border-bottom-left-radius: 3px;
+                    border-bottom-right-radius: 3px;
                     &.ended {
                         background: #969ba3;
                         .triangle {
@@ -264,9 +331,8 @@ html {
                     background: #f5f5f5;
                     margin: 0.8rem 0;
                     position: relative;
-                    height: 2.2rem;
-                    line-height: 2.2rem;
-                    font-size: 0.95rem;
+                    height: 2.6rem;
+                    line-height: 2.6rem;
                     &.unstart {
                         p {
                             background: none;
@@ -296,7 +362,7 @@ html {
                         color: #333333;
                         img {
                             width: 1rem;
-                            margin-left: .8rem;
+                            margin-left: 0.8rem;
                         }
                     }
                     .percent {
@@ -334,7 +400,7 @@ html {
             float: right;
         }
         .rule {
-            padding: 1rem 0.8rem 0.5rem;
+            padding: 1rem 1.2rem 0.5rem 1rem;
             background: #ffffff;
             margin-top: 3rem;
             border-radius: 4px;
