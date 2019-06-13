@@ -277,7 +277,7 @@ export default {
 </script>
 <style lang="less" scoped>
 #result {
-    background: linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
+    background:#9c9187;
     min-height: 100vh;
     width: 100%;
     padding-bottom: 2rem;
@@ -293,9 +293,6 @@ export default {
                 font-size: 1.5rem;
                 text-align: center;
                 text-shadow: 0px 3px 4px rgba(0, 0, 0, 1);
-                // background: linear-gradient(to bottom, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
-                // background-clip: text;
-                // -webkit-text-fill-color: transparent;
                 font-weight: bold;
             }
             .logo {
@@ -333,9 +330,6 @@ export default {
             p {
                 color: #ffffff;
                 text-shadow: 0px 3px 4px rgba(0, 0, 0, 0.5);
-                // background: linear-gradient(180deg, #b7b7b7 0%, #eeeeee 52%, #d8d8d8 100%);
-                // -webkit-background-clip: text;
-                // -webkit-text-fill-color: transparent;
                 font-size: 1rem;
                 &.name {
                     font-weight: bold;
@@ -354,6 +348,7 @@ export default {
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
                 display: block;
+                color:#dfa71a;
             }
             .asintado {
                 width: 50%;
@@ -383,6 +378,7 @@ export default {
                 margin-bottom: 0.5rem;
                 font-weight: bold;
                 font-size: 1.2rem;
+                color:rgba(191, 143, 22, 1);
             }
             span {
                 color: #ffffff;
@@ -396,13 +392,13 @@ export default {
             color: #63428a;
             font-size: 0.95rem;
             vertical-align: middle;
-            background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
             border-radius: 20px;
             font-weight: bold;
             margin: 1rem 0;
             height: 2.5rem;
             line-height: 2.5rem;
             box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5);
+            background: rgba(235, 202, 77, 1);
             img {
                 width: 1.5rem;
             }

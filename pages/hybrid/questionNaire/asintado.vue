@@ -180,7 +180,7 @@ export default {
 </script>
 <style lang="less" scoped>
 #asintado {
-    background: linear-gradient(180deg, rgba(85, 85, 85, 1) 0%, rgba(201, 183, 166, 1) 100%);
+    background:#9c9187;
     min-height: 100vh;
     .character {
         background: url('~assets/img/naire/background2.png') no-repeat top center;
@@ -293,7 +293,7 @@ export default {
         color: #63428a;
         font-size: 0.95rem;
         vertical-align: middle;
-        background: linear-gradient(180deg, rgba(235, 202, 77, 1) 0%, rgba(235, 200, 112, 1) 34%, rgba(188, 147, 43, 1) 100%);
+        background: rgba(235, 202, 77, 1);
         border-radius: 20px;
         font-weight: bold;
         margin-top: 1rem;
