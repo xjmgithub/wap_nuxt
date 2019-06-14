@@ -13,7 +13,12 @@
                 </p>
             </div>
             <div class="box">
-                <div v-for="(item,index) in quesList" :key="index" class="question">
+                <div
+                    v-for="(item,index) in quesList"
+                    :key="index"
+                    :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}"
+                    class="question"
+                >
                     <span
                         class="state"
                         :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
@@ -26,16 +31,17 @@
                     <div
                         v-for="(a,i) in item.anwsers"
                         :key="i"
-                        :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked}"
+                        :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended','end-wrong':item.guess==i+1&&item.result!=item.result&& item.state=='ended'}"
                         @click="showBetBtn(item,a)"
                     >
                         <p :style="{'width':percent(a.count,item.total)}"/>
                         <span class="vaule">
                             {{a.label}}. {{a.value}}
-                            <img v-if="item.result==item.guess && item.state=='ended'" src="~assets/img/naire/ic_right.png">
-                            <img v-else-if="item.result!=item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
+                            <img v-if="item.result==a.id && item.state=='ended' && item.guess" src="~assets/img/naire/ic_right.png">
+                            <img v-else-if="item.result!=a.id && a.id==item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
                         </span>
-                        <span v-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
+                        <span v-if="item.state=='ended'&& item.result==a.id && item.guess" class="percent won">{{a.count}} people won</span>
+                        <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
                         <div class="bet-btn" @click="answer(item,a)">BET</div>
                     </div>
                     <span class="close">
@@ -95,7 +101,7 @@ export default {
                         : val == 'progress'
                             ? 'In Progress'
                             : val == 'ended'
-                                ? 'ended'
+                                ? 'Ended'
                                 : ''
             return ss
         },
@@ -281,6 +287,7 @@ html {
                 margin-bottom: 1.6rem;
                 position: relative;
                 border-radius: 3px;
+
                 span {
                     display: block;
                     &.topic {
@@ -399,7 +406,6 @@ html {
                         position: absolute;
                         top: 0;
                         left: 0.5rem;
-                        color: #333333;
                         img {
                             width: 1rem;
                             margin-left: 0.8rem;
@@ -410,6 +416,46 @@ html {
                         top: 0;
                         right: 0.5rem;
                         color: #999999;
+                        &.won {
+                            color: #ffffff;
+                        }
+                    }
+                }
+                &.end-miss {
+                    background: #ffffff url('~assets/img/naire/stamp_missed.png') no-repeat right 8%;
+                    background-size: 25%;
+                }
+                &.end-win {
+                    background: #ffffff url('~assets/img/naire/stamp_won.png') no-repeat right 8%;
+                    background-size: 25%;
+                    .answer {
+                        &.end-right {
+                            background: -webkit-linear-gradient(180deg, rgba(157, 217, 15, 1) 0%, rgba(68, 168, 0, 1) 100%);
+                            color: white;
+                        }
+                        &.my-choose-scale {
+                            p {
+                                background: rgba(0, 0, 0, 0);
+                            }
+                        }
+                    }
+                }
+                &.end-lost {
+                    background: #ffffff url('~assets/img/naire/stamp_lost.png') no-repeat right 8%;
+                    background-size: 25%;
+                    .answer {
+                        &.default-scale {
+                            p {
+                                background: #58bbf7;
+                            }
+                        }
+                        &.end-right {
+                            background: -webkit-linear-gradient(180deg, rgba(157, 217, 15, 1) 0%, rgba(68, 168, 0, 1) 100%);
+                            p {
+                                background: rgba(0, 0, 0, 0);
+                            }
+                        }
+                        
                     }
                 }
             }

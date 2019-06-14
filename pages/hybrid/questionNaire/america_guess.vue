@@ -16,22 +16,21 @@
                 <div class="dot">‧</div>
                 <p>If you guess the correct answer to all questions in a match day, you will get a 1-day FREE VIP coupon.</p>
             </div>
-            <div class="bot-down-btn" @click="share">Click here and share to your friends</div>
+            <div class="bot-down-btn" @click="toShare()">Click here and share to your friends</div>
         </div>
+        <mShare/>
     </div>
 </template>
 <script>
-import { shareInvite } from '~/functions/utils'
+import mShare from '~/components/web/share.vue'
 export default {
     layout: 'base',
+    components: {
+        mShare
+    },
     methods: {
-        share() {
-            shareInvite(
-                `${window.location.origin}/hybrid/lands/soccercup?utm_source=startimes_app&utm_medium=activity&utm_campaign=soccercup1`,
-                'StarTimes ON Cup - Crazy Freekick',
-                `Join us as a Country Hero and score for the Team ${this.country.name} to win the cup.`,
-                `${window.location.origin}/res_nuxt/img/soccercup.png`
-            )
+        toShare() {
+            this.$store.commit('SET_SHARE_STATE', true)
         }
     },
     head() {
