@@ -18,7 +18,7 @@
                         {{item.state | formatState}}
                         <span class="triangle" />
                     </span>
-                    <span class="topic">{{index+1}}.{{item.title}}</span>
+                    <span class="topic">{{item.title}}</span>
                     <span class="joined">{{item.total | formatPeople}} people joined</span>
                     <div v-for="(a,i) in item.anwsers" :key="i" :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended'}" @click="showBetBtn(item,a)">
                         <p v-if="!(item.result==a.id && item.state=='ended')" :style="{'width':percent(a.count,item.total)}" />
