@@ -205,7 +205,8 @@ export default {
 #america {
     width: 100vw;
     min-height: 100vh;
-    background: #042c85;
+    // background: #042c85;
+    background: -webkit-linear-gradient(270deg,#042c85 0%,#042c85 50%, #325ab1  100%);
     .bg-pic {
         display: block;
         width: 100%;
@@ -227,7 +228,7 @@ export default {
             p {
                 display: inline-block;
             }
-            padding-top: 0.5rem;
+            padding: 0.5rem 0;
             img {
                 width: 1rem;
             }
@@ -240,12 +241,12 @@ export default {
             .share {
                 color: #ffffff;
                 background: #2fb2f8;
-                padding: 0.1rem 0.6rem;
+                padding: 0.2rem 0.6rem;
                 font-weight: bold;
                 border-radius: 2px;
                 margin-left: 0.5rem;
                 img {
-                    width: 1.5rem;
+                    width: 1.1rem;
                 }
                 span {
                     vertical-align: middle;
@@ -254,9 +255,9 @@ export default {
             }
         }
         .box {
-            height: 60vh;
+            height: 66vh;
             overflow-y: scroll;
-            padding: 1rem 0;
+            padding-top: 1rem;
             .question {
                 padding: 1rem;
                 background: #ffffff;
@@ -384,7 +385,7 @@ export default {
                         left: 0.5rem;
                         img {
                             width: 1rem;
-                            margin-left: 0.8rem;
+                            margin-left: 0.3rem;
                         }
                     }
                     .percent {
