@@ -307,6 +307,7 @@ export default {
             height: 66vh;
             overflow-y: scroll;
             padding-top: 1rem;
+            padding-bottom: 1rem;
             .question {
                 padding: 1rem;
                 background: #ffffff;
