@@ -179,21 +179,28 @@ export default {
         }
     },
     mounted() {
-        if (this.$store.state.appType == 0) {
-            this.$nextTick(() => {
-                this.bscroll = new BScroll('.box', {
-                    startY: 0,
-                    bounce: {
-                        top: false,
-                        bottom: false,
-                        left: false,
-                        right: false
-                    },
-                    click: true,
-                    tap: true,
-                    observeDOM: false
+        if (this.$store.state.appType == 1) {
+            if (
+                navigator.userAgent.indexOf('Android 6') > 0 ||
+                navigator.userAgent.indexOf('Android 7') > 0 ||
+                navigator.userAgent.indexOf('Android 8') > 0 ||
+                navigator.userAgent.indexOf('Android 9') > 0
+            ) {
+                this.$nextTick(() => {
+                    this.bscroll = new BScroll('.box', {
+                        startY: 0,
+                        bounce: {
+                            top: false,
+                            bottom: false,
+                            left: false,
+                            right: false
+                        },
+                        click: true,
+                        tap: true,
+                        observeDOM: false
+                    })
                 })
-            })
+            }
         }
     },
     methods: {
