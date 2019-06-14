@@ -34,7 +34,7 @@ export default {
             this.$store.commit('SET_SHARE_STATE', true)
         },
         toApp(){
-            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/questonNaire/america_bet`, () => {
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/questionNaire/america_bet`, () => {
                 this.sendEvLog({
                     category: `vote_soccercup`,
                     action: 'downloadpopup_show',
