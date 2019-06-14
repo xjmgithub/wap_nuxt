@@ -10,6 +10,7 @@
                 <p class="share" @click="share()">
                     <img src="~assets/img/naire/ic_share.png">
                     <span>SHARE</span>
+                    <img class="corner" src="~assets/img/naire/bonus.png">
                 </p>
             </div>
             <div class="box">
@@ -181,6 +182,7 @@ export default {
         }
     },
     mounted() {
+        document.querySelector('#america').height = document.body.clientHeight
         if (this.$store.state.appType == 1) {
             if (
                 navigator.userAgent.indexOf('Android 6') > 0 ||
@@ -209,6 +211,12 @@ export default {
         showPrizeDialog(num) {
             this.prizeNum = num
             this.showPrize = true
+            this.sendEvLog({
+                category: 'guess_event',
+                action: 'view_prize',
+                label: '',
+                value: 1
+            })
         },
         percent(count, total) {
             if (total <= 0) return '0%'
@@ -225,6 +233,12 @@ export default {
             return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m) + '%'
         },
         showBetBtn(question, answer) {
+            this.sendEvLog({
+                category: 'guess_event',
+                action: 'guess_select',
+                label: question.id,
+                value: 1
+            })
             if (question.state == 'progress' && !question.guess) {
                 question.anwsers.forEach(item => {
                     item.clicked = false
@@ -234,6 +248,12 @@ export default {
         },
         answer(question, answer) {
             if (question.guess) return
+            this.sendEvLog({
+                category: 'guess_event',
+                action: 'guess_click',
+                label: question.id,
+                value: 1
+            })
             this.$axios
                 .get(`/hybrid/api/quiz/bet?userId=${this.userId}&quizId=${this.quizId}&questionId=${question.id}&answerId=${answer.id}`)
                 .then(res => {
@@ -251,6 +271,12 @@ export default {
                 })
         },
         share() {
+            this.sendEvLog({
+                category: 'guess_event',
+                action: 'guess_share',
+                label: '',
+                value: 1
+            })
             shareInvite(
                 `${location.origin}/hybrid/questionNaire/america_guess?utm_source=usacup`,
                 'COPA AMERICA 2019 CRAZY GUESS',
@@ -318,16 +344,24 @@ export default {
             .share {
                 color: #ffffff;
                 background: #2fb2f8;
-                padding: 0.2rem 0.6rem;
+                padding: 0.3rem 1rem;
                 font-weight: bold;
                 border-radius: 2px;
                 margin-left: 0.5rem;
+                position: relative;
                 img {
                     width: 1.1rem;
                 }
                 span {
                     vertical-align: middle;
                     font-size: 0.98rem;
+                }
+                .corner {
+                    position: absolute;
+                    right: 0;
+                    height: 1.5rem;
+                    width: 1.5rem;
+                    top: 0;
                 }
             }
         }
@@ -513,11 +547,6 @@ export default {
                     background: #ffffff url('~assets/img/naire/stamp_lost.png') no-repeat right 8%;
                     background-size: 25%;
                     .answer {
-                        // &.default-scale {
-                        //     p {
-                        //         background: #58bbf7;
-                        //     }
-                        // }
                         &.end-right {
                             background: url('~assets/img/naire/button_pattern.png') no-repeat right center / 15%,
                                 -webkit-linear-gradient(180deg, rgba(157, 217, 15, 1) 0%, rgba(68, 168, 0, 1) 100%);
