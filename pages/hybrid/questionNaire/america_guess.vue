@@ -82,7 +82,7 @@ export default {
     },
     head() {
         return {
-            title: 'COPA AMERICA 2019 CRAZY GUESS',
+            title: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!',
             meta: [
                 { name: 'description', property: 'description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
                 { name: 'og:description', property: 'og:description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
@@ -92,7 +92,7 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/bg_guess.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'COPA AMERICA 2019 CRAZY GUESS' }
+                { name: 'og:title', property: 'og:title', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' }
             ]
         }
     }
