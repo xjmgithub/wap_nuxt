@@ -4,7 +4,7 @@
             <img src="~assets/img/naire/bg_guess.png" class="bg-pic">
             <div>
                 <span><img src="~assets/img/naire/ic_crown.png" class="crown"> EXCLUSIVE ON STARTIMES</span>
-                <p>GUESS NOW</p>
+                <p @click="toApp()">GUESS NOW</p>
             </div>
         </div>
         <div class="bot-down">
@@ -25,6 +25,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
+import {callApp,callMarket} from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -33,6 +34,44 @@ export default {
     methods: {
         toShare() {
             this.$store.commit('SET_SHARE_STATE', true)
+        },
+        toApp(){
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/questionNaire/america_bet`, () => {
+                this.sendEvLog({
+                    category: `vote_soccercup`,
+                    action: 'downloadpopup_show',
+                    label: 'usacup',
+                    value: 1
+                })
+                this.$confirm(
+                    'Download StarTimes ON and join us and get the Champion !',
+                    () => {
+                        this.sendEvLog({
+                            category: `vote_soccercup`,
+                            action: 'downloadpopup_clickok',
+                            label: 'usacup',
+                            value: 1
+                        })
+                        this.sendEvLog({
+                            category: `vote_soccercup`,
+                            action: 'toMarket',
+                            label: 'usacup',
+                            value: 1
+                        })
+                        callMarket.call(this)
+                    },
+                    () => {
+                        this.sendEvLog({
+                            category: `vote_soccercup`,
+                            action: 'downloadpopup_clicknot',
+                            label: 'usacup',
+                            value: 1
+                        })
+                    },
+                    this.$store.state.lang.download_apk,
+                    this.$store.state.lang.vote_cancel
+                )
+            })
         }
     },
     head() {

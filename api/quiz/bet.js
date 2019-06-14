@@ -20,28 +20,62 @@ export default function(req, res, next) {
 
     if (userId && quizId && questionId && answerId) {
         const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
-        connection.query(
-            `INSERT INTO quiz_match_result (user_id,fk_match,fk_question,fk_answer,create_time) VALUES (${userId}, ${quizId},${questionId},${answerId},"${now}")`,
-            function(error, results) {
-                if (error) {
+        const nowTime = dayjs()
+        connection.query(`SELECT start_time,end_time FROM quiz_match_question WHERE id="${questionId}"`, function(error, item) {
+            if (error) {
+                res.end(
+                    JSON.stringify({
+                        code: 103,
+                        message: 'error',
+                        data: error
+                    })
+                )
+            } else {
+                if (dayjs(item[0].start_time) > nowTime) {
                     res.end(
                         JSON.stringify({
-                            code: 103,
-                            message: 'error',
-                            data: error
+                            code: 104,
+                            message: 'This bet not started',
+                            data: ''
                         })
                     )
-                } else {
-                    res.end(
-                        JSON.stringify({
-                            code: 200,
-                            message: 'success',
-                            data: results.insertId
-                        })
-                    )
+                    return
                 }
+                if (dayjs(item[0].end_time) < nowTime) {
+                    res.end(
+                        JSON.stringify({
+                            code: 105,
+                            message: 'This bet is closed.',
+                            data: ''
+                        })
+                    )
+                    return
+                }
+
+                connection.query(
+                    `INSERT INTO quiz_match_result (user_id,fk_match,fk_question,fk_answer,create_time) VALUES (${userId}, ${quizId},${questionId},${answerId},"${now}")`,
+                    function(error, results) {
+                        if (error) {
+                            res.end(
+                                JSON.stringify({
+                                    code: 103,
+                                    message: 'error',
+                                    data: error
+                                })
+                            )
+                        } else {
+                            res.end(
+                                JSON.stringify({
+                                    code: 200,
+                                    message: 'success',
+                                    data: results.insertId
+                                })
+                            )
+                        }
+                    }
+                )
             }
-        )
+        })
     } else {
         res.end(
             JSON.stringify({
