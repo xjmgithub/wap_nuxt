@@ -7,7 +7,7 @@
                     <img src="~assets/img/naire/ic_prize.png">
                     <span>VIEW PRIZE</span>
                 </p>
-                <p class="share">
+                <p class="share" @click="share()">
                     <img src="~assets/img/naire/ic_share.png">
                     <span>SHARE</span>
                 </p>
@@ -201,11 +201,6 @@ export default {
     }
 }
 </script>
-<style>
-html {
-    background: #042c85;
-}
-</style>
 <style lang="less" scoped>
 #america {
     width: 100vw;
