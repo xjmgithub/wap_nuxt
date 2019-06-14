@@ -180,7 +180,7 @@ export default {
                         question.total = question.total + 1
                         question.guess = answer.id
                     } else {
-                        this.$alert('Try again later')
+                        this.$alert(res.data.message)
                     }
                 })
                 .catch(e => {
