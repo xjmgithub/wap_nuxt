@@ -51,6 +51,8 @@
                 <p>If you guess the correct answer to some of the questions in a match day, you will get a discount coupon.</p>
                 <div class="dot">‧</div>
                 <p>If you guess the correct answer to all questions in a match day, you will get a 1-day FREE VIP coupon.</p>
+                <div class="dot">‧</div>
+                <p>Share to your friends and get additional prizes!</p>
             </div>
         </div>
         <div v-show="showPrize==true" class="card-prize">
