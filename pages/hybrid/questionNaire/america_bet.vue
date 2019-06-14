@@ -26,7 +26,7 @@
                         {{item.state | formatState}}
                         <span class="triangle"/>
                     </span>
-                    <span class="topic">{{index+1}}.{{item.title}}</span>
+                    <span class="topic">{{item.title}}</span>
                     <span class="joined">{{item.total | formatPeople}} people joined</span>
                     <div
                         v-for="(a,i) in item.anwsers"
