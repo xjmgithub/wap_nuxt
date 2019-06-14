@@ -420,7 +420,7 @@ export default {
                                 width: 3.6rem;
                                 top: -0.4rem;
                                 right: -1.2rem;
-                                animation: gift 0.5s ease-out;
+                                animation: gift 0.4s ease-out;
                                 animation-direction: alternate;
                                 animation-iteration-count: infinite;
                             }
