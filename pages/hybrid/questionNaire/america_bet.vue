@@ -282,7 +282,7 @@ export default {
 </script>
 <style lang="less" scoped>
 #america {
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
     background: -webkit-linear-gradient(270deg, #042c85 0%, #042c85 50%, #325ab1 100%);
     .bg-pic {
