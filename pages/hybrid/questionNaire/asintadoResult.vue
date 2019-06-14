@@ -185,27 +185,30 @@ export default {
                         this.programList = res.data.data.slice(0, 4)
                     }
                 }
+
                 if (
                     navigator.userAgent.indexOf('Android 6') > 0 ||
                     navigator.userAgent.indexOf('Android 7') > 0 ||
                     navigator.userAgent.indexOf('Android 8') > 0 ||
                     navigator.userAgent.indexOf('Android 9') > 0
                 ) {
-                    document.querySelector('#result').style.height = '100vh'
-                    this.$nextTick(() => {
-                        this.bscroll = new BScroll('#result', {
-                            startY: 0,
-                            bounce: {
-                                top: false,
-                                bottom: false,
-                                left: false,
-                                right: false
-                            },
-                            click: true,
-                            tap: true,
-                            observeDOM: false
+                    if (this.$store.state.appType == 1) {
+                        document.querySelector('#result').style.height = '100vh'
+                        this.$nextTick(() => {
+                            this.bscroll = new BScroll('#result', {
+                                startY: 0,
+                                bounce: {
+                                    top: false,
+                                    bottom: false,
+                                    left: false,
+                                    right: false
+                                },
+                                click: true,
+                                tap: true,
+                                observeDOM: false
+                            })
                         })
-                    })
+                    }
                 }
             })
         },
