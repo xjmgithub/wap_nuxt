@@ -13,35 +13,58 @@
                 </p>
             </div>
             <div class="box">
-                <div v-for="(item,index) in quesList" :key="index" :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}" class="question">
-                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}">
+                <div
+                    v-for="(item,index) in quesList"
+                    :key="index"
+                    :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}"
+                    class="question"
+                >
+                    <span
+                        class="state"
+                        :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
+                    >
                         {{item.state | formatState}}
-                        <span class="triangle" />
+                        <span class="triangle"/>
                     </span>
                     <span class="topic">{{item.title}}</span>
                     <span class="joined">{{item.total | formatPeople}} people joined</span>
-                    <div v-for="(a,i) in item.anwsers" :key="i" :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended'}" @click="showBetBtn(item,a)">
-                        <p v-if="!(item.result==a.id && item.state=='ended')" :style="{'width':percent(a.count,item.total)}" />
+                    <div
+                        v-for="(a,i) in item.anwsers"
+                        :key="i"
+                        :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended'}"
+                        @click="showBetBtn(item,a)"
+                    >
+                        <p v-if="!(item.result==a.id && item.state=='ended')" :style="{'width':percent(a.count,item.total)}"/>
                         <span class="vaule">
                             {{a.label}}. {{a.value}}
-                            <img v-if="item.result==a.id && item.state=='ended' && item.guess" src="~assets/img/naire/ic_right.png">
+                            <img
+                                v-if="item.result==a.id && item.state=='ended' && item.guess"
+                                src="~assets/img/naire/ic_right.png"
+                            >
                             <img v-else-if="item.result!=a.id && a.id==item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
                         </span>
                         <span v-if="item.state=='ended'&& item.result==a.id && item.guess" :class="{'won':item.guess==a.id}" class="percent right">
                             {{a.count}} people won!
-                            <img v-show="item.guess==item.result" src="~assets/img/naire/ic_gift.png" @click="showPrize=true">
+                            <img
+                                v-show="item.guess==item.result"
+                                src="~assets/img/naire/ic_gift.png"
+                                @click="showPrizeDialog(a.count)"
+                            >
                         </span>
                         <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
                         <div class="bet-btn" @click="answer(item,a)">BET</div>
                     </div>
                     <span class="close">
                         Close at
-                        <a href="javascript:void(0)" :class="{'close':item.state=='closed' || item.state=='ended'}">{{item.end_time | formatTime}}</a>
+                        <a
+                            href="javascript:void(0)"
+                            :class="{'close':item.state=='closed' || item.state=='ended'}"
+                        >{{item.end_time | formatTime}}</a>
                     </span>
                 </div>
             </div>
         </div>
-        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false" />
+        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false"/>
         <div v-show="showRule==true" class="card-rule">
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
             <div class="rule">
@@ -62,11 +85,10 @@
                     <img v-else src="http://cdn.startimestv.com/head/h_d.png">
                     <p class="user">{{$store.state.user.nickName||$store.state.user.userName}}</p>
                     <p class="congra">Congratulations!</p>
-                    <p class="total">In total 147233 people won this guess, and you have got:</p>
+                    <p class="total">In total {{prizeNum}} people won this guess, and you have got:</p>
                     <img src="~assets/img/naire/ic_MAX.png" class="max">
                     <p class="vip">Already sent to your account</p>
                     <div class="btn" @click="checkPrize()">CHECK PRIZE</div>
-                    <span>How to redeem my prize?</span>
                 </div>
             </div>
         </div>
@@ -84,7 +106,13 @@ export default {
             const ss =
                 val == 'closed'
                     ? 'Waiting Result'
-                    : val == 'unstart' ? 'Not Start' : val == 'progress' ? 'In Progress' : val == 'ended' ? 'Ended' : ''
+                    : val == 'unstart'
+                        ? 'Not Start'
+                        : val == 'progress'
+                            ? 'In Progress'
+                            : val == 'ended'
+                                ? 'Ended'
+                                : ''
             return ss
         },
         formatTime(val) {
@@ -103,7 +131,8 @@ export default {
             showRule: false,
             showPrize: false,
             userId: this.$store.state.user.id,
-            quizId: this.$route.query.quizId || 1
+            quizId: this.$route.query.quizId || 1,
+            prizeNum: 0
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -147,6 +176,10 @@ export default {
         console.log(this.$store.state.user)
     },
     methods: {
+        showPrizeDialog(num) {
+            this.prizeNum = num
+            this.showPrize = true
+        },
         percent(count, total) {
             if (total <= 0) return '0%'
             const scale = (count / total).toFixed(3)
@@ -159,7 +192,7 @@ export default {
             try {
                 m += s2.split('.')[1].length
             } catch (e) {}
-            return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m) + '%'
+            return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m) + '%'
         },
         showBetBtn(question, answer) {
             if (question.state == 'progress' && !question.guess) {
@@ -582,7 +615,7 @@ export default {
 @keyframes gift {
     from {
         top: -0.6rem;
-        opacity: .7;
+        opacity: 0.7;
     }
     to {
         top: -0.3rem;
