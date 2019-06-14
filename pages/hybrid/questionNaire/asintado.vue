@@ -69,7 +69,7 @@ export default {
                     B: 'I always point out their problems.'
                 },
                 {
-                    question: 'What is your bigges fear?',
+                    question: 'What is your biggest fear?',
                     A: 'Hurting someone.',
                     B: 'Letting people down.'
                 },
