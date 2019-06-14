@@ -26,26 +26,17 @@
                     <div
                         v-for="(a,i) in item.anwsers"
                         :key="i"
-                        :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.userResult&&!a.clicked,'pa':item.userResult,'clicked':a.clicked}"
-                        class="answer"
+                        :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked}"
                         @click="showBetBtn(item,a)"
                     >
-                        <p :style="{'width':(a.count/item.total).toFixed(1) * 100 +'%'}"/>
+                        <p :style="{'width':percent(a.count,item.total)}"/>
                         <span class="vaule">
                             {{a.label}}. {{a.value}}
-                            <img
-                                v-if="item.result==item.userResult && item.state=='ended'"
-                                src="~assets/img/naire/ic_right.png"
-                            >
-                            <img v-else-if="item.result!=item.userResult && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
+                            <img v-if="item.result==item.guess && item.state=='ended'" src="~assets/img/naire/ic_right.png">
+                            <img v-else-if="item.result!=item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
                         </span>
-                        <span v-if="item.state=='unstart'"/>
-                        <span
-                            v-else-if="item.state!='unstart' && item.total>0 && !a.clicked"
-                            class="percent"
-                        >{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span>
-                        <span v-else class="percent">0%</span>
-                        <div class="bet-btn" @click="answer(item.id,a.id)">BET</div>
+                        <span v-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
+                        <div class="bet-btn" @click="answer(item,a)">BET</div>
                     </div>
                     <span class="close">
                         Close at
@@ -88,6 +79,7 @@
     </div>
 </template>
 <script>
+import { shareInvite } from '~/functions/utils'
 export default {
     layout: 'base',
     filters: {
@@ -123,7 +115,6 @@ export default {
             showRule: false,
             showPrize: false,
             userId: this.$store.state.user.id,
-            quesList: [],
             quizId: this.$route.query.quizId || 1
         }
     },
@@ -166,53 +157,54 @@ export default {
     },
     mounted() {
         console.log(this.quesList)
-        // this.getQuestion()
     },
     methods: {
-        getQuestion() {
-            this.$axios
-                .get(`/hybrid/api/quiz/list?quizId=1&userid=${this.userId}`)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        const data = res.data.data
-                        data.forEach(ques => {
-                            let total = 0
-                            ques.anwsers.forEach(ans => {
-                                total = total + ans.count
-                            })
-                            ques.total = total
-                        })
-                        this.quesList = res.data.data
-                        console.log(this.quesList)
-                    } else {
-                        this.$alert('Try again later')
-                    }
-                })
-                .catch(() => {
-                    this.$alert('Try again later')
-                })
+        percent(count, total) {
+            if (total <= 0) return '0%'
+            const scale = (count / total).toFixed(3)
+            let m = 0
+            const s1 = scale.toString()
+            const s2 = '100'
+            try {
+                m += s1.split('.')[1].length
+            } catch (e) {}
+            try {
+                m += s2.split('.')[1].length
+            } catch (e) {}
+            return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m) + '%'
         },
         showBetBtn(question, answer) {
-            if (question.state == 'progress') {
+            if (question.state == 'progress' && !question.guess) {
                 question.anwsers.forEach(item => {
                     item.clicked = false
                 })
                 answer.clicked = true
             }
         },
-        answer(question, anwser) {
+        answer(question, answer) {
             this.$axios
-                .get(`/hybrid/api/quiz/bet?userId=${this.userId}&quizId=${this.quizId}&questionId=${question}&answerId=${anwser}`)
+                .get(`/hybrid/api/quiz/bet?userId=${this.userId}&quizId=${this.quizId}&questionId=${question.id}&answerId=${answer.id}`)
                 .then(res => {
                     if (res.data.code == 200) {
-                        // 已经投票了
+                        answer.clicked = false
+                        answer.count = answer.count + 1
+                        question.total = question.total + 1
+                        question.guess = answer.id
                     } else {
                         this.$alert('Try again later')
                     }
                 })
-                .catch(() => {
+                .catch(e => {
                     this.$alert('Try again later')
                 })
+        },
+        share() {
+            shareInvite(
+                `${location.origin}/hybrid/questionNaire/america_guess?utm_source=usacup`,
+                '100% Precise Me!',
+                'Who am I in Asintado, Avengers and Game of Thrones?',
+                'http://cdn.startimestv.com/banner/asintado.jpg'
+            )
         }
     },
     head() {
@@ -379,12 +371,12 @@ html {
                             background: none;
                         }
                     }
-                    &.pn {
+                    &.default-scale {
                         p {
                             background: #e3e3e3;
                         }
                     }
-                    &.pa {
+                    &.my-choose-scale {
                         background: #d5ecfa;
                         p {
                             background: #58bbf7;
