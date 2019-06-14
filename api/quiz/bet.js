@@ -35,7 +35,7 @@ export default function(req, res, next) {
                     res.end(
                         JSON.stringify({
                             code: 104,
-                            message: 'Quiz has not started',
+                            message: 'This bet not started',
                             data: ''
                         })
                     )
@@ -45,7 +45,7 @@ export default function(req, res, next) {
                     res.end(
                         JSON.stringify({
                             code: 105,
-                            message: 'The quiz is over.',
+                            message: 'This bet is closed.',
                             data: ''
                         })
                     )
