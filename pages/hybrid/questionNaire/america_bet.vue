@@ -13,54 +13,60 @@
                 </p>
             </div>
             <div class="box">
-                <div
-                    v-for="(item,index) in quesList"
-                    :key="index"
-                    :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}"
-                    class="question"
-                >
-                    <span
-                        class="state"
-                        :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
-                    >
-                        {{item.state | formatState}}
-                        <span class="triangle"/>
-                    </span>
-                    <span class="topic">{{item.title}}</span>
-                    <span class="joined">{{item.total | formatPeople}} people joined</span>
+                <div style="padding:1rem 0 2rem;">
                     <div
-                        v-for="(a,i) in item.anwsers"
-                        :key="i"
-                        :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended'}"
-                        @click="showBetBtn(item,a)"
+                        v-for="(item,index) in quesList"
+                        :key="index"
+                        :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}"
+                        class="question"
                     >
-                        <p v-if="!(item.result==a.id && item.state=='ended')" :style="{'width':percent(a.count,item.total)}"/>
-                        <span class="vaule">
-                            {{a.label}}. {{a.value}}
-                            <img
-                                v-if="item.result==a.id && item.state=='ended' && item.guess"
-                                src="~assets/img/naire/ic_right.png"
-                            >
-                            <img v-else-if="item.result!=a.id && a.id==item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
+                        <span
+                            class="state"
+                            :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
+                        >
+                            {{item.state | formatState}}
+                            <span class="triangle"/>
                         </span>
-                        <span v-if="item.state=='ended'&& item.result==a.id && item.guess" :class="{'won':item.guess==a.id}" class="percent right">
-                            {{a.count}} people won!
-                            <img
-                                v-show="item.guess==item.result"
-                                src="~assets/img/naire/ic_gift.png"
-                                @click="showPrizeDialog(a.count)"
+                        <span class="topic">{{item.title}}</span>
+                        <span class="joined">{{item.total | formatPeople}} people joined</span>
+                        <div
+                            v-for="(a,i) in item.anwsers"
+                            :key="i"
+                            :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended'}"
+                            @click="showBetBtn(item,a)"
+                        >
+                            <p v-if="!(item.result==a.id && item.state=='ended')" :style="{'width':percent(a.count,item.total)}"/>
+                            <span class="vaule">
+                                {{a.label}}. {{a.value}}
+                                <img
+                                    v-if="item.result==a.id && item.state=='ended' && item.guess"
+                                    src="~assets/img/naire/ic_right.png"
+                                >
+                                <img v-else-if="item.result!=a.id && a.id==item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
+                            </span>
+                            <span
+                                v-if="item.state=='ended'&& item.result==a.id && item.guess"
+                                :class="{'won':item.guess==a.id}"
+                                class="percent right"
                             >
+                                {{a.count}} people won!
+                                <img
+                                    v-show="item.guess==item.result"
+                                    src="~assets/img/naire/ic_gift.png"
+                                    @click="showPrizeDialog(a.count)"
+                                >
+                            </span>
+                            <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
+                            <div class="bet-btn" @click="answer(item,a)">BET</div>
+                        </div>
+                        <span class="close">
+                            Close at
+                            <a
+                                href="javascript:void(0)"
+                                :class="{'close':item.state=='closed' || item.state=='ended'}"
+                            >{{item.end_time | formatTime}}</a>
                         </span>
-                        <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
-                        <div class="bet-btn" @click="answer(item,a)">BET</div>
                     </div>
-                    <span class="close">
-                        Close at
-                        <a
-                            href="javascript:void(0)"
-                            :class="{'close':item.state=='closed' || item.state=='ended'}"
-                        >{{item.end_time | formatTime}}</a>
-                    </span>
                 </div>
             </div>
         </div>
@@ -96,6 +102,7 @@
 </template>
 <script>
 import { shareInvite, toNativePage } from '~/functions/utils'
+import BScroll from 'better-scroll'
 export default {
     layout: 'base',
     filters: {
@@ -172,8 +179,22 @@ export default {
         }
     },
     mounted() {
-        console.log(this.quesList)
-        console.log(this.$store.state.user)
+        if (this.$store.state.appType == 0) {
+            this.$nextTick(() => {
+                this.bscroll = new BScroll('.box', {
+                    startY: 0,
+                    bounce: {
+                        top: false,
+                        bottom: false,
+                        left: false,
+                        right: false
+                    },
+                    click: true,
+                    tap: true,
+                    observeDOM: false
+                })
+            })
+        }
     },
     methods: {
         showPrizeDialog(num) {
