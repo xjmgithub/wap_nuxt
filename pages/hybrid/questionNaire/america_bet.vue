@@ -284,12 +284,10 @@ export default {
 #america {
     width: 100vw;
     min-height: 100vh;
-    // background: #042c85;
     background: -webkit-linear-gradient(270deg, #042c85 0%, #042c85 50%, #325ab1 100%);
     .bg-pic {
         display: block;
         width: 100%;
-        z-index: 100;
     }
     .contain {
         width: 96%;
