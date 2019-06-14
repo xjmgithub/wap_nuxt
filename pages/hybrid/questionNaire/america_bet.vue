@@ -7,54 +7,40 @@
                     <img src="~assets/img/naire/ic_prize.png">
                     <span>VIEW PRIZE</span>
                 </p>
-                <p class="share" @click="showPrize=true">
+                <p class="share">
                     <img src="~assets/img/naire/ic_share.png">
                     <span>SHARE</span>
                 </p>
             </div>
             <div class="box">
-                <div
-                    v-for="(item,index) in quesList"
-                    :key="index"
-                    :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}"
-                    class="question"
-                >
-                    <span
-                        class="state"
-                        :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
-                    >
+                <div v-for="(item,index) in quesList" :key="index" :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}" class="question">
+                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}">
                         {{item.state | formatState}}
-                        <span class="triangle"/>
+                        <span class="triangle" />
                     </span>
                     <span class="topic">{{index+1}}.{{item.title}}</span>
                     <span class="joined">{{item.total | formatPeople}} people joined</span>
-                    <div
-                        v-for="(a,i) in item.anwsers"
-                        :key="i"
-                        :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended','end-wrong':item.guess==i+1&&item.result!=item.result&& item.state=='ended'}"
-                        @click="showBetBtn(item,a)"
-                    >
-                        <p :style="{'width':percent(a.count,item.total)}"/>
+                    <div v-for="(a,i) in item.anwsers" :key="i" :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended','end-wrong':item.guess==i+1&&item.result!=item.result&& item.state=='ended'}" @click="showBetBtn(item,a)">
+                        <p :style="{'width':percent(a.count,item.total)}" />
                         <span class="vaule">
                             {{a.label}}. {{a.value}}
                             <img v-if="item.result==a.id && item.state=='ended' && item.guess" src="~assets/img/naire/ic_right.png">
                             <img v-else-if="item.result!=a.id && a.id==item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
                         </span>
-                        <span v-if="item.state=='ended'&& item.result==a.id && item.guess" class="percent won">{{a.count}} people won</span>
+                        <span v-if="item.state=='ended'&& item.result==a.id && item.guess" :class="{'won':item.guess==a.id}" class="percent right">{{a.count}} people won!
+                            <img v-show="item.guess==item.result" src="~assets/img/naire/ic_gift.png" @click="showPrize=true">
+                        </span>
                         <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
                         <div class="bet-btn" @click="answer(item,a)">BET</div>
                     </div>
                     <span class="close">
                         Close at
-                        <a
-                            href="javascript:void(0)"
-                            :class="{'close':item.state=='closed' || item.state=='ended'}"
-                        >{{item.end_time | formatTime}}</a>
+                        <a href="javascript:void(0)" :class="{'close':item.state=='closed' || item.state=='ended'}">{{item.end_time | formatTime}}</a>
                     </span>
                 </div>
             </div>
         </div>
-        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false"/>
+        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false" />
         <div v-show="showRule==true" class="card-rule">
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
             <div class="rule">
@@ -96,13 +82,7 @@ export default {
             const ss =
                 val == 'closed'
                     ? 'Waiting Result'
-                    : val == 'unstart'
-                        ? 'Not Start'
-                        : val == 'progress'
-                            ? 'In Progress'
-                            : val == 'ended'
-                                ? 'Ended'
-                                : ''
+                    : val == 'unstart' ? 'Not Start' : val == 'progress' ? 'In Progress' : val == 'ended' ? 'Ended' : ''
             return ss
         },
         formatTime(val) {
@@ -177,7 +157,7 @@ export default {
             try {
                 m += s2.split('.')[1].length
             } catch (e) {}
-            return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m) + '%'
+            return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m) + '%'
         },
         showBetBtn(question, answer) {
             if (question.state == 'progress' && !question.guess) {
@@ -188,6 +168,7 @@ export default {
             }
         },
         answer(question, answer) {
+            if (question.guess) return
             this.$axios
                 .get(`/hybrid/api/quiz/bet?userId=${this.userId}&quizId=${this.quizId}&questionId=${question.id}&answerId=${answer.id}`)
                 .then(res => {
@@ -416,8 +397,18 @@ html {
                         top: 0;
                         right: 0.5rem;
                         color: #999999;
-                        &.won {
+                        &.right {
                             color: #ffffff;
+                            padding-right: 1rem;
+                            &.won {
+                                padding-right: 2.5rem;
+                            }
+                            img {
+                                position: absolute;
+                                width: 3.4rem;
+                                top: -0.4rem;
+                                right: -1.1rem;
+                            }
                         }
                     }
                 }
@@ -432,6 +423,7 @@ html {
                         &.end-right {
                             background: -webkit-linear-gradient(180deg, rgba(157, 217, 15, 1) 0%, rgba(68, 168, 0, 1) 100%);
                             color: white;
+                            position: relative;
                         }
                         &.my-choose-scale {
                             p {
@@ -450,12 +442,12 @@ html {
                             }
                         }
                         &.end-right {
-                            background: -webkit-linear-gradient(180deg, rgba(157, 217, 15, 1) 0%, rgba(68, 168, 0, 1) 100%);
+                            background: url('~assets/img/naire/button_pattern.png') no-repeat right center / 15%,
+                                -webkit-linear-gradient(180deg, rgba(157, 217, 15, 1) 0%, rgba(68, 168, 0, 1) 100%);
                             p {
                                 background: rgba(0, 0, 0, 0);
                             }
                         }
-                        
                     }
                 }
             }
