@@ -188,15 +188,26 @@ export default {
         share() {
             shareInvite(
                 `${location.origin}/hybrid/questionNaire/america_guess?utm_source=usacup`,
-                '100% Precise Me!',
-                'Who am I in Asintado, Avengers and Game of Thrones?',
-                'http://cdn.startimestv.com/banner/asintado.jpg'
+                'COPA AMERICA 2019 CRAZY GUESS',
+                'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!',
+                'http://cdn.startimestv.com/banner/bg_guess.jpg'
             )
         }
     },
     head() {
         return {
-            title: 'Crazy Bet'
+            title: 'COPA AMERICA 2019 CRAZY BET',
+            meta: [
+                { name: 'description', property: 'description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
+                { name: 'og:description', property: 'og:description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: 'http://cdn.startimestv.com/banner/bg_guess.jpg'
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: 'COPA AMERICA 2019 CRAZY BET' }
+            ]
         }
     }
 }
