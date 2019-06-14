@@ -13,51 +13,35 @@
                 </p>
             </div>
             <div class="box">
-                <div v-for="(item,index) in quesList" :key="index" class="question">
-                    <span
-                        class="state"
-                        :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
-                    >
+                <div v-for="(item,index) in quesList" :key="index" :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}" class="question">
+                    <span class="state" :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}">
                         {{item.state | formatState}}
-                        <span class="triangle"/>
+                        <span class="triangle" />
                     </span>
                     <span class="topic">{{index+1}}.{{item.title}}</span>
                     <span class="joined">{{item.total | formatPeople}} people joined</span>
-                    <div
-                        v-for="(a,i) in item.anwsers"
-                        :key="i"
-                        :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.userResult&&!a.clicked,'pa':item.userResult,'clicked':a.clicked}"
-                        class="answer"
-                        @click="showBetBtn(item,a)"
-                    >
-                        <p :style="{'width':(a.count/item.total).toFixed(1) * 100 +'%'}"/>
+                    <div v-for="(a,i) in item.anwsers" :key="i" :class="{'unstart':item.state=='unstart','pn':(item.state=='progress'||item.state=='closed')&&!item.guess&&!a.clicked,'end-right':item.result==i+1 && item.state=='ended','end-wrong':item.guess==i+1&&item.result!=item.result&& item.state=='ended','clicked':a.clicked}" class="answer" @click="showBetBtn(item,a)">
+                        <p :style="{'width':(a.count/item.total).toFixed(1) * 100 +'%'}" />
                         <span class="vaule">
                             {{a.label}}. {{a.value}}
-                            <img
-                                v-if="item.result==item.userResult && item.state=='ended'"
-                                src="~assets/img/naire/ic_right.png"
-                            >
-                            <img v-else-if="item.result!=item.userResult && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
+                            <img v-if="item.result==i+1 && item.state=='ended'" src="~assets/img/naire/ic_right.png">
+                            <img v-else-if="item.guess==i+1&&item.result!=item.result&& item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
                         </span>
-                        <span v-if="item.state=='unstart'"/>
-                        <span
-                            v-else-if="item.state!='unstart' && item.total>0 && !a.clicked"
-                            class="percent"
-                        >{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span>
+
+                        <span v-if="item.state=='unstart'" />
+                        <span v-else-if="item.state!='unstart'&&item.state!='ended' && item.total>0 && !a.clicked" class="percent">{{(a.count/item.total).toFixed(3) * 100 +'%'}}</span>
+                        <span v-else-if="item.state=='ended'&& item.result==i+1" class="percent won">{{a.count}} people won</span>
                         <span v-else class="percent">0%</span>
                         <div class="bet-btn" @click="answer(item.id,a.id)">BET</div>
                     </div>
                     <span class="close">
                         Close at
-                        <a
-                            href="javascript:void(0)"
-                            :class="{'close':item.state=='closed' || item.state=='ended'}"
-                        >{{item.end_time | formatTime}}</a>
+                        <a href="javascript:void(0)" :class="{'close':item.state=='closed' || item.state=='ended'}">{{item.end_time | formatTime}}</a>
                     </span>
                 </div>
             </div>
         </div>
-        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false"/>
+        <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false" />
         <div v-show="showRule==true" class="card-rule">
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
             <div class="rule">
@@ -98,13 +82,7 @@ export default {
             const ss =
                 val == 'closed'
                     ? 'Waiting Result'
-                    : val == 'unstart'
-                        ? 'Not Start'
-                        : val == 'progress'
-                            ? 'In Progress'
-                            : val == 'ended'
-                                ? 'ended'
-                                : ''
+                    : val == 'unstart' ? 'Not Start' : val == 'progress' ? 'In Progress' : val == 'ended' ? 'Ended' : ''
             return ss
         },
         formatTime(val) {
@@ -289,6 +267,18 @@ html {
                 margin-bottom: 1.6rem;
                 position: relative;
                 border-radius: 3px;
+                &.end-miss {
+                    background: #ffffff url('~assets/img/naire/stamp_missed.png') no-repeat right 8%;
+                    background-size: 25%;
+                }
+                &.end-win {
+                    background: #ffffff url('~assets/img/naire/stamp_won.png') no-repeat right 8%;
+                    background-size: 25%;
+                }
+                &.end-lost {
+                    background: #ffffff url('~assets/img/naire/stamp_lost.png') no-repeat right 8%;
+                    background-size: 25%;
+                }
                 span {
                     display: block;
                     &.topic {
@@ -384,11 +374,14 @@ html {
                             background: #e3e3e3;
                         }
                     }
-                    &.pa {
+                    &.end-wrong {
                         background: #d5ecfa;
                         p {
                             background: #58bbf7;
                         }
+                    }
+                    &.end-right {
+                        background: -webkit-linear-gradient(180deg, rgba(157, 217, 15, 1) 0%, rgba(68, 168, 0, 1) 100%);
                     }
                     &.clicked {
                         border: #58bbf7 solid 1px;
@@ -418,6 +411,9 @@ html {
                         top: 0;
                         right: 0.5rem;
                         color: #999999;
+                        &.won {
+                            color: #ffffff;
+                        }
                     }
                 }
             }
