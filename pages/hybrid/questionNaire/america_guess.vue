@@ -38,6 +38,12 @@ export default {
             this.$store.commit('SET_SHARE_STATE', true)
         },
         toApp() {
+            this.sendEvLog({
+                category: 'guess_event',
+                action: 'download_act',
+                label: '',
+                value: 1
+            })
             callApp.call(
                 this,
                 `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/questionNaire/america_bet`,

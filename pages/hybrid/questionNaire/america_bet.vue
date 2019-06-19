@@ -58,7 +58,7 @@
                                 >
                             </span>
                             <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
-                            <div class="bet-btn" @click="answer(item,a)">BET</div>
+                            <div class="bet-btn" @click="answer(item,a)">GUESS</div>
                         </div>
                         <span class="close">
                             Close at
@@ -145,6 +145,18 @@ export default {
             prizeNum: 0
         }
     },
+    watch: {
+        showRule(nv, ov) {
+            if (nv) {
+                this.sendEvLog({
+                    category: 'guess_event',
+                    action: 'view_prize',
+                    label: '',
+                    value: 1
+                })
+            }
+        }
+    },
     async asyncData({ app: { $axios }, store, route }) {
         try {
             let data = {}
@@ -182,6 +194,12 @@ export default {
         }
     },
     mounted() {
+        this.sendEvLog({
+            category: 'guess_event',
+            action: 'guess_event_show',
+            label: '',
+            value: 1
+        })
         document.querySelector('#america').height = document.body.clientHeight
         if (this.$store.state.appType == 1) {
             if (
@@ -213,7 +231,7 @@ export default {
             this.showPrize = true
             this.sendEvLog({
                 category: 'guess_event',
-                action: 'view_prize',
+                action: 'gift_click',
                 label: '',
                 value: 1
             })
@@ -254,6 +272,23 @@ export default {
                 label: question.id,
                 value: 1
             })
+            const isLogin = this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS'
+            if (!isLogin) {
+                this.sendEvLog({
+                    category: 'guess_event',
+                    action: 'login_dialog_show',
+                    label: '',
+                    value: 1
+                })
+                this.$confirm('Login is required for you to get prizes, please login', () => {
+                    if (this.$store.state.appType === 1) {
+                        toNativePage('com.star.mobile.video.account.LoginActivity')
+                    } else {
+                        toNativePage('startimes://login')
+                    }
+                })
+                return false
+            }
             this.$axios
                 .get(`/hybrid/api/quiz/bet?userId=${this.userId}&quizId=${this.quizId}&questionId=${question.id}&answerId=${answer.id}`)
                 .then(res => {
@@ -285,6 +320,12 @@ export default {
             )
         },
         checkPrize() {
+            this.sendEvLog({
+                category: 'guess_event',
+                action: 'check_prize_click',
+                label: '',
+                value: 1
+            })
             toNativePage('com.star.mobile.video.me.coupon.OttCouponsActivity?needLogin=true')
         }
     },
@@ -325,7 +366,6 @@ export default {
         border: 1px solid transparent;
         position: fixed;
         top: 33%;
-        overflow-y: scroll;
         .top {
             text-align: right;
             p {

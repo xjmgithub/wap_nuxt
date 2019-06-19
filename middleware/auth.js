@@ -15,9 +15,7 @@ const authIgnore = [
     /^\/hybrid\/tools/,
     /^\/hybrid\/vote/,
     /^\/browser/,
-    /^\/hybrid\/questionNaire\/asintado/,
-    /^\/hybrid\/questionNaire\/asintadoResult/,
-    /^\/hybrid\/questionNaire\/america_guess/,
+    /^\/hybrid\/questionNaire/,
     /^\/hybrid\/dvb\/bind/,
     /^\/hybrid\/dvb\/order/,
 ]
