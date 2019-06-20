@@ -126,7 +126,7 @@ export default {
     },
     data() {
         return {
-            appType: this.$store.state.appType || 0,
+            appType: 1 || this.$store.state.appType || 0,
             tabList: [
                 {
                     name: this.$store.state.lang.vote_tab_film,
@@ -217,12 +217,13 @@ export default {
     async asyncData({ app: { $axios }, store, req }) {
         let banners = []
         let leftVote = 0
+        let ipMax = false
         $axios.setHeader('token', store.state.token)
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
             if (data.data.banner) banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-            if (store.state.appType) {
-                leftVote = await $axios({
+            if (1 || store.state.appType) {
+                const addVoteNum = await $axios({
                     url: `/voting/v1/ticket/sign-in`,
                     headers: { 'content-type': 'application/x-www-form-urlencoded' },
                     method: 'POST',
@@ -230,20 +231,23 @@ export default {
                         vote_id: 8
                     })
                 })
-                leftVote = leftVote.data.data || 0
+                leftVote = addVoteNum.data.data || 0
+                ipMax = addVoteNum.data.code == -5 && leftVote == 0
             }
             return {
                 banners: banners.data.data || [],
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 leftVote: leftVote,
-                voteTitle: data.data.name
+                voteTitle: data.data.name,
+                ipMax: ipMax
             }
         } catch (e) {
             return {
                 banners: [],
                 vote_sign: (req && req.headers.vote_sign) || '',
                 leftVote: 0,
-                voteTitle: 'Pan Africa Online Film Festival'
+                voteTitle: 'Pan Africa Online Film Festival',
+                ipMax: ipMax
             }
         }
     },
@@ -254,6 +258,10 @@ export default {
             label: '',
             value: 1
         })
+
+        if (this.ipMax) {
+            this.$alert('The votes have been issued today, come back tomorrow.')
+        }
 
         this.getAllList() // 获取投票单元
 
