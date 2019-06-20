@@ -1,5 +1,5 @@
 <template>
-    <img src="~assets/img/landpage/process.png">
+    <img src="~assets/img/landpage/DVB_PROCESS.png">
 </template>
 <script>
 export default {
