@@ -126,7 +126,7 @@ export default {
     },
     data() {
         return {
-            appType: 1 || this.$store.state.appType || 0,
+            appType: this.$store.state.appType || 0,
             tabList: [
                 {
                     name: this.$store.state.lang.vote_tab_film,
@@ -222,7 +222,7 @@ export default {
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
             if (data.data.banner) banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-            if (1 || store.state.appType) {
+            if (store.state.appType) {
                 const addVoteNum = await $axios({
                     url: `/voting/v1/ticket/sign-in`,
                     headers: { 'content-type': 'application/x-www-form-urlencoded' },
