@@ -257,14 +257,13 @@ export default {
                 .then(res => {
                     this.leftVote = res.data.data || 0
                     this.ipMax = res.data.code == -5 && this.leftVote == 0
+                    if (this.ipMax) {
+                        this.$alert('The votes have been issued today, come back tomorrow.')
+                    }
                 })
                 .catch(e => {
                     console.log(e)
                 })
-        }
-
-        if (this.ipMax) {
-            this.$alert('The votes have been issued today, come back tomorrow.')
         }
 
         this.getAllList() // 获取投票单元
