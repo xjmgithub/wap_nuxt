@@ -154,7 +154,9 @@ export default {
             mvList: [],
             time: 5,
             openPicShowd: false,
-            mounted: false
+            mounted: false,
+            leftVote: 0,
+            ipMax: false
         }
     },
     computed: {
@@ -216,38 +218,20 @@ export default {
     },
     async asyncData({ app: { $axios }, store, req }) {
         let banners = []
-        let leftVote = 0
-        let ipMax = false
         $axios.setHeader('token', store.state.token)
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
             if (data.data.banner) banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-            if (store.state.appType) {
-                const addVoteNum = await $axios({
-                    url: `/voting/v1/ticket/sign-in`,
-                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                    method: 'POST',
-                    data: qs.stringify({
-                        vote_id: 8
-                    })
-                })
-                leftVote = addVoteNum.data.data || 0
-                ipMax = addVoteNum.data.code == -5 && leftVote == 0
-            }
             return {
                 banners: banners.data.data || [],
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
-                leftVote: leftVote,
-                voteTitle: data.data.name,
-                ipMax: ipMax
+                voteTitle: data.data.name
             }
         } catch (e) {
             return {
                 banners: [],
                 vote_sign: (req && req.headers.vote_sign) || '',
-                leftVote: 0,
-                voteTitle: 'Pan Africa Online Film Festival',
-                ipMax: ipMax
+                voteTitle: 'Pan Africa Online Film Festival'
             }
         }
     },
@@ -258,6 +242,26 @@ export default {
             label: '',
             value: 1
         })
+
+        if (this.appType > 0) {
+            this.$axios({
+                url: '/voting/v1/ticket/sign-in',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    vote_id: 8
+                })
+            })
+                .then(res => {
+                    this.leftVote = res.data.data || 0
+                    this.ipMax = res.data.code == -5 && this.leftVote == 0
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+        }
 
         if (this.ipMax) {
             this.$alert('The votes have been issued today, come back tomorrow.')
