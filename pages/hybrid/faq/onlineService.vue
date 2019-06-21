@@ -39,7 +39,8 @@ export default {
         return {
             pageSize: 20,
             isLoading: false,
-            entranceId: this.$route.query.entrance_id || ''
+            entranceId: this.$route.query.entrance_id || '',
+            configId: this.$route.query.config_id || ''
         }
     },
     async asyncData({ app: { $axios }, route, store }) {
@@ -52,6 +53,7 @@ export default {
         }
         let tags = []
         let service = {}
+        let categoryId = 183
 
         try {
             $axios.setHeader('token', store.state.token)
@@ -60,6 +62,7 @@ export default {
             const res1 = await $axios.get(`/ocs/v1/faqs/Tags`)
             const res2 = await $axios.get(`/ocs/v1/service/module/show?entranceId=${route.query.entrance_id}`)
             const res3 = await $axios.get(`/ocs/v1/faqs/directory/${store.state.country.id}`)
+            categoryId = res3.data.data
             res1.data.data.forEach((item, index) => {
                 tags.push({
                     id: item.tagging_id,
@@ -78,11 +81,11 @@ export default {
         }
         return {
             faqTags: tags || [],
-            service: service
+            service: service,
+            categoryId: categoryId
         }
     },
     mounted() {
-        console.log(this.faqTags)
         document.querySelector('.wrapper').style.height = window.innerHeight + 'px'
 
         this.sendEvLog({
@@ -129,6 +132,22 @@ export default {
             if (tag.untilTotal) return
 
             if (tagId == 1) {
+                this.$axios.get(`/ocs/v1/faqs/category/${this.categoryId}?config_id=${this.configId}`).then(res => {
+                    this.isLoading = false
+                    if (res.data.code === 200) {
+                        const arr = []
+                        res.data.data.contents.forEach(item=>{
+                            arr.push({
+                                id:item.id,
+                                thema:item.name
+                            })
+                        })
+
+                        tag.faqs = tag.faqs.concat(arr)
+                        tag.page = tag.page + 1
+                        tag.untilTotal = true
+                    }
+                })
             } else {
                 this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagId}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
                     this.isLoading = false

@@ -77,7 +77,6 @@ export default {
             user: this.$store.state.user,
             config_id: this.$route.query.config_id || 0,
             entrance_id: this.$route.query.entrance_id,
-            categoryId: 183, // default others
             serviceRecord: null,
             renderQueue: [],
             loadHistoryState: false, // 加载历史记录状态
@@ -193,12 +192,7 @@ export default {
                     name: 'Welcome to StarTimes Online Service.'
                 })
 
-                this.$axios.get(`/ocs/v1/faqs/directory/${this.$store.state.country.id}`).then(res => {
-                    if (res.data.code === 200) {
-                        this.categoryId = res.data.data
-                        this.getfaqDirectory(res.data.data)
-                    }
-                })
+                this.getfaqDirectory()
             }
         })
     },
@@ -230,7 +224,7 @@ export default {
                     })
         },
         getfaqDirectory(id) {
-            id &&
+            if (id) {
                 this.$axios.get(`/ocs/v1/faqs/category/${id}?config_id=${this.config_id}`).then(res => {
                     if (res.data.code === 200) {
                         this.addOperate(
@@ -240,6 +234,22 @@ export default {
                         )
                     }
                 })
+            } else {
+                this.$axios.get(`/ocs/v1/faqs/byTag?tagId=1&pageSize=40&pageNum=1`).then(res => {
+                    if (res.data) {
+                        res.data.data.rows.forEach(item => {
+                            item.name = item.thema
+                        })
+                        res.data.data.contents = res.data.data.rows
+                        res.data.data.type = 1
+                        this.addOperate(
+                            Object.assign({}, res.data.data, {
+                                tpl: 'list'
+                            })
+                        )
+                    }
+                })
+            }
         },
         askQuest(item, type, showOrder) {
             this.addOperate(
