@@ -70,14 +70,20 @@ export default {
         $axios.setHeader('token', store.state.gtoken)
         try {
             const { data } = await $axios.get(`/cms/program_detail/byvod/${route.params.id}`)
+            const res2 = await $axios.get(`/adm/v1/sharing/custom-contents?target_type=2&target_id=${route.params.id}`)
+            console.log(res2)
             return {
                 pid: data.id,
-                seoData: data
+                seoData: data,
+                cusShareTitle: (res2.data.data && res2.data.data.copywriting) || '',
+                cusShareImg: (res2.data.data && res2.data.data.image_url) || ''
             }
         } catch (e) {
             return {
                 pid: '',
-                seoData: {}
+                seoData: {},
+                cusShareTitle: '',
+                cusShareImg: ''
             }
         }
     },
@@ -175,7 +181,7 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.id,2)
+                    normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.id, 2)
                     this.sendEvLog({
                         category: document.title,
                         action: 'install_dialog_install',
@@ -204,14 +210,14 @@ export default {
     },
     head() {
         return {
-            title: this.seoData.name,
+            title: this.cusShareTitle || this.seoData.name,
             meta: [
                 { name: 'description', property: 'description', content: this.seoData.programSummary },
                 { name: 'og:description', property: 'og:description', content: this.seoData.programSummary + '#StarTimes ON Live TV & football' },
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.seoData.poster && this.seoData.poster.replace('http:', 'https:')
+                    content: this.cusShareImg || (this.seoData.poster && this.seoData.poster.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.seoData.name }
