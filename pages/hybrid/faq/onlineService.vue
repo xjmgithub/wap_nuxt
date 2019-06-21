@@ -59,6 +59,7 @@ export default {
             $axios.setHeader('x-appVersion', 51120)
             const res1 = await $axios.get(`/ocs/v1/faqs/Tags`)
             const res2 = await $axios.get(`/ocs/v1/service/module/show?entranceId=${route.query.entrance_id}`)
+            const res3 = await $axios.get(`/ocs/v1/faqs/directory/${store.state.country.id}`)
             res1.data.data.forEach((item, index) => {
                 tags.push({
                     id: item.tagging_id,
@@ -81,6 +82,7 @@ export default {
         }
     },
     mounted() {
+        console.log(this.faqTags)
         document.querySelector('.wrapper').style.height = window.innerHeight + 'px'
 
         this.sendEvLog({
@@ -125,16 +127,20 @@ export default {
             })
             if (!moretag && tag.page > 1) return
             if (tag.untilTotal) return
-            this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagId}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
-                this.isLoading = false
-                if (res.data) {
-                    tag.faqs = tag.faqs.concat(res.data.data.rows)
-                    tag.page = tag.page + 1
-                    if (tag.faqs.length >= res.data.data.total) {
-                        tag.untilTotal = true
+
+            if (tagId == 1) {
+            } else {
+                this.$axios.get(`/ocs/v1/faqs/byTag?tagId=${tagId}&pageSize=${this.pageSize}&pageNum=${tag.page}`).then(res => {
+                    this.isLoading = false
+                    if (res.data) {
+                        tag.faqs = tag.faqs.concat(res.data.data.rows)
+                        tag.page = tag.page + 1
+                        if (tag.faqs.length >= res.data.data.total) {
+                            tag.untilTotal = true
+                        }
                     }
-                }
-            })
+                })
+            }
         },
         changeTag(tagId) {
             this.sendEvLog({
