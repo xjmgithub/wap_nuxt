@@ -442,21 +442,22 @@ export const callMarket = function() {
     } else {
         source = '&' + location.search.substr(1)
     }
-
-    this.$axios({
-        method: 'POST',
-        headers: {
-            'content-type': 'application/x-www-form-urlencoded',
-            token: this.$store.state.token,
-            'X-Secret': voteDownTag
-        },
-        data: qs.stringify({
-            vote_id: 8,
-            target: user,
-            action: 'SHARE_DOWNLOAD'
-        }),
-        url: '/voting/v1/ticket'
-    })
+    if (voteDownTag && voteDownTag != -1) {
+        this.$axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded',
+                token: this.$store.state.token,
+                'X-Secret': voteDownTag
+            },
+            data: qs.stringify({
+                vote_id: 8,
+                target: user,
+                action: 'SHARE_DOWNLOAD'
+            }),
+            url: '/voting/v1/ticket'
+        })
+    }
 
     window.location.href =
         appType == 1 ? 'market://details?id=com.star.mobile.video' + source : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
