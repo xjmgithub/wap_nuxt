@@ -275,17 +275,10 @@ export default {
     },
     async asyncData({ app: { $axios }, store, route }) {
         try {
-            let data = {}
             $axios.setHeader('token', store.state.token)
-            if (process.client) {
-                const res = await $axios.get(`/voting/v1/questionnaire/has_submitted?questionnaire_id=13`)
-                data = res.data
-            } else {
-                const res = await $axios.get(`http://localhost:3000/voting/v1/questionnaire/has_submitted?questionnaire_id=13`)
-                data = res.data
-            }
+            const res = await $axios.get(`/voting/v1/questionnaire/has_submitted?questionnaire_id=13`)
             return {
-                isDone: data.data
+                isDone: res.data.data
             }
         } catch (e) {
             return {
