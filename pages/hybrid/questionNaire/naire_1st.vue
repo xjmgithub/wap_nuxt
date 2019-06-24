@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div v-show="!isDone && !isSucessed && initLoading">
+        <div v-show="!isDone && !isSucessed">
             <div class="description">
                 <p>Dear users of StarTimes ON, thanks for your participation in advance. Your feedback is important to us!</p>
                 <p>This survey is purely intended to help improve the users’ experience with StarTimes ON; all information collected here will be protected and will never be shared with others.</p>
@@ -9,27 +9,25 @@
             <div class="content">
                 <div class="question">
                     <div v-for="(item, index) in naireList" :key="index">
-                        <p :id="'question-'+index">
-                            {{item.question}}
-                        </p>
-                        <RadioNaire :radio-list="item.answer" @pick="changeItem($event,index)" />
+                        <p :id="'question-'+index">{{item.question}}</p>
+                        <RadioNaire :radio-list="item.answer" @pick="changeItem($event,index)"/>
                     </div>
                 </div>
-                <mButton :text="'SUBMIT'" class="submit" @click="submit" />
+                <mButton :text="'SUBMIT'" class="submit" @click="submit"/>
             </div>
             <div v-show="loaded" class="loadlayer">
-                <loading />
+                <loading/>
             </div>
         </div>
-        <div v-show="isDone && initLoading " class="done">
+        <div v-show="isDone" class="done">
             <img src="~assets/img/naire/done.png" alt>
             <p>You have already submitted. Thank you again.</p>
-            <mButton v-if="appType==1" :text="'OK'" class="ok" @click="ok" />
+            <mButton v-if="appType==1" :text="'OK'" class="ok" @click="ok"/>
         </div>
         <div v-show="isSucessed" class="success">
             <img src="~assets/img/naire/success.png" alt>
             <p>Thank you for your participation and have a nice day!</p>
-            <mButton v-if="appType==1" :text="'OK'" class="ok" @click="ok" />
+            <mButton v-if="appType==1" :text="'OK'" class="ok" @click="ok"/>
         </div>
     </div>
 </template>
@@ -49,7 +47,7 @@ export default {
     data() {
         return {
             appType: this.$store.state.appType,
-            questionnaire_id:13,
+            questionnaire_id: 13,
             naireList: [
                 {
                     question: '1. Your Gender please?',
@@ -258,9 +256,7 @@ export default {
                 }
             ],
             loaded: false,
-            isDone: false,
             isSucessed: false,
-            initLoading: false,
             openTime: '',
             answers1: '',
             answers2: '',
@@ -277,14 +273,35 @@ export default {
             return [this.answers1, this.answers2, this.answers3, this.answers4, this.answers5, this.answers6, this.answers7, this.answers8]
         }
     },
+    async asyncData({ app, store, route }) {
+        try {
+            let data = {}
+            if (process.client) {
+                const res = await app.$axios.get(`/voting/v1/questionnaire/has_submitted?questionnaire_id=${app.questionnaire_id}`)
+                data = res.data
+            } else {
+                const res = await app.$axios.get(
+                    `http://localhost:3000/voting/v1/questionnaire/has_submitted?questionnaire_id=${app.questionnaire_id}`
+                )
+                data = res.data
+            }
+
+            return {
+                isDone: data.data
+            }
+        } catch (e) {
+            return {
+                isDone: false
+            }
+        }
+    },
     mounted() {
         this.sendEvLog({
             category: 'questionnaire',
-            action: 'init',
+            action: 'show',
             label: this.questionnaire_id,
-            value: 1
+            value: this.isDone ? 1 : 0
         })
-
         this.openTime = new Date().getTime()
         const s = navigator.userAgent.indexOf('Android')
         const w = navigator.userAgent.substr(s + 8).split(';')[0]
@@ -316,52 +333,6 @@ export default {
             }
             window.getChannelId && window.getChannelId.finish()
         })
-        this.$axios({
-            url: `/voting/v1/questionnaire/has_submitted?questionnaire_id=${this.questionnaire_id}`,
-            method: 'get',
-            data: {}
-        })
-            .then(res => {
-                if (res.data.code === 0) {
-                    this.isDone = res.data.data
-                    this.initLoading = true
-                    this.sendEvLog({
-                        category: 'questionnaire',
-                        action: 'show',
-                        label: this.questionnaire_id,
-                        value: res.data.data ? 1 : 0
-                    })
-                } else {
-                    this.$alert(
-                        'Load error,please try reload',
-                        () => {
-                            window.location.reload()
-                        },
-                        'RELOAD'
-                    )
-                    this.sendEvLog({
-                        category: 'questionnaire',
-                        action: 'error',
-                        label: this.questionnaire_id,
-                        value: res.data.code
-                    })
-                }
-            })
-            .catch(() => {
-                this.$alert(
-                    'Load error,please try reload',
-                    () => {
-                        window.location.reload()
-                    },
-                    'RELOAD'
-                )
-                this.sendEvLog({
-                    category: 'questionnaire',
-                    action: 'error',
-                    label: this.questionnaire_id,
-                    value: 'voting api error'
-                })
-            })
     },
     methods: {
         changeItem(data, index) {
@@ -482,8 +453,8 @@ export default {
 }
 </script>
 <style>
-html{
-    background:#1657d7;
+html {
+    background: #1657d7;
 }
 </style>
 <style lang="less" scoped>
