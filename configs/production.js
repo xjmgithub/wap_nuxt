@@ -9,6 +9,6 @@ export default {
     gtbankJdkHost: 'https://eu-gateway.mastercard.com',
     proxyHost: 'https://upms.startimestv.com/',
     apiURL: 'http://app-gateway.production.eu-west-1.startimes.aws.local/',
-    mechantRequestUrl: 'http://172.31.39.21:8010/',
+    mechantRequestUrl: 'http://app-gateway.production.eu-west-1.startimes.aws.local/', // 'http://172.31.39.21:8010/',
     vodtab: 'd6d9c3e21dfd4631ab14d95eb0871ca3'
 }
