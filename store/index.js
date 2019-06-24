@@ -170,7 +170,6 @@ export const actions = {
         commit('SET_INIT_TIME', _HEADER.startTime)
         commit('SET_APP_VERSION', _HEADER.versionname || (_HEADER.versioncode && versionMap[_HEADER.versioncode]))
 
-        // TODO 是否可以只加载一次
         preload()
         preload6()
         let country = 'NG'
@@ -226,7 +225,7 @@ export const actions = {
             // 匿名用户不存在用户信息接口返回204
             commit('SET_AREA_INFO', countryMap[country])
         } else {
-            commit('SET_AREA_INFO', countryMap.NG)
+            commit('SET_AREA_INFO', countryMap['-O'])
         }
     }
 }
