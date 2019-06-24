@@ -49,6 +49,7 @@ export default {
     data() {
         return {
             appType: this.$store.state.appType,
+            questionnaire_id:13,
             naireList: [
                 {
                     question: '1. Your Gender please?',
@@ -280,7 +281,7 @@ export default {
         this.sendEvLog({
             category: 'questionnaire',
             action: 'init',
-            label: 6,
+            label: this.questionnaire_id,
             value: 1
         })
 
@@ -300,7 +301,7 @@ export default {
                 this.sendEvLog({
                     category: 'questionnaire',
                     action: 'back',
-                    label: 6,
+                    label: this.questionnaire_id,
                     value: 0,
                     timediff: timediff,
                     answers1: this.answers1,
@@ -316,7 +317,7 @@ export default {
             window.getChannelId && window.getChannelId.finish()
         })
         this.$axios({
-            url: `/voting/v1/questionnaire/has_submitted?questionnaire_id=6`,
+            url: `/voting/v1/questionnaire/has_submitted?questionnaire_id=${this.questionnaire_id}`,
             method: 'get',
             data: {}
         })
@@ -327,7 +328,7 @@ export default {
                     this.sendEvLog({
                         category: 'questionnaire',
                         action: 'show',
-                        label: 6,
+                        label: this.questionnaire_id,
                         value: res.data.data ? 1 : 0
                     })
                 } else {
@@ -341,7 +342,7 @@ export default {
                     this.sendEvLog({
                         category: 'questionnaire',
                         action: 'error',
-                        label: 6,
+                        label: this.questionnaire_id,
                         value: res.data.code
                     })
                 }
@@ -357,7 +358,7 @@ export default {
                 this.sendEvLog({
                     category: 'questionnaire',
                     action: 'error',
-                    label: 6,
+                    label: this.questionnaire_id,
                     value: 'voting api error'
                 })
             })
@@ -418,7 +419,7 @@ export default {
                 },
                 timeout: 20000,
                 data: qs.stringify({
-                    questionnaire_id: 6
+                    questionnaire_id: this.questionnaire_id
                 })
             })
                 .then(res => {
@@ -429,7 +430,7 @@ export default {
                     this.sendEvLog({
                         category: 'questionnaire',
                         action: 'submit',
-                        label: 6,
+                        label: this.questionnaire_id,
                         value: this.isSucessed ? 1 : 0,
                         timediff: timediff,
                         answers1: this.answers1,
@@ -446,7 +447,7 @@ export default {
                     this.sendEvLog({
                         category: 'questionnaire',
                         action: 'submit',
-                        label: 6,
+                        label: this.questionnaire_id,
                         value: 0,
                         timediff: timediff,
                         answers1: this.answers1,
@@ -467,7 +468,7 @@ export default {
             this.sendEvLog({
                 category: 'questionnaire',
                 action: 'back',
-                label: 6,
+                label: this.questionnaire_id,
                 value: this.isDone || this.isSucessed ? 1 : 0
             })
             window.getChannelId && window.getChannelId.finish()
@@ -480,6 +481,11 @@ export default {
     }
 }
 </script>
+<style>
+html{
+    background:#1657d7;
+}
+</style>
 <style lang="less" scoped>
 .btnStyle {
     color: #0087eb;
