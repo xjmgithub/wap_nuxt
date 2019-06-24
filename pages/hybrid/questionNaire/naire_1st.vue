@@ -273,19 +273,17 @@ export default {
             return [this.answers1, this.answers2, this.answers3, this.answers4, this.answers5, this.answers6, this.answers7, this.answers8]
         }
     },
-    async asyncData({ app, store, route }) {
+    async asyncData({ app: { $axios }, store, route }) {
         try {
             let data = {}
+            $axios.setHeader('token', store.state.token)
             if (process.client) {
-                const res = await app.$axios.get(`/voting/v1/questionnaire/has_submitted?questionnaire_id=${app.questionnaire_id}`)
+                const res = await $axios.get(`/voting/v1/questionnaire/has_submitted?questionnaire_id=13`)
                 data = res.data
             } else {
-                const res = await app.$axios.get(
-                    `http://localhost:3000/voting/v1/questionnaire/has_submitted?questionnaire_id=${app.questionnaire_id}`
-                )
+                const res = await $axios.get(`http://localhost:3000/voting/v1/questionnaire/has_submitted?questionnaire_id=13`)
                 data = res.data
             }
-
             return {
                 isDone: data.data
             }
