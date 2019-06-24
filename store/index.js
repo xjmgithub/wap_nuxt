@@ -225,7 +225,7 @@ export const actions = {
             // 匿名用户不存在用户信息接口返回204
             commit('SET_AREA_INFO', countryMap[country])
         } else {
-            commit('SET_AREA_INFO', countryMap['-O'])
+            commit('SET_AREA_INFO', countryMap.NG)
         }
     }
 }
