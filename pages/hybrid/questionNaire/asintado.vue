@@ -49,11 +49,6 @@ export default {
             from: this.$route.query.from || '',
             quesList: [
                 {
-                    question: 'Are you a girl or a boy?',
-                    A: 'Girl',
-                    B: 'Boy'
-                },
-                {
                     question: 'How close are you with your family?',
                     A: 'We get along well',
                     B: "It's...complicated"
@@ -77,6 +72,11 @@ export default {
                     question: "Who's your better date choice?",
                     A: 'Someone who is smart.',
                     B: 'Someone who is good-looking.'
+                },
+                {
+                    question: 'Are you a girl or a boy?',
+                    A: 'Girl',
+                    B: 'Boy'
                 }
             ],
             userGender: ''
@@ -116,7 +116,7 @@ export default {
     methods: {
         answer(sex) {
             const index = this.currIndex
-            if (index === 0) {
+            if (index === this.quesList.length - 1) {
                 this.userGender = sex
             }
             if (index + 1 <= this.quesList.length - 1) {
