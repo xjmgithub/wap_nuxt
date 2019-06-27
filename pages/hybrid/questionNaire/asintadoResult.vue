@@ -35,7 +35,7 @@
                 <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                     <div class="play">Get My Own Result</div>
                 </nuxt-link>
-                <div v-show="sharePin" class="line"/>
+                <div v-show="sharePin" class="line" />
             </div>
             <div v-show="sharePin" class="asintado">
                 <div class="introduction">
@@ -71,7 +71,7 @@
             <div v-show="programList.length>0" class="clips">
                 <p>Highlights</p>
                 <ul class="clearfix">
-                    <li v-for="(item,index) in programList" :key="index" @click="toVideo(item.link_vod_code)">
+                    <li v-for="(item,index) in programList" :key="index" @click="toVideo(item,index+1)">
                         <div>
                             <img v-if="item.link_url" :src="cdnPic(item.link_url)">
                             <img v-else src="~assets/img/web/def.png">
@@ -82,7 +82,7 @@
                 </ul>
             </div>
         </div>
-        <mShare :share-url="shareUrl"/>
+        <mShare :share-url="shareUrl" />
     </div>
 </template>
 <script>
@@ -212,7 +212,15 @@ export default {
                 }
             })
         },
-        toVideo(vod) {
+        toVideo(item, index) {
+            this.sendEvLog({
+                category: 'Characteristic Test',
+                action: 'highlight_click',
+                label: `${this.platform}`,
+                value: index,
+                msg: item.description || item.name
+            })
+            const vod = item.link_vod_code
             if (vod && this.appType > 0) {
                 if (this.appType == 1) {
                     window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
