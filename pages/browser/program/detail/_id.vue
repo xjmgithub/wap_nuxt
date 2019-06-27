@@ -59,17 +59,24 @@ export default {
             try {
                 $axios.setHeader('token', store.state.gtoken)
                 const res = await $axios.get(`/cms/program_detail/${route.params.id}`)
+                const res2 = await $axios.get(`/adm/v1/sharing/custom-contents?target_type=2&target_id=${route.params.id}`)
                 return {
-                    pData: res.data
+                    pData: res.data,
+                    cusShareTitle: (res2.data.data && res2.data.data.copywriting) || '',
+                    cusShareImg: (res2.data.data && res2.data.data.image_url) || ''
                 }
             } catch (e) {
                 return {
-                    pData: {}
+                    pData: {},
+                    cusShareTitle: '',
+                    cusShareImg: ''
                 }
             }
         } else {
             return {
-                pData: {}
+                pData: {},
+                cusShareTitle: '',
+                cusShareImg: ''
             }
         }
     },
@@ -195,14 +202,14 @@ export default {
     },
     head() {
         return {
-            title: this.pData.name,
+            title: this.cusShareTitle || this.pData.name,
             meta: [
                 { name: 'description', property: 'description', content: this.pData.programSummary },
                 { name: 'og:description', property: 'og:description', content: this.pData.programSummary + '#StarTimes ON Live TV & football' },
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.pData.poster && this.pData.poster.replace('http:', 'https:')
+                    content: this.cusShareImg || (this.pData.poster && this.pData.poster.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.pData.name }

@@ -128,18 +128,25 @@ export default {
     async asyncData({ app: { $axios }, route, store }) {
         let data = null
         let time = new Date().getTime()
+        let cusShareTitle = ''
+        let cusShareImg = ''
         try {
             $axios.setHeader('token', store.state.gtoken)
             const res = await $axios.get(`/cms/vup/v6/channels/${route.query.channelId}`)
+            const res2 = await $axios.get(`/adm/v1/sharing/custom-contents?target_type=1&target_id=${route.query.channelId}`)
             time = dayjs(res.headers.date).valueOf()
             data = res.data
+            cusShareTitle = (res2.data.data && res2.data.data.copywriting) || ''
+            cusShareImg = (res2.data.data && res2.data.data.image_url) || ''
         } catch (e) {
             data = null
         }
         return {
             serverTime: time,
             channel: data,
-            platformInfos: data && data.ofAreaTVPlatforms[0].platformInfos
+            platformInfos: data && data.ofAreaTVPlatforms[0].platformInfos,
+            cusShareTitle: cusShareTitle,
+            cusShareImg: cusShareImg
         }
     },
     mounted() {
@@ -321,14 +328,14 @@ export default {
     },
     head() {
         return {
-            title: this.channel.name,
+            title: this.cusShareTitle || this.channel.name,
             meta: [
                 { name: 'description', property: 'description', content: this.channel.description },
                 { name: 'og:description', property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:')
+                    content: this.cusShareImg || (this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary' },
                 { name: 'og:title', property: 'og:title', content: this.channel.name }
