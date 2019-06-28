@@ -34,7 +34,6 @@
                                 <img v-show="item.guess==item.result" src="~assets/img/naire/ic_gift.png" @click="showPrizeDialog(a.count)">
                             </span>
                             <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
-                            <div class="bet-btn" @click="answer(item,a)">GUESS</div>
                         </div>
                         <span class="close">
                             Close at
@@ -230,6 +229,22 @@ export default {
                 })
                 answer.clicked = true
             }
+            this.$confirm(
+                'Confirm to select this option?',
+                () => {
+                    this.answer(question, answer)
+                },
+                () => {
+                    this.sendEvLog({
+                        category: 'guess_event',
+                        action: 'selection_cancel',
+                        label: question.id,
+                        value: 1
+                    })
+                },
+                'Confirm',
+                'Cancel'
+            )
         },
         answer(question, answer) {
             if (question.guess) return
