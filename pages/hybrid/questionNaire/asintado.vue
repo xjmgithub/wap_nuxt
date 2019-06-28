@@ -7,6 +7,7 @@
         <div class="container">
             <div class="box">
                 <div v-for="(item,index) in quesList" v-show="currIndex==index" :key="index" class="question">
+                    <div v-show="index==0" class="alert">Just click the answer that appeared in your mind first time and get your Characteristic Test results!</div>
                     <div>
                         <span class="num">{{index+1}}.</span>
                         {{item.question}}
@@ -48,6 +49,11 @@ export default {
             currIndex: 0,
             from: this.$route.query.from || '',
             quesList: [
+                 {
+                    question: 'Are you a girl or a boy?',
+                    A: 'Girl',
+                    B: 'Boy'
+                },
                 {
                     question: 'How close are you with your family?',
                     A: 'We get along well',
@@ -72,12 +78,8 @@ export default {
                     question: "Who's your better date choice?",
                     A: 'Someone who is smart.',
                     B: 'Someone who is good-looking.'
-                },
-                {
-                    question: 'Are you a girl or a boy?',
-                    A: 'Girl',
-                    B: 'Boy'
                 }
+               
             ],
             userGender: ''
         }
@@ -116,7 +118,7 @@ export default {
     methods: {
         answer(sex) {
             const index = this.currIndex
-            if (index === this.quesList.length - 1) {
+            if (index === 0) {
                 this.userGender = sex
             }
             if (index + 1 <= this.quesList.length - 1) {
@@ -213,6 +215,11 @@ export default {
         .question {
             padding: 1rem 0;
             text-align: left;
+            .alert{
+                font-size: 0.95rem;
+                color:#cba543;
+                padding-bottom: .7rem;
+            }
             .num {
                 color: #8451ae;
                 font-size: 1rem;
