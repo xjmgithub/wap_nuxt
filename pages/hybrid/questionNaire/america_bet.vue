@@ -217,6 +217,7 @@ export default {
             return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m) + '%'
         },
         showBetBtn(question, answer) {
+            if (question.state != 'progress') return
             if (question.guess) return
             this.sendEvLog({
                 category: 'guess_event',
