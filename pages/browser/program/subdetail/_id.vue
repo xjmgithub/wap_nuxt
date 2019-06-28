@@ -71,7 +71,6 @@ export default {
         try {
             const { data } = await $axios.get(`/cms/program_detail/byvod/${route.params.id}`)
             const res2 = await $axios.get(`/adm/v1/sharing/custom-contents?target_type=2&target_id=${route.params.id}`)
-            console.log(res2)
             return {
                 pid: data.id,
                 seoData: data,
@@ -119,7 +118,6 @@ export default {
                     this.pDescription = val.programSummary || ''
                 }
             })
-
             localforage.getItem('subprograms_' + this.pid).then(val => {
                 if (!val) {
                     this.$axios.get(`/vup/v1/program/${this.pid}/sub-vods`).then(res => {
@@ -220,7 +218,7 @@ export default {
                     content: this.cusShareImg || (this.seoData.poster && this.seoData.poster.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.seoData.name }
+                { name: 'og:title', property: 'og:title', content: this.cusShareTitle || this.seoData.name }
             ]
         }
     }

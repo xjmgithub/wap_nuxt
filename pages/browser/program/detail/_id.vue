@@ -212,7 +212,7 @@ export default {
                     content: this.cusShareImg || (this.pData.poster && this.pData.poster.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.pData.name }
+                { name: 'og:title', property: 'og:title', content: this.cusShareTitle || this.pData.name }
             ]
         }
     }
