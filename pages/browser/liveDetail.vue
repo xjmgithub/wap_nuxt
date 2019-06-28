@@ -328,7 +328,7 @@ export default {
     },
     head() {
         return {
-            title: this.cusShareTitle || this.channel.name,
+            title: this.channel.name,
             meta: [
                 { name: 'description', property: 'description', content: this.channel.description },
                 { name: 'og:description', property: 'og:description', content: this.channel.description + '#StarTimes ON Live TV & football' },
@@ -338,7 +338,7 @@ export default {
                     content: this.cusShareImg || (this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary' },
-                { name: 'og:title', property: 'og:title', content: this.cusShareTitle || this.channel.name }
+                { name: 'og:title', property: 'og:title', content: this.channel.name }
             ]
         }
     }

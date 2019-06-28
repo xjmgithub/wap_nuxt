@@ -208,7 +208,7 @@ export default {
     },
     head() {
         return {
-            title: this.cusShareTitle || this.seoData.name,
+            title: this.seoData.name,
             meta: [
                 { name: 'description', property: 'description', content: this.seoData.programSummary },
                 { name: 'og:description', property: 'og:description', content: this.seoData.programSummary + '#StarTimes ON Live TV & football' },
@@ -218,7 +218,7 @@ export default {
                     content: this.cusShareImg || (this.seoData.poster && this.seoData.poster.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.cusShareTitle || this.seoData.name }
+                { name: 'og:title', property: 'og:title', content: this.seoData.name }
             ]
         }
     }
