@@ -92,6 +92,9 @@ export default {
         /*
         ** You can extend webpack config here
         */
+        parallel: true,
+        cache:true,
+        hardSource:true,
         extend(config, ctx) {
             config.node = {
                 fs: 'empty',
