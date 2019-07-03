@@ -37,7 +37,7 @@
                 </li>
             </ul>
         </div>
-        <mShare :show="showShare"/>
+        <mShare :show="showShare" />
     </div>
 </template>
 <script>
@@ -218,7 +218,11 @@ export default {
                     content: this.cusShareImg || (this.seoData.poster && this.seoData.poster.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.seoData.name }
+                { name: 'og:title', property: 'og:title', content: this.seoData.name },
+                { name: 'al:android:url', property: 'al:android:url', content: 'starvideo://platformapi/webtoapp' },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }
