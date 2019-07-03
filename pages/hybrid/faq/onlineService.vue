@@ -62,7 +62,7 @@ export default {
             const res1 = await $axios.get(`/ocs/v1/faqs/Tags`)
             const res2 = await $axios.get(`/ocs/v1/service/module/show?entranceId=${route.query.entrance_id}`)
             const res3 = await $axios.get(`/ocs/v1/faqs/directory/${store.state.country.id}`)
-            categoryId = res3.data.data
+            categoryId = res3.data.data || 183
             res1.data.data.forEach((item, index) => {
                 tags.push({
                     id: item.tagging_id,
