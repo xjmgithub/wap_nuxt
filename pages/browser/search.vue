@@ -2,15 +2,15 @@
     <div class="page">
         <div class="search">
             <form @submit.prevent="toSearch()">
-                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_serarch_input" @input="changeWord">
-                <img src="~assets/img/web/ic_search.png" @click="toSearch()">
+                <input v-model="keyword" type="text" :placeholder="$store.state.lang.officialwebsitemobile_serarch_input" @input="changeWord" />
+                <img src="~assets/img/web/ic_search.png" @click="toSearch()" />
             </form>
         </div>
         <div v-show="!oriKeyword">
             <p class="select">{{$store.state.lang.officialwebsitemobile_select_for_you}}</p>
             <ul class="select-word">
                 <li v-for="(item,index) in hotKeyList" :key="index" @click="clickKeyword(item)">
-                    <img src="~assets/img/web/ic_search_b.png">
+                    <img src="~assets/img/web/ic_search_b.png" />
                     <span>{{item}}</span>
                 </li>
             </ul>
@@ -24,18 +24,18 @@
                 <li v-for="(item,index) in programList" :key="index">
                     <nuxt-link v-show="item.fields.program_type=='PROGRAM'" :to="`/browser/program/detail/${item.fields.pro_id}`">
                         <div>
-                            <img v-if="item.fields.pro_picture_url" :pre-src="item.fields.pro_picture_url">
-                            <img v-else src="~assets/img/web/def.png">
+                            <img v-if="item.fields.pro_picture_url" :pre-src="item.fields.pro_picture_url" />
+                            <img v-else src="~assets/img/web/def.png" />
                         </div>
-                        <p class="title" v-html="highlight(getName(item))"/>
+                        <p class="title" v-html="highlight(getName(item))" />
                     </nuxt-link>
                     <nuxt-link v-show="item.fields.program_type=='SUBPROGRAM'" :to="`/browser/program/subdetail/${item.fields.subpro_id}`">
                         <div>
-                            <img v-if="item.fields.subpro_picture_url" :pre-src="item.fields.subpro_picture_url">
-                            <img v-else src="~assets/img/web/def.png">
+                            <img v-if="item.fields.subpro_picture_url" :pre-src="item.fields.subpro_picture_url" />
+                            <img v-else src="~assets/img/web/def.png" />
                             <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
-                        <p class="title" v-html="highlight(getName(item))"/>
+                        <p class="title" v-html="highlight(getName(item))" />
                     </nuxt-link>
                     <span v-if="item.fields.subpro_corner_mark" class="mark">{{item.fields.subpro_corner_mark}}</span>
                 </li>
@@ -43,7 +43,7 @@
             <div v-show="!endedState" class="loading-end">loading…</div>
         </div>
         <div v-show="oriKeyword&&programList.length==0&&noResult" class="noResult">
-            <img src="~assets/img/web/noresult.png" alt>
+            <img src="~assets/img/web/noresult.png" alt />
         </div>
     </div>
 </template>
@@ -184,7 +184,17 @@ export default {
                 .get(
                     `/search-service/v1/search-by-source-type?search_value=${this.oriKeyword}&page_number=${this.page_number}&page_size=${
                         this.page_size
-                    }&local_zero_utc=${time}&source_type=PROGRAM&request_source=WEB`
+                    }&local_zero_utc=${time}&source_type=PROGRAM&request_source=WEB`,
+                    {
+                        headers: {
+                            clienttype: 'H5',
+                            lncode: this.$store.state.langType,
+                            syslang: navigator.languages[0],
+                            // eslint-disable-next-line no-useless-escape
+                            timezoneid: new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1],
+                            'User-Agent': 'StarTimesON/H5'
+                        }
+                    }
                 )
                 .then(res => {
                     this.loadstate = false
