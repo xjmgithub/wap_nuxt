@@ -1,6 +1,6 @@
 <template>
     <div id="america">
-        <img src="~assets/img/naire/bg_bet.png" class="bg-pic">
+        <img src="~assets/img/naire/bg_guess.png" class="bg-pic">
         <div class="contain">
             <div class="top">
                 <p class="prize" @click="showRule=true">
