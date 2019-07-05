@@ -7,16 +7,16 @@
                     <span v-show="historyEnd" class="refresh_text">No more history</span>
                 </div>
                 <div>
-                    <img v-show="loadHistoryState" class="refresh_img" src="~assets/img/spinner.gif">
+                    <img v-show="loadHistoryState" class="refresh_img" src="~assets/img/spinner.gif" />
                 </div>
             </div>
             <template v-for="(item,index) in renderQueue">
-                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest"/>
+                <questionListTpl v-if="item.tpl=='list'" :key="index" :dtype="item.type" :list="item.contents" @ask="askQuest" />
                 <div v-if="item.tpl=='order'" :key="index" class="order-contain">
-                    <orderBlockTpl :order="item.order"/>
+                    <orderBlockTpl :order="item.order" />
                 </div>
-                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name"/>
-                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name"/>
+                <askTpl v-if="item.tpl=='ask'||item.tpl=='chatask'" :key="index" :question="item.name" />
+                <answerTpl v-if="item.tpl=='chatanswer' || item.tpl=='welcome'" :key="index" :answer="item.name" />
                 <contentTpl
                     v-if="item.tpl=='content'"
                     :key="index"
@@ -29,8 +29,8 @@
                 <div v-if="item.tpl=='tips'" :key="index" class="tips">
                     <div>{{item.text}}</div>
                 </div>
-                <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord"/>
-                <msgTpl v-if="item.tpl=='message'" :key="index" :order="item" :replied="item.replied" style="padding-top:0.5rem;"/>
+                <evaluate v-if="item.tpl=='evaluate'" :key="index" :service-record="item.serviceRecord" />
+                <msgTpl v-if="item.tpl=='message'" :key="index" :order="item" :replied="item.replied" style="padding-top:0.5rem;" />
             </template>
         </div>
         <div v-show="showLiveChatBtn" class="live-chat">
@@ -40,7 +40,7 @@
         <div v-show="showLiveChatBtn&&connectState==2" class="live-chat-input">
             <div class="user-control-w">
                 <div class="user-edit-w">
-                    <textarea v-model="chatMsg" class="form-control user-edit" placeholder="Enter your question"/>
+                    <textarea v-model="chatMsg" class="form-control user-edit" placeholder="Enter your question" />
                 </div>
                 <div class="user-submit-w">
                     <button type="submit" class="user-submit-btn" @click="sendChatMsg">SEND</button>
@@ -347,10 +347,11 @@ export default {
                 } else if (obj.tpl === 'tips') {
                     return false
                 }
+
                 this.$axios
                     .post('/css/v1/service/history', {
                         service_type: this.connectState == 2 ? 3 : 1, // TODO
-                        service_group_id: this.serviceRecord,
+                        service_group_id: this.serviceRecord || '',
                         service_state: 2,
                         remark: JSON.stringify(obj),
                         service_info: serviceInfo,
@@ -620,16 +621,6 @@ export default {
                                         name: item.text
                                     })
                                 }
-                                // if (
-                                //     item.from.type === 'Client' &&
-                                //     item.type === 'Message' &&
-                                //     item.text
-                                // ) {
-                                //     this.addOperate({
-                                //         tpl: 'chatask',
-                                //         name: item.text
-                                //     })
-                                // }
                             })
                         }
                     } else if (res.data.statusCode === -1) {
