@@ -77,7 +77,13 @@ export default {
         { path: '/hybrid/api/episode/submit', handler: '~/api/episode/submit.js' },
         { path: '/hybrid/api/episode/result', handler: '~/api/episode/result.js' },
         { path: '/hybrid/api/quiz/list', handler: '~/api/quiz/list.js' },
-        { path: '/hybrid/api/quiz/bet', handler: '~/api/quiz/bet.js' }
+        { path: '/hybrid/api/quiz/bet', handler: '~/api/quiz/bet.js' },
+        { path: '/hybrid/api/games/getAward', handler: '~/api/games/getAward.js' },
+        { path: '/hybrid/api/games/getRanks', handler: '~/api/games/getRanks.js' },
+        { path: '/hybrid/api/games/getTaskByGame', handler: '~/api/games/getTaskByGame.js' },
+        { path: '/hybrid/api/games/setGoal', handler: '~/api/games/setGoal.js' },
+        { path: '/hybrid/api/games/startGame', handler: '~/api/games/startGame.js' },
+        { path: '/hybrid/api/games/taskOver', handler: '~/api/games/taskOver.js' }
     ],
     hooks: {
         listen(server) {
