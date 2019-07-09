@@ -5,18 +5,7 @@
             <span class="name">Funnie</span>
             <span class="time">Just now</span>
         </div>
-        <p class="title">
-            Description about the content here is the summary that about the content here is the summary that is the summary that…
-        </p>
-        <div class="image">
-            <img src="~assets/img/others/news.png" @click="sharePost=true">
-        </div>
-        <div class="des">
-            <p>ENTERTAINMENT WATCH: SA choir gets standing ovation on 'America's Got Talent' with goosebump performance that will have you in tears</p>
-            <p>34 minutes ago A South African choir from Limpopo had the audience on their feet after their performance on 'America's Got Talent'.</p>
-            <p>11-year-old cancer survivor earns third golden buzzer on 'America's Got Talent' This contestant overcame the odds to get Gabrielle Union's first g</p>
-            <p>olden buzzer on 'America's Got Talent' WATCH: DJ Arch Jnr gets a standing ovation from Simon Cowell on America's Got Talent</p>
-        </div>
+        <iframe src="http://qa.upms.startimestv.com/wap/newstpl/index.html" width="100%"></iframe>
         <div class="opeartion">
             <div class="left">
                 <span>
@@ -70,6 +59,11 @@ export default {
                 {src:'/res_nuxt/img/mrshare.jpg'}
             ]
         }
+    },
+    mounted(){
+        window.addEventListener("message",function(event){
+            console.log(event)
+        },false)
     },
     methods: {
         toShare() {
