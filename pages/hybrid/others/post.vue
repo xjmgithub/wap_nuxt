@@ -1,26 +1,28 @@
 <template>
     <div class="wrapper">
         <div class="user">
-            <img src="~assets/img/naire/girl.png">
+            <img src="~assets/img/naire/girl.png" />
             <span class="name">Funnie</span>
             <span class="time">Just now</span>
         </div>
-        <iframe src="http://qa.upms.startimestv.com/wap/newstpl/index.html" width="100%"></iframe>
+        <iframe id="news-content" frameborder="0" scrolling="no" src="http://localhost:8001/newstpl/index.html" width="100%"></iframe>
         <div class="opeartion">
             <div class="left">
                 <span>
-                    <img v-show="likeIcon=='likeDef'" src="~assets/img/faq/ic_like_def_g.png" @click="dealIcon('like')">
-                    <img v-show="likeIcon=='like'" src="~assets/img/faq/ic_like_def_b.png" @click="dealIcon('likeDef')"> {{ likeCount|formatCount }}
+                    <img v-show="likeIcon=='likeDef'" src="~assets/img/faq/ic_like_def_g.png" @click="dealIcon('like')" />
+                    <img v-show="likeIcon=='like'" src="~assets/img/faq/ic_like_def_b.png" @click="dealIcon('likeDef')" />
+                    {{ likeCount|formatCount }}
                 </span>
                 <span>
-                    <img v-show="disLikeIcon=='disLikeDef'" src="~assets/img/faq/ic_dislike_def_g.png" @click="dealIcon('disLike')">
-                    <img v-show="disLikeIcon=='disLike'" src="~assets/img/faq/ic_dislike_def_b.png" @click="dealIcon('disLikeDef')"> {{ disLikeCount|formatCount }}
+                    <img v-show="disLikeIcon=='disLikeDef'" src="~assets/img/faq/ic_dislike_def_g.png" @click="dealIcon('disLike')" />
+                    <img v-show="disLikeIcon=='disLike'" src="~assets/img/faq/ic_dislike_def_b.png" @click="dealIcon('disLikeDef')" />
+                    {{ disLikeCount|formatCount }}
                 </span>
             </div>
-            <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()">
+            <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()" />
         </div>
-        <mShare/>
-        <mPost v-show="sharePost" :post-list="postList" @closePost="sharePost=false"/>
+        <mShare />
+        <mPost v-show="sharePost" :post-list="postList" @closePost="sharePost=false" />
     </div>
 </template>
 <script>
@@ -53,17 +55,19 @@ export default {
             disLikeIcon: 'disLikeDef',
             likeCount: 1288398,
             disLikeCount: 1323,
-            sharePost:false,
-            postList:[
-                {src:'/res_nuxt/img/soccercup.png'},
-                {src:'/res_nuxt/img/mrshare.jpg'}
-            ]
+            sharePost: false,
+            postList: [{ src: '/res_nuxt/img/soccercup.png' }, { src: '/res_nuxt/img/mrshare.jpg' }]
         }
     },
-    mounted(){
-        window.addEventListener("message",function(event){
-            console.log(event)
-        },false)
+    mounted() {
+        window.addEventListener('message', function(event) {
+            if (event.data.type == 'updateHeight') {
+                const iframe = document.getElementById('news-content')
+                iframe.style.height = event.data.value + 'px'
+            } else if (event.data.type == 'showPic') {
+                // TODO showPic
+            }
+        })
     },
     methods: {
         toShare() {
