@@ -5,7 +5,8 @@
             <span class="name">Funnie</span>
             <span class="time">Just now</span>
         </div>
-        <iframe src="http://qa.upms.startimestv.com/wap/newstpl/index.html" width="100%"></iframe>
+        <!-- <iframe id="myiframe" src="http://qa.upms.startimestv.com/wap/newstpl/index.html" width="100%" frameborder="no" scrolling="no" @load="resize()"></iframe> -->
+        <iframe id="myiframe" src="http://localhost:8001/newstpl/index.html" width="100%" frameborder="no" scrolling="no" @load="resize()"></iframe>
         <div class="opeartion">
             <div class="left">
                 <span>
@@ -20,7 +21,7 @@
             <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()">
         </div>
         <mShare/>
-        <mPost v-show="sharePost" :post-list="postList" @closePost="sharePost=false"/>
+        <mPost v-show="sharePost" :post-list="postList" @closePost="sharePost=false" />
     </div>
 </template>
 <script>
@@ -53,17 +54,37 @@ export default {
             disLikeIcon: 'disLikeDef',
             likeCount: 1288398,
             disLikeCount: 1323,
-            sharePost:false,
-            postList:[
-                {src:'/res_nuxt/img/soccercup.png'},
-                {src:'/res_nuxt/img/mrshare.jpg'}
-            ]
+            // sharePost: true,
+            postList: [],
+            iframeHeight: 0
         }
     },
-    mounted(){
-        window.addEventListener("message",function(event){
-            console.log(event)
-        },false)
+    computed: {
+        sharePost: {
+            // 为计算属性添加get set 方法
+            get() {
+                console.log(this.postList.length)
+                return this.postList.length > 0
+            },
+            set() {}
+        }
+    },
+    mounted() {
+        const _this = this
+        window.addEventListener(
+            'message',
+            event => {
+                // console.log(event)
+                this.postList = event.data.list
+                if (_this.iframeHeight === 0) {
+                    _this.$nextTick(() => {
+                        _this.iframeHeight = event.data.height
+                        _this.resize()
+                    })
+                }
+            },
+            false
+        )
     },
     methods: {
         toShare() {
@@ -72,6 +93,7 @@ export default {
         dealIcon(type) {
             switch (type) {
                 case 'like':
+                    if (this.disLikeIcon == 'disLike') this.disLikeCount--
                     this.likeIcon = 'like'
                     this.disLikeIcon = 'disLikeDef'
                     this.likeCount++
@@ -81,6 +103,7 @@ export default {
                     this.likeCount--
                     break
                 case 'disLike':
+                    if (this.likeIcon == 'like') this.likeCount--
                     this.disLikeIcon = 'disLike'
                     this.likeIcon = 'likeDef'
                     this.disLikeCount++
@@ -90,6 +113,10 @@ export default {
                     this.disLikeCount--
                     break
             }
+        },
+        resize() {
+            console.log(12121211212)
+            document.getElementById('myiframe').style.height = this.iframeHeight + 'px'
         }
     },
     head() {
@@ -147,8 +174,10 @@ export default {
         border-bottom: 1px solid #eeeeee;
         color: #666666;
         font-size: 0.85rem;
+        // padding: 0 .5rem 0.3rem;
         padding-bottom: 0.3rem;
         position: relative;
+        margin-top: 0.3rem;
         span {
             margin-right: 0.5rem;
         }
