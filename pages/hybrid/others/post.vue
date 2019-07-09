@@ -5,7 +5,7 @@
             <span class="name">Funnie</span>
             <span class="time">Just now</span>
         </div>
-        <iframe src="http://localhost:8001/newstpl/index.html" width="100%"></iframe>
+        <iframe src="http://qa.upms.startimestv.com/wap/newstpl/index.html" width="100%"></iframe>
         <div class="opeartion">
             <div class="left">
                 <span>
