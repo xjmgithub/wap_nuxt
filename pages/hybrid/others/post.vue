@@ -9,7 +9,7 @@
             Description about the content here is the summary that about the content here is the summary that is the summary that…
         </p>
         <div class="image">
-            <img src="~assets/img/others/news.png">
+            <img src="~assets/img/others/news.png" @click="sharePost=true">
         </div>
         <div class="des">
             <p>ENTERTAINMENT WATCH: SA choir gets standing ovation on 'America's Got Talent' with goosebump performance that will have you in tears</p>
@@ -31,10 +31,12 @@
             <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()">
         </div>
         <mShare/>
+        <mPost v-show="sharePost" :post-list="postList" @closePost="sharePost=false"/>
     </div>
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
+import mPost from '~/components/post_swiper'
 export default {
     layout: 'base',
     filters: {
@@ -53,14 +55,20 @@ export default {
         }
     },
     components: {
-        mShare
+        mShare,
+        mPost
     },
     data() {
         return {
             likeIcon: 'likeDef',
             disLikeIcon: 'disLikeDef',
             likeCount: 1288398,
-            disLikeCount: 1323
+            disLikeCount: 1323,
+            sharePost:false,
+            postList:[
+                {src:'/res_nuxt/img/soccercup.png'},
+                {src:'/res_nuxt/img/mrshare.jpg'}
+            ]
         }
     },
     methods: {
