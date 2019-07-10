@@ -6,28 +6,27 @@
             <span class="time">Just now</span>
         </div>
         <iframe id="news-content" frameborder="0" scrolling="no" src="http://localhost:8001/newstpl/index.html" width="100%"></iframe>
-        <div class="opeartion">
+        <div :class="{'show-pic':sharePost}" class="opeartion">
             <div class="left">
                 <span>
                     <img v-show="likeIcon=='likeDef'" src="~assets/img/faq/ic_like_def_g.png" @click="dealIcon('like')" />
-                    <img v-show="likeIcon=='like'" src="~assets/img/faq/ic_like_def_b.png" @click="dealIcon('likeDef')" />
-                    {{ likeCount|formatCount }}
+                    <img v-show="likeIcon=='like'" src="~assets/img/faq/ic_like_def_b.png" @click="dealIcon('likeDef')" /> {{ likeCount|formatCount }}
                 </span>
                 <span>
                     <img v-show="disLikeIcon=='disLikeDef'" src="~assets/img/faq/ic_dislike_def_g.png" @click="dealIcon('disLike')" />
-                    <img v-show="disLikeIcon=='disLike'" src="~assets/img/faq/ic_dislike_def_b.png" @click="dealIcon('disLikeDef')" />
-                    {{ disLikeCount|formatCount }}
+                    <img v-show="disLikeIcon=='disLike'" src="~assets/img/faq/ic_dislike_def_b.png" @click="dealIcon('disLikeDef')" /> {{ disLikeCount|formatCount }}
                 </span>
             </div>
             <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()" />
         </div>
         <mShare />
-        <mPost v-show="sharePost" :post-list="postList" @closePost="sharePost=false" />
+        <mPost v-show="sharePost" :post-list="postList" :p-index="index" @closePost="sharePost=false" />
     </div>
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post_swiper'
+// import mPost from '~/components/post'
 export default {
     layout: 'base',
     filters: {
@@ -56,16 +55,21 @@ export default {
             likeCount: 1288398,
             disLikeCount: 1323,
             sharePost: false,
-            postList: [{ src: '/res_nuxt/img/soccercup.png' }, { src: '/res_nuxt/img/mrshare.jpg' }]
+            // postList: [{ src: '/res_nuxt/img/soccercup.png' }, { src: '/res_nuxt/img/mrshare.jpg' }]
+            postList: [],
+            index: 0
         }
     },
     mounted() {
-        window.addEventListener('message', function(event) {
+        window.addEventListener('message', event => {
             if (event.data.type == 'updateHeight') {
                 const iframe = document.getElementById('news-content')
                 iframe.style.height = event.data.value + 'px'
             } else if (event.data.type == 'showPic') {
                 // TODO showPic
+                this.sharePost = true
+                this.postList = event.data.value.list
+                this.index = event.data.value.index
             }
         })
     },
@@ -157,20 +161,30 @@ export default {
         border-bottom: 1px solid #eeeeee;
         color: #666666;
         font-size: 0.85rem;
-        // padding: 0 .5rem 0.3rem;
         padding-bottom: 0.3rem;
         position: relative;
         margin-top: 0.3rem;
+        width: 100%;
+        .left {
+            display: inline-block;
+        }
         span {
             margin-right: 0.5rem;
         }
         img {
             width: 1.6rem;
             &.share {
-                position: absolute;
-                top: -2px;
-                right: 0;
+                float: right;
+                margin-top: -2px;
             }
+        }
+        &.show-pic {
+            position: fixed;
+            bottom: 0.5rem;
+            width:96%;
+            left:2%;
+            z-index: 1001;
+            border-bottom: 1px solid #666666;
         }
     }
 }
