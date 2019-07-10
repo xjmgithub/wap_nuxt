@@ -2,12 +2,15 @@
     <div id="asintado">
         <div class="character">
             <p class="title">Who Are You In These Series?</p>
-            <img src="~assets/img/naire/role.png">
+            <img src="~assets/img/naire/role.png" />
         </div>
         <div class="container">
             <div class="box">
                 <div v-for="(item,index) in quesList" v-show="currIndex==index" :key="index" class="question">
-                    <div v-show="index==0" class="alert">Just click the answer that appeared in your mind first time and get your Characteristic Test results!</div>
+                    <div
+                        v-show="index==0"
+                        class="alert"
+                    >Just click the answer that appeared in your mind first time and get your Characteristic Test results!</div>
                     <div>
                         <span class="num">{{index+1}}.</span>
                         {{item.question}}
@@ -17,9 +20,14 @@
                 </div>
                 <div class="progress">
                     <div class="line">
-                        <div v-for="(item,index) in quesList.length" :key="index" :class="{'now':index==currIndex}" :style="{left:100/(quesList.length-1)*index-2+'%'}">
-                            <img src="~assets/img/naire/ic-point.png">
-                            <span/>
+                        <div
+                            v-for="(item,index) in quesList.length"
+                            :key="index"
+                            :class="{'now':index==currIndex}"
+                            :style="{left:100/(quesList.length-1)*index-2+'%'}"
+                        >
+                            <img src="~assets/img/naire/ic-point.png" />
+                            <span />
                         </div>
                     </div>
                     <p>
@@ -29,15 +37,16 @@
                 </div>
             </div>
             <div v-show="appType!=2" class="share" @click="toShare()">
-                <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
+                <img src="~assets/img/naire/ic_share_def_g.png" /> SHARE TO MY FRIENDS
             </div>
         </div>
-        <mShare/>
+        <mShare />
     </div>
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
 import { shareInvite } from '~/functions/utils'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     components: {
@@ -49,7 +58,7 @@ export default {
             currIndex: 0,
             from: this.$route.query.from || '',
             quesList: [
-                 {
+                {
                     question: 'Are you a girl or a boy?',
                     A: 'Girl',
                     B: 'Boy'
@@ -79,7 +88,6 @@ export default {
                     A: 'Someone who is smart.',
                     B: 'Someone who is good-looking.'
                 }
-               
             ],
             userGender: ''
         }
@@ -169,7 +177,22 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/asintado.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: '100% Precise Me!' }
+                { name: 'og:title', property: 'og:title', content: '100% Precise Me!' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/questionNaire/asintado`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }
@@ -215,10 +238,10 @@ export default {
         .question {
             padding: 1rem 0;
             text-align: left;
-            .alert{
+            .alert {
                 font-size: 0.95rem;
-                color:#cba543;
-                padding-bottom: .7rem;
+                color: #cba543;
+                padding-bottom: 0.7rem;
             }
             .num {
                 color: #8451ae;

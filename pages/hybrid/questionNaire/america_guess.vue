@@ -28,6 +28,7 @@
 <script>
 import mShare from '~/components/web/share.vue'
 import { callApp, callMarket } from '~/functions/utils'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     components: {
@@ -98,7 +99,22 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/bg_guess.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' }
+                { name: 'og:title', property: 'og:title', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/questionNaire/america_bet`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }

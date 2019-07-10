@@ -2,9 +2,9 @@
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
         <div v-show="appType||mounted">
-            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner"/>
+            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner" />
             <div class="topContain" :class="{'mtop':!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle"/>
+                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
                 <div class="sticky">
                     <div class="rules">
                         <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
@@ -13,7 +13,7 @@
                     <nav id="nav">
                         <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="tabIndex=index">
                             <span>{{item.name}}</span>
-                            <p/>
+                            <p />
                         </a>
                     </nav>
                     <div v-if="appType" class="leftvote">
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo"/>
+                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo" />
                 <sFilm
                     v-if="item.type=='short_film'"
                     v-show="tabIndex==index"
@@ -31,7 +31,7 @@
                     @onVote="handleVote"
                     @toPlay="toVideo"
                 />
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo"/>
+                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo" />
             </template>
             <div
                 v-show="appType!=2"
@@ -45,7 +45,7 @@
             >{{$store.state.lang.vote_share}}</div>
             <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
                 <template v-slot:content>
-                    <div v-html="$store.state.lang.vote_about_word"/>
+                    <div v-html="$store.state.lang.vote_about_word" />
                 </template>
                 <template v-if="appType==0" v-slot:buttons>
                     <div class="download-btn" @click="loadConfirm('','about')">
@@ -56,7 +56,7 @@
             </mCard>
             <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
                 <template v-slot:content>
-                    <div v-html="$store.state.lang.vote_rule_word"/>
+                    <div v-html="$store.state.lang.vote_rule_word" />
                 </template>
                 <template v-slot:buttons>
                     <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
@@ -68,18 +68,18 @@
             </mCard>
             <mCard v-show="shareCard" :title="$store.state.lang.vote_earnvote_tt" class="card" @closeCard="shareCard=false">
                 <template v-slot:content>
-                    <div v-html="$store.state.lang.vote_rule_word"/>
+                    <div v-html="$store.state.lang.vote_rule_word" />
                 </template>
                 <template v-slot:buttons>
                     <div class="share-way">
                         <span @click="shareWithFacebook">
-                            <img src="~assets/img/vote/ic_facebook_def.png">
+                            <img src="~assets/img/vote/ic_facebook_def.png" />
                         </span>
                         <span @click="copyLink">
-                            <img src="~assets/img/vote/ic_copylink_def copy.png">
+                            <img src="~assets/img/vote/ic_copylink_def copy.png" />
                         </span>
                         <span @click="shareWithTwitter">
-                            <img src="~assets/img/vote/ic_ti_def.png">
+                            <img src="~assets/img/vote/ic_ti_def.png" />
                         </span>
                     </div>
                     <div v-if="appType==0" class="download-btn" @click="loadConfirm('','share')">
@@ -94,7 +94,7 @@
         </div>
         <div v-if="!appType&&mounted" class="open" :class="{showd:openPicShowd}">
             <div class="top">
-                <img src="~assets/img/vote/open_top.png" @load="screenTimer">
+                <img src="~assets/img/vote/open_top.png" @load="screenTimer" />
                 <p>
                     <span v-show="time<5">{{time}}s</span>
                     <span @click="setVoteScreen('about')">{{$store.state.lang.vote_about}}</span>
@@ -102,7 +102,7 @@
                 <div class="btn" @click="setVoteScreen">{{$store.state.lang.vote_join_now}}</div>
             </div>
             <div class="bot">
-                <img src="~assets/img/vote/open_bot.png">
+                <img src="~assets/img/vote/open_bot.png" />
             </div>
         </div>
     </div>
@@ -114,6 +114,7 @@ import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
 import { shareInvite, setCookie, getCookie, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 import download from '~/components/vote/download'
+import { Base64 } from 'js-base64'
 import qs from 'qs'
 export default {
     layout: 'base',
@@ -599,7 +600,22 @@ export default {
                     content: this.banners.length > 0 && this.banners[0].materials.replace('http:', 'https:')
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.voteTitle }
+                { name: 'og:title', property: 'og:title', content: this.voteTitle },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/FilmFestival`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }
