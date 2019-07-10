@@ -56,7 +56,7 @@ export default {
             sharePost: false,
             // postList: [{ src: '/res_nuxt/img/soccercup.png' }, { src: '/res_nuxt/img/mrshare.jpg' }]
             postList: [],
-            index: 0
+            index: 1
         }
     },
     mounted() {
@@ -68,7 +68,7 @@ export default {
                 // TODO showPic
                 this.sharePost = true
                 this.postList = event.data.value.list
-                this.index = event.data.value.index
+                this.index = Number(event.data.value.index) + 1
             }
         })
     },
@@ -176,8 +176,8 @@ export default {
         &.show-pic {
             position: fixed;
             bottom: 0.5rem;
-            width:96%;
-            left:2%;
+            width: 96%;
+            left: 2%;
             z-index: 1001;
             border-bottom: 1px solid #666666;
         }
