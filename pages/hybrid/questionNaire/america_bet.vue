@@ -356,7 +356,7 @@ export default {
                     name: 'al:android:url',
                     property: 'al:android:url',
                     content:
-                        'starvideo://platformapi/webtoapp?target=' +
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
                             `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/questionNaire/america_bet`.replace(
                                 /&/g,
