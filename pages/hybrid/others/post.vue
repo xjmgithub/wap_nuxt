@@ -26,7 +26,6 @@
 <script>
 import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post_swiper'
-// import mPost from '~/components/post'
 export default {
     layout: 'base',
     filters: {
@@ -100,10 +99,6 @@ export default {
                     this.disLikeCount--
                     break
             }
-        },
-        resize() {
-            console.log(12121211212)
-            document.getElementById('myiframe').style.height = this.iframeHeight + 'px'
         }
     },
     head() {
