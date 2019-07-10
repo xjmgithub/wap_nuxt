@@ -44,9 +44,19 @@ export default {
     z-index: 99;
     background: #000000;
     padding: 0.8rem;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .slide-bar-card {
     z-index: 1001;
+}
+.wh_slide {
+    position: relative;
 }
 .wh_slide_box {
     width: 99%;
