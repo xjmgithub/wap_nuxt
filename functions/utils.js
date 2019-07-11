@@ -430,7 +430,12 @@ export const callMarket = function() {
             url: '/voting/v1/ticket'
         })
     }
-
+    this.sendEvLog({
+        category: 'callup_app',
+        action: 'to_googleplay',
+        label: window.location.href,
+        Value: 1
+    })
     window.location.href =
         appType == 1 ? 'market://details?id=com.star.mobile.video' + source : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
 }
@@ -506,9 +511,9 @@ export const toAppStore = function(page) {
                 appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
                 () => {
                     _this.sendEvLog({
-                        category: _this.vote_name,
-                        action: 'downloadpopup_click',
-                        label: 'go',
+                        category: 'callup_app',
+                        action: 'to_googleplay',
+                        label: window.location.href,
                         Value: 1
                     })
                     window.location.href =
