@@ -90,12 +90,6 @@ export default {
             window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
         },
         downApk() {
-            this.sendEvLog({
-                category: 'langingpage',
-                action: 'download_click',
-                label: window.location.pathname
-            })
-
             downloadApk.call(this)
         }
     },
