@@ -1,7 +1,7 @@
 <template>
     <div class="download" @click="down">
         <div>
-            <img src="~assets/img/web/app_icon.png">
+            <img src="~assets/img/web/app_icon.png" />
             <div>
                 <p>StarTimes ON App</p>
                 <span>{{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
@@ -11,7 +11,8 @@
     </div>
 </template>
 <script>
-import { normalToAppStore, UAType } from '~/functions/utils'
+import { UAType } from '~/functions/utils'
+import { normalToAppStore } from '~/functions/app'
 import localforage from 'localforage'
 export default {
     mounted() {

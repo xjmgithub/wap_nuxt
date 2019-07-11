@@ -374,6 +374,24 @@ export const initDB = function() {
     })
 }
 
+export const getBrowser = function() {
+    const ua = window.navigator.userAgent || ''
+    const isAndroid = /android/i.test(ua)
+    const isIos = /iphone|ipad|ipod/i.test(ua)
+    const isOriginalChrome = /chrome\/[\d.]+ Mobile Safari\/[\d.]+/i.test(ua) && isAndroid
+    // ios 上很多 app 都包含 safari 标识，但它们都是以自己的 app 标识开头，而不是 Mozilla
+    const isSafari = /safari\/([\d.]+)$/i.test(ua) && isIos && ua.indexOf('Crios') < 0 && ua.indexOf('Mozilla') === 0
+    const verion = parseInt(navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)[1], 10)
+
+    return {
+        isAndroid,
+        isIos,
+        isOriginalChrome,
+        isSafari,
+        verion
+    }
+}
+
 export const downloadApk = function(callback) {
     const ua = navigator.userAgent.toLowerCase()
     const appType = ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0 ? 2 : 1
@@ -444,6 +462,7 @@ export const callMarket = function() {
         appType == 1 ? 'market://details?id=com.star.mobile.video' + source : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
 }
 
+// 参考 https://github.com/suanmei/callapp-lib/blob/master/index.js
 export const callApp = function(page, failback) {
     const ua = navigator.userAgent.toLowerCase()
     const scheme = ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0 ? 'startimes' : 'starvideo'
@@ -458,10 +477,12 @@ export const callApp = function(page, failback) {
 
     iframe.src = scheme + '://' + path
 
+    // window.location.href = scheme + '://' + path
+
     const s = setTimeout(() => {
         if (!document.hidden) failback && failback()
         clearTimeout(s)
-    }, 3000)
+    }, 2000)
     document.addEventListener('visibilitychange', () => {
         clearTimeout(s)
     })
