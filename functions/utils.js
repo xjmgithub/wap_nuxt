@@ -30,10 +30,6 @@ export const getCookie = name => {
     return decodeURIComponent(value) || null
 }
 
-export const delCookie = name => {
-    document.cookie = name + '=; Max-Age=-99999999;'
-}
-
 export const toNativePage = page => {
     if (page.indexOf('com.star.mobile.video') >= 0) {
         window.getChannelId && window.getChannelId.toAppPage(3, page, '')
@@ -42,19 +38,13 @@ export const toNativePage = page => {
     }
 }
 
-export const getQuery = name => {
-    const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
-    const r = window.location.search.substr(1).match(reg)
-    if (r !== null) return decodeURIComponent(r[2])
-    return null
-}
-
 export const getRandomInt = (min, max) => {
     min = Math.ceil(min)
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min)) + min
 }
 
+// TODO 待优化
 export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
     if (window.getChannelId && window.getChannelId.showCustorm) {
         const content = '【' + shareTitle + '】' + shareContent + ' ' + link
@@ -270,6 +260,7 @@ export const parseUA = (isApp, appversion) => {
     }
     return dstr
 }
+
 export const getFaqBlockLogLabel = function() {
     return (
         (this.$store.state.country.id || '') +
