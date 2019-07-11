@@ -5,7 +5,9 @@
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
-                        <img :src="item" @click="closePost()">
+                        <div class="swiper-zoom-container">
+                            <img :src="item" @click="closePost()">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -33,7 +35,7 @@ export default {
     data() {
         return {
             mySwiper: null,
-            realIndex:this.pIndex
+            realIndex: this.pIndex
         }
     },
     methods: {
@@ -52,6 +54,10 @@ export default {
                     slideChange: () => {
                         this.realIndex = this.mySwiper.activeIndex + 1
                     }
+                },
+                zoom: {
+                    maxRatio: 5,
+                    minRatio: 1
                 }
             })
         },
