@@ -33,13 +33,8 @@ export default {
     data() {
         return {
             mySwiper: null,
-            realIndex: this.pIndex
+            realIndex:this.pIndex
         }
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.init()
-        })
     },
     methods: {
         closePost() {
@@ -62,6 +57,7 @@ export default {
         },
         slide() {
             this.$nextTick(() => {
+                this.init()
                 this.mySwiper.slideTo(this.pIndex - 1, 1, false)
             })
         }
