@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="count">{{realIndex}}/{{postList.length}}</div>
-        <div class="post-layer" @click="closePost()">
+        <div class="post-layer" @click.stop="closePost()">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
-                            <img :src="item" @click="closePost()">
+                            <img :src="item" @click.stop="zoom()">
                         </div>
                     </div>
                 </div>
@@ -42,6 +42,7 @@ export default {
         closePost() {
             this.$emit('closePost')
         },
+        zoom(){},
         init() {
             this.mySwiper = new Swiper('.swiper-container', {
                 loop: false, // 循环模式选项
@@ -55,10 +56,7 @@ export default {
                         this.realIndex = this.mySwiper.activeIndex + 1
                     }
                 },
-                zoom: {
-                    maxRatio: 5,
-                    minRatio: 1
-                }
+                zoom: true
             })
         },
         slide() {
