@@ -35,7 +35,8 @@
         "localforage": "^1.7.3",
         "mysql": "^2.17.1",
         "nuxt": "^2.8.1",
-        "qs": "^6.6.0"
+        "qs": "^6.6.0",
+        "swiper": "^4.5.0"
     },
     "devDependencies": {
         "nodemon": "^1.18.9",

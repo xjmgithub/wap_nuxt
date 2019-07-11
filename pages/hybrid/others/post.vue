@@ -25,7 +25,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import mPost from '~/components/post_swiper'
+import mPost from '~/components/post'
 export default {
     layout: 'base',
     filters: {
@@ -69,6 +69,7 @@ export default {
                 this.sharePost = true
                 this.postList = event.data.value.list
                 this.index = Number(event.data.value.index) + 1
+                localStorage.setItem('pic-index',this.index)
             }
         })
     },
