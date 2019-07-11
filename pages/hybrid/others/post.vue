@@ -20,7 +20,7 @@
             <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()" />
         </div>
         <mShare />
-        <mPost v-show="sharePost" :post-list="postList" :p-index="index" @closePost="sharePost=false" />
+        <mPost v-show="sharePost" ref="mySwiper" :post-list="postList" :p-index="index" @closePost="sharePost=false" />
     </div>
 </template>
 <script>
@@ -69,7 +69,7 @@ export default {
                 this.sharePost = true
                 this.postList = event.data.value.list
                 this.index = Number(event.data.value.index) + 1
-                localStorage.setItem('pic-index',this.index)
+                this.$refs.mySwiper.slide()
             }
         })
     },

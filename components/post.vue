@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="count">{{index}}/{{postList.length}}</div>
+        <div class="count">{{realIndex}}/{{postList.length}}</div>
         <div class="post-layer" @click="closePost()">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
@@ -23,25 +23,43 @@ export default {
             default: () => {
                 return []
             }
+        },
+        pIndex: {
+            required: false,
+            type: Number,
+            default: 1
         }
     },
     data() {
         return {
-            index: 1,
-            mySwiper: null
+            mySwiper: null,
+            realIndex:this.pIndex
         }
-    },
-    mounted() {
-        this.index = Number(localStorage.getItem('pic-index'))
-        this.$nextTick(() => {
-            this.mySwiper = new Swiper('.swiper-container', {
-                loop: false // 循环模式选项
-            })
-        })
     },
     methods: {
         closePost() {
             this.$emit('closePost')
+        },
+        init() {
+            this.mySwiper = new Swiper('.swiper-container', {
+                loop: false, // 循环模式选项
+                observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+                observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+                on: {
+                    slideChangeTransitionEnd: () => {
+                        this.realIndex = this.mySwiper.activeIndex + 1
+                    },
+                    slideChange: () => {
+                        this.realIndex = this.mySwiper.activeIndex + 1
+                    }
+                }
+            })
+        },
+        slide() {
+            this.$nextTick(() => {
+                this.init()
+                this.mySwiper.slideTo(this.pIndex - 1, 1, false)
+            })
         }
     }
 }
