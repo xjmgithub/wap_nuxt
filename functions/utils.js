@@ -30,10 +30,6 @@ export const getCookie = name => {
     return decodeURIComponent(value) || null
 }
 
-export const delCookie = name => {
-    document.cookie = name + '=; Max-Age=-99999999;'
-}
-
 export const toNativePage = page => {
     if (page.indexOf('com.star.mobile.video') >= 0) {
         window.getChannelId && window.getChannelId.toAppPage(3, page, '')
@@ -42,19 +38,13 @@ export const toNativePage = page => {
     }
 }
 
-export const getQuery = name => {
-    const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
-    const r = window.location.search.substr(1).match(reg)
-    if (r !== null) return decodeURIComponent(r[2])
-    return null
-}
-
 export const getRandomInt = (min, max) => {
     min = Math.ceil(min)
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min)) + min
 }
 
+// TODO 待优化
 export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
     if (window.getChannelId && window.getChannelId.showCustorm) {
         const content = '【' + shareTitle + '】' + shareContent + ' ' + link
@@ -270,6 +260,7 @@ export const parseUA = (isApp, appversion) => {
     }
     return dstr
 }
+
 export const getFaqBlockLogLabel = function() {
     return (
         (this.$store.state.country.id || '') +
@@ -314,7 +305,7 @@ export const getFaqAnswerLabel = function(question) {
 
 export const playVodinApp = function(appType, vod) {
     if (appType == 1) {
-        window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+        toNativePage('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
     } else if (appType == 2) {
         window.location.href = 'startimes://player?vodId=' + vod
     } else {
@@ -385,36 +376,18 @@ export const initDB = function() {
 }
 
 export const downloadApk = function(callback) {
-    const voteDownTag = getCookie('vote_share_down')
-    const user = getCookie('vote_share_user')
-    if (voteDownTag && voteDownTag != -1) {
-        // 下载记票
-        this.$axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded',
-                token: this.$store.state.token,
-                'X-Secret': voteDownTag
-            },
-            data: qs.stringify({
-                vote_id: 8,
-                target: user,
-                action: 'SHARE_DOWNLOAD'
-            }),
-            url: '/voting/v1/ticket'
-        })
-    }
-
+    this.sendEvLog({
+        category: 'callup_app',
+        action: 'down_apk',
+        label: window.location.href,
+        Value: 1
+    })
     this.$axios
         .get('/cms/public/app')
         .then(res => {
-            let url = res.data.apkUrl
+            const url = res.data.apkUrl
             if (url) {
-                if (url.indexOf('google') > 0) {
-                    url = url.replace('google', 'officialWap')
-                }
-
-                window.location.href = url
+                window.location.href = url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : url
             } else {
                 this.$alert('Download error.Please retry.')
             }
@@ -422,7 +395,6 @@ export const downloadApk = function(callback) {
         .catch(() => {
             this.$alert('Download error.Please retry.')
         })
-
     if (callback) callback()
 }
 
@@ -458,7 +430,12 @@ export const callMarket = function() {
             url: '/voting/v1/ticket'
         })
     }
-
+    this.sendEvLog({
+        category: 'callup_app',
+        action: 'to_googleplay',
+        label: window.location.href,
+        Value: 1
+    })
     window.location.href =
         appType == 1 ? 'market://details?id=com.star.mobile.video' + source : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
 }
@@ -534,9 +511,9 @@ export const toAppStore = function(page) {
                 appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
                 () => {
                     _this.sendEvLog({
-                        category: _this.vote_name,
-                        action: 'downloadpopup_click',
-                        label: 'go',
+                        category: 'callup_app',
+                        action: 'to_googleplay',
+                        label: window.location.href,
                         Value: 1
                     })
                     window.location.href =
@@ -587,14 +564,7 @@ export const normalToAppStore = function(page, pos) {
             if (appType == 2) {
                 window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
             } else {
-                downloadApk.call(_this, () => {
-                    _this.sendEvLog({
-                        category: document.title,
-                        action: 'install_activated',
-                        label: UAType() + '_' + (pos || 1),
-                        value: 1
-                    })
-                })
+                downloadApk.call(_this)
             }
         }
     })

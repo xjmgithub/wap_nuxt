@@ -2,7 +2,7 @@
     <div @click="showgif=false">
         <div v-if="appType==0" class="download" @click="down(1)">
             <div>
-                <img src="~assets/img/web/app_icon.png">
+                <img src="~assets/img/web/app_icon.png" />
                 <div>
                     <p>StarTimes ON App</p>
                     <span>{{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
@@ -12,23 +12,24 @@
         </div>
         <div v-if="appType==0" class="holder">&nbsp;</div>
         <div class="pannel">
-            <img class="result" src="~assets/img/vote/game_result.png">
-            <img class="rules" src="~assets/img/vote/showgif.png" @click.stop="showgif=true">
+            <img class="result" src="~assets/img/vote/game_result.png" />
+            <img class="rules" src="~assets/img/vote/showgif.png" @click.stop="showgif=true" />
         </div>
         <div class="bot-down">
             <div class="bot-down-text">Eid Mubarak!! Share to more friends for the great honor of your country.</div>
             <div class="bot-down-btn" @click="share">SHARE NOW!</div>
         </div>
-        <sharePannel/>
+        <sharePannel />
         <div v-show="showgif" class="gif" @click.stop>
-            <img class="pic" src="~assets/img/vote/shuoming.gif">
-            <img class="close" src="~assets/img/dvb/delete.png" @click="showgif=false">
+            <img class="pic" src="~assets/img/vote/shuoming.gif" />
+            <img class="close" src="~assets/img/dvb/delete.png" @click="showgif=false" />
         </div>
     </div>
 </template>
 <script>
 import { shareInvite, callMarket, callApp } from '~/functions/utils'
 import sharePannel from '~/components/web/share'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     components: {
@@ -113,7 +114,19 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/soccercup.png'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'StarTimes ON Cup - Crazy Freekick' }
+                { name: 'og:title', property: 'og:title', content: 'StarTimes ON Cup - Crazy Freekick' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/acon`.replace(/&/g, '**')
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }
@@ -129,7 +142,7 @@ html {
     max-width: 1080px;
     margin: 0 auto;
     position: relative;
-    padding-bottom:3rem;
+    padding-bottom: 3rem;
     .result {
         display: block;
         width: 100%;

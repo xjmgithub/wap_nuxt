@@ -44,6 +44,7 @@
 import mShare from '~/components/web/share.vue'
 import { formatTime, normalToAppStore, initDB, cacheDateUpdate, UAType } from '~/functions/utils'
 import localforage from 'localforage'
+import { Base64 } from 'js-base64'
 export default {
     components: {
         mShare
@@ -219,7 +220,7 @@ export default {
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.seoData.name },
-                { name: 'al:android:url', property: 'al:android:url', content: 'starvideo://platformapi/webtoapp' },
+                { name: 'al:android:url', property: 'al:android:url', content: 'starvideo://platformapi/webtoapp?channel=facebook&target=' + Base64.encode(`com.star.mobile.video.player.PlayerVodActivity?vodId=${this.id}`.replace(/&/g, '**')) },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
                 { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
                 { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }

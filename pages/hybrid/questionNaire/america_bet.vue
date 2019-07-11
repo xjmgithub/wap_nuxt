@@ -1,43 +1,63 @@
 <template>
     <div id="america">
-        <img src="~assets/img/naire/bg_guess.png" class="bg-pic">
+        <img src="~assets/img/naire/bg_guess.png" class="bg-pic" />
         <div class="contain">
             <div class="top">
                 <p class="prize" @click="showRule=true">
-                    <img src="~assets/img/naire/ic_prize.png">
+                    <img src="~assets/img/naire/ic_prize.png" />
                     <span>VIEW PRIZE</span>
                 </p>
                 <p class="share" @click="share()">
-                    <img src="~assets/img/naire/ic_share.png">
+                    <img src="~assets/img/naire/ic_share.png" />
                     <span>SHARE</span>
-                    <img class="corner" src="~assets/img/naire/bonus.png">
+                    <img class="corner" src="~assets/img/naire/bonus.png" />
                 </p>
             </div>
             <div class="box">
                 <div style="padding:1rem 0 2rem;">
-                    <div v-for="(item,index) in quesList" :key="index" :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}" class="question">
-                        <span class="state" :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}">
+                    <div
+                        v-for="(item,index) in quesList"
+                        :key="index"
+                        :class="{'end-miss':!item.guess && item.state=='ended','end-win':item.guess==item.result && item.state=='ended','end-lost':item.guess!=''&&item.guess!=item.result && item.state=='ended'}"
+                        class="question"
+                    >
+                        <span
+                            class="state"
+                            :class="{'closed':item.state=='closed'||item.state=='unstart','progress':item.state=='progress','ended':item.state=='ended'}"
+                        >
                             {{item.state | formatState}}
                             <span class="triangle" />
                         </span>
                         <span class="topic">{{item.title}}</span>
                         <span class="joined">{{item.total | formatPeople}} people joined</span>
-                        <div v-for="(a,i) in item.anwsers" :key="i" :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended'}" @click="showBetBtn(item,a)">
+                        <div
+                            v-for="(a,i) in item.anwsers"
+                            :key="i"
+                            :class="{'answer':true,'unstart':item.state=='unstart','default-scale':item.state!='unstart'&&!a.clicked,'my-choose-scale':item.guess==a.id,'clicked':a.clicked,'end-right':item.result==a.id && item.state=='ended'}"
+                            @click="showBetBtn(item,a)"
+                        >
                             <p v-if="!(item.result==a.id && item.state=='ended')" :style="{'width':percent(a.count,item.total)}" />
                             <span class="vaule">
                                 {{a.label}}. {{a.value}}
-                                <img v-if="item.result==a.id && item.state=='ended'" src="~assets/img/naire/ic_right.png">
-                                <img v-else-if="item.result!=a.id && a.id==item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png">
+                                <img v-if="item.result==a.id && item.state=='ended'" src="~assets/img/naire/ic_right.png" />
+                                <img v-else-if="item.result!=a.id && a.id==item.guess && item.state=='ended'" src="~assets/img/naire/ic_wrong.png" />
                             </span>
                             <span v-if="item.state=='ended'&& item.result==a.id " :class="{'won':item.guess==a.id}" class="percent right">
                                 {{a.count}} people won!
-                                <img v-show="item.guess==item.result" src="~assets/img/naire/ic_gift.png" @click="showPrizeDialog(a.count)">
+                                <img
+                                    v-show="item.guess==item.result"
+                                    src="~assets/img/naire/ic_gift.png"
+                                    @click="showPrizeDialog(a.count)"
+                                />
                             </span>
                             <span v-else-if="item.state!='unstart' && !a.clicked" class="percent">{{percent(a.count,item.total)}}</span>
                         </div>
                         <span class="close">
                             Close at
-                            <a href="javascript:void(0)" :class="{'close':item.state=='closed' || item.state=='ended'}">{{item.end_time | formatTime}}</a>
+                            <a
+                                href="javascript:void(0)"
+                                :class="{'close':item.state=='closed' || item.state=='ended'}"
+                            >{{item.end_time | formatTime}}</a>
                         </span>
                     </div>
                 </div>
@@ -45,7 +65,7 @@
         </div>
         <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false" />
         <div v-show="showRule==true" class="card-rule">
-            <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false">
+            <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false" />
             <div class="rule">
                 <div class="dot">‧</div>
                 <p>There are several questions in each match day, the more questions you guess correctly, the more prizes you will get;</p>
@@ -58,16 +78,16 @@
             </div>
         </div>
         <div v-show="showPrize==true" class="card-prize">
-            <img src="~assets/img/naire/ic_close.png" class="close" @click="showPrize=false">
+            <img src="~assets/img/naire/ic_close.png" class="close" @click="showPrize=false" />
             <div class="prize">
-                <img src="~assets/img/naire/bg_popup.png" class="bg" @click="showPrize=false">
+                <img src="~assets/img/naire/bg_popup.png" class="bg" @click="showPrize=false" />
                 <div class="receive">
-                    <img v-if="$store.state.user.head" :src="cdnPicSrc($store.state.user.head)" class="photo">
-                    <img v-else src="http://cdn.startimestv.com/head/h_d.png">
+                    <img v-if="$store.state.user.head" :src="cdnPicSrc($store.state.user.head)" class="photo" />
+                    <img v-else src="http://cdn.startimestv.com/head/h_d.png" />
                     <p class="user">{{$store.state.user.nickName||$store.state.user.userName}}</p>
                     <p class="congra">Congratulations!</p>
                     <p class="total">In total {{prizeNum}} people won this guess, and you have got:</p>
-                    <img src="~assets/img/naire/ic_MAX.png" class="max">
+                    <img src="~assets/img/naire/ic_MAX.png" class="max" />
                     <p class="vip">Already sent to your account</p>
                     <div class="btn" @click="checkPrize()">CHECK PRIZE</div>
                 </div>
@@ -78,6 +98,7 @@
 <script>
 import { shareInvite, toNativePage } from '~/functions/utils'
 import BScroll from 'better-scroll'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     filters: {
@@ -88,7 +109,13 @@ export default {
             const ss =
                 val == 'closed'
                     ? 'Waiting Result'
-                    : val == 'unstart' ? 'Not Start' : val == 'progress' ? 'In Progress' : val == 'ended' ? 'Ended' : ''
+                    : val == 'unstart'
+                        ? 'Not Start'
+                        : val == 'progress'
+                            ? 'In Progress'
+                            : val == 'ended'
+                                ? 'Ended'
+                                : ''
             return ss
         },
         formatTime(val) {
@@ -214,7 +241,7 @@ export default {
             try {
                 m += s2.split('.')[1].length
             } catch (e) {}
-            return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m) + '%'
+            return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m) + '%'
         },
         showBetBtn(question, answer) {
             if (question.state != 'progress') return
@@ -324,7 +351,22 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/bg_guess.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'COPA AMERICA 2019 CRAZY Guess' }
+                { name: 'og:title', property: 'og:title', content: 'COPA AMERICA 2019 CRAZY Guess' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/questionNaire/america_bet`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }
