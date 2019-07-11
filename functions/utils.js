@@ -1,4 +1,3 @@
-import CallApp from 'callapp-lib'
 import { Base64 } from 'js-base64'
 import localforage from 'localforage'
 import dayjs from 'dayjs'
@@ -376,37 +375,41 @@ export const initDB = function() {
 }
 
 export const downloadApk = function(callback) {
+    const ua = navigator.userAgent.toLowerCase()
+    const appType = ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0 ? 2 : 1
     this.sendEvLog({
         category: 'callup_app',
         action: 'down_apk',
         label: window.location.href,
         Value: 1
     })
-    this.$axios
-        .get('/cms/public/app')
-        .then(res => {
-            const url = res.data.apkUrl
-            if (url) {
-                window.location.href = url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : url
-            } else {
+    if (appType == 2) {
+        window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
+    } else {
+        this.$axios
+            .get('/cms/public/app')
+            .then(res => {
+                const url = res.data.apkUrl
+                if (url) {
+                    window.location.href = url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : url
+                } else {
+                    this.$alert('Download error.Please retry.')
+                }
+            })
+            .catch(() => {
                 this.$alert('Download error.Please retry.')
-            }
-        })
-        .catch(() => {
-            this.$alert('Download error.Please retry.')
-        })
+            })
+    }
     if (callback) callback()
 }
 
 export const callMarket = function() {
     const ua = navigator.userAgent.toLowerCase()
-    let appType = 1
-    let source = ''
+    const appType = ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0 ? 2 : 1
     const voteDownTag = getCookie('vote_share_down')
     const user = getCookie('vote_share_user')
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        appType = 2
-    }
+
+    let source = ''
     if (location.href.indexOf('referrer') > 0) {
         source = location.search
     } else if (location.href.indexOf('utm_source') > 0) {
@@ -414,6 +417,7 @@ export const callMarket = function() {
     } else {
         source = '&' + location.search.substr(1)
     }
+
     if (voteDownTag && voteDownTag != -1) {
         this.$axios({
             method: 'POST',
@@ -442,131 +446,58 @@ export const callMarket = function() {
 
 export const callApp = function(page, failback) {
     const ua = navigator.userAgent.toLowerCase()
-    let scheme = 'starvideo'
+    const scheme = ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0 ? 'startimes' : 'starvideo'
     let path = 'platformapi/webtoapp'
 
-    if (page) {
-        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
-    }
+    if (page) path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
 
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-    }
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-    callLib.open({
-        path: path,
-        callback() {
-            if (failback) failback()
-        }
+    const iframe = document.createElement('iframe')
+    iframe.frameborder = '0'
+    iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
+    document.body.appendChild(iframe)
+
+    iframe.src = scheme + '://' + path
+
+    const s = setTimeout(() => {
+        if (!document.hidden) failback && failback()
+        clearTimeout(s)
+    }, 3000)
+    document.addEventListener('visibilitychange', () => {
+        clearTimeout(s)
     })
 }
 
+// !important discard
 export const toAppStore = function(page) {
-    const ua = navigator.userAgent.toLowerCase()
-    const _this = this
-
-    let source = ''
-    let scheme = 'starvideo'
-    let appType = 1
-    let path = 'platformapi/webtoapp'
-    if (page) {
-        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
-    }
-
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-        appType = 2
-        // path = '?player?vod='+ page
-    }
-
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-
-    callLib.open({
-        path: path,
-        callback() {
-            if (location.href.indexOf('referrer') > 0) {
-                source = location.search
-            } else if (location.href.indexOf('utm_source') > 0) {
-                source = '&referrer=' + encodeURIComponent(location.search.substr(1))
-            } else {
-                source = '&' + location.search.substr(1)
-            }
-
-            _this.sendEvLog({
-                category: _this.vote_name,
-                action: 'downloadpopup_show',
-                label: '',
-                Value: 1
-            })
-
-            _this.$confirm(
-                appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
-                () => {
-                    _this.sendEvLog({
-                        category: 'callup_app',
-                        action: 'to_googleplay',
-                        label: window.location.href,
-                        Value: 1
-                    })
-                    window.location.href =
-                        appType == 1
-                            ? 'market://details?id=com.star.mobile.video' + source
-                            : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-                },
-                () => {
-                    _this.sendEvLog({
-                        category: _this.vote_name,
-                        action: 'downloadpopup_click',
-                        label: 'not now',
-                        Value: 1
-                    })
-                },
-                _this.$store.state.lang.mrright_go,
-                _this.$store.state.lang.mrright_not_now
-            )
-        }
+    callApp(page, () => {
+        this.$confirm(
+            this.$store.state.lang.mrright_download_android,
+            () => {
+                this.sendEvLog({
+                    category: 'callup_app',
+                    action: 'to_googleplay',
+                    label: window.location.href,
+                    Value: 1
+                })
+                callMarket()
+            },
+            () => {
+                this.sendEvLog({
+                    category: this.vote_name,
+                    action: 'downloadpopup_click',
+                    label: 'not now',
+                    Value: 1
+                })
+            },
+            this.$store.state.lang.mrright_go,
+            this.$store.state.lang.mrright_not_now
+        )
     })
 }
 
-export const normalToAppStore = function(page, pos) {
-    const ua = navigator.userAgent.toLowerCase()
-    const _this = this
-
-    let scheme = 'starvideo'
-    let appType = 1
-    let path = 'platformapi/webtoapp'
-    if (page) {
-        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
-    }
-
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-        appType = 2
-    }
-
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-
-    callLib.open({
-        path: path,
-        callback() {
-            if (appType == 2) {
-                window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-            } else {
-                downloadApk.call(_this)
-            }
-        }
+export const normalToAppStore = function(page) {
+    callApp(page, () => {
+        downloadApk.call(this)
     })
 }
 
