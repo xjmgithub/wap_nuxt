@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div v-if="logo&&nickname">
             <div class="user">
-                <img :src="logo" />
+                <div class="user-head" :style="{background:`url(${logo}) no-repeat center center`,'background-size':'cover'}"></div>
                 <span class="name">{{nickname}}</span>
                 <span class="time">{{publishTime}}</span>
             </div>
@@ -10,7 +10,7 @@
                 id="news-content"
                 frameborder="0"
                 scrolling="no"
-                src="http://qa.upms.startimestv.com/wap/newstpl/index.html"
+                src="http://localhost:8001/newstpl/index.html"
                 width="100%"
                 @load="iframeLoaded=true"
             ></iframe>
@@ -74,8 +74,8 @@ export default {
     async asyncData({ app: { $axios }, store, route }) {
         $axios.setHeader('token', store.state.token)
         try {
-            const res = await $axios.get(`http://localhost:9001/feed/v1/posts/${route.params.id}/details`)
-            const data = res.data.data
+            const res = await $axios.get(`/feed/v1/posts/${route.params.id}/details`)
+            const data = res.data
             return {
                 id: route.params.id,
                 likeCount: data.upvote,
@@ -170,8 +170,12 @@ export default {
         line-height: 2.5rem;
         margin-bottom: 0.3rem;
         padding: 1rem 1rem 0rem;
-        img {
+        .user-head {
             width: 2.5rem;
+            height: 2.5rem;
+            background-size: contain;
+            border-radius: 2.5rem;
+            float: left;
         }
         .name {
             color: #333333;
@@ -226,7 +230,7 @@ export default {
             }
         }
         &.show-pic {
-            position: absolute;
+            position: fixed;
             bottom: 0rem;
             z-index: 1001;
             width: 100%;

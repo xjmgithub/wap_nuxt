@@ -66,7 +66,7 @@ export default {
         '/search-service/': env.proxyHost,
         '/wxorder/': env.proxyHost,
         '/like/': env.proxyHost,
-        '/feed/': 'http://localhost:9001'
+        '/feed/': env.proxyHost
     },
     router: {
         middleware: 'auth' // middleware before all pages render

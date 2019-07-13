@@ -6,7 +6,8 @@
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
-                            <img :src="item" />
+                            <img :data-src="item" class="swiper-lazy" />
+                            <div class="swiper-lazy-preloader"></div>
                         </div>
                     </div>
                 </div>
@@ -56,6 +57,7 @@ export default {
                 initialSlide: this.index,
                 width: document.body.scrollWidth,
                 height: document.body.scrollHeight,
+                preloadImages: false,
                 lazy: {
                     loadPrevNext: true
                 }
@@ -84,6 +86,10 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
 }
 .swiper-slide {
     width: 100%;
