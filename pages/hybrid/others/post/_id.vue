@@ -11,7 +11,7 @@
                 id="news-content"
                 frameborder="0"
                 scrolling="no"
-                src="http://localhost:8001/newstpl/index.html"
+                src="http://qa.upms.startimestv.com/wap/newstpl/index.html?level=LEVEL_1"
                 width="100%"
                 @load="iframeLoaded=true"
             ></iframe>
