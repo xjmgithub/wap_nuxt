@@ -79,6 +79,12 @@ export default {
         try {
             const res = await $axios.get(`/feed/v1/posts/${route.params.id}/details`)
             const data = res.data
+            const posters = data.posters
+            let imgtype = posters.length > 1 ? 2 : 1
+            posters.forEach(item => {
+                if (item.type.indexOf('GIF') >= 0) imgtype = 0
+            })
+
             return {
                 id: route.params.id,
                 likeCount: data.upvote,
@@ -89,7 +95,8 @@ export default {
                 detailUrl: data.detailed_url,
                 title: data.title,
                 voteState: data.vote_state, // 0 无，1赞，2踩，
-                postPic: data.posters[0].url
+                postPic: data.posters[0].url,
+                imgType: imgtype
             }
         } catch (e) {
             return {
@@ -102,7 +109,8 @@ export default {
                 datailUrl: '',
                 title: '',
                 voteState: 0,
-                postPic: ''
+                postPic: '',
+                imgType: ''
             }
         }
     },
@@ -123,9 +131,23 @@ export default {
         },
         like() {
             this.postLike(this.voteState == 1 ? 3 : 1)
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'upvote_tap',
+                label: this.id,
+                value: 1,
+                imgtype: this.imgtype
+            })
         },
         unlike() {
             this.postLike(this.voteState == 2 ? 3 : 2)
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'downvote_tap',
+                label: this.id,
+                value: 1,
+                imgtype: this.imgtype
+            })
         },
         postLike(num) {
             this.$axios({
