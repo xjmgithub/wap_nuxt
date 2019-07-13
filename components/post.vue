@@ -2,7 +2,7 @@
     <div v-show="visiable" @click.stop="closePost()">
         <div class="count">{{realIndex}}/{{postList.length}}</div>
         <div class="post-layer">
-            <div class="swiper-container">
+            <div class="swiper-container" @click.stop>
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
@@ -89,12 +89,6 @@ export default {
     .swiper-container {
         width: 100%;
         height: 100%;
-    }
-}
-.swiper-slide {
-    width: 100%;
-    img {
-        width: 100%;
     }
 }
 .count {
