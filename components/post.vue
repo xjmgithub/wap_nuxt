@@ -16,8 +16,7 @@
     </div>
 </template>
 <script>
-import Swiper from 'Swiper'
-import 'Swiper/dist/css/swiper.css'
+import Swiper from 'swiper'
 export default {
     data() {
         return {
@@ -70,6 +69,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import 'swiper/dist/css/swiper.css';
 .post-layer {
     width: 100%;
     height: 100%;
