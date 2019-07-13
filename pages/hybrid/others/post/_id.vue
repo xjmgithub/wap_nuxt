@@ -1,6 +1,7 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" style="padding-top:4rem;">
         <div v-if="logo&&nickname">
+            <download style="top:0;z-index:99"></download>
             <div class="user">
                 <div class="user-head" :style="{background:`url(${logo}) no-repeat center center`,'background-size':'cover'}"></div>
                 <span class="name">{{nickname}}</span>
@@ -36,6 +37,7 @@ import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post'
 import dayjs from 'dayjs'
 import qs from 'qs'
+import download from '~/components/web/download.vue'
 export default {
     layout: 'base',
     filters: {
@@ -57,7 +59,8 @@ export default {
     },
     components: {
         mShare,
-        mPost
+        mPost,
+        download
     },
     data() {
         return {
@@ -86,7 +89,7 @@ export default {
                 detailUrl: data.detailed_url,
                 title: data.title,
                 voteState: data.vote_state, // 0 无，1赞，2踩，
-                postPic:data.posters[0].url
+                postPic: data.posters[0].url
             }
         } catch (e) {
             return {
@@ -99,7 +102,7 @@ export default {
                 datailUrl: '',
                 title: '',
                 voteState: 0,
-                postPic:''
+                postPic: ''
             }
         }
     },
