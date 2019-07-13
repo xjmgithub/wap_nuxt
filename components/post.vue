@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div v-show="visiable" @click.stop="closePost()">
         <div class="count">{{realIndex}}/{{postList.length}}</div>
-        <div class="post-layer" @click.stop="closePost()">
+        <div class="post-layer">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
-                            <img :src="item" @click.stop="zoom()">
+                            <img :src="item" />
                         </div>
                     </div>
                 </div>
@@ -18,51 +18,50 @@
 import Swiper from 'Swiper'
 import 'Swiper/dist/css/swiper.css'
 export default {
-    props: {
-        postList: {
-            required: false,
-            type: Array,
-            default: () => {
-                return []
-            }
-        },
-        pIndex: {
-            required: false,
-            type: Number,
-            default: 1
-        }
-    },
     data() {
         return {
             mySwiper: null,
-            realIndex: this.pIndex
+            index: 0,
+            postList: [],
+            visiable: false
+        }
+    },
+    computed: {
+        realIndex() {
+            return this.index + 1
         }
     },
     methods: {
+        show(list, index) {
+            this.index = index
+            if (this.mySwiper) {
+                this.visiable = true
+                this.mySwiper.slideTo(this.index)
+            } else {
+                this.postList = list
+                this.$nextTick(() => {
+                    this.init()
+                })
+            }
+        },
         closePost() {
-            this.$emit('closePost')
+            this.visiable = false
+            this.$emit('close')
         },
-        zoom(){},
         init() {
+            this.visiable = true
             this.mySwiper = new Swiper('.swiper-container', {
-                loop: false, // 循环模式选项
-                observer: true, // 修改swiper自己或子元素时，自动初始化swiper
-                observeParents: true, // 修改swiper的父元素时，自动初始化swiper
-                on: {
-                    slideChangeTransitionEnd: () => {
-                        this.realIndex = this.mySwiper.activeIndex + 1
-                    },
-                    slideChange: () => {
-                        this.realIndex = this.mySwiper.activeIndex + 1
-                    }
-                },
-                zoom: true
+                loop: false,
+                zoom: true,
+                initialSlide: this.index,
+                width: document.body.scrollWidth,
+                height: document.body.scrollHeight,
+                lazy: {
+                    loadPrevNext: true
+                }
             })
-        },
-        slide() {
-            this.$nextTick(() => {
-                this.init()
-                this.mySwiper.slideTo(this.pIndex - 1, 1, false)
+            this.mySwiper.on('slideChangeTransitionEnd', () => {
+                this.index = this.mySwiper.activeIndex
             })
         }
     }
@@ -78,7 +77,6 @@ export default {
     bottom: 0;
     z-index: 99;
     background: #000000;
-    padding: 0.8rem;
     display: -webkit-box;
     display: -moz-box;
     display: -webkit-flex;

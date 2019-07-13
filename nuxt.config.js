@@ -64,7 +64,9 @@ export default {
         '/self/': env.proxyHost,
         '/channel/': env.proxyHost,
         '/search-service/': env.proxyHost,
-        '/wxorder/': env.proxyHost
+        '/wxorder/': env.proxyHost,
+        '/like/': env.proxyHost,
+        '/feed/': 'http://localhost:9001'
     },
     router: {
         middleware: 'auth' // middleware before all pages render

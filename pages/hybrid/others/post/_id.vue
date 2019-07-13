@@ -1,0 +1,257 @@
+<template>
+    <div class="wrapper">
+        <div v-if="logo&&nickname">
+            <div class="user">
+                <img :src="logo" />
+                <span class="name">{{nickname}}</span>
+                <span class="time">{{publishTime}}</span>
+            </div>
+            <iframe
+                id="news-content"
+                frameborder="0"
+                scrolling="no"
+                src="http://qa.upms.startimestv.com/wap/newstpl/index.html"
+                width="100%"
+                @load="iframeLoaded=true"
+            ></iframe>
+            <div v-show="iframeLoaded" :class="{'show-pic':sharePost}" class="opeartion">
+                <div class="left">
+                    <div class="like" :class="{actived:voteState==1}" @click="like()">{{ likeCount|formatCount }}</div>
+                    <div class="unlike" :class="{actived:voteState==2}" @click="unlike()">{{ disLikeCount|formatCount }}</div>
+                </div>
+                <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()" />
+            </div>
+        </div>
+        <div v-else class="fail">
+            <img src="~assets/img/pay/img_failed_def_b.png" />
+            <div class="alert-title">Sorry, this page is not available.</div>
+            <div class="alert-context">The link may be broken, or the page has been removed. Find more funny videos and images on StarTimes ON</div>
+        </div>
+        <mShare />
+        <mPost ref="mySwiper" @close="sharePost=false" />
+    </div>
+</template>
+<script>
+import mShare from '~/components/web/share.vue'
+import mPost from '~/components/post'
+import dayjs from 'dayjs'
+import qs from 'qs'
+export default {
+    layout: 'base',
+    filters: {
+        formatCount(val) {
+            if (val == 0 || isNaN(val)) {
+                return '--'
+            } else if (val < 10000) {
+                // 1w
+                return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+            } else if (val >= 10000 && val < 1000000) {
+                // 1w-100w (K)
+                const x = (val / 1000).toFixed(1) % 1000
+                return x == 0 ? '1.0M' : x + 'K'
+            } else if (val >= 1000000) {
+                // 100w (M)
+                return (val / 1000000).toFixed(1) + 'M'
+            }
+        }
+    },
+    components: {
+        mShare,
+        mPost
+    },
+    data() {
+        return {
+            iframeLoaded: false,
+            sharePost: false,
+            postList: []
+        }
+    },
+    computed: {
+        publishTime() {
+            return dayjs(parseInt(this.time)).format('YYYY-MM-DD HH:mm:ss')
+        }
+    },
+    async asyncData({ app: { $axios }, store, route }) {
+        $axios.setHeader('token', store.state.token)
+        try {
+            const res = await $axios.get(`http://localhost:9001/feed/v1/posts/${route.params.id}/details`)
+            const data = res.data.data
+            return {
+                id: route.params.id,
+                likeCount: data.upvote,
+                disLikeCount: data.downvote,
+                logo: data.logo,
+                nickname: data.nick,
+                time: data.publish_time,
+                detailUrl: data.detailed_url,
+                title: data.title,
+                voteState: data.vote_state // 0 无，1赞，2踩
+            }
+        } catch (e) {
+            return {
+                id: route.params.id,
+                likeCount: '',
+                disLikeCount: '',
+                logo: '',
+                nickname: '',
+                time: '',
+                datailUrl: '',
+                title: '',
+                voteState: 0
+            }
+        }
+    },
+    mounted() {
+        window.addEventListener('message', event => {
+            if (event.data.type == 'updateHeight') {
+                const iframe = document.getElementById('news-content')
+                iframe.style.height = event.data.value + 'px'
+            } else if (event.data.type == 'showPic') {
+                this.sharePost = true
+                this.$refs.mySwiper.show(event.data.value.list, Number(event.data.value.index))
+            }
+        })
+    },
+    methods: {
+        toShare() {
+            this.$store.commit('SET_SHARE_STATE', true)
+        },
+        like() {
+            this.postLike(this.voteState == 1 ? 3 : 1)
+        },
+        unlike() {
+            this.postLike(this.voteState == 2 ? 3 : 2)
+        },
+        postLike(num) {
+            this.$axios({
+                url: '/like/v1/vote',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    post_id: this.id,
+                    state: num
+                })
+            }).then(res => {
+                if (res.data.code === 0) {
+                    if (num == 1) {
+                        this.likeCount++
+                        this.voteState == 2 && this.disLikeCount--
+                    } else if (num == 2) {
+                        this.disLikeCount++
+                        this.voteState == 1 && this.likeCount--
+                    } else {
+                        if (this.voteState == 1) {
+                            this.likeCount--
+                        }
+                        if (this.voteState == 2) {
+                            this.disLikeCount--
+                        }
+                    }
+                    this.voteState = num
+                } else {
+                    this.$alert('network error')
+                }
+            })
+        }
+    },
+    head() {
+        return {
+            title: this.title || 'StarTimes ON'
+        }
+    }
+}
+</script>
+<style lang="less" scoped>
+.wrapper {
+    width: 100%;
+    .user {
+        line-height: 2.5rem;
+        margin-bottom: 0.3rem;
+        padding: 1rem 1rem 0rem;
+        img {
+            width: 2.5rem;
+        }
+        .name {
+            color: #333333;
+            font-size: 0.95rem;
+            margin: 0 0.8rem 0 0.5rem;
+            font-weight: bold;
+        }
+        .time {
+            color: #999999;
+            font-size: 0.85rem;
+        }
+    }
+    .opeartion {
+        border-bottom: 1px solid #eeeeee;
+        color: #666666;
+        font-size: 0.85rem;
+        padding: 0.5rem 0;
+        position: relative;
+        margin: 0 1rem 1.2rem;
+        .left {
+            display: inline-block;
+            > div {
+                display: inline-block;
+                height: 1.5rem;
+                line-height: 1.5rem;
+                padding-left: 1.7rem;
+                margin-right: 1rem;
+            }
+            .like {
+                background: url('~assets/img/others/like.png') no-repeat left center;
+                background-size: contain;
+                &.actived {
+                    background: url('~assets/img/others/like_sl.png') no-repeat left center;
+                    background-size: contain;
+                }
+            }
+            .unlike {
+                background: url('~assets/img/others/dislike.png') no-repeat left center;
+                background-size: contain;
+                &.actived {
+                    background: url('~assets/img/others/dislike_sl.png') no-repeat left center;
+                    background-size: contain;
+                }
+            }
+        }
+
+        img {
+            width: 1.6rem;
+            &.share {
+                float: right;
+                margin-top: -2px;
+            }
+        }
+        &.show-pic {
+            position: absolute;
+            bottom: 0rem;
+            z-index: 1001;
+            width: 100%;
+            margin: 0;
+            padding: 1rem;
+        }
+    }
+}
+.fail {
+    padding: 2rem;
+    img {
+        display: block;
+        width: 14rem;
+        margin: 0 auto;
+        margin-top: 5rem;
+    }
+    .alert-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+        margin: 2rem 0 1rem;
+    }
+    .alert-context {
+        line-height: 1.3rem;
+        text-align: left;
+    }
+}
+</style>
