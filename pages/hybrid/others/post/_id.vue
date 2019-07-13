@@ -85,7 +85,8 @@ export default {
                 time: data.publish_time,
                 detailUrl: data.detailed_url,
                 title: data.title,
-                voteState: data.vote_state // 0 无，1赞，2踩
+                voteState: data.vote_state, // 0 无，1赞，2踩，
+                postPic:data.posters[0].url
             }
         } catch (e) {
             return {
@@ -97,7 +98,8 @@ export default {
                 time: '',
                 datailUrl: '',
                 title: '',
-                voteState: 0
+                voteState: 0,
+                postPic:''
             }
         }
     },
@@ -158,7 +160,18 @@ export default {
     },
     head() {
         return {
-            title: this.title || 'StarTimes ON'
+            title: this.title || 'StarTimes ON',
+            meta: [
+                { name: 'description', property: 'description', content: this.title || 'StarTimes ON' },
+                { name: 'og:description', property: 'og:description', content: this.title || 'StarTimes ON' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.postPic
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: this.title || 'StarTimes ON' }
+            ]
         }
     }
 }
