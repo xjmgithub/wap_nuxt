@@ -18,12 +18,20 @@
 <script>
 import Swiper from 'swiper'
 export default {
+    props: {
+        imgType: {
+            required: true,
+            type: String,
+            default: ''
+        }
+    },
     data() {
         return {
             mySwiper: null,
             index: 0,
             postList: [],
-            visiable: false
+            visiable: false,
+            id: this.$route.params.id
         }
     },
     computed: {
@@ -46,6 +54,14 @@ export default {
         },
         closePost() {
             this.visiable = false
+            const value = event.target.tagName == 'IMG' ? 1 : 0
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'img_tap',
+                label: this.id,
+                value: value,
+                imgtype: this.imgType
+            })
             this.$emit('close')
         },
         init() {
@@ -63,6 +79,33 @@ export default {
             })
             this.mySwiper.on('slideChangeTransitionEnd', () => {
                 this.index = this.mySwiper.activeIndex
+            })
+            this.mySwiper.on('slidePrevTransitionEnd', () => {
+                this.sendEvLog({
+                    category: `post_${this.id}`,
+                    action: 'img_swipe_left',
+                    label: this.id,
+                    value: 1,
+                    imgtype: this.imgType
+                })
+            })
+            this.mySwiper.on('slideNextTransitionEnd', () => {
+                this.sendEvLog({
+                    category: `post_${this.id}`,
+                    action: 'img_swipe_right',
+                    label: this.id,
+                    value: 1,
+                    imgtype: this.imgType
+                })
+            })
+            this.mySwiper.on('zoomChange', scale => {
+                this.sendEvLog({
+                    category: `post_${this.id}`,
+                    action: 'img_zoom',
+                    label: this.id,
+                    value: scale > 1 ? 1 : 0,
+                    imgtype: this.imgType
+                })
             })
         }
     }

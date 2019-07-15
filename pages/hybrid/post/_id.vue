@@ -11,7 +11,7 @@
                 id="news-content"
                 frameborder="0"
                 scrolling="no"
-                src="http://qa.upms.startimestv.com/wap/newstpl/index.html?level=LEVEL_1"
+                src="http://10.0.63.127:8001/newstpl/index.html"
                 width="100%"
                 @load="iframeLoaded=true"
             ></iframe>
@@ -29,7 +29,7 @@
             <div class="alert-context">The link may be broken, or the page has been removed. Find more funny videos and images on StarTimes ON</div>
         </div>
         <mShare />
-        <mPost ref="mySwiper" @close="sharePost=false" />
+        <mPost ref="mySwiper" :img-type="imgType" @close="sharePost=false" />
     </div>
 </template>
 <script>
@@ -93,7 +93,7 @@ export default {
                 nickname: data.nick,
                 time: data.publish_time,
                 detailUrl: data.detailed_url,
-                title: data.title,
+                title: data.title || '',
                 voteState: data.vote_state, // 0 无，1赞，2踩，
                 postPic: data.posters[0].url,
                 imgType: imgtype
@@ -121,6 +121,13 @@ export default {
                 iframe.style.height = event.data.value + 'px'
             } else if (event.data.type == 'showPic') {
                 this.sharePost = true
+                this.sendEvLog({
+                    category: `post_${this.id}`,
+                    action: 'post_image_tap',
+                    label: this.id,
+                    value: 1,
+                    imgtype: this.imgtype
+                })
                 this.$refs.mySwiper.show(event.data.value.list, Number(event.data.value.index))
             }
         })
