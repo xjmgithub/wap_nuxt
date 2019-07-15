@@ -11,7 +11,7 @@
                 id="news-content"
                 frameborder="0"
                 scrolling="no"
-                src="http://10.0.63.127:8001/newstpl/index.html"
+                :src="detailUrl"
                 width="100%"
                 @load="iframeLoaded=true"
             ></iframe>
