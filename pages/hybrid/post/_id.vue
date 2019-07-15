@@ -5,7 +5,7 @@
             <div class="user">
                 <div class="user-head" :style="{background:`url(${logo}) no-repeat center center`,'background-size':'cover'}"></div>
                 <span class="name">{{nickname}}</span>
-                <span class="time">{{publishTime}}</span>
+                <span class="time">{{time}}</span>
             </div>
             <iframe
                 id="news-content"
@@ -35,8 +35,6 @@
 <script>
 import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post'
-import dayjs from 'dayjs'
-import qs from 'qs'
 import download from '~/components/web/download.vue'
 export default {
     layout: 'base',
@@ -69,11 +67,6 @@ export default {
             postList: []
         }
     },
-    computed: {
-        publishTime() {
-            return dayjs(parseInt(this.time)).format('YYYY-MM-DD HH:mm:ss')
-        }
-    },
     async asyncData({ app: { $axios }, store, route }) {
         $axios.setHeader('token', store.state.token)
         try {
@@ -85,13 +78,30 @@ export default {
                 if (item.type.indexOf('GIF') >= 0) imgtype = 0
             })
 
+            const now = new Date().getTime()
+            const diff = parseInt(now - data.publish_time)
+            let time = 'just now'
+            if (diff < 60 * 1000) {
+                time = 'just now'
+            } else if (diff < 60 * 1000 * 60) {
+                time = Math.ceil(diff / 60000) + ' minutes ago'
+            } else if (diff < 60 * 1000 * 60 * 24) {
+                time = Math.ceil(diff / (60 * 1000 * 60)) + ' hours ago'
+            } else if (diff < 60 * 1000 * 60 * 24 * 30) {
+                time = Math.ceil(diff / (60 * 1000 * 60 * 24)) + ' days ago'
+            } else if (diff < 60 * 1000 * 60 * 24 * 30 * 12) {
+                time = Math.ceil(diff / (60 * 1000 * 60 * 24 * 30)) + ' months ago'
+            } else {
+                time = Math.ceil(diff / (60 * 1000 * 60 * 24 * 30 * 12)) + ' years ago'
+            }
+
             return {
                 id: route.params.id,
                 likeCount: data.upvote,
                 disLikeCount: data.downvote,
                 logo: data.logo,
                 nickname: data.nick,
-                time: data.publish_time,
+                time: time,
                 detailUrl: data.detailed_url,
                 title: data.title || '',
                 voteState: data.vote_state, // 0 无，1赞，2踩，
@@ -115,6 +125,10 @@ export default {
         }
     },
     mounted() {
+        // 从缓存中读取点赞状态
+        const voteSateCache = localStorage.getItem(`post_${this.id}`)
+        this.voteState = voteSateCache
+
         window.addEventListener('message', event => {
             if (event.data.type == 'updateHeight') {
                 const iframe = document.getElementById('news-content')
@@ -157,38 +171,56 @@ export default {
             })
         },
         postLike(num) {
-            this.$axios({
-                url: '/like/v1/vote',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: qs.stringify({
-                    post_id: this.id,
-                    state: num
-                })
-            }).then(res => {
-                if (res.data.code === 0) {
-                    if (num == 1) {
-                        this.likeCount++
-                        this.voteState == 2 && this.disLikeCount--
-                    } else if (num == 2) {
-                        this.disLikeCount++
-                        this.voteState == 1 && this.likeCount--
-                    } else {
-                        if (this.voteState == 1) {
-                            this.likeCount--
-                        }
-                        if (this.voteState == 2) {
-                            this.disLikeCount--
-                        }
-                    }
-                    this.voteState = num
-                } else {
-                    this.$alert('network error')
+            if (num == 1) {
+                this.likeCount++
+                this.voteState == 2 && this.disLikeCount--
+            } else if (num == 2) {
+                this.disLikeCount++
+                this.voteState == 1 && this.likeCount--
+            } else {
+                if (this.voteState == 1) {
+                    this.likeCount--
                 }
-            })
+                if (this.voteState == 2) {
+                    this.disLikeCount--
+                }
+            }
+            this.voteState = num
+            localStorage.setItem(`post_${this.id}`, num)
         }
+        // postLike(num) {
+        //     this.$axios({
+        //         url: '/like/v1/vote',
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/x-www-form-urlencoded'
+        //         },
+        //         data: qs.stringify({
+        //             post_id: this.id,
+        //             state: num
+        //         })
+        //     }).then(res => {
+        //         if (res.data.code === 0) {
+        //             if (num == 1) {
+        //                 this.likeCount++
+        //                 this.voteState == 2 && this.disLikeCount--
+        //             } else if (num == 2) {
+        //                 this.disLikeCount++
+        //                 this.voteState == 1 && this.likeCount--
+        //             } else {
+        //                 if (this.voteState == 1) {
+        //                     this.likeCount--
+        //                 }
+        //                 if (this.voteState == 2) {
+        //                     this.disLikeCount--
+        //                 }
+        //             }
+        //             this.voteState = num
+        //         } else {
+        //             this.$alert('network error')
+        //         }
+        //     })
+        // }
     },
     head() {
         return {
