@@ -7,14 +7,7 @@
                 <span class="name">{{nickname}}</span>
                 <span class="time">{{time}}</span>
             </div>
-            <iframe
-                id="news-content"
-                frameborder="0"
-                scrolling="no"
-                :src="detailUrl"
-                width="100%"
-                @load="iframeLoaded=true"
-            ></iframe>
+            <iframe id="news-content" frameborder="0" scrolling="no" :src="detailUrl" width="100%" @load="iframeLoaded=true"></iframe>
             <div v-show="iframeLoaded" :class="{'show-pic':sharePost}" class="opeartion">
                 <div class="left">
                     <div class="like" :class="{actived:voteState==1}" @click="like()">{{ likeCount|formatCount }}</div>
@@ -84,7 +77,7 @@ export default {
             if (diff < 60 * 1000) {
                 time = 'just now'
             } else if (diff < 60 * 1000 * 60) {
-                time = Math.ceil(diff / 60000) + ' minutes ago'
+                time = Math.ceil(diff / 60000) + ' mins ago'
             } else if (diff < 60 * 1000 * 60 * 24) {
                 time = Math.ceil(diff / (60 * 1000 * 60)) + ' hours ago'
             } else if (diff < 60 * 1000 * 60 * 24 * 30) {
