@@ -123,6 +123,9 @@ export default {
         this.voteState = voteSateCache
 
         window.addEventListener('message', event => {
+            // 防止恶意注入
+            if (event.origin.indexOf('startimestv.com') < 0) return
+
             if (event.data.type == 'updateHeight') {
                 const iframe = document.getElementById('news-content')
                 iframe.style.height = event.data.value + 'px'
