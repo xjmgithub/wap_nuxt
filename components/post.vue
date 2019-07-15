@@ -21,8 +21,8 @@ export default {
     props: {
         imgType: {
             required: true,
-            type: String,
-            default: ''
+            type: Number,
+            default: 1
         }
     },
     data() {
