@@ -375,20 +375,25 @@ export const initDB = function() {
 }
 
 export const getBrowser = function() {
+    if (!process.client) return {}
+
     const ua = window.navigator.userAgent || ''
     const isAndroid = /android/i.test(ua)
     const isIos = /iphone|ipad|ipod/i.test(ua)
     const isOriginalChrome = /chrome\/[\d.]+ Mobile Safari\/[\d.]+/i.test(ua) && isAndroid
     // ios 上很多 app 都包含 safari 标识，但它们都是以自己的 app 标识开头，而不是 Mozilla
     const isSafari = /safari\/([\d.]+)$/i.test(ua) && isIos && ua.indexOf('Crios') < 0 && ua.indexOf('Mozilla') === 0
-    const verion = parseInt(navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)[1], 10)
+    let version = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)
+    if (version) {
+        version = parseInt(version[1], 10)
+    }
 
     return {
         isAndroid,
         isIos,
         isOriginalChrome,
         isSafari,
-        verion
+        version
     }
 }
 
@@ -485,40 +490,6 @@ export const callApp = function(page, failback) {
     }, 2000)
     document.addEventListener('visibilitychange', () => {
         clearTimeout(s)
-    })
-}
-
-// !important discard
-export const toAppStore = function(page) {
-    callApp(page, () => {
-        this.$confirm(
-            this.$store.state.lang.mrright_download_android,
-            () => {
-                this.sendEvLog({
-                    category: 'callup_app',
-                    action: 'to_googleplay',
-                    label: window.location.href,
-                    Value: 1
-                })
-                callMarket()
-            },
-            () => {
-                this.sendEvLog({
-                    category: this.vote_name,
-                    action: 'downloadpopup_click',
-                    label: 'not now',
-                    Value: 1
-                })
-            },
-            this.$store.state.lang.mrright_go,
-            this.$store.state.lang.mrright_not_now
-        )
-    })
-}
-
-export const normalToAppStore = function(page) {
-    callApp(page, () => {
-        downloadApk.call(this)
     })
 }
 

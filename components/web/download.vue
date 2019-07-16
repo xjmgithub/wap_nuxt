@@ -11,44 +11,51 @@
     </div>
 </template>
 <script>
-import { UAType } from '~/functions/utils'
-import { normalToAppStore } from '~/functions/app'
-import localforage from 'localforage'
+import { callApp, downApk, callMarket } from '~/functions/app'
 export default {
+    props: {
+        page: {
+            required: false,
+            type: String,
+            default: ''
+        },
+        downApk: {
+            required: false,
+            type: Boolean,
+            default: true
+        }
+    },
     mounted() {
         this.sendEvLog({
-            category: document.title,
+            category: 'callup_app',
             action: 'install_promo_show',
-            label: UAType() + '_1',
+            label: this.$route.path,
             value: 1
         })
     },
     methods: {
         down() {
             this.sendEvLog({
-                category: document.title,
+                category: 'callup_app',
                 action: 'install_promo_click',
-                label: UAType() + '_1',
+                label: this.$route.path,
                 value: 1
             })
+            let page = this.page || ''
+
             if (this.$route.path.indexOf('program/subdetail/') >= 0) {
-                normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.$route.params.id)
+                page = `com.star.mobile.video.player.PlayerVodActivity?vodId=${this.$route.params.id}`
             } else if (this.$route.path.indexOf('program/detail/') >= 0) {
-                localforage
-                    .getItem('program_' + this.$route.params.id)
-                    .then(val => {
-                        if (val.defaultVod.id) {
-                            normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + val.defaultVod.id)
-                        } else {
-                            normalToAppStore.call(this)
-                        }
-                    })
-                    .catch(e => {
-                        normalToAppStore.call(this)
-                    })
-            } else {
-                normalToAppStore.call(this)
+                page = `com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.$route.params.id}`
             }
+
+            callApp.call(this, page, () => {
+                if (this.downApk) {
+                    downApk.call(this)
+                } else {
+                    callMarket.call(this)
+                }
+            })
         }
     }
 }

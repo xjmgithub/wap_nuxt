@@ -1,26 +1,26 @@
 <template>
     <div class="untrim-page">
         <div v-if="channel.poster&&channel.poster.resources[0].url" class="poster" @click="confirmDown">
-            <img :src="channel.poster&&cdnPicSrc(channel.poster.resources[0].url)">
-            <img src="~assets/img/web/ic_play.png">
+            <img :src="channel.poster&&cdnPicSrc(channel.poster.resources[0].url)" />
+            <img src="~assets/img/web/ic_play.png" />
         </div>
         <div class="container-main">
             <div class="views">
                 {{channel.liveOnlineUserNumber||0 | formatViewCount}} views
                 <div class="share" @click="toShare">
-                    <img src="~assets/img/web/ic_share_def_g.png">
+                    <img src="~assets/img/web/ic_share_def_g.png" />
                     {{$store.state.lang.officialwebsitemobile_action_share}}
                 </div>
             </div>
             <div v-if="channel.id" class="base-info clearfix">
                 <div class="logo">
-                    <img :src="channel.logo.resources[0]&&cdnPicSrc(channel.logo.resources[0].url)" alt>
+                    <img :src="channel.logo.resources[0]&&cdnPicSrc(channel.logo.resources[0].url)" alt />
                 </div>
                 <div class="info">
                     <p class="info-name">{{channel.name}}</p>
-                    <img v-show="channel.liveStatus" src="~assets/img/web/online.png">
-                    <img v-show="isDTT" src="~assets/img/web/ic_TERRESTRIAL.png">
-                    <img v-show="isDTH" src="~assets/img/web/ic_dth.png">
+                    <img v-show="channel.liveStatus" src="~assets/img/web/online.png" />
+                    <img v-show="isDTT" src="~assets/img/web/ic_TERRESTRIAL.png" />
+                    <img v-show="isDTH" src="~assets/img/web/ic_dth.png" />
                 </div>
             </div>
             <div class="describes">
@@ -29,11 +29,11 @@
             <div v-show="platformInfos.length>0" class="watch">
                 <p>Watch it on TV</p>
                 <div v-for="(item,index) in platformInfos" :key="index" class="watchList" @click="goToBouquetDetail(item)">
-                    <img v-if="item.tvPlatForm=='DTT'" src="~assets/img/web/DTT.png" class="sign">
-                    <img v-if="item.tvPlatForm=='DTH'" src="~assets/img/web/DTH.png" class="sign">
+                    <img v-if="item.tvPlatForm=='DTT'" src="~assets/img/web/DTT.png" class="sign" />
+                    <img v-if="item.tvPlatForm=='DTH'" src="~assets/img/web/DTH.png" class="sign" />
                     <span :class="{isDtt:item.tvPlatForm=='DTT',isDth:item.tvPlatForm=='DTH'}">{{item.channelNumber}}</span>
                     <span class="name">{{item.ofPackage.name}}</span>
-                    <img src="~assets/img/web/ic_categary1.png" class="arrows">
+                    <img src="~assets/img/web/ic_categary1.png" class="arrows" />
                 </div>
             </div>
             <div v-if="epgList.length>0" class="tv-guide">
@@ -46,12 +46,12 @@
                 <div class="epg-contain">
                     <div v-for="(item,index) in epgList" :key="index" class="epg">
                         <span class="playTime">{{item.startDate | formatPlayTime}}</span>
-                        <span :class="{current:item.isCurrent}" class="circle"/>
+                        <span :class="{current:item.isCurrent}" class="circle" />
                         <div class="playTitle" @click="toggleDetail(item)">
                             {{item.name}}
-                            <div style="height:0.8rem;"/>
+                            <div style="height:0.8rem;" />
                             <div v-show="item.isCurrent" class="total">
-                                <div :style="{ width: progress + '%'}" class="progress"/>
+                                <div :style="{ width: progress + '%'}" class="progress" />
                             </div>
                             <div v-show="item.showDetail" class="more-info">
                                 <div>
@@ -72,12 +72,12 @@
                 </div>
             </div>
         </div>
-        <mShare :show="showShare"/>
+        <mShare :show="showShare" />
     </div>
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { normalToAppStore, UAType } from '~/functions/utils'
+import { callApp, downApk } from '~/functions/app.js'
 import dayjs from 'dayjs'
 import { Base64 } from 'js-base64'
 export default {
@@ -207,15 +207,6 @@ export default {
             )
         )
         this.getTvGuide(this.epgTime[3], 3)
-
-        if (this.channel.poster && this.channel.poster.resources[0].url) {
-            this.sendEvLog({
-                category: document.title,
-                action: 'install_promo_show',
-                label: UAType() + '_2',
-                value: 1
-            })
-        }
     },
     methods: {
         toShare() {
@@ -300,31 +291,16 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    normalToAppStore.call(this)
-                    this.sendEvLog({
-                        category: document.title,
-                        action: 'install_dialog_install',
-                        label: UAType() + '_2',
-                        value: 1
+                    callApp.call(this, `com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`, () => {
+                        downApk.call(this)
                     })
                 },
                 () => {
-                    this.sendEvLog({
-                        category: document.title,
-                        action: 'install_dialog_cancel',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
+                    // cancel
                 },
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
-            this.sendEvLog({
-                category: document.title,
-                action: 'install_promo_click',
-                label: UAType() + '_2',
-                value: 1
-            })
         }
     },
     head() {
@@ -340,7 +316,13 @@ export default {
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary' },
                 { name: 'og:title', property: 'og:title', content: this.channel.name },
-                { name: 'al:android:url', property: 'al:android:url', content: 'starvideo://platformapi/webtoapp?channel=facebook&target=' + Base64.encode(`com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`.replace(/&/g, '**')) },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(`com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`.replace(/&/g, '**'))
+                },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
                 { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
                 { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }

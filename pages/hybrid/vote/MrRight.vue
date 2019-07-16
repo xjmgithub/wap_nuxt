@@ -2,22 +2,22 @@
     <div class="wrapper">
         <div class="Mr-Right">
             <div class="title">
-                <img src="~assets/img/vote/pic_title.png">
+                <img src="~assets/img/vote/pic_title.png" />
                 <div class="video">
-                    <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)">
-                    <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)">
-                    <img src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)">
+                    <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)" />
+                    <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)" />
+                    <img src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',0)" />
                 </div>
             </div>
             <div class="rule">
                 <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
                 <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                    <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)">
+                    <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)" />
                 </nuxt-link>
             </div>
             <div v-show="coupleList.length>0" class="vote">
                 <p>
-                    <img class="heart" src="~assets/img/vote/heartpoint.png">
+                    <img class="heart" src="~assets/img/vote/heartpoint.png" />
                     <span class="title">{{$store.state.lang.mrright_weekly_candidates}}</span>
                     <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
                 </p>
@@ -29,8 +29,8 @@
                         data-id="item.id"
                     >
                         <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
-                            <img :src="cdnPic(item.icon)" class="icon">
-                            <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player">
+                            <img :src="cdnPic(item.icon)" class="icon" />
+                            <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player" />
                         </div>
                         <span class="player-name">{{item.name.split('&')[0]}}</span>
                         <span class="player-name">{{item.name.split('&')[1]}}</span>
@@ -46,7 +46,7 @@
             </div>
             <div v-show="rankList.length > 0" class="rank">
                 <p>
-                    <img class="heart" src="~assets/img/vote/heartpoint.png">
+                    <img class="heart" src="~assets/img/vote/heartpoint.png" />
                     <span class="title">{{$store.state.lang.mrright_history_rank}}</span>
                     <span class="voteleft">{{$store.state.lang.mrright_all_candidates}}</span>
                 </p>
@@ -54,7 +54,7 @@
                     <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,1)">
                         <div class="left">
                             <span class="rank-num" :class="{'top-three':index<3}">{{index+1}}</span>
-                            <img v-show="index<3" :src="cdnPic(item.icon)" class="icon">
+                            <img v-show="index<3" :src="cdnPic(item.icon)" class="icon" />
                             <div v-if="index<3" class="name">
                                 <p>{{item.name.split('&')[0]}}</p>
                                 <p>& {{item.name.split('&')[1]}}</p>
@@ -65,7 +65,7 @@
                             <span class="count">{{item.ballot_num}}</span>
                             <span class="votes">votes</span>
                             <span class="player">
-                                <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png">
+                                <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" />
                             </span>
                         </div>
                     </li>
@@ -73,19 +73,19 @@
                 <p class="toggleAll" @click="showAll = !showAll">
                     <span v-show="showList.length==6&&rankList.length>6">{{$store.state.lang.mrright_view_all}}</span>
                     <span v-show="showList.length>6">{{$store.state.lang.mrright_view_less}}</span>
-                    <img v-show="rankList.length>6" :class="{updown:showAll}" src="~assets/img/vote/view more.png">
+                    <img v-show="rankList.length>6" :class="{updown:showAll}" src="~assets/img/vote/view more.png" />
                 </p>
             </div>
             <div class="clips">
                 <p>
-                    <img class="heart" src="~assets/img/vote/heartpoint.png">
+                    <img class="heart" src="~assets/img/vote/heartpoint.png" />
                     {{$store.state.lang.mrright_clips_you_cant_miss}}
                 </p>
                 <ul class="clearfix">
                     <li v-for="(item,index) in clipsList" :key="index">
                         <div @click="toPlayer(item.link_vod_code,'video_click',item.name||item.description,10)">
-                            <img class="url" :src="cdnPic(item.link_url)">
-                            <img src="~assets/img/vote/ic_play_small_white.png" class="player">
+                            <img class="url" :src="cdnPic(item.link_url)" />
+                            <img src="~assets/img/vote/ic_play_small_white.png" class="player" />
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
                     </li>
@@ -93,16 +93,17 @@
             </div>
             <div class="title">
                 <div class="video">
-                    <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)">
-                    <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)">
-                    <img src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)">
+                    <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',1)" />
+                    <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',1)" />
+                    <img src="~assets/img/vote/highlights.png" @click="toPlayer(videoList[2].link_vod_code,'clipbtn_click','1',1)" />
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { shareInvite, playVodinApp, animateCSS, toAppStore, toNativePage, cdnPicSrc } from '~/functions/utils'
+import { shareInvite, playVodinApp, animateCSS, toNativePage, cdnPicSrc } from '~/functions/utils'
+import { callApp, callMarket } from '~/functions/app'
 import qs from 'qs'
 import BScroll from 'better-scroll'
 export default {
@@ -265,7 +266,30 @@ export default {
         // 投票提交
         handleViceVote(advisor, _evt1) {
             if (this.$store.state.appType <= 0) {
-                toAppStore.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href)
+                callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+                    this.$confirm(
+                        this.$store.state.lang.mrright_download_android,
+                        () => {
+                            this.sendEvLog({
+                                category: 'callup_app',
+                                action: 'to_googleplay',
+                                label: this.$route.path,
+                                Value: 1
+                            })
+                            callMarket.call(this)
+                        },
+                        () => {
+                            this.sendEvLog({
+                                category: this.vote_name,
+                                action: 'downloadpopup_click',
+                                label: 'not now',
+                                Value: 1
+                            })
+                        },
+                        this.$store.state.lang.mrright_go,
+                        this.$store.state.lang.mrright_not_now
+                    )
+                })
                 return
             }
             if (this.voteLeft === 0 && this.isLogin) {
@@ -339,9 +363,32 @@ export default {
         toPlayer(vod, action, label, value) {
             if (vod) {
                 if (this.$store.state.appType > 0) {
-                    playVodinApp.call(this,this.$store.state.appType, vod)
+                    playVodinApp.call(this, this.$store.state.appType, vod)
                 } else {
-                    toAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
+                    callApp.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
+                        this.$confirm(
+                            this.$store.state.lang.mrright_download_android,
+                            () => {
+                                this.sendEvLog({
+                                    category: 'callup_app',
+                                    action: 'to_googleplay',
+                                    label: this.$route.path,
+                                    Value: 1
+                                })
+                                callMarket.call(this)
+                            },
+                            () => {
+                                this.sendEvLog({
+                                    category: this.vote_name,
+                                    action: 'downloadpopup_click',
+                                    label: 'not now',
+                                    Value: 1
+                                })
+                            },
+                            this.$store.state.lang.mrright_go,
+                            this.$store.state.lang.mrright_not_now
+                        )
+                    })
                 }
                 this.mSendEvLog(action, label, value)
             }
