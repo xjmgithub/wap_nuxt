@@ -57,7 +57,8 @@ export default {
         return {
             iframeLoaded: false,
             sharePost: false,
-            postList: []
+            postList: [],
+            pageStart: new Date().getTime()
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -99,7 +100,8 @@ export default {
                 title: data.title || '',
                 voteState: data.vote_state, // 0 无，1赞，2踩，
                 postPic: data.posters[0].url,
-                imgType: imgtype
+                imgType: imgtype,
+                postPics: data.posters
             }
         } catch (e) {
             return {
@@ -113,7 +115,8 @@ export default {
                 title: '',
                 voteState: 0,
                 postPic: '',
-                imgType: ''
+                imgType: '',
+                postPics: []
             }
         }
     },
@@ -121,6 +124,14 @@ export default {
         // 从缓存中读取点赞状态
         const voteSateCache = localStorage.getItem(`post_${this.id}`)
         this.voteState = voteSateCache
+
+        this.sendEvLog({
+            category: `post_${this.id}`,
+            action: 'page_show',
+            label: this.id,
+            value: this.logo ? 1 : 0,
+            path: 0
+        })
 
         window.addEventListener('message', event => {
             // 防止恶意注入
@@ -135,7 +146,7 @@ export default {
                     category: `post_${this.id}`,
                     action: 'post_image_tap',
                     label: this.id,
-                    value: 1,
+                    value: this.posters.length,
                     imgtype: this.imgtype
                 })
                 this.$refs.mySwiper.show(event.data.value.list, Number(event.data.value.index))
@@ -144,41 +155,82 @@ export default {
     },
     methods: {
         toShare() {
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'share_tap',
+                label: this.id,
+                value: this.posters.length,
+                imgtype: this.imgtype
+            })
             this.$store.commit('SET_SHARE_STATE', true)
         },
         like() {
             this.postLike(this.voteState == 1 ? 3 : 1)
-            this.sendEvLog({
-                category: `post_${this.id}`,
-                action: 'upvote_tap',
-                label: this.id,
-                value: 1,
-                imgtype: this.imgtype
-            })
         },
         unlike() {
             this.postLike(this.voteState == 2 ? 3 : 2)
-            this.sendEvLog({
-                category: `post_${this.id}`,
-                action: 'downvote_tap',
-                label: this.id,
-                value: 1,
-                imgtype: this.imgtype
-            })
         },
         postLike(num) {
             if (num == 1) {
                 this.likeCount++
-                this.voteState == 2 && this.disLikeCount--
+                if (this.voteState == 2) {
+                    this.disLikeCount--
+                    this.sendEvLog({
+                        category: `post_${this.id}`,
+                        action: 'upvote_tap',
+                        label: this.id,
+                        value: -1,
+                        imgtype: this.imgtype
+                    })
+                } else {
+                    this.sendEvLog({
+                        category: `post_${this.id}`,
+                        action: 'upvote_tap',
+                        label: this.id,
+                        value: 1,
+                        imgtype: this.imgtype
+                    })
+                }
             } else if (num == 2) {
                 this.disLikeCount++
-                this.voteState == 1 && this.likeCount--
+                if (this.voteState == 1) {
+                    this.likeCount--
+                    this.sendEvLog({
+                        category: `post_${this.id}`,
+                        action: 'downvote_tap',
+                        label: this.id,
+                        value: -1,
+                        imgtype: this.imgtype
+                    })
+                } else {
+                    this.sendEvLog({
+                        category: `post_${this.id}`,
+                        action: 'downvote_tap',
+                        label: this.id,
+                        value: 1,
+                        imgtype: this.imgtype
+                    })
+                }
             } else {
                 if (this.voteState == 1) {
                     this.likeCount--
+                    this.sendEvLog({
+                        category: `post_${this.id}`,
+                        action: 'upvote_tap',
+                        label: this.id,
+                        value: 0,
+                        imgtype: this.imgtype
+                    })
                 }
                 if (this.voteState == 2) {
                     this.disLikeCount--
+                    this.sendEvLog({
+                        category: `post_${this.id}`,
+                        action: 'downvote_tap',
+                        label: this.id,
+                        value: 0,
+                        imgtype: this.imgtype
+                    })
                 }
             }
             this.voteState = num
