@@ -1,8 +1,8 @@
 <template>
     <div :class="{'grey-back':result==2}" class="container">
-        <loading v-show="result<=0"/>
+        <loading v-show="result<=0" />
         <template v-if="result=='1'">
-            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
+            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt />
             <p class="success">Payment Successful</p>
             <p class="money">
                 <span>{{currency}}</span>
@@ -13,13 +13,13 @@
             >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
-            <img src="~assets/img/pay/img_failed_def_b.png" alt>
+            <img src="~assets/img/pay/img_failed_def_b.png" alt />
             <p class="fail">Payment Failed</p>
             <p class="msg">{{fail_message}}</p>
         </template>
         <div v-show="result>0" class="footer">
-            <mButton text="REFRESH" @click="refresh"/>
-            <mButton text="OK" @click="click"/>
+            <mButton text="REFRESH" @click="refresh" />
+            <mButton text="OK" @click="click" />
         </div>
     </div>
 </template>
@@ -48,11 +48,11 @@ export default {
                 $axios.setHeader('token', store.state.token)
                 const { data } = await $axios.post(`/payment/v2/third-party-payment-web-notify/${payType}`, route.query)
                 let result = 0
-                if(data.state==3){
+                if (data.state == 3) {
                     result = 1
-                }else if(data.state==4){
+                } else if (data.state == 4) {
                     result = 2
-                }else{
+                } else {
                     result = 0
                 }
                 return {
@@ -95,7 +95,7 @@ export default {
                 this.$alert('Query seqNo needed! please check request')
                 return false
             }
-        
+
             this.getPayStatus()
             this.timer = setInterval(() => {
                 if (this.result > 0) {
@@ -134,6 +134,7 @@ export default {
                         }, 5000)
                     } else if (data && data.state === 4) {
                         this.result = 2
+                        this.fail_message = data.summary ? data.summary : this.fail_message
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
                     }
                 })
