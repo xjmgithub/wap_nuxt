@@ -67,11 +67,10 @@ export default {
             const res = await $axios.get(`/feed/v1/posts/${route.params.id}/details`)
             const data = res.data
             const posters = data.posters
-            let imgtype = posters.length > 1 ? 2 : 1
+            let imgType = posters.length > 1 ? 2 : 1
             posters.forEach(item => {
-                if (item.type.indexOf('GIF') >= 0) imgtype = 0
+                if (item.type.indexOf('GIF') >= 0) imgType = 0
             })
-
             const now = new Date().getTime()
             const diff = parseInt(now - data.publish_time)
             let time = 'just now'
@@ -100,7 +99,7 @@ export default {
                 title: data.title || '',
                 voteState: data.vote_state, // 0 无，1赞，2踩，
                 postPic: data.posters[0].url,
-                imgType: imgtype,
+                imgType: imgType,
                 postPics: data.posters
             }
         } catch (e) {
@@ -135,7 +134,7 @@ export default {
 
         window.addEventListener('message', event => {
             // 防止恶意注入
-            if (event.origin.indexOf('startimestv.com') < 0) return
+            // if (event.origin.indexOf('startimestv.com') < 0) return
 
             if (event.data.type == 'updateHeight') {
                 const iframe = document.getElementById('news-content')
@@ -146,8 +145,8 @@ export default {
                     category: `post_${this.id}`,
                     action: 'post_image_tap',
                     label: this.id,
-                    value: this.posters.length,
-                    imgtype: this.imgtype
+                    value: this.postPics.length,
+                    imgtype: this.imgType
                 })
                 this.$refs.mySwiper.show(event.data.value.list, Number(event.data.value.index))
             }
@@ -155,14 +154,14 @@ export default {
     },
     methods: {
         toShare() {
+            this.$store.commit('SET_SHARE_STATE', true)
             this.sendEvLog({
                 category: `post_${this.id}`,
                 action: 'share_tap',
                 label: this.id,
-                value: this.posters.length,
-                imgtype: this.imgtype
+                value: this.postPics.length,
+                imgtype: this.imgType
             })
-            this.$store.commit('SET_SHARE_STATE', true)
         },
         like() {
             this.postLike(this.voteState == 1 ? 3 : 1)
@@ -180,7 +179,7 @@ export default {
                         action: 'upvote_tap',
                         label: this.id,
                         value: -1,
-                        imgtype: this.imgtype
+                        imgtype: this.imgType
                     })
                 } else {
                     this.sendEvLog({
@@ -188,7 +187,7 @@ export default {
                         action: 'upvote_tap',
                         label: this.id,
                         value: 1,
-                        imgtype: this.imgtype
+                        imgtype: this.imgType
                     })
                 }
             } else if (num == 2) {
@@ -200,7 +199,7 @@ export default {
                         action: 'downvote_tap',
                         label: this.id,
                         value: -1,
-                        imgtype: this.imgtype
+                        imgtype: this.imgType
                     })
                 } else {
                     this.sendEvLog({
@@ -208,7 +207,7 @@ export default {
                         action: 'downvote_tap',
                         label: this.id,
                         value: 1,
-                        imgtype: this.imgtype
+                        imgtype: this.imgType
                     })
                 }
             } else {
@@ -219,7 +218,7 @@ export default {
                         action: 'upvote_tap',
                         label: this.id,
                         value: 0,
-                        imgtype: this.imgtype
+                        imgtype: this.imgType
                     })
                 }
                 if (this.voteState == 2) {
@@ -229,7 +228,7 @@ export default {
                         action: 'downvote_tap',
                         label: this.id,
                         value: 0,
-                        imgtype: this.imgtype
+                        imgtype: this.imgType
                     })
                 }
             }

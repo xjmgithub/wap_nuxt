@@ -6,7 +6,7 @@
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
-                            <img :data-src="item" class="swiper-lazy" />
+                            <img :data-src="item" class="swiper-lazy" @click.stop />
                             <div class="swiper-lazy-preloader"></div>
                         </div>
                     </div>
@@ -134,7 +134,7 @@ export default {
         height: 100%;
     }
     .swiper-slide {
-      overflow: hidden;
+        overflow: hidden;
     }
 }
 .count {
