@@ -59,7 +59,8 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage, getFaqAnswerLabel } from '~/functions/utils'
+import { getFaqAnswerLabel } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
     components: {

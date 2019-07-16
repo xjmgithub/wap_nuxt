@@ -102,8 +102,8 @@
     </div>
 </template>
 <script>
-import { shareInvite, playVodinApp, animateCSS, toNativePage, cdnPicSrc } from '~/functions/utils'
-import { callApp, callMarket } from '~/functions/app'
+import { animateCSS, cdnPicSrc } from '~/functions/utils'
+import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 import qs from 'qs'
 import BScroll from 'better-scroll'
 export default {

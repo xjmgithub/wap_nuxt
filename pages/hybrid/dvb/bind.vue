@@ -1,25 +1,25 @@
 <template>
     <div class="wrapper">
         <div class="untrim">
-            <card-input ref="cardInput" :list="cardList" :stop-days="stopDays" :card-state="cardState" @endInput="checkout" @typing="canBuy=false"/>
+            <card-input ref="cardInput" :list="cardList" :stop-days="stopDays" :card-state="cardState" @endInput="checkout" @typing="canBuy=false" />
             <div v-if="recharge_items.length>0" class="program-box">
                 <p v-show="canBuy">
                     {{LANG.topup_bouquet}}:
                     <span class="program-name">{{ program_name }}</span>
                 </p>
             </div>
-            <goods v-if="recharge_items.length>0" ref="goodsPicker" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm"/>
+            <goods v-if="recharge_items.length>0" ref="goodsPicker" :goods-list="recharge_items" :disabled="canBuy" @update="changeNorm" />
             <div v-if="recharge_items.length>0" :class="{disabled:!canBuy}" class="pay-btn" @click="buyNow">
                 <span class="need-pay">{{ currency }}{{ formatAmount(payAmount) }}</span>
                 {{LANG.next_}}
             </div>
         </div>
-        <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'" :new-user="newUser"/>
+        <more-methods v-show="canBuy&&recharge_items.length>0&&countryCode=='NG'" :new-user="newUser" />
         <div v-if="recharge_items.length<=0" class="demoDialog">
             <div @click="focusInput">
                 <p>{{LANG.input_your_smartcard_number}}</p>
                 <div>
-                    <img src="~assets/img/dvb/icon_smart_card.png">
+                    <img src="~assets/img/dvb/icon_smart_card.png" />
                 </div>
                 <p>{{LANG.recharge_your_decoder_account}}</p>
                 <p class="tips">{{LANG.Tips_check_your_Balance}}</p>
@@ -40,7 +40,8 @@
 import cardInput from '~/components/dvb/input'
 import goods from '~/components/dvb/goods'
 import moreMethods from '~/components/dvb/moreMethods'
-import { formatAmount, toNativePage } from '~/functions/utils'
+import { formatAmount } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 import countryArr from '~/functions/countrys.json'
 import tokens from '~/functions/token.json'
 export default {

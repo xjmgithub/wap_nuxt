@@ -1,20 +1,18 @@
 <template>
     <div class="wrapper">
         <div class="page-top clear">
-            <img class="landing-page-bg-center" src="~assets/img/landpage/landing-page-0903.jpg" alt="StarTimes APP">
+            <img class="landing-page-bg-center" src="~assets/img/landpage/landing-page-0903.jpg" alt="StarTimes APP" />
         </div>
         <div class="page-bottom">
             <div class="download">
                 <div v-if="appType==2" class="download-appstore-wrapper" @click="downFromAppStore()">
-                    <img v-if="langType=='fr'" src="~assets/img/landpage/ios_appstore_bg_fy.png">
-                    <img v-if="langType=='pt'" src="~assets/img/landpage/ios_appstore_bg_py.png">
-                    <img v-else src="~assets/img/landpage/ios_appstore_bg.png">
+                    <img v-if="langType=='fr'" src="~assets/img/landpage/ios_appstore_bg_fy.png" />
+                    <img v-if="langType=='pt'" src="~assets/img/landpage/ios_appstore_bg_py.png" />
+                    <img v-else src="~assets/img/landpage/ios_appstore_bg.png" />
                 </div>
                 <div v-if="appType==1" class="download-app-wrapper">
                     <div class="download-app-btn" @click="downApk()">
-                        <div style="padding:0px 0.8rem">
-                            {{$store.state.lang.download_apk}}
-                        </div>
+                        <div style="padding:0px 0.8rem">{{$store.state.lang.download_apk}}</div>
                     </div>
                 </div>
             </div>
@@ -22,7 +20,7 @@
     </div>
 </template>
 <script>
-import { downloadApk } from '~/functions/utils'
+import { downApk } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
@@ -90,7 +88,7 @@ export default {
             window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
         },
         downApk() {
-            downloadApk.call(this)
+            downApk.call(this)
         }
     },
     head() {

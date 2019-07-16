@@ -2,8 +2,9 @@
 // 仅在客户端执行
 
 import { Base64 } from 'js-base64'
-import { getBrowser } from '~/functions/utils'
+import { getBrowser, getCookie } from '~/functions/utils'
 import axios from 'axios'
+import qs from 'qs'
 
 const browser = getBrowser()
 const scheme = browser.isIos ? 'startimes' : 'starvideo'
@@ -38,11 +39,6 @@ const invokeByIframe = function(page, failback) {
     })
 }
 
-// for universal link
-// const invokeByLocation = function(page, failback) {
-//     console.log(page)
-// }
-
 export const callApp = function(page, failback) {
     this.sendEvLog({
         category: 'callup_app',
@@ -76,12 +72,31 @@ export const downApk = function(callback) {
 
 export const callMarket = function() {
     let source = ''
+    const voteDownTag = getCookie('vote_share_down')
+    const user = getCookie('vote_share_user')
+
     if (location.href.indexOf('referrer') > 0) {
         source = location.search
     } else if (location.href.indexOf('utm_source') > 0) {
         source = '&referrer=' + encodeURIComponent(location.search.substr(1))
     } else {
         source = '&' + location.search.substr(1)
+    }
+    if (voteDownTag && voteDownTag != -1) {
+        this.$axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded',
+                token: this.$store.state.token,
+                'X-Secret': voteDownTag
+            },
+            data: qs.stringify({
+                vote_id: 8,
+                target: user,
+                action: 'SHARE_DOWNLOAD'
+            }),
+            url: '/voting/v1/ticket'
+        })
     }
 
     this.sendEvLog({
@@ -91,4 +106,32 @@ export const callMarket = function() {
         value: 1
     })
     window.location.href = browser.isIos ? appleStore : 'market://details?id=com.star.mobile.video' + source
+}
+
+export const playVodinApp = function(appType, vod) {
+    if (appType == 1) {
+        toNativePage('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
+    } else if (appType == 2) {
+        window.location.href = 'startimes://player?vodId=' + vod
+    } else {
+        callApp('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
+            downApk.call(this)
+        })
+    }
+}
+
+export const toNativePage = function(page) {
+    if (page.indexOf('com.star.mobile.video') >= 0) {
+        window.getChannelId && window.getChannelId.toAppPage(3, page, '')
+    } else {
+        window.location.href = page
+    }
+}
+
+// TODO 待优化
+export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
+    if (window.getChannelId && window.getChannelId.showCustorm) {
+        const content = '【' + shareTitle + '】' + shareContent + ' ' + link
+        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', shareTitle)
+    }
 }

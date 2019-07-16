@@ -1,7 +1,7 @@
 <template>
     <div class="download" @click="down">
         <div>
-            <img src="~assets/img/web/app_icon.png">
+            <img src="~assets/img/web/app_icon.png" />
             <div>
                 <p>StarTimes ON App</p>
                 <span>{{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
@@ -11,21 +11,11 @@
     </div>
 </template>
 <script>
-import { UAType } from '~/functions/utils'
 export default {
-    mounted() {
-        this.sendEvLog({
-            category: document.title,
-            action: 'install_promo_show',
-            label: UAType() + '_1',
-            value: 1
-        })
-    },
     methods: {
         down() {
             this.$emit('onload')
         }
-            
     }
 }
 </script>

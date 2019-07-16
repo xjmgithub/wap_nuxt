@@ -64,7 +64,7 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
     components: {

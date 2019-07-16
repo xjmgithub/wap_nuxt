@@ -50,7 +50,7 @@
 import env from '~/env.js'
 import bgImgData from '~/components/web/bgImgData'
 import mTitle from '~/components/web/title'
-import { downloadApk } from '~/functions/utils'
+import { downApk } from '~/functions/app'
 import vodList from '~/components/web/vod'
 export default {
     layout: 'default',
@@ -136,7 +136,7 @@ export default {
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         downloadApk() {
-            downloadApk.call(this)
+            downApk.call(this)
         },
         getPrograms() {
             const tmp = new Date().toLocaleDateString()

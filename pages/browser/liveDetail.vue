@@ -77,7 +77,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { callApp, downApk } from '~/functions/app.js'
+import { callApp, downApk } from '~/functions/app'
 import dayjs from 'dayjs'
 import { Base64 } from 'js-base64'
 export default {
