@@ -2,8 +2,9 @@
 // 仅在客户端执行
 
 import { Base64 } from 'js-base64'
-import { getBrowser } from '~/functions/utils'
+import { getBrowser, getCookie } from '~/functions/utils'
 import axios from 'axios'
+import qs from 'qs'
 
 const browser = getBrowser()
 const scheme = browser.isIos ? 'startimes' : 'starvideo'
@@ -99,6 +100,25 @@ export const callMarket = function(failback) {
         source = '&referrer=' + encodeURIComponent(location.search.substr(1))
     } else {
         source = '&referrer=' + encodeURIComponent('utm_source=officeWap')
+    }
+
+    const voteDownTag = getCookie('vote_share_down')
+    const user = getCookie('vote_share_user')
+    if (voteDownTag && voteDownTag != -1) {
+        this.$axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded',
+                token: this.$store.state.token,
+                'X-Secret': voteDownTag
+            },
+            data: qs.stringify({
+                vote_id: 8,
+                target: user,
+                action: 'SHARE_DOWNLOAD'
+            }),
+            url: '/voting/v1/ticket'
+        })
     }
 
     this.sendEvLog({
