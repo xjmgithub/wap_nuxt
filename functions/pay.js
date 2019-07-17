@@ -1,5 +1,6 @@
 import qs from 'qs'
-import { parseUA, toNativePage } from '~/functions/utils.js'
+import { parseUA } from '~/functions/utils.js'
+import { toNativePage } from '~/functions/app'
 
 // 生成订单
 export const createDVBOrder = function(order, callback) {

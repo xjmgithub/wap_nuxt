@@ -2,13 +2,13 @@
     <div>
         <div class="poster">
             <div v-if="sPoster" class="pic" @click="confirmDown">
-                <img :src="sPoster&&cdnPicSrc(sPoster)" class="cover">
-                <img src="~assets/img/web/ic_play.png">
+                <img :src="sPoster&&cdnPicSrc(sPoster)" class="cover" />
+                <img src="~assets/img/web/ic_play.png" />
             </div>
             <div class="clearfix">
                 <span class="program-name title">{{sName}}</span>
                 <div class="share" @click="toShare">
-                    <img src="~assets/img/web/ic_share_def_g.png">
+                    <img src="~assets/img/web/ic_share_def_g.png" />
                     {{$store.state.lang.officialwebsitemobile_action_share}}
                 </div>
             </div>
@@ -18,7 +18,7 @@
             <nuxt-link :to="`/browser/program/detail/${pid}`">
                 <span class="program-name">{{pName}}</span>
                 <p>
-                    <img :src="pPoster&&cdnPicSrc(pPoster)" align="right" hspace="8" vspace="8">
+                    <img :src="pPoster&&cdnPicSrc(pPoster)" align="right" hspace="8" vspace="8" />
                     {{pDescription}}
                 </p>
             </nuxt-link>
@@ -29,7 +29,7 @@
                 <li v-for="(item,index) in subProgram" :key="index">
                     <nuxt-link :to="`/browser/program/subdetail/${item.id}`">
                         <div>
-                            <img :src="item.poster.resources&&cdnPicSrc(item.poster.resources[0].url)">
+                            <img :src="item.poster.resources&&cdnPicSrc(item.poster.resources[0].url)" />
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description||item.name}}</span>
@@ -42,7 +42,8 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { formatTime, normalToAppStore, initDB, cacheDateUpdate, UAType } from '~/functions/utils'
+import { formatTime, initDB, cacheDateUpdate } from '~/functions/utils'
+import { callupFlow } from '~/functions/app'
 import localforage from 'localforage'
 import { Base64 } from 'js-base64'
 export default {
@@ -137,14 +138,6 @@ export default {
                                 }
                             })
                         }
-                        if (this.sPoster) {
-                            this.sendEvLog({
-                                category: document.title,
-                                action: 'install_promo_show',
-                                label: UAType() + '_2',
-                                value: 1
-                            })
-                        }
                         localforage.setItem('subprograms_' + this.pid, data)
                     })
                 } else {
@@ -161,14 +154,6 @@ export default {
                                 this.sDescription = ele.summary
                             }
                         })
-                        if (this.sPoster) {
-                            this.sendEvLog({
-                                category: document.title,
-                                action: 'install_promo_show',
-                                label: UAType() + '_2',
-                                value: 1
-                            })
-                        }
                     }
                 }
             })
@@ -180,31 +165,15 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.id, 2)
-                    this.sendEvLog({
-                        category: document.title,
-                        action: 'install_dialog_install',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
+                    this.$nuxt.$loading.start()
+                    callupFlow.call(this, `com.star.mobile.video.player.PlayerVodActivity?vodId=${this.id}`)
                 },
                 () => {
-                    this.sendEvLog({
-                        category: document.title,
-                        action: 'install_dialog_cancel',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
+                    // cancel
                 },
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
-            this.sendEvLog({
-                category: document.title,
-                action: 'install_promo_click',
-                label: UAType() + '_2',
-                value: 1
-            })
         }
     },
     head() {
@@ -220,7 +189,13 @@ export default {
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.seoData.name },
-                { name: 'al:android:url', property: 'al:android:url', content: 'starvideo://platformapi/webtoapp?channel=facebook&target=' + Base64.encode(`com.star.mobile.video.player.PlayerVodActivity?vodId=${this.id}`.replace(/&/g, '**')) },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(`com.star.mobile.video.player.PlayerVodActivity?vodId=${this.id}`.replace(/&/g, '**'))
+                },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
                 { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
                 { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }

@@ -1,7 +1,7 @@
 <template>
     <div id="game">
         <div class="canvas">
-            <canvas id="canvas" class="ani_hack" width="1360" height="640"/>
+            <canvas id="canvas" class="ani_hack" width="1360" height="640" />
         </div>
         <div class="contain">
             <nav id="nav">
@@ -27,15 +27,15 @@
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.logo">
-                                <img :src="item.logo">
+                                <img :src="item.logo" />
                             </span>
                             <span v-else>
-                                <img src="~assets/img/flag_others.png">
+                                <img src="~assets/img/flag_others.png" />
                             </span>
                             <span class="cty-name">{{item.name}}</span>
                         </div>
                         <div class="right">
-                            <img src="~assets/img/vote/soccer.png" class="soccer">
+                            <img src="~assets/img/vote/soccer.png" class="soccer" />
                             <span>x {{item.ballot_num}}</span>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
 import mCard from '~/components/vote/card'
 import countrys from '~/functions/countrys.json'
 import qs from 'qs'
-import { shareInvite } from '~/functions/utils'
+import { shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {

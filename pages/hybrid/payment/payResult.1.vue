@@ -1,8 +1,8 @@
 <template>
     <div :class="{'grey-back':result==2}" class="container">
-        <loading v-show="result<=0"/>
+        <loading v-show="result<=0" />
         <template v-if="result=='1'">
-            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt>
+            <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt />
             <p class="success">Payment Successful</p>
             <p class="money">
                 <span>{{currency}}</span>
@@ -13,20 +13,21 @@
             >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
-            <img src="~assets/img/pay/img_failed_def_b.png" alt>
+            <img src="~assets/img/pay/img_failed_def_b.png" alt />
             <p class="fail">Payment Failed</p>
             <p class="msg">{{fail_message}}</p>
         </template>
         <div v-show="result>0" class="footer">
-            <mButton text="REFRESH" @click="refresh"/>
-            <mButton text="OK" @click="click"/>
+            <mButton text="REFRESH" @click="refresh" />
+            <mButton text="OK" @click="click" />
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
-import { toNativePage, setCookie } from '~/functions/utils'
+import { setCookie } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
     components: {

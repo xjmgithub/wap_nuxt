@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-import { toNativePage } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     props: {
         newUser: {

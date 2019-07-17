@@ -1,20 +1,18 @@
 <template>
     <div class="wrapper">
         <div class="page-top clear">
-            <img class="landing-page-bg-center" src="~assets/img/landpage/landing-page-0903.jpg" alt="StarTimes APP">
+            <img class="landing-page-bg-center" src="~assets/img/landpage/landing-page-0903.jpg" alt="StarTimes APP" />
         </div>
         <div class="page-bottom">
             <div class="download">
-                <div v-if="appType==2" class="download-appstore-wrapper" @click="downFromAppStore()">
-                    <img v-if="langType=='fr'" src="~assets/img/landpage/ios_appstore_bg_fy.png">
-                    <img v-if="langType=='pt'" src="~assets/img/landpage/ios_appstore_bg_py.png">
-                    <img v-else src="~assets/img/landpage/ios_appstore_bg.png">
+                <div v-if="appType==2" class="download-appstore-wrapper" @click="down()">
+                    <img v-if="langType=='fr'" src="~assets/img/landpage/ios_appstore_bg_fy.png" />
+                    <img v-if="langType=='pt'" src="~assets/img/landpage/ios_appstore_bg_py.png" />
+                    <img v-else src="~assets/img/landpage/ios_appstore_bg.png" />
                 </div>
                 <div v-if="appType==1" class="download-app-wrapper">
-                    <div class="download-app-btn" @click="downApk()">
-                        <div style="padding:0px 0.8rem">
-                            {{$store.state.lang.download_apk}}
-                        </div>
+                    <div class="download-app-btn" @click="down()">
+                        <div style="padding:0px 0.8rem">{{$store.state.lang.download_apk}}</div>
                     </div>
                 </div>
             </div>
@@ -22,7 +20,8 @@
     </div>
 </template>
 <script>
-import { downloadApk } from '~/functions/utils'
+import { downApk, callApp, callMarket } from '~/functions/app'
+import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
     data() {
@@ -32,70 +31,50 @@ export default {
         }
     },
     mounted() {
-        let timeout
-        const ua = navigator.userAgent.toLowerCase()
-        let appStoreLink
+        const browser = getBrowser()
+        this.appType = browser.isIos ? 2 : 1
         this.sendEvLog({
-            category: 'langingpage',
-            action: 'show',
-            label: window.location.pathname
+            category: 'callup_app',
+            action: 'landing_show',
+            label: window.location.pathname,
+            value: 1
         })
-
-        if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-            this.appType = 2
-            appStoreLink = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-        } else {
-            this.appType = 1
-            appStoreLink = 'market://details?id=com.star.mobile.video&' + window.location.search.replace('?', '')
-        }
-
-        timeout && clearTimeout(timeout)
-        // timeout = setTimeout(function() {
-        //     if (Date.now() - t < interval + 800) {
-        //         location.href = 'http://www.baidu.com'
-        //     }
-        // }, interval)
-
-        const iframe = document.createElement('iframe')
-        iframe.onload = function() {
-            if (this.appType === 1) {
-                this.sendEvLog({
-                    category: 'langingpage',
-                    action: 'jump_googleplay',
-                    label: window.location.pathname
-                })
-            }
-            if (this.appType === 2) {
-                this.sendEvLog({
-                    category: 'langingpage',
-                    action: 'jump_appstore',
-                    label: window.location.pathname
-                })
-            }
-        }
-        iframe.setAttribute('src', appStoreLink)
-        iframe.setAttribute('style', 'display:none')
-        document.body.appendChild(iframe)
-        setTimeout(function() {
-            document.body.removeChild(iframe)
-        }, 200)
+        callApp.call(this, '', () => {
+            callMarket.call(this) // 默认唤醒不起来app
+        })
     },
     methods: {
-        downFromAppStore() {
-            this.sendEvLog({
-                category: 'langingpage',
-                action: 'appstore_click',
-                label: window.location.pathname
+        down() {
+            this.$nuxt.$loading.start()
+            callApp.call(this, '', () => {
+                callMarket.call(this, () => {
+                    downApk.call(this)
+                    this.$nuxt.$loading.finish()
+                })
             })
-            window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-        },
-        downApk() {
-            downloadApk.call(this)
         }
     },
     head() {
         return {
-            title: 'StarTimes APP'
+            title: 'StarTimes APP',
+            meta: [
+                { name: 'description', property: 'description', content: 'StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment' },
+                {
+                    name: 'og:description',
+                    property: 'og:description',
+                    content: 'StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment'
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: 'StarTimes APP' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content: 'starvideo://platformapi/webtoapp?channel=facebook'
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
+            ]
         }
     }
 }
@@ -103,6 +82,7 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     min-height: 100%;
+    height: 100vh;
     background: linear-gradient(to right, #698aad, #2d4f7c);
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;

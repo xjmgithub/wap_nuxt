@@ -59,7 +59,8 @@ import contentTpl from '~/components/faq/contentTpl'
 import msgTpl from '~/components/faq/message'
 import evaluate from '~/components/faq/evaluate'
 import autosize from 'autosize'
-import { toNativePage, getFaqAnswerLabel } from '~/functions/utils'
+import { getFaqAnswerLabel } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -347,6 +348,20 @@ export default {
                 } else if (obj.tpl === 'tips') {
                     return false
                 }
+                
+                // this.sendEvLog({
+                //     category: 'onlineService',
+                //     action: 'error_debug',
+                //     label: 1,
+                //     value: JSON.stringify({
+                //         service_type: this.connectState == 2 ? 3 : 1, // TODO
+                //         service_group_id: this.serviceRecord || '',
+                //         service_state: 2,
+                //         remark: JSON.stringify(obj),
+                //         service_info: serviceInfo,
+                //         operator: operator
+                //     })
+                // })
 
                 this.$axios
                     .post('/css/v1/service/history', {

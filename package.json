@@ -26,7 +26,6 @@
         "autosize": "^4.0.2",
         "axios": "^0.18.0",
         "better-scroll": "^1.15.1",
-        "callapp-lib": "^2.1.5",
         "cross-env": "^5.2.0",
         "dayjs": "^1.8.12",
         "js-base64": "^2.5.1",
