@@ -1,8 +1,5 @@
-import CallApp from 'callapp-lib'
-import { Base64 } from 'js-base64'
 import localforage from 'localforage'
 import dayjs from 'dayjs'
-import qs from 'qs'
 
 export const setCookie = (name, value, time) => {
     if (!name) {
@@ -30,26 +27,10 @@ export const getCookie = name => {
     return decodeURIComponent(value) || null
 }
 
-export const toNativePage = page => {
-    if (page.indexOf('com.star.mobile.video') >= 0) {
-        window.getChannelId && window.getChannelId.toAppPage(3, page, '')
-    } else {
-        window.location.href = page
-    }
-}
-
 export const getRandomInt = (min, max) => {
     min = Math.ceil(min)
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min)) + min
-}
-
-// TODO 待优化
-export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
-    if (window.getChannelId && window.getChannelId.showCustorm) {
-        const content = '【' + shareTitle + '】' + shareContent + ' ' + link
-        window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', shareTitle)
-    }
 }
 
 export const shareByFacebook = function(link) {
@@ -303,18 +284,6 @@ export const getFaqAnswerLabel = function(question) {
     )
 }
 
-export const playVodinApp = function(appType, vod) {
-    if (appType == 1) {
-        toNativePage('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod)
-    } else if (appType == 2) {
-        window.location.href = 'startimes://player?vodId=' + vod
-    } else {
-        callApp('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
-            downloadApk.call(this)
-        })
-    }
-}
-
 export const animateCSS = function(element, animationName, callback) {
     const node = element
 
@@ -331,6 +300,7 @@ export const animateCSS = function(element, animationName, callback) {
     node.classList.add('animated', animationName)
 }
 
+// TODO LASY
 export const cdnPicSrc = function(src) {
     if (src) {
         const app = (this.$store && this.$store.state.appType) || 0
@@ -370,207 +340,30 @@ export const cacheDateUpdate = function(callback) {
 
 export const initDB = function() {
     localforage.config({
-        driver: [localforage.WEBSQL, localforage.LOCALSTORAGE], // indexDB在android4.4上保存不全
+        driver: [localforage.WEBSQL, localforage.LOCALSTORAGE],
         name: 'StarTimes'
     })
 }
 
-export const downloadApk = function(callback) {
-    this.sendEvLog({
-        category: 'callup_app',
-        action: 'down_apk',
-        label: window.location.href,
-        Value: 1
-    })
-    this.$axios
-        .get('/cms/public/app')
-        .then(res => {
-            const url = res.data.apkUrl
-            if (url) {
-                window.location.href = url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : url
-            } else {
-                this.$alert('Download error.Please retry.')
-            }
-        })
-        .catch(() => {
-            this.$alert('Download error.Please retry.')
-        })
-    if (callback) callback()
-}
+export const getBrowser = function() {
+    if (!process.client) return {}
 
-export const callMarket = function() {
-    const ua = navigator.userAgent.toLowerCase()
-    let appType = 1
-    let source = ''
-    const voteDownTag = getCookie('vote_share_down')
-    const user = getCookie('vote_share_user')
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        appType = 2
-    }
-    if (location.href.indexOf('referrer') > 0) {
-        source = location.search
-    } else if (location.href.indexOf('utm_source') > 0) {
-        source = '&referrer=' + encodeURIComponent(location.search.substr(1))
-    } else {
-        source = '&' + location.search.substr(1)
-    }
-    if (voteDownTag && voteDownTag != -1) {
-        this.$axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded',
-                token: this.$store.state.token,
-                'X-Secret': voteDownTag
-            },
-            data: qs.stringify({
-                vote_id: 8,
-                target: user,
-                action: 'SHARE_DOWNLOAD'
-            }),
-            url: '/voting/v1/ticket'
-        })
-    }
-    this.sendEvLog({
-        category: 'callup_app',
-        action: 'to_googleplay',
-        label: window.location.href,
-        Value: 1
-    })
-    window.location.href =
-        appType == 1 ? 'market://details?id=com.star.mobile.video' + source : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-}
-
-export const callApp = function(page, failback) {
-    const ua = navigator.userAgent.toLowerCase()
-    let scheme = 'starvideo'
-    let path = 'platformapi/webtoapp'
-
-    if (page) {
-        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
+    const ua = window.navigator.userAgent || ''
+    const isAndroid = /android/i.test(ua)
+    const isIos = /iphone|ipad|ipod/i.test(ua)
+    const isOriginalChrome = /chrome\/[\d.]+ Mobile Safari\/[\d.]+/i.test(ua) && isAndroid
+    // ios 上很多 app 都包含 safari 标识，但它们都是以自己的 app 标识开头，而不是 Mozilla
+    const isSafari = /safari\/([\d.]+)$/i.test(ua) && isIos && ua.indexOf('Crios') < 0 && ua.indexOf('Mozilla') === 0
+    let version = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)
+    if (version) {
+        version = parseInt(version[1], 10)
     }
 
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
+    return {
+        isAndroid,
+        isIos,
+        isOriginalChrome,
+        isSafari,
+        version
     }
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-    callLib.open({
-        path: path,
-        callback() {
-            if (failback) failback()
-        }
-    })
-}
-
-export const toAppStore = function(page) {
-    const ua = navigator.userAgent.toLowerCase()
-    const _this = this
-
-    let source = ''
-    let scheme = 'starvideo'
-    let appType = 1
-    let path = 'platformapi/webtoapp'
-    if (page) {
-        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
-    }
-
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-        appType = 2
-        // path = '?player?vod='+ page
-    }
-
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-
-    callLib.open({
-        path: path,
-        callback() {
-            if (location.href.indexOf('referrer') > 0) {
-                source = location.search
-            } else if (location.href.indexOf('utm_source') > 0) {
-                source = '&referrer=' + encodeURIComponent(location.search.substr(1))
-            } else {
-                source = '&' + location.search.substr(1)
-            }
-
-            _this.sendEvLog({
-                category: _this.vote_name,
-                action: 'downloadpopup_show',
-                label: '',
-                Value: 1
-            })
-
-            _this.$confirm(
-                appType == 1 ? _this.$store.state.lang.mrright_download_android : _this.$store.state.lang.mrright_download_ios,
-                () => {
-                    _this.sendEvLog({
-                        category: 'callup_app',
-                        action: 'to_googleplay',
-                        label: window.location.href,
-                        Value: 1
-                    })
-                    window.location.href =
-                        appType == 1
-                            ? 'market://details?id=com.star.mobile.video' + source
-                            : 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-                },
-                () => {
-                    _this.sendEvLog({
-                        category: _this.vote_name,
-                        action: 'downloadpopup_click',
-                        label: 'not now',
-                        Value: 1
-                    })
-                },
-                _this.$store.state.lang.mrright_go,
-                _this.$store.state.lang.mrright_not_now
-            )
-        }
-    })
-}
-
-export const normalToAppStore = function(page, pos) {
-    const ua = navigator.userAgent.toLowerCase()
-    const _this = this
-
-    let scheme = 'starvideo'
-    let appType = 1
-    let path = 'platformapi/webtoapp'
-    if (page) {
-        path = path + '?target=' + Base64.encode(page.replace(/&/g, '**'))
-    }
-
-    if (ua.indexOf('iphone') >= 0 || ua.indexOf('ipad') >= 0) {
-        scheme = 'startimes'
-        appType = 2
-    }
-
-    const callLib = new CallApp({
-        scheme: {
-            protocol: scheme
-        }
-    })
-
-    callLib.open({
-        path: path,
-        callback() {
-            if (appType == 2) {
-                window.location.href = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-            } else {
-                downloadApk.call(_this)
-            }
-        }
-    })
-}
-
-export const UAType = function() {
-    const ua = navigator.userAgent
-    return ua.includes('iPhone') || ua.includes('iPad') ? 2 : 1
 }

@@ -87,7 +87,8 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { shareInvite, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard, cdnPicSrc } from '~/functions/utils'
+import { shareByFacebook, shareByTwitter, copyClipboard, cdnPicSrc } from '~/functions/utils'
+import { callApp, callMarket, shareInvite } from '~/functions/app'
 import BScroll from 'better-scroll'
 import { Base64 } from 'js-base64'
 export default {

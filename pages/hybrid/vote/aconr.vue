@@ -27,7 +27,7 @@
     </div>
 </template>
 <script>
-import { shareInvite, callMarket, callApp } from '~/functions/utils'
+import { callApp, callMarket, shareInvite } from '~/functions/app'
 import sharePannel from '~/components/web/share'
 import { Base64 } from 'js-base64'
 export default {
@@ -66,18 +66,6 @@ export default {
                 this.$confirm(
                     'Download StarTimes ON and join us and get the Champion !',
                     () => {
-                        this.sendEvLog({
-                            category: `vote_soccercup`,
-                            action: 'downloadpopup_clickok',
-                            label: 1,
-                            value: 1
-                        })
-                        this.sendEvLog({
-                            category: `vote_soccercup`,
-                            action: 'toMarket',
-                            label: 1,
-                            value: 1
-                        })
                         callMarket.call(this)
                     },
                     () => {

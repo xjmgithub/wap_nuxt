@@ -96,7 +96,7 @@
     </div>
 </template>
 <script>
-import { shareInvite, toNativePage } from '~/functions/utils'
+import { toNativePage, shareInvite } from '~/functions/app'
 import BScroll from 'better-scroll'
 import { Base64 } from 'js-base64'
 export default {

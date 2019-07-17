@@ -13,7 +13,7 @@
 import mButton from '~/components/button'
 import Password from '~/components/password'
 import { invoke, commonPayAfter, verifyWalletPass, payWithBalance } from '~/functions/pay'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
     components: {

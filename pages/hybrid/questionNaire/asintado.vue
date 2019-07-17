@@ -45,7 +45,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { shareInvite } from '~/functions/utils'
+import { shareInvite } from '~/functions/app'
 import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
