@@ -11,7 +11,7 @@
     </div>
 </template>
 <script>
-import { callApp, downApk, callMarket } from '~/functions/app'
+import { callupFlow } from '~/functions/app'
 export default {
     props: {
         page: {
@@ -48,14 +48,8 @@ export default {
             } else if (this.$route.path.indexOf('program/detail/') >= 0) {
                 page = `com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.$route.params.id}`
             }
-
-            callApp.call(this, page, () => {
-                if (this.downApk) {
-                    downApk.call(this)
-                } else {
-                    callMarket.call(this)
-                }
-            })
+            this.$nuxt.$loading.start()
+            callupFlow.call(this, page)
         }
     }
 }

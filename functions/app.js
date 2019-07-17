@@ -2,9 +2,8 @@
 // 仅在客户端执行
 
 import { Base64 } from 'js-base64'
-import { getBrowser, getCookie } from '~/functions/utils'
+import { getBrowser } from '~/functions/utils'
 import axios from 'axios'
-import qs from 'qs'
 
 const browser = getBrowser()
 const scheme = browser.isIos ? 'startimes' : 'starvideo'
@@ -20,7 +19,7 @@ const getApkUrl = function(callback) {
     })
 }
 
-const invokeByIframe = function(page, failback) {
+export const invokeByIframe = function(page, failback) {
     const iframe = document.createElement('iframe')
     iframe.frameborder = '0'
     iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
@@ -36,6 +35,7 @@ const invokeByIframe = function(page, failback) {
     }, 2000)
     document.addEventListener('visibilitychange', () => {
         clearTimeout(s)
+        this.$nuxt.$loading.finish()
     })
 }
 
@@ -67,36 +67,18 @@ export const downApk = function(callback) {
             }
         })
     }
+    this.$nuxt.$loading.finish()
     callback && callback()
 }
 
-export const callMarket = function() {
+export const callMarket = function(failback) {
     let source = ''
-    const voteDownTag = getCookie('vote_share_down')
-    const user = getCookie('vote_share_user')
-
     if (location.href.indexOf('referrer') > 0) {
         source = location.search
     } else if (location.href.indexOf('utm_source') > 0) {
         source = '&referrer=' + encodeURIComponent(location.search.substr(1))
     } else {
-        source = '&' + location.search.substr(1)
-    }
-    if (voteDownTag && voteDownTag != -1) {
-        this.$axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded',
-                token: this.$store.state.token,
-                'X-Secret': voteDownTag
-            },
-            data: qs.stringify({
-                vote_id: 8,
-                target: user,
-                action: 'SHARE_DOWNLOAD'
-            }),
-            url: '/voting/v1/ticket'
-        })
+        source = '&referrer=' + encodeURIComponent('utm_source=officeWap')
     }
 
     this.sendEvLog({
@@ -105,7 +87,26 @@ export const callMarket = function() {
         label: this.$route.path,
         value: 1
     })
-    window.location.href = browser.isIos ? appleStore : 'market://details?id=com.star.mobile.video' + source
+
+    if (browser.isIos) {
+        window.location.href = appleStore
+    } else {
+        const iframe = document.createElement('iframe')
+        iframe.frameborder = '0'
+        iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
+        document.body.appendChild(iframe)
+
+        iframe.src = `market://details?id=com.star.mobile.video${source}`
+
+        const s = setTimeout(() => {
+            if (!document.hidden) failback && failback()
+            clearTimeout(s)
+        }, 2000)
+        document.addEventListener('visibilitychange', () => {
+            clearTimeout(s)
+            this.$nuxt.$loading.finish()
+        })
+    }
 }
 
 export const playVodinApp = function(appType, vod) {
@@ -114,8 +115,11 @@ export const playVodinApp = function(appType, vod) {
     } else if (appType == 2) {
         window.location.href = 'startimes://player?vodId=' + vod
     } else {
-        callApp('com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
-            downApk.call(this)
+        this.$nuxt.$loading.start()
+        callApp.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, () => {
+            callMarket.call(this, () => {
+                downApk.call(this)
+            })
         })
     }
 }
@@ -134,4 +138,12 @@ export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
         const content = '【' + shareTitle + '】' + shareContent + ' ' + link
         window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', shareTitle)
     }
+}
+
+export const callupFlow = function(page) {
+    callApp.call(this, page, () => {
+        callMarket.call(this, () => {
+            downApk.call(this)
+        })
+    })
 }

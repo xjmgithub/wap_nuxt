@@ -77,7 +77,7 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { callApp, downApk } from '~/functions/app'
+import { callupFlow } from '~/functions/app'
 import dayjs from 'dayjs'
 import { Base64 } from 'js-base64'
 export default {
@@ -291,9 +291,7 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    callApp.call(this, `com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`, () => {
-                        downApk.call(this)
-                    })
+                    callupFlow.call(this,`com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`)
                 },
                 () => {
                     // cancel
