@@ -56,7 +56,25 @@ export default {
     },
     head() {
         return {
-            title: 'StarTimes APP'
+            title: 'StarTimes APP',
+            meta: [
+                { name: 'description', property: 'description', content: 'StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment' },
+                {
+                    name: 'og:description',
+                    property: 'og:description',
+                    content: 'StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment'
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: 'StarTimes APP' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content: 'starvideo://platformapi/webtoapp?channel=facebook'
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
+            ]
         }
     }
 }

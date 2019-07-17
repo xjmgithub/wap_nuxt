@@ -847,6 +847,7 @@ html {
     transition: transform 400ms;
     &.showd {
         transform: translateY(-100%);
+        -webkit-transform: translateY(-100%);
     }
     .top {
         position: fixed;
