@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { downApk, invokeByIframe, callMarket } from '~/functions/app'
+import { downApk, callApp, callMarket } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -39,14 +39,14 @@ export default {
             label: window.location.pathname,
             value: 1
         })
-        invokeByIframe('', () => {
+        callApp.call(this, '', () => {
             callMarket.call(this) // 默认唤醒不起来app
         })
     },
     methods: {
         down() {
             this.$nuxt.$loading.start()
-            invokeByIframe('', () => {
+            callApp.call(this, '', () => {
                 callMarket.call(this, () => {
                     downApk.call(this)
                     this.$nuxt.$loading.finish()

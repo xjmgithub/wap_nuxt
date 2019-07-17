@@ -19,6 +19,25 @@ const getApkUrl = function(callback) {
     })
 }
 
+export const envokeByIntent = function(page, failback) {
+    let target = ''
+    if (page) {
+        target = Base64.encode(page.replace(/&/g, '**'))
+        target = `;S.target=${target}`
+    }
+    getApkUrl(url => {
+        window.location.href = `intent://${host}/${path}#Intent;scheme=starvideo;package=com.star.mobile.video;S.target=${target};S.browser_fallback_url=${url};end`
+        const s = setTimeout(() => {
+            if (!document.hidden) failback && failback()
+            clearTimeout(s)
+        }, 2000)
+        document.addEventListener('visibilitychange', () => {
+            clearTimeout(s)
+            this.$nuxt.$loading.finish()
+        })
+    })
+}
+
 export const invokeByIframe = function(page, failback) {
     const iframe = document.createElement('iframe')
     iframe.frameborder = '0'
@@ -46,7 +65,11 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
-    invokeByIframe(page, failback)
+    if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0) {
+        envokeByIntent(page, failback)
+    } else {
+        invokeByIframe(page, failback)
+    }
 }
 
 export const downApk = function(callback) {
