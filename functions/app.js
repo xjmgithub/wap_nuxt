@@ -22,19 +22,16 @@ const getApkUrl = function(callback) {
 export const envokeByIntent = function(page, failback) {
     let target = ''
     if (page) {
-        target = Base64.encode(page.replace(/&/g, '**'))
-        target = `;S.target=${target}`
+        target = '?target=' + Base64.encode(page.replace(/&/g, '**'))
     }
-    getApkUrl(url => {
-        window.location.href = `intent://${host}/${path}#Intent;scheme=starvideo;package=com.star.mobile.video;S.target=${target};S.browser_fallback_url=${url};end`
-        const s = setTimeout(() => {
-            if (!document.hidden) failback && failback()
-            clearTimeout(s)
-        }, 2000)
-        document.addEventListener('visibilitychange', () => {
-            clearTimeout(s)
-            this.$nuxt.$loading.finish()
-        })
+    window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
+    const s = setTimeout(() => {
+        if (!document.hidden) failback && failback()
+        clearTimeout(s)
+    }, 2000)
+    document.addEventListener('visibilitychange', () => {
+        clearTimeout(s)
+        this.$nuxt.$loading.finish()
     })
 }
 
