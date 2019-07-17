@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper"/>
+    <div class="wrapper" />
 </template>
 <script>
 import { Base64 } from 'js-base64'
@@ -12,7 +12,6 @@ export default {
         }
     },
     mounted() {
-        const scheme = 'starba'
         let path = 'platformapi/webtoapp'
 
         if (this.$route.query.target) {
@@ -26,14 +25,15 @@ export default {
             }
             path = path + '?target=' + Base64.encode(target.replace(/&/g, '**'))
         }
-        
+
+
+
         const iframe = document.createElement('iframe')
         iframe.frameborder = '0'
         iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
         document.body.appendChild(iframe)
 
-
-        iframe.src = `${starba}://platformapi/webtoapp${target}`
+        iframe.src = `starba://${path}`
 
         const s = setTimeout(() => {
             clearTimeout(s)

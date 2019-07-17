@@ -95,7 +95,7 @@ export const downApk = function(callback) {
 export const callMarket = function(failback) {
     let source = ''
     if (location.href.indexOf('referrer') > 0) {
-        source = location.search
+        source = '&' + location.search.substr(1)
     } else if (location.href.indexOf('utm_source') > 0) {
         source = '&referrer=' + encodeURIComponent(location.search.substr(1))
     } else {
