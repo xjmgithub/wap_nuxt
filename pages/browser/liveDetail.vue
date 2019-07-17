@@ -291,6 +291,7 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
+                    this.$nuxt.$loading.start()
                     callupFlow.call(this,`com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`)
                 },
                 () => {

@@ -113,7 +113,7 @@ import mFilm from '~/components/vote/film'
 import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
 import { setCookie, getCookie, shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
-import { callApp, callMarket, shareInvite } from '~/functions/app'
+import { callApp, callMarket, shareInvite, downApk } from '~/functions/app'
 import download from '~/components/vote/download'
 import { Base64 } from 'js-base64'
 import qs from 'qs'
@@ -444,7 +444,9 @@ export default {
                                 label: pos,
                                 value: 1
                             })
-                            callMarket.call(this)
+                            callMarket.call(this, () => {
+                                downApk.call(this)
+                            })
                         },
                         () => {
                             this.sendEvLog({
@@ -464,7 +466,9 @@ export default {
                         label: pos,
                         value: 1
                     })
-                    callMarket.call(this)
+                    callMarket.call(this, () => {
+                        downApk.call(this)
+                    })
                 }
             })
         },
@@ -475,6 +479,7 @@ export default {
                 label: 'download_tips',
                 value: 1
             })
+            this.$nuxt.$loading.start()
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 this.rulesCard = false
                 this.aboutCard = false
@@ -484,7 +489,9 @@ export default {
                     label: 'download_tips',
                     value: 1
                 })
-                callMarket.call(this)
+                callMarket.call(this, () => {
+                    downApk.call(this)
+                })
             })
         },
         loadMore() {

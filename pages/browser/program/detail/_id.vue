@@ -47,6 +47,7 @@ export default {
         }
     },
     data() {
+        console.log(this.$route.params.id)
         return {
             pid: this.$route.params.id,
             subProgram: [],
@@ -150,7 +151,8 @@ export default {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    callupFlow.call(this, `com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.id}`)
+                    this.$nuxt.$loading.start()
+                    callupFlow.call(this, `com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.pid}`)
                 },
                 () => {
                     // cancel
@@ -178,7 +180,7 @@ export default {
                     property: 'al:android:url',
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
-                        Base64.encode(`com.star.mobile.video.player.PlayerVodActivity?vodId=${this.pData.defaultVod.id}`.replace(/&/g, '**'))
+                        Base64.encode(`com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.pid}`.replace(/&/g, '**'))
                 },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
                 { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
