@@ -29,6 +29,7 @@
 import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post'
 import download from '~/components/web/download.vue'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     filters: {
@@ -62,6 +63,7 @@ export default {
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
+        console.log(route)
         $axios.setHeader('token', store.state.token)
         try {
             const res = await $axios.get(`/feed/v1/posts/${route.params.id}/details`)
@@ -282,7 +284,22 @@ export default {
                     content: this.postPic
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.title || 'StarTimes ON' }
+                { name: 'og:title', property: 'og:title', content: this.title || 'StarTimes ON' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/FilmFestival`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }
