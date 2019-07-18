@@ -7,7 +7,7 @@
                 <span class="name">{{nickname}}</span>
                 <span class="time">{{time}}</span>
             </div>
-            <iframe id="news-content" frameborder="0" scrolling="no" :src="detailUrl" width="100%" @load="iframeLoaded=true"></iframe>
+            <iframe id="news-content" frameborder="0" scrolling="no" :src="'http://localhost:4000/src/index.html'" width="100%" @load="iframeLoaded=true"></iframe>
             <div v-show="iframeLoaded" :class="{'show-pic':sharePost}" class="opeartion">
                 <div class="left">
                     <div class="like" :class="{actived:voteState==1}" @click="like()">{{ likeCount|formatCount }}</div>

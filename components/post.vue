@@ -6,7 +6,7 @@
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
-                            <img :data-src="item" class="swiper-lazy" @click.stop />
+                            <img :data-src="item" class="swiper-lazy" @click.stop="tapToClose()" />
                             <div class="swiper-lazy-preloader"></div>
                         </div>
                     </div>
@@ -31,7 +31,8 @@ export default {
             index: 0,
             postList: [],
             visiable: false,
-            id: this.$route.params.id
+            id: this.$route.params.id,
+            waitDoubleClick: false
         }
     },
     computed: {
@@ -52,17 +53,29 @@ export default {
                 })
             }
         },
-        closePost() {
+        closePost(type) {
             this.visiable = false
-            const value = event.target.tagName == 'IMG' ? 1 : 0
             this.sendEvLog({
                 category: `post_${this.id}`,
                 action: 'img_tap',
                 label: this.id,
-                value: value,
+                value: type||0,
                 imgtype: this.imgType
             })
             this.$emit('close')
+        },
+        tapToClose() {
+            if (this.waitDoubleClick) {
+                this.waitDoubleClick = false
+            } else {
+                this.waitDoubleClick = true
+                setTimeout(() => {
+                    if (this.waitDoubleClick == true) {
+                        this.waitDoubleClick = false
+                        this.closePost(1)
+                    }
+                }, 200)
+            }
         },
         init() {
             this.visiable = true
