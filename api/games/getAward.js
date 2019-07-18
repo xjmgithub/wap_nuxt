@@ -39,7 +39,9 @@ export default function(req, res, next) {
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
     const today = dayjs().format('YYY-MM-DD')
     const tomorrow = dayjs()
-    let award = (0).add(1, 'days').format('YYY-MM-DD')
+        .add(1, 'days')
+        .format('YYY-MM-DD')
+    let award = 0
 
     if (isNaN(goals) || goals > 100 || goals < 1) {
         res.end(
