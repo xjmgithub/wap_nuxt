@@ -30,6 +30,7 @@ import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post'
 import download from '~/components/web/download.vue'
 import { Base64 } from 'js-base64'
+import { callApp } from '~/functions/app'
 export default {
     layout: 'base',
     filters: {
@@ -131,6 +132,8 @@ export default {
     },
     mounted() {
         // 从缓存中读取点赞状态
+        callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`)
+
         const voteSateCache = localStorage.getItem(`post_${this.id}`)
         this.voteState = voteSateCache
 
@@ -298,12 +301,7 @@ export default {
                     property: 'al:android:url',
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
-                        Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`.replace(
-                                /&/g,
-                                '**'
-                            )
-                        )
+                        Base64.encode(`com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`.replace(/&/g, '**'))
                 },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
                 { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
