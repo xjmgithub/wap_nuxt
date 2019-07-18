@@ -7,12 +7,12 @@
         <ul class="clearfix">
             <li v-for="(item,index) in advisorList" :key="index" data-id="item.id">
                 <div class="img-box">
-                    <img :src="cdnPicSrc(item.icon)" class="icon">
+                    <img :src="cdnPicSrc(item.icon)" class="icon" />
                 </div>
                 <span class="player-name">{{item.name}}</span>
                 <div class="flowers">
-                    <img src="~assets/img/vote/flower.png" class="send-flower">
-                    <img src="~assets/img/vote/btn_flower.png" class="bgt">
+                    <img src="~assets/img/vote/flower.png" class="send-flower" />
+                    <img src="~assets/img/vote/btn_flower.png" class="bgt" />
                     <span class="flower-count">{{item.ballot_num }}</span>
                     <span>flowers</span>
                 </div>
@@ -28,7 +28,7 @@
 </template>
 <script>
 import loading from '~/components/loading'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     filters: {
         canVoteState(state) {
@@ -119,8 +119,6 @@ export default {
                 label: '',
                 value: 10
             })
-            // const link = window.location.href
-            // shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
         },
         getAdvisorList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.tab_msg.vote_id}`).then(res => {

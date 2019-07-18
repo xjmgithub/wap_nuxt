@@ -1,19 +1,19 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <serviceBlock :service="service" :show-more="true"/>
+            <serviceBlock :service="service" :show-more="true" />
             <div v-if="faqTags" class="service">
                 <div id="nav">
                     <a v-for="(item,index) in faqTags" :key="index" :class="{on:item.checked}" @click="changeTag(item.id)">
-                        <div :class="item.class"/>
+                        <div :class="item.class" />
                     </a>
                 </div>
                 <div class="questions">
                     <div v-for="(item,index) in faqTags" v-show="item.checked" :key="index">
                         <ul v-if="item.faqs.length>0">
-                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)" v-html="item2.thema"/>
+                            <li v-for="(item2,index2) in item.faqs" :key="index2" @click="clickQues(item2)" v-html="item2.thema" />
                         </ul>
-                        <loading v-else/>
+                        <loading v-else />
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@ export default {
             pageSize: 20,
             isLoading: false,
             entranceId: this.$route.query.entrance_id || '',
-            configId: this.$route.query.config_id || ''
+            configId: this.$route.query.config_id || 0
         }
     },
     async asyncData({ app: { $axios }, route, store }) {
@@ -62,7 +62,7 @@ export default {
             const res1 = await $axios.get(`/ocs/v1/faqs/Tags`)
             const res2 = await $axios.get(`/ocs/v1/service/module/show?entranceId=${route.query.entrance_id}`)
             const res3 = await $axios.get(`/ocs/v1/faqs/directory/${store.state.country.id}`)
-            categoryId = res3.data.data
+            categoryId = res3.data.data || 183
             res1.data.data.forEach((item, index) => {
                 tags.push({
                     id: item.tagging_id,
@@ -136,10 +136,10 @@ export default {
                     this.isLoading = false
                     if (res.data.code === 200) {
                         const arr = []
-                        res.data.data.contents.forEach(item=>{
+                        res.data.data.contents.forEach(item => {
                             arr.push({
-                                id:item.id,
-                                thema:item.name
+                                id: item.id,
+                                thema: item.name
                             })
                         })
 

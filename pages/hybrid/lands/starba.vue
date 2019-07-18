@@ -1,8 +1,7 @@
 <template>
-    <div class="wrapper"/>
+    <div class="wrapper" />
 </template>
 <script>
-import CallApp from 'callapp-lib'
 import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
@@ -13,7 +12,6 @@ export default {
         }
     },
     mounted() {
-        const scheme = 'starba'
         let path = 'platformapi/webtoapp'
 
         if (this.$route.query.target) {
@@ -28,16 +26,21 @@ export default {
             path = path + '?target=' + Base64.encode(target.replace(/&/g, '**'))
         }
 
-        const callLib = new CallApp({
-            scheme: {
-                protocol: scheme
-            }
-        })
-        callLib.open({
-            path: path,
-            callback() {
-                console.log('唤醒失败')
-            }
+
+
+        const iframe = document.createElement('iframe')
+        iframe.frameborder = '0'
+        iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
+        document.body.appendChild(iframe)
+
+        iframe.src = `starba://${path}`
+
+        const s = setTimeout(() => {
+            clearTimeout(s)
+        }, 2000)
+        document.addEventListener('visibilitychange', () => {
+            clearTimeout(s)
+            this.$nuxt.$loading.finish()
         })
     },
     head() {

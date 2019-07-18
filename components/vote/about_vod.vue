@@ -80,21 +80,12 @@ export default {
                 label: '',
                 value: 10
             })
-            // const link = window.location.href
-            // shareInvite(link, this.share.shareTitle, this.share.shareContent, this.tab_msg.name, this.share.voteName)
         },
         // 根据零时区时间获取本地客户端时间
         getClientZoneTime() {
             const ua = window.navigator.userAgent
             if (ua.indexOf('iPhone') >= 0 || ua.indexOf('iPad') >= 0) {
                 const tArr = []
-                // for (let i = 0; i < this.broadcast_time.length; i++) {
-                //     const arr = this.broadcast_time[i].split(/[- : \/]/)
-                //     const zeroZoneTime = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTime()
-                //     const tt = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]).getTimezoneOffset()
-                //     const clientZoneTime = zeroZoneTime - tt * 60 * 1000
-                //     tArr.push([this.formatDate(clientZoneTime), zeroZoneTime])
-                // }
                 this.broadcast_time = tArr
             } else {
                 const tmp = []

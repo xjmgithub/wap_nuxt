@@ -1,10 +1,10 @@
 <template>
     <div id="america">
         <div class="top">
-            <img src="~assets/img/naire/bg_guess.png" class="bg-pic">
+            <img src="~assets/img/naire/bg_guess.png" class="bg-pic" />
             <div>
                 <span>
-                    <img src="~assets/img/naire/ic_crown.png" class="crown"> EXCLUSIVE ON STARTIMES
+                    <img src="~assets/img/naire/ic_crown.png" class="crown" /> EXCLUSIVE ON STARTIMES
                 </span>
                 <p @click="toApp()">GUESS NOW</p>
             </div>
@@ -22,12 +22,13 @@
             </div>
             <div class="bot-down-btn" @click="toShare()">Click here and share to your friends</div>
         </div>
-        <mShare/>
+        <mShare />
     </div>
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { callApp, callMarket } from '~/functions/utils'
+import { callApp, callMarket } from '~/functions/app'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     components: {
@@ -48,36 +49,13 @@ export default {
                 this,
                 `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/questionNaire/america_bet`,
                 () => {
-                    this.sendEvLog({
-                        category: `vote_soccercup`,
-                        action: 'downloadpopup_show',
-                        label: 'usacup',
-                        value: 1
-                    })
                     this.$confirm(
                         'Download StarTimes ON and join us and get the Champion !',
                         () => {
-                            this.sendEvLog({
-                                category: `vote_soccercup`,
-                                action: 'downloadpopup_clickok',
-                                label: 'usacup',
-                                value: 1
-                            })
-                            this.sendEvLog({
-                                category: `vote_soccercup`,
-                                action: 'toMarket',
-                                label: 'usacup',
-                                value: 1
-                            })
                             callMarket.call(this)
                         },
                         () => {
-                            this.sendEvLog({
-                                category: `vote_soccercup`,
-                                action: 'downloadpopup_clicknot',
-                                label: 'usacup',
-                                value: 1
-                            })
+                            // cancel
                         },
                         this.$store.state.lang.download_apk,
                         this.$store.state.lang.vote_cancel
@@ -98,7 +76,22 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/bg_guess.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' }
+                { name: 'og:title', property: 'og:title', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/questionNaire/america_bet`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }

@@ -9,16 +9,16 @@
                         <span class="try">TRY AGAIN</span>
                     </a>
                     <div v-show="sharePin" class="share">
-                        <img src="~assets/img/naire/ic_facebook_def.png" @click="shareWithFacebook">
-                        <img src="~assets/img/naire/ic_Twitter_def.png" @click="shareWithTwitter">
-                        <img src="~assets/img/naire/ic_copylink_def.png" @click="copyLink">
+                        <img src="~assets/img/naire/ic_facebook_def.png" @click="shareWithFacebook" />
+                        <img src="~assets/img/naire/ic_Twitter_def.png" @click="shareWithTwitter" />
+                        <img src="~assets/img/naire/ic_copylink_def.png" @click="copyLink" />
                     </div>
                 </div>
                 <div class="atlas clearfix">
                     <div v-for="(item,index) in result" :key="index" :class="{'asintado':item.fk_episode==1,'other':item.fk_episode!=1}">
                         <p class="name">{{item.name}}</p>
                         <p :class="{'episode':!sharePin}">{{item.fk_episode | getFkName}}</p>
-                        <img :src="item.avatar" @load="refreshScroll">
+                        <img :src="item.avatar" @load="refreshScroll" />
                         <span v-show="sharePin" class="short">{{item.short_des}}</span>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                     <span v-for="(item,index) in result" :key="index">{{item.long_des}}</span>
                 </div>
                 <div v-show="!sharePin&&appType!=2" class="share" @click="toShare()">
-                    <img src="~assets/img/naire/ic_share_def_g.png"> SHARE TO MY FRIENDS
+                    <img src="~assets/img/naire/ic_share_def_g.png" /> SHARE TO MY FRIENDS
                 </div>
                 <nuxt-link v-show="sharePin" :to="`/hybrid/questionNaire/asintado`">
                     <div class="play">Get My Own Result</div>
@@ -39,7 +39,7 @@
             </div>
             <div v-show="sharePin" class="asintado">
                 <div class="introduction">
-                    <img src="~assets/img/naire/poster.png">
+                    <img src="~assets/img/naire/poster.png" />
                     <div>
                         <b>Asintado</b>( transl. Sharpshooter) is a 2018 Philippine action drama television series starring Julia Montes, Shaina Magdayao, Paulo Avelino and Aljur Abrenica
                     </div>
@@ -48,21 +48,21 @@
                     <p>Comments</p>
                     <ul>
                         <li @click="toVideo()">
-                            <img src="~assets/img/naire/boy.png">
+                            <img src="~assets/img/naire/boy.png" />
                             <div>
-                                <img src="~assets/img/faq/Triangle.png">From Wildflower to Asintado, interesting series from Startimes ON.
+                                <img src="~assets/img/faq/Triangle.png" />From Wildflower to Asintado, interesting series from Startimes ON.
                             </div>
                         </li>
                         <li @click="toVideo()">
-                            <img src="~assets/img/naire/girl.png">
+                            <img src="~assets/img/naire/girl.png" />
                             <div>
-                                <img src="~assets/img/faq/Triangle.png">Very very interest can't miss it for anything.
+                                <img src="~assets/img/faq/Triangle.png" />Very very interest can't miss it for anything.
                             </div>
                         </li>
                         <li @click="toVideo()">
-                            <img src="~assets/img/naire/girl.png">
+                            <img src="~assets/img/naire/girl.png" />
                             <div>
-                                <img src="~assets/img/faq/Triangle.png">Great! I watch Asintado with my phone on StarTimes ON app!
+                                <img src="~assets/img/faq/Triangle.png" />Great! I watch Asintado with my phone on StarTimes ON app!
                             </div>
                         </li>
                     </ul>
@@ -73,8 +73,8 @@
                 <ul class="clearfix">
                     <li v-for="(item,index) in programList" :key="index" @click="toVideo(item,index+1)">
                         <div>
-                            <img v-if="item.link_url" :src="cdnPic(item.link_url)">
-                            <img v-else src="~assets/img/web/def.png">
+                            <img v-if="item.link_url" :src="cdnPic(item.link_url)" />
+                            <img v-else src="~assets/img/web/def.png" />
                             <span class="show-time">{{item | formatShowTime}}</span>
                         </div>
                         <p class="title">{{item.description||item.name}}</p>
@@ -87,8 +87,10 @@
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { shareInvite, callApp, callMarket, shareByFacebook, shareByTwitter, copyClipboard, cdnPicSrc } from '~/functions/utils'
+import { shareByFacebook, shareByTwitter, copyClipboard, cdnPicSrc } from '~/functions/utils'
+import { callApp, callMarket, shareInvite } from '~/functions/app'
 import BScroll from 'better-scroll'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     filters: {
@@ -292,7 +294,22 @@ export default {
                     content: 'http://cdn.startimestv.com/banner/asintado.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: '100% Precise Me!' }
+                { name: 'og:title', property: 'og:title', content: '100% Precise Me!' },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/questionNaire/asintado`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }

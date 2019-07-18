@@ -1,17 +1,17 @@
 <template>
     <div>
-        <nuxt v-if="!needLoginAlert"/>
+        <nuxt v-if="!needLoginAlert" />
         <div v-if="needLoginAlert" class="authfail">
-            <img src="~assets/img/pay/img_failed_def_b.png">
+            <img src="~assets/img/pay/img_failed_def_b.png" />
             <p class="fail">
                 Please
                 <a href="javascript:void(0)" @click="toNativeLogin">Log in First.</a>
             </p>
         </div>
-        <alert ref="alert"/>
-        <confirm ref="confirm"/>
-        <toast ref="toast"/>
-        <shadowLayer v-show="layer"/>
+        <alert ref="alert" />
+        <confirm ref="confirm" />
+        <toast ref="toast" />
+        <shadowLayer v-show="layer" />
     </div>
 </template>
 <script>
@@ -20,7 +20,8 @@ import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import toast from '~/components/toast'
 import shadowLayer from '~/components/shadow-layer'
-import { toNativePage, cdnPicSrc } from '~/functions/utils'
+import { cdnPicSrc } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     components: {
         alert,
@@ -70,7 +71,7 @@ export default {
             })
         }
 
-        if(this.$store.state.appType<=0){
+        if (this.$store.state.appType <= 0) {
             /* eslint-disable */
             window.fbAsyncInit = function() {
                 FB.init({

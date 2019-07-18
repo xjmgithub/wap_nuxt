@@ -1,13 +1,13 @@
 <template>
     <Swiper v-if="banners.length > 0" :auto-play="true" @changeIndex="changeIndex">
         <Slide v-for="(item,index) in banners" :key="index" @click="clickBanner(item)">
-            <img :src="cdnPicSrc(item.materials)">
+            <img :src="cdnPicSrc(item.materials)" />
         </Slide>
     </Swiper>
 </template>
 <script>
 import { Swiper, Slide } from '~/components/swiper'
-import { toNativePage } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
     components: {

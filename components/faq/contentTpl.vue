@@ -1,25 +1,23 @@
 <template>
     <div class="list_faq_item clearfix">
         <div class="content_avatar fl">
-            <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png">
+            <img src="~assets/img/faq/ic_onlineservice_def_multicolor.png" />
         </div>
         <div class="content_show">
-            <img class="arrow" src="~assets/img/faq/Triangle.png">
+            <img class="arrow" src="~assets/img/faq/Triangle.png" />
             <div class="result-wraper" v-html="content" />
             <div>
-                <div class="btn" @click="tocomplain">
-                    COMPLAIN
-                </div>
+                <div class="btn" @click="tocomplain">COMPLAIN</div>
                 <div class="clear" />
                 <div v-if="!noevaluate" class="attitude-container">
                     <div class="yes-item" @click="evaluate(1)">
-                        <img v-show="!agree" src="~assets/img/faq/ic_happy_def_g.png" alt>
-                        <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt>
+                        <img v-show="!agree" src="~assets/img/faq/ic_happy_def_g.png" alt />
+                        <img v-show="agree" src="~assets/img/faq/ic_happy_sl_green.png" alt />
                         <span>YES</span>
                     </div>
                     <div class="no-item" @click="evaluate(0)">
-                        <img v-show="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png" alt>
-                        <img v-show="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png" alt>
+                        <img v-show="!disagree" src="~assets/img/faq/ic_disappoint_def_g.png" alt />
+                        <img v-show="disagree" src="~assets/img/faq/ic_disappoint_sl_red.png" alt />
                         <span>NO</span>
                     </div>
                 </div>
@@ -28,7 +26,8 @@
     </div>
 </template>
 <script>
-import { toNativePage, getFaqAnswerLabel } from '~/functions/utils'
+import { getFaqAnswerLabel } from '~/functions/utils'
+import { toNativePage } from '~/functions/app'
 export default {
     props: {
         content: {

@@ -2,7 +2,7 @@
     <div class="bg">
         <div class="download" @click="down(1)">
             <div>
-                <img src="~assets/img/web/app_icon.png">
+                <img src="~assets/img/web/app_icon.png" />
                 <div>
                     <p>StarTimes ON App</p>
                     <span>{{$store.state.lang.officialwebsitemobile_install_to_watch}}</span>
@@ -19,14 +19,14 @@
             <div>Join us and get the Champion !</div>
         </div>
         <div class="game-rule">
-            <img src="~assets/img/landpage/game.png">
+            <img src="~assets/img/landpage/game.png" />
             <div class="btn" @click="down(2)">DETAIL RULES</div>
         </div>
-        <img class="ball-btn" src="~assets/img/landpage/ball_btn.png" @click="down(3)">
+        <img class="ball-btn" src="~assets/img/landpage/ball_btn.png" @click="down(3)" />
     </div>
 </template>
 <script>
-import { callApp, callMarket } from '~/functions/utils'
+import { callApp, callMarket } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
@@ -35,36 +35,13 @@ export default {
     methods: {
         down(num) {
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin}/hybrid/vote/acon`, () => {
-                this.sendEvLog({
-                    category: `vote_soccercup`,
-                    action: 'downloadpopup_show',
-                    label: num,
-                    value: 1
-                })
                 this.$confirm(
                     'Download StarTimes ON and join us and get the Champion !',
                     () => {
-                        this.sendEvLog({
-                            category: `vote_soccercup`,
-                            action: 'downloadpopup_clickok',
-                            label: num,
-                            value: 1
-                        })
-                        this.sendEvLog({
-                            category: `vote_soccercup`,
-                            action: 'toMarket',
-                            label: num,
-                            value: 1
-                        })
                         callMarket.call(this)
                     },
                     () => {
-                        this.sendEvLog({
-                            category: `vote_soccercup`,
-                            action: 'downloadpopup_clicknot',
-                            label: num,
-                            value: 1
-                        })
+                        // cancel
                     },
                     this.$store.state.lang.download_apk,
                     this.$store.state.lang.vote_cancel

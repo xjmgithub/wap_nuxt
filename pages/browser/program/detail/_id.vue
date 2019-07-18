@@ -2,13 +2,13 @@
     <div>
         <div class="poster" @click="confirmDown">
             <div v-if="pPoster" class="pic" @click="confirmDown">
-                <img :src="cdnPicSrc(pPoster)">
-                <img src="~assets/img/web/ic_play.png">
+                <img :src="cdnPicSrc(pPoster)" />
+                <img src="~assets/img/web/ic_play.png" />
             </div>
             <div class="clearfix">
                 <span class="program-name title">{{pName}}</span>
                 <div class="share" @click.stop="toShare">
-                    <img src="~assets/img/web/ic_share_def_g.png">
+                    <img src="~assets/img/web/ic_share_def_g.png" />
                     {{$store.state.lang.officialwebsitemobile_action_share}}
                 </div>
             </div>
@@ -20,7 +20,7 @@
                 <li v-for="(item,index) in subProgram" :key="index">
                     <nuxt-link :to="`/browser/program/subdetail/${item.id}`">
                         <div>
-                            <img :src="item.poster && cdnPicSrc(item.poster.resources[0].url)">
+                            <img :src="item.poster && cdnPicSrc(item.poster.resources[0].url)" />
                             <span class="show-time">{{item.durationSecond | formatShowTime}}</span>
                         </div>
                         <span class="title">{{item.description || item.name}}</span>
@@ -28,13 +28,15 @@
                 </li>
             </ul>
         </div>
-        <mShare :show="showShare"/>
+        <mShare :show="showShare" />
     </div>
 </template>
 <script>
 import mShare from '~/components/web/share.vue'
-import { formatTime, normalToAppStore, initDB, cacheDateUpdate, UAType } from '~/functions/utils'
+import { formatTime, initDB, cacheDateUpdate } from '~/functions/utils'
+import { callupFlow } from '~/functions/app'
 import localforage from 'localforage'
+import { Base64 } from 'js-base64'
 export default {
     components: {
         mShare
@@ -45,6 +47,7 @@ export default {
         }
     },
     data() {
+        console.log(this.$route.params.id)
         return {
             pid: this.$route.params.id,
             subProgram: [],
@@ -105,15 +108,6 @@ export default {
                         this.pName = res.data.name || ''
                         this.pDescription = res.data.programSummary || ''
                         localforage.setItem('program_' + this.pid, res.data)
-
-                        if (this.pPoster) {
-                            this.sendEvLog({
-                                category: document.title,
-                                action: 'install_promo_show',
-                                label: UAType() + '_2',
-                                value: 1
-                            })
-                        }
                     })
                 } else {
                     loadNum--
@@ -123,15 +117,6 @@ export default {
                     this.pPoster = val.poster || ''
                     this.pName = val.name || ''
                     this.pDescription = val.programSummary || ''
-
-                    if (this.pPoster) {
-                        this.sendEvLog({
-                            category: document.title,
-                            action: 'install_promo_show',
-                            label: UAType() + '_2',
-                            value: 1
-                        })
-                    }
                 }
             })
 
@@ -162,42 +147,19 @@ export default {
         toShare() {
             this.$store.commit('SET_SHARE_STATE', true)
         },
-        toSubProgramDetail(id) {
-            this.$router.push(`/browser/programlist/subProgram?subId=${id}`)
-        },
         confirmDown() {
             this.$confirm(
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
-                    if (this.pData.defaultVod.id) {
-                        normalToAppStore.call(this, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + this.pData.defaultVod.id, 2)
-                    } else {
-                        normalToAppStore.call(this, '', 2)
-                    }
-                    this.sendEvLog({
-                        category: document.title,
-                        action: 'install_dialog_install',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
+                    this.$nuxt.$loading.start()
+                    callupFlow.call(this, `com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.pid}`)
                 },
                 () => {
-                    this.sendEvLog({
-                        category: document.title,
-                        action: 'install_dialog_cancel',
-                        label: UAType() + '_2',
-                        value: 1
-                    })
+                    // cancel
                 },
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_install,
                 this.$store.state.lang.officialwebsitemobile_downloadpopup_cancel
             )
-            this.sendEvLog({
-                category: document.title,
-                action: 'install_promo_click',
-                label: UAType() + '_2',
-                value: 1
-            })
         }
     },
     head() {
@@ -212,7 +174,17 @@ export default {
                     content: this.cusShareImg || (this.pData.poster && this.pData.poster.replace('http:', 'https:'))
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.pData.name }
+                { name: 'og:title', property: 'og:title', content: this.pData.name },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(`com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.pid}`.replace(/&/g, '**'))
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
             ]
         }
     }
