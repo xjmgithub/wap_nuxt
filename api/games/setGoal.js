@@ -54,7 +54,7 @@ export default function(req, res, next) {
                 const taskId = 1
 
                 // 进球的action 是goals
-                const sql = `INSERT INTO games_action (action_name,user_id,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES ('goals',${userId},${countryId},'${userAvatar}',${gameId},${taskId},1,'进球', '${now}')`
+                const sql = `INSERT INTO games_action (action_name,user_id,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES ('goals',${userId},${countryId},'${userAvatar}',${gameId},${taskId},${goals},'Goal', '${now}')`
                 runSql(
                     res,
                     `SELECT create_time FROM games_action WHERE user_id="${userId}" AND fk_game="${gameId}" AND action_name="goals" ORDER BY create_time DESC limit 1`,
