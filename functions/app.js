@@ -93,13 +93,24 @@ export const downApk = function(callback) {
 }
 
 export const callMarket = function(failback) {
-    let source = ''
-    if (location.href.indexOf('referrer') > 0) {
-        source = '&' + location.search.substr(1)
-    } else if (location.href.indexOf('utm_source') > 0) {
-        source = '&referrer=' + encodeURIComponent(location.search.substr(1))
+    const query = this.$route.query
+    const referrer = query.referrer
+    let source = '&referrer='
+
+    if (query.referrer) {
+        source = source + encodeURIComponent(referrer)
+    } else if (query.utm_source) {
+        let str = `utm_source=${query.utm_source}`
+        if (query.utm_medium) str += `&utm_medium=${query.utm_medium}`
+        if (query.utm_campaign) str += `&utm_campaign=${query.utm_campaign}`
+        source = source + encodeURIComponent(str)
+    } else if (query.utms) {
+        let str = `utm_source=${query.utms}`
+        if (query.utmm) str += `&utm_medium=${query.utmm}`
+        if (query.utmc) str += `&utm_campaign=${query.utmc}`
+        source = source + encodeURIComponent(str)
     } else {
-        source = '&referrer=' + encodeURIComponent('utm_source=officeWap')
+        source = source + encodeURIComponent('utm_source=officeWap')
     }
 
     const voteDownTag = getCookie('vote_share_down')

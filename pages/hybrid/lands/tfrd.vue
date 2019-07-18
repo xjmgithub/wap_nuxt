@@ -31,6 +31,14 @@ export default {
         }
     },
     mounted() {
+        this.$router.replace({
+            query: Object.assign({}, this.$route.query, {
+                utms: 'startimes_app',
+                utmm: 'share',
+                utmc: 'tell_friends'
+            })
+        })
+
         const browser = getBrowser()
         this.appType = browser.isIos ? 2 : 1
         this.sendEvLog({
