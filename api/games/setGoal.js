@@ -7,26 +7,25 @@ import qs from 'qs'
 import axios from 'axios'
 // import redis from 'redis'
 import { runSql } from '../../functions/mysql.js'
-import { getCookieFromReq } from './func'
 import env from '../../env.js'
+
 // const client = redis.createClient(6379, 'test1-mysql-redis')
 // client.on('error', function(err) {
 //     console.log('Error ' + err)
+// })
+// client.set('color', 'red', redis.print)
+// client.get('color', function(err, value) {
+//     if (err) throw err
+//     console.log('Got: ' + value)
+//     client.quit()
 // })
 
 export default function(req, res, next) {
     const urlobj = new URL('http://localhost' + req.url)
     const query = qs.parse(urlobj.search.substr(1))
-    const goals = query.goal
+    const goals = query.goals
     const gameId = query.gameId || 1
-    const _COOKIE = getCookieFromReq(req.headers)
-    // client.set('color', 'red', redis.print)
-    // client.get('color', function(err, value) {
-    //     if (err) throw err
-    //     console.log('Got: ' + value)
-    //     client.quit()
-    // })
-
+    const token = req.headers.token
     if (isNaN(goals) || goals > 5 || goals < 1) {
         res.end(
             JSON.stringify({
@@ -37,16 +36,22 @@ export default function(req, res, next) {
         )
         return false
     }
-
     axios
         .get(`${env.apiURL}cms/users/me`, {
             headers: {
-                token: _COOKIE.token || ''
+                token: token || ''
             }
         })
         .then(function(res1) {
             if (res1.status === 200) {
-                const userId = res.data.data.id
+                const userId = res1.data.id
+                const countryId = res1.data.areaID
+                const userAvatar = res1.data.head
+                const taskId = 1
+                const now = new Date()
+                // 进球的action 是goals
+                const sql = `INSERT INTO games_action (action_name,user_id,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES ('goals',${userId},${countryId},${userAvatar},${gameId},${taskId},1,'进球', ${now})`
+
                 runSql(
                     res,
                     `SELECT create_time FROM games_action WHERE user_id="${userId}" AND fk_game="${gameId}" AND action_name="goals" ORDER BY create_time limit 1`,
@@ -60,9 +65,38 @@ export default function(req, res, next) {
                                 })
                             )
                         } else if (lastTime) {
-                            console.log(lastTime)
+                            const start = new Date().getTime()
+                            const end = now.getTime()
+                            console.log(sql)
+                            if (end - start < 1000 * 12.5) {
+                                res.end(
+                                    JSON.stringify({
+                                        code: 104,
+                                        message: 'search error',
+                                        data: error
+                                    })
+                                )
+                            } else {
+                                runSql(res, sql, function() {
+                                    res.end(
+                                        JSON.stringify({
+                                            code: 200,
+                                            message: 'success',
+                                            data: error
+                                        })
+                                    )
+                                })
+                            }
                         } else {
-                            console.log(123)
+                            runSql(res, sql, function() {
+                                res.end(
+                                    JSON.stringify({
+                                        code: 200,
+                                        message: 'success',
+                                        data: ''
+                                    })
+                                )
+                            })
                         }
                     }
                 )
@@ -73,7 +107,7 @@ export default function(req, res, next) {
         })
         .catch(err => {
             console.log(err)
-            res.statusCode = 401
+            res.statusCode = 500
             res.end('Unauthorized')
         })
 }
