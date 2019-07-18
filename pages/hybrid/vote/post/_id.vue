@@ -62,8 +62,14 @@ export default {
             pageStart: new Date().getTime()
         }
     },
-    async asyncData({ app: { $axios }, store, route }) {
-        console.log(route)
+    async asyncData({ app: { $axios }, store, route, req }) {
+        let shareUrl = ''
+        if (req) {
+            shareUrl = 'http://' + req.headers.host + route.path
+        } else {
+            shareUrl = window.location.href
+        }
+
         $axios.setHeader('token', store.state.token)
         try {
             const res = await $axios.get(`/feed/v1/posts/${route.params.id}/details`)
@@ -102,7 +108,8 @@ export default {
                 voteState: data.vote_state, // 0 无，1赞，2踩，
                 postPic: data.posters[0].url,
                 imgType: imgType,
-                postPics: data.posters
+                postPics: data.posters,
+                shareUrl: shareUrl
             }
         } catch (e) {
             return {
@@ -117,7 +124,8 @@ export default {
                 voteState: 0,
                 postPic: '',
                 imgType: '',
-                postPics: []
+                postPics: [],
+                shareUrl: shareUrl
             }
         }
     },
@@ -291,7 +299,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/FilmFestival`.replace(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`.replace(
                                 /&/g,
                                 '**'
                             )
