@@ -5,6 +5,7 @@
 
 import qs from 'qs'
 import axios from 'axios'
+import dayjs from 'dayjs'
 // import redis from 'redis'
 import { runSql } from '../../functions/mysql.js'
 import env from '../../env.js'
@@ -26,6 +27,9 @@ export default function(req, res, next) {
     const goals = query.goals
     const gameId = query.gameId || 1
     const token = req.headers.token
+    const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    const nowTime = dayjs()
+
     if (isNaN(goals) || goals > 5 || goals < 1) {
         res.end(
             JSON.stringify({
@@ -48,32 +52,21 @@ export default function(req, res, next) {
                 const countryId = res1.data.areaID
                 const userAvatar = res1.data.head
                 const taskId = 1
-                const now = new Date()
-                // 进球的action 是goals
-                const sql = `INSERT INTO games_action (action_name,user_id,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES ('goals',${userId},${countryId},${userAvatar},${gameId},${taskId},1,'进球', ${now})`
 
+                // 进球的action 是goals
+                const sql = `INSERT INTO games_action (action_name,user_id,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES ('goals',${userId},${countryId},'${userAvatar}',${gameId},${taskId},1,'进球', '${now}')`
                 runSql(
                     res,
-                    `SELECT create_time FROM games_action WHERE user_id="${userId}" AND fk_game="${gameId}" AND action_name="goals" ORDER BY create_time limit 1`,
-                    (error, lastTime) => {
-                        if (error) {
-                            res.end(
-                                JSON.stringify({
-                                    code: 104,
-                                    message: 'search error',
-                                    data: error
-                                })
-                            )
-                        } else if (lastTime) {
-                            const start = new Date().getTime()
-                            const end = now.getTime()
-                            console.log(sql)
-                            if (end - start < 1000 * 12.5) {
+                    `SELECT create_time FROM games_action WHERE user_id="${userId}" AND fk_game="${gameId}" AND action_name="goals" ORDER BY create_time DESC limit 1`,
+                    lastTime => {
+                        if (lastTime[0]) {
+                            const start = dayjs(lastTime[0].create_time)
+                            if (nowTime - start < 1000 * 12.5) {
                                 res.end(
                                     JSON.stringify({
-                                        code: 104,
-                                        message: 'search error',
-                                        data: error
+                                        code: 105,
+                                        message: 'unvalid goals',
+                                        data: ''
                                     })
                                 )
                             } else {
@@ -82,7 +75,7 @@ export default function(req, res, next) {
                                         JSON.stringify({
                                             code: 200,
                                             message: 'success',
-                                            data: error
+                                            data: ''
                                         })
                                     )
                                 })
