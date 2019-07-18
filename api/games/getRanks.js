@@ -34,35 +34,38 @@ export default function(req, res, next) {
     }
 
     function getRanksByUser(gameId) {
-        getUserMe(token, userId => {
-            runSql(
-                res,
-                `SELECT user_id,user_name,user_avatar,SUM(weight) AS goals FROM (SELECT * FROM games_action WHERE fk_game=${gameId} AND action_name="goals" ORDER BY id DESC) AS N GROUP BY user_id`,
-                rankList => {
-                    if (rankList.length > 0) {
+        runSql(
+            res,
+            `SELECT user_id,user_name,user_avatar,SUM(weight) AS goals FROM (SELECT * FROM games_action WHERE fk_game=${gameId} AND action_name="goals" ORDER BY id DESC) AS N GROUP BY user_id`,
+            rankList => {
+                if (rankList.length > 0) {
+                    getUserMe(token, userId => {
+                        
+                        // TODO 如果是登录用户会添加一个action 今天登录的标志
+
                         getMyCoins(token, userId, coins => {
                             res.end(
                                 JSON.stringify({
                                     code: 200,
                                     message: 'success',
                                     data: {
-                                        myCoins:coins,
-                                        list:rankList
+                                        myCoins: coins,
+                                        list: rankList
                                     }
                                 })
                             )
                         })
-                    } else {
-                        res.end(
-                            JSON.stringify({
-                                code: 204,
-                                message: 'there is no result!',
-                                data: ''
-                            })
-                        )
-                    }
+                    })
+                } else {
+                    res.end(
+                        JSON.stringify({
+                            code: 204,
+                            message: 'there is no result!',
+                            data: ''
+                        })
+                    )
                 }
-            )
-        })
+            }
+        )
     }
 }

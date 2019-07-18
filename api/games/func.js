@@ -29,6 +29,10 @@ export const getUserMe = function(token, callback) {
             const coins = res.data.coins
             callback && callback(userId, countryId, userAvatar, coins)
         })
+        .catch(err=>{
+            console.log(err)
+            callback && callback()
+        })
 }
 
 export const addCoins = function(token, userId, coins, des, callback) {

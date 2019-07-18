@@ -14,13 +14,9 @@ import { getUserMe, delCoins } from './func'
 export default function(req, res, next) {
     const urlobj = new URL('http://localhost' + req.url)
     const query = qs.parse(urlobj.search.substr(1))
-    const goals = query.goals
     const gameId = query.gameId || 1
     const token = req.headers.token
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
-    const nowTime = dayjs()
-    const today = dayjs().format('YYY-MM-DD')
-    const tomorrow = dayjs()
 
     getUserMe(token, (userId, countryId, avatar, coins) => {
         if (coins < 50) {
