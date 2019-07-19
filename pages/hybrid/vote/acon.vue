@@ -4,26 +4,18 @@
             <canvas id="canvas" class="ani_hack" width="1360" height="640" />
         </div>
         <div class="contain">
-            <nav id="nav">
-                <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="tabIndex=index">
-                    <span>{{item.name}}</span>
-                </a>
-            </nav>
-            <div v-show="tabIndex==0" class="cty-rank">
+            <div class="cty-rank">
+                <p class="time">
+                    TOP SOCCERS:
+                    <span>Ends in 124h 37m 2s</span>
+                </p>
                 <p>
-                    <span class="cty">{{country.name}}</span>&nbsp;ranks
-                    <b>NO.{{ctyRank}}</b> now.
-                    <span class="rules" @click="awardsCard=true">TEAM AWARDS</span>
+                    You've scored
+                    <b>{{goals}}</b> goals.
+                    <span class="rules" @click="showResult=true">Last week result</span>
                 </p>
                 <div class="box">
-                    <div
-                        v-for="(item,index) in countryList"
-                        :id="`c-${item.name}`"
-                        :key="index"
-                        :data-index="index"
-                        :class="{'my-cty':item.code==country.id}"
-                        class="cty-list"
-                    >
+                    <div v-for="(item,index) in rankList" :id="`c-${item.name}`" :key="index" :data-index="index" :class="{'my-rank':item.code==userId}" class="per-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.logo">
@@ -35,71 +27,117 @@
                             <span class="cty-name">{{item.name}}</span>
                         </div>
                         <div class="right">
-                            <img src="~assets/img/vote/soccer.png" class="soccer" />
-                            <span>x {{item.ballot_num}}</span>
+                            <span>Pts: {{item.ballot_num}}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <mCard v-show="awardsCard" :title="'AWARD RULES'" class="card" @closeCard="awardsCard=false">
-            <template v-slot:content>
-                <p>1. Activity Time: 2019-06-11 00:00:00 - 2019.06.19 23:59:59</p>
-                <p>2. Each user represents his own country, and each time he scores a goal, he scores 1 goal for the country.</p>
-                <p>3. There is no limit on the number of times per person per day, can always play during the event</p>
-                <p>4. After the event, 299 users in Champion country team will receive 1 FREE MAX VIP monthly coupon, 199 in the second country, 99 in the third country, and no more than 50 users in the 4th to 15th countries.</p>
-                <p>5. The winning users will be randomly selected from the users who have scored for the country, only one per person. The winning probability will be based on the goals you contribute and the friends you invited to the game.</p>
-                <p>6. Coupon issuance time: 2019-06-04.</p>
-                <p>7. MAX VIP Coupon is specified to StarTimes ON MAX VIP, which contains all VIP contents on StarTimes ON that includes all the 30+ VIP live TV channels (ST World Football, AMC Movies, STAR LIFE, ST Swahili, BBC World News, NGW and many more).</p>
-                <p>8. MAX VIP is only available for StarTimes ON APP.</p>
-                <p>9. StarTimes ON reserves all the right for the final explanation.</p>
-            </template>
-        </mCard>
         <div class="bot-down">
-            <div class="bot-down-text">The more friends you call, the higher winning probability will be.</div>
-            <div class="bot-down-btn" @click="share">CALL NOW!</div>
+            <span>
+                <img src="~assets/img/vote/button_games.png">
+            </span>
+            <span>
+                <img src="~assets/img/vote/button_bonus.png">
+            </span>
+            <span>
+                <img src="~assets/img/vote/button_friends.png">
+            </span>
         </div>
+        <div v-show="showRewards==true||showGames==true" class="card-layer" @click="showRewards=false,showGames=false" />
+        <!-- 点击开始提示-50coins弹窗 -->
+        <div v-show="showRewards==true" class="card-rewards">
+            <div class="close">
+                <img src="~assets/img/naire/ic_close.png" @click="showRewards=false" />
+            </div>
+            <div class="rewards">
+                <p>WINNING REWARDS</p>
+                <div class="re-item">
+                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball"> x 10
+                    <div>
+                        <img src="~assets/img/vote/coins0.png" class="coins">
+                    </div>
+                    <span>+100 coins</span>
+                </div>
+                <div class="re-item">
+                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball"> x 30
+                    <div>
+                        <img src="~assets/img/vote/coins1.png" class="coins">
+                    </div>
+                    <span>+400 coins</span>
+                </div>
+                <div class="re-item">
+                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball"> x 60
+                    <div>
+                        <img src="~assets/img/vote/coins2.png" class="coins">
+                    </div>
+                    <span>+800 coins</span>
+                </div>
+                <div class="entry">
+                    ENTRY REE:
+                    <span>-50 coins</span>
+                    <p>START</p>
+                </div>
+            </div>
+        </div>
+        <div></div>
     </div>
 </template>
 <script>
-import mCard from '~/components/vote/card'
-import countrys from '~/functions/countrys.json'
 import qs from 'qs'
 import { shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
-    components: {
-        mCard
-    },
     data() {
-        const obj = {}
-        countrys.forEach(item => {
-            obj[item.id] = item
-        })
         return {
-            tabList: [{ type: 'country', name: 'TOP TEAMS' }],
-            countrys: obj,
-            country: this.$store.state.country,
-            countryList: [],
-            tabIndex: 0,
-            awardsCard: false,
-            ctyRank: '-'
-        }
-    },
-    computed: {
-        candidate() {
-            let r = {}
-            this.countryList.forEach(item => {
-                if (item.code == this.country.id) {
-                    r = item
+            // userId: this.$store.state.user.id,
+            userId: 9893,
+            
+            rankList: [
+                {
+                    name: 'lilysony',
+                    ballot_num: '9611',
+                    code: 6
+                },
+                {
+                    name: 'Orange tata',
+                    ballot_num: '8006',
+                    code: 5
+                },
+                {
+                    name: 'Ninaomysan',
+                    ballot_num: '6512',
+                    code: 9893
+                },
+                {
+                    name: 'Johnnasa@gmail.com',
+                    ballot_num: '5543',
+                    code: 4
+                },
+                {
+                    name: 'Giantsir1990@yahoo.com',
+                    ballot_num: '2210',
+                    code: 3
+                },
+                {
+                    name: 'lilysony',
+                    ballot_num: '1110',
+                    code: 2
+                },
+                {
+                    name: 'lilysony',
+                    ballot_num: '961',
+                    code: 1
                 }
-            })
-            return r
+            ],
+            showResult: false,
+            showGames: false,
+            showRewards: true,
+            goals: '-'
         }
     },
     mounted() {
         /* eslint-disable */
-
         const first_in = localStorage.getItem('acon_first')
         if (!first_in) {
             this.$alert(
@@ -126,47 +164,12 @@ export default {
             this.vote(goal)
         })
         // $(game).on('goal', function(evt, goal, score) {})
-        this.getCountryList(1)
-
-        window.soccer_cup_country = this.country.name
+        // this.getRankList(1)
     },
     methods: {
-        animateBall(callback) {
-            const dest = document.querySelector('#c-' + this.country.name + ' .right img').getBoundingClientRect()
-            const Contain = document.querySelector('.box').getBoundingClientRect()
-
-            if (dest.top < Contain.top || dest.bottom > Contain.bottom) {
-                callback && callback()
-                return false
-            }
-
-            var box = document.createElement('img')
-            box.setAttribute('src', '/res_nuxt/acon/sprites/ball_kick_left.png')
-            box.style.setProperty('width', '1.5rem')
-            box.style.setProperty('position', 'fixed')
-            box.style.setProperty('z-index', '10000')
-            document.querySelector('#game').appendChild(box)
-            function animate(time) {
-                requestAnimationFrame(animate)
-                TWEEN.update(time)
-            }
-            requestAnimationFrame(animate)
-
-            var coords = { x: dest.left, y: 150 }
-            var tween = new TWEEN.Tween(coords)
-                .to({ x: dest.left, y: dest.top }, 1500)
-                .easing(TWEEN.Easing.Bounce.Out)
-                .onUpdate(function() {
-                    box.style.setProperty('transform', 'translate(' + coords.x + 'px, ' + coords.y + 'px)')
-                })
-                .onComplete(function() {
-                    document.querySelector('#game').removeChild(box)
-                    callback()
-                })
-                .start()
-        },
-        getCountryList(init) {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=12`).then(res => {
+        getRankList(init) {
+            // cycle 0查询当期，1查询上一期
+            this.$axios.get(`/hybrid/api/games/getRanks?cycle=0&gameId=1 `).then(res => {
                 if (res.data.code == 0) {
                     let result = []
                     const vlist = res.data.data
@@ -175,7 +178,6 @@ export default {
                     })
                     vlist.forEach((item, index) => {
                         if (item.show) {
-                            const country = this.countrys[item.name]
                             result.push({
                                 name: country.name,
                                 code: item.name,
@@ -184,14 +186,11 @@ export default {
                                 candidate_id: item.id
                             })
                         }
-                        if (this.country.id == item.name) {
-                            this.ctyRank = index + 1
-                        }
                     })
-                    this.countryList = result
+                    this.rankList = result
                     if (init) {
                         this.$nextTick(() => {
-                            const t = document.querySelector('.my-cty')
+                            const t = document.querySelector('.my-rank')
                             document.querySelector('.box').scrollTop = t.getAttribute('data-index') * t.getBoundingClientRect().height
                         })
                     }
@@ -203,23 +202,21 @@ export default {
         vote(goal) {
             if (goal > 0) {
                 this.$alert(`You've scroed ${goal} goals for ${this.country.name}. Thanks for the contribution for your country, Hero.`, () => {
-                    this.animateBall(() => {
-                        this.$axios({
-                            url: '/voting/v1/ballot',
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            data: qs.stringify({
-                                candidate_id: this.candidate.candidate_id,
-                                vote_id: 12,
-                                weight: goal
-                            })
-                        }).then(res => {
-                            if (res.data.code === 0) {
-                                this.getCountryList()
-                            }
+                    this.$axios({
+                        url: '/voting/v1/ballot',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: qs.stringify({
+                            candidate_id: this.candidate.candidate_id,
+                            vote_id: 12,
+                            weight: goal
                         })
+                    }).then(res => {
+                        if (res.data.code === 0) {
+                            // this.getRankList()
+                        }
                     })
                 })
             }
@@ -289,43 +286,25 @@ canvas {
     top: 43%;
     width: 95%;
     margin: 0 2.5%;
-    #nav {
-        height: 2.3rem;
-        a {
-            background: #174427;
-            text-align: center;
-            cursor: pointer;
-            height: 2.4rem;
-            line-height: 2.6rem;
-            width: 48%;
-            color: #66a578;
-            display: block;
-            border-radius: 15px 15px 0 0;
-            &:link,
-            &:active,
-            &:visited,
-            &:hover {
-                background: none;
-                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            }
-            &.on {
-                font-weight: 600;
-                background: #252e28;
-            }
-        }
-    }
     .cty-rank {
         background: #252e28;
         border-top: 1px solid #252e28;
-        border-top-right-radius: 15px;
+        border-radius: 4px;
         p {
             margin: 0.2rem;
             color: #94e6ac;
             height: 2.4rem;
             line-height: 2.4rem;
             padding: 0 5%;
-            .cty {
-                color: #ffe050;
+            &.time {
+                color: #e4ffc6;
+                border-bottom: 1px solid #66a578;
+                margin: 0;
+                font-size: 0.9rem;
+                span {
+                    float: right;
+                    font-size: 0.75rem;
+                }
             }
             .rules {
                 color: #f34c02;
@@ -341,11 +320,11 @@ canvas {
             overflow-y: scroll;
             clear: both;
         }
-        .cty-list {
+        .per-list {
             color: #66a578;
             height: 4rem;
             line-height: 4rem;
-            &.my-cty {
+            &.my-rank {
                 border-left: 3px solid #94e6ac;
                 background: rgba(148, 230, 172, 0.1);
                 .left {
@@ -406,40 +385,116 @@ canvas {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                .soccer {
-                    width: 1.5rem;
-                }
             }
         }
     }
 }
-
 .bot-down {
     position: fixed;
     bottom: 0;
     height: 3rem;
-    padding: 0.5rem 3%;
-    display: -webkit-box;
     background: #3a8956;
     z-index: 200;
-    box-shadow: 0 -2px 4px #232323cf;
-    .bot-down-text {
-        -webkit-box-flex: 4;
-        font-size: 0.8rem;
-        color: #ffd91f;
-        margin-right: 0.3rem;
-    }
-    .bot-down-btn {
-        -webkit-box-flex: 1;
-        width: 8.2rem;
-        height: 2rem;
-        line-height: 2rem;
-        font-size: 0.9rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width: 100%;
+    box-shadow: 0px -1px 4px 0px rgba(0, 61, 21, 1);
+    span {
+        display: inline-block;
+        width: 32.4%;
         text-align: center;
-        color: #ff5c05;
-        background: #ffd91f;
-        border-radius: 3px;
-        font-weight: bold;
+        img {
+            width: 4.5rem;
+            position: relative;
+            top: -1.5rem;
+        }
+    }
+}
+.card-layer {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.3);
+}
+.card-rewards {
+    font-size: 0.95rem;
+    z-index: 1001;
+    width: 80%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -12rem;
+    margin-left: -40%;
+    .close {
+        width: 100%;
+        height: 3rem;
+        img {
+            width: 2rem;
+            float: right;
+        }
+    }
+    .rewards {
+        width: 100%;
+        padding: 1rem 0.8rem;
+        background: #398754;
+        & > p {
+            font-weight: bold;
+            color: #ffd91f;
+            margin-bottom: 1rem;
+        }
+        .re-item {
+            width: 100%;
+            background: #489f66;
+            padding: 0 1rem;
+            height: 4rem;
+            line-height: 4rem;
+            margin-bottom: 0.3rem;
+            border-radius: 5px;
+            color: #235a36;
+            font-weight: bold;
+            div {
+                float: right;
+                width: 15%;
+                padding: 1.1rem 0;
+                .coins {
+                    height: 1.8rem;
+                    float: right;
+                }
+            }
+            .ball {
+                width: 1.8rem;
+            }
+            span {
+                color: #ffd91f;
+                font-weight: bold;
+                float: right;
+                margin-right: 0.5rem;
+            }
+        }
+        .entry {
+            text-align: center;
+            color: #235a36;
+            font-weight: bold;
+            margin-top: 0.8rem;
+            span {
+                color: #ffd91f;
+            }
+            p {
+                width: 45%;
+                color: #bf7029;
+                margin: 0 auto;
+                height: 2.5rem;
+                line-height: 2.5rem;
+                box-shadow: 0px 1px 4px 2px #666666;
+                background: #ffe050;
+                border-radius: 30px;
+                margin-top: 0.5rem;
+            }
+        }
     }
 }
 </style>
