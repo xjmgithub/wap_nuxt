@@ -42,7 +42,7 @@
         </div>
         <div class="bot-down">
             <span>
-                <img src="~assets/img/vote/button_games.png">
+                <img src="~assets/img/vote/button_games.png" @click="showGames=true">
             </span>
             <span>
                 <img src="~assets/img/vote/button_bonus.png" @click="showMissions=true">
@@ -83,7 +83,7 @@
                 <div class="entry">
                     ENTRY REE:
                     <span>-50 coins</span>
-                    <p>START</p>
+                    <img src="~assets/img/vote/button_start.png" class="start">
                 </div>
             </div>
         </div>
@@ -144,6 +144,23 @@
                 </div>
             </div>
         </div>
+        <!-- 点击games 提示选择游戏弹窗 -->
+        <div v-show="showGames==true" class="card">
+            <div class="close">
+                <img src="~assets/img/naire/ic_close.png" @click="showGames=false" />
+            </div>
+            <div class="games">
+                <div class="gam-item">
+                    <img src="~assets/img/vote/popup_game.png">
+                    <img src="~assets/img/vote/popup_game_mask.png" class="mask">
+                </div>
+                <div class="operation">
+                    <img src="~assets/img/vote/button_forward.png" class="forward">
+                    <img src="~assets/img/vote/button_start.png" class="start">
+                    <img src="~assets/img/vote/button_next.png" class="next">
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -155,7 +172,6 @@ export default {
         return {
             // userId: this.$store.state.user.id,
             userId: 9893,
-
             rankList: [
                 {
                     name: 'lilysony',
@@ -195,7 +211,7 @@ export default {
             ],
             showResult: false,
             showGames: false,
-            showRewards: false,
+            showRewards: true,
             showMissions: false,
             goals: '-'
         }
@@ -510,7 +526,7 @@ canvas {
     position: fixed;
     top: 50%;
     left: 50%;
-    margin-top: -12rem;
+    margin-top: -14rem;
     margin-left: -45%;
     .close {
         width: 100%;
@@ -566,16 +582,10 @@ canvas {
             span {
                 color: #ffd91f;
             }
-            p {
-                width: 45%;
-                color: #bf7029;
-                margin: 0 auto;
-                height: 2.5rem;
-                line-height: 2.5rem;
-                box-shadow: 0px 1px 4px 2px #666666;
-                background: #ffe050;
-                border-radius: 30px;
-                margin-top: 0.5rem;
+            img{
+                width: 8.6rem;
+                display: block;
+                margin: 0.5rem auto 0;
             }
         }
     }
@@ -651,6 +661,40 @@ canvas {
                     width: 100%;
                     display: block;
                 }
+            }
+        }
+    }
+    .games {
+        width: 100%;
+        background: #398754;
+        padding-bottom: 2rem;
+        position: relative;
+        .gam-item {
+            position: relative;
+            img {
+                width: 100%;
+                &.mask {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                }
+            }
+        }
+        .operation {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            .forward {
+                width: 3rem;
+            }
+            .start {
+                width: 8.6rem;
+                margin:0 .5rem
+            }
+            .next {
+                width: 3rem;
             }
         }
     }
