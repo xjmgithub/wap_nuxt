@@ -4,6 +4,13 @@
             <canvas id="canvas" class="ani_hack" width="1360" height="640" />
         </div>
         <div class="contain">
+            <div class="my-coins-box">
+                <div class="my-coins">
+                    My Coins:27
+                    <img src="~assets/img/vote/ic_gift.png">
+                    <img src="~assets/img/vote/ic_gift_go.png">
+                </div>
+            </div>
             <div class="cty-rank">
                 <p class="time">
                     TOP SOCCERS:
@@ -38,15 +45,15 @@
                 <img src="~assets/img/vote/button_games.png">
             </span>
             <span>
-                <img src="~assets/img/vote/button_bonus.png">
+                <img src="~assets/img/vote/button_bonus.png" @click="showMissions=true">
             </span>
             <span>
                 <img src="~assets/img/vote/button_friends.png">
             </span>
         </div>
-        <div v-show="showRewards==true||showGames==true" class="card-layer" @click="showRewards=false,showGames=false" />
+        <div v-show="showRewards==true||showGames==true || showMissions==true" class="card-layer" />
         <!-- 点击开始提示-50coins弹窗 -->
-        <div v-show="showRewards==true" class="card-rewards">
+        <div v-show="showRewards==true" class="card">
             <div class="close">
                 <img src="~assets/img/naire/ic_close.png" @click="showRewards=false" />
             </div>
@@ -80,7 +87,63 @@
                 </div>
             </div>
         </div>
-        <div></div>
+        <!-- 点击bonus 提示Daily Missions 弹窗 -->
+        <div v-show="showMissions==true" class="card">
+            <div class="close">
+                <img src="~assets/img/naire/ic_close.png" @click="showMissions=false" />
+            </div>
+            <div class="missions">
+                <p>Daily Missions</p>
+                <div class="mis-item">
+                    <div class="mis-name">
+                        <span>Daily Playing</span>
+                        <div class="total">2/3
+                            <p/>
+                        </div>
+                    </div>
+                    <div class="mis-prize">
+                        <p>
+                            <span>100</span> coins
+                        </p>
+                    </div>
+                    <div class="mis-redeem">
+                        <img src="~assets/img/vote/button_redeem.png">
+                    </div>
+                </div>
+                <div class="mis-item">
+                    <div class="mis-name">
+                        <span>3 Games Played</span>
+                        <div class="total">2/3
+                            <p/>
+                        </div>
+                    </div>
+                    <div class="mis-prize">
+                        <p>
+                            <span>100</span> coins
+                        </p>
+                    </div>
+                    <div class="mis-redeem">
+                        <img src="~assets/img/vote/button_redeem.png">
+                    </div>
+                </div>
+                <div class="mis-item">
+                    <div class="mis-name">
+                        <span>80 Freekick Shots</span>
+                        <div class="total">51/80
+                            <p/>
+                        </div>
+                    </div>
+                    <div class="mis-prize">
+                        <p>
+                            <span>180</span> coins
+                        </p>
+                    </div>
+                    <div class="mis-redeem">
+                        <img src="~assets/img/vote/button_redeem.png">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -92,7 +155,7 @@ export default {
         return {
             // userId: this.$store.state.user.id,
             userId: 9893,
-            
+
             rankList: [
                 {
                     name: 'lilysony',
@@ -132,7 +195,8 @@ export default {
             ],
             showResult: false,
             showGames: false,
-            showRewards: true,
+            showRewards: false,
+            showMissions: false,
             goals: '-'
         }
     },
@@ -140,11 +204,7 @@ export default {
         /* eslint-disable */
         const first_in = localStorage.getItem('acon_first')
         if (!first_in) {
-            this.$alert(
-                `Welcome to the 'CRAZY FREEKICK'! As a country hero, You'll represent for Team ${
-                    this.country.name
-                }. Any goal you score will be added to your country. The higher ranking your team reaches, the more VIP FREE Coupons will be sent to people who have scored.`
-            )
+            this.$alert(`Welcome to the 'CRAZY FREEKICK'!弹窗提示用户能应得coins并兑换奖品，文案待定!`)
             localStorage.setItem('acon_first', 1)
         }
 
@@ -281,11 +341,34 @@ canvas {
     outline: none;
     -webkit-tap-highlight-color: transparent; /* mobile webkit */
 }
+
 .contain {
     position: fixed;
     top: 43%;
     width: 95%;
     margin: 0 2.5%;
+    .my-coins-box {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        .my-coins {
+            display: inline-block;
+            padding: 0.4rem 0.6rem;
+            background: rgba(37, 46, 40, 0.8);
+            color: #e4ffc6;
+            border: 2px solid #6dc60e;
+            border-radius: 30px;
+            img {
+                width: 1.5rem;
+                margin-left: 0.5rem;
+                & + img {
+                    width: 0.5rem;
+                    margin-left: 0.2rem;
+                }
+            }
+        }
+    }
+
     .cty-rank {
         background: #252e28;
         border-top: 1px solid #252e28;
@@ -420,15 +503,15 @@ canvas {
     z-index: 1000;
     background: rgba(0, 0, 0, 0.3);
 }
-.card-rewards {
+.card {
     font-size: 0.95rem;
     z-index: 1001;
-    width: 80%;
+    width: 90%;
     position: fixed;
     top: 50%;
     left: 50%;
     margin-top: -12rem;
-    margin-left: -40%;
+    margin-left: -45%;
     .close {
         width: 100%;
         height: 3rem;
@@ -493,6 +576,81 @@ canvas {
                 background: #ffe050;
                 border-radius: 30px;
                 margin-top: 0.5rem;
+            }
+        }
+    }
+    .missions {
+        width: 100%;
+        padding: 1rem 0.8rem;
+        background: #398754;
+        & > p {
+            font-weight: bold;
+            color: #ffd91f;
+            margin-bottom: 1rem;
+        }
+        .mis-item {
+            width: 100%;
+            background: #489f66;
+            padding: 0.5em 0.5rem 1rem;
+            margin-bottom: 0.3rem;
+            border-radius: 5px;
+            color: #235a36;
+            font-weight: bold;
+            display: -webkit-box;
+            font-size: 0.9rem;
+            .mis-name {
+                -webkit-box-flex: 3;
+                .total {
+                    width: 100%;
+                    height: 15px;
+                    line-height: 15px;
+                    background: #215b35;
+                    color: #82d39e;
+                    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+                    font-size: 0.6rem;
+                    text-align: center;
+                    margin-top: 0.5rem;
+                    border-radius: 4px;
+                    position: relative;
+                    &.half {
+                        color: #bf7029;
+                        text-shadow: 0px 1px 0px rgba(33, 91, 53, 1);
+                    }
+                    p {
+                        width: 50%;
+                        background: #ffe050;
+                        height: 100%;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        border-radius: 4px;
+                    }
+                }
+            }
+            .mis-prize {
+                text-align: center;
+                color: #fff1ad;
+                // -webkit-box-flex: 2;
+                padding-top: 0.5rem;
+                width: 3rem;
+                span {
+                    color: #ffd91f;
+                }
+            }
+            .mis-redeem {
+                // -webkit-box-flex: 1;
+                width: 4rem;
+                margin-top: 0.5rem;
+                // color: #bf7029;
+                // box-shadow: 0px 1px 4px 1px #666666;
+                // background: #ffe050;
+                // border-radius: 5px;
+                // text-align: center;
+                // font-size: 0.7rem;
+                img {
+                    width: 100%;
+                    display: block;
+                }
             }
         }
     }
