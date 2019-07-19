@@ -15,7 +15,6 @@ export default function(req, res, next) {
     const query = qs.parse(urlobj.search.substr(1))
     const gameId = query.gameId || 1
     const token = req.headers.token
-    const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
     getUserMe(token, userId => {
         runSql(res, `SELECT * FROM games_task WHERE fk_game=${gameId}`, taskList => {
             // 处理是否领取任务奖励
@@ -49,11 +48,7 @@ export default function(req, res, next) {
                             }
 
                             // 查看任务完成情况
-                            console.log(
-                                `SELECT SUM(weight) as process FROM games_action WHERE user_id=${userId} AND fk_task=${
-                                    item.id
-                                } AND create_time>'${start}' AND create_time<'${end}'`
-                            )
+                            
                             runSql(
                                 res,
                                 `SELECT SUM(weight) as process FROM games_action WHERE user_id=${userId} AND fk_task=${
