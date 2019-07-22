@@ -36,6 +36,13 @@
                             <span class="cty-name">{{item.user_name}}</span>
                         </div>
                         <div class="right">
+                            <div v-show="index<=2">
+                                <span class="prize">
+                                    <i/>{{index|formatPrize}}</span>
+                                <img v-show="index==0" src="~assets/img/vote/crank1.png">
+                                <img v-show="index==1" src="~assets/img/vote/crank2.png">
+                                <img v-show="index==2" src="~assets/img/vote/crank3.png">
+                            </div>
                             <span>Pts: {{item.goals}}</span>
                         </div>
                     </div>
@@ -142,6 +149,9 @@ export default {
     filters: {
         formatProcess(item) {
             return item.process >= item.threshold ? item.threshold : item.process
+        },
+        formatPrize(index) {
+            return index == 0 ? '+30,000' : index == 1 ? '+20,000' : index == 2 ? '+10,000' : ''
         }
     },
     data() {
@@ -411,7 +421,6 @@ canvas {
         .per-list {
             color: #66a578;
             height: 4rem;
-            line-height: 4rem;
             &.my-rank {
                 border-left: 3px solid #94e6ac;
                 background: rgba(148, 230, 172, 0.1);
@@ -424,6 +433,7 @@ canvas {
             .left {
                 float: left;
                 width: 68%;
+                line-height: 4rem;
                 span {
                     float: left;
                     img {
@@ -473,6 +483,24 @@ canvas {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                .prize {
+                    background: #9aee3f;
+                    padding: 0 0.5rem;
+                    font-size: 0.9rem;
+                    position: relative;
+                    border-radius: 2px;
+                    i {
+                        position: absolute;
+                        border: 0.3rem solid #9aee3f;
+                        border-color: #9aee3f transparent transparent transparent;
+                        left: 50%;
+                        bottom: -.6rem;
+                        margin-left:-.15rem;
+                    }
+                }
+                img {
+                    width: 0.8rem;
+                }
             }
         }
     }
