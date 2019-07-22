@@ -59,9 +59,9 @@ export default {
             this.sendEvLog({
                 category: `post_${this.id}`,
                 action: 'img_tap',
-                label: this.id,
+                label: this.id + '-' + this.mySwiper.realIndex,
                 value: type || 0,
-                imgtype: this.imgType
+                imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif')>=0 ? 0 : 1
             })
             this.$emit('close')
         },

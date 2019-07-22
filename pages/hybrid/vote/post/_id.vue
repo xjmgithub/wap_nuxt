@@ -164,9 +164,9 @@ export default {
                 this.sendEvLog({
                     category: `post_${this.id}`,
                     action: 'post_image_tap',
-                    label: this.id,
+                    label: this.id + '-' + event.data.value.index,
                     value: this.postPics.length,
-                    imgtype: this.imgType
+                    imgtype: event.data.value.list[event.data.value.index].indexOf('gif') >= 0 ? 0 : 1
                 })
                 this.$refs.mySwiper.show(event.data.value.list, Number(event.data.value.index))
             }
