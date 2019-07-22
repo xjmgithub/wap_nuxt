@@ -43,6 +43,13 @@ export default {
     methods: {
         show(list, index) {
             this.index = index
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'page_show',
+                label: this.id,
+                value: 1,
+                path: 0
+            })
             if (this.mySwiper) {
                 this.visiable = true
                 this.mySwiper.zoom.out()
@@ -61,7 +68,7 @@ export default {
                 action: 'img_tap',
                 label: this.id + '-' + this.mySwiper.realIndex,
                 value: type || 0,
-                imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif')>=0 ? 0 : 1
+                imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
             })
             this.$emit('close')
         },
