@@ -16,65 +16,45 @@ import { getUserMe, getMyCoins } from './func'
 export default function(req, res, next) {
     const urlobj = new URL('http://localhost' + req.url)
     const query = qs.parse(urlobj.search.substr(1))
-    const cycle = query.cycle || 0
-    let gameId = query.gameId || 1
+    const gameId = query.gameId || 1
     const token = req.headers.token
+    let preGameId = ''
 
-    if (cycle > 0) {
-        runSql(
-            res,
-            `SELECT id FROM games WHERE end_time<(SELECT start_time FROM games WHERE id="${gameId}") ORDER BY end_time DESC LIMIT 1`,
-            lastGame => {
-                if (lastGame.length > 0) {
-                    gameId = lastGame[0].id
-                    getRanksByUser(gameId)
-                } else {
-                    res.end(
-                        JSON.stringify({
-                            code: 102,
-                            message: 'there is no data!',
-                            data: ''
-                        })
-                    )
-                }
+    runSql(
+        res,
+        `SELECT id FROM games WHERE end_time<(SELECT start_time FROM games WHERE id="${gameId}") ORDER BY end_time DESC LIMIT 1`,
+        lastGame => {
+            if (lastGame.length > 0) {
+                preGameId = lastGame[0].id
+                getRanksByUser(gameId)
+            } else {
+                getRanksByUser(gameId)
             }
-        )
-    } else {
-        getRanksByUser(gameId)
-    }
+        }
+    )
 
     function getRanksByUser(gameId) {
-        runSql(
-            res,
-            `SELECT user_id,user_name,user_avatar,SUM(weight) AS goals FROM (SELECT * FROM games_action WHERE fk_game=${gameId} AND action_name="goals" ORDER BY id DESC) AS N GROUP BY user_id`,
-            rankList => {
-                if (rankList.length > 0) {
-                    getUserMe(token, userId => {
-                        // TODO 如果是登录用户会添加一个action 今天登录的标志
-
-                        getMyCoins(token, userId, coins => {
-                            res.end(
-                                JSON.stringify({
-                                    code: 200,
-                                    message: 'success',
-                                    data: {
-                                        myCoins: coins,
-                                        list: rankList
-                                    }
-                                })
-                            )
-                        })
-                    })
-                } else {
-                    res.end(
-                        JSON.stringify({
-                            code: 204,
-                            message: 'there is no result!',
-                            data: ''
-                        })
-                    )
-                }
-            }
-        )
+        getUserMe(token, userId => {
+            // TODO 如果是登录用户会添加一个action 今天登录的标志
+            getMyCoins(token, userId, coins => {
+                runSql(
+                    res,
+                    `SELECT user_id,user_name,user_avatar,SUM(weight) AS goals FROM (SELECT * FROM games_action WHERE fk_game=${gameId} AND action_name="goals" ORDER BY id DESC) AS N GROUP BY user_id`,
+                    rankList => {
+                        res.end(
+                            JSON.stringify({
+                                code: 200,
+                                message: 'success',
+                                data: {
+                                    myCoins: coins,
+                                    list: rankList.length > 0 ? rankList : [],
+                                    preGameId: preGameId || ''
+                                }
+                            })
+                        )
+                    }
+                )
+            })
+        })
     }
 }
