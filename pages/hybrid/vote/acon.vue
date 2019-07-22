@@ -6,7 +6,7 @@
         <div class="contain">
             <div class="my-coins-box">
                 <div class="my-coins">
-                    My Coins:27
+                    My Coins：{{myCoins}}
                     <img src="~assets/img/vote/ic_gift.png">
                     <img src="~assets/img/vote/ic_gift_go.png">
                 </div>
@@ -22,19 +22,19 @@
                     <span class="rules" @click="showResult=true">Last week result</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in rankList" :id="`c-${item.name}`" :key="index" :data-index="index" :class="{'my-rank':item.code==userId}" class="per-list">
+                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                            <span v-if="item.logo">
-                                <img :src="item.logo" />
+                            <span v-if="item.user_avatar">
+                                <img :src="cdnPicSrc(item.user_avatar)" />
                             </span>
                             <span v-else>
-                                <img src="~assets/img/flag_others.png" />
+                                <img src="http://cdn.startimestv.com/head/h_d.png" />
                             </span>
-                            <span class="cty-name">{{item.name}}</span>
+                            <span class="cty-name">{{item.user_name}}</span>
                         </div>
                         <div class="right">
-                            <span>Pts: {{item.ballot_num}}</span>
+                            <span>Pts: {{item.goals}}</span>
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                 <img src="~assets/img/vote/button_games.png" @click="showGames=true">
             </span>
             <span>
-                <img src="~assets/img/vote/button_bonus.png" @click="showMissions=true">
+                <img src="~assets/img/vote/button_bonus.png" @click="getTaskByGame()">
             </span>
             <span>
                 <img src="~assets/img/vote/button_friends.png">
@@ -94,48 +94,17 @@
             </div>
             <div class="missions">
                 <p>Daily Missions</p>
-                <div class="mis-item">
+                <div v-for="(item,index) in taskList" :key="index" class="mis-item">
                     <div class="mis-name">
-                        <span>Daily Playing</span>
-                        <div class="total">2/3
-                            <p/>
+                        <span>{{item.label}}</span>
+                        <div class="total">
+                            <p :style="{width:(item.process/item.threshold).toFixed(2) * 100 + '%'}" />
+                            <span>{{item.process}}/{{item.threshold}}</span>
                         </div>
                     </div>
                     <div class="mis-prize">
                         <p>
-                            <span>100</span> coins
-                        </p>
-                    </div>
-                    <div class="mis-redeem">
-                        <img src="~assets/img/vote/button_redeem.png">
-                    </div>
-                </div>
-                <div class="mis-item">
-                    <div class="mis-name">
-                        <span>3 Games Played</span>
-                        <div class="total">2/3
-                            <p/>
-                        </div>
-                    </div>
-                    <div class="mis-prize">
-                        <p>
-                            <span>100</span> coins
-                        </p>
-                    </div>
-                    <div class="mis-redeem">
-                        <img src="~assets/img/vote/button_redeem.png">
-                    </div>
-                </div>
-                <div class="mis-item">
-                    <div class="mis-name">
-                        <span>80 Freekick Shots</span>
-                        <div class="total">51/80
-                            <p/>
-                        </div>
-                    </div>
-                    <div class="mis-prize">
-                        <p>
-                            <span>180</span> coins
+                            <span>{{item.award}}</span> coins
                         </p>
                     </div>
                     <div class="mis-redeem">
@@ -171,49 +140,15 @@ export default {
     data() {
         return {
             // userId: this.$store.state.user.id,
-            userId: 9893,
-            rankList: [
-                {
-                    name: 'lilysony',
-                    ballot_num: '9611',
-                    code: 6
-                },
-                {
-                    name: 'Orange tata',
-                    ballot_num: '8006',
-                    code: 5
-                },
-                {
-                    name: 'Ninaomysan',
-                    ballot_num: '6512',
-                    code: 9893
-                },
-                {
-                    name: 'Johnnasa@gmail.com',
-                    ballot_num: '5543',
-                    code: 4
-                },
-                {
-                    name: 'Giantsir1990@yahoo.com',
-                    ballot_num: '2210',
-                    code: 3
-                },
-                {
-                    name: 'lilysony',
-                    ballot_num: '1110',
-                    code: 2
-                },
-                {
-                    name: 'lilysony',
-                    ballot_num: '961',
-                    code: 1
-                }
-            ],
+            userId: 9152883,
+            rankList: [],
+            taskList: [],
             showResult: false,
             showGames: false,
-            showRewards: true,
+            showRewards: false,
             showMissions: false,
-            goals: '-'
+            goals: '-',
+            myCoins: '-'
         }
     },
     mounted() {
@@ -233,47 +168,83 @@ export default {
         document.querySelector('.contain').style.top = document.querySelector('canvas').style.height
 
         $(game).on('save_score', (evt, goal, score) => {
-            this.vote(goal)
+            this.setGoal(goal)
         })
 
         $(game).on('level_end', (evt, goal, score) => {
-            this.vote(goal)
+            this.getAward(goal)
         })
         // $(game).on('goal', function(evt, goal, score) {})
-        // this.getRankList(1)
+        this.getRankList(1)
+        this.setGoal(4)
     },
     methods: {
+        // 获取游戏个人排行 用户coins
         getRankList(init) {
-            // cycle 0查询当期，1查询上一期
             this.$axios.get(`/hybrid/api/games/getRanks?cycle=0&gameId=1 `).then(res => {
-                if (res.data.code == 0) {
-                    let result = []
-                    const vlist = res.data.data
+                if (res.data.code == 200) {
+                    const data = res.data.data
+                    this.myCoins = data.myCoins
+                    const vlist = data.list
                     vlist.sort(function(a, b) {
-                        return b.ballot_num - a.ballot_num
+                        return b.goals - a.goals
                     })
-                    vlist.forEach((item, index) => {
-                        if (item.show) {
-                            result.push({
-                                name: country.name,
-                                code: item.name,
-                                logo: country.nationalFlag,
-                                ballot_num: item.ballot_num,
-                                candidate_id: item.id
-                            })
-                        }
-                    })
-                    this.rankList = result
+                    this.rankList = vlist
+                    try {
+                        this.rankList.forEach(ele => {
+                            if (ele.user_id === this.userId) {
+                                this.goals = ele.goals
+                                throw new Error('EndIterative')
+                            }
+                        })
+                    } catch (e) {
+                        if (e.message !== 'EndIterative') throw e
+                    }
                     if (init) {
                         this.$nextTick(() => {
                             const t = document.querySelector('.my-rank')
                             document.querySelector('.box').scrollTop = t.getAttribute('data-index') * t.getBoundingClientRect().height
                         })
                     }
-                } else {
-                    this.$alert('Top Team get error')
                 }
             })
+        },
+        // 获取游戏任务
+        getTaskByGame() {
+            this.showMissions = true
+            this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=1`).then(res => {
+                if (res.data.code == 200) {
+                    this.taskList = res.data.data
+                }
+            })
+        },
+        // 游戏结束 获取奖励
+        getAward(goal) {
+            if (goal > 0) {
+                this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
+                    this.$axios.get(`/hybrid/api/games/getAward?gameId=1&goals=${goal}`).then(res => {
+                        if (res.data.code == 200) {
+                            this.myCoins = res.data.data.afterCoins
+                        } else {
+                            this.$toast(res.data.message)
+                        }
+                    })
+                })
+            }
+        },
+        // 关卡结束，添加goal进球数
+        setGoal(goal) {
+            console.log(goal)
+            if (goal > 0 && goal <= 5) {
+                this.$axios.get(`/hybrid/api/games/setGoal?gameId=1&goals=${goal}`).then(res => {
+                    console.log(res)
+                    if (res.data.code == 200) {
+                        this.getRankList()
+                    } else {
+                        this.$toast(res.data.message)
+                    }
+                })
+            }
         },
         vote(goal) {
             if (goal > 0) {
@@ -582,7 +553,7 @@ canvas {
             span {
                 color: #ffd91f;
             }
-            img{
+            img {
                 width: 8.6rem;
                 display: block;
                 margin: 0.5rem auto 0;
@@ -691,7 +662,7 @@ canvas {
             }
             .start {
                 width: 8.6rem;
-                margin:0 .5rem
+                margin: 0 0.5rem;
             }
             .next {
                 width: 3rem;
