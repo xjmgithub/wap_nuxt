@@ -53,7 +53,7 @@ export default function(req, res, next) {
                     res,
                     `SELECT SUM(weight) as process FROM games_action WHERE user_id=${userId} AND fk_task=${taskId} AND create_time>'${start}' AND create_time<'${end}'`,
                     process => {
-                        if (process >= item.threshold) {
+                        if (process[0].process >= item.threshold) {
                             runSql(res, `INSERT INTO games_task_log (user_id,fk_task,create_time) VALUES (${userId},${taskId},'${now}')`, result => {
                                 if (result) {
                                     res.end(

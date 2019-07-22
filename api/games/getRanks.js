@@ -23,10 +23,20 @@ export default function(req, res, next) {
     if (cycle > 0) {
         runSql(
             res,
-            `SELECT id FROM games WHERE end_time<(SELECT start_time FROM games WHERE id="${gameId}") ORDER BY end_time DESC LIMIT 1 `,
+            `SELECT id FROM games WHERE end_time<(SELECT start_time FROM games WHERE id="${gameId}") ORDER BY end_time DESC LIMIT 1`,
             lastGame => {
-                if (lastGame.length > 0) gameId = lastGame[0]
-                getRanksByUser(gameId)
+                if (lastGame.length > 0) {
+                    gameId = lastGame[0].id
+                    getRanksByUser(gameId)
+                } else {
+                    res.end(
+                        JSON.stringify({
+                            code: 102,
+                            message: 'there is no data!',
+                            data: ''
+                        })
+                    )
+                }
             }
         )
     } else {
@@ -40,7 +50,6 @@ export default function(req, res, next) {
             rankList => {
                 if (rankList.length > 0) {
                     getUserMe(token, userId => {
-                        
                         // TODO 如果是登录用户会添加一个action 今天登录的标志
 
                         getMyCoins(token, userId, coins => {
