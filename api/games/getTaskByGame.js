@@ -8,7 +8,7 @@
 import qs from 'qs'
 import dayjs from 'dayjs'
 import { runSql } from '../../functions/mysql.js'
-import { getUserMe, delCoins } from './func'
+import { getUserMe } from './func'
 
 export default function(req, res, next) {
     const urlobj = new URL('http://localhost' + req.url)
@@ -19,7 +19,8 @@ export default function(req, res, next) {
         runSql(res, `SELECT * FROM games_task WHERE fk_game=${gameId}`, taskList => {
             // 处理是否领取任务奖励
             if (taskList.length > 0) {
-                taskList.forEach(item => {
+                let tag = 0
+                taskList.forEach((item, index) => {
                     let start = ''
                     let end = ''
                     if (item.settlement_cycle == 1) {
@@ -48,21 +49,23 @@ export default function(req, res, next) {
                             }
 
                             // 查看任务完成情况
-                            
                             runSql(
                                 res,
                                 `SELECT SUM(weight) as process FROM games_action WHERE user_id=${userId} AND fk_task=${
                                     item.id
                                 } AND create_time>'${start}' AND create_time<'${end}'`,
                                 taskProcess => {
+                                    tag++
                                     item.process = taskProcess[0].process || 0
-                                    res.end(
-                                        JSON.stringify({
-                                            code: 200,
-                                            message: 'success',
-                                            data: taskList
-                                        })
-                                    )
+                                    if (tag >= taskList.length) {
+                                        res.end(
+                                            JSON.stringify({
+                                                code: 200,
+                                                message: 'success',
+                                                data: taskList
+                                            })
+                                        )
+                                    }
                                 }
                             )
                         }
