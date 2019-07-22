@@ -14,12 +14,14 @@
             <div class="cty-rank">
                 <p class="time">
                     TOP SOCCERS:
-                    <span>Ends in 124h 37m 2s</span>
+                    <span>
+                        <img src="~assets/img/vote/ic_count_down.png"> Ends in 124h 37m 2s</span>
                 </p>
                 <p>
                     You've scored
                     <b>{{goals}}</b> goals.
-                    <span class="rules" @click="showResult=true">Last week result</span>
+                    <span v-if="latest" class="rules" @click="getLastWeekResult()">Last week result</span>
+                    <span v-else class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
                     <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
@@ -48,14 +50,14 @@
                 <img src="~assets/img/vote/button_bonus.png" @click="getTaskByGame()">
             </span>
             <span>
-                <img src="~assets/img/vote/button_friends.png">
+                <img src="~assets/img/vote/button_friends.png" @click="share()">
             </span>
         </div>
         <div v-show="showRewards==true||showGames==true || showMissions==true" class="card-layer" />
         <!-- 点击开始提示-50coins弹窗 -->
         <div v-show="showRewards==true" class="card">
             <div class="close">
-                <img src="~assets/img/naire/ic_close.png" @click="showRewards=false" />
+                <img src="~assets/img/vote/close.png" @click="showRewards=false" />
             </div>
             <div class="rewards">
                 <p>WINNING REWARDS</p>
@@ -90,7 +92,7 @@
         <!-- 点击bonus 提示Daily Missions 弹窗 -->
         <div v-show="showMissions==true" class="card">
             <div class="close">
-                <img src="~assets/img/naire/ic_close.png" @click="showMissions=false" />
+                <img src="~assets/img/vote/close.png" @click="showMissions=false" />
             </div>
             <div class="missions">
                 <p>Daily Missions</p>
@@ -99,7 +101,7 @@
                         <span>{{item.label}}</span>
                         <div class="total">
                             <p :style="{width:(item.process/item.threshold).toFixed(2) * 100 + '%'}" />
-                            <span>{{item.process}}/{{item.threshold}}</span>
+                            <span :class="{'over-half':(item.process/item.threshold).toFixed(2) * 100>45}">{{item.process}}/{{item.threshold}}</span>
                         </div>
                     </div>
                     <div class="mis-prize">
@@ -108,7 +110,8 @@
                         </p>
                     </div>
                     <div class="mis-redeem">
-                        <img src="~assets/img/vote/button_redeem.png">
+                        <img v-if="item.overTask" src="~assets/img/vote/button_redeemed.png">
+                        <img v-else src="~assets/img/vote/button_redeem.png" @click="taskOver(index+1)">
                     </div>
                 </div>
             </div>
@@ -116,7 +119,7 @@
         <!-- 点击games 提示选择游戏弹窗 -->
         <div v-show="showGames==true" class="card">
             <div class="close">
-                <img src="~assets/img/naire/ic_close.png" @click="showGames=false" />
+                <img src="~assets/img/vote/close.png" @click="showGames=false" />
             </div>
             <div class="games">
                 <div class="gam-item">
@@ -133,7 +136,6 @@
     </div>
 </template>
 <script>
-import qs from 'qs'
 import { shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
@@ -143,12 +145,12 @@ export default {
             userId: 9152883,
             rankList: [],
             taskList: [],
-            showResult: false,
             showGames: false,
             showRewards: false,
             showMissions: false,
             goals: '-',
-            myCoins: '-'
+            myCoins: '-',
+            latest: true
         }
     },
     mounted() {
@@ -176,12 +178,13 @@ export default {
         })
         // $(game).on('goal', function(evt, goal, score) {})
         this.getRankList(1)
-        this.setGoal(4)
+        // this.setGoal(4)
     },
     methods: {
-        // 获取游戏个人排行 用户coins
+        // 获取游戏当期个人排行 用户coins
         getRankList(init) {
-            this.$axios.get(`/hybrid/api/games/getRanks?cycle=0&gameId=1 `).then(res => {
+            this.latest = true
+            this.$axios.get(`/hybrid/api/games/getRanks?cycle=0&gameId=1`).then(res => {
                 if (res.data.code == 200) {
                     const data = res.data.data
                     this.myCoins = data.myCoins
@@ -209,10 +212,25 @@ export default {
                 }
             })
         },
+        // 获取游戏上一期个人排行
+        getLastWeekResult() {
+            this.latest = false
+            this.$axios.get(`/hybrid/api/games/getRanks?cycle=1&gameId=1 `).then(res => {
+                if (res.data.code == 200) {
+                    const data = res.data.data
+                    const vlist = data.list
+                    vlist.sort(function(a, b) {
+                        return b.goals - a.goals
+                    })
+                    this.rankList = vlist
+                }
+            })
+        },
         // 获取游戏任务
         getTaskByGame() {
             this.showMissions = true
             this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=1`).then(res => {
+                console.log(res)
                 if (res.data.code == 200) {
                     this.taskList = res.data.data
                 }
@@ -234,45 +252,29 @@ export default {
         },
         // 关卡结束，添加goal进球数
         setGoal(goal) {
-            console.log(goal)
-            if (goal > 0 && goal <= 5) {
-                this.$axios.get(`/hybrid/api/games/setGoal?gameId=1&goals=${goal}`).then(res => {
-                    console.log(res)
-                    if (res.data.code == 200) {
-                        this.getRankList()
-                    } else {
-                        this.$toast(res.data.message)
-                    }
-                })
-            }
+            this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=1`).then(res => {
+                if (res.data.code == 200) {
+                    this.getRankList()
+                } else {
+                    this.$toast(res.data.message)
+                }
+            })
         },
-        vote(goal) {
-            if (goal > 0) {
-                this.$alert(`You've scroed ${goal} goals for ${this.country.name}. Thanks for the contribution for your country, Hero.`, () => {
-                    this.$axios({
-                        url: '/voting/v1/ballot',
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        data: qs.stringify({
-                            candidate_id: this.candidate.candidate_id,
-                            vote_id: 12,
-                            weight: goal
-                        })
-                    }).then(res => {
-                        if (res.data.code === 0) {
-                            // this.getRankList()
-                        }
-                    })
-                })
-            }
+        // 任务完成
+        taskOver(taskId) {
+            this.$axios.get(`/hybrid/api/games/taskOver?taskId=${taskId}`).then(res => {
+                console.log(res)
+                if (res.data.code == 200) {}
+                else{
+                    this.$toast(res.data.message)
+                }
+            })
         },
         share() {
             shareInvite(
                 `${window.location.origin}/hybrid/lands/soccercup?utm_source=startimes_app&utm_medium=activity&utm_campaign=soccercup1`,
                 'StarTimes ON Cup - Crazy Freekick',
-                `Join us as a Country Hero and score for the Team ${this.country.name} to win the cup.`,
+                `Join us as a Country Hero and score for the Team to win the cup.`,
                 `${window.location.origin}/res_nuxt/img/soccercup.png`
             )
         }
@@ -375,6 +377,10 @@ canvas {
                     float: right;
                     font-size: 0.75rem;
                 }
+                img{
+                    width:.7rem;
+                    margin-top: -0.1rem;
+                }
             }
             .rules {
                 color: #f34c02;
@@ -386,7 +392,7 @@ canvas {
         }
         .box {
             height: 50vh;
-            padding-bottom: 7rem;
+            padding-bottom: 11rem;
             overflow-y: scroll;
             clear: both;
         }
@@ -605,6 +611,13 @@ canvas {
                         top: 0;
                         left: 0;
                         border-radius: 4px;
+                    }
+                    span {
+                        position: absolute;
+                        &.over-half {
+                            color: #bf7029;
+                            text-shadow: 0px 1px 0px rgba(33, 91, 53, 1);
+                        }
                     }
                 }
             }
