@@ -14,7 +14,7 @@ const appleStore = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&
 
 /* 获取apk地址 */
 const getApkUrl = function(callback) {
-    axios.get('/cms/public/app').then(data => {
+    axios.get('http://upms.startimestv.com/cms/public/app').then(data => {
         const url = data.data.apkUrl
         callback && callback(url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : '')
     })
@@ -63,7 +63,7 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
-    if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0) {
+    if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0 || (browser.isOriginalChrome&&browser.isAndroid)) {
         envokeByIntent(page, failback)
     } else {
         invokeByIframe(page, failback)
