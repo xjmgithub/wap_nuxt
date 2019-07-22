@@ -20,8 +20,8 @@
                 <p>
                     You've scored
                     <b>{{goals}}</b> goals.
-                    <span v-if="latest" class="rules" @click="getLastWeekResult()">Last week result</span>
-                    <span v-else class="rules" @click="getRankList()">Back to latest</span>
+                    <span v-if="latest && preGameId" class="rules" @click="getLastWeekResult()">Last week result</span>
+                    <span v-if="!latest && preGameId" class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
                     <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
@@ -111,7 +111,7 @@
                     </div>
                     <div class="mis-redeem">
                         <img v-if="item.overTask" src="~assets/img/vote/button_redeemed.png">
-                        <img v-else src="~assets/img/vote/button_redeem.png" @click="taskOver(index+1)">
+                        <img v-else src="~assets/img/vote/button_redeem.png" @click="taskOver(item)">
                     </div>
                 </div>
             </div>
@@ -150,7 +150,8 @@ export default {
             showMissions: false,
             goals: '-',
             myCoins: '-',
-            latest: true
+            latest: true,
+            preGameId: ''
         }
     },
     mounted() {
@@ -184,10 +185,11 @@ export default {
         // 获取游戏当期个人排行 用户coins
         getRankList(init) {
             this.latest = true
-            this.$axios.get(`/hybrid/api/games/getRanks?cycle=0&gameId=1`).then(res => {
+            this.$axios.get(`/hybrid/api/games/getRanks?gameId=1`).then(res => {
                 if (res.data.code == 200) {
                     const data = res.data.data
                     this.myCoins = data.myCoins
+                    this.preGameId = data.preGameId
                     const vlist = data.list
                     vlist.sort(function(a, b) {
                         return b.goals - a.goals
@@ -215,7 +217,7 @@ export default {
         // 获取游戏上一期个人排行
         getLastWeekResult() {
             this.latest = false
-            this.$axios.get(`/hybrid/api/games/getRanks?cycle=1&gameId=1 `).then(res => {
+            this.$axios.get(`/hybrid/api/games/getRanks?gameId=${this.preGameId}`).then(res => {
                 if (res.data.code == 200) {
                     const data = res.data.data
                     const vlist = data.list
@@ -261,11 +263,12 @@ export default {
             })
         },
         // 任务完成
-        taskOver(taskId) {
+        taskOver(item) {
+            const taskId = item.id
             this.$axios.get(`/hybrid/api/games/taskOver?taskId=${taskId}`).then(res => {
-                console.log(res)
-                if (res.data.code == 200) {}
-                else{
+                if (res.data.code == 200) {
+                    item.overTask = true
+                } else {
                     this.$toast(res.data.message)
                 }
             })
@@ -377,8 +380,8 @@ canvas {
                     float: right;
                     font-size: 0.75rem;
                 }
-                img{
-                    width:.7rem;
+                img {
+                    width: 0.7rem;
                     margin-top: -0.1rem;
                 }
             }
