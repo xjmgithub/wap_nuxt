@@ -6,7 +6,7 @@
         <div class="contain">
             <div class="my-coins-box">
                 <div class="my-coins">
-                    My Coins:27
+                    My Coins：{{myCoins}}
                     <img src="~assets/img/vote/ic_gift.png">
                     <img src="~assets/img/vote/ic_gift_go.png">
                 </div>
@@ -14,27 +14,29 @@
             <div class="cty-rank">
                 <p class="time">
                     TOP SOCCERS:
-                    <span>Ends in 124h 37m 2s</span>
+                    <span>
+                        <img src="~assets/img/vote/ic_count_down.png"> Ends in 124h 37m 2s</span>
                 </p>
                 <p>
                     You've scored
                     <b>{{goals}}</b> goals.
-                    <span class="rules" @click="showResult=true">Last week result</span>
+                    <span v-if="latest" class="rules" @click="getLastWeekResult()">Last week result</span>
+                    <span v-else class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in rankList" :id="`c-${item.name}`" :key="index" :data-index="index" :class="{'my-rank':item.code==userId}" class="per-list">
+                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
-                            <span v-if="item.logo">
-                                <img :src="item.logo" />
+                            <span v-if="item.user_avatar">
+                                <img :src="cdnPicSrc(item.user_avatar)" />
                             </span>
                             <span v-else>
-                                <img src="~assets/img/flag_others.png" />
+                                <img src="http://cdn.startimestv.com/head/h_d.png" />
                             </span>
-                            <span class="cty-name">{{item.name}}</span>
+                            <span class="cty-name">{{item.user_name}}</span>
                         </div>
                         <div class="right">
-                            <span>Pts: {{item.ballot_num}}</span>
+                            <span>Pts: {{item.goals}}</span>
                         </div>
                     </div>
                 </div>
@@ -45,17 +47,17 @@
                 <img src="~assets/img/vote/button_games.png" @click="showGames=true">
             </span>
             <span>
-                <img src="~assets/img/vote/button_bonus.png" @click="showMissions=true">
+                <img src="~assets/img/vote/button_bonus.png" @click="getTaskByGame()">
             </span>
             <span>
-                <img src="~assets/img/vote/button_friends.png">
+                <img src="~assets/img/vote/button_friends.png" @click="share()">
             </span>
         </div>
         <div v-show="showRewards==true||showGames==true || showMissions==true" class="card-layer" />
         <!-- 点击开始提示-50coins弹窗 -->
         <div v-show="showRewards==true" class="card">
             <div class="close">
-                <img src="~assets/img/naire/ic_close.png" @click="showRewards=false" />
+                <img src="~assets/img/vote/close.png" @click="showRewards=false" />
             </div>
             <div class="rewards">
                 <p>WINNING REWARDS</p>
@@ -90,56 +92,26 @@
         <!-- 点击bonus 提示Daily Missions 弹窗 -->
         <div v-show="showMissions==true" class="card">
             <div class="close">
-                <img src="~assets/img/naire/ic_close.png" @click="showMissions=false" />
+                <img src="~assets/img/vote/close.png" @click="showMissions=false" />
             </div>
             <div class="missions">
                 <p>Daily Missions</p>
-                <div class="mis-item">
+                <div v-for="(item,index) in taskList" :key="index" class="mis-item">
                     <div class="mis-name">
-                        <span>Daily Playing</span>
-                        <div class="total">2/3
-                            <p/>
+                        <span>{{item.label}}</span>
+                        <div class="total">
+                            <p :style="{width:(item.process/item.threshold).toFixed(2) * 100 + '%'}" />
+                            <span :class="{'over-half':(item.process/item.threshold).toFixed(2) * 100>45}">{{item.process}}/{{item.threshold}}</span>
                         </div>
                     </div>
                     <div class="mis-prize">
                         <p>
-                            <span>100</span> coins
+                            <span>{{item.award}}</span> coins
                         </p>
                     </div>
                     <div class="mis-redeem">
-                        <img src="~assets/img/vote/button_redeem.png">
-                    </div>
-                </div>
-                <div class="mis-item">
-                    <div class="mis-name">
-                        <span>3 Games Played</span>
-                        <div class="total">2/3
-                            <p/>
-                        </div>
-                    </div>
-                    <div class="mis-prize">
-                        <p>
-                            <span>100</span> coins
-                        </p>
-                    </div>
-                    <div class="mis-redeem">
-                        <img src="~assets/img/vote/button_redeem.png">
-                    </div>
-                </div>
-                <div class="mis-item">
-                    <div class="mis-name">
-                        <span>80 Freekick Shots</span>
-                        <div class="total">51/80
-                            <p/>
-                        </div>
-                    </div>
-                    <div class="mis-prize">
-                        <p>
-                            <span>180</span> coins
-                        </p>
-                    </div>
-                    <div class="mis-redeem">
-                        <img src="~assets/img/vote/button_redeem.png">
+                        <img v-if="item.overTask" src="~assets/img/vote/button_redeemed.png">
+                        <img v-else src="~assets/img/vote/button_redeem.png" @click="taskOver(index+1)">
                     </div>
                 </div>
             </div>
@@ -147,7 +119,7 @@
         <!-- 点击games 提示选择游戏弹窗 -->
         <div v-show="showGames==true" class="card">
             <div class="close">
-                <img src="~assets/img/naire/ic_close.png" @click="showGames=false" />
+                <img src="~assets/img/vote/close.png" @click="showGames=false" />
             </div>
             <div class="games">
                 <div class="gam-item">
@@ -164,56 +136,21 @@
     </div>
 </template>
 <script>
-import qs from 'qs'
 import { shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
         return {
             // userId: this.$store.state.user.id,
-            userId: 9893,
-            rankList: [
-                {
-                    name: 'lilysony',
-                    ballot_num: '9611',
-                    code: 6
-                },
-                {
-                    name: 'Orange tata',
-                    ballot_num: '8006',
-                    code: 5
-                },
-                {
-                    name: 'Ninaomysan',
-                    ballot_num: '6512',
-                    code: 9893
-                },
-                {
-                    name: 'Johnnasa@gmail.com',
-                    ballot_num: '5543',
-                    code: 4
-                },
-                {
-                    name: 'Giantsir1990@yahoo.com',
-                    ballot_num: '2210',
-                    code: 3
-                },
-                {
-                    name: 'lilysony',
-                    ballot_num: '1110',
-                    code: 2
-                },
-                {
-                    name: 'lilysony',
-                    ballot_num: '961',
-                    code: 1
-                }
-            ],
-            showResult: false,
+            userId: 9152883,
+            rankList: [],
+            taskList: [],
             showGames: false,
-            showRewards: true,
+            showRewards: false,
             showMissions: false,
-            goals: '-'
+            goals: '-',
+            myCoins: '-',
+            latest: true
         }
     },
     mounted() {
@@ -233,75 +170,111 @@ export default {
         document.querySelector('.contain').style.top = document.querySelector('canvas').style.height
 
         $(game).on('save_score', (evt, goal, score) => {
-            this.vote(goal)
+            this.setGoal(goal)
         })
 
         $(game).on('level_end', (evt, goal, score) => {
-            this.vote(goal)
+            this.getAward(goal)
         })
         // $(game).on('goal', function(evt, goal, score) {})
-        // this.getRankList(1)
+        this.getRankList(1)
+        // this.setGoal(4)
     },
     methods: {
+        // 获取游戏当期个人排行 用户coins
         getRankList(init) {
-            // cycle 0查询当期，1查询上一期
-            this.$axios.get(`/hybrid/api/games/getRanks?cycle=0&gameId=1 `).then(res => {
-                if (res.data.code == 0) {
-                    let result = []
-                    const vlist = res.data.data
+            this.latest = true
+            this.$axios.get(`/hybrid/api/games/getRanks?cycle=0&gameId=1`).then(res => {
+                if (res.data.code == 200) {
+                    const data = res.data.data
+                    this.myCoins = data.myCoins
+                    const vlist = data.list
                     vlist.sort(function(a, b) {
-                        return b.ballot_num - a.ballot_num
+                        return b.goals - a.goals
                     })
-                    vlist.forEach((item, index) => {
-                        if (item.show) {
-                            result.push({
-                                name: country.name,
-                                code: item.name,
-                                logo: country.nationalFlag,
-                                ballot_num: item.ballot_num,
-                                candidate_id: item.id
-                            })
-                        }
-                    })
-                    this.rankList = result
+                    this.rankList = vlist
+                    try {
+                        this.rankList.forEach(ele => {
+                            if (ele.user_id === this.userId) {
+                                this.goals = ele.goals
+                                throw new Error('EndIterative')
+                            }
+                        })
+                    } catch (e) {
+                        if (e.message !== 'EndIterative') throw e
+                    }
                     if (init) {
                         this.$nextTick(() => {
                             const t = document.querySelector('.my-rank')
                             document.querySelector('.box').scrollTop = t.getAttribute('data-index') * t.getBoundingClientRect().height
                         })
                     }
-                } else {
-                    this.$alert('Top Team get error')
                 }
             })
         },
-        vote(goal) {
+        // 获取游戏上一期个人排行
+        getLastWeekResult() {
+            this.latest = false
+            this.$axios.get(`/hybrid/api/games/getRanks?cycle=1&gameId=1 `).then(res => {
+                if (res.data.code == 200) {
+                    const data = res.data.data
+                    const vlist = data.list
+                    vlist.sort(function(a, b) {
+                        return b.goals - a.goals
+                    })
+                    this.rankList = vlist
+                }
+            })
+        },
+        // 获取游戏任务
+        getTaskByGame() {
+            this.showMissions = true
+            this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=1`).then(res => {
+                console.log(res)
+                if (res.data.code == 200) {
+                    this.taskList = res.data.data
+                }
+            })
+        },
+        // 游戏结束 获取奖励
+        getAward(goal) {
             if (goal > 0) {
-                this.$alert(`You've scroed ${goal} goals for ${this.country.name}. Thanks for the contribution for your country, Hero.`, () => {
-                    this.$axios({
-                        url: '/voting/v1/ballot',
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        data: qs.stringify({
-                            candidate_id: this.candidate.candidate_id,
-                            vote_id: 12,
-                            weight: goal
-                        })
-                    }).then(res => {
-                        if (res.data.code === 0) {
-                            // this.getRankList()
+                this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
+                    this.$axios.get(`/hybrid/api/games/getAward?gameId=1&goals=${goal}`).then(res => {
+                        if (res.data.code == 200) {
+                            this.myCoins = res.data.data.afterCoins
+                        } else {
+                            this.$toast(res.data.message)
                         }
                     })
                 })
             }
         },
+        // 关卡结束，添加goal进球数
+        setGoal(goal) {
+            this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=1`).then(res => {
+                if (res.data.code == 200) {
+                    this.getRankList()
+                } else {
+                    this.$toast(res.data.message)
+                }
+            })
+        },
+        // 任务完成
+        taskOver(taskId) {
+            this.$axios.get(`/hybrid/api/games/taskOver?taskId=${taskId}`).then(res => {
+                console.log(res)
+                if (res.data.code == 200) {}
+                else{
+                    this.$toast(res.data.message)
+                }
+            })
+        },
         share() {
             shareInvite(
                 `${window.location.origin}/hybrid/lands/soccercup?utm_source=startimes_app&utm_medium=activity&utm_campaign=soccercup1`,
                 'StarTimes ON Cup - Crazy Freekick',
-                `Join us as a Country Hero and score for the Team ${this.country.name} to win the cup.`,
+                `Join us as a Country Hero and score for the Team to win the cup.`,
                 `${window.location.origin}/res_nuxt/img/soccercup.png`
             )
         }
@@ -404,6 +377,10 @@ canvas {
                     float: right;
                     font-size: 0.75rem;
                 }
+                img{
+                    width:.7rem;
+                    margin-top: -0.1rem;
+                }
             }
             .rules {
                 color: #f34c02;
@@ -415,7 +392,7 @@ canvas {
         }
         .box {
             height: 50vh;
-            padding-bottom: 7rem;
+            padding-bottom: 11rem;
             overflow-y: scroll;
             clear: both;
         }
@@ -582,7 +559,7 @@ canvas {
             span {
                 color: #ffd91f;
             }
-            img{
+            img {
                 width: 8.6rem;
                 display: block;
                 margin: 0.5rem auto 0;
@@ -634,6 +611,13 @@ canvas {
                         top: 0;
                         left: 0;
                         border-radius: 4px;
+                    }
+                    span {
+                        position: absolute;
+                        &.over-half {
+                            color: #bf7029;
+                            text-shadow: 0px 1px 0px rgba(33, 91, 53, 1);
+                        }
                     }
                 }
             }
@@ -691,7 +675,7 @@ canvas {
             }
             .start {
                 width: 8.6rem;
-                margin:0 .5rem
+                margin: 0 0.5rem;
             }
             .next {
                 width: 3rem;
