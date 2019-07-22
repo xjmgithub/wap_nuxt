@@ -63,10 +63,10 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
-    if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0 || (browser.isOriginalChrome&&browser.isAndroid)) {
-        envokeByIntent(page, failback)
+    if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0 || (browser.isOriginalChrome && browser.isAndroid)) {
+        envokeByIntent.call(this, page, failback)
     } else {
-        invokeByIframe(page, failback)
+        invokeByIframe.call(this, page, failback)
     }
 }
 

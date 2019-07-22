@@ -1,12 +1,12 @@
 <template>
-    <div v-show="visiable" @click.stop="closePost()">
+    <div v-show="visiable">
         <div class="count">{{realIndex}}/{{postList.length}}</div>
         <div class="post-layer">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
-                            <img :data-src="item" class="swiper-lazy" @click.stop="tapToClose()" />
+                            <img :data-src="item" class="swiper-lazy" />
                             <div class="swiper-lazy-preloader"></div>
                         </div>
                     </div>
@@ -45,6 +45,7 @@ export default {
             this.index = index
             if (this.mySwiper) {
                 this.visiable = true
+                this.mySwiper.zoom.out()
                 this.mySwiper.slideTo(this.index)
             } else {
                 this.postList = list
@@ -59,23 +60,10 @@ export default {
                 category: `post_${this.id}`,
                 action: 'img_tap',
                 label: this.id,
-                value: type||0,
+                value: type || 0,
                 imgtype: this.imgType
             })
             this.$emit('close')
-        },
-        tapToClose() {
-            if (this.waitDoubleClick) {
-                this.waitDoubleClick = false
-            } else {
-                this.waitDoubleClick = true
-                setTimeout(() => {
-                    if (this.waitDoubleClick == true) {
-                        this.waitDoubleClick = false
-                        this.closePost(1)
-                    }
-                }, 200)
-            }
         },
         init() {
             this.visiable = true
@@ -119,6 +107,9 @@ export default {
                     value: scale > 1 ? 1 : 0,
                     imgtype: this.imgType
                 })
+            })
+            this.mySwiper.on('click', event => {
+                this.closePost(event.srcElement.tagName == 'IMG' ? 1 : 0)
             })
         }
     }
