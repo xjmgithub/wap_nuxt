@@ -7,7 +7,14 @@
                 <span class="name">{{nickname}}</span>
                 <span class="time">{{time}}</span>
             </div>
-            <iframe id="news-content" frameborder="0" scrolling="no" :src="detailUrl" width="100%" @load="iframeLoaded=true"></iframe>
+            <iframe
+                id="news-content"
+                frameborder="0"
+                scrolling="no"
+                :src="'http://10.0.63.127:4000/dist/index.html'"
+                width="100%"
+                @load="iframeLoaded=true"
+            ></iframe>
             <div v-show="iframeLoaded" :class="{'show-pic':sharePost}" class="opeartion">
                 <div class="left">
                     <div class="like" :class="{actived:voteState==1}" @click="like()">{{ likeCount|formatCount }}</div>
@@ -26,10 +33,10 @@
     </div>
 </template>
 <script>
+import { Base64 } from 'js-base64'
 import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post'
 import download from '~/components/web/download.vue'
-import { Base64 } from 'js-base64'
 import { callApp } from '~/functions/app'
 export default {
     layout: 'base',
@@ -147,6 +154,7 @@ export default {
 
         window.addEventListener('message', event => {
             // 防止恶意注入
+            alert(123)
             // if (event.origin.indexOf('startimestv.com') < 0) return
 
             if (event.data.type == 'updateHeight') {

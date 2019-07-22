@@ -2,9 +2,9 @@
 // 仅在客户端执行
 
 import { Base64 } from 'js-base64'
-import { getBrowser, getCookie } from '~/functions/utils'
 import axios from 'axios'
 import qs from 'qs'
+import { getBrowser, getCookie } from '~/functions/utils'
 
 const browser = getBrowser()
 const scheme = browser.isIos ? 'startimes' : 'starvideo'

@@ -62,9 +62,9 @@
     </div>
 </template>
 <script>
+import qs from 'qs'
 import mCard from '~/components/vote/card'
 import countrys from '~/functions/countrys.json'
-import qs from 'qs'
 import { shareInvite } from '~/functions/app'
 export default {
     layout: 'base',

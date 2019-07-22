@@ -27,9 +27,9 @@
     </div>
 </template>
 <script>
+import { Base64 } from 'js-base64'
 import { callApp, callMarket, shareInvite } from '~/functions/app'
 import sharePannel from '~/components/web/share'
-import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     components: {
