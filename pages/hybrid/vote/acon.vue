@@ -100,8 +100,8 @@
                     <div class="mis-name">
                         <span>{{item.label}}</span>
                         <div class="total">
-                            <p :style="{width:(item.process/item.threshold).toFixed(2) * 100 + '%'}" />
-                            <span :class="{'over-half':(item.process/item.threshold).toFixed(2) * 100>45}">{{item.process}}/{{item.threshold}}</span>
+                            <p :style="{width:getProcess(item)}" />
+                            <span :class="{'over-half':(item.process/item.threshold).toFixed(2) * 100>45}">{{item|formatProcess}}/{{item.threshold}}</span>
                         </div>
                     </div>
                     <div class="mis-prize">
@@ -139,6 +139,11 @@
 import { shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
+    filters: {
+        formatProcess(item) {
+            return item.process >= item.threshold ? item.threshold : item.process
+        }
+    },
     data() {
         return {
             // userId: this.$store.state.user.id,
@@ -182,6 +187,10 @@ export default {
         // this.setGoal(4)
     },
     methods: {
+        getProcess(item) {
+            const tmp = (item.process / item.threshold).toFixed(2) * 100
+            return tmp >= 100 ? '100%' : tmp + '%'
+        },
         // 获取游戏当期个人排行 用户coins
         getRankList(init) {
             this.latest = true
