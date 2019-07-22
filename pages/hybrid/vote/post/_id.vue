@@ -11,7 +11,7 @@
                 id="news-content"
                 frameborder="0"
                 scrolling="no"
-                :src="'http://10.0.63.127:4000/dist/index.html'"
+                :src="detailUrl"
                 width="100%"
                 @load="iframeLoaded=true"
             ></iframe>
@@ -154,7 +154,6 @@ export default {
 
         window.addEventListener('message', event => {
             // 防止恶意注入
-            alert(123)
             // if (event.origin.indexOf('startimestv.com') < 0) return
 
             if (event.data.type == 'updateHeight') {
