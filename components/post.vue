@@ -6,7 +6,7 @@
                 <div class="swiper-wrapper">
                     <div v-for="(item,i) in postList" :key="i" class="swiper-slide">
                         <div class="swiper-zoom-container">
-                            <img :data-src="item" class="swiper-lazy" />
+                            <img :data-src="item" class="swiper-lazy" @load="imgLoaded" @error="imgError" />
                             <div class="swiper-lazy-preloader"></div>
                         </div>
                     </div>
@@ -56,7 +56,15 @@ export default {
                 this.mySwiper.slideTo(this.index)
             } else {
                 this.postList = list
+
                 this.$nextTick(() => {
+                    this.imgRequest(this.index)
+                    if (this.index - 1 >= 0) {
+                        this.imgRequest(this.index - 1)
+                    }
+                    if (this.index + 1 < this.postList.length) {
+                        this.imgRequest(this.index + 1)
+                    }
                     this.init()
                 })
             }
@@ -71,6 +79,35 @@ export default {
                 imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
             })
             this.$emit('close')
+        },
+        imgLoaded(event) {
+            const index = this.postList.indexOf(event.target.src)
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'image_result',
+                label: this.id + '-' + index,
+                value: 1,
+                imgtype: event.target.src.indexOf('gif') >= 0 ? 0 : 1
+            })
+        },
+        imgError(event) {
+            const index = this.postList.indexOf(event.target.src)
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'image_result',
+                label: this.id + '-' + index,
+                value: 0,
+                imgtype: event.target.src.indexOf('gif') >= 0 ? 0 : 1
+            })
+        },
+        imgRequest(index) {
+            this.sendEvLog({
+                category: `post_${this.id}`,
+                action: 'image_request',
+                label: this.id + '-' + index,
+                value: 1,
+                imgtype: this.postList[index].indexOf('gif') >= 0 ? 0 : 1
+            })
         },
         init() {
             this.visiable = true
@@ -117,6 +154,9 @@ export default {
             })
             this.mySwiper.on('click', event => {
                 this.closePost(event.srcElement.tagName == 'IMG' ? 1 : 0)
+            })
+            this.mySwiper.on('lazyImageLoad', (slide, img) => {
+                this.imgRequest(this.postList.indexOf(img.getAttribute('data-src')))
             })
         }
     }
