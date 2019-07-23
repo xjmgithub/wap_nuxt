@@ -3,6 +3,7 @@
 
 import { Base64 } from 'js-base64'
 import qs from 'qs'
+import axios from 'axios'
 import { getBrowser, getCookie } from '~/functions/utils'
 
 const browser = getBrowser()
@@ -71,7 +72,9 @@ export const downApk = function(callback) {
     if (browser.isIos) {
         window.location.href = appleStore
     } else {
-        window.location.href = '/hybrid/api/app/getApk'
+        axios.get('/hybrid/api/app/getApk').then(data => {
+            window.location.href = data.data.data
+        })
     }
     this.$nuxt.$loading.finish()
     callback && callback()

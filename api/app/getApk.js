@@ -6,10 +6,13 @@ export default function(req, res, next) {
         .then(data => {
             const url = data.data.apkUrl
             const direct = url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : url
-            res.writeHead(301, {
-                Location: direct
-            })
-            res.end()
+            res.end(
+                JSON.stringify({
+                    code: 200,
+                    message: 'success',
+                    data: direct
+                })
+            )
             return false
         })
         .catch(err => {
