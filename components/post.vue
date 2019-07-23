@@ -129,27 +129,27 @@ export default {
                 this.sendEvLog({
                     category: `post_${this.id}`,
                     action: 'img_swipe_left',
-                    label: this.id,
+                    label: this.id + '-' + this.mySwiper.realIndex,
                     value: 1,
-                    imgtype: this.imgType
+                    imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
                 })
             })
             this.mySwiper.on('slideNextTransitionEnd', () => {
                 this.sendEvLog({
                     category: `post_${this.id}`,
                     action: 'img_swipe_right',
-                    label: this.id,
+                    label: this.id + '-' + this.mySwiper.realIndex,
                     value: 1,
-                    imgtype: this.imgType
+                    imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
                 })
             })
             this.mySwiper.on('zoomChange', scale => {
                 this.sendEvLog({
                     category: `post_${this.id}`,
                     action: 'img_zoom',
-                    label: this.id,
+                    label: this.id + '-' + this.mySwiper.realIndex,
                     value: scale > 1 ? 1 : 0,
-                    imgtype: this.imgType
+                    imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
                 })
             })
             this.mySwiper.on('click', event => {
