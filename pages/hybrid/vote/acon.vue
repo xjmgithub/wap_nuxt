@@ -35,7 +35,7 @@
                             </span>
                             <span class="cty-name">{{item.user_name}}</span>
                         </div>
-                        <div class="right">
+                        <div class="right" :class="{'top-three':index<=2}">
                             <div v-show="index<=2">
                                 <span class="prize">
                                     <i/>{{index|formatPrize}}</span>
@@ -135,7 +135,9 @@
                 </div>
                 <div class="operation">
                     <img src="~assets/img/vote/button_forward.png" class="forward">
-                    <img src="~assets/img/vote/button_start.png" class="start">
+                    <nuxt-link :to="`/hybrid/questionNaire/america_bet`">
+                        <img src="~assets/img/vote/button_start.png" class="start">
+                    </nuxt-link>
                     <img src="~assets/img/vote/button_next.png" class="next">
                 </div>
             </div>
@@ -287,6 +289,16 @@ export default {
             this.$axios.get(`/hybrid/api/games/taskOver?taskId=${taskId}`).then(res => {
                 if (res.data.code == 200) {
                     item.overTask = true
+                } else {
+                    this.$toast(res.data.message)
+                }
+            })
+        },
+        // 开始游戏
+        startGame() {
+            this.$axios.get(`/hybrid/api/games/startGame?gameId=1`).then(res => {
+                if (res.data.code == 200) {
+                    // TODO
                 } else {
                     this.$toast(res.data.message)
                 }
@@ -483,6 +495,10 @@ canvas {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                line-height: 4rem;
+                &.top-three {
+                    line-height: 1.8rem;
+                }
                 .prize {
                     background: #9aee3f;
                     padding: 0 0.5rem;
@@ -494,8 +510,8 @@ canvas {
                         border: 0.3rem solid #9aee3f;
                         border-color: #9aee3f transparent transparent transparent;
                         left: 50%;
-                        bottom: -.6rem;
-                        margin-left:-.15rem;
+                        bottom: -0.6rem;
+                        margin-left: -0.15rem;
                     }
                 }
                 img {
