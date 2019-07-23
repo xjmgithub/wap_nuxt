@@ -17,19 +17,18 @@ export const getCookieFromReq = function(headers) {
 
 export const getUserMe = function(token, callback) {
     return axios
-        .get(`${env.apiURL}cms/users/me`, {
+        .get(`${env.apiURL}vup/v1/ums/users/me`, {
             headers: {
                 token: token || ''
             }
         })
         .then(res => {
-            const userId = res.data.id
-            const countryId = res.data.areaID
-            const userAvatar = res.data.head
-            const coins = res.data.coins
-            callback && callback(userId, countryId, userAvatar, coins)
+            getMyCoins(token, res.data.id, coins => {
+                res.data.coins = coins || res.data.coins
+                callback && callback(res.data)
+            })
         })
-        .catch(err=>{
+        .catch(err => {
             console.log(err)
             callback && callback()
         })
