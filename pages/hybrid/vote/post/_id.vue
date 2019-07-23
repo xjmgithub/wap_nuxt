@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper" style="padding-top:4rem;">
         <div v-if="logo&&nickname">
-            <download style="top:0;z-index:99"></download>
+            <download style="top:0;z-index:99" :page="`com.star.mobile.video.activity.BrowserActivity?loadUrl=${shareUrl}`"></download>
             <div class="user">
                 <div class="user-head" :style="{background:`url(${logo}) no-repeat center center`,'background-size':'cover'}"></div>
                 <span class="name">{{nickname}}</span>

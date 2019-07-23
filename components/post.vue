@@ -143,13 +143,13 @@ export default {
                     imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
                 })
             })
-            this.mySwiper.on('zoomChange', scale => {
+            this.mySwiper.on('zoomChange', (scale,img) => {
                 this.sendEvLog({
                     category: `post_${this.id}`,
                     action: 'img_zoom',
-                    label: this.id + '-' + this.mySwiper.realIndex,
+                    label: this.id + '-' + this.postList.indexOf(img.getAttribute('src')),
                     value: scale > 1 ? 1 : 0,
-                    imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
+                    imgtype: img.getAttribute('src').indexOf('gif') >= 0 ? 0 : 1
                 })
             })
             this.mySwiper.on('click', event => {
