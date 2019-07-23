@@ -2,7 +2,6 @@
 // 仅在客户端执行
 
 import { Base64 } from 'js-base64'
-import axios from 'axios'
 import qs from 'qs'
 import { getBrowser, getCookie } from '~/functions/utils'
 
@@ -11,14 +10,6 @@ const scheme = browser.isIos ? 'startimes' : 'starvideo'
 const host = 'platformapi'
 const path = 'webtoapp'
 const appleStore = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
-
-/* 获取apk地址 */
-const getApkUrl = function(callback) {
-    axios.get('http://upms.startimestv.com/cms/public/app').then(data => {
-        const url = data.data.apkUrl
-        callback && callback(url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : '')
-    })
-}
 
 export const envokeByIntent = function(page, failback) {
     let target = ''
@@ -80,13 +71,7 @@ export const downApk = function(callback) {
     if (browser.isIos) {
         window.location.href = appleStore
     } else {
-        getApkUrl(url => {
-            if (url) {
-                window.location.href = url
-            } else {
-                window.alert('Download error.Please retry.')
-            }
-        })
+        window.location.href = '/hybrid/api/app/getApk'
     }
     this.$nuxt.$loading.finish()
     callback && callback()
