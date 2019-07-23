@@ -856,6 +856,7 @@ function CMain(a) {
     this.gotoMenu = function() {
         new CMenu()
         g = STATE_MENU
+        // $(s_oMain).trigger('game_loaded')
     }
     this.gotoSelectTeam = function() {
         new CSelectTeam()
@@ -1155,7 +1156,8 @@ function CMenu() {
         a = CANVAS_WIDTH / 2 + 320
         e = CANVAS_HEIGHT - 110
         h = new CGfxButton(a, e, f)
-        h.addEventListener(ON_MOUSE_UP, this._onButPlayRelease, this)
+        h.addEventListener(ON_MOUSE_UP, this.startButClick, this)
+        // h.addEventListener(ON_MOUSE_UP, this._onButPlayRelease, this)
         if (!1 === DISABLE_SOUND_MOBILE || !1 === s_bMobile)
             (f = s_oSpriteLibrary.getSprite('audio_icon')),
                 (b = CANVAS_WIDTH - f.height / 2 - 10),
@@ -1198,6 +1200,12 @@ function CMenu() {
         ;(!1 !== DISABLE_SOUND_MOBILE && !1 !== s_bMobile) || createjs.Sound.play('click')
         s_oMain.gotoSelectTeam()
     }
+
+    // 后来添加
+    this.startButClick = function() {
+        $(s_oMain).trigger('start_btn_click') // 开始按钮更改
+    }
+
     s_oMenu = this
     this._init()
 }

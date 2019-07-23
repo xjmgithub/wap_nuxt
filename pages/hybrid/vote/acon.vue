@@ -7,15 +7,16 @@
             <div class="my-coins-box">
                 <div class="my-coins">
                     My Coins：{{myCoins}}
-                    <img src="~assets/img/vote/ic_gift.png">
-                    <img src="~assets/img/vote/ic_gift_go.png">
+                    <img src="~assets/img/vote/ic_gift.png" />
+                    <img src="~assets/img/vote/ic_gift_go.png" />
                 </div>
             </div>
             <div class="cty-rank">
                 <p class="time">
                     TOP SOCCERS:
                     <span>
-                        <img src="~assets/img/vote/ic_count_down.png"> Ends in 124h 37m 2s</span>
+                        <img src="~assets/img/vote/ic_count_down.png" /> Ends in 124h 37m 2s
+                    </span>
                 </p>
                 <p>
                     You've scored
@@ -24,7 +25,14 @@
                     <span v-if="!latest && preGameId" class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
+                    <div
+                        v-for="(item,index) in rankList"
+                        :id="`c-${item.user_name}`"
+                        :key="index"
+                        :data-index="index"
+                        :class="{'my-rank':item.user_id==userId}"
+                        class="per-list"
+                    >
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.user_avatar">
@@ -38,10 +46,12 @@
                         <div class="right" :class="{'top-three':index<=2}">
                             <div v-show="index<=2">
                                 <span class="prize">
-                                    <i/>{{index|formatPrize}}</span>
-                                <img v-show="index==0" src="~assets/img/vote/crank1.png">
-                                <img v-show="index==1" src="~assets/img/vote/crank2.png">
-                                <img v-show="index==2" src="~assets/img/vote/crank3.png">
+                                    <i />
+                                    {{index|formatPrize}}
+                                </span>
+                                <img v-show="index==0" src="~assets/img/vote/crank1.png" />
+                                <img v-show="index==1" src="~assets/img/vote/crank2.png" />
+                                <img v-show="index==2" src="~assets/img/vote/crank3.png" />
                             </div>
                             <span>Pts: {{item.goals}}</span>
                         </div>
@@ -51,13 +61,13 @@
         </div>
         <div class="bot-down">
             <span>
-                <img src="~assets/img/vote/button_games.png" @click="showGames=true">
+                <img src="~assets/img/vote/button_games.png" @click="showGames=true" />
             </span>
             <span>
-                <img src="~assets/img/vote/button_bonus.png" @click="getTaskByGame()">
+                <img src="~assets/img/vote/button_bonus.png" @click="getTaskByGame()" />
             </span>
             <span>
-                <img src="~assets/img/vote/button_friends.png" @click="share()">
+                <img src="~assets/img/vote/button_friends.png" @click="share()" />
             </span>
         </div>
         <div v-show="showRewards==true||showGames==true || showMissions==true" class="card-layer" />
@@ -69,30 +79,30 @@
             <div class="rewards">
                 <p>WINNING REWARDS</p>
                 <div class="re-item">
-                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball"> x 10
+                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball" /> x 10
                     <div>
-                        <img src="~assets/img/vote/coins0.png" class="coins">
+                        <img src="~assets/img/vote/coins0.png" class="coins" />
                     </div>
                     <span>+100 coins</span>
                 </div>
                 <div class="re-item">
-                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball"> x 30
+                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball" /> x 30
                     <div>
-                        <img src="~assets/img/vote/coins1.png" class="coins">
+                        <img src="~assets/img/vote/coins1.png" class="coins" />
                     </div>
                     <span>+400 coins</span>
                 </div>
                 <div class="re-item">
-                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball"> x 60
+                    <img src="~assets/img/vote/ic_football_winning_rewards.png" class="ball" /> x 60
                     <div>
-                        <img src="~assets/img/vote/coins2.png" class="coins">
+                        <img src="~assets/img/vote/coins2.png" class="coins" />
                     </div>
                     <span>+800 coins</span>
                 </div>
                 <div class="entry">
                     ENTRY REE:
                     <span>-50 coins</span>
-                    <img src="~assets/img/vote/button_start.png" class="start">
+                    <img src="~assets/img/vote/button_start.png" class="start" />
                 </div>
             </div>
         </div>
@@ -117,8 +127,8 @@
                         </p>
                     </div>
                     <div class="mis-redeem">
-                        <img v-if="item.overTask" src="~assets/img/vote/button_redeemed.png">
-                        <img v-else src="~assets/img/vote/button_redeem.png" @click="taskOver(item)">
+                        <img v-if="item.overTask" src="~assets/img/vote/button_redeemed.png" />
+                        <img v-else src="~assets/img/vote/button_redeem.png" @click="taskOver(item)" />
                     </div>
                 </div>
             </div>
@@ -130,15 +140,15 @@
             </div>
             <div class="games">
                 <div class="gam-item">
-                    <img src="~assets/img/vote/popup_game.png">
-                    <img src="~assets/img/vote/popup_game_mask.png" class="mask">
+                    <img src="~assets/img/vote/popup_game.png" />
+                    <img src="~assets/img/vote/popup_game_mask.png" class="mask" />
                 </div>
                 <div class="operation">
-                    <img src="~assets/img/vote/button_forward.png" class="forward">
+                    <img src="~assets/img/vote/button_forward.png" class="forward" />
                     <nuxt-link :to="`/hybrid/questionNaire/america_bet`">
-                        <img src="~assets/img/vote/button_start.png" class="start">
+                        <img src="~assets/img/vote/button_start.png" class="start" />
                     </nuxt-link>
-                    <img src="~assets/img/vote/button_next.png" class="next">
+                    <img src="~assets/img/vote/button_next.png" class="next" />
                 </div>
             </div>
         </div>
@@ -178,7 +188,6 @@ export default {
             this.$alert(`Welcome to the 'CRAZY FREEKICK'!弹窗提示用户能应得coins并兑换奖品，文案待定!`)
             localStorage.setItem('acon_first', 1)
         }
-
         const game = new window.CMain({
             shot_indicator_spd: 1000,
             decrease_shot_indicator_spd: 100
@@ -194,7 +203,9 @@ export default {
         $(game).on('level_end', (evt, goal, score) => {
             this.getAward(goal)
         })
-        // $(game).on('goal', function(evt, goal, score) {})
+        $(game).on('start_btn_click', (evt, goal, score) => {
+            window.s_oMenu._onButPlayRelease()
+        })
         this.getRankList(1)
         // this.setGoal(4)
     },
