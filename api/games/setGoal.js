@@ -35,7 +35,7 @@ export default function(req, res, next) {
         // 插入games_action goals
         const sql = `INSERT INTO games_action 
                     (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
-                    ('goals',${user.id},'${user.userName}',${user.areaID},'${user.head}',${gameId},${taskId},${goals},'Goal', '${now}')`
+                    ('goals',${user.id},'${user.nickName||user.userName}',${user.areaID},'${user.head}',${gameId},${taskId},${goals},'Goal', '${now}')`
 
         // 查询上一次操作进球的时间
         runSql(

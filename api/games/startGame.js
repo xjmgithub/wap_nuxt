@@ -44,8 +44,10 @@ export default function(req, res, next) {
                         runSql(
                             res,
                             `INSERT INTO games_action 
-                        (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
-                        ('startGame',${user.id},'${user.userName}',${user.areaID},'${user.head}',${gameId},${taskId},1,'startGame', '${now}')`
+                            (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
+                            ('startGame',${user.id},'${user.nickName || user.userName}',${user.areaID},'${
+                                user.head
+                            }',${gameId},${taskId},1,'startGame', '${now}')`
                         )
 
                         res.end(

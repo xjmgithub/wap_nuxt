@@ -65,7 +65,7 @@ export default function(req, res, next) {
                                     res,
                                     `INSERT INTO games_action 
                                     (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
-                                    ('login',${user.id},'${user.userName}',${user.areaID},'${user.head}',${gameId},${taskId},1,'login', '${now}')`
+                                    ('login',${user.id},'${user.nickName||user.userName}',${user.areaID},'${user.head}',${gameId},${taskId},1,'login', '${now}')`
                                 )
 
                                 res.end(
