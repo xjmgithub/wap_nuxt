@@ -93,7 +93,7 @@
                 </div>
                 <div class="entry">
                     ENTRY REE:
-                    <span>-50 coins</span>
+                    <span :class="{'played':!DailyPlayed}">-50 coins</span>
                     <img src="~assets/img/vote/button_start.png" class="start" @click="startGame()" />
                 </div>
             </div>
@@ -160,8 +160,7 @@ export default {
     },
     data() {
         return {
-            // userId: this.$store.state.user.id,
-            userId: 9152883,
+            userId: this.$store.state.user.id,
             rankList: [],
             taskList: [],
             showGames: false,
@@ -170,7 +169,9 @@ export default {
             goals: '-',
             myCoins: '-',
             latest: true,
-            preGameId: ''
+            preGameId: '',
+            DailyPlayed: false,
+            levelGoal: []
         }
     },
     mounted() {
@@ -189,11 +190,10 @@ export default {
         document.querySelector('.contain').style.top = document.querySelector('canvas').style.height
 
         $(game).on('save_score', (evt, goal, score) => {
-            this.setGoal(goal)
-        })
-
-        $(game).on('level_end', (evt, goal, score) => {
             this.getAward(goal)
+        })
+        $(game).on('level_end', (evt, goal, score) => {
+            this.setGoal(goal)
         })
         $(game).on('start_btn_click', (evt, goal, score) => {
             this.showRewards = true
@@ -212,6 +212,7 @@ export default {
                 if (res.data.code == 200) {
                     const data = res.data.data
                     this.myCoins = data.myCoins
+                    this.DailyPlayed = data.DailyPlayed
                     this.preGameId = data.preGameId
                     const vlist = data.list
                     vlist.sort(function(a, b) {
@@ -231,7 +232,7 @@ export default {
                     if (init) {
                         this.$nextTick(() => {
                             const t = document.querySelector('.my-rank')
-                            document.querySelector('.box').scrollTop = t.getAttribute('data-index') * t.getBoundingClientRect().height
+                            if (t) document.querySelector('.box').scrollTop = t.getAttribute('data-index') * t.getBoundingClientRect().height
                         })
                     }
                 }
@@ -255,7 +256,6 @@ export default {
         getTaskByGame() {
             this.showMissions = true
             this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=1`).then(res => {
-                console.log(res)
                 if (res.data.code == 200) {
                     this.taskList = res.data.data
                 }
@@ -263,11 +263,33 @@ export default {
         },
         // 游戏结束 获取奖励
         getAward(goal) {
-            if (goal > 0) {
-                this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
-                    this.$axios.get(`/hybrid/api/games/getAward?gameId=1&goals=${goal}`).then(res => {
-                        if (res.data.code == 200) {
+            this.setGoal(goal)
+            let totalGoal = 0
+            this.levelGoal.forEach(ele => {
+                totalGoal += ele
+            })
+            if (totalGoal >= 10) {
+                this.$axios.get(`/hybrid/api/games/getAward?gameId=1&goals=${totalGoal}`).then(res => {
+                    if (res.data.code == 200) {
+                        if (res.data.data.operatorCoins >= 100) {
+                            this.$toast(`you get ${res.data.data.operatorCoins} coins in this round of game.`)
                             this.myCoins = res.data.data.afterCoins
+                        }
+                    } else {
+                        this.$toast(res.data.message)
+                    }
+                })
+            }
+        },
+        // 关卡结束，添加goal进球数
+        setGoal(goal) {
+            if (goal > 0) {
+                this.levelGoal.push(goal)
+                console.log(this.levelGoal)
+                this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
+                    this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=1`).then(res => {
+                        if (res.data.code == 200) {
+                            this.getRankList()
                         } else {
                             this.$toast(res.data.message)
                         }
@@ -275,22 +297,13 @@ export default {
                 })
             }
         },
-        // 关卡结束，添加goal进球数
-        setGoal(goal) {
-            this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=1`).then(res => {
-                if (res.data.code == 200) {
-                    this.getRankList()
-                } else {
-                    this.$toast(res.data.message)
-                }
-            })
-        },
         // 任务完成
         taskOver(item) {
             const taskId = item.id
             this.$axios.get(`/hybrid/api/games/taskOver?taskId=${taskId}`).then(res => {
                 if (res.data.code == 200) {
                     item.overTask = true
+                    this.myCoins += item.award
                 } else {
                     this.$toast(res.data.message)
                 }
@@ -298,15 +311,19 @@ export default {
         },
         // 开始游戏
         startGame() {
-            this.$axios.get(`/hybrid/api/games/startGame?gameId=1`).then(res => {
-                console.log(res)
-                if (res.data.code == 200) {
-                    // this.showRewards = false
-                    window.s_oMenu._onButPlayRelease()
-                } else {
-                    this.$toast(res.data.message)
-                }
-            })
+            this.showRewards = false
+            if (this.DailyPlayed) {
+                this.$axios.get(`/hybrid/api/games/startGame?gameId=1`).then(res => {
+                    if (res.data.code == 200) {
+                        window.s_oMenu._onButPlayRelease()
+                        this.myCoins = res.data.data.afterCoins
+                    } else {
+                        this.$toast(res.data.message)
+                    }
+                })
+            } else {
+                window.s_oMenu._onButPlayRelease()
+            }
         },
         share() {
             shareInvite(
@@ -505,10 +522,11 @@ canvas {
                 }
                 .prize {
                     background: #9aee3f;
-                    padding: 0 0.5rem;
+                    padding: 0 0.3rem;
                     font-size: 0.9rem;
                     position: relative;
                     border-radius: 2px;
+                    margin-right: 0.2rem;
                     i {
                         position: absolute;
                         border: 0.3rem solid #9aee3f;
@@ -618,6 +636,9 @@ canvas {
             margin-top: 0.8rem;
             span {
                 color: #ffd91f;
+                &.played {
+                    text-decoration: line-through;
+                }
             }
             img {
                 width: 8.6rem;
