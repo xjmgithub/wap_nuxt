@@ -140,7 +140,7 @@ export default {
     },
     mounted() {
         // 从缓存中读取点赞状态
-        if (this.appType <= 0) {
+        if (this.$store.state.appType <= 0) {
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`)
         }
 
@@ -174,7 +174,7 @@ export default {
     },
     methods: {
         toShare() {
-            if (this.appType == 1) {
+            if (this.$store.state.appType == 1) {
                 shareInApp(window.location.href, this.title || this.$store.state.lang.post_share_title, this.postPic)
             } else {
                 this.$store.commit('SET_SHARE_STATE', true)
