@@ -1,10 +1,4 @@
 // 开始游戏
-// token
-// gameId
-
-// 如果当前用户coins大于50则消耗50coins
-// 如果小于50则视为非法
-// 添加一条玩过游戏的game_action
 
 import qs from 'qs'
 import dayjs from 'dayjs'
@@ -17,9 +11,11 @@ export default function(req, res, next) {
     const gameId = query.gameId || 1
     const token = req.headers.token
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    const taskId = 2 // 3 Games Played
 
-    getUserMe(token, (userId, countryId, avatar, coins) => {
-        if (coins < 50) {
+    getUserMe(token, user => {
+        // 金币不足
+        if (user.coins < 50) {
             res.end(
                 JSON.stringify({
                     code: 101,
@@ -28,13 +24,25 @@ export default function(req, res, next) {
                 })
             )
         } else {
-            delCoins(token, userId, 50, 'Shot Game-Start Game', delResult => {
+            // 减少coins 50
+            delCoins(token, user.id, 50, 'Shot Game-Start Game', delResult => {
                 const coinsActionid = delResult.data.data.id
                 const resText = JSON.stringify(delResult.data).substr(0, 800)
+                // 添加coins 操作记录
                 runSql(
                     res,
-                    `INSERT INTO coins_log (type,coins,user_id,instructions,state,fk_game,coins_action_id,res_text,create_time) VALUES (2,50,${userId},'Shot Game-Start Game',1,${gameId},${coinsActionid},'${resText}','${now}')`,
+                    `INSERT INTO coins_log 
+                    (type,coins,user_id,instructions,state,fk_game,coins_action_id,res_text,create_time) VALUES 
+                    (2,50,${user.id},'Shot Game-Start Game',1,${gameId},${coinsActionid},'${resText}','${now}')`,
                     () => {
+                        // 添加action 行为记录 startGame
+                        runSql(
+                            res,
+                            `INSERT INTO games_action 
+                        (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
+                        ('startGame',${user.id},'${user.userName}',${user.areaID},'${user.head}',${gameId},${taskId},1,'startGame', '${now}')`
+                        )
+
                         res.end(
                             JSON.stringify({
                                 code: 200,

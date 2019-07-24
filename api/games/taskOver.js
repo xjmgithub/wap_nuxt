@@ -1,16 +1,9 @@
 // 完成任务兑换金币
-// token
-// task_id
-// gameId
-
-// 查询如果任务已经做完了则非法
-// 如果合法则判断任务完成得必要条件是否达到
-// 如果达到了条件，则插入数据到games_task_log
 
 import qs from 'qs'
 import dayjs from 'dayjs'
 import { runSql } from '../../functions/mysql.js'
-import { getUserMe } from './func'
+import { getUserMe, addCoins } from './func'
 
 export default function(req, res, next) {
     const urlobj = new URL('http://localhost' + req.url)
@@ -18,6 +11,12 @@ export default function(req, res, next) {
     const taskId = query.taskId
     const token = req.headers.token
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    let start = dayjs()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss')
+    let end = dayjs()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss')
 
     if (!taskId || isNaN(taskId)) {
         res.end(
@@ -30,41 +29,74 @@ export default function(req, res, next) {
         return false
     }
 
-    getUserMe(token, userId => {
+    getUserMe(token, user => {
         runSql(res, `SELECT * FROM games_task WHERE id=${taskId}`, task => {
             if (task.length > 0) {
                 const item = task[0]
-                let start = ''
-                let end = ''
+                // 自定义周期任务
                 if (item.settlement_cycle == 1) {
-                    // 自定义周期任务
                     start = item.start_time
                     end = item.end_time
-                } else {
-                    // 每日任务
-                    start = dayjs()
-                        .startOf('day')
-                        .format('YYYY-MM-DD HH:mm:ss')
-                    end = dayjs()
-                        .endOf('day')
-                        .format('YYYY-MM-DD HH:mm:ss')
                 }
+                // 查询任务进度
                 runSql(
                     res,
-                    `SELECT SUM(weight) as process FROM games_action WHERE user_id=${userId} AND fk_task=${taskId} AND create_time>'${start}' AND create_time<'${end}'`,
+                    `SELECT SUM(weight) as process FROM games_action 
+                    WHERE user_id=${user.id} AND fk_task=${taskId} AND create_time>'${start}' AND create_time<'${end}'`,
                     process => {
                         if (process[0].process >= item.threshold) {
-                            runSql(res, `INSERT INTO games_task_log (user_id,fk_task,create_time) VALUES (${userId},${taskId},'${now}')`, result => {
-                                if (result) {
-                                    res.end(
-                                        JSON.stringify({
-                                            code: 200,
-                                            message: 'success',
-                                            data: result
-                                        })
-                                    )
+                            // 完成任务
+                            runSql(
+                                res,
+                                `INSERT INTO games_task_log 
+                                (user_id,fk_task,create_time) VALUES 
+                                (${user.id},${taskId},'${now}')`,
+                                result => {
+                                    addCoins(token, user.id, item.award, `Shot Games-${item.label}`, addResult => {
+                                        const resText = JSON.stringify(addResult.data).substr(0, 800)
+                                        if (addResult && addResult.data.code == 0) {
+                                            const coinsActionid = addResult.data.data.id
+                                            const resText = JSON.stringify(addResult.data).substr(0, 800)
+                                            runSql(
+                                                res,
+                                                `INSERT INTO coins_log 
+                                                (type,coins,user_id,instructions,state,fk_game,coins_action_id,res_text,create_time) VALUES 
+                                                (1,${item.award},${user.id},'Shot Games-${item.label}',1,${
+                                                    item.fk_game
+                                                },${coinsActionid},'${resText}','${now}')`,
+                                                () => {
+                                                    if (result) {
+                                                        res.end(
+                                                            JSON.stringify({
+                                                                code: 200,
+                                                                message: 'success',
+                                                                data: result
+                                                            })
+                                                        )
+                                                    }
+                                                }
+                                            )
+                                        } else {
+                                            // 兑换积分失败
+                                            runSql(
+                                                res,
+                                                `INSERT INTO coins_log 
+                                                (type,coins,user_id,instructions,state,fk_game,coins_action_id,res_text,create_time) VALUES 
+                                                (1,${item.award},${user.id},'Shot Games-${item.label}',1,${item.fk_game},'',${resText},'${now}')`,
+                                                () => {
+                                                    res.end(
+                                                        JSON.stringify({
+                                                            code: 102,
+                                                            message: 'get coins error',
+                                                            data: ''
+                                                        })
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    })
                                 }
-                            })
+                            )
                         } else {
                             // 没有达到任务完成条件
                             res.end(

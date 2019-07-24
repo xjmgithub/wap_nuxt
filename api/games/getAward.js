@@ -61,11 +61,13 @@ export default function(req, res, next) {
         award = 100
     }
 
-    getUserMe(token, (user, countryId, userAvatar) => {
+    getUserMe(token, user => {
         const taskId = 2
         runSql(
             res,
-            `SELECT id,coins,create_time FROM coins_log WHERE user_id=${user} AND TYPE=1 AND state!=2 AND fk_game=${gameId} AND create_time>'${today}' AND create_time<'${tomorrow}' ORDER BY create_time DESC`,
+            `SELECT id,coins,create_time FROM coins_log WHERE user_id=${
+                user.id
+            } AND TYPE=1 AND state!=2 AND fk_game=${gameId} AND create_time>'${today}' AND create_time<'${tomorrow}' ORDER BY create_time DESC`,
             result => {
                 if (result.length > 0) {
                     // shang
@@ -99,18 +101,22 @@ export default function(req, res, next) {
                     }
                 }
 
-                addCoins(token, user, award, `Shot Games-${goals} goals`, addResult => {
+                addCoins(token, user.id, award, `Shot Games-${goals} goals`, addResult => {
                     const resText = JSON.stringify(addResult.data).substr(0, 800)
                     if (addResult && addResult.data.code == 0) {
                         const coinsActionid = addResult.data.data.id
                         const resText = JSON.stringify(addResult.data).substr(0, 800)
                         runSql(
                             res,
-                            `INSERT INTO coins_log (type,coins,user_id,instructions,state,fk_game,coins_action_id,res_text,create_time) VALUES (1,${award},${user},'Shot Games-${goals} goals',1,${gameId},${coinsActionid},'${resText}','${now}')`,
+                            `INSERT INTO coins_log (type,coins,user_id,instructions,state,fk_game,coins_action_id,res_text,create_time) VALUES (1,${award},${
+                                user.id
+                            },'Shot Games-${goals} goals',1,${gameId},${coinsActionid},'${resText}','${now}')`,
                             () => {
                                 runSql(
                                     res,
-                                    `INSERT INTO games_action (action_name,user_id,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES ('getAward',${user},${countryId},'${userAvatar}',${gameId},${taskId},${award},'get coins', '${now}')`
+                                    `INSERT INTO games_action (action_name,user_id,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES ('getAward',${user},${
+                                        user.areaID
+                                    },'${user.head}',${gameId},${taskId},${award},'get coins', '${now}')`
                                 )
 
                                 res.end(

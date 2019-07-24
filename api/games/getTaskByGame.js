@@ -1,9 +1,4 @@
-// 获取游戏任务进度
-// token
-// gameId
-
-// 查询 game_task 并查询game_action 对应任务做的进度
-// 查询 game_task_log 查询各个任务的状态
+// 获取游戏任务列表
 
 import qs from 'qs'
 import dayjs from 'dayjs'
@@ -15,45 +10,41 @@ export default function(req, res, next) {
     const query = qs.parse(urlobj.search.substr(1))
     const gameId = query.gameId || 1
     const token = req.headers.token
-    getUserMe(token, userId => {
+    let start = dayjs()
+        .startOf('day')
+        .format('YYYY-MM-DD HH:mm:ss')
+    let end = dayjs()
+        .endOf('day')
+        .format('YYYY-MM-DD HH:mm:ss')
+
+    getUserMe(token, user => {
         runSql(res, `SELECT * FROM games_task WHERE fk_game=${gameId}`, taskList => {
             // 处理是否领取任务奖励
             if (taskList.length > 0) {
                 let tag = 0
                 taskList.forEach((item, index) => {
-                    let start = ''
-                    let end = ''
+                    // 自定义周期任务
                     if (item.settlement_cycle == 1) {
-                        // 自定义周期任务
                         start = item.start_time
                         end = item.end_time
-                    } else {
-                        // 每日任务
-                        start = dayjs()
-                            .startOf('day')
-                            .format('YYYY-MM-DD HH:mm:ss')
-                        end = dayjs()
-                            .endOf('day')
-                            .format('YYYY-MM-DD HH:mm:ss')
                     }
                     runSql(
                         res,
-                        `SELECT * FROM games_task_log WHERE user_id=${userId} AND fk_task=${
-                            item.id
-                        } AND create_time>'${start}' AND create_time<'${end}'`,
+                        `SELECT * FROM games_task_log 
+                        WHERE user_id=${user.id} AND fk_task=${item.id} AND create_time>'${start}' AND create_time<'${end}'`,
                         doneTask => {
+                            // 任务完成状态
                             if (doneTask.length > 0) {
-                                item.overTask = true // 任务已经完成
+                                item.overTask = true
                             } else {
                                 item.overTask = false
                             }
 
-                            // 查看任务完成情况
+                            // 任务进度
                             runSql(
                                 res,
-                                `SELECT SUM(weight) as process FROM games_action WHERE user_id=${userId} AND fk_task=${
-                                    item.id
-                                } AND create_time>'${start}' AND create_time<'${end}'`,
+                                `SELECT SUM(weight) as process FROM games_action 
+                                WHERE user_id=${user.id} AND fk_task=${item.id} AND create_time>'${start}' AND create_time<'${end}'`,
                                 taskProcess => {
                                     tag++
                                     item.process = taskProcess[0].process || 0
