@@ -11,7 +11,7 @@ export default function(req, res, next) {
     const goals = query.goals
     const gameId = query.gameId || 1
     const token = req.headers.token
-    const taskId = 1
+    const taskId = 3
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
     const nowTime = dayjs()
 
@@ -27,6 +27,11 @@ export default function(req, res, next) {
     }
 
     getUserMe(token, user => {
+        if (!user) {
+            res.statusCode = 401
+            res.end('Unauthorized')
+            return false
+        }
         // 插入games_action goals
         const sql = `INSERT INTO games_action 
                     (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 

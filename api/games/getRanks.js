@@ -44,9 +44,14 @@ export default function(req, res, next) {
             res,
             `SELECT user_id,user_name,user_avatar,SUM(weight) AS goals 
             FROM (SELECT * FROM games_action WHERE fk_game=${gameId} AND action_name="goals" ORDER BY id DESC) AS N 
-            GROUP BY user_id`,
+            GROUP BY user_id ORDER BY goals DESC`,
             rankList => {
                 getUserMe(token, user => {
+                    if (!user) {
+                        res.statusCode = 401
+                        res.end('Unauthorized')
+                        return false
+                    }
                     if (user && user.roleName !== 'ANONYMOUS') {
                         // 是否登录过查询
                         runSql(

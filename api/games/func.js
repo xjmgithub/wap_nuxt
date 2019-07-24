@@ -23,13 +23,9 @@ export const getUserMe = function(token, callback) {
             }
         })
         .then(res => {
-            getMyCoins(token, res.data.id, coins => {
-                res.data.coins = coins || res.data.coins
-                callback && callback(res.data)
-            })
+            callback && callback(res.data)
         })
         .catch(err => {
-            console.log(err)
             callback && callback()
         })
 }

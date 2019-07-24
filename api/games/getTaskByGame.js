@@ -18,6 +18,11 @@ export default function(req, res, next) {
         .format('YYYY-MM-DD HH:mm:ss')
 
     getUserMe(token, user => {
+        if (!user) {
+            res.statusCode = 401
+            res.end('Unauthorized')
+            return false
+        }
         runSql(res, `SELECT * FROM games_task WHERE fk_game=${gameId}`, taskList => {
             // 处理是否领取任务奖励
             if (taskList.length > 0) {
@@ -48,6 +53,7 @@ export default function(req, res, next) {
                                 taskProcess => {
                                     tag++
                                     item.process = taskProcess[0].process || 0
+                                    item.process = item.process > item.threshold ? item.threshold : item.process
                                     if (tag >= taskList.length) {
                                         res.end(
                                             JSON.stringify({

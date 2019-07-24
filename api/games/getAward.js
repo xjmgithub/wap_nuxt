@@ -36,6 +36,7 @@ export default function(req, res, next) {
     const goals = query.goals
     const gameId = query.gameId || 1
     const token = req.headers.token
+    const taskId = 2
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
     const nowTime = dayjs()
     const today = dayjs().format('YYY-MM-DD')
@@ -60,9 +61,13 @@ export default function(req, res, next) {
     } else if (goals >= 10) {
         award = 100
     }
-
+    // TODO 没有防刷机制
     getUserMe(token, user => {
-        const taskId = 2
+        if (!user) {
+            res.statusCode = 401
+            res.end('Unauthorized')
+            return false
+        }
         runSql(
             res,
             `SELECT id,coins,create_time FROM coins_log WHERE user_id=${

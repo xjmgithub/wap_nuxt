@@ -14,6 +14,11 @@ export default function(req, res, next) {
     const taskId = 2 // 3 Games Played
 
     getUserMe(token, user => {
+        if (!user) {
+            res.statusCode = 401
+            res.end('Unauthorized')
+            return false
+        }
         // 金币不足
         if (user.coins < 50) {
             res.end(
