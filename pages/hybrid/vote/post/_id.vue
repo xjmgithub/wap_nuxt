@@ -1,20 +1,16 @@
 <template>
-    <div class="wrapper" style="padding-top:4rem;">
+    <div class="wrapper" :style="{'padding-top':($store.state.appType==0? '4rem': '0')}">
         <div v-if="logo&&nickname">
-            <download style="top:0;z-index:99" :page="`com.star.mobile.video.activity.BrowserActivity?loadUrl=${shareUrl}`"></download>
+            <download
+                v-if="$store.state.appType==0"
+                style="top:0;z-index:99"
+            ></download>
             <div class="user">
                 <div class="user-head" :style="{background:`url(${logo}) no-repeat center center`,'background-size':'cover'}"></div>
                 <span class="name">{{nickname}}</span>
                 <span class="time">{{time}}</span>
             </div>
-            <iframe
-                id="news-content"
-                frameborder="0"
-                scrolling="no"
-                :src="detailUrl"
-                width="100%"
-                @load="iframeLoaded=true"
-            ></iframe>
+            <iframe id="news-content" frameborder="0" scrolling="no" :src="detailUrl" width="100%" @load="iframeLoaded=true"></iframe>
             <div v-show="iframeLoaded" :class="{'show-pic':sharePost}" class="opeartion">
                 <div class="left">
                     <div class="like" :class="{actived:voteState==1}" @click="like()">{{ likeCount|formatCount }}</div>
@@ -103,7 +99,6 @@ export default {
             } else {
                 time = Math.ceil(diff / (60 * 1000 * 60 * 24 * 30 * 12)) + ' years ago'
             }
-
             return {
                 id: route.params.id,
                 likeCount: data.upvote,
@@ -139,7 +134,9 @@ export default {
     },
     mounted() {
         // 从缓存中读取点赞状态
-        callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`)
+        if (this.appType <= 0) {
+            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`)
+        }
 
         const voteSateCache = localStorage.getItem(`post_${this.id}`)
         this.voteState = voteSateCache
@@ -155,7 +152,6 @@ export default {
         window.addEventListener('message', event => {
             // 防止恶意注入
             // if (event.origin.indexOf('startimestv.com') < 0) return
-
             if (event.data.type == 'updateHeight') {
                 const iframe = document.getElementById('news-content')
                 iframe.style.height = event.data.value + 'px'
