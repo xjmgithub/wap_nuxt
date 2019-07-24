@@ -4,14 +4,15 @@
             <download
                 v-if="$store.state.appType==0"
                 style="top:0;z-index:99"
+                :page="`com.star.mobile.video.activity.BrowserActivity?loadUrl=${shareUrl}`"
             ></download>
             <div class="user">
                 <div class="user-head" :style="{background:`url(${logo}) no-repeat center center`,'background-size':'cover'}"></div>
                 <span class="name">{{nickname}}</span>
                 <span class="time">{{time}}</span>
             </div>
-            <iframe id="news-content" frameborder="0" scrolling="no" :src="detailUrl" width="100%" @load="iframeLoaded=true"></iframe>
-            <div v-show="iframeLoaded" :class="{'show-pic':sharePost}" class="opeartion">
+            <div class="news-main" v-html="detailHtml"></div>
+            <div :class="{'show-pic':sharePost}" class="opeartion">
                 <div class="left">
                     <div class="like" :class="{actived:voteState==1}" @click="like()">{{ likeCount|formatCount }}</div>
                     <div class="unlike" :class="{actived:voteState==2}" @click="unlike()">{{ disLikeCount|formatCount }}</div>
@@ -25,7 +26,7 @@
             <div class="alert-context">The link may be broken, or the page has been removed. Find more funny videos and images on StarTimes ON</div>
         </div>
         <mShare />
-        <mPost ref="mySwiper" :img-type="imgType" @close="sharePost=false" />
+        <mPost ref="mySwiper" @close="sharePost=false" />
     </div>
 </template>
 <script>
@@ -33,7 +34,7 @@ import { Base64 } from 'js-base64'
 import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post'
 import download from '~/components/web/download.vue'
-import { callApp } from '~/functions/app'
+import { callApp, shareInApp } from '~/functions/app'
 export default {
     layout: 'base',
     filters: {
@@ -60,9 +61,7 @@ export default {
     },
     data() {
         return {
-            iframeLoaded: false,
             sharePost: false,
-            postList: [],
             pageStart: new Date().getTime()
         }
     },
@@ -99,6 +98,13 @@ export default {
             } else {
                 time = Math.ceil(diff / (60 * 1000 * 60 * 24 * 30 * 12)) + ' years ago'
             }
+
+            const dom = await $axios.get(data.detailed_url)
+            const startStr = dom.data.indexOf('<div class="news_main">')
+            const endStr = dom.data.indexOf('</div><script')
+            let detailHtml = dom.data.substring(startStr + 23, endStr)
+            detailHtml = detailHtml.replace(/data-src/g, 'src')
+
             return {
                 id: route.params.id,
                 likeCount: data.upvote,
@@ -106,7 +112,7 @@ export default {
                 logo: data.logo,
                 nickname: data.nick,
                 time: time,
-                detailUrl: data.detailed_url,
+                detailHtml: detailHtml,
                 title: data.title || '',
                 voteState: data.vote_state, // 0 无，1赞，2踩，
                 postPic: data.posters[0].url,
@@ -122,7 +128,7 @@ export default {
                 logo: '',
                 nickname: '',
                 time: '',
-                datailUrl: '',
+                detailHtml: '',
                 title: '',
                 voteState: 0,
                 postPic: '',
@@ -149,35 +155,37 @@ export default {
             path: 0
         })
 
-        window.addEventListener('message', event => {
-            // 防止恶意注入
-            // if (event.origin.indexOf('startimestv.com') < 0) return
-            if (event.data.type == 'updateHeight') {
-                const iframe = document.getElementById('news-content')
-                iframe.style.height = event.data.value + 'px'
-            } else if (event.data.type == 'showPic') {
+        const imgList = document.querySelectorAll('.news-main img')
+        const imgSrcList = []
+        for (let i = 0; i < imgList.length; i++) {
+            imgSrcList.push(imgList[i].src)
+            imgList[i].addEventListener('click', () => {
                 this.sharePost = true
                 this.sendEvLog({
                     category: `post_${this.id}`,
                     action: 'post_image_tap',
-                    label: this.id + '-' + event.data.value.index,
-                    value: this.postPics.length,
-                    imgtype: event.data.value.list[event.data.value.index].indexOf('gif') >= 0 ? 0 : 1
+                    label: this.id + '-' + i,
+                    value: imgList.length,
+                    imgtype: imgList[i].src.indexOf('gif') >= 0 ? 0 : 1
                 })
-                this.$refs.mySwiper.show(event.data.value.list, Number(event.data.value.index))
-            }
-        })
+                this.$refs.mySwiper.show(imgSrcList, i)
+            })
+        }
     },
     methods: {
         toShare() {
-            this.$store.commit('SET_SHARE_STATE', true)
-            this.sendEvLog({
-                category: `post_${this.id}`,
-                action: 'share_tap',
-                label: this.id,
-                value: this.postPics.length,
-                imgtype: this.imgType
-            })
+            if (this.appType == 1) {
+                shareInApp(window.location.href, this.title || this.$store.state.lang.post_share_title, this.postPic)
+            } else {
+                this.$store.commit('SET_SHARE_STATE', true)
+                this.sendEvLog({
+                    category: `post_${this.id}`,
+                    action: 'share_tap',
+                    label: this.id,
+                    value: this.postPics.length,
+                    imgtype: this.imgType
+                })
+            }
         },
         like() {
             this.postLike(this.voteState == 1 ? 3 : 1)
@@ -251,54 +259,21 @@ export default {
             this.voteState = num
             localStorage.setItem(`post_${this.id}`, num)
         }
-        // postLike(num) {
-        //     this.$axios({
-        //         url: '/like/v1/vote',
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/x-www-form-urlencoded'
-        //         },
-        //         data: qs.stringify({
-        //             post_id: this.id,
-        //             state: num
-        //         })
-        //     }).then(res => {
-        //         if (res.data.code === 0) {
-        //             if (num == 1) {
-        //                 this.likeCount++
-        //                 this.voteState == 2 && this.disLikeCount--
-        //             } else if (num == 2) {
-        //                 this.disLikeCount++
-        //                 this.voteState == 1 && this.likeCount--
-        //             } else {
-        //                 if (this.voteState == 1) {
-        //                     this.likeCount--
-        //                 }
-        //                 if (this.voteState == 2) {
-        //                     this.disLikeCount--
-        //                 }
-        //             }
-        //             this.voteState = num
-        //         } else {
-        //             this.$alert('network error')
-        //         }
-        //     })
-        // }
     },
     head() {
         return {
-            title: this.title || 'StarTimes ON',
+            title: this.title || this.$store.state.lang.post_share_title,
             meta: [
                 { name: 'viewport', content: 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1' },
-                { name: 'description', property: 'description', content: this.title || 'StarTimes ON' },
-                { name: 'og:description', property: 'og:description', content: this.title || 'StarTimes ON' },
+                { name: 'description', property: 'description', content: this.title || this.$store.state.lang.post_share_title },
+                { name: 'og:description', property: 'og:description', content: this.title || this.$store.state.lang.post_share_title },
                 {
                     name: 'og:image',
                     property: 'og:image',
                     content: this.postPic
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: this.title || 'StarTimes ON' },
+                { name: 'og:title', property: 'og:title', content: this.title || this.$store.state.lang.post_share_title },
                 {
                     name: 'al:android:url',
                     property: 'al:android:url',
@@ -314,6 +289,34 @@ export default {
     }
 }
 </script>
+<style lang="less">
+.news-main {
+    width: 100%;
+    padding: 1rem 1rem 0.1rem;
+    img {
+        display: block;
+        margin: 0.5rem 0;
+        width: 100%;
+        position: relative;
+    }
+    img::before {
+        content: '';
+        display: inline-block;
+        padding-bottom: 30%;
+        width: 0.1px;
+        vertical-align: middle;
+    }
+    img::after {
+        content: '';
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: url('~assets/img/water-logo.png') #686b6e no-repeat center;
+    }
+}
+</style>
 <style lang="less" scoped>
 .wrapper {
     width: 100%;
@@ -391,7 +394,7 @@ export default {
     }
 }
 .fail {
-    padding: 2rem;
+    padding: 0 2rem;
     img {
         display: block;
         width: 14rem;

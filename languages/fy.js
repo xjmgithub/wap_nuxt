@@ -5,6 +5,8 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Téléchargez',
 
+    post_share_title: 'StarTimes ON vous ouvre un nouveau monde !',
+
     // vote film
     vote_about: 'À propos du PAOFF ',
     vote_tab_film: 'Films',

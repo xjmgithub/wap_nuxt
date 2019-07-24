@@ -18,13 +18,6 @@
 <script>
 import Swiper from 'swiper/dist/js/swiper.js'
 export default {
-    props: {
-        imgType: {
-            required: true,
-            type: Number,
-            default: 1
-        }
-    },
     data() {
         return {
             mySwiper: null,

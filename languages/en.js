@@ -5,6 +5,8 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Download Now',
 
+    post_share_title: 'StarTimes ON opens up a new world!',
+
     // vote film
     vote_about: 'About PAOFF',
     vote_tab_film: 'Movies',
@@ -22,17 +24,19 @@ export default {
     vote_apk: 'Download apk now（11M） ',
     vote_earnvote_tt: 'Tell friends to earn votes',
     vote_webshare_words: "We're clearly in tune.I've already voted, click to JOIN ME!",
-    vote_share:'SHARE',
-    vote_view_more:'VIEW MORE',
-    vote_ok:'OK',
-    vote_cancel:'CANCEL',
-    vote_notstart_btn:'Stay tuned! Voting begins on June 1st.',
-    
+    vote_share: 'SHARE',
+    vote_view_more: 'VIEW MORE',
+    vote_ok: 'OK',
+    vote_cancel: 'CANCEL',
+    vote_notstart_btn: 'Stay tuned! Voting begins on June 1st.',
+
     vote_leftvote: 'Remaining Votes',
     vote_vote_btn: 'VOTE',
-    vote_join_now:'Pick Your Nominee ',
-    vote_about_word:'<p>The Pan African Online Film Festival (PAOFF) is an online awards exclusive to StarTimes ON which aims to reward outstanding production done by African producers which will in turn support and promote the development of the film and music industry across Africa.</p><p>The award is an initiative of Africa’s leading digital TV operator, StarTimes and will focus on 3 categories which are Best African Movie, Best African Short Film & Best African MV. </p><p>We are honored to invite all online users to vote and support for your favorite via StarTimes ON. We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p><p>©2019 by StarTimes All Rights Reserved</p>',
-    vote_rule_word:"<p>1.From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows!</p><p>2.Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven't installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get!</p><p>3.Votes can be accumulated and are valid until the deadline.You can vote for any shows you like.</p><p>4.Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>",
+    vote_join_now: 'Pick Your Nominee ',
+    vote_about_word:
+        '<p>The Pan African Online Film Festival (PAOFF) is an online awards exclusive to StarTimes ON which aims to reward outstanding production done by African producers which will in turn support and promote the development of the film and music industry across Africa.</p><p>The award is an initiative of Africa’s leading digital TV operator, StarTimes and will focus on 3 categories which are Best African Movie, Best African Short Film & Best African MV. </p><p>We are honored to invite all online users to vote and support for your favorite via StarTimes ON. We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p><p>©2019 by StarTimes All Rights Reserved</p>',
+    vote_rule_word:
+        "<p>1.From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows!</p><p>2.Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven't installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get!</p><p>3.Votes can be accumulated and are valid until the deadline.You can vote for any shows you like.</p><p>4.Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>",
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',

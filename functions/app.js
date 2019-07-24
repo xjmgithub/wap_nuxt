@@ -179,6 +179,13 @@ export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
     }
 }
 
+export const shareInApp = function(link, content, shareImg) {
+    if (window.getChannelId && window.getChannelId.showCustorm) {
+        const mainText = content + ' ' + link
+        window.getChannelId.showCustorm(mainText, link, link, link, link, link, link, shareImg || '', mainText)
+    }
+}
+
 export const callupFlow = function(page) {
     callApp.call(this, page, () => {
         callMarket.call(this, () => {
