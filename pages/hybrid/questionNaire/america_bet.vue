@@ -183,7 +183,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.quizId)
         this.sendEvLog({
             category: 'guess_event',
             action: 'guess_event_show',
