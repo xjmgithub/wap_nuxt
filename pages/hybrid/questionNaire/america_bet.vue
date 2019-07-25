@@ -1,6 +1,6 @@
 <template>
     <div id="america">
-        <img src="~assets/img/naire/bg_guess.png" class="bg-pic" />
+        <img src="~assets/img/naire/Uganda.jpg" class="bg-pic" />
         <div class="contain">
             <div class="top">
                 <p class="prize" @click="showRule=true">
@@ -68,13 +68,9 @@
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false" />
             <div class="rule">
                 <div class="dot">‧</div>
-                <p>There are several questions in each match day, the more questions you guess correctly, the more prizes you will get;</p>
+                <p>There are several questions in each episode, you will get prize if all questions are answered correctly ;</p>
                 <div class="dot">‧</div>
-                <p>If you guess the correct answer to some of the questions in a match day, you will get a discount coupon.</p>
-                <div class="dot">‧</div>
-                <p>If you guess the correct answer to all questions in a match day, you will get a 1-day FREE VIP coupon.</p>
-                <div class="dot">‧</div>
-                <p>Share to your friends and get additional prizes!</p>
+                <p>If you guess the correct answer to all questions , you will get a 1-week FREE VIP coupon.</p>
             </div>
         </div>
         <div v-show="showPrize==true" class="card-prize">
@@ -187,6 +183,7 @@ export default {
         }
     },
     mounted() {
+        console.log(this.quizId)
         this.sendEvLog({
             category: 'guess_event',
             action: 'guess_event_show',
@@ -341,17 +338,17 @@ export default {
     },
     head() {
         return {
-            title: 'COPA AMERICA 2019 CRAZY Guess',
+            title: 'Challengers Crazy Guess',
             meta: [
                 { name: 'description', property: 'description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
                 { name: 'og:description', property: 'og:description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: 'http://cdn.startimestv.com/banner/bg_guess.jpg'
+                    content: 'http://cdn.startimestv.com/banner/Uganda.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'COPA AMERICA 2019 CRAZY Guess' },
+                { name: 'og:title', property: 'og:title', content: 'Hisense Challengers Uganda Crazy Guess' },
                 {
                     name: 'al:android:url',
                     property: 'al:android:url',
