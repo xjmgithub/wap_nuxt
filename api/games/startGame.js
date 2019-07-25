@@ -26,7 +26,8 @@ export default function(req, res, next) {
 
         runSql(
             res,
-            `SELECT * FROM games_action WHERE user_id="9152882" AND action_name="startGame" AND create_time>'${today}' AND create_time<'${tomorrow}' LIMIT 1`,
+            `SELECT * FROM games_action 
+            WHERE user_id=${user.id} AND action_name="startGame" AND create_time>'${today}' AND create_time<'${tomorrow}' LIMIT 1`,
             dailyPlayed => {
                 if (dailyPlayed.length > 0) {
                     // 已经玩过了
