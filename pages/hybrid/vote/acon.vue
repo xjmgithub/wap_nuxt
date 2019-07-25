@@ -15,7 +15,7 @@
                 <p class="time">
                     TOP SOCCERS:
                     <span>
-                        <img src="~assets/img/vote/ic_count_down.png" /> Ends in 124h 37m 2s
+                        <img src="~assets/img/vote/ic_count_down.png" /> Ends in {{endTime}}
                     </span>
                 </p>
                 <p>
@@ -25,14 +25,7 @@
                     <span v-if="!latest && preGameId" class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
-                    <div
-                        v-for="(item,index) in rankList"
-                        :id="`c-${item.user_name}`"
-                        :key="index"
-                        :data-index="index"
-                        :class="{'my-rank':item.user_id==userId}"
-                        class="per-list"
-                    >
+                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.user_avatar">
@@ -46,8 +39,7 @@
                         <div class="right" :class="{'top-three':index<=2}">
                             <div v-show="index<=2">
                                 <span class="prize">
-                                    <i />
-                                    {{index|formatPrize}}
+                                    <i /> {{index|formatPrize}}
                                 </span>
                                 <img v-show="index==0" src="~assets/img/vote/crank1.png" />
                                 <img v-show="index==1" src="~assets/img/vote/crank2.png" />
@@ -156,6 +148,7 @@
 </template>
 <script>
 import { shareInvite } from '~/functions/app'
+import dayjs from 'dayjs'
 export default {
     layout: 'base',
     filters: {
@@ -180,16 +173,12 @@ export default {
             preGameId: '',
             DailyPlayed: false,
             levelGoal: [],
-            gameId: this.$route.query.gameId || 1
+            gameId: this.$route.query.gameId || 1,
+            endTime: ''
         }
     },
     mounted() {
         /* eslint-disable */
-        const first_in = localStorage.getItem('acon_first')
-        if (!first_in) {
-            this.$alert(`Welcome to the 'CRAZY FREEKICK'!弹窗提示用户能应得coins并兑换奖品，文案待定!`)
-            localStorage.setItem('acon_first', 1)
-        }
         const game = new window.CMain({
             shot_indicator_spd: 1000,
             decrease_shot_indicator_spd: 100
@@ -223,6 +212,7 @@ export default {
                     this.myCoins = data.myCoins
                     this.DailyPlayed = data.DailyPlayed
                     this.preGameId = data.preGameId
+                    this.endTime = dayjs(data.gameInfo.end_time).format('YYYY-MM-DD HH:mm:ss')
                     const vlist = data.list
                     vlist.sort(function(a, b) {
                         return b.goals - a.goals
@@ -285,6 +275,7 @@ export default {
                         if (res.data.data.operatorCoins >= 100) {
                             this.$toast(`you get ${res.data.data.operatorCoins} coins in this round of game.`)
                             this.myCoins = res.data.data.afterCoins
+                            this.levelGoal = []
                         }
                     } else {
                         this.$toast(res.data.message)
@@ -296,7 +287,6 @@ export default {
         setGoal(goal) {
             if (goal > 0) {
                 this.levelGoal.push(goal)
-                console.log(this.levelGoal)
                 this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
                     this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=${this.gameId}`).then(res => {
                         if (res.data.code == 200) {
@@ -429,7 +419,7 @@ canvas {
             color: #94e6ac;
             height: 2.4rem;
             line-height: 2.4rem;
-            padding: 0 5%;
+            padding: 0 4%;
             &.time {
                 color: #e4ffc6;
                 border-bottom: 1px solid #66a578;
