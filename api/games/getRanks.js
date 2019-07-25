@@ -23,7 +23,7 @@ export default function(req, res, next) {
     let preGameId = ''
 
     // 获取上一期游戏id
-    runSql(
+    runSql( 
         res,
         `SELECT id FROM games 
         WHERE end_time<(SELECT start_time FROM games WHERE id="${gameId}") 
@@ -47,11 +47,6 @@ export default function(req, res, next) {
             GROUP BY user_id ORDER BY goals DESC`,
             rankList => {
                 getUserMe(token, user => {
-                    if (!user) {
-                        res.statusCode = 401
-                        res.end('Unauthorized')
-                        return false
-                    }
                     if (user && user.roleName !== 'ANONYMOUS') {
                         // 是否登录过查询
                         runSql(

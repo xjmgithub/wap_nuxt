@@ -25,7 +25,14 @@
                     <span v-if="!latest && preGameId" class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
+                    <div
+                        v-for="(item,index) in rankList"
+                        :id="`c-${item.user_name}`"
+                        :key="index"
+                        :data-index="index"
+                        :class="{'my-rank':item.user_id==userId}"
+                        class="per-list"
+                    >
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.user_avatar">
@@ -39,7 +46,8 @@
                         <div class="right" :class="{'top-three':index<=2}">
                             <div v-show="index<=2">
                                 <span class="prize">
-                                    <i /> {{index|formatPrize}}
+                                    <i />
+                                    {{index|formatPrize}}
                                 </span>
                                 <img v-show="index==0" src="~assets/img/vote/crank1.png" />
                                 <img v-show="index==1" src="~assets/img/vote/crank2.png" />
@@ -171,7 +179,8 @@ export default {
             latest: true,
             preGameId: '',
             DailyPlayed: false,
-            levelGoal: []
+            levelGoal: [],
+            gameId: this.$route.query.gameId || 1
         }
     },
     mounted() {
@@ -208,7 +217,7 @@ export default {
         // 获取游戏当期个人排行 用户coins
         getRankList(init) {
             this.latest = true
-            this.$axios.get(`/hybrid/api/games/getRanks?gameId=1`).then(res => {
+            this.$axios.get(`/hybrid/api/games/getRanks?gameId=${this.gameId}`).then(res => {
                 if (res.data.code == 200) {
                     const data = res.data.data
                     this.myCoins = data.myCoins
@@ -255,7 +264,7 @@ export default {
         // 获取游戏任务
         getTaskByGame() {
             this.showMissions = true
-            this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=1`).then(res => {
+            this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=${gameId}`).then(res => {
                 if (res.data.code == 200) {
                     this.taskList = res.data.data
                 }
@@ -269,7 +278,7 @@ export default {
                 totalGoal += ele
             })
             if (totalGoal >= 10) {
-                this.$axios.get(`/hybrid/api/games/getAward?gameId=1&goals=${totalGoal}`).then(res => {
+                this.$axios.get(`/hybrid/api/games/getAward?gameId=${gameId}&goals=${totalGoal}`).then(res => {
                     if (res.data.code == 200) {
                         if (res.data.data.operatorCoins >= 100) {
                             this.$toast(`you get ${res.data.data.operatorCoins} coins in this round of game.`)
@@ -287,7 +296,7 @@ export default {
                 this.levelGoal.push(goal)
                 console.log(this.levelGoal)
                 this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
-                    this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=1`).then(res => {
+                    this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=${gameId}`).then(res => {
                         if (res.data.code == 200) {
                             this.getRankList()
                         } else {
@@ -312,7 +321,7 @@ export default {
         // 开始游戏
         startGame() {
             this.showRewards = false
-            this.$axios.get(`/hybrid/api/games/startGame?gameId=1`).then(res => {
+            this.$axios.get(`/hybrid/api/games/startGame?gameId=${gameId}`).then(res => {
                 if (res.data.code == 200) {
                     window.s_oMenu._onButPlayRelease()
                     this.myCoins = res.data.data.afterCoins
