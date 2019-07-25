@@ -85,15 +85,15 @@ export default {
             const now = new Date().getTime()
             const diff = parseInt(now - data.publish_time)
             let time = 'just now'
-            if (diff < 60 * 1000) {
+            if (diff <= 60 * 1000) {
                 time = 'just now'
-            } else if (diff < 60 * 1000 * 60) {
+            } else if (diff <= 60 * 1000 * 60) {
                 time = Math.ceil(diff / 60000) + ' mins ago'
-            } else if (diff < 60 * 1000 * 60 * 24) {
+            } else if (diff <= 60 * 1000 * 60 * 24) {
                 time = Math.ceil(diff / (60 * 1000 * 60)) + ' hours ago'
-            } else if (diff < 60 * 1000 * 60 * 24 * 30) {
+            } else if (diff <= 60 * 1000 * 60 * 24 * 30) {
                 time = Math.ceil(diff / (60 * 1000 * 60 * 24)) + ' days ago'
-            } else if (diff < 60 * 1000 * 60 * 24 * 30 * 12) {
+            } else if (diff <= 60 * 1000 * 60 * 24 * 30 * 12) {
                 time = Math.ceil(diff / (60 * 1000 * 60 * 24 * 30)) + ' months ago'
             } else {
                 time = Math.ceil(diff / (60 * 1000 * 60 * 24 * 30 * 12)) + ' years ago'
