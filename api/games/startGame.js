@@ -21,7 +21,7 @@ export default function(req, res, next) {
 
 
     getUserMe(token, user => {
-        if (!user) {
+        if (!user||user.roleName == 'ANONYMOUS') {
             res.statusCode = 401
             res.end('Unauthorized')
             return false

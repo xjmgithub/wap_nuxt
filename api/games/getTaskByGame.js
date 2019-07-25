@@ -18,7 +18,7 @@ export default function(req, res, next) {
         .format('YYYY-MM-DD HH:mm:ss')
 
     getUserMe(token, user => {
-        if (!user) {
+        if (!user||user.roleName == 'ANONYMOUS') {
             res.statusCode = 401
             res.end('Unauthorized')
             return false

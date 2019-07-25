@@ -29,7 +29,7 @@ export default function(req, res, next) {
     // 游戏不再当前周期不可以踢球
 
     getUserMe(token, user => {
-        if (!user) {
+        if (!user||user.roleName == 'ANONYMOUS') {
             res.statusCode = 401
             res.end('Unauthorized')
             return false

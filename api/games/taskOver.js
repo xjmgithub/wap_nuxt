@@ -32,7 +32,7 @@ export default function(req, res, next) {
     // TODO 游戏不在当前期不可以领将
 
     getUserMe(token, user => {
-        if (!user) {
+        if (!user||user.roleName == 'ANONYMOUS') {
             res.statusCode = 401
             res.end('Unauthorized')
             return false
