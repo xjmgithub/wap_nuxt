@@ -482,7 +482,7 @@ var CANVAS_WIDTH = 1360,
     EDGEBOARD_Y = 80,
     TEXT = 'walibi0615bold',
     NUM_CROWD = 31,
-    NUM_LEVEL = 6,
+    NUM_LEVEL = 7,   // 游戏关节
     NUM_KICK = 5,
     SPACE_BAR = 32,
     SHOT_INDICATOR_SPEED,
