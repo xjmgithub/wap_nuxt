@@ -482,7 +482,7 @@ var CANVAS_WIDTH = 1360,
     EDGEBOARD_Y = 80,
     TEXT = 'walibi0615bold',
     NUM_CROWD = 31,
-    NUM_LEVEL = 12, // 游戏关节
+    NUM_LEVEL = 15, // 游戏关节
     NUM_KICK = 5,
     SPACE_BAR = 32,
     SHOT_INDICATOR_SPEED,
@@ -2360,20 +2360,20 @@ function CLevel(a, e, b) {
                 case 1:
                 case 2:
                     h.push({
-                        goalToScore: 1,
+                        goalToScore: 2,
                         kickLeft: 5
                     })
                     break
                 case 3:
                 case 4:
                     h.push({
-                        goalToScore: 1,
+                        goalToScore: 3,
                         kickLeft: 5
                     })
                     break
                 default:
                     h.push({
-                        goalToScore: 1,
+                        goalToScore: 4,
                         kickLeft: 5
                     })
                     break
