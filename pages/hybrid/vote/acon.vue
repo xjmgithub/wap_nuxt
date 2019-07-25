@@ -312,18 +312,14 @@ export default {
         // 开始游戏
         startGame() {
             this.showRewards = false
-            if (this.DailyPlayed) {
-                this.$axios.get(`/hybrid/api/games/startGame?gameId=1`).then(res => {
-                    if (res.data.code == 200) {
-                        window.s_oMenu._onButPlayRelease()
-                        this.myCoins = res.data.data.afterCoins
-                    } else {
-                        this.$toast(res.data.message)
-                    }
-                })
-            } else {
-                window.s_oMenu._onButPlayRelease()
-            }
+            this.$axios.get(`/hybrid/api/games/startGame?gameId=1`).then(res => {
+                if (res.data.code == 200) {
+                    window.s_oMenu._onButPlayRelease()
+                    this.myCoins = res.data.data.afterCoins
+                } else {
+                    this.$toast(res.data.message)
+                }
+            })
         },
         share() {
             shareInvite(
