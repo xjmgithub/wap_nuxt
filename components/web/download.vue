@@ -47,7 +47,7 @@ export default {
                 page = `com.star.mobile.video.player.PlayerVodActivity?vodId=${this.$route.params.id}`
             } else if (this.$route.path.indexOf('program/detail/') >= 0) {
                 page = `com.star.mobile.video.player.PlayerVodActivity?programDetailId=${this.$route.params.id}`
-            } else if (this.$route.path.indexOf('liveDetail?channelId') >= 0) {
+            } else if (this.$route.path.indexOf('liveDetail') >= 0) {
                 page = `com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.$route.query.channelId}`
             }
             this.$nuxt.$loading.start()
