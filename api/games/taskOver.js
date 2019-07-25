@@ -86,6 +86,16 @@ export default function(req, res, next) {
                                                                 item.fk_game
                                                             },${coinsActionid},'${resText}','${now}')`,
                                                             () => {
+                                                                // 完成金币
+                                                                runSql(
+                                                                    res,
+                                                                    `INSERT INTO games_action 
+                                                                    (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
+                                                                    ('taskOver',${user.id},'${user.nickName || user.userName}',${user.areaID},'${
+                                                                        user.head
+                                                                    }',${item.fk_game},4,${item.award},'taskOver', '${now}')`
+                                                                )
+
                                                                 if (result) {
                                                                     res.end(
                                                                         JSON.stringify({
