@@ -15,7 +15,8 @@
                 <p class="time">
                     TOP SOCCERS:
                     <span>
-                        <img src="~assets/img/vote/ic_count_down.png" /> Ends in {{endTime}}
+                        <img src="~assets/img/vote/ic_count_down.png" />
+                        Ends in {{endTime}}
                     </span>
                 </p>
                 <p>
@@ -25,7 +26,14 @@
                     <span v-if="!latest && preGameId" class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
+                    <div
+                        v-for="(item,index) in rankList"
+                        :id="`c-${item.user_name}`"
+                        :key="index"
+                        :data-index="index"
+                        :class="{'my-rank':item.user_id==userId}"
+                        class="per-list"
+                    >
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.user_avatar">
@@ -39,7 +47,8 @@
                         <div class="right" :class="{'top-three':index<=2}">
                             <div v-show="index<=2">
                                 <span class="prize">
-                                    <i /> {{index|formatPrize}}
+                                    <i />
+                                    {{index|formatPrize}}
                                 </span>
                                 <img v-show="index==0" src="~assets/img/vote/crank1.png" />
                                 <img v-show="index==1" src="~assets/img/vote/crank2.png" />
@@ -147,7 +156,7 @@
     </div>
 </template>
 <script>
-import { shareInvite,toNativePage } from '~/functions/app'
+import { shareInvite, toNativePage } from '~/functions/app'
 import dayjs from 'dayjs'
 export default {
     layout: 'base',
@@ -160,6 +169,7 @@ export default {
         }
     },
     data() {
+        const user = this.$store.state.user
         return {
             userId: this.$store.state.user.id,
             rankList: [],
@@ -174,7 +184,8 @@ export default {
             DailyPlayed: false,
             levelGoal: [],
             gameId: this.$route.query.gameId || 1,
-            endTime: ''
+            endTime: '',
+            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
         }
     },
     mounted() {
@@ -194,13 +205,31 @@ export default {
             this.setGoal(goal)
         })
         $(game).on('start_btn_click', (evt, goal, score) => {
-            this.showRewards = true
+            if (this.isLogin) {
+                this.showRewards = true
+            } else {
+                this.$confirm('Please sign in first', () => {
+                    toNativePage(
+                        'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
+                            encodeURIComponent(window.location.href)
+                    )
+                })
+            }
         })
         this.getRankList(1)
     },
     methods: {
-        toMyCoins(){
-            toNativePage('com.star.mobile.video.me.mycoins.MyCoinsActivity')
+        toMyCoins() {
+            if (this.isLogin) {
+                toNativePage('com.star.mobile.video.me.mycoins.MyCoinsActivity')
+            } else {
+                this.$confirm('Please sign in first', () => {
+                    toNativePage(
+                        'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
+                            encodeURIComponent(window.location.href)
+                    )
+                })
+            }
         },
         getProcess(item) {
             const tmp = (item.process / item.threshold).toFixed(2) * 100
@@ -256,14 +285,23 @@ export default {
         },
         // 获取游戏任务
         getTaskByGame() {
-            this.$nuxt.$loading.start()
-            this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=${this.gameId}`).then(res => {
-                if (res.data.code == 200) {
-                    this.showMissions = true
-                    this.$nuxt.$loading.finish()
-                    this.taskList = res.data.data
-                }
-            })
+            if (this.isLogin) {
+                this.$nuxt.$loading.start()
+                this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=${this.gameId}`).then(res => {
+                    if (res.data.code == 200) {
+                        this.showMissions = true
+                        this.$nuxt.$loading.finish()
+                        this.taskList = res.data.data
+                    }
+                })
+            } else {
+                this.$confirm('Please sign in first', () => {
+                    toNativePage(
+                        'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
+                            encodeURIComponent(window.location.href)
+                    )
+                })
+            }
         },
         // 游戏结束 获取奖励
         getAward(goal) {
