@@ -26,6 +26,8 @@ export default function(req, res, next) {
         return false
     }
 
+    // 游戏不再当前周期不可以踢球
+
     getUserMe(token, user => {
         if (!user) {
             res.statusCode = 401

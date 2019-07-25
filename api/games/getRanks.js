@@ -23,7 +23,7 @@ export default function(req, res, next) {
     let preGameId = ''
 
     // 获取上一期游戏id
-    runSql( 
+    runSql(
         res,
         `SELECT id FROM games 
         WHERE end_time<(SELECT start_time FROM games WHERE id="${gameId}") 
@@ -60,21 +60,26 @@ export default function(req, res, next) {
                                     res,
                                     `INSERT INTO games_action 
                                     (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
-                                    ('login',${user.id},'${user.nickName||user.userName}',${user.areaID},'${user.head}',${gameId},${taskId},1,'login', '${now}')`
+                                    ('login',${user.id},'${user.nickName || user.userName}',${user.areaID},'${
+                                        user.head
+                                    }',${gameId},${taskId},1,'login', '${now}')`
                                 )
 
-                                res.end(
-                                    JSON.stringify({
-                                        code: 200,
-                                        message: 'success',
-                                        data: {
-                                            myCoins: user.coins || 0,
-                                            list: rankList.length > 0 ? rankList : [],
-                                            preGameId: preGameId || '',
-                                            DailyPlayed: haveLoged.length > 0
-                                        }
-                                    })
-                                )
+                                runSql(res, `SELECT * FROM games WHERE id=${gameId}')`, game => {
+                                    res.end(
+                                        JSON.stringify({
+                                            code: 200,
+                                            message: 'success',
+                                            data: {
+                                                myCoins: user.coins || 0,
+                                                list: rankList.length > 0 ? rankList : [],
+                                                preGameId: preGameId || '',
+                                                DailyPlayed: haveLoged.length > 0,
+                                                gameInfo: game
+                                            }
+                                        })
+                                    )
+                                })
                             }
                         )
                     } else {

@@ -29,6 +29,8 @@ export default function(req, res, next) {
         return false
     }
 
+    // TODO 游戏不在当前期不可以领将
+
     getUserMe(token, user => {
         if (!user) {
             res.statusCode = 401

@@ -69,6 +69,8 @@ export default function(req, res, next) {
             return false
         }
 
+        // TODO 不再当前周期的时候不能玩游戏
+
         runSql(
             res,
             `SELECT id,coins,create_time FROM coins_log 

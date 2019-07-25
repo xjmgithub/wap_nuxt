@@ -17,6 +17,9 @@ export default function(req, res, next) {
         .add(1, 'days')
         .format('YYYY-MM-DD')
 
+    // TODO 游戏不再当前周期不可以领奖
+
+
     getUserMe(token, user => {
         if (!user) {
             res.statusCode = 401
