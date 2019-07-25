@@ -287,7 +287,6 @@ export default {
         setGoal(goal) {
             if (goal > 0) {
                 this.levelGoal.push(goal)
-                console.log(this.levelGoal)
                 this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
                     this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=${this.gameId}`).then(res => {
                         if (res.data.code == 200) {
