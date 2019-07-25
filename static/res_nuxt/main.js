@@ -482,7 +482,7 @@ var CANVAS_WIDTH = 1360,
     EDGEBOARD_Y = 80,
     TEXT = 'walibi0615bold',
     NUM_CROWD = 31,
-    NUM_LEVEL = 7,   // 游戏关节
+    NUM_LEVEL = 12, // 游戏关节
     NUM_KICK = 5,
     SPACE_BAR = 32,
     SHOT_INDICATOR_SPEED,
@@ -2274,31 +2274,11 @@ function CLevel(a, e, b) {
     this._init = function(a, b) {
         a++
         1 < a && (this.viewNextLevelPanel(), this.refreshButtonPos(s_iOffsetX, s_iOffsetY))
-        for (var c = 0; c < NUM_LEVEL; c++) (f[c] = Array(NUM_KICK)), (l[c] = Array(NUM_KICK)), (m[c] = Array(NUM_KICK))
-        h.push({
-            goalToScore: 1,
-            kickLeft: 5
-        })
-        h.push({
-            goalToScore: 2,
-            kickLeft: 5
-        })
-        h.push({
-            goalToScore: 2,
-            kickLeft: 5
-        })
-        h.push({
-            goalToScore: 3,
-            kickLeft: 5
-        })
-        h.push({
-            goalToScore: 3,
-            kickLeft: 5
-        })
-        h.push({
-            goalToScore: 4,
-            kickLeft: 5
-        })
+        for (var c = 0; c < NUM_LEVEL; c++) {
+            f[c] = Array(NUM_KICK)
+            l[c] = Array(NUM_KICK)
+            m[c] = Array(NUM_KICK)
+        }
         k.push({
             x: 430,
             y: 530
@@ -2323,66 +2303,7 @@ function CLevel(a, e, b) {
             x: 930,
             y: 500
         })
-        f[0][0] = k[0]
-        f[0][1] = k[0]
-        f[0][2] = k[0]
-        f[0][3] = k[0]
-        f[0][4] = k[0]
-        f[1][0] = k[0]
-        f[1][1] = k[0]
-        f[1][2] = k[0]
-        f[1][3] = k[1]
-        f[1][4] = k[1]
-        f[2][0] = k[1]
-        f[2][1] = k[0]
-        f[2][2] = k[0]
-        f[2][3] = k[0]
-        f[2][4] = k[2]
-        f[3][0] = k[1]
-        f[3][1] = k[2]
-        f[3][2] = k[0]
-        f[3][3] = k[1]
-        f[3][4] = k[2]
-        f[4][0] = k[0]
-        f[4][1] = k[1]
-        f[4][2] = k[2]
-        f[4][3] = k[2]
-        f[4][4] = k[2]
-        f[5][0] = k[2]
-        f[5][1] = k[1]
-        f[5][2] = k[1]
-        f[5][3] = k[1]
-        f[5][4] = k[1]
-        l[0][0] = d[0]
-        l[0][1] = d[0]
-        l[0][2] = d[0]
-        l[0][3] = d[0]
-        l[0][4] = d[0]
-        l[1][0] = d[0]
-        l[1][1] = d[0]
-        l[1][2] = d[0]
-        l[1][3] = d[1]
-        l[1][4] = d[1]
-        l[2][0] = d[1]
-        l[2][1] = d[0]
-        l[2][2] = d[0]
-        l[2][3] = d[0]
-        l[2][4] = d[2]
-        l[3][0] = d[1]
-        l[3][1] = d[2]
-        l[3][2] = d[0]
-        l[3][3] = d[1]
-        l[3][4] = d[2]
-        l[4][0] = d[0]
-        l[4][1] = d[1]
-        l[4][2] = d[2]
-        l[4][3] = d[2]
-        l[4][4] = d[2]
-        l[5][0] = d[2]
-        l[5][1] = d[1]
-        l[5][2] = d[1]
-        l[5][3] = d[1]
-        l[5][4] = d[1]
+
         p.push({
             x: 0,
             y: 0,
@@ -2428,36 +2349,53 @@ function CLevel(a, e, b) {
             y: CANVAS_HEIGHT / 2 - 25,
             num: 2
         })
-        m[0][0] = p[0]
-        m[0][1] = p[0]
-        m[0][2] = p[0]
-        m[0][3] = p[0]
-        m[0][4] = p[0]
-        m[1][0] = p[1]
-        m[1][1] = p[1]
-        m[1][2] = p[1]
-        m[1][3] = p[2]
-        m[1][4] = p[2]
-        m[2][0] = p[4]
-        m[2][1] = p[3]
-        m[2][2] = p[2]
-        m[2][3] = p[2]
-        m[2][4] = p[2]
-        m[3][0] = p[2]
-        m[3][1] = p[1]
-        m[3][2] = p[1]
-        m[3][3] = p[5]
-        m[3][4] = p[1]
-        m[4][0] = p[1]
-        m[4][1] = p[2]
-        m[4][2] = p[2]
-        m[4][3] = p[6]
-        m[4][4] = p[6]
-        m[5][0] = p[5]
-        m[5][1] = p[2]
-        m[5][2] = p[7]
-        m[5][3] = p[5]
-        m[5][4] = p[1]
+        for (var z = 0; z < NUM_LEVEL; z++) {
+            switch (z) {
+                case 0:
+                    h.push({
+                        goalToScore: 1,
+                        kickLeft: 5
+                    })
+                    break
+                case 1:
+                case 2:
+                    h.push({
+                        goalToScore: 1,
+                        kickLeft: 5
+                    })
+                    break
+                case 3:
+                case 4:
+                    h.push({
+                        goalToScore: 1,
+                        kickLeft: 5
+                    })
+                    break
+                default:
+                    h.push({
+                        goalToScore: 1,
+                        kickLeft: 5
+                    })
+                    break
+            }
+
+            // 球和球员的位置
+            for (var y = 0; y < 5; y++) {
+                if (z == 0) {
+                    f[z][y] = k[0]
+                    l[z][y] = d[0]
+                    m[z][y] = p[0]
+                } else {
+                    var randPlayer = Math.floor(Math.random() * 3)
+                    var randWall = Math.floor(Math.random() * 7)
+                    // 球员的位置
+                    f[z][y] = k[randPlayer]
+                    l[z][y] = d[randPlayer]
+                    // 后卫的位置
+                    m[z][y] = p[randWall]
+                }
+            }
+        }
     }
     this._onButContinueRelease = function() {
         this.unload()
