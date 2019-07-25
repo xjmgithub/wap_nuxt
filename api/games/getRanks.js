@@ -47,25 +47,24 @@ export default function(req, res, next) {
             GROUP BY user_id ORDER BY goals DESC`,
             rankList => {
                 getUserMe(token, user => {
-                    if (user && user.roleName !== 'ANONYMOUS') {
-                        // 是否登录过查询
-                        runSql(
-                            res,
-                            `SELECT * FROM games_action 
-                            WHERE action_name="startGame" AND create_time>'${start}' AND create_time<'${end}' 
-                            LIMIT 1`,
-                            haveLoged => {
-                                // 登录记录
-                                runSql(
-                                    res,
-                                    `INSERT INTO games_action 
-                                    (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
-                                    ('login',${user.id},'${user.nickName || user.userName}',${user.areaID},'${
-                                        user.head
-                                    }',${gameId},${taskId},1,'login', '${now}')`
-                                )
-
-                                runSql(res, `SELECT * FROM games WHERE id=${gameId}')`, game => {
+                    runSql(res, `SELECT * FROM games WHERE id=${gameId}`, game => {
+                        if (user && user.roleName !== 'ANONYMOUS') {
+                            // 是否登录过查询
+                            runSql(
+                                res,
+                                `SELECT * FROM games_action 
+                                WHERE action_name="startGame" AND create_time>'${start}' AND create_time<'${end}' 
+                                LIMIT 1`,
+                                haveLoged => {
+                                    // 登录记录
+                                    runSql(
+                                        res,
+                                        `INSERT INTO games_action 
+                                        (action_name,user_id,user_name,country_id,user_avatar,fk_game,fk_task,weight,description,create_time) VALUES 
+                                        ('login',${user.id},'${user.nickName || user.userName}',${user.areaID},'${
+                                            user.head
+                                        }',${gameId},${taskId},1,'login', '${now}')`
+                                    )
                                     res.end(
                                         JSON.stringify({
                                             code: 200,
@@ -75,27 +74,28 @@ export default function(req, res, next) {
                                                 list: rankList.length > 0 ? rankList : [],
                                                 preGameId: preGameId || '',
                                                 DailyPlayed: haveLoged.length > 0,
-                                                gameInfo: game
+                                                gameInfo: game[0]
                                             }
                                         })
                                     )
-                                })
-                            }
-                        )
-                    } else {
-                        res.end(
-                            JSON.stringify({
-                                code: 200,
-                                message: 'success',
-                                data: {
-                                    myCoins: 0,
-                                    list: rankList.length > 0 ? rankList : [],
-                                    preGameId: preGameId || '',
-                                    DailyPlayed: false
                                 }
-                            })
-                        )
-                    }
+                            )
+                        } else {
+                            res.end(
+                                JSON.stringify({
+                                    code: 200,
+                                    message: 'success',
+                                    data: {
+                                        myCoins: 0,
+                                        list: rankList.length > 0 ? rankList : [],
+                                        preGameId: preGameId || '',
+                                        DailyPlayed: false,
+                                        gameInfo: game[0]
+                                    }
+                                })
+                            )
+                        }
+                    })
                 })
             }
         )

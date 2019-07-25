@@ -263,9 +263,11 @@ export default {
         },
         // 获取游戏任务
         getTaskByGame() {
-            this.showMissions = true
-            this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=${gameId}`).then(res => {
+            this.$nuxt.$loading.start()
+            this.$axios.get(`/hybrid/api/games/getTaskByGame?gameId=${this.gameId}`).then(res => {
                 if (res.data.code == 200) {
+                    this.showMissions = true
+                    this.$nuxt.$loading.finish()
                     this.taskList = res.data.data
                 }
             })
@@ -278,7 +280,7 @@ export default {
                 totalGoal += ele
             })
             if (totalGoal >= 10) {
-                this.$axios.get(`/hybrid/api/games/getAward?gameId=${gameId}&goals=${totalGoal}`).then(res => {
+                this.$axios.get(`/hybrid/api/games/getAward?gameId=${this.gameId}&goals=${totalGoal}`).then(res => {
                     if (res.data.code == 200) {
                         if (res.data.data.operatorCoins >= 100) {
                             this.$toast(`you get ${res.data.data.operatorCoins} coins in this round of game.`)
@@ -296,7 +298,7 @@ export default {
                 this.levelGoal.push(goal)
                 console.log(this.levelGoal)
                 this.$alert(`You've scroed ${goal} goals, Hero.`, () => {
-                    this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=${gameId}`).then(res => {
+                    this.$axios.get(`/hybrid/api/games/setGoal?goals=${goal}&gameId=${this.gameId}`).then(res => {
                         if (res.data.code == 200) {
                             this.getRankList()
                         } else {
@@ -321,7 +323,7 @@ export default {
         // 开始游戏
         startGame() {
             this.showRewards = false
-            this.$axios.get(`/hybrid/api/games/startGame?gameId=${gameId}`).then(res => {
+            this.$axios.get(`/hybrid/api/games/startGame?gameId=${this.gameId}`).then(res => {
                 if (res.data.code == 200) {
                     window.s_oMenu._onButPlayRelease()
                     this.myCoins = res.data.data.afterCoins
