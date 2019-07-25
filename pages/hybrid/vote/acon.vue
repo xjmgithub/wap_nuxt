@@ -5,7 +5,7 @@
         </div>
         <div class="contain">
             <div class="my-coins-box">
-                <div class="my-coins">
+                <div class="my-coins" @click="toMyCoins">
                     My Coins：{{myCoins}}
                     <img src="~assets/img/vote/ic_gift.png" />
                     <img src="~assets/img/vote/ic_gift_go.png" />
@@ -147,7 +147,7 @@
     </div>
 </template>
 <script>
-import { shareInvite } from '~/functions/app'
+import { shareInvite,toNativePage } from '~/functions/app'
 import dayjs from 'dayjs'
 export default {
     layout: 'base',
@@ -199,6 +199,9 @@ export default {
         this.getRankList(1)
     },
     methods: {
+        toMyCoins(){
+            toNativePage('com.star.mobile.video.me.mycoins.MyCoinsActivity')
+        },
         getProcess(item) {
             const tmp = (item.process / item.threshold).toFixed(2) * 100
             return tmp >= 100 ? '100%' : tmp + '%'
