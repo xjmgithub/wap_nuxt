@@ -17,7 +17,8 @@
                     <div class="like" :class="{actived:voteState==1}" @click="like()">{{ likeCount|formatCount }}</div>
                     <div class="unlike" :class="{actived:voteState==2}" @click="unlike()">{{ disLikeCount|formatCount }}</div>
                 </div>
-                <img src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()" />
+                <img v-show="!sharePost" src="~assets/img/web/ic_share_def_g.png" class="share" @click="toShare()" />
+                <img v-show="sharePost" src="~assets/img/web/ic_share_white.png" class="share" @click="toShare()" />
             </div>
         </div>
         <div v-else class="fail">
@@ -389,7 +390,17 @@ export default {
             z-index: 1001;
             width: 100%;
             margin: 0;
-            padding: 1rem;
+            padding: 0.8rem 1rem;
+            color: white;
+            background: rgba(0, 0, 0, 0.64);
+            .like {
+                background: url('~assets/img/others/like_white.png') no-repeat left center;
+                background-size: contain;
+            }
+            .unlike {
+                background: url('~assets/img/others/dislike_white.png') no-repeat left center;
+                background-size: contain;
+            }
         }
     }
 }

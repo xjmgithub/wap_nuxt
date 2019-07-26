@@ -57,7 +57,7 @@ export const callApp = function(page, failback) {
         value: 1
     })
     envokeByIntent.call(this, page, failback)
-    // if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0 || (browser.isOriginalChrome && browser.isAndroid)) {
+    // if (browser.isOriginalChrome) {
     //     envokeByIntent.call(this, page, failback)
     // } else {
     //     invokeByIframe.call(this, page, failback)

@@ -104,9 +104,10 @@ export default {
         },
         init() {
             this.visiable = true
+            const sbHisense = window.navigator.userAgent.indexOf('Hisense F22') > 0
             this.mySwiper = new Swiper('.swiper-container', {
                 loop: false,
-                zoom: true,
+                zoom: !sbHisense,
                 initialSlide: this.index,
                 width: document.body.scrollWidth,
                 height: document.body.scrollHeight,
@@ -136,7 +137,7 @@ export default {
                     imgtype: this.postList[this.mySwiper.realIndex].indexOf('gif') >= 0 ? 0 : 1
                 })
             })
-            this.mySwiper.on('zoomChange', (scale,img) => {
+            this.mySwiper.on('zoomChange', (scale, img) => {
                 this.sendEvLog({
                     category: `post_${this.id}`,
                     action: 'img_zoom',
