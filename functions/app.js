@@ -17,7 +17,8 @@ export const envokeByIntent = function(page, failback) {
     if (page) {
         target = '?target=' + Base64.encode(page.replace(/&/g, '**'))
     }
-    window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
+    // window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
+    window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;end`
     const s = setTimeout(() => {
         if (!document.hidden) failback && failback()
         clearTimeout(s)
@@ -55,11 +56,12 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
-    if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0 || (browser.isOriginalChrome && browser.isAndroid)) {
-        envokeByIntent.call(this, page, failback)
-    } else {
-        invokeByIframe.call(this, page, failback)
-    }
+    envokeByIntent.call(this, page, failback)
+    // if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0 || (browser.isOriginalChrome && browser.isAndroid)) {
+    //     envokeByIntent.call(this, page, failback)
+    // } else {
+    //     invokeByIframe.call(this, page, failback)
+    // }
 }
 
 export const downApk = function(callback) {
