@@ -39,7 +39,7 @@ export default function(req, res, next) {
                         res.end(
                             JSON.stringify({
                                 code: 101,
-                                message: 'you have not enough coins',
+                                message: 'You have not enough coins',
                                 data: ''
                             })
                         )
