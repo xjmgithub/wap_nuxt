@@ -111,7 +111,7 @@ export default {
                 likeCount: data.upvote,
                 disLikeCount: data.downvote,
                 logo: data.logo,
-                nickname: data.nick,
+                nickname: data.nick || 'StarTimes Entertainment',
                 time: time,
                 detailHtml: detailHtml,
                 title: data.title || '',
