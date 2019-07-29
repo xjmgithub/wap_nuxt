@@ -110,7 +110,7 @@ export default {
                 id: route.params.id,
                 likeCount: data.upvote,
                 disLikeCount: data.downvote,
-                logo: data.logo,
+                logo: data.logo || 'http://cdn.startimestv.com/banner/ic_male.png',
                 nickname: data.nick || 'StarTimes Entertainment',
                 time: time,
                 detailHtml: detailHtml,
