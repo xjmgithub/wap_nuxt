@@ -102,10 +102,10 @@
     </div>
 </template>
 <script>
-import { animateCSS, cdnPicSrc } from '~/functions/utils'
-import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 import qs from 'qs'
 import BScroll from 'better-scroll'
+import { animateCSS, cdnPicSrc } from '~/functions/utils'
+import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     data() {

@@ -28,9 +28,9 @@
     </div>
 </template>
 <script>
-import channel from '~/components/web/guideitem'
 import localforage from 'localforage'
 import dayjs from 'dayjs'
+import channel from '~/components/web/guideitem'
 import { initDB, cacheDateUpdate } from '~/functions/utils'
 export default {
     components: {
