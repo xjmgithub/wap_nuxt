@@ -138,6 +138,7 @@ export default {
                         }, 5000)
                     } else if (data && data.state === 4) {
                         this.result = 2
+                        this.fail_message = data.summary ? data.summary : this.fail_message
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
                     }
                 })
