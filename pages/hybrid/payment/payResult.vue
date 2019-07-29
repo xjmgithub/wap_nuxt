@@ -111,7 +111,7 @@ export default {
         click() {
             if (this.isApp === 1) {
                 if (this.result == 1) {
-                    window.getChannelId && window.getChannelId.noticePaySuccess()
+                    window.getChannelId && window.getChannelId.noticePaySuccess && window.getChannelId.noticePaySuccess()
                 }
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 window.getChannelId && window.getChannelId.finish()
