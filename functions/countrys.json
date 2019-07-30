@@ -135,7 +135,7 @@
         "appFBConfigs": [],
         "country": "-O",
         "onLine": true,
-        "nationalFlag": "",
+        "nationalFlag": "http://cdn.startimestv.com/banner/flag_others.png",
         "countryMap": "http://cdn.startimestv.com/static/image/choose_country_others.png",
         "timezone": "",
         "portalStatus": false,
