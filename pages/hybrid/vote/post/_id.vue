@@ -36,6 +36,7 @@ import mShare from '~/components/web/share.vue'
 import mPost from '~/components/post'
 import download from '~/components/web/download.vue'
 import { callApp, shareInApp } from '~/functions/app'
+import qs from 'qs'
 export default {
     layout: 'base',
     filters: {
@@ -143,10 +144,9 @@ export default {
         // 从缓存中读取点赞状态
         if (this.$store.state.appType <= 0) {
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${this.shareUrl}`)
+            const voteSateCache = localStorage.getItem(`post_${this.id}`)
+            this.voteState = voteSateCache
         }
-
-        const voteSateCache = localStorage.getItem(`post_${this.id}`)
-        this.voteState = voteSateCache
 
         this.sendEvLog({
             category: `post_${this.id}`,
@@ -189,10 +189,19 @@ export default {
             }
         },
         like() {
-            this.postLike(this.voteState == 1 ? 3 : 1)
+            if (this.$store.state.appType <= 0) {
+                this.postLikeClient(this.voteState == 2 ? 3 : 2)
+                this.postLike(this.voteState == 1 ? 3 : 1)
+            } else {
+                this.postLikeClient(this.voteState == 1 ? 3 : 1)
+            }
         },
         unlike() {
-            this.postLike(this.voteState == 2 ? 3 : 2)
+            if (this.$store.state.appType <= 0) {
+                this.postLike(this.voteState == 2 ? 3 : 2)
+            } else {
+                this.postLikeClient(this.voteState == 2 ? 3 : 2)
+            }
         },
         postLike(num) {
             if (num == 1) {
@@ -259,6 +268,21 @@ export default {
             }
             this.voteState = num
             localStorage.setItem(`post_${this.id}`, num)
+        },
+        postLikeClient(num) {
+            this.$axios({
+                url: '/like/v1/vote',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    post_id: this.id,
+                    state: num
+                })
+            }).then(res => {
+                this.postLike(num)
+            })
         }
     },
     head() {
