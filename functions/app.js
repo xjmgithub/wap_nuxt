@@ -18,7 +18,7 @@ export const envokeByIntent = function(page, failback) {
         target = '?target=' + Base64.encode(page.replace(/&/g, '**'))
     }
     // window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
-    window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;end`
+    window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
     const s = setTimeout(() => {
         if (!document.hidden) failback && failback()
         clearTimeout(s)
