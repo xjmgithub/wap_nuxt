@@ -16,7 +16,7 @@
             <img class="rules" src="~assets/img/vote/showgif.png" @click.stop="showgif=true" />
         </div>
         <div class="bot-down">
-            <div class="bot-down-text">Eid Mubarak!! Share to more friends for the great honor of your country.</div>
+            <div class="bot-down-text">Share to more friends for the great honor of your country and win coins now.</div>
             <div class="bot-down-btn" @click="share">SHARE NOW!</div>
         </div>
         <sharePannel />
@@ -47,7 +47,7 @@ export default {
                 shareInvite(
                     `${window.location.href}?utm_source=startimes_app&utm_medium=activity&utm_campaign=soccercup2`,
                     'Eid Mubarak!',
-                    `Final result of StarTimes ON Soccer Cup game comes out. Check it out and get reward.`,
+                    `Final result of StarTimes ON Soccer Cup game comes out. Join the now one and get coins&VIPs.`,
                     `${window.location.origin}/res_nuxt/img/soccercup.png`
                 )
             } else if (this.$store.state.appType == 0) {
@@ -89,12 +89,12 @@ export default {
                 {
                     name: 'description',
                     property: 'description',
-                    content: '【Eid Mubarak!】Final result of StarTimes ON Soccer Cup game comes out. Check it out and get reward.'
+                    content: 'Final result of StarTimes ON Soccer Cup game comes out. Join the now one and get coins&VIPs.'
                 },
                 {
                     name: 'og:description',
                     property: 'og:description',
-                    content: '【Eid Mubarak!】Final result of StarTimes ON Soccer Cup game comes out. Check it out and get reward.'
+                    content: 'Final result of StarTimes ON Soccer Cup game comes out. Join the now one and get coins&VIPs.'
                 },
                 {
                     name: 'og:image',
@@ -130,7 +130,7 @@ html {
     max-width: 1080px;
     margin: 0 auto;
     position: relative;
-    padding-bottom: 3rem;
+    padding-bottom: 3.5rem;
     .result {
         display: block;
         width: 100%;
@@ -147,7 +147,7 @@ html {
     position: fixed;
     width: 100%;
     bottom: 0;
-    height: 3rem;
+    height: 3.5rem;
     padding: 0.5rem 3%;
     display: -webkit-box;
     background: #3a8956;

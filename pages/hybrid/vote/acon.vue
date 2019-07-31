@@ -44,7 +44,7 @@
         </div>
         <mCard v-show="awardsCard" :title="'AWARD RULES'" class="card" @closeCard="awardsCard=false">
             <template v-slot:content>
-                <p>1. Activity Time: 2019-06-11 00:00:00 - 2019.06.19 23:59:59</p>
+                <p>1. Activity Time: 2019-06-11 00:00:00 - 2019.08.15 23:59:59</p>
                 <p>2. Each user represents his own country, and each time he scores a goal, he scores 1 goal for the country.</p>
                 <p>3. There is no limit on the number of times per person per day, can always play during the event</p>
                 <p>4. After the event, 299 users in Champion country team will receive 1 FREE MAX VIP monthly coupon, 199 in the second country, 99 in the third country, and no more than 50 users in the 4th to 15th countries.</p>
@@ -56,7 +56,7 @@
             </template>
         </mCard>
         <div class="bot-down">
-            <div class="bot-down-text">The more friends you call, the higher winning probability will be.</div>
+            <div class="bot-down-text">Every user in TOP 5 country who scored will get the mega coins. Call your friends.</div>
             <div class="bot-down-btn" @click="share">CALL NOW!</div>
         </div>
     </div>
@@ -105,7 +105,7 @@ export default {
             this.$alert(
                 `Welcome to the 'CRAZY FREEKICK'! As a country hero, You'll represent for Team ${
                     this.country.name
-                }. Any goal you score will be added to your country. The higher ranking your team reaches, the more VIP FREE Coupons will be sent to people who have scored.`
+                }. Any goal you score will be added to your country. The higher ranking your team reaches, the more VIP FREE Coupons and coins will be sent to people who have scored.`
             )
             localStorage.setItem('acon_first', 1)
         }
@@ -417,7 +417,7 @@ canvas {
 .bot-down {
     position: fixed;
     bottom: 0;
-    height: 3rem;
+    height: 3.5rem;
     padding: 0.5rem 3%;
     display: -webkit-box;
     background: #3a8956;
