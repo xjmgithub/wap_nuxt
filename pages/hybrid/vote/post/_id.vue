@@ -189,20 +189,18 @@ export default {
             }
         },
         like() {
-            this.postLikeClient(this.voteState == 1 ? 3 : 1)
-            // if (this.$store.state.appType <= 0) {
-            //     this.postLike(this.voteState == 1 ? 3 : 1)
-            // } else {
-            //     this.postLikeClient(this.voteState == 1 ? 3 : 1)
-            // }
+            if (this.$store.state.appType <= 0) {
+                this.postLike(this.voteState == 1 ? 3 : 1)
+            } else {
+                this.postLikeClient(this.voteState == 1 ? 3 : 1)
+            }
         },
         unlike() {
-            this.postLikeClient(this.voteState == 2 ? 3 : 2)
-            // if (this.$store.state.appType <= 0) {
-            //     this.postLike(this.voteState == 2 ? 3 : 2)
-            // } else {
-            //     this.postLikeClient(this.voteState == 2 ? 3 : 2)
-            // }
+            if (this.$store.state.appType <= 0) {
+                this.postLike(this.voteState == 2 ? 3 : 2)
+            } else {
+                this.postLikeClient(this.voteState == 2 ? 3 : 2)
+            }
         },
         postLike(num) {
             if (num == 1) {
