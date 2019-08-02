@@ -1,6 +1,7 @@
 <template>
     <div id="america">
-        <img src="~assets/img/naire/Uganda.jpg" class="bg-pic" />
+        <img v-if="quizId==21" src="~assets/img/naire/bet21.jpg" class="bg-pic" />
+        <img v-else src="~assets/img/naire/Uganda.jpg" class="bg-pic" />
         <div class="contain">
             <div class="top">
                 <p class="prize" @click="showRule=true">
@@ -44,13 +45,23 @@
             </div>
         </div>
         <div v-show="showRule==true||showPrize==true" class="card-layer" @click="showRule=false,showPrize=false" />
-        <div v-show="showRule==true" class="card-rule">
+        <div v-show="showRule==true" :class="{bet21:quizId==21}" class="card-rule">
             <img src="~assets/img/naire/ic_popup_close.png" @click="showRule=false" />
-            <div class="rule">
+            <div v-show="quizId==11" class="rule">
                 <div class="dot">‧</div>
                 <p>There are several questions in each episode, you will get prize if all questions are answered correctly ;</p>
                 <div class="dot">‧</div>
                 <p>If you guess the correct answer to all questions , you will get a 1-week FREE VIP coupon.</p>
+            </div>
+            <div v-show="quizId==21" class="rule">
+                <div class="dot">‧</div>
+                <p>1. There is only one correct answer to each question.</p>
+                <div class="dot">‧</div>
+                <p>2. Every day we will update a question and answer to previous question will be announced.</p>
+                <div class="dot">‧</div>
+                <p>3. Users who answer correctly every single day will get a coupon, with which you will get a 50% discount on our Weekly VIP. Please also be noted, this coupon shall be used within 24 hours.</p>
+                <div class="dot">‧</div>
+                <p>4. For each natural month, 5 users randomly selected from those who answer at least 10 questions correctly in a row, will be awarded with free coupons of our Monthly VIP; 2 users randomly selected from those who answer at least 20 questions correctly in a row, will be awarded with Star signature football</p>
             </div>
         </div>
         <div v-show="showPrize==true" class="card-prize">
@@ -292,8 +303,9 @@ export default {
                 label: '',
                 value: 1
             })
+            const shareUrl = this.quizId == '21' ? 'america_guess21':'america_guess'
             shareInvite(
-                `${location.origin}/hybrid/questionNaire/america_guess?utm_source=usacup`,
+                `${location.origin}/hybrid/questionNaire/${shareUrl}?utm_source=usacup`,
                 'COPA AMERICA 2019 CRAZY GUESS',
                 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!',
                 'http://cdn.startimestv.com/banner/bg_guess.jpg'
@@ -622,6 +634,9 @@ export default {
         left: 50%;
         margin-top: -12rem;
         margin-left: -37.5%;
+        &.bet21{
+            margin-top: -15rem;
+        }
         img {
             width: 2rem;
             float: right;
