@@ -14,7 +14,7 @@
                 <div class="dot">‧</div>
                 <p>1. There is only one correct answer to each question.</p>
                 <div class="dot">‧</div>
-                <p>2. Every day we will update a question and answer to previous question will be announced.</p>
+                <p class="impor"><b>2. Every day we will update a question and answer to previous question will be announced.</b></p>
                 <div class="dot">‧</div>
                 <p>3. Users who answer correctly every single day will get a coupon, with which you will get a 50% discount on our Weekly VIP. Please also be noted, this coupon shall be used within 24 hours.</p>
                 <div class="dot">‧</div>
@@ -154,6 +154,9 @@ html {
             background: rgba(255, 255, 255, 0.2);
             border-radius: 2px;
             padding: 0.8rem 0.8rem 0.1rem;
+        }
+        .impor{
+            color:#f1a721;
         }
         p {
             margin: 0 0 0.8rem 0.8rem;

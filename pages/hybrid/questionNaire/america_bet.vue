@@ -6,7 +6,8 @@
             <div class="top">
                 <p class="prize" @click="showRule=true">
                     <img src="~assets/img/naire/ic_prize.png" />
-                    <span>VIEW PRIZE</span>
+                    <span v-if="quizId==21">RULES</span>
+                    <span v-else>VIEW PRIZE</span>
                 </p>
                 <p class="share" @click="share()">
                     <img src="~assets/img/naire/ic_share.png" />
@@ -57,7 +58,7 @@
                 <div class="dot">‧</div>
                 <p>1. There is only one correct answer to each question.</p>
                 <div class="dot">‧</div>
-                <p>2. Every day we will update a question and answer to previous question will be announced.</p>
+                <p><b>2. Every day we will update a question and answer to previous question will be announced.</b></p>
                 <div class="dot">‧</div>
                 <p>3. Users who answer correctly every single day will get a coupon, with which you will get a 50% discount on our Weekly VIP. Please also be noted, this coupon shall be used within 24 hours.</p>
                 <div class="dot">‧</div>
