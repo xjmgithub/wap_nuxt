@@ -122,7 +122,8 @@ export default {
             prizeNum: 0,
             title: '',
             shareTitle:'',
-            shareContent:''
+            shareContent:'',
+            shareImg:''
         }
     },
     watch: {
@@ -183,6 +184,7 @@ export default {
         this.title = this.quizId == 21 ? 'Challenge Of Football Knowledge' : 'Challengers Crazy Guess'
         this.shareTitle = this.quizId == 21 ? '' : 'Hisense Challengers Uganda Crazy Guess'
         this.shareContent = this.quizId == 21 ? '' : 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!'
+        this.shareImg = this.quizId == 21 ? ' http://cdn.startimestv.com/banner/football.jpg' : 'http://cdn.startimestv.com/banner/Uganda.jpg'
         document.querySelector('#america').height = document.body.clientHeight
         if (this.$store.state.appType == 1) {
             if (
@@ -339,7 +341,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: 'http://cdn.startimestv.com/banner/Uganda.jpg'
+                    content: this.shareImg
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.shareTitle },
