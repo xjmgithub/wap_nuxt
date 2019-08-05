@@ -58,7 +58,9 @@
                 <div class="dot">‧</div>
                 <p>1. There is only one correct answer to each question.</p>
                 <div class="dot">‧</div>
-                <p><b>2. Every day we will update a question and answer to previous question will be announced.</b></p>
+                <p>
+                    <b>2. Every day we will update a question and answer to previous question will be announced.</b>
+                </p>
                 <div class="dot">‧</div>
                 <p>3. Users who answer correctly every single day will get a coupon, with which you will get a 50% discount on our Weekly VIP. Please also be noted, this coupon shall be used within 24 hours.</p>
                 <div class="dot">‧</div>
@@ -117,7 +119,10 @@ export default {
             showPrize: false,
             userId: this.$store.state.user.id,
             quizId: this.$route.query.quizId || 1,
-            prizeNum: 0
+            prizeNum: 0,
+            title: '',
+            shareTitle:'',
+            shareContent:''
         }
     },
     watch: {
@@ -175,6 +180,9 @@ export default {
             label: '',
             value: 1
         })
+        this.title = this.quizId == 21 ? 'Challenge Of Football Knowledge' : 'Challengers Crazy Guess'
+        this.shareTitle = this.quizId == 21 ? '' : 'Hisense Challengers Uganda Crazy Guess'
+        this.shareContent = this.quizId == 21 ? '' : 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!'
         document.querySelector('#america').height = document.body.clientHeight
         if (this.$store.state.appType == 1) {
             if (
@@ -304,7 +312,7 @@ export default {
                 label: '',
                 value: 1
             })
-            const shareUrl = this.quizId == '21' ? 'america_guess21':'america_guess'
+            const shareUrl = this.quizId == '21' ? 'america_guess21' : 'america_guess'
             shareInvite(
                 `${location.origin}/hybrid/questionNaire/${shareUrl}?utm_source=usacup`,
                 'COPA AMERICA 2019 CRAZY GUESS',
@@ -324,17 +332,17 @@ export default {
     },
     head() {
         return {
-            title: 'Challengers Crazy Guess',
+            title: this.title,
             meta: [
-                { name: 'description', property: 'description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
-                { name: 'og:description', property: 'og:description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
+                { name: 'description', property: 'description', content: this.shareContent },
+                { name: 'og:description', property: 'og:description', content: this.shareContent },
                 {
                     name: 'og:image',
                     property: 'og:image',
                     content: 'http://cdn.startimestv.com/banner/Uganda.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Hisense Challengers Uganda Crazy Guess' },
+                { name: 'og:title', property: 'og:title', content: this.shareTitle },
                 {
                     name: 'al:android:url',
                     property: 'al:android:url',
@@ -635,7 +643,7 @@ export default {
         left: 50%;
         margin-top: -12rem;
         margin-left: -37.5%;
-        &.bet21{
+        &.bet21 {
             margin-top: -15rem;
         }
         img {
