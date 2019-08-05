@@ -25,7 +25,7 @@ export const getUserMe = function(token, callback) {
         .then(res => {
             callback && callback(res.data)
         })
-        .catch(err => {
+        .catch(() => {
             callback && callback()
         })
 }

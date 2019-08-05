@@ -18,7 +18,7 @@ export default function(req, res, next) {
         .format('YYYY-MM-DD HH:mm:ss')
 
     getUserMe(token, user => {
-        if (!user||user.roleName == 'ANONYMOUS') {
+        if (!user || user.roleName == 'ANONYMOUS') {
             res.statusCode = 401
             res.end('Unauthorized')
             return false
@@ -68,6 +68,14 @@ export default function(req, res, next) {
                         }
                     )
                 })
+            } else {
+                res.end(
+                    JSON.stringify({
+                        code: 105,
+                        message: 'task list is null',
+                        data: ''
+                    })
+                )
             }
         })
     })
