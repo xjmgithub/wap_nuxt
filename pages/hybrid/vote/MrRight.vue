@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="Mr-Right">
             <div class="title">
-                <img src="~assets/img/vote/pic_title.png" />
+                <img src="~assets/img/vote/Banner2.jpg" />
                 <div class="video">
                     <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)" />
                     <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)" />
@@ -12,7 +12,10 @@
             <div class="rule">
                 <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
                 <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                    <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)" />
+                    <img src="~assets/img/vote/VIVO2.jpg" @click="mSendEvLog('banner_click',1,10)" />
+                    <span>
+                        AI Triple Camera(Front 16 MP, Rear 13MP+8MP+2MP), 5000mAh Battery
+                    </span>
                 </nuxt-link>
             </div>
             <div v-show="coupleList.length>0" class="vote">
@@ -22,12 +25,7 @@
                     <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
                 </p>
                 <ul class="clearfix">
-                    <li
-                        v-for="(item,index) in coupleList"
-                        :key="index"
-                        :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
-                        data-id="item.id"
-                    >
+                    <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length>0&&advisorList.length<3}" data-id="item.id">
                         <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
                             <img :src="cdnPic(item.icon)" class="icon" />
                             <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player" />
@@ -78,8 +76,7 @@
             </div>
             <div class="clips">
                 <p>
-                    <img class="heart" src="~assets/img/vote/heartpoint.png" />
-                    {{$store.state.lang.mrright_clips_you_cant_miss}}
+                    <img class="heart" src="~assets/img/vote/heartpoint.png" /> {{$store.state.lang.mrright_clips_you_cant_miss}}
                 </p>
                 <ul class="clearfix">
                     <li v-for="(item,index) in clipsList" :key="index">
@@ -448,7 +445,14 @@ body {
         font-weight: bold;
         margin-top: 0.7rem;
         img {
-            width: 100%;
+            width: 60%;
+        }
+        span {
+            color:#ffffff;
+            font-size: .9rem;
+            display: inline-block;
+            width: 38%;
+            vertical-align: middle;
         }
         .share {
             position: absolute;
@@ -461,6 +465,7 @@ body {
         & > img {
             display: block;
             width: 100%;
+            margin-bottom: 0.5rem;
         }
         .video {
             padding: 0 0.5rem;

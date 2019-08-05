@@ -45,7 +45,7 @@ export default {
     mrright_voted: 'VOTED',
     mrright_left_vote_today: 'left vote today:',
     mrright_history_rank: 'History Rank',
-    mrright_all_candidates: 'All candidates encore on 14th Jul!',
+    mrright_all_candidates: 'All candidates encore on 31st Oct!',
     mrright_clips_you_cant_miss: "Clips You Can't Miss",
     mrright_vote_tomorrow_login: 'Continue vote tomorrow! More vote, more chances for prize!',
     mrright_vote_tomorrow: 'Continue vote tomorrow! Sign in for more chances to win prize!',
