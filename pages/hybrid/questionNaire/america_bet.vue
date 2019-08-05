@@ -58,11 +58,15 @@
                 <div class="dot">‧</div>
                 <p>1. There is only one correct answer to each question.</p>
                 <div class="dot">‧</div>
-                <p><b>2. Every day we will update a question and answer to previous question will be announced.</b></p>
+                <p>
+                    <b>2. Every day we will update a question and answer to previous question will be announced.</b>
+                </p>
                 <div class="dot">‧</div>
                 <p>3. Users who answer correctly every single day will get a coupon, with which you will get a 50% discount on our Weekly VIP. Please also be noted, this coupon shall be used within 24 hours.</p>
                 <div class="dot">‧</div>
                 <p>4. For each natural month, 5 users randomly selected from those who answer at least 10 questions correctly in a row, will be awarded with free coupons of our Monthly VIP; 2 users randomly selected from those who answer at least 20 questions correctly in a row, will be awarded with Star signature football</p>
+                <div class="dot">‧</div>
+                <p>5.Users who participate in the answer have the opportunity to divide the coins, a total of 300 million.</p>
             </div>
         </div>
         <div v-show="showPrize==true" class="card-prize">
@@ -112,12 +116,25 @@ export default {
         }
     },
     data() {
+        const id = this.$route.query.quizId
+        const title = id == 21 ? 'Challenge Of Football Knowledge' : 'Challengers Crazy Guess'
+        const shareTitle = id == 21 ? 'Challenge Of Football Knowledge' : 'Hisense Challengers Uganda Crazy Guess'
+        const shareContent =
+            id == 21
+                ? 'Are you knowledgeable about football？Fight for 300 million coins&VIPs together.'
+                : 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!'
+
+        const shareImg = id == 21 ? ' http://cdn.startimestv.com/banner/football.jpg' : 'http://cdn.startimestv.com/banner/Uganda.jpg'
         return {
             showRule: false,
             showPrize: false,
             userId: this.$store.state.user.id,
             quizId: this.$route.query.quizId || 1,
-            prizeNum: 0
+            prizeNum: 0,
+            title: title,
+            shareTitle: shareTitle,
+            shareContent: shareContent,
+            shareImg: shareImg
         }
     },
     watch: {
@@ -175,6 +192,7 @@ export default {
             label: '',
             value: 1
         })
+
         document.querySelector('#america').height = document.body.clientHeight
         if (this.$store.state.appType == 1) {
             if (
@@ -304,7 +322,7 @@ export default {
                 label: '',
                 value: 1
             })
-            const shareUrl = this.quizId == '21' ? 'america_guess21':'america_guess'
+            const shareUrl = this.quizId == '21' ? 'america_guess21' : 'america_guess'
             shareInvite(
                 `${location.origin}/hybrid/questionNaire/${shareUrl}?utm_source=usacup`,
                 'COPA AMERICA 2019 CRAZY GUESS',
@@ -324,17 +342,17 @@ export default {
     },
     head() {
         return {
-            title: 'Challengers Crazy Guess',
+            title: this.title,
             meta: [
-                { name: 'description', property: 'description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
-                { name: 'og:description', property: 'og:description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
+                { name: 'description', property: 'description', content: this.shareContent },
+                { name: 'og:description', property: 'og:description', content: this.shareContent },
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: 'http://cdn.startimestv.com/banner/Uganda.jpg'
+                    content: this.shareImg
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Hisense Challengers Uganda Crazy Guess' },
+                { name: 'og:title', property: 'og:title', content: this.shareTitle },
                 {
                     name: 'al:android:url',
                     property: 'al:android:url',
@@ -635,7 +653,7 @@ export default {
         left: 50%;
         margin-top: -12rem;
         margin-left: -37.5%;
-        &.bet21{
+        &.bet21 {
             margin-top: -15rem;
         }
         img {
@@ -647,6 +665,8 @@ export default {
             background: #ffffff;
             margin-top: 3rem;
             border-radius: 4px;
+            max-height: 25rem;
+            overflow: scroll;
             p {
                 margin: 0 0 0.8rem 1rem;
             }
