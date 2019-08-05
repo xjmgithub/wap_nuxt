@@ -110,7 +110,7 @@ export default {
         return {
             isLogin: this.$store.state.user.type || false,
             isApp: this.$store.state.appType,
-            vote_id: 7,
+            vote_id: 14,
             videoList: [],
             advisorList: [],
             rankList: [],
