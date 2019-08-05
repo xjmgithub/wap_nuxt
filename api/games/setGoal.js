@@ -19,7 +19,7 @@ export default function(req, res, next) {
         res.end(
             JSON.stringify({
                 code: 101,
-                message: 'the goal is invalid',
+                message: 'The goal is invalid',
                 data: ''
             })
         )
@@ -52,7 +52,7 @@ export default function(req, res, next) {
                         res.end(
                             JSON.stringify({
                                 code: 105,
-                                message: 'unvalid goals',
+                                message: 'Unvalid goals',
                                 data: ''
                             })
                         )

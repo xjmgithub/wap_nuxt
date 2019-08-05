@@ -341,7 +341,7 @@ export default {
             this.$axios.get(`/hybrid/api/games/taskOver?taskId=${taskId}`).then(res => {
                 if (res.data.code == 200) {
                     item.overTask = true
-                    this.$toast(`you get ${item.award} coins by task.`, 4000)
+                    this.$toast(`You get ${item.award} coins by task.`, 4000)
                     this.myCoins += item.award
                     this.getTaskByGame()
                 } else {

@@ -22,7 +22,7 @@ export default function(req, res, next) {
         res.end(
             JSON.stringify({
                 code: 101,
-                message: 'taskId is invalid',
+                message: 'TaskId is invalid',
                 data: ''
             })
         )
@@ -122,7 +122,7 @@ export default function(req, res, next) {
                                                                 res.end(
                                                                     JSON.stringify({
                                                                         code: 102,
-                                                                        message: 'get coins error',
+                                                                        message: 'Get coins error',
                                                                         data: ''
                                                                     })
                                                                 )

@@ -49,7 +49,7 @@ export default function(req, res, next) {
         res.end(
             JSON.stringify({
                 code: 101,
-                message: 'the goal is invalid',
+                message: 'The goal is invalid',
                 data: ''
             })
         )
@@ -83,7 +83,7 @@ export default function(req, res, next) {
                         res.end(
                             JSON.stringify({
                                 code: 105,
-                                message: 'unvalid goals',
+                                message: 'Unvalid goals',
                                 data: ''
                             })
                         )
@@ -97,7 +97,7 @@ export default function(req, res, next) {
                             res.end(
                                 JSON.stringify({
                                     code: 106,
-                                    message: 'the coins you got today reached the max value ',
+                                    message: 'The coins you got today reached the max value ',
                                     data: ''
                                 })
                             )
@@ -152,7 +152,7 @@ export default function(req, res, next) {
                                 res.end(
                                     JSON.stringify({
                                         code: 102,
-                                        message: 'get coins error',
+                                        message: 'Get coins error',
                                         data: ''
                                     })
                                 )
