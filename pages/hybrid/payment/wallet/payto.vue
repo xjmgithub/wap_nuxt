@@ -119,7 +119,7 @@ export default {
                 }
             } else {
                 // 充值流程
-                this.$router.push('/hybrid/payment/wallet/rechargeChannel')
+                // this.$router.push('/hybrid/payment/wallet/rechargeChannel')
             }
         }
     }
