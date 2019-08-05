@@ -15,6 +15,7 @@
                     <img src="~assets/img/vote/VIVO2.jpg" @click="mSendEvLog('banner_click',1,10)" />
                     <span>
                         AI Triple Camera(Front 16 MP, Rear 13MP+8MP+2MP), 5000mAh Battery
+                        <b>HOW TO WIN</b>
                     </span>
                 </nuxt-link>
             </div>
@@ -449,10 +450,16 @@ body {
         }
         span {
             color:#ffffff;
-            font-size: .9rem;
+            font-size: .8rem;
             display: inline-block;
             width: 38%;
             vertical-align: middle;
+            b{
+                display: block;
+                text-decoration: underline;
+                margin-top:.2rem;
+                color:#ffe6a4;
+            }
         }
         .share {
             position: absolute;
