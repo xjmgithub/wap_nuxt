@@ -4,8 +4,8 @@
             <canvas id="canvas" class="ani_hack" width="1360" height="640" />
         </div>
         <div class="contain">
-            <div class="my-coins-box">
-                <div class="my-coins" @click="toMyCoins">
+            <div v-show="showMyCoins" class="my-coins-box">
+                <div class="my-coins" :class="{animation:showMyCoins}" @click="toMyCoins">
                     My Coins：{{myCoins}}
                     <img src="~assets/img/vote/ic_gift.png" />
                     <img src="~assets/img/vote/ic_gift_go.png" />
@@ -168,6 +168,7 @@ export default {
             showGames: false,
             showRewards: false,
             showMissions: false,
+            showMyCoins: true,
             goals: '-',
             myCoins: '-',
             latest: true,
@@ -206,6 +207,9 @@ export default {
                     )
                 })
             }
+        })
+        $(game).on('game_begin', () => {
+            this.showMyCoins = false
         })
         this.getRankList(1)
     },
@@ -296,6 +300,7 @@ export default {
         },
         // 游戏结束 获取奖励
         getAward(goal) {
+            this.showMyCoins = true
             this.setGoal(goal)
             let totalGoal = 0
             this.levelGoal.forEach(ele => {
@@ -305,15 +310,15 @@ export default {
                 this.$axios.get(`/hybrid/api/games/getAward?gameId=${this.gameId}&goals=${totalGoal}`).then(res => {
                     if (res.data.code == 200) {
                         if (res.data.data.operatorCoins >= 100) {
-                            this.$toast(`you get ${res.data.data.operatorCoins} coins in this round of game.`)
+                            this.$toast(`You get ${res.data.data.operatorCoins} coins in this round of game.`, 4000)
                             this.myCoins = res.data.data.afterCoins
-                            this.levelGoal = []
                         }
                     } else {
-                        this.$toast(res.data.message)
+                        this.$toast(res.data.message, 3000)
                     }
                 })
             }
+            this.levelGoal = []
         },
         // 关卡结束，添加goal进球数
         setGoal(goal) {
@@ -324,7 +329,7 @@ export default {
                         if (res.data.code == 200) {
                             this.getRankList()
                         } else {
-                            this.$toast(res.data.message)
+                            this.$toast(res.data.message, 3000)
                         }
                     })
                 })
@@ -336,11 +341,11 @@ export default {
             this.$axios.get(`/hybrid/api/games/taskOver?taskId=${taskId}`).then(res => {
                 if (res.data.code == 200) {
                     item.overTask = true
-                    this.$toast(`you get ${item.award} coins by task.`)
+                    this.$toast(`you get ${item.award} coins by task.`, 4000)
                     this.myCoins += item.award
                     this.getTaskByGame()
                 } else {
-                    this.$toast(res.data.message)
+                    this.$toast(res.data.message, 3000)
                 }
             })
         },
@@ -352,7 +357,7 @@ export default {
                     window.s_oMenu._onButPlayRelease()
                     this.myCoins = res.data.data.afterCoins
                 } else {
-                    this.$toast(res.data.message)
+                    this.$toast(res.data.message, 3000)
                 }
             })
         },
@@ -416,7 +421,17 @@ canvas {
     outline: none;
     -webkit-tap-highlight-color: transparent; /* mobile webkit */
 }
-
+@keyframes moves {
+    from {
+        transform: rotate(-9deg);
+    }
+    50% {
+        transform: rotate(9deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
 .contain {
     position: fixed;
     top: 43%;
@@ -441,9 +456,12 @@ canvas {
                     margin-left: 0.2rem;
                 }
             }
+            &.animation {
+                -webkit-animation: moves 0.4s ease-out;
+                animation: moves 0.4s ease-out;
+            }
         }
     }
-
     .cty-rank {
         background: #252e28;
         border-top: 1px solid #252e28;

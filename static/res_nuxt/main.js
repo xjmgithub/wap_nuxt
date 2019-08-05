@@ -1368,6 +1368,7 @@ function CSelectTeam() {
         f.setPosition(a, e - g)
     }
     this._onButNextRelease = function() {
+        $(s_oMain).trigger('game_begin')
         this.unload()
         ;(!1 !== DISABLE_SOUND_MOBILE && !1 !== s_bMobile) || createjs.Sound.play('click')
         var a
