@@ -65,6 +65,8 @@
                 <p>3. Users who answer correctly every single day will get a coupon, with which you will get a 50% discount on our Weekly VIP. Please also be noted, this coupon shall be used within 24 hours.</p>
                 <div class="dot">‧</div>
                 <p>4. For each natural month, 5 users randomly selected from those who answer at least 10 questions correctly in a row, will be awarded with free coupons of our Monthly VIP; 2 users randomly selected from those who answer at least 20 questions correctly in a row, will be awarded with Star signature football</p>
+                <div class="dot">‧</div>
+                <p>5.Users who participate in the answer have the opportunity to divide the coins, a total of 300 million.</p>
             </div>
         </div>
         <div v-show="showPrize==true" class="card-prize">
@@ -114,16 +116,25 @@ export default {
         }
     },
     data() {
+        const id = this.$route.query.quizId
+        const title = id == 21 ? 'Challenge Of Football Knowledge' : 'Challengers Crazy Guess'
+        const shareTitle = id == 21 ? 'Challenge Of Football Knowledge' : 'Hisense Challengers Uganda Crazy Guess'
+        const shareContent =
+            id == 21
+                ? 'Are you knowledgeable about football？Fight for 300 million coins&VIPs together.'
+                : 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!'
+
+        const shareImg = id == 21 ? ' http://cdn.startimestv.com/banner/football.jpg' : 'http://cdn.startimestv.com/banner/Uganda.jpg'
         return {
             showRule: false,
             showPrize: false,
             userId: this.$store.state.user.id,
             quizId: this.$route.query.quizId || 1,
             prizeNum: 0,
-            title: '',
-            shareTitle:'',
-            shareContent:'',
-            shareImg:''
+            title: title,
+            shareTitle: shareTitle,
+            shareContent: shareContent,
+            shareImg: shareImg
         }
     },
     watch: {
@@ -181,10 +192,7 @@ export default {
             label: '',
             value: 1
         })
-        this.title = this.quizId == 21 ? 'Challenge Of Football Knowledge' : 'Challengers Crazy Guess'
-        this.shareTitle = this.quizId == 21 ? '' : 'Hisense Challengers Uganda Crazy Guess'
-        this.shareContent = this.quizId == 21 ? '' : 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!'
-        this.shareImg = this.quizId == 21 ? ' http://cdn.startimestv.com/banner/football.jpg' : 'http://cdn.startimestv.com/banner/Uganda.jpg'
+
         document.querySelector('#america').height = document.body.clientHeight
         if (this.$store.state.appType == 1) {
             if (
@@ -657,6 +665,8 @@ export default {
             background: #ffffff;
             margin-top: 3rem;
             border-radius: 4px;
+            max-height: 25rem;
+            overflow: scroll;
             p {
                 margin: 0 0 0.8rem 1rem;
             }

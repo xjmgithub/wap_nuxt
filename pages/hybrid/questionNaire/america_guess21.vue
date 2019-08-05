@@ -19,6 +19,7 @@
                 <p>3. Users who answer correctly every single day will get a coupon, with which you will get a 50% discount on our Weekly VIP. Please also be noted, this coupon shall be used within 24 hours.</p>
                 <div class="dot">‧</div>
                 <p>4. For each natural month, 5 users randomly selected from those who answer at least 10 questions correctly in a row, will be awarded with free coupons of our Monthly VIP; 2 users randomly selected from those who answer at least 20 questions correctly in a row, will be awarded with Star signature football</p>
+                <p>5.Users who participate in the answer have the opportunity to divide the coins, a total of 300 million.</p>
             </div>
             <div class="bot-down-btn" @click="toShare()">Click here and share to your friends</div>
         </div>
@@ -66,17 +67,17 @@ export default {
     },
     head() {
         return {
-            title: 'Challengers Crazy Guess',
+            title: 'Challenge Of Football Knowledge',
             meta: [
-                { name: 'description', property: 'description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
-                { name: 'og:description', property: 'og:description', content: 'Win 1,000,000 VIPs! Get them free in StarTimes ON Crazy Guess!' },
+                { name: 'description', property: 'description', content: 'Are you knowledgeable about football？Fight for 300 million coins&VIPs together.' },
+                { name: 'og:description', property: 'og:description', content: 'Are you knowledgeable about football？Fight for 300 million coins&VIPs together.' },
                 {
                     name: 'og:image',
                     property: 'og:image',
                     content: 'http://cdn.startimestv.com/banner/Uganda.jpg'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-                { name: 'og:title', property: 'og:title', content: 'Hisense Challengers Uganda Crazy Guess' },
+                { name: 'og:title', property: 'og:title', content: 'Challenge Of Football Knowledge' },
                 {
                     name: 'al:android:url',
                     property: 'al:android:url',
