@@ -31,12 +31,8 @@ export default {
             return false
         }
 
-        if (!this.payChannel) {
-            this.$alert('Query payChannel needed! please check request')
-            return false
-        }
 
-        this.$axios.get(`payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
+        this.$axios.get(`http://qa.payment.startimestv.com/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
             const data = res.data
             if (data && data.payChannels && data.payChannels.length > 0) {
                 const payChannels = {}
