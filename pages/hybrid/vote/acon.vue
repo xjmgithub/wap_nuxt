@@ -6,7 +6,7 @@
         <div class="contain">
             <div v-show="showMyCoins" class="my-coins-box">
                 <div class="my-coins" :class="{animation:showMyCoins}" @click="toMyCoins">
-                    My Coins：{{myCoins}}
+                    My Coins: {{myCoins}}
                     <img src="~assets/img/vote/ic_gift.png" />
                     <img src="~assets/img/vote/ic_gift_go.png" />
                 </div>
@@ -19,7 +19,7 @@
                         Ends in {{endTime}}
                     </span>
                 </p>
-                <p>
+                <p class="your-score">
                     You've scored
                     <b>{{goals}}</b> goals.
                     <span v-if="latest && preGameId" class="rules" @click="getLastWeekResult()">Last week result</span>
@@ -198,18 +198,19 @@ export default {
         /* eslint-disable */
         if (window.history && window.history.pushState) {
             history.pushState(null, null, document.URL)
-            window.addEventListener('popstate', ()=>{
-                
-                history.pushState(null, null, document.URL)
-                // 如果任务面板打卡
+            window.addEventListener(
+                'popstate',
+                () => {
+                    history.pushState(null, null, document.URL)
+                    // 如果任务面板打卡
 
-                // 如果正在游戏中
+                    // 如果正在游戏中
 
-                // else  如果判断当前页面则
-                window.getChannelId && window.getChannelId.finish()
-
-
-            }, false)
+                    // else  如果判断当前页面则
+                    window.getChannelId && window.getChannelId.finish()
+                },
+                false
+            )
         }
 
         const game = new window.CMain({
@@ -218,7 +219,7 @@ export default {
         })
         window.sizeHandler()
 
-        document.querySelector('.contain').style.top = document.querySelector('canvas').style.height
+        document.querySelector('.contain').style.top = parseInt(document.querySelector('canvas').style.height) - 20 + 'px'
 
         $(game).on('save_score', (evt, goal, score) => {
             this.getAward(goal)
@@ -476,16 +477,17 @@ canvas {
     .my-coins-box {
         width: 100%;
         text-align: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.1rem;
         .my-coins {
             display: inline-block;
-            padding: 0.4rem 0.6rem;
+            padding: 0.3rem 0.6rem;
             background: rgba(37, 46, 40, 0.8);
             color: #e4ffc6;
             border: 2px solid #6dc60e;
             border-radius: 30px;
+            font-size: 0.9rem;
             img {
-                width: 1.5rem;
+                width: 1.3rem;
                 margin-left: 0.5rem;
                 & + img {
                     width: 0.5rem;
@@ -505,8 +507,8 @@ canvas {
         p {
             margin: 0.2rem;
             color: #94e6ac;
-            height: 2.4rem;
-            line-height: 2.4rem;
+            height: 2.2rem;
+            line-height: 2.2rem;
             padding: 0 4%;
             &.time {
                 color: #e4ffc6;
@@ -521,6 +523,10 @@ canvas {
                     width: 0.7rem;
                     margin-top: -0.1rem;
                 }
+            }
+            &.your-score{
+                height:1.4rem;
+                line-height: 1.9rem;
             }
             .rules {
                 color: #f34c02;
@@ -538,7 +544,7 @@ canvas {
         }
         .per-list {
             color: #66a578;
-            height: 4rem;
+            height: 3.5rem;
             &.my-rank {
                 border-left: 3px solid #94e6ac;
                 background: rgba(148, 230, 172, 0.1);
@@ -551,7 +557,7 @@ canvas {
             .left {
                 float: left;
                 width: 68%;
-                line-height: 4rem;
+                line-height: 3.5rem;
                 span {
                     float: left;
                     img {
@@ -561,8 +567,8 @@ canvas {
                 }
                 .ranking {
                     width: 1.7rem;
-                    line-height: 4.1rem;
-                    height: 4rem;
+                    line-height: 3.5rem;
+                    height: 3.5rem;
                     font-size: 0.9rem;
                     box-sizing: border-box;
                     color: #94e6ac;
@@ -592,6 +598,7 @@ canvas {
                     white-space: nowrap;
                     width: 53%;
                     font-weight: bold;
+                    font-size:0.9rem;
                 }
             }
 
@@ -601,9 +608,9 @@ canvas {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                line-height: 4rem;
+                line-height: 3.5rem;
                 &.top-three {
-                    line-height: 1.8rem;
+                    line-height: 1.5rem;
                 }
                 .prize {
                     background: #9aee3f;
@@ -631,21 +638,22 @@ canvas {
 .bot-down {
     position: fixed;
     bottom: 0;
-    height: 3rem;
+    height: 2.4rem;
     background: #3a8956;
     z-index: 200;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     width: 100%;
     box-shadow: 0px -1px 4px 0px rgba(0, 61, 21, 1);
+    padding:0 5%;
     span {
         display: inline-block;
         width: 32.4%;
         text-align: center;
         img {
-            width: 4.5rem;
+            width: 4rem;
             position: relative;
-            top: -1.5rem;
+            top: -1.3rem;
         }
     }
 }
