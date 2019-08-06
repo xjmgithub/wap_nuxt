@@ -395,6 +395,7 @@ export default {
                     this.myCoins = res.data.data.afterCoins
                 } else {
                     this.$toast(res.data.message, 3000)
+                    this.isPlaying = false
                 }
             })
         },
