@@ -137,9 +137,9 @@
                 </div>
                 <div class="operation">
                     <img src="~assets/img/vote/button_forward.png" class="forward" />
-                    <nuxt-link :to="`/hybrid/questionNaire/america_bet`">
+                    <a href="/hybrid/questionNaire/america_bet">
                         <img src="~assets/img/vote/button_start.png" class="start" />
-                    </nuxt-link>
+                    </a>
                     <img src="~assets/img/vote/button_next.png" class="next" />
                 </div>
             </div>
