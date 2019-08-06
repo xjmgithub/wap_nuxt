@@ -181,6 +181,11 @@ export default {
         }
     },
     mounted() {
+        this.$router.push({
+            query: Object.assign({}, this.$route.query, {
+                start: 1
+            })
+        })
         /* eslint-disable */
         const game = new window.CMain({
             shot_indicator_spd: 1000,
@@ -211,7 +216,13 @@ export default {
         $(game).on('game_begin', () => {
             this.showMyCoins = false
         })
+        $(game).on('game_exit', () => {
+            this.showMyCoins = true
+        })
         this.getRankList(1)
+    },
+    beforeRouteLeave(to, from, next) {
+        // ...
     },
     methods: {
         toMyCoins() {

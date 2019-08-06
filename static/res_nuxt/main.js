@@ -1350,6 +1350,7 @@ function CSelectTeam() {
         s_iTeamSelected = g
     }
     this._onExit = function() {
+        $(s_oMain).trigger('game_exit')
         s_oMain.gotoMenu()
     }
     this.unload = function() {
@@ -1698,6 +1699,7 @@ function CGame(a, e) {
         s_oMain.gotoMenu()
         if (!1 === DISABLE_SOUND_MOBILE || !1 === s_bMobile) (s_oCrowd.volume = 0), (s_oSoundtrack.volume = 1)
         $(s_oMain).trigger('restart')
+        $(s_oMain).trigger('game_exit')
     }
     this.gameOver = function() {
         c = q = 0
