@@ -53,7 +53,7 @@ export default function(req, res, next) {
                             runSql(
                                 res,
                                 `SELECT * FROM games_action 
-                                WHERE action_name="startGame" AND create_time>'${start}' AND create_time<'${end}' 
+                                WHERE action_name="startGame" AND create_time>'${start}' AND create_time<'${end}' AND user_id='${user.id}' 
                                 LIMIT 1`,
                                 haveLoged => {
                                     // 登录记录
