@@ -146,9 +146,9 @@
                 </div>
                 <div class="operation">
                     <img src="~assets/img/vote/button_forward.png" class="forward" />
-                    <nuxt-link :to="`/hybrid/questionNaire/america_bet`">
+                    <a href="/hybrid/questionNaire/america_bet">
                         <img src="~assets/img/vote/button_start.png" class="start" />
-                    </nuxt-link>
+                    </a>
                     <img src="~assets/img/vote/button_next.png" class="next" />
                 </div>
             </div>
@@ -190,6 +190,11 @@ export default {
         }
     },
     mounted() {
+        this.$router.push({
+            query: Object.assign({}, this.$route.query, {
+                start: 1
+            })
+        })
         /* eslint-disable */
         if (window.history && window.history.pushState) {
             history.pushState(null, null, document.URL)
@@ -236,7 +241,13 @@ export default {
         $(game).on('game_begin', () => {
             this.showMyCoins = false
         })
+        $(game).on('game_exit', () => {
+            this.showMyCoins = true
+        })
         this.getRankList(1)
+    },
+    beforeRouteLeave(to, from, next) {
+        // ...
     },
     methods: {
         toMyCoins() {

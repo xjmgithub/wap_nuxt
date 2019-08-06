@@ -72,7 +72,7 @@ export default function(req, res, next) {
                 res.end(
                     JSON.stringify({
                         code: 105,
-                        message: 'task list is null',
+                        message: 'Task list is null',
                         data: ''
                     })
                 )
