@@ -32,7 +32,6 @@ export default {
             redirectUrl: '',
             paySubject: '',
             payNote: '',
-            merchantAppId: '',
             totalAmount: '',
             notifyUrl: '',
             country: '',
@@ -43,6 +42,32 @@ export default {
 
     methods: {
         creatPayment() {
+            this.$axios({
+                url: '/hybrid/api/payment/createPayment',
+                method: 'post',
+                data: {
+                    client_id: this.client_id,
+                    apiKey: this.apikey,
+                    appid: this.appid,
+                    redirectUrl: this.redirectUrl,
+                    paySubject: this.paySubject,
+                    payNote: this.payNote,
+                    totalAmount: this.totalAmount,
+                    notifyUrl: this.notifyUrl,
+                    country: this.country,
+                    currency: this.currency,
+                    txNo: this.txNo
+                }
+            })
+                .then(res => {
+                    console.log(res.data)
+                    if (res.data.resultCode == 'SUCCESS') {
+                        window.location.href = `/hybrid/payment/channels?payToken=${res.data.payToken}`
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
     }
 }

@@ -5,7 +5,7 @@ const authIgnore = [
     /^\/hybrid\/account\/register/,
     /^\/hybrid\/account\/setpass/,
     /^\/hybrid\/account\/resetpass/,
-    /^\/hybrid\/payment\/channelDesc/,
+    /^\/hybrid\/payment\/channels/,
     /^\/hybrid\/payment\/payResult/,
     /^\/hybrid\/payment\/form/,
     /^\/hybrid\/payment\/methods/,
@@ -19,7 +19,7 @@ const authIgnore = [
     /^\/hybrid\/dvb\/bind/,
     /^\/hybrid\/dvb\/order/,
     /^\/hybrid\/post/,
-    /^\/hybrid\/api/,
+    /^\/hybrid\/api/
 ]
 const inIgnore = url => {
     let result = false
@@ -31,7 +31,7 @@ const inIgnore = url => {
     return result
 }
 
-export default ({ app, store, route, redirect,$axios }) => {
+export default ({ app, store, route, redirect, $axios }) => {
     const user = store.state.user
     const isLogin = user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
     if (!inIgnore(route.fullPath)) {
@@ -43,5 +43,4 @@ export default ({ app, store, route, redirect,$axios }) => {
             }
         }
     }
-    
 }
