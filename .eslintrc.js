@@ -18,6 +18,7 @@ module.exports = {
                 singleline: 10
             }
         ],
+        'import/order': 'off',
         eqeqeq: 'off',
         'vue/mustache-interpolation-spacing': 'off',
         'prettier/prettier': 0,
@@ -25,7 +26,7 @@ module.exports = {
         'vue/multiline-html-element-content-newline': 'off',
         'vue/html-closing-bracket-spacing': 'off',
         'vue/no-v-html': 'off',
-        'vue/html-self-closing':'off',
+        'vue/html-self-closing': 'off',
         'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }],
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

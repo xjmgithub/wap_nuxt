@@ -3,33 +3,25 @@
         <div :class="{focus:focus_email,error:error_email}" class="input-email">
             <div class="number">
                 <input v-model="email" type="email" placeholder="Enter your email address" @focus="focus_email=true" @blur="focus_email=false">
+                <div v-show="showAutoInput" class="auto-input">
+                    <div class="gmail" @click="autoInput('gamil.com')">{{email}}{{str_gmail}}</div>
+                    <div class="fotmail" @click="autoInput('fotmail.com')">{{email}}{{str_fotmail}}</div>
+                    <div class="yahoo" @click="autoInput('yahoo.com')">{{email}}{{str_yahoo}}</div>
+                </div>
             </div>
             <div v-show="error_email" class="error">
                 {{error_email}}
             </div>
         </div>
-        <div class="get-code">
-            <input
-                v-model="vscode"
-                :class="{focus:focus_code,error:error_code}"
-                type="text"
-                maxlength="4"
-                placeholder="Click to get verification code"
-                @focus="focus_code=true"
-                @blur="focus_code=false"
-            >
-            <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">
-                {{codeDuring>0?`${codeDuring}s`:'Get Code'}}
-            </div>
-            <div v-show="error_code" class="error_code">
-                {{error_code}}
-            </div>
-        </div>
+        <getCode ref="emailpicker" :email="email" @errorEmail="showError" @emailCanNext="emCanNext" @vscode="vsCode"/>
     </div>
 </template>
 <script>
-import qs from 'qs'
+import getCode from '~/components/form/get_code'
 export default {
+    components: {
+        getCode,
+    },
     props: {
         type: {
             type: Number,
@@ -45,45 +37,23 @@ export default {
             focus_code: false,
             error_code: '',
             codeDuring: 0,
-            waiting_res: false
-        }
-    },
-    computed: {
-        canGetCode() {
-            const regEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
-            return regEmail.test(this.email) && this.codeDuring <= 0
+            waiting_res: false,
+            str_gmail: 'gamil.com',
+            str_fotmail: 'fotmail.com',
+            str_yahoo: 'yahoo.com',
+            showAutoInput: false,
         }
     },
     watch: {
         email(nv, ov) {
-            this.error_email = ''
-        },
-        vscode(nv, ov) {
-            this.error_code = ''
-            if (nv.length >= 4) {
-                this.$axios({
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded',
-                        token: this.$store.state.token
-                    },
-                    data: qs.stringify({
-                        email: this.email,
-                        code: nv
-                    }),
-                    url: this.type ? '/ums/v1/user/code/verify' : '/ums/v1/register/code/verify'
-                }).then(res => {
-                    if (res.data.code === 0) {
-                        this.$emit('pass', true)
-                    } else {
-                        this.$emit('pass', false)
-                        this.error_code = 'This code you entered is incorrect. Please try again.'
-                    }
-                })
+            this.error_email = '';
+            const str = this.email.substr((this.email.length-1), 1);
+            if(this.email.length > 1 && str == '@') {
+                this.showAutoInput = true;
             } else {
-                this.$emit('pass', false)
+                this.showAutoInput = false;
             }
-        }
+        },
     },
     mounted() {
         const _this = this
@@ -95,18 +65,18 @@ export default {
         clearInterval(this.timer)
     },
     methods: {
-        getCode() {
-            if (!this.canGetCode || this.waiting_res) return false
-            this.waiting_res = true
-            const url = this.type ? '/ums/v1/register/password/change' : '/ums/v1/register/code/email'
-            this.$axios.get(`${url}?email=${this.email}`).then(res => {
-                this.waiting_res = false
-                if (res.data.code === 0) {
-                    this.codeDuring = 60
-                } else {
-                    this.error_email = 'Please confirm you have entered the right email.'
-                }
-            })
+        autoInput(str) {
+            this.email += str;
+            this.showAutoInput = false;
+        },
+        showError(msg) {
+            this.error_email = msg
+        },
+        emCanNext(bool) {
+            this.$emit("emailCanNext",bool)
+        },
+        vsCode(vscode) {
+            this.vscode = vscode;
         }
     }
 }
@@ -116,9 +86,8 @@ export default {
     padding-top: 2.5rem;
 }
 .input-email {
+    width: 100%;
     border-bottom: #dddddd solid 1px;
-    display: -webkit-box;
-    display: flex;
     padding-bottom: 5px;
     margin: 1rem 0 2rem;
     position: relative;
@@ -135,76 +104,45 @@ export default {
         clear: both;
         visibility: hidden;
     }
-    .prefix {
-        max-width: 3.5rem;
-        border-right: #dddddd solid 1px;
-        line-height: 1.2rem;
-        height: 1.2rem;
-        float: left;
-        -webkit-box-flex: 1;
-        flex: 1;
-    }
     .number {
-        -webkit-box-flex: 11;
-        flex: 5;
+        width: 100%;
+        position: relative;
         input {
             width: 100%;
             border: none;
             display: block;
             outline: none;
+            padding-left: 0.4rem;
             &::-webkit-input-placeholder {
+                font-size: 0.9rem;
+            }
+        }
+        .auto-input {
+            width: 100%;
+            position: absolute;
+            top: 1.6rem;
+            left: 0;
+            border: 1px solid #dddddd;
+            background-color: #ffffff;
+            z-index: 10;
+            div {
+                width: 100%;
+                height: 3rem;
+                line-height: 3rem;
+                border-bottom: 1px solid #dddddd;
+                &.yahoo {
+                    border: 0;
+                }
+                color: #999999;
+                padding-left: 0.4rem;
                 font-size: 0.9rem;
             }
         }
     }
     .error {
+        height: 1rem;
         position: absolute;
-        bottom: -1.4rem;
-        font-size: 0.8rem;
-        color: red;
-    }
-}
-.get-code {
-    display: flex;
-    margin: 1.5rem 0;
-    position: relative;
-    input {
-        display: block;
-        flex: 2.6;
-        border: none;
-        border-bottom: #dddddd solid 1px;
-        &.focus {
-            border-bottom: #0087eb solid 1px;
-        }
-        &.error {
-            border-bottom: red solid 1px;
-        }
-        &::-webkit-input-placeholder {
-            font-size: 0.9rem;
-        }
-        outline: none;
-        margin-right: 0.5rem;
-    }
-
-    .btn {
-        flex: 1;
-        max-width: 10rem;
-        background: #0087eb;
-        color: white;
-        font-size: 0.9rem;
-        font-weight: bold;
-        text-align: center;
-        height: 2.3rem;
-        line-height: 2.3rem;
-        cursor: pointer;
-        &.disabled {
-            background: #dddddd;
-            color: #aaaaaa;
-        }
-    }
-    .error_code {
-        position: absolute;
-        bottom: -1.4rem;
+        bottom: -1.5rem;
         font-size: 0.8rem;
         color: red;
     }

@@ -2,33 +2,24 @@
     <div class="wrapper">
         <div class="input-item">
             <div class="label">
-                Create a Password
                 <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2">
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1">
             </div>
-            <input v-model="pass" :type="pwdType" placeholder="Password(6-18 digits or letters)" @blur="checkpass">
+            <div v-show="focus_ps" class="passText">Please enter 6-18 digits or letters</div>
+            <input v-model="pass" :class="{focus:focus_ps,error:error_ps}" :type="pwdType" placeholder="Enter Password" @focus="focusPass" @blur="checkPass" >
+            <div v-if="error_ps" class="error-tip">{{error_ps}}</div>
         </div>
         <div class="input-item">
             <div class="label">
-                Confirm New Password
-                <img
-                    v-if="isCiphertext_confirm==1"
-                    class="open-close"
-                    src="~assets/img/ic_hide_def_g.png"
-                    alt
-                >
+                <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext_confirm=2">
                 <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1">
             </div>
-            <input v-model="repass" :type="pwdType_confirm" placeholder="Password(6-18 digits or letters)" @blur="checkpass">
-        </div>
-        <div class="input-item invite">
-            <div class="label">
-                Invitation Code(Optional)
-            </div>
-            <input v-model="inviteCode" type="text" @blur="checkpass">
+            <div v-show="focus_reps" class="repassText">Corfirm Password</div>
+            <input v-model="repass" :class="{focus:focus_reps,error:error_reps}" :type="pwdType_confirm" placeholder="Corfirm Password" @focus="focusRepass" @blur="checkRepass" >
+            <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
-            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -49,10 +40,14 @@ export default {
             email: this.$route.query.email || '',
             pass: '',
             repass: '',
-            inviteCode: '',
+            inviteCode: '357543',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
-            disabled: true
+            abled: false,
+            focus_ps: false,
+            focus_reps: false,
+            error_ps: '',
+            error_reps: '',
         }
     },
     computed: {
@@ -64,28 +59,60 @@ export default {
         }
     },
     watch: {
-        pass: function(val, oldVal) {
-            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val === this.repass) {
-                this.disabled = false
+        pass (nv, ov) {
+            this.abled = false;
+            this.error_ps = '';
+            this.error_reps = '';
+            if(nv == this.repass && /^[a-zA-Z0-9]{6,18}$/.test(nv)) {
+                this.abled = true;
+            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(nv))) {
+                this.abled = false;
             } else {
-                this.disabled = true
+                this.abled = false;
             }
-        },
-        repass: function(val, oldVal) {
-            if (/^[a-zA-Z0-9]{6,18}$/.test(val) && val === this.pass) {
-                this.disabled = false
+         },
+        repass (nv, ov) {
+            this.abled = false;
+            this.error_ps = '';
+            this.error_reps = '';
+            if(nv == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
+                this.abled = true;
+            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass))) {
+                this.abled = false;
             } else {
-                this.disabled = true
+                this.abled = false;
             }
         }
     },
     methods: {
-        checkpass() {
-            // TODO 格式化
+        focusPass() {
+            this.focus_ps = true;
+            this.error_ps = '';
+        },
+        focusRepass() {
+            this.focus_reps = true;
+            this.error_reps = '';
+        },
+        checkPass() {
+            this.focus_ps = false;
+            if(this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
+            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass)) && this.pass) {
+                this.error_ps = 'Password must be 6-18 digits or letters!'
+            } else if (this.repass) {
+                this.error_reps = 'The two passwords you entered did not match!'
+            }
+        },
+        checkRepass() {
+            this.focus_reps = false;
+            if(this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
+            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass)) && this.pass) {
+                this.error_ps = 'Password must be 6-18 digits or letters!'
+            } else if (this.repass) {
+                this.error_reps = 'The two passwords you entered did not match!'
+            }
         },
         nextStep() {
             // TODO 校验
-
             const options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
@@ -131,38 +158,69 @@ export default {
                 }
             })
         }
-    }
+    },
+    head() {
+        return {
+            title: 'Set Password'
+        }
+    },
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
 .wrapper {
-    padding: 3rem 1rem;
-}
-input {
-    border: none;
-    outline: none;
-    border-bottom: #dddddd solid 1px;
-    width: 100%;
-    height: 2rem;
-    line-height: 2rem;
-}
-.input-item {
-    margin-top: 2rem;
-}
-.label {
-    font-size: 0.8rem;
-}
-.open-close {
-    width: 1.5rem;
-    height: 1.5rem;
-    float: right;
-}
-.footer {
-    position: fixed;
-    bottom: 2rem;
-    width: 75%;
-    margin: 0 auto;
-    left: 0;
-    right: 0;
+    padding: 0 1rem;
+    .input-item {
+        margin-top: 1.5rem;
+        width: 100%;
+        height: 3rem;
+        position: relative;
+        .label {
+            .open-close {
+                width: 1.5rem;
+                height: 1.5rem;
+                position: absolute;
+                top: 1.2rem;
+                right: 0;
+            }
+        }
+        font-size: 0.9rem;
+        .passText, .repassText {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #0087EB;
+            padding-left: 0.4rem;
+        }
+        input {
+            padding: 1rem 0 0 0.4rem;
+            border: none;
+            outline: none;
+            border-bottom: #dddddd solid 1px;
+            width: 100%;
+            height: 3rem;
+            color: #111111;
+            &::-webkit-input-placeholder {
+                color: #999999;
+            }
+            &.focus {
+            border-bottom: 1px solid #0087EB;
+            }
+            &.error {
+                border-bottom: 1px solid red;
+            }
+        }
+        .error-tip {
+            color: red;
+            padding: 0.4rem;
+        }
+    }
+    .footer {
+        position: fixed;
+        bottom: 2rem;
+        width: 75%;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+    }
 }
 </style>
