@@ -15,8 +15,7 @@
                 <p class="time">
                     TOP SOCCERS:
                     <span>
-                        <img src="~assets/img/vote/ic_count_down.png" />
-                        Ends in {{endTime}}
+                        <img src="~assets/img/vote/ic_count_down.png" /> Ends in {{endTime}}
                     </span>
                 </p>
                 <p>
@@ -26,14 +25,7 @@
                     <span v-if="!latest && preGameId" class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
-                    <div
-                        v-for="(item,index) in rankList"
-                        :id="`c-${item.user_name}`"
-                        :key="index"
-                        :data-index="index"
-                        :class="{'my-rank':item.user_id==userId}"
-                        class="per-list"
-                    >
+                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.user_avatar">
@@ -47,8 +39,7 @@
                         <div class="right" :class="{'top-three':index<=2}">
                             <div v-show="index<=2">
                                 <span class="prize">
-                                    <i />
-                                    {{index|formatPrize}}
+                                    <i /> {{index|formatPrize}}
                                 </span>
                                 <img v-show="index==0" src="~assets/img/vote/crank1.png" />
                                 <img v-show="index==1" src="~assets/img/vote/crank2.png" />
@@ -186,30 +177,40 @@ export default {
             levelGoal: [],
             gameId: this.$route.query.gameId || 1,
             endTime: '',
-            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
+            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
+            isPlaying: false
         }
     },
     mounted() {
-        this.$router.push({
-            query: Object.assign({}, this.$route.query, {
-                start: 1
-            })
-        })
         /* eslint-disable */
         if (window.history && window.history.pushState) {
             history.pushState(null, null, document.URL)
-            window.addEventListener('popstate', ()=>{
-                
-                history.pushState(null, null, document.URL)
-                // 如果任务面板打卡
-
-                // 如果正在游戏中
-
-                // else  如果判断当前页面则
-                window.getChannelId && window.getChannelId.finish()
-
-
-            }, false)
+            window.addEventListener(
+                'popstate',
+                () => {
+                    if (this.showMissions) {
+                        // 如果任务面板打卡，点击返回则直接关闭关闭任务面板
+                        this.showMissions = false
+                        history.pushState(null, null, document.URL)
+                    } else if (this.isPlaying) {
+                        // 如果正在游戏中
+                        this.$confirm(
+                            'Are you sure you want to quit the game?',
+                            () => {
+                                window.getChannelId && window.getChannelId.finish()
+                            },
+                            () => {
+                                history.pushState(null, null, document.URL)
+                            },
+                            'Yes',
+                            'No'
+                        )
+                    } else
+                        // else  如果判断当前页面则
+                        window.getChannelId && window.getChannelId.finish()
+                },
+                false
+            )
         }
 
         const game = new window.CMain({
@@ -228,7 +229,7 @@ export default {
         })
         $(game).on('start_btn_click', (evt, goal, score) => {
             if (this.isLogin) {
-                this.showRewards = true
+                this.showRewards = this.isPlaying ? false : true
             } else {
                 this.$confirm('Please sign in first', () => {
                     toNativePage(
@@ -243,11 +244,9 @@ export default {
         })
         $(game).on('game_exit', () => {
             this.showMyCoins = true
+            this.isPlaying = false
         })
         this.getRankList(1)
-    },
-    beforeRouteLeave(to, from, next) {
-        // ...
     },
     methods: {
         toMyCoins() {
@@ -337,6 +336,7 @@ export default {
         // 游戏结束 获取奖励
         getAward(goal) {
             this.showMyCoins = true
+            this.isPlaying = false
             this.setGoal(goal)
             let totalGoal = 0
             this.levelGoal.forEach(ele => {
@@ -388,6 +388,7 @@ export default {
         // 开始游戏
         startGame() {
             this.showRewards = false
+            this.isPlaying = true
             this.$axios.get(`/hybrid/api/games/startGame?gameId=${this.gameId}`).then(res => {
                 if (res.data.code == 200) {
                     window.s_oMenu._onButPlayRelease()
