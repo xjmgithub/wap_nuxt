@@ -19,6 +19,7 @@ const authIgnore = [
     /^\/hybrid\/dvb\/bind/,
     /^\/hybrid\/dvb\/order/,
     /^\/hybrid\/post/,
+    /^\/hybrid\/api/,
 ]
 const inIgnore = url => {
     let result = false
