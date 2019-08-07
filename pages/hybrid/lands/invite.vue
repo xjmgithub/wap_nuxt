@@ -34,6 +34,7 @@ export default {
         shadowLayer,
     },
     data() {
+        
         return {
             // utm_str: this.$route.query.referrer || JSON.stringify(this.$route.query).replace(/"/g,'').replace('{','').replace('}','').replace(/,/g,'&').replace(/:/g,'=').replace('t_sr','utm_source').replace('t_md','utm_medium').replace('t_tm','utm_term').replace('t_ct','utm_content').replace('t_cn','utm_campaign'),
             utm_str: this.$route.query.referrer || JSON.stringify(this.$route.query).replace([/"{}/g],'').replace(/,/g,'&').replace(/:/g,'=').replace('t_sr','utm_source').replace('t_md','utm_medium').replace('t_tm','utm_term').replace('t_ct','utm_content').replace('t_cn','utm_campaign'),
