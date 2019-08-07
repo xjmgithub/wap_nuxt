@@ -2,15 +2,15 @@
     <div class="wrapper">
         <div class="tab">
             <div :class="{seled:type==0}" @click="changetype(0)">
-                <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
-                <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.svg">
+                <img class="gray" src="~assets/img/users/ic_telephone_def_g.png">
+                <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.png">
                 <span class="arrow"></span>
                 <span class="gray">Phone number</span>
                 <span class="blue">Phone number</span>
             </div>
             <div :class="{seled:type==1}" @click="changetype(1)">
-                <img class="gray" src="~assets/img/users/ic_email_def_gray.svg">
-                <img class="blue" src="~assets/img/users/ic_email_sl_blue.svg">
+                <img class="gray" src="~assets/img/users/ic_email_def_gray.png">
+                <img class="blue" src="~assets/img/users/ic_email_sl_blue.png">
                 <span class="arrow"></span>
                 <span class="gray">Email Address</span>
                 <span class="blue">Email Address</span>
@@ -185,17 +185,16 @@ export default {
                 -webkit-box-flex: 1;
                 flex: 5;
                 width: 6.2rem;
-                height: 1.2rem;
+                height: 1.4rem;
                 padding-left: 4px;
                 display: block;
                 font-size: 14px;
-                line-height: 1.2rem;
+                line-height: 1.4rem;
             }
             img {
                 -webkit-box-flex: 1;
                 flex: 1;
-                width: 1.2rem;
-                height: 1.2rem;
+                width: 1rem;
                 display: block;
             }
             .arrow {
