@@ -15,7 +15,8 @@
                 <p class="time">
                     TOP SOCCERS:
                     <span>
-                        <img src="~assets/img/vote/ic_count_down.png" /> Ends in {{endTime}}
+                        <img src="~assets/img/vote/ic_count_down.png" />
+                        Ends in {{endTime}}
                     </span>
                 </p>
                 <p class="your-score">
@@ -25,7 +26,14 @@
                     <span v-if="!latest && preGameId" class="rules" @click="getRankList()">Back to latest</span>
                 </p>
                 <div class="box">
-                    <div v-for="(item,index) in rankList" :id="`c-${item.user_name}`" :key="index" :data-index="index" :class="{'my-rank':item.user_id==userId}" class="per-list">
+                    <div
+                        v-for="(item,index) in rankList"
+                        :id="`c-${item.user_name}`"
+                        :key="index"
+                        :data-index="index"
+                        :class="{'my-rank':item.user_id==userId}"
+                        class="per-list"
+                    >
                         <div class="left">
                             <span :class="{first:index==0 ,second:index==1,third:index==2}" class="ranking">{{index + 1}}</span>
                             <span v-if="item.user_avatar">
@@ -39,7 +47,8 @@
                         <div class="right" :class="{'top-three':index<=2}">
                             <div v-show="index<=2">
                                 <span class="prize">
-                                    <i /> {{index|formatPrize}}
+                                    <i />
+                                    {{index|formatPrize}}
                                 </span>
                                 <img v-show="index==0" src="~assets/img/vote/crank1.png" />
                                 <img v-show="index==1" src="~assets/img/vote/crank2.png" />
@@ -182,12 +191,14 @@ export default {
         }
     },
     mounted() {
+        let tag = 1 // 兼容4.4 手机
+        
         /* eslint-disable */
         if (window.history && window.history.pushState) {
             history.pushState(null, null, document.URL)
             window.addEventListener(
                 'popstate',
-                () => {
+                e => {
                     if (this.showMissions) {
                         // 如果任务面板打卡，点击返回则直接关闭关闭任务面板
                         this.showMissions = false
@@ -205,9 +216,13 @@ export default {
                             'Yes',
                             'No'
                         )
-                    } else
-                        // else  如果判断当前页面则
-                        window.getChannelId && window.getChannelId.finish()
+                    } else {
+                        if (tag == 1 && navigator.userAgent.indexOf('Android 4') >= 0) {
+                            tag++
+                        } else {
+                            window.getChannelId && window.getChannelId.finish()
+                        }
+                    }
                 },
                 false
             )
@@ -411,7 +426,7 @@ export default {
     head() {
         return {
             title: 'StarTimes ON Cup - Crazy Freekick',
-            script: [{ src: '/res_nuxt/jquery-3.4.1.min.js' }, { src: '/res_nuxt/createjs.min.js' }, { src: '/res_nuxt/main.js' }]
+            script: [{ src: '/res_nuxt/jquery-3.4.1.min.js' }, { src: '/res_nuxt/createjs-2014.12.12.min.js' }, { src: '/res_nuxt/main.js' }]
         }
     }
 }
