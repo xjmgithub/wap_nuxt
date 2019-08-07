@@ -9,8 +9,8 @@
                     <div class="yahoo" @click="autoInput('yahoo.com')">{{email}}{{str_yahoo}}</div>
                 </div>
             </div>
-            <div v-show="error_email" class="error">
-                {{error_email}}
+            <div v-show="error_email" class="error" v-html="emailError">
+                <!-- {{error_email}} -->
             </div>
         </div>
         <getCode ref="emailpicker" :email="email" @errorEmail="showError" @emailCanNext="emCanNext" @vscode="vsCode"/>
@@ -42,6 +42,14 @@ export default {
             str_fotmail: 'fotmail.com',
             str_yahoo: 'yahoo.com',
             showAutoInput: false,
+        }
+    },
+    computed: {
+        emailError() {
+            if(this.error_email == 'You are not a new user because you have registered once.') {
+                return this.error_email+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
+            }
+            return this.error_email;
         }
     },
     watch: {

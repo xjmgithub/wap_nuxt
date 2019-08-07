@@ -19,7 +19,8 @@
             <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
-            <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep" />
+            <!-- <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep" /> -->
+            <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep2" />
         </div>
     </div>
 </template>
@@ -110,6 +111,9 @@ export default {
             } else if (this.repass) {
                 this.error_reps = 'The two passwords you entered did not match!'
             }
+        },
+        nextStep2() {
+            this.$router.push(`/hybrid/account/toGooglePlay`)
         },
         nextStep() {
             // TODO 校验

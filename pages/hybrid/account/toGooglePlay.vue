@@ -1,12 +1,11 @@
 <template>
     <div class="wrapper">
-        <img class="st_logo" src="~assets/img/logo01.png">
-        <div class="regtext">
-            Download startimes ON app now?
-            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
-                Download
-            </nuxt-link>
+        <div class="title">Register Successful!</div>
+        <div class="msg">
+            You have get rewards! Download app and use reward!
         </div>
+        <img src="~assets/img/pic_gift.png">
+        <div class="down-now">DOWNLOAD NOW!</div>
     </div>
 </template>
 <script>
@@ -19,6 +18,7 @@ export default {
     },
     mounted() {
         this.utm_str = sessionStorage.getItem("utm_str");
+        // console.log(this.utm_str)
     },
     methods: {
         
@@ -34,27 +34,37 @@ export default {
 .wrapper {
     position: static;
     min-height: 100%;
-    padding-top: 25%;
+    padding-top: 17%;
+    color: #333333;
+    .title {
+        text-align: center;
+        margin: 0 auto;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    .msg {
+        margin: 2rem auto 0;
+        padding: 0 2rem;
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
     img {
         display: block;
-        height: 2.3rem;
-        width: 18rem;
+        height: 65%;
+        width: 65%;
         margin: 0 auto;
-        margin-top: 1.2rem;
-        margin-bottom: 1.2rem;
     }
-
-    .st_logo {
-        height: auto;
-        width: 11rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .regtext {
+    .down-now {
+        width: 80%;
+        height: 2.3rem;
+        line-height: 2.3rem;
+        font-size: 0.9rem;
         text-align: center;
-        font-size: 0.8rem;
-        color: #424242;
-        margin-top: 2.5rem;
+        color: #ffffff;
+        font-weight: 600;
+        background-color: #0087EB;
+        margin: 0.8rem 10%;
+        border-radius: 0.2rem;
     }
 }
 </style>

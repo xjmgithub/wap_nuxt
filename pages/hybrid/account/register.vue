@@ -29,8 +29,8 @@
                     <div class="number">
                         <input v-model="tel" type="tel" placeholder="Enter your Phone Number" @focus="focus_tel=true" @blur="focus_tel=false">
                     </div>
-                    <div v-show="error_tel" class="error">
-                        {{error_tel}}
+                    <div v-show="error_tel" class="error" v-html="telError">
+                        <!-- {{error_tel}} -->
                     </div>
                 </div>
             </div>
@@ -101,10 +101,15 @@ export default {
             if (this.type === 1) {
                 return this.emailCanNext
             } else {
-                // return this.tel.length >= 6 && this.vscode.length >=4 && this.error_tel == '' && this.error_code == '';
                 return this.phoneCanNext;
             }
         },
+        telError() {
+            if(this.error_tel == 'You are not a new user because you have registered once.') {
+                return this.error_tel+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
+            }
+            return this.error_tel;
+        }
         
     },
     watch: {
@@ -149,7 +154,7 @@ export default {
                 const code = this.$refs.telpicker.vscode
                 const phoneCc = this.country.phonePrefix
                 const countryID = this.country.id
-                console.log(countryID)
+                // console.log(countryID)
                 // const activeID = '';
                 // 活动ID &activeID=${activeID}
                 this.$router.push(`/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryID=${countryID}&code=${code}`)

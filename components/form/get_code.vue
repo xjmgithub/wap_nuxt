@@ -39,15 +39,12 @@ export default {
     data() {
         return {
             vscode: '',
-            // focus_tel: false,
             error_tel: '',
             error_email: '',
             error_code: '',
             error_state: false,
             codeDuring: 0,
             waiting_res: false,
-            // password: '',
-            // endinput: false,
         }
     },
     computed: {
@@ -123,15 +120,9 @@ export default {
         clearInterval(this.timer)
     },
     methods: {
-        // setPassword(data) {
-        //     this.vscode = this.$refs.pass.vscode;
-        // },
         codeNum(code){
             this.vscode = code;
         },
-        // vscodeNum(num) {
-        //     this.vscode = num;
-        // },
         getCode() {
             // TODO 防止多次点击
             if (!this.canGetCode || this.waiting_res) {
@@ -144,9 +135,11 @@ export default {
                     this.waiting_res = false
                     if (res.data.code === 0) {
                         this.codeDuring = 60
+                    } else if(res.data.code === 2) {
+                        this.error_tel = 'You are not a new user because you have registered once.';
+                        this.$emit('errorTel',this.error_tel);
                     } else {
-                        console.log('getcode')
-                        this.error_tel = 'Please confirm you have entered the right number.';
+                        this.error_tel = 'This phone number you entered is incorrect. Please try again.';
                         this.$emit('errorTel',this.error_tel);
                     }
                 })
@@ -156,8 +149,11 @@ export default {
                     this.waiting_res = false
                     if (res.data.code === 0) {
                         this.codeDuring = 60
+                    } else if(res.data.code === 2) {
+                        this.error_email = 'You are not a new user because you have registered once.';
+                        this.$emit('errorEmail',this.error_email);
                     } else {
-                        this.error_email = 'Please confirm you have entered the right email.'
+                        this.error_email = 'This email you entered is incorrect. Please try again.';
                         this.$emit('errorEmail',this.error_email);
                     }
                 })
