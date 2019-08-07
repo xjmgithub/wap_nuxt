@@ -1,61 +1,144 @@
 <template>
     <div class="container">
-        <p>{{desc}}</p>
+        <div class="goods">
+            <p class="pay-money">
+                <span>{{currency}}</span>{{totalAmount | formatAmount}}
+            </p>
+            <p class="pay-subject">{{paySubject}}</p>
+        </div>
+        <div class="pay-channels">
+            <div v-for="(item,i) in payChannels" :key="i">
+                <label class="radio">
+                    <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)">
+                    <img v-else src="~assets/img/pay/ewallet.png">
+                    <span v-if="item.payType==1&&eCurrency&&eAmount>=0">eWallet: {{eCurrency}}{{eAmount| formatAmount}}</span>
+                    <span v-else-if="item.payType==1">eWallet</span>
+                    <span v-else>{{item.name}}</span>
+                    <input :checked="i===0?true:false" type="radio" name="pay-options" value="item.payType" @click="checkThis(item)">
+                    <i/>
+                </label>
+            </div>
+        </div>
+        <div v-show="payDesc" class="desc">
+            <p>Note:</p>
+            <p v-html="payDesc" />
+        </div>
+        <div class="error-msg" v-html="errorMsg" />
         <div class="footer">
-            <mButton :disabled="false" text="PAY NOW" @click="nextStep" />
+            <mButton :disabled="Boolean(errorMsg)" text="PAY NOW" @click="nextStep" />
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
+import { formatAmount, cdnPicSrc } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
         mButton
     },
+    filters: {
+        formatAmount(num) {
+            return formatAmount(num)
+        }
+    },
     data() {
+        const user = this.$store.state.user
         return {
+            isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             payToken: this.$route.query.payToken,
             payChannel: this.$route.query.payChannel || 9002,
             desc: '',
             form_exit: false,
             appInterfaceMode: null,
-            payType: null,
             redirectUrl: '',
-            merchantRedirectUrl: ''
+            merchantRedirectUrl: '',
+            currency: '',
+            totalAmount: '',
+            paySubject: '',
+            payChannels: [],
+            payType: 1,
+            eAmount: '',
+            eCurrency: ''
+        }
+    },
+    computed: {
+        payDesc() {
+            let tmp = ''
+            this.payChannels.forEach(ele => {
+                if (ele.payType == this.payType) {
+                    tmp = ele.description
+                }
+            })
+            return tmp
+        },
+        // btnState() {
+        //     return Boolean(this.errorMsg)
+        //     let tmp = ''
+        //     if (!this.isLogin) {
+        //         return false
+        //     } else if (this.payType === 1) {
+        //         tmp = this.currency == this.eCurrency && this.eAmount >= this.totalAmount
+        //     } else {
+        //         tmp = this.currency == this.eCurrency
+        //     }
+        //     return !tmp
+        // },
+        errorMsg() {
+            let tmp = ''
+            if (!this.isLogin && this.payType === 1) return tmp
+            tmp =
+                this.currency != this.eCurrency
+                    ? 'Commodity currency does not match wallet currency and cannot be paid'
+                    : this.eAmount < this.totalAmount ? 'The wallet balance is insufficient to pay for the goods' : ''
+            return tmp
         }
     },
     mounted() {
-        if (!this.payToken) {
-            this.$alert('Query payToken needed! please check request')
-            return false
+        this.getPayMethods()
+        if (this.isLogin) {
+            this.getEwalletBalance()
         }
-
-
-        this.$axios.get(`http://qa.payment.startimestv.com/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
-            const data = res.data
-            if (data && data.payChannels && data.payChannels.length > 0) {
-                const payChannels = {}
-                data.payChannels.forEach((item, index) => {
-                    payChannels[item.id] = item
-                })
-                if (payChannels[this.payChannel]) {
-                    this.desc = payChannels[this.payChannel].description
-                    this.form_exit = payChannels[this.payChannel].formConfigExist
-                    this.appInterfaceMode = payChannels[this.payChannel].appInterfaceMode
-                    this.payType = payChannels[this.payChannel].payType
-
-                    // 请求支付
-                    this.invokePay()
-                } else {
-                    this.$alert('payToken and payChannel Mismatch! please check request')
-                }
-            } else {
-                this.$alert('The merchant has not yet opened a supportable payment channel.')
-            }
-        })
     },
     methods: {
+        getPayMethods() {
+            if (!this.payToken) {
+                this.$alert('Query payToken needed! please check request')
+                return false
+            }
+            this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
+                const data = res.data
+                if (data && data.payChannels && data.payChannels.length > 0) {
+                    data.payChannels.sort((a, b) => {
+                        return a.orderSeq - b.orderSeq
+                    })
+                    this.currency = data.currency
+                    this.totalAmount = data.totalAmount
+                    this.paySubject = data.paySubject
+                    this.payChannels = data.payChannels
+                } else {
+                    this.$alert('payToken and payChannel Mismatch! please check request')
+                    // this.$alert('The merchant has not yet opened a supportable payment channel.')
+                }
+            })
+        },
+        getEwalletBalance() {
+            this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
+                const data = res.data
+                if (data.accountNo) {
+                    this.eAmount = data.amount
+                    this.eCurrency = data.currencySymbol
+                    sessionStorage.setItem('eWallet-account', JSON.stringify(data))
+                }
+            })
+        },
+        cdnPic(src) {
+            return cdnPicSrc.call(this, src)
+        },
+        checkThis(item) {
+            this.payType = item.payType
+            this.currency = item.currency
+        },
         invokePay() {
             if (!this.form_exit) {
                 if (this.payType !== 3 && [2, 3].indexOf(this.appInterfaceMode) < 0) {
@@ -97,6 +180,12 @@ export default {
             }
         },
         nextStep() {
+            if (!this.isLogin && this.payType === 1) {
+                this.$confirm('The eWallet needs to login the startimes first', () => {
+                    this.$router.push('/hybrid/account/login')
+                })
+                return
+            }
             if (this.form_exit) {
                 this.$router.push(
                     `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.payChannel}&appInterfaceMode=${this.appInterfaceMode}`
@@ -121,19 +210,102 @@ export default {
 </script>
 <style lang="less" scoped>
 .container {
-    padding: 5rem 1rem 0;
-    font-size: 0.9rem;
-}
-.container p {
-    color: #666;
-    line-height: 1.5rem;
-}
-.footer {
-    position: fixed;
-    bottom: 2rem;
-    width: 75%;
-    margin: 0 auto;
-    left: 0;
-    right: 0;
+    .goods {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem 0;
+        margin-bottom: 1.5rem;
+        .pay-money {
+            font-weight: bold;
+            font-size: 2.25rem;
+            color: #212121;
+            span {
+                font-size: 1.25rem;
+            }
+        }
+        .pay-subject {
+            color: #666666;
+            font-size: 1.1rem;
+        }
+    }
+    .pay-channels {
+        width: 90%;
+        margin: 0 auto;
+        & > div {
+            border-bottom: 1px solid #eeeeee;
+            padding: 0.8rem 0;
+        }
+        .radio {
+            img {
+                width: 1.5rem;
+            }
+            span {
+                margin-left: 0.5rem;
+                color: #333333;
+                font-weight: bold;
+            }
+            position: relative;
+            cursor: pointer;
+            display: block;
+            line-height: 2rem;
+            height: 2.3rem;
+            input {
+                position: absolute;
+                left: -9999px;
+                &:checked {
+                    & + i {
+                        border: 2px solid #008be9;
+                        &:after {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+            i {
+                width: 1.3rem;
+                height: 1.3rem;
+                outline: 0;
+                border: 2px solid #ddd;
+                background: #ffffff;
+                border-radius: 100%;
+                float: right;
+                margin-top: 0.45rem;
+                display: flex;
+                &:after {
+                    content: '';
+                    width: 0.8rem;
+                    height: 0.8rem;
+                    border-radius: 100%;
+                    background-color: #008be9;
+                    opacity: 0;
+                    transition: opacity 0.1s;
+                    -webkit-transition: opacity 0.1s;
+                    margin: auto;
+                }
+            }
+        }
+    }
+    .desc {
+        width: 90%;
+        margin: 0 auto;
+        line-height: 1.3rem;
+        margin-top: 0.8rem;
+    }
+    .error-msg {
+        position: fixed;
+        bottom: 4.5rem;
+        color: red;
+        font-size: 0.8rem;
+        width: 100%;
+        text-align: center;
+    }
+    .footer {
+        position: fixed;
+        bottom: 2rem;
+        width: 75%;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+    }
 }
 </style>
