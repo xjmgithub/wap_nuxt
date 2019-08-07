@@ -34,10 +34,8 @@ export default {
         shadowLayer,
     },
     data() {
-
         return {
-            utm_str: this.$route.query.referrer || JSON.stringify(this.$route.query).replace(/"/g,'').replace('{','').replace('}','').replace(/,/g,'&').replace(/:/g,'=').replace('t_sr','utm_source').replace('t_md','utm_medium').replace('t_tm','utm_term').replace('t_ct','utm_content').replace('t_cn','utm_campaign'),
-            // utm_str: this.$route.query.referrer || JSON.stringify(this.$route.query).replace([/"{}/g],'').replace(/,/g,'&').replace(/:/g,'=').replace('t_sr','utm_source').replace('t_md','utm_medium').replace('t_tm','utm_term').replace('t_ct','utm_content').replace('t_cn','utm_campaign'),
+            utm_str: this.$route.query.referrer || JSON.stringify(this.$route.query).replace(/[{"}]/g,'').replace(/,/g,'&').replace(/:/g,'=').replace('t_sr','utm_source').replace('t_md','utm_medium').replace('t_tm','utm_term').replace('t_ct','utm_content').replace('t_cn','utm_campaign'),
             showRulesPage: false,
         }
     },
@@ -48,7 +46,7 @@ export default {
 
         // http://localhost:3000/hybrid/lands/invite?t_sr=startimes_app&t_md=share&t_tm=running&t_ct=logolink&t_cn=tell_friends
 
-        console.log(this.utm_str) // utm_source=startimes_app&utm_medium=share&utm_term=running&utm_content=logolink&utm_campaign=tell_friends
+        // console.log(this.utm_str) // utm_source=startimes_app&utm_medium=share&utm_term=running&utm_content=logolink&utm_campaign=tell_friends
 
         sessionStorage.setItem("utm_str", this.utm_str)
         
@@ -74,8 +72,8 @@ export default {
     padding-bottom: 21%;
     font-family: Roboto;
     font-weight: 600;
-    position: relative;
-    // position: fixed;
+    // position: relative;
+    position: fixed;
     top: 0;
     left: 0;
     .st_logo {
