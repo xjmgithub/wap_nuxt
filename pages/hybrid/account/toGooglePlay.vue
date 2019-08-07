@@ -1,27 +1,34 @@
 <template>
     <div class="wrapper">
         <div class="title">Register Successful!</div>
-        <div class="msg">
-            You have get rewards! Download app and use reward!
-        </div>
-        <img src="~assets/img/pic_gift.png">
-        <div class="down-now">DOWNLOAD NOW!</div>
+        <div class="msg">You have get rewards! Download app and use reward!</div>
+        <img src="~assets/img/pic_gift.png" />
+        <div class="down-now" @click="callMarket">DOWNLOAD NOW!</div>
     </div>
 </template>
 <script>
+import { downApk } from '~/functions/app'
 export default {
     layout: 'base',
-    data() {
-        return {
-            utm_str: '',
-        }
-    },
-    mounted() {
-        this.utm_str = sessionStorage.getItem("utm_str");
-        // console.log(this.utm_str)
-    },
     methods: {
-        
+        callMarket() {
+            const utmStr = sessionStorage.getItem('utm_str')
+            const iframe = document.createElement('iframe')
+            iframe.frameborder = '0'
+            iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
+            document.body.appendChild(iframe)
+
+            iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(utmStr)
+
+            const s = setTimeout(() => {
+                if (!document.hidden) downApk.call(this)
+                clearTimeout(s)
+            }, 2000)
+            document.addEventListener('visibilitychange', () => {
+                clearTimeout(s)
+                this.$nuxt.$loading.finish()
+            })
+        }
     },
     head() {
         return {
@@ -62,7 +69,7 @@ export default {
         text-align: center;
         color: #ffffff;
         font-weight: 600;
-        background-color: #0087EB;
+        background-color: #0087eb;
         margin: 0.8rem 10%;
         border-radius: 0.2rem;
     }
