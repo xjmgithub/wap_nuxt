@@ -192,7 +192,7 @@ export default {
     },
     mounted() {
         let tag = 1 // 兼容4.4 手机
-        
+
         /* eslint-disable */
         if (window.history && window.history.pushState) {
             history.pushState(null, null, document.URL)
