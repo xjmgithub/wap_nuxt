@@ -87,6 +87,7 @@ export default {
         this.getPayMethods()
         if (this.isLogin) this.getMyEwallet()
         this.lastpay = getCookie('lastpay')
+        console.log(this.lastpay)
     },
     methods: {
         getPayMethods() {
@@ -155,6 +156,11 @@ export default {
                     commonPayAfter.call(this, data, this.payType, this.appInterfaceMode)
                 })
             }
+        }
+    },
+    head() {
+        return {
+            title: 'Confirm Payment'
         }
     }
 }

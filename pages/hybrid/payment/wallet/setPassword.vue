@@ -1,34 +1,27 @@
 <template>
     <div class="container">
         <div v-show="step==1" class="step1">
-            <verify-tel ref="phone" @canNext="canStep2=true"/>
+            <verify-tel ref="phone" @canNext="canStep2=true" />
             <div class="footer">
-                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)"/>
+                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)" />
             </div>
         </div>
         <div v-show="step==2" class="step2">
-            <passInput
-                ref="vscode"
-                :length="4"
-                :toggle-view="true"
-                placeholder="Enter the code"
-                @endinput="canStep3=true"
-                @inputing="canStep3=false"
-            />
+            <passInput ref="vscode" :length="4" :toggle-view="true" placeholder="Enter the code" @endinput="canStep3=true" @inputing="canStep3=false" />
             <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(3)"/>
+                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(3)" />
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
-            <passInput ref="newpass" :toggle-view="true" placeholder="Set a 6-bit password" @endinput="canStep4=true" @inputing="canStep4=false"/>
+            <passInput ref="newpass" :toggle-view="true" placeholder="Set a 6-bit password" @endinput="canStep4=true" @inputing="canStep4=false" />
             <div class="footer">
-                <mButton :disabled="!canStep4" text="NEXT" @click="goStep(4)"/>
+                <mButton :disabled="!canStep4" text="NEXT" @click="goStep(4)" />
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
-            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm password" @endinput="canStep5=true" @inputing="canStep5=false"/>
+            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm password" @endinput="canStep5=true" @inputing="canStep5=false" />
             <div class="footer">
-                <mButton :disabled="!canStep5" text="OK" @click="goStep(5)"/>
+                <mButton :disabled="!canStep5" text="OK" @click="goStep(5)" />
             </div>
         </div>
     </div>
@@ -55,7 +48,7 @@ export default {
             canStep5: false,
             reset: false,
             accountNo: null,
-            channel:this.$route.query.channel,
+            channel: this.$route.query.channel,
             payToken: this.$route.query.payToken,
             card: this.$route.query.card // paystack card
         }
@@ -170,10 +163,10 @@ export default {
                     { authorization_code: this.card }
                 )
                 return false
-            }else{
+            } else {
                 invoke.call(this, this.payToken, this.channel, data => {
                     payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
-                        setCookie('lastpay', 'wallet')
+                        setCookie('lastpay', this.channel)
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
@@ -181,14 +174,19 @@ export default {
                 })
             }
         }
+    },
+    head() {
+        return {
+            title: this.reset ? 'Reset Password' : 'Setting Password'
+        }
     }
 }
 </script>
 <style lang="less" scoped>
 .container {
     padding: 3rem 0.6rem;
-    height:100%;
-    background:white;
+    height: 100%;
+    background: white;
     .step2 {
         width: 100%;
         height: 100%;

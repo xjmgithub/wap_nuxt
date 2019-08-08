@@ -149,6 +149,11 @@ export default {
         refresh() {
             this.$router.go(0)
         }
+    },
+     head() {
+        return {
+            title: 'Payment Results'
+        }
     }
 }
 </script>
