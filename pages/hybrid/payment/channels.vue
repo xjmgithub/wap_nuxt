@@ -14,7 +14,7 @@
                     <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                     <span v-else-if="item.payType==1">eWallet</span>
                     <span v-else>{{item.name}}</span>
-                    <input :checked="lastpay===item.id || i===0?true:false" type="radio" name="pay-options" value="item.payType" @click="checkThis(item)">
+                    <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="checkThis(item)">
                     <i/>
                 </label>
             </div>
@@ -87,7 +87,6 @@ export default {
         this.getPayMethods()
         if (this.isLogin) this.getMyEwallet()
         this.lastpay = getCookie('lastpay')
-        console.log(this.lastpay)
     },
     methods: {
         getPayMethods() {
