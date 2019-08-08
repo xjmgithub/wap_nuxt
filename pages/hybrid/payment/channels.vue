@@ -78,10 +78,8 @@ export default {
         errorMsg() {
             let tmp = ''
             if (!this.isLogin && this.payType === 1) return tmp
-            tmp =
-                this.currency != this.eCurrency
-                    ? 'Commodity currency does not match wallet currency and cannot be paid'
-                    : this.eAmount < this.totalAmount ? 'The wallet balance is insufficient to pay for the goods' : ''
+            else if (this.currency != this.eCurrency) tmp = 'Commodity currency does not match wallet currency and cannot be paid'
+            else if (this.eAmount < this.totalAmount && this.payType === 1) tmp = 'The wallet balance is insufficient to pay for the goods'
             return tmp
         }
     },
