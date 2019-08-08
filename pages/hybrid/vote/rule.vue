@@ -15,7 +15,7 @@
                     <span>AI Triple Camera(Front 16 MP, Rear 13MP+8MP+2MP), 5000mAh Battery, 6.35-inch Halo FullView Display, 4GB+64GB ROM</span>
                 </p>
                 <span>
-                    <img src="~assets/img/vote/VIVO.jpg">
+                    <img src="~assets/img/vote/VIVO.png">
                 </span>
             </div>
             <h4>Tips for you to win lucky prize:</h4>
