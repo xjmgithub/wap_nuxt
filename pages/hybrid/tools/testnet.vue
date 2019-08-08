@@ -12,7 +12,7 @@
             <button @click="testimg2">测试cdn图片加载</button>
             <div>{{imgLoad2}}</div>
         </div>
-        <div>
+        <!-- <div>
             <button @click="testjs1">测试cloudfrontjs加载</button>
             <div>{{jsLoad1}}</div>
         </div>
@@ -23,7 +23,7 @@
         <div>
             <button @click="testhtml">测试html加载</button>
             <div>{{htmlLoad}}</div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
