@@ -1,16 +1,16 @@
 <template>
     <div class="wrapper">
         <div class="tab">
-            <div :class="{seled:type==0}" @click="changetype(0)">
-                <img class="gray" src="~assets/img/users/ic_telephone_def_g.png">
-                <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.png">
+            <div :class="{seled:type==0}" @click="type=0">
+                <img class="gray" src="~assets/img/users/ic_telephone_def_g.png" />
+                <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.png" />
                 <span class="arrow"></span>
                 <span class="gray">Phone number</span>
                 <span class="blue">Phone number</span>
             </div>
-            <div :class="{seled:type==1}" @click="changetype(1)">
-                <img class="gray" src="~assets/img/users/ic_email_def_gray.png">
-                <img class="blue" src="~assets/img/users/ic_email_sl_blue.png">
+            <div :class="{seled:type==1}" @click="type=1">
+                <img class="gray" src="~assets/img/users/ic_email_def_gray.png" />
+                <img class="blue" src="~assets/img/users/ic_email_sl_blue.png" />
                 <span class="arrow"></span>
                 <span class="gray">Email Address</span>
                 <span class="blue">Email Address</span>
@@ -19,35 +19,62 @@
         <div v-show="type==0" class="by_tel">
             <div class="phone_number">
                 <div class="country_choose" @click="countryDialogStatus=true">
-                    <img class="country_icon" :src="cdnPicSrc(country.nationalFlag)">
-                    <img class="ic_categary" src="~assets/img/users/ic_categary.png">
+                    <img class="country_icon" :src="cdnPicSrc(country.nationalFlag)" />
+                    <img class="ic_categary" src="~assets/img/users/ic_categary.png" />
                 </div>
                 <div :class="{focus:focus_tel,error:error_tel}" class="input-tel">
-                    <div class="prefix">
-                        +{{country.phonePrefix}}
-                    </div>
+                    <div class="prefix">+{{country.phonePrefix}}</div>
                     <div class="number">
-                        <input v-model="tel" type="tel" placeholder="Enter your Phone Number" @focus="focus_tel=true" @blur="focus_tel=false">
+                        <input v-model="tel" type="tel" placeholder="Enter your Phone Number" @focus="focus_tel=true" @blur="focus_tel=false" />
                     </div>
-                    <div v-show="error_tel" class="error" v-html="telError">
-                        <!-- {{error_tel}} -->
-                    </div>
+                    <div v-show="error_tel" class="error" v-html="error_tel"></div>
                 </div>
             </div>
-            <!-- <getCode ref="telpicker" :prefix="country.phonePrefix" :tel="tel" @errorTel="showError" /> -->
-            <getCode ref="telpicker" :prefix="country.phonePrefix" :tel="tel" @errorTel="showError" @phoneCanNext="telCanNext"/>
-            <!-- <verifyTel ref="telpicker" :prefix="country.phonePrefix" /> -->
+            <div class="get-code">
+                <password
+                    ref="telCode"
+                    class="code_num"
+                    :default-view="0"
+                    :length="4"
+                    @endinput="vertifyTelCode"
+                    @inputing="haveTelcodeVertify=false&&error_tel_code=''"
+                />
+                <getCodeBtn ref="telGetCodeBtn" class="get-code-btn" :disabled="!new RegExp(country.phoneRegex).test(tel)" @click="getTelCode" />
+                <div class="error_code">{{error_tel_code}}</div>
+            </div>
         </div>
         <div v-show="type==1" class="by_email">
-            <verifyEmail ref="emailpicker" @emailCanNext="changeEmailCanNext">
-                <!-- <template v-slot:emailcode>
-                    <getCode ref="emailcode"/>
-                    <getCode ref="telpicker" :prefix="country.phonePrefix" :tel="tel" @errorTel="showError" @phoneCanNext="telCanNext"/>
-                </template> -->
-            </verifyEmail>
+            <div :class="{focus:focus_email,error:error_email}" class="input-email">
+                <div class="number">
+                    <input v-model="email" type="email" placeholder="Enter your email address" @focus="focus_email=true" @blur="focus_email=false" />
+                    <div v-show="showAutoInput" class="auto-input">
+                        <div @click="autoInput('gamil.com')">{{email}}gamil.com</div>
+                        <div @click="autoInput('fotmail.com')">{{email}}fotmail.com</div>
+                        <div @click="autoInput('yahoo.com')">{{email}}yahoo.com</div>
+                    </div>
+                </div>
+                <div v-show="error_email" class="error" v-html="error_email"></div>
+            </div>
+            <div class="get-code">
+                <password
+                    ref="emailCode"
+                    class="code_num"
+                    :default-view="0"
+                    :length="4"
+                    @endinput="vertifyEmailCode"
+                    @inputing="haveEmailcodeVertify=false&&error_email_code=''"
+                />
+                <getCodeBtn
+                    ref="emailGetCodeBtn"
+                    class="get-code-btn"
+                    :disabled="!new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(email)"
+                    @click="getEmailCode"
+                />
+                <div class="error_code">{{error_email_code}}</div>
+            </div>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep"/>
+            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" />
         </div>
         <div class="terms">
             <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
@@ -56,27 +83,25 @@
             <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="cdnPicSrc(item.nationalFlag)">
+                    <img :src="cdnPicSrc(item.nationalFlag)" />
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
-import getCode from '~/components/form/get_code'
-// import verifyTel from '~/components/form/verify_tel'
-import verifyEmail from '~/components/form/verify_email'
+import password from '~/components/password'
+import getCodeBtn from '~/components/form/getCodeBtn'
 import shadowLayer from '~/components/shadow-layer'
 import mButton from '~/components/button'
 import countrys from '~/functions/countrys.json'
 export default {
     layout: 'base',
     components: {
-        getCode,
-        // verifyTel,
-        verifyEmail,
+        password,
+        getCodeBtn,
         shadowLayer,
         mButton
     },
@@ -86,56 +111,97 @@ export default {
             countrys: countrys,
             country: this.$store.state.country,
             countryDialogStatus: false,
-            phoneCanNext: false,
-            emailCanNext: false,
             tel: '',
+            email: '',
             vscode: '',
             focus_tel: false,
+            focus_email: false,
             error_tel: '',
-            error_code: '',
+            error_email: '',
+            error_tel_code: '',
+            error_email_code: '',
+            haveGetTelCode: false,
+            haveGetEmailCode: false,
+            haveTelcodeVertify: false,
+            haveEmailCodeVertify: false
         }
     },
     computed: {
         canNext() {
-            // console.log(this.phoneCanNext);
             if (this.type === 1) {
-                return this.emailCanNext
+                return this.haveGetTelCode && this.haveTelcodeVertify
             } else {
-                return this.phoneCanNext;
+                return this.haveGetEmailCode && this.haveEmailCodeVertify
             }
-        },
-        telError() {
-            if(this.error_tel == 'You are not a new user because you have registered once.') {
-                return this.error_tel+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
-            }
-            return this.error_tel;
         }
-        
     },
     watch: {
         tel(nv, ov) {
+            this.haveGetTelCode = false
             this.error_tel = ''
+        },
+        email(nv, ov) {
+            this.haveEmailCodeVertify = false
+            this.error_email = ''
+            const str = this.email.substr(this.email.length - 1, 1)
+            if (this.email.length > 1 && str == '@') {
+                this.showAutoInput = true
+            } else {
+                this.showAutoInput = false
+            }
         },
         country(nv, ov) {
             this.tel = ''
-        },
+        }
     },
     methods: {
-        telCanNext(bool) {
-            this.phoneCanNext = bool;
+        getTelCode(callback) {
+            this.$axios({
+                url: `/ums/v2/register/code/sms?phone=${this.tel}&phoneCc=${this.country.phonePrefix}&index=1`,
+                method: 'get'
+            })
+                .then(res => {
+                    callback()
+                    if (res.data.code === 0) {
+                        this.haveGetEmailCode = true
+                    } else if (res.data.code === 2) {
+                        this.error_tel =
+                            'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
+                    } else {
+                        this.error_tel = 'This phone number you entered is incorrect. Please try again.'
+                    }
+                })
+                .catch(() => {
+                    callback()
+                })
         },
-        showError(msg) {
-            this.error_tel = msg;
+        getEmailcode(callback) {
+            this.$axios({
+                url: `/ums/v1/register/code/email?email=${this.email}`,
+                method: 'get'
+            })
+                .then(res => {
+                    callback()
+                    if (res.data.code === 0) {
+                        this.haveGetTelCode = true
+                    } else if (res.data.code === 2) {
+                        this.error_tel =
+                            'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
+                    } else {
+                        this.error_tel = 'This phone number you entered is incorrect. Please try again.'
+                    }
+                })
+                .catch(() => {
+                    callback()
+                })
         },
-        // changePhoneCanNext(bool) {
-        //     // console.log(this.$router.query)
-        //     this.phoneCanNext = bool
-        // },
-        changeEmailCanNext(bool) {
-            this.emailCanNext = bool
+        vertifyTelCode(val) {
+            // 验证验证码， 并将haveTelcodeVertify设置为true
         },
-        changetype(type) {
-            this.type = type
+        vertifyEmailCode(val) {},
+        autoInput(str) {
+            this.email += str
+            this.showAutoInput = false
         },
         chooseCountry(country) {
             this.country = country
@@ -159,7 +225,7 @@ export default {
                 // 活动ID &activeID=${activeID}
                 this.$router.push(`/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryID=${countryID}&code=${code}`)
             }
-        },
+        }
     },
     head() {
         return {
@@ -206,12 +272,12 @@ export default {
                 margin: 0 auto;
                 left: 0;
                 right: 0;
-                border-bottom: 3px solid #0087EB;
+                border-bottom: 3px solid #0087eb;
                 display: none;
             }
             .blue {
                 display: none;
-                color: #0087EB;
+                color: #0087eb;
             }
             .gray {
                 display: block;
@@ -240,10 +306,10 @@ export default {
         height: 15rem;
     }
     .by_tel {
-        .phone_number{
+        .phone_number {
             display: -webkit-box;
             display: flex;
-            margin-bottom: 1.9rem;
+            margin-bottom: 2.4rem;
             .country_choose {
                 -webkit-box-flex: 1;
                 flex: 1;
@@ -374,6 +440,86 @@ export default {
                 }
             }
         }
+    }
+}
+.get-code {
+    display: flex;
+    position: relative;
+    .code_num {
+        flex: 2;
+        margin-right: 10px;
+    }
+    .get-code-btn {
+        flex: 1;
+    }
+    .error_code {
+        position: absolute;
+        bottom: -1rem;
+        font-size: 0.8rem;
+        color: red;
+    }
+}
+.input-email {
+    padding-top: 1rem;
+    width: 100%;
+    border-bottom: #dddddd solid 1px;
+    padding-bottom: 5px;
+    margin: 1rem 0 2rem;
+    position: relative;
+    &.focus {
+        border-bottom: #0087eb solid 1px;
+    }
+    &.error {
+        border-bottom: red solid 1px;
+    }
+    &:after {
+        content: '0';
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+    .number {
+        width: 100%;
+        position: relative;
+        input {
+            width: 100%;
+            border: none;
+            display: block;
+            outline: none;
+            padding-left: 0.4rem;
+            &::-webkit-input-placeholder {
+                font-size: 0.9rem;
+            }
+        }
+        .auto-input {
+            width: 100%;
+            position: absolute;
+            top: 1.6rem;
+            left: 0;
+            border: 1px solid #dddddd;
+            background-color: #ffffff;
+            z-index: 10;
+            div {
+                width: 100%;
+                height: 3rem;
+                line-height: 3rem;
+                border-bottom: 1px solid #dddddd;
+                &.yahoo {
+                    border: 0;
+                }
+                color: #999999;
+                padding-left: 0.4rem;
+                font-size: 0.9rem;
+            }
+        }
+    }
+    .error {
+        height: 1rem;
+        position: absolute;
+        bottom: -1.5rem;
+        font-size: 0.8rem;
+        color: red;
     }
 }
 </style>

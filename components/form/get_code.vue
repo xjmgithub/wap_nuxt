@@ -1,22 +1,18 @@
 <template>
     <div>
         <div class="get-code">
-            <codeNum ref="codeNum" class="code_num" :error-state="error_state" :length="4" @vscode="codeNum" />
-            <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">
-                {{codeDuring>0?`${codeDuring}s`:'Get Code'}}
-            </div>
-            <div v-show="error_code" class="error_code">
-                {{error_code}}
-            </div>
+            <codeNum ref="codeNum" class="code_num" :class="{error:error_state}" :default-view="0" :length="4" @vscode="codeNum" />
+            <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+            <div v-show="error_code" class="error_code">{{error_code}}</div>
         </div>
     </div>
 </template>
 <script>
 import qs from 'qs'
-import codeNum from '~/components/codeNum'
+import codeNum from '~/components/password'
 export default {
     components: {
-        codeNum,
+        codeNum
     },
     props: {
         type: {
@@ -44,12 +40,12 @@ export default {
             error_code: '',
             error_state: false,
             codeDuring: 0,
-            waiting_res: false,
+            waiting_res: false
         }
     },
     computed: {
         canGetCode() {
-            if(this.tel) {
+            if (this.tel) {
                 return this.tel.length >= 6 && this.codeDuring <= 0
             } else {
                 const regEmail = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
@@ -63,9 +59,9 @@ export default {
             this.error_state = false
             this.$emit('phoneCanNext', false)
             this.$emit('emailCanNext', false)
-            if(this.vscode.length>=4){
-                this.$emit('vscode',nv)
-                if(this.tel) {
+            if (this.vscode.length >= 4) {
+                this.$emit('vscode', nv)
+                if (this.tel) {
                     this.$axios({
                         method: 'POST',
                         headers: {
@@ -75,7 +71,7 @@ export default {
                         data: qs.stringify({
                             phoneCc: this.prefix,
                             phone: this.tel,
-                            code: this.vscode,
+                            code: this.vscode
                         }),
                         url: this.type ? '/ums/v1/user/code/sms' : '/ums/v1/register/code/sms'
                     }).then(res => {
@@ -83,7 +79,7 @@ export default {
                             this.$emit('phoneCanNext', true)
                         } else {
                             this.error_code = 'This code you entered is incorrect. Please try again.'
-                            this.error_state = true;
+                            this.error_state = true
                         }
                     })
                 } else {
@@ -103,7 +99,7 @@ export default {
                             this.$emit('emailCanNext', true)
                         } else {
                             this.error_code = 'This code you entered is incorrect. Please try again.'
-                            this.error_state = true;
+                            this.error_state = true
                         }
                     })
                 }
@@ -120,8 +116,8 @@ export default {
         clearInterval(this.timer)
     },
     methods: {
-        codeNum(code){
-            this.vscode = code;
+        codeNum(code) {
+            this.vscode = code
         },
         getCode() {
             // TODO 防止多次点击
@@ -129,18 +125,18 @@ export default {
                 return false
             }
             this.waiting_res = true
-            if(this.tel) {
+            if (this.tel) {
                 const url = this.type ? '/ums/v1/user/code/sms' : '/ums/v2/register/code/sms'
                 this.$axios.get(`${url}?phone=${this.tel}&phoneCc=${this.prefix}&index=1`).then(res => {
                     this.waiting_res = false
                     if (res.data.code === 0) {
                         this.codeDuring = 60
-                    } else if(res.data.code === 2) {
-                        this.error_tel = 'You are not a new user because you have registered once.';
-                        this.$emit('errorTel',this.error_tel);
+                    } else if (res.data.code === 2) {
+                        this.error_tel = 'You are not a new user because you have registered once.'
+                        this.$emit('errorTel', this.error_tel)
                     } else {
-                        this.error_tel = 'This phone number you entered is incorrect. Please try again.';
-                        this.$emit('errorTel',this.error_tel);
+                        this.error_tel = 'This phone number you entered is incorrect. Please try again.'
+                        this.$emit('errorTel', this.error_tel)
                     }
                 })
             } else {
@@ -149,12 +145,12 @@ export default {
                     this.waiting_res = false
                     if (res.data.code === 0) {
                         this.codeDuring = 60
-                    } else if(res.data.code === 2) {
-                        this.error_email = 'You are not a new user because you have registered once.';
-                        this.$emit('errorEmail',this.error_email);
+                    } else if (res.data.code === 2) {
+                        this.error_email = 'You are not a new user because you have registered once.'
+                        this.$emit('errorEmail', this.error_email)
                     } else {
-                        this.error_email = 'This email you entered is incorrect. Please try again.';
-                        this.$emit('errorEmail',this.error_email);
+                        this.error_email = 'This email you entered is incorrect. Please try again.'
+                        this.$emit('errorEmail', this.error_email)
                     }
                 })
             }
