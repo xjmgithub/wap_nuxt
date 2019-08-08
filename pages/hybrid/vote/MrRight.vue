@@ -12,12 +12,9 @@
             <div class="rule">
                 <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
                 <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                    <img src="~assets/img/vote/VIVO2.jpg" @click="mSendEvLog('banner_click',1,10)" />
-                    <span>
-                        AI Triple Camera(Front 16 MP, Rear 13MP+8MP+2MP), 5000mAh Battery
-                        <b>HOW TO WIN</b>
-                    </span>
+                    <img src="~assets/img/vote/VIVO.png" @click="mSendEvLog('banner_click',1,10)" />
                 </nuxt-link>
+                <span>HOW TO WIN</span>
             </div>
             <div v-show="coupleList.length>0" class="vote">
                 <p>
@@ -446,26 +443,20 @@ body {
         font-weight: bold;
         margin-top: 0.7rem;
         img {
-            width: 60%;
+            width: 100%;
         }
         span {
-            color:#ffffff;
-            font-size: .8rem;
-            display: inline-block;
-            width: 38%;
-            vertical-align: middle;
-            b{
-                display: block;
-                text-decoration: underline;
-                margin-top:.2rem;
-                color:#ffe6a4;
-            }
-        }
-        .share {
-            position: absolute;
-            right: 4%;
-            color: #ffffff;
+            color: #ffe6a4;
+            font-size: 0.7rem;
+            font-weight: bold;
             text-decoration: underline;
+            position: absolute;
+            bottom:0;
+            right: 15%;
+            &.share {
+                right: 4%;
+                top:0;
+            }
         }
     }
     .title {
