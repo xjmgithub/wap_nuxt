@@ -13,8 +13,8 @@
                 <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
                 <nuxt-link :to="{path:'/hybrid/vote/rule'}">
                     <img src="~assets/img/vote/VIVO.png" @click="mSendEvLog('banner_click',1,10)" />
+                    <span>HOW TO WIN</span>
                 </nuxt-link>
-                <span>HOW TO WIN</span>
             </div>
             <div v-show="coupleList.length>0" class="vote">
                 <p>
@@ -451,11 +451,11 @@ body {
             font-weight: bold;
             text-decoration: underline;
             position: absolute;
-            bottom:0;
+            bottom: 0;
             right: 15%;
             &.share {
                 right: 4%;
-                top:0;
+                top: 0;
             }
         }
     }
