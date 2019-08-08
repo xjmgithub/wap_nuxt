@@ -37,19 +37,18 @@ export default {
         return {
             utm_str: this.$route.query.referrer || JSON.stringify(this.$route.query).replace(/[{"}]/g,'').replace(/,/g,'&').replace(/:/g,'=').replace('t_sr','utm_source').replace('t_md','utm_medium').replace('t_tm','utm_term').replace('t_ct','utm_content').replace('t_cn','utm_campaign'),
             showRulesPage: false,
+            invite_code: this.$route.query.inviteCode,
         }
     },
     mounted() {
-        // http://localhost:3000/hybrid/lands/invite?referrer=utm_source%3Dstartimes_app%26utm_medium%3Dshare%26utm_term%3Drunning%26utm_content%3Dlogolink%26utm_campaign%3Dtell_friends
+        // http://localhost:3000/hybrid/lands/invite?referrer=utm_source%3Dstartimes_app%26utm_medium%3Dshare%26utm_term%3Drunning%26utm_content%3Dlogolink%26utm_campaign%3Dtell_friends%26inviteCode%3D123456
 
-        // http://localhost:3000/hybrid/lands/invite?utm_source=startimes_app&utm_medium=share&utm_term=running&utm_content=logolink&utm_campaign=tell_friends
+        // http://localhost:3000/hybrid/lands/invite?utm_source=startimes_app&utm_medium=share&utm_term=running&utm_content=logolink&utm_campaign=tell_friends&inviteCode=123456
 
-        // http://localhost:3000/hybrid/lands/invite?t_sr=startimes_app&t_md=share&t_tm=running&t_ct=logolink&t_cn=tell_friends
-
-        // console.log(this.utm_str) // utm_source=startimes_app&utm_medium=share&utm_term=running&utm_content=logolink&utm_campaign=tell_friends
+        // http://localhost:3000/hybrid/lands/invite?t_sr=startimes_app&t_md=share&t_tm=running&t_ct=logolink&t_cn=tell_friends&inviteCode=123456
 
         sessionStorage.setItem("utm_str", this.utm_str)
-        
+        sessionStorage.setItem("invite_code", this.invite_code)
     },
     methods: {
         showRules() {
@@ -69,10 +68,8 @@ export default {
     height: 100%;
     background-image: linear-gradient(to top, #954AB1 25%, #5C2479 75%);
     padding-top: 5%;
-    padding-bottom: 21%;
     font-family: Roboto;
     font-weight: 600;
-    // position: relative;
     position: fixed;
     top: 0;
     left: 0;
@@ -83,6 +80,7 @@ export default {
         margin: 0 auto;
     }
     .words {
+        margin-top: -20%;
         div {
             width: 100%;
             text-align: center;
@@ -91,7 +89,6 @@ export default {
                 font-size: 1rem;
                 color: #F2D884;
                 line-height: 1.2rem;
-                margin-top: -5.5rem;
             }
             &.rules {
                 margin-top: 1.5rem;

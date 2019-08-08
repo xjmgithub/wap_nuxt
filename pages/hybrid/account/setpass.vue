@@ -19,8 +19,7 @@
             <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
-            <!-- <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep" /> -->
-            <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep2" />
+            <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -34,14 +33,13 @@ export default {
     },
     data() {
         return {
-            countryId: this.$route.query.countryId || '',
             phone: this.$route.query.phone || '',
             phoneCc: this.$route.query.phoneCc || '',
             verifyCode: this.$route.query.code || '',
             email: this.$route.query.email || '',
             pass: '',
             repass: '',
-            inviteCode: '357543',
+            inviteCode: sessionStorage.getItem('invite_code'),
             isCiphertext: 1,
             isCiphertext_confirm: 1,
             abled: false,
@@ -112,9 +110,6 @@ export default {
                 this.error_reps = 'The two passwords you entered did not match!'
             }
         },
-        nextStep2() {
-            this.$router.push(`/hybrid/account/toGooglePlay`)
-        },
         nextStep() {
             // TODO 校验
             const options = {
@@ -123,12 +118,11 @@ export default {
                 invitedId: this.inviteCode,
                 invitedChannel: 0,
                 deviceId: this.$store.state.deviceId,
-                countryId: 2
+                activity: 'invite_new',
             }
             if (this.phone) {
                 options.phoneCc = this.phoneCc
                 options.phone = this.phone
-                options.countryId = this.countryId
                 options.type = 10
             } else {
                 options.email = this.email
@@ -156,6 +150,7 @@ export default {
                             pwd: this.pass
                         }
                     }
+                    sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
                     login(this, params)
                 } else {
                     this.error_code = 'This code you entered is incorrect. Please try again.'
