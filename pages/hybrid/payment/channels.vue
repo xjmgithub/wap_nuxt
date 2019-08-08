@@ -1,20 +1,20 @@
 <template>
     <div class="container">
         <div class="goods">
-            <p class="pay-money">
+            <p v-show="totalAmount" class="pay-money">
                 <span>{{currency}}</span>{{totalAmount | formatAmount}}
             </p>
-            <p class="pay-subject">{{paySubject}}</p>
+            <p class="pay-subject">Production Name: {{paySubject}}</p>
         </div>
         <div class="pay-channels">
             <div v-for="(item,i) in payChannels" :key="i">
                 <label class="radio">
                     <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)">
                     <img v-else src="~assets/img/pay/ewallet.png">
-                    <span v-if="item.payType==1&&eCurrency&&eAmount>=0">eWallet: {{eCurrency}}{{eAmount| formatAmount}}</span>
+                    <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                     <span v-else-if="item.payType==1">eWallet</span>
                     <span v-else>{{item.name}}</span>
-                    <input :checked="i===0?true:false" type="radio" name="pay-options" value="item.payType" @click="checkThis(item)">
+                    <input :checked="lastpay===item.id || i===0?true:false" type="radio" name="pay-options" value="item.payType" @click="checkThis(item)">
                     <i/>
                 </label>
             </div>
@@ -31,7 +31,8 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import { formatAmount, cdnPicSrc } from '~/functions/utils'
+import { formatAmount, cdnPicSrc, setCookie, getCookie } from '~/functions/utils'
+import { updateWalletAccount, updateWalletConf, invoke, commonPayAfter } from '~/functions/pay'
 export default {
     layout: 'base',
     components: {
@@ -40,6 +41,9 @@ export default {
     filters: {
         formatAmount(num) {
             return formatAmount(num)
+        },
+        formatDefPay(num) {
+            return formatAmount(num)
         }
     },
     data() {
@@ -47,19 +51,18 @@ export default {
         return {
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             payToken: this.$route.query.payToken,
-            payChannel: this.$route.query.payChannel || 9002,
-            desc: '',
-            form_exit: false,
+            payChannel: 9003,
             appInterfaceMode: null,
-            redirectUrl: '',
-            merchantRedirectUrl: '',
             currency: '',
             totalAmount: '',
             paySubject: '',
             payChannels: [],
+            lastpay: '',
             payType: 1,
             eAmount: '',
-            eCurrency: ''
+            eCurrency: '',
+            eCurrencySymbol: '',
+            formConfigExist: false
         }
     },
     computed: {
@@ -72,18 +75,6 @@ export default {
             })
             return tmp
         },
-        // btnState() {
-        //     return Boolean(this.errorMsg)
-        //     let tmp = ''
-        //     if (!this.isLogin) {
-        //         return false
-        //     } else if (this.payType === 1) {
-        //         tmp = this.currency == this.eCurrency && this.eAmount >= this.totalAmount
-        //     } else {
-        //         tmp = this.currency == this.eCurrency
-        //     }
-        //     return !tmp
-        // },
         errorMsg() {
             let tmp = ''
             if (!this.isLogin && this.payType === 1) return tmp
@@ -96,9 +87,8 @@ export default {
     },
     mounted() {
         this.getPayMethods()
-        if (this.isLogin) {
-            this.getEwalletBalance()
-        }
+        if (this.isLogin) this.getMyEwallet()
+        this.lastpay = getCookie('lastpay')
     },
     methods: {
         getPayMethods() {
@@ -122,14 +112,13 @@ export default {
                 }
             })
         },
-        getEwalletBalance() {
-            this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
-                const data = res.data
-                if (data.accountNo) {
-                    this.eAmount = data.amount
-                    this.eCurrency = data.currencySymbol
-                    sessionStorage.setItem('eWallet-account', JSON.stringify(data))
-                }
+        getMyEwallet() {
+            updateWalletAccount.call(this, account => {
+                this.eAmount = account.amount
+                this.eCurrency = account.currency
+                this.eCurrencySymbol = account.currencySymbol
+                sessionStorage.setItem('wallet', JSON.stringify(account))
+                updateWalletConf.call(this, account.accountNo)
             })
         },
         cdnPic(src) {
@@ -138,71 +127,35 @@ export default {
         checkThis(item) {
             this.payType = item.payType
             this.currency = item.currency
-        },
-        invokePay() {
-            if (!this.form_exit) {
-                if (this.payType !== 3 && [2, 3].indexOf(this.appInterfaceMode) < 0) {
-                    /* payType 取值
-                    1、钱包余额
-                    2、现金
-                    3、第三方在线支付
-                    4、订阅
-                    99、其他 */
-
-                    /* appInterfaceMode
-                    1、SDK
-                    2、Web，访问Web页面
-                    3、Wait，等待支付结果
-                    */
-                    this.$alert(
-                        'The payment method you selected is temporarily not supported by this platform. Please contact appservice@startimes.com.cn'
-                    )
-                    return false
-                }
-
-                this.$axios
-                    .post('/payment/api/v2/invoke-payment', {
-                        payToken: this.payToken,
-                        payChannelId: this.payChannel,
-                        tradeType: 'JSAPI',
-                        deviceInfo: window.navigator.userAgent,
-                        extendInfo: {} // 没有动态表单收集信息的传空对象
-                    })
-                    .then(res => {
-                        const data = res.data
-                        if (data && data.resultCode === 0) {
-                            if (this.appInterfaceMode === 2) {
-                                this.redirectUrl = data.tppRedirectUrl
-                            }
-                            this.merchantRedirectUrl = data.merchantPayRedirectUrl
-                        }
-                    })
-            }
+            this.payChannel = item.id
+            this.formConfigExist = item.formConfigExist
+            this.appInterfaceMode = item.appInterfaceMode
         },
         nextStep() {
-            if (!this.isLogin && this.payType === 1) {
-                this.$confirm('The eWallet needs to login the startimes first', () => {
-                    this.$router.push('/hybrid/account/login')
-                })
-                return
-            }
-            if (this.form_exit) {
+            if (this.payType === 1) {
+                if (!this.isLogin) {
+                    this.$confirm('The eWallet needs to login the startimes first', () => {
+                        this.$router.push('/hybrid/account/signin')
+                    })
+                } else {
+                    const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
+                    if (passIsSet === 'true') {
+                        this.$router.push(`/hybrid/payment/wallet/paybyPass?channel=${this.payChannel}&payToken=${this.payToken}`)
+                    } else {
+                        this.$router.push(`/hybrid/payment/wallet/setPassword?channel=${this.payChannel}&payToken=${this.payToken}`)
+                    }
+                }
+            } else if (this.formConfigExist) {
                 this.$router.push(
                     `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.payChannel}&appInterfaceMode=${this.appInterfaceMode}`
                 )
             } else {
-                if (this.appInterfaceMode === 2) {
-                    window.open(this.redirectUrl)
-                    // this.$confirm(
-                    //     'If payment has been completed,please click done.If you encounter problems,please try again or contact appservice@startimes.com.cn',
-                    //     () => {
-                    //         // 跳转商户页
-                    //     },
-                    //     'Completed',
-                    //     'Try again'
-                    // )
-                }
-                this.$router.push(`/hybrid/payment/payResult?payToken=${this.payToken}`)
+                invoke.call(this, this.payToken, this.payChannel, data => {
+                    setCookie('lastpay', this.channel)
+                    this.$nuxt.$loading.finish()
+                    this.$store.commit('HIDE_SHADOW_LAYER')
+                    commonPayAfter.call(this, data, this.payType, this.appInterfaceMode)
+                })
             }
         }
     }

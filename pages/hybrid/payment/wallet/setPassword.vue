@@ -56,7 +56,7 @@ export default {
             reset: false,
             accountNo: null,
             channel:this.$route.query.channel,
-            payToken: this.$route.query.paytoken,
+            payToken: this.$route.query.payToken,
             card: this.$route.query.card // paystack card
         }
     },
@@ -164,7 +164,7 @@ export default {
                     data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        setCookie('lastpay', 'card')
+                        setCookie('lastpay', this.channel)
                         commonPayAfter.call(this, data, 3, 3)
                     },
                     { authorization_code: this.card }

@@ -60,7 +60,6 @@ export default {
                 }
             })
                 .then(res => {
-                    console.log(res.data)
                     if (res.data.resultCode == 'SUCCESS') {
                         window.location.href = `/hybrid/payment/channels?payToken=${res.data.payToken}`
                     }

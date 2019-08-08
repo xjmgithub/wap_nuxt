@@ -1,11 +1,11 @@
 <template>
     <div class="container">
-        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword"/>
+        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword" />
         <div class="forgot-pwd">
             <a @click="forgetPass">Forgot payment password?</a>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"/>
+            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -14,6 +14,7 @@ import mButton from '~/components/button'
 import Password from '~/components/password'
 import { invoke, commonPayAfter, verifyWalletPass, payWithBalance } from '~/functions/pay'
 import { toNativePage } from '~/functions/app'
+import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -24,7 +25,7 @@ export default {
         return {
             password: '',
             canPay: false,
-            payToken: this.$route.query.paytoken,
+            payToken: this.$route.query.payToken,
             channel: this.$route.query.channel,
             apiType: this.$route.query.apiType,
             card: this.$route.query.card
@@ -73,6 +74,7 @@ export default {
                 } else {
                     invoke.call(this, this.payToken, this.channel, data => {
                         payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
+                            setCookie('lastpay', this.channel)
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
                             commonPayAfter.call(this, data, 3, 3)
