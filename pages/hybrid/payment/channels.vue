@@ -133,7 +133,7 @@ export default {
             if (this.payType === 1) {
                 if (!this.isLogin) {
                     this.$confirm('The eWallet needs to login the startimes first', () => {
-                        this.$router.push('/hybrid/account/signin')
+                        this.$router.push(`/hybrid/account/signin?pre=${location.href}`)
                     })
                 } else {
                     const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword

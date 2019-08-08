@@ -67,7 +67,13 @@ export default {
             phoneNum: '',
             password: '',
             email: '',
-            countrys: countrArr
+            countrys: countrArr,
+            pre: this.$route.query.pre,
+        }
+    },
+    mounted(){
+        if (this.pre) {
+            sessionStorage.setItem('login_prefer', this.pre)
         }
     },
     methods: {
