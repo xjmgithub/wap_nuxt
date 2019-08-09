@@ -153,7 +153,7 @@ export default {
                             pwd: this.pass
                         }
                     }
-                    sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
+                    // sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
                     login(this, params)
                 } else {
                     this.error_code = 'This code you entered is incorrect. Please try again.'

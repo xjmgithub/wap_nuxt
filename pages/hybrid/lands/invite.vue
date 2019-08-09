@@ -65,6 +65,7 @@ export default {
                 .replace('t_cn', 'utm_campaign')
         }
         sessionStorage.setItem('utm_str', this.utm_str)
+        sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
         if (this.invite_code) {
             sessionStorage.setItem('invite_code', this.invite_code)
         }

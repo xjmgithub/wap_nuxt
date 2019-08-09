@@ -223,8 +223,7 @@ export default {
                 url: '/ums/v1/register/code/sms',
                 method: 'post',
                 headers: {
-                    'content-type': 'application/x-www-form-urlencoded',
-                    token: this.$store.state.token
+                    'content-type': 'application/x-www-form-urlencoded'
                 },
                 data: qs.stringify({
                     phoneCc: this.country.phonePrefix,
@@ -250,7 +249,7 @@ export default {
                 method: 'post',
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
-                    token: this.$store.state.token
+                    // token: this.$store.state.token
                 },
                 data: qs.stringify({
                     email: this.email,
@@ -280,7 +279,7 @@ export default {
         nextStep() {
             if (this.type === 1) {
                 const email = this.email
-                const code = this.$ref.emailCode.password
+                const code = this.$refs.emailCode.password
                 this.$router.push(`/hybrid/account/setpass?email=${email}&code=${code}`)
             } else {
                 // TODO校验
