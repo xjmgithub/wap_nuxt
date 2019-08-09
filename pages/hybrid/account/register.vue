@@ -31,14 +31,7 @@
                 </div>
             </div>
             <div class="get-code">
-                <password
-                    ref="telCode"
-                    class="code_num"
-                    :default-view="0"
-                    :length="4"
-                    @endinput="vertifyTelCode"
-                    @inputing="haveTelcodeVertify=false&&error_tel_code=''"
-                />
+                <password ref="telCode" class="code_num" :default-view="0" :length="4" @endinput="vertifyTelCode" @inputing="inputTelCode" />
                 <getCodeBtn ref="telGetCodeBtn" class="get-code-btn" :disabled="!new RegExp(country.phoneRegex).test(tel)" @click="getTelCode" />
                 <div class="error_code">{{error_tel_code}}</div>
             </div>
@@ -56,14 +49,7 @@
                 <div v-show="error_email" class="error" v-html="error_email"></div>
             </div>
             <div class="get-code">
-                <password
-                    ref="emailCode"
-                    class="code_num"
-                    :default-view="0"
-                    :length="4"
-                    @endinput="vertifyEmailCode"
-                    @inputing="haveEmailcodeVertify=false&&error_email_code=''"
-                />
+                <password ref="emailCode" class="code_num" :default-view="0" :length="4" @endinput="vertifyEmailCode" @inputing="inputEmailCode" />
                 <getCodeBtn
                     ref="emailGetCodeBtn"
                     class="get-code-btn"
@@ -97,6 +83,7 @@ import getCodeBtn from '~/components/form/getCodeBtn'
 import shadowLayer from '~/components/shadow-layer'
 import mButton from '~/components/button'
 import countrys from '~/functions/countrys.json'
+import qs from 'qs'
 export default {
     layout: 'base',
     components: {
@@ -113,7 +100,6 @@ export default {
             countryDialogStatus: false,
             tel: '',
             email: '',
-            vscode: '',
             focus_tel: false,
             focus_email: false,
             error_tel: '',
@@ -123,15 +109,16 @@ export default {
             haveGetTelCode: false,
             haveGetEmailCode: false,
             haveTelcodeVertify: false,
-            haveEmailCodeVertify: false
+            haveEmailCodeVertify: false,
+            showAutoInput: false
         }
     },
     computed: {
         canNext() {
             if (this.type === 1) {
-                return this.haveGetTelCode && this.haveTelcodeVertify
-            } else {
                 return this.haveGetEmailCode && this.haveEmailCodeVertify
+            } else {
+                return this.haveGetTelCode && this.haveTelcodeVertify
             }
         }
     },
@@ -155,6 +142,14 @@ export default {
         }
     },
     methods: {
+        inputTelCode() {
+            this.haveTelcodeVertify = false
+            this.error_tel_code = ''
+        },
+        inputEmailCode() {
+            this.haveEmailcodeVertify = false
+            this.error_email_code = ''
+        },
         getTelCode(callback) {
             this.$axios({
                 url: `/ums/v2/register/code/sms?phone=${this.tel}&phoneCc=${this.country.phonePrefix}&index=1`,
@@ -163,7 +158,7 @@ export default {
                 .then(res => {
                     callback()
                     if (res.data.code === 0) {
-                        this.haveGetEmailCode = true
+                        this.haveGetTelCode = true
                     } else if (res.data.code === 2) {
                         this.error_tel =
                             'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
@@ -175,7 +170,7 @@ export default {
                     callback()
                 })
         },
-        getEmailcode(callback) {
+        getEmailCode(callback) {
             this.$axios({
                 url: `/ums/v1/register/code/email?email=${this.email}`,
                 method: 'get'
@@ -196,9 +191,54 @@ export default {
                 })
         },
         vertifyTelCode(val) {
-            // 验证验证码， 并将haveTelcodeVertify设置为true
+            this.$axios({
+                url: '/ums/v1/register/code/sms',
+                method: 'post',
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    token: this.$store.state.token
+                },
+                data: qs.stringify({
+                    phoneCc: this.country.phonePrefix,
+                    phone: this.tel,
+                    code: val
+                })
+            })
+                .then(res => {
+                    if (res.data.code == 0) {
+                        this.haveTelcodeVertify = true
+                    } else {
+                        this.error_tel_code = 'This code you entered is incorrect. Please try again.'
+                    }
+                })
+                .catch(() => {
+                    // console.log(验证失败)
+                })
         },
-        vertifyEmailCode(val) {},
+        vertifyEmailCode(val) {
+            this.$axios({
+                url: '/ums/v1/register/code/verify',
+                method: 'post',
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    token: this.$store.state.token
+                },
+                data: qs.stringify({
+                    email: this.email,
+                    code: val
+                })
+            })
+                .then(res => {
+                    if (res.data.code == 0) {
+                        this.haveEmailcodeVertify = true
+                    } else {
+                        this.error_email_code = 'This code you entered is incorrect. Please try again.'
+                    }
+                })
+                .catch(() => {
+                    // console.log(验证失败)
+                })
+        },
         autoInput(str) {
             this.email += str
             this.showAutoInput = false
@@ -209,21 +249,15 @@ export default {
         },
         nextStep() {
             if (this.type === 1) {
-                const email = this.$refs.emailpicker.email
-                const code = this.$refs.emailpicker.vscode
-                // const activeID = '';
-                // 活动ID &activeID=${activeID}
+                const email = this.email
+                const code = this.$ref.emailCode.password
                 this.$router.push(`/hybrid/account/setpass?email=${email}&code=${code}`)
             } else {
                 // TODO校验
                 const phone = this.tel
-                const code = this.$refs.telpicker.vscode
+                const code = this.$refs.telCode.password
                 const phoneCc = this.country.phonePrefix
-                const countryID = this.country.id
-                // console.log(countryID)
-                // const activeID = '';
-                // 活动ID &activeID=${activeID}
-                this.$router.push(`/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&countryID=${countryID}&code=${code}`)
+                this.$router.push(`/hybrid/account/setpass?phone=${phone}&phoneCc=${phoneCc}&code=${code}`)
             }
         }
     },
@@ -304,6 +338,72 @@ export default {
     .by_tel,
     .by_email {
         height: 15rem;
+        .input-email {
+            padding-top: 2.5rem;
+            width: 100%;
+            border-bottom: #dddddd solid 1px;
+            padding-bottom: 5px;
+            margin: 1rem 0 2rem;
+            position: relative;
+            &.focus {
+                border-bottom: #0087eb solid 1px;
+            }
+            &.error {
+                border-bottom: red solid 1px;
+            }
+            &:after {
+                content: '0';
+                display: block;
+                height: 0;
+                clear: both;
+                visibility: hidden;
+            }
+            .number {
+                width: 100%;
+                position: relative;
+                input {
+                    width: 100%;
+                    border: none;
+                    display: block;
+                    outline: none;
+                    padding-left: 0.4rem;
+                    &::-webkit-input-placeholder {
+                        font-size: 0.9rem;
+                    }
+                }
+                .auto-input {
+                    width: 100%;
+                    position: absolute;
+                    top: 1.6rem;
+                    left: 0;
+                    border: 1px solid #dddddd;
+                    background-color: #ffffff;
+                    z-index: 10;
+                    div {
+                        width: 100%;
+                        height: 3rem;
+                        line-height: 3rem;
+                        border-bottom: 1px solid #dddddd;
+                        &.yahoo {
+                            border: 0;
+                        }
+                        color: #999999;
+                        padding-left: 0.4rem;
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+            .error {
+                height: 1rem;
+                position: absolute;
+                bottom: -1.5rem;
+                font-size: 0.8rem;
+                color: red;
+            }
+        }
+        .get-code {
+            margin-top: 2.5rem;
+        }
     }
     .by_tel {
         .phone_number {

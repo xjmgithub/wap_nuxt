@@ -1,7 +1,7 @@
 <template>
     <div class="workshop">
         <codeNum></codeNum>
-        <password placeholder="sdfas" toggleView="1"></password>
+        <password placeholder="sdfas" toggle-view="1"></password>
     </div>
 </template>
 <script>

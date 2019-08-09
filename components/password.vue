@@ -130,8 +130,9 @@ export default {
     }
     .hidden-pwd {
         width: 100%;
+        height: 100%;
         position: absolute;
-        bottom: 2.2rem;
+        top: 0;
         left: 0;
         opacity: 0;
     }
