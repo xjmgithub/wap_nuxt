@@ -39,7 +39,7 @@ export default {
             email: this.$route.query.email || '',
             pass: '',
             repass: '',
-            inviteCode: sessionStorage.getItem('invite_code') || '',
+            inviteCode: '',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
             abled: false,
@@ -119,6 +119,7 @@ export default {
                 deviceId: this.$store.state.deviceId,
                 activity: 'invite_new',
             }
+            this.inviteCode = sessionStorage.getItem('invite_code');
             if(this.inviteCode){
                 options.invitedId = this.inviteCode;
             }

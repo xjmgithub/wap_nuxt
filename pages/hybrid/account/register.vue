@@ -31,7 +31,15 @@
                 </div>
             </div>
             <div class="get-code">
-                <password ref="telCode" class="code_num" :default-view="0" :length="4" @endinput="vertifyTelCode" @inputing="inputTelCode" />
+                <password
+                    ref="telCode"
+                    :class="{error:error_line_tel}"
+                    class="code_num"
+                    :default-view="0"
+                    :length="4"
+                    @endinput="vertifyTelCode"
+                    @inputing="inputTelCode"
+                />
                 <getCodeBtn ref="telGetCodeBtn" class="get-code-btn" :disabled="!new RegExp(country.phoneRegex).test(tel)" @click="getTelCode" />
                 <div class="error_code">{{error_tel_code}}</div>
             </div>
@@ -49,7 +57,15 @@
                 <div v-show="error_email" class="error" v-html="error_email"></div>
             </div>
             <div class="get-code">
-                <password ref="emailCode" class="code_num" :default-view="0" :length="4" @endinput="vertifyEmailCode" @inputing="inputEmailCode" />
+                <password
+                    ref="emailCode"
+                    :class="{error:error_line_email}"
+                    class="code_num"
+                    :default-view="0"
+                    :length="4"
+                    @endinput="vertifyEmailCode"
+                    @inputing="inputEmailCode"
+                />
                 <getCodeBtn
                     ref="emailGetCodeBtn"
                     class="get-code-btn"
@@ -107,9 +123,11 @@ export default {
             error_email: '',
             error_tel_code: '',
             error_email_code: '',
+            error_line_tel: false,
+            error_line_email: false,
             haveGetTelCode: false,
             haveGetEmailCode: false,
-            haveTelcodeVertify: false,
+            haveTelCodeVertify: false,
             haveEmailCodeVertify: false,
             showAutoInput: false
         }
@@ -119,7 +137,7 @@ export default {
             if (this.type === 1) {
                 return this.haveGetEmailCode && this.haveEmailCodeVertify
             } else {
-                return this.haveGetTelCode && this.haveTelcodeVertify
+                return this.haveGetTelCode && this.haveTelCodeVertify
             }
         }
     },
@@ -129,7 +147,7 @@ export default {
             this.error_tel = ''
         },
         email(nv, ov) {
-            this.haveEmailCodeVertify = false
+            this.haveGetEmailCode = false
             this.error_email = ''
             const str = this.email.substr(this.email.length - 1, 1)
             if (this.email.length > 1 && str == '@') {
@@ -144,12 +162,14 @@ export default {
     },
     methods: {
         inputTelCode() {
-            this.haveTelcodeVertify = false
+            this.haveTelCodeVertify = false
             this.error_tel_code = ''
+            this.error_line_tel = false
         },
         inputEmailCode() {
-            this.haveEmailcodeVertify = false
+            this.haveEmailCodeVertify = false
             this.error_email_code = ''
+            this.error_line_email = false
         },
         getTelCode(callback) {
             const timerIntercept = 'error' // 倒计时拦截
@@ -184,14 +204,14 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         callback()
-                        this.haveGetTelCode = true
+                        this.haveGetEmailCode = true
                     } else if (res.data.code === 2) {
                         callback(timerIntercept)
-                        this.error_tel =
+                        this.error_email =
                             'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
                     } else {
                         callback(timerIntercept)
-                        this.error_tel = 'This phone number you entered is incorrect. Please try again.'
+                        this.error_email = 'This phone number you entered is incorrect. Please try again.'
                     }
                 })
                 .catch(() => {
@@ -214,9 +234,10 @@ export default {
             })
                 .then(res => {
                     if (res.data.code == 0) {
-                        this.haveTelcodeVertify = true
+                        this.haveTelCodeVertify = true
                     } else {
                         this.error_tel_code = 'This code you entered is incorrect. Please try again.'
+                        this.error_line_tel = true
                     }
                 })
                 .catch(() => {
@@ -238,9 +259,10 @@ export default {
             })
                 .then(res => {
                     if (res.data.code == 0) {
-                        this.haveEmailcodeVertify = true
+                        this.haveEmailCodeVertify = true
                     } else {
                         this.error_email_code = 'This code you entered is incorrect. Please try again.'
+                        this.error_line_email = true
                     }
                 })
                 .catch(() => {
@@ -363,12 +385,27 @@ export default {
                 color: red;
             }
         }
+        .number {
+            input {
+                width: 100%;
+                border: none;
+                display: block;
+                padding: 0 0.5rem;
+                height: 1.5rem;
+                line-height: 1.5rem;
+                outline: none;
+                color: #333333;
+                &::-webkit-input-placeholder {
+                    font-size: 0.9rem;
+                }
+            }
+        }
     }
     .by_tel {
+        padding-top: 3.3rem;
         .phone_number {
             display: -webkit-box;
             display: flex;
-            margin-top: 3.3rem;
             margin-bottom: 2.4rem;
             .country_choose {
                 -webkit-box-flex: 1;
@@ -409,38 +446,17 @@ export default {
                 }
                 .number {
                     margin-left: 2.3rem;
-                    input {
-                        width: 100%;
-                        border: none;
-                        display: block;
-                        padding: 0 0.5rem;
-                        height: 1.5rem;
-                        line-height: 1.5rem;
-                        outline: none;
-                        color: #333333;
-                        &::-webkit-input-placeholder {
-                            font-size: 0.9rem;
-                        }
-                    }
-                }
-                .error {
-                    height: 1rem;
-                    position: absolute;
-                    bottom: -1.5rem;
-                    font-size: 0.8rem;
-                    color: red;
                 }
             }
         }
     }
     .by_email {
+        padding-top: 3.3rem;
         .input-email {
             width: 100%;
             border-bottom: #dddddd solid 1px;
             padding-bottom: 5px;
-            margin-top: 3.3rem;
-            margin-bottom: 2.4rem; 
-            // margin: 2.5rem 0 2.4rem;
+            margin-bottom: 2.4rem;
             position: relative;
             &.focus {
                 border-bottom: #0087eb solid 1px;
@@ -457,20 +473,6 @@ export default {
             }
             .number {
                 width: 100%;
-                input {
-                    width: 100%;
-                    border: none;
-                    display: block;
-                    padding: 0 0.5rem;
-                    height: 1.5rem;
-                    line-height: 1.5rem;
-                    outline: none;
-                    color: #333333;
-                    // padding-left: 0.4rem;
-                    &::-webkit-input-placeholder {
-                        font-size: 0.9rem;
-                    }
-                }
                 .auto-input {
                     width: 100%;
                     position: absolute;
@@ -493,14 +495,17 @@ export default {
                     }
                 }
             }
-            .error {
+        }
+    }
+    .input-tel,
+    .input-email {
+        .error {
                 height: 1rem;
                 position: absolute;
                 bottom: -1.5rem;
                 font-size: 0.8rem;
                 color: red;
             }
-        }
     }
     .next-btn {
         width: 80%;
@@ -567,69 +572,6 @@ export default {
                 }
             }
         }
-    }
-}
-.input-email {
-    padding-top: 1rem;
-    width: 100%;
-    border-bottom: #dddddd solid 1px;
-    padding-bottom: 5px;
-    margin: 1rem 0 2rem;
-    position: relative;
-    &.focus {
-        border-bottom: #0087eb solid 1px;
-    }
-    &.error {
-        border-bottom: red solid 1px;
-    }
-    &:after {
-        content: '0';
-        display: block;
-        height: 0;
-        clear: both;
-        visibility: hidden;
-    }
-    .number {
-        width: 100%;
-        position: relative;
-        input {
-            width: 100%;
-            border: none;
-            display: block;
-            outline: none;
-            padding-left: 0.4rem;
-            &::-webkit-input-placeholder {
-                font-size: 0.9rem;
-            }
-        }
-        .auto-input {
-            width: 100%;
-            position: absolute;
-            top: 1.6rem;
-            left: 0;
-            border: 1px solid #dddddd;
-            background-color: #ffffff;
-            z-index: 10;
-            div {
-                width: 100%;
-                height: 3rem;
-                line-height: 3rem;
-                border-bottom: 1px solid #dddddd;
-                &.yahoo {
-                    border: 0;
-                }
-                color: #999999;
-                padding-left: 0.4rem;
-                font-size: 0.9rem;
-            }
-        }
-    }
-    .error {
-        height: 1rem;
-        position: absolute;
-        bottom: -1.5rem;
-        font-size: 0.8rem;
-        color: red;
     }
 }
 </style>

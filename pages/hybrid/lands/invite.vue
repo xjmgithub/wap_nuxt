@@ -52,7 +52,6 @@ export default {
         } else {
             const obj = this.$route.query
             Object.keys(obj).forEach(key => {
-                console.log(key)
                 if (key != 'inviteCode') {
                     this.utm_str = this.utm_str + key + '=' + obj[key] + '&'
                 }
