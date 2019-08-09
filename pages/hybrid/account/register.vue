@@ -282,7 +282,7 @@ export default {
             display: -webkit-box;
             display: flex;
             span {
-                -webkit-box-flex: 1;
+                -webkit-box-flex: 5;
                 flex: 5;
                 width: 6.2rem;
                 height: 1.4rem;
@@ -473,20 +473,6 @@ export default {
                     color: red;
                 }
             }
-        }
-    }
-    .next-btn {
-        width: 80%;
-        background: #0087eb;
-        color: white;
-        text-align: center;
-        height: 2rem;
-        line-height: 2rem;
-        font-size: 0.8rem;
-        margin: 0 auto;
-        &.disabled {
-            background: #dddddd;
-            color: #aaaaaa;
         }
     }
     .terms {
