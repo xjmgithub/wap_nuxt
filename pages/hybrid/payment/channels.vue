@@ -94,6 +94,11 @@ export default {
             return tmp
         }
     },
+    watch: {
+        $route(to, from) {
+            this.$router.go(0)
+        }
+    },
     mounted() {
         this.getPayMethods()
         if (this.isLogin) this.getMyEwallet()
