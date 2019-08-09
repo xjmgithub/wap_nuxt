@@ -157,6 +157,7 @@ export default {
             })
                 .then(res => {
                     callback()
+                    this.haveGetTelCode = false
                     if (res.data.code === 0) {
                         this.haveGetTelCode = true
                     } else if (res.data.code === 2) {
@@ -176,14 +177,15 @@ export default {
                 method: 'get'
             })
                 .then(res => {
+                    this.haveGetTelCode = false
                     callback()
                     if (res.data.code === 0) {
-                        this.haveGetTelCode = true
+                        this.haveGetEmailCode = true
                     } else if (res.data.code === 2) {
-                        this.error_tel =
+                        this.error_email =
                             'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
                     } else {
-                        this.error_tel = 'This phone number you entered is incorrect. Please try again.'
+                        this.error_email = 'This email you entered is incorrect. Please try again.'
                     }
                 })
                 .catch(() => {
@@ -212,7 +214,7 @@ export default {
                     }
                 })
                 .catch(() => {
-                    // console.log(验证失败)
+                    // console.log('验证失败')
                 })
         },
         vertifyEmailCode(val) {
@@ -236,7 +238,7 @@ export default {
                     }
                 })
                 .catch(() => {
-                    // console.log(验证失败)
+                    // console.log('验证失败')
                 })
         },
         autoInput(str) {
@@ -282,7 +284,7 @@ export default {
             display: -webkit-box;
             display: flex;
             span {
-                -webkit-box-flex: 1;
+                -webkit-box-flex: 5;
                 flex: 5;
                 width: 6.2rem;
                 height: 1.4rem;
@@ -338,11 +340,29 @@ export default {
     .by_tel,
     .by_email {
         height: 15rem;
+        .get-code {
+            display: flex;
+            position: relative;
+            .code_num {
+                flex: 2;
+                margin-right: 10px;
+            }
+            .get-code-btn {
+                flex: 1;
+            }
+            .error_code {
+                position: absolute;
+                bottom: -1rem;
+                font-size: 0.8rem;
+                color: red;
+            }
+        }
     }
     .by_tel {
         .phone_number {
             display: -webkit-box;
             display: flex;
+            margin-top: 3.3rem;
             margin-bottom: 2.4rem;
             .country_choose {
                 -webkit-box-flex: 1;
@@ -350,7 +370,6 @@ export default {
                 img {
                     width: 1.5rem;
                     height: 1.5rem;
-                    margin-top: 3.3rem;
                 }
                 .country_icon {
                     margin-right: 0.2rem;
@@ -361,7 +380,6 @@ export default {
                 flex: 4;
                 align-content: flex-end;
                 padding-bottom: 5px;
-                margin-top: 3.3rem;
                 border-bottom: #dddddd solid 1px;
                 position: relative;
                 &.focus {
@@ -411,11 +429,12 @@ export default {
     }
     .by_email {
         .input-email {
-            // padding-top: 2.5rem;
             width: 100%;
             border-bottom: #dddddd solid 1px;
             padding-bottom: 5px;
-            margin: 2.5rem 0 2.4rem;
+            margin-top: 3.3rem;
+            margin-bottom: 2.4rem; 
+            // margin: 2.5rem 0 2.4rem;
             position: relative;
             &.focus {
                 border-bottom: #0087eb solid 1px;
@@ -432,13 +451,16 @@ export default {
             }
             .number {
                 width: 100%;
-                position: relative;
                 input {
                     width: 100%;
                     border: none;
                     display: block;
+                    padding: 0 0.5rem;
+                    height: 1.5rem;
+                    line-height: 1.5rem;
                     outline: none;
-                    padding-left: 0.4rem;
+                    color: #333333;
+                    // padding-left: 0.4rem;
                     &::-webkit-input-placeholder {
                         font-size: 0.9rem;
                     }
@@ -539,23 +561,6 @@ export default {
                 }
             }
         }
-    }
-}
-.get-code {
-    display: flex;
-    position: relative;
-    .code_num {
-        flex: 2;
-        margin-right: 10px;
-    }
-    .get-code-btn {
-        flex: 1;
-    }
-    .error_code {
-        position: absolute;
-        bottom: -1rem;
-        font-size: 0.8rem;
-        color: red;
     }
 }
 .input-email {
