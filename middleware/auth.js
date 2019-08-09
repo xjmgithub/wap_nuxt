@@ -1,7 +1,7 @@
 const authIgnore = [
     /^\/hybrid\/account\/login/,
     /^\/hybrid\/account\/logout/,
-    /^\/hybrid\/account\/signin/,
+    /^\/hybrid\/account\/signIn/,
     /^\/hybrid\/account\/register/,
     /^\/hybrid\/account\/setpass/,
     /^\/hybrid\/account\/resetpass/,
