@@ -6,25 +6,28 @@
             </p>
             <p class="pay-subject">Production Name: {{paySubject}}</p>
         </div>
-        <div class="pay-channels">
-            <div v-for="(item,i) in payChannels" :key="i">
-                <label class="radio">
-                    <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)">
-                    <img v-else src="~assets/img/pay/ewallet.png">
-                    <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
-                    <span v-else-if="item.payType==1">eWallet</span>
-                    <span v-else>{{item.name}}</span>
-                    <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="checkThis(item)">
-                    <i/>
-                </label>
+        <div class="contain">
+            <div class="pay-channels">
+                <div v-for="(item,i) in payChannels" :key="i" @click="checkThis(item)">
+                    <label class="radio">
+                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)">
+                        <img v-else src="~assets/img/pay/ewallet.png">
+                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
+                        <span v-else-if="item.payType==1">eWallet</span>
+                        <span v-else>{{item.name}}</span>
+                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options">
+                        <i/>
+                    </label>
+                </div>
+            </div>
+            <div v-show="payDesc" class="desc">
+                <p>Note:</p>
+                <p v-html="payDesc" />
             </div>
         </div>
-        <div v-show="payDesc" class="desc">
-            <p>Note:</p>
-            <p v-html="payDesc" />
-        </div>
-        <div class="error-msg" v-html="errorMsg" />
+
         <div class="footer">
+            <div class="error-msg" v-html="errorMsg" />
             <mButton :disabled="Boolean(errorMsg)" text="PAY NOW" @click="nextStep" />
         </div>
     </div>
@@ -62,7 +65,8 @@ export default {
             eAmount: '',
             eCurrency: '',
             eCurrencySymbol: '',
-            formConfigExist: false
+            formConfigExist: false,
+            oCurrency: ''
         }
     },
     computed: {
@@ -78,7 +82,7 @@ export default {
         errorMsg() {
             let tmp = ''
             if (!this.isLogin && this.payType === 1) return tmp
-            else if (this.currency != this.eCurrency) tmp = 'Commodity currency does not match wallet currency and cannot be paid'
+            else if (this.currency != this.oCurrency) tmp = 'Commodity currency does not match wallet currency and cannot be paid'
             else if (this.eAmount < this.totalAmount && this.payType === 1) tmp = 'The wallet balance is insufficient to pay for the goods'
             return tmp
         }
@@ -86,7 +90,6 @@ export default {
     mounted() {
         this.getPayMethods()
         if (this.isLogin) this.getMyEwallet()
-        this.lastpay = getCookie('lastpay')
     },
     methods: {
         getPayMethods() {
@@ -104,6 +107,13 @@ export default {
                     this.totalAmount = data.totalAmount
                     this.paySubject = data.paySubject
                     this.payChannels = data.payChannels
+
+                    const payChannels = {}
+                    this.payChannels.forEach(item => {
+                        payChannels[item.id] = item
+                    })
+                    this.lastpay = getCookie('lastpay')
+                    this.oCurrency = payChannels[this.lastpay].currency
                 } else {
                     this.$alert('payToken and payChannel Mismatch! please check request')
                     // this.$alert('The merchant has not yet opened a supportable payment channel.')
@@ -124,10 +134,11 @@ export default {
         },
         checkThis(item) {
             this.payType = item.payType
-            this.currency = item.currency
+            this.oCurrency = item.payType == 1 ? this.eCurrency : item.currency
             this.payChannel = item.id
             this.formConfigExist = item.formConfigExist
             this.appInterfaceMode = item.appInterfaceMode
+            setCookie('lastpay', this.payChannel)
         },
         nextStep() {
             if (this.payType === 1) {
@@ -149,7 +160,7 @@ export default {
                 )
             } else {
                 invoke.call(this, this.payToken, this.payChannel, data => {
-                    setCookie('lastpay', this.channel)
+                    setCookie('lastpay', this.payChannel)
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
                     commonPayAfter.call(this, data, this.payType, this.appInterfaceMode)
@@ -184,84 +195,93 @@ export default {
             font-size: 1.1rem;
         }
     }
-    .pay-channels {
-        width: 90%;
-        margin: 0 auto;
-        & > div {
-            border-bottom: 1px solid #eeeeee;
-            padding: 0.8rem 0;
-        }
-        .radio {
-            img {
-                width: 1.5rem;
+    .contain {
+        height: 60vh;
+        overflow-y: scroll;
+        .pay-channels {
+            width: 90%;
+            margin: 0 auto;
+            & > div {
+                border-bottom: 1px solid #eeeeee;
+                padding: 0.8rem 0;
             }
-            span {
-                margin-left: 0.5rem;
-                color: #333333;
-                font-weight: bold;
-            }
-            position: relative;
-            cursor: pointer;
-            display: block;
-            line-height: 2rem;
-            height: 2.3rem;
-            input {
-                position: absolute;
-                left: -9999px;
-                &:checked {
-                    & + i {
-                        border: 2px solid #008be9;
-                        &:after {
-                            opacity: 1;
+            .radio {
+                img {
+                    width: 1.5rem;
+                }
+                span {
+                    margin-left: 0.5rem;
+                    color: #333333;
+                    font-weight: bold;
+                }
+                position: relative;
+                cursor: pointer;
+                display: block;
+                line-height: 2rem;
+                height: 2.3rem;
+                input {
+                    position: absolute;
+                    left: -9999px;
+                    &:checked {
+                        & + i {
+                            border: 2px solid #008be9;
+                            &:after {
+                                opacity: 1;
+                            }
                         }
                     }
                 }
-            }
-            i {
-                width: 1.3rem;
-                height: 1.3rem;
-                outline: 0;
-                border: 2px solid #ddd;
-                background: #ffffff;
-                border-radius: 100%;
-                float: right;
-                margin-top: 0.45rem;
-                display: flex;
-                &:after {
-                    content: '';
-                    width: 0.8rem;
-                    height: 0.8rem;
+                i {
+                    width: 1.3rem;
+                    height: 1.3rem;
+                    outline: 0;
+                    border: 2px solid #ddd;
+                    background: #ffffff;
                     border-radius: 100%;
-                    background-color: #008be9;
-                    opacity: 0;
-                    transition: opacity 0.1s;
-                    -webkit-transition: opacity 0.1s;
-                    margin: auto;
+                    float: right;
+                    margin-top: 0.45rem;
+                    display: flex;
+                    &:after {
+                        content: '';
+                        width: 0.8rem;
+                        height: 0.8rem;
+                        border-radius: 100%;
+                        background-color: #008be9;
+                        opacity: 0;
+                        transition: opacity 0.1s;
+                        -webkit-transition: opacity 0.1s;
+                        margin: auto;
+                    }
                 }
             }
         }
-    }
-    .desc {
-        width: 90%;
-        margin: 0 auto;
-        line-height: 1.3rem;
-        margin-top: 0.8rem;
-    }
-    .error-msg {
-        position: fixed;
-        bottom: 4.5rem;
-        color: red;
-        font-size: 0.8rem;
-        width: 100%;
-        text-align: center;
+        .desc {
+            width: 90%;
+            margin: 0 auto;
+            line-height: 1.3rem;
+            margin-top: 0.8rem;
+        }
     }
     .footer {
+        width: 100%;
+        background: #ffffff;
         position: fixed;
         bottom: 2rem;
-        width: 75%;
         margin: 0 auto;
         left: 0;
         right: 0;
+        .error-msg {
+            color: red;
+            font-size: 0.8rem;
+            width: 75%;
+            text-align: center;
+            display: block;
+            margin: 0 auto;
+        }
+        button {
+            width: 75%;
+        }
+
     }
 }
 </style>
