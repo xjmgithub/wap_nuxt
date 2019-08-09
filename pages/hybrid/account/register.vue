@@ -83,6 +83,7 @@ import getCodeBtn from '~/components/form/getCodeBtn'
 import shadowLayer from '~/components/shadow-layer'
 import mButton from '~/components/button'
 import countrys from '~/functions/countrys.json'
+import { getRandomInt } from '~/functions/utils'
 import qs from 'qs'
 export default {
     layout: 'base',
@@ -151,45 +152,50 @@ export default {
             this.error_email_code = ''
         },
         getTelCode(callback) {
+            const timerIntercept = 'error' // 倒计时拦截
+            const index = getRandomInt(1, 10) // 发送短信平台的调用顺序
             this.$axios({
-                url: `/ums/v2/register/code/sms?phone=${this.tel}&phoneCc=${this.country.phonePrefix}&index=1`,
+                url: `/ums/v2/register/code/sms?phone=${this.tel}&phoneCc=${this.country.phonePrefix}&index=${index}`,
                 method: 'get'
             })
                 .then(res => {
-                    callback()
-                    this.haveGetTelCode = false
                     if (res.data.code === 0) {
+                        callback()
                         this.haveGetTelCode = true
                     } else if (res.data.code === 2) {
+                        callback(timerIntercept)
                         this.error_tel =
                             'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
                     } else {
+                        callback(timerIntercept)
                         this.error_tel = 'This phone number you entered is incorrect. Please try again.'
                     }
                 })
                 .catch(() => {
-                    callback()
+                    callback(timerIntercept)
                 })
         },
         getEmailCode(callback) {
+            const timerIntercept = 'error'
             this.$axios({
                 url: `/ums/v1/register/code/email?email=${this.email}`,
                 method: 'get'
             })
                 .then(res => {
-                    this.haveGetTelCode = false
-                    callback()
                     if (res.data.code === 0) {
-                        this.haveGetEmailCode = true
+                        callback()
+                        this.haveGetTelCode = true
                     } else if (res.data.code === 2) {
-                        this.error_email =
+                        callback(timerIntercept)
+                        this.error_tel =
                             'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
                     } else {
-                        this.error_email = 'This email you entered is incorrect. Please try again.'
+                        callback(timerIntercept)
+                        this.error_tel = 'This phone number you entered is incorrect. Please try again.'
                     }
                 })
                 .catch(() => {
-                    callback()
+                    callback(timerIntercept)
                 })
         },
         vertifyTelCode(val) {
