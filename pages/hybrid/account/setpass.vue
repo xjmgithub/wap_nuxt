@@ -111,11 +111,9 @@ export default {
             }
         },
         nextStep() {
-            // TODO 校验
             const options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
-                invitedChannel: 0,
                 deviceId: this.$store.state.deviceId,
                 activity: 'invite_new',
             }
