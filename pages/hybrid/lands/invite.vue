@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <img class="st_logo" src="~assets/img/landpage/pic_freevip.png">
+        <img class="st_logo" src="~assets/img/landpage/pic_freevip.png" />
         <div class="words">
             <div class="tip">If you are new user, you can get 5000 coins after downloading app!</div>
             <div class="rules" @click="showRules">Activity Rules</div>
@@ -15,11 +15,17 @@
             </div>
             <div class="section">
                 <span>1</span>
-                <p>Tell your friends to download StarTimes ON app,<font color="#008BE9">you will get 100 coins</font></p>
+                <p>
+                    Tell your friends to download StarTimes ON app,
+                    <font color="#008BE9">you will get 100 coins</font>
+                </p>
             </div>
             <div class="section">
                 <span>2</span>
-                <p>Ask your friends to register and fill in your invitation code,<font color="#008BE9">you will get free VIP 1 day.</font></p>
+                <p>
+                    Ask your friends to register and fill in your invitation code,
+                    <font color="#008BE9">you will get free VIP 1 day.</font>
+                </p>
             </div>
             <div class="got-it" @click="showRulesPage=false">GOT IT</div>
         </div>
@@ -31,28 +37,42 @@ import shadowLayer from '~/components/shadow-layer'
 export default {
     layout: 'base',
     components: {
-        shadowLayer,
+        shadowLayer
     },
     data() {
         return {
-            utm_str: this.$route.query.referrer || JSON.stringify(this.$route.query).replace(/[{"}]/g,'').replace(/,/g,'&').replace(/:/g,'=').replace('t_sr','utm_source').replace('t_md','utm_medium').replace('t_tm','utm_term').replace('t_ct','utm_content').replace('t_cn','utm_campaign'),
+            utm_str: '',
             showRulesPage: false,
-            invite_code: this.$route.query.inviteCode,
+            invite_code: this.$route.query.inviteCode || ''
         }
     },
     mounted() {
-        // http://localhost:3000/hybrid/lands/invite?referrer=utm_source%3Dstartimes_app%26utm_medium%3Dshare%26utm_term%3Drunning%26utm_content%3Dlogolink%26utm_campaign%3Dtell_friends%26inviteCode%3D123456
-
-        // http://localhost:3000/hybrid/lands/invite?utm_source=startimes_app&utm_medium=share&utm_term=running&utm_content=logolink&utm_campaign=tell_friends&inviteCode=123456
-
-        // http://localhost:3000/hybrid/lands/invite?t_sr=startimes_app&t_md=share&t_tm=running&t_ct=logolink&t_cn=tell_friends&inviteCode=123456
-
-        sessionStorage.setItem("utm_str", this.utm_str)
-        sessionStorage.setItem("invite_code", this.invite_code)
+        if (this.$route.query.referrer) {
+            this.utm_str = this.$route.query.referrer
+        } else {
+            const obj = this.$route.query
+            Object.keys(obj).forEach(key => {
+                console.log(key)
+                if (key != 'inviteCode') {
+                    this.utm_str = this.utm_str + key + '=' + obj[key] + '&'
+                }
+            })
+            this.utm_str = this.utm_str
+                .substr(0, this.utm_str.length - 1)
+                .replace('t_sr', 'utm_source')
+                .replace('t_md', 'utm_medium')
+                .replace('t_tm', 'utm_term')
+                .replace('t_ct', 'utm_content')
+                .replace('t_cn', 'utm_campaign')
+        }
+        sessionStorage.setItem('utm_str', this.utm_str)
+        if (this.invite_code) {
+            sessionStorage.setItem('invite_code', this.invite_code)
+        }
     },
     methods: {
         showRules() {
-            this.showRulesPage = true;
+            this.showRulesPage = true
         }
     },
     head() {
@@ -66,7 +86,7 @@ export default {
 .wrapper {
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(to top, #954AB1 25%, #5C2479 75%);
+    background-image: linear-gradient(to top, #954ab1 25%, #5c2479 75%);
     padding-top: 5%;
     font-family: Roboto;
     font-weight: 600;
@@ -87,7 +107,7 @@ export default {
             &.tip {
                 padding: 0 0.8rem;
                 font-size: 1rem;
-                color: #F2D884;
+                color: #f2d884;
                 line-height: 1.2rem;
             }
             &.rules {
@@ -103,9 +123,9 @@ export default {
         height: 3rem;
         line-height: 3rem;
         text-align: center;
-        color: #5C2479;
+        color: #5c2479;
         font-weight: 900;
-        background-color: #FFBE19;
+        background-color: #ffbe19;
         margin: 2rem 10%;
         border-radius: 1.3rem;
     }
@@ -113,7 +133,7 @@ export default {
         width: 17.5rem;
         height: 22rem;
         border-radius: 0.2rem;
-        background-color: #FFFFFF;
+        background-color: #ffffff;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -150,8 +170,7 @@ export default {
                     color: #ffffff;
                     font-size: 0.6rem;
                     border-radius: 50%;
-                    background: #008BE9;
-                    // padding-top: 0.2rem;
+                    background: #008be9;
                 }
                 p {
                     padding-left: 1.5rem;
@@ -166,7 +185,7 @@ export default {
                 line-height: 2.3rem;
                 font-size: 1rem;
                 font-weight: 700;
-                color: #008BE9;
+                color: #008be9;
             }
         }
     }

@@ -338,72 +338,6 @@ export default {
     .by_tel,
     .by_email {
         height: 15rem;
-        .input-email {
-            padding-top: 2.5rem;
-            width: 100%;
-            border-bottom: #dddddd solid 1px;
-            padding-bottom: 5px;
-            margin: 1rem 0 2rem;
-            position: relative;
-            &.focus {
-                border-bottom: #0087eb solid 1px;
-            }
-            &.error {
-                border-bottom: red solid 1px;
-            }
-            &:after {
-                content: '0';
-                display: block;
-                height: 0;
-                clear: both;
-                visibility: hidden;
-            }
-            .number {
-                width: 100%;
-                position: relative;
-                input {
-                    width: 100%;
-                    border: none;
-                    display: block;
-                    outline: none;
-                    padding-left: 0.4rem;
-                    &::-webkit-input-placeholder {
-                        font-size: 0.9rem;
-                    }
-                }
-                .auto-input {
-                    width: 100%;
-                    position: absolute;
-                    top: 1.6rem;
-                    left: 0;
-                    border: 1px solid #dddddd;
-                    background-color: #ffffff;
-                    z-index: 10;
-                    div {
-                        width: 100%;
-                        height: 3rem;
-                        line-height: 3rem;
-                        border-bottom: 1px solid #dddddd;
-                        &.yahoo {
-                            border: 0;
-                        }
-                        color: #999999;
-                        padding-left: 0.4rem;
-                        font-size: 0.9rem;
-                    }
-                }
-            }
-            .error {
-                height: 1rem;
-                position: absolute;
-                bottom: -1.5rem;
-                font-size: 0.8rem;
-                color: red;
-            }
-        }
-        .get-code {
-            margin-top: 2.5rem;
-        }
     }
     .by_tel {
         .phone_number {
@@ -472,6 +406,71 @@ export default {
                     font-size: 0.8rem;
                     color: red;
                 }
+            }
+        }
+    }
+    .by_email {
+        .input-email {
+            // padding-top: 2.5rem;
+            width: 100%;
+            border-bottom: #dddddd solid 1px;
+            padding-bottom: 5px;
+            margin: 2.5rem 0 2.4rem;
+            position: relative;
+            &.focus {
+                border-bottom: #0087eb solid 1px;
+            }
+            &.error {
+                border-bottom: red solid 1px;
+            }
+            &:after {
+                content: '0';
+                display: block;
+                height: 0;
+                clear: both;
+                visibility: hidden;
+            }
+            .number {
+                width: 100%;
+                position: relative;
+                input {
+                    width: 100%;
+                    border: none;
+                    display: block;
+                    outline: none;
+                    padding-left: 0.4rem;
+                    &::-webkit-input-placeholder {
+                        font-size: 0.9rem;
+                    }
+                }
+                .auto-input {
+                    width: 100%;
+                    position: absolute;
+                    top: 1.6rem;
+                    left: 0;
+                    border: 1px solid #dddddd;
+                    background-color: #ffffff;
+                    z-index: 10;
+                    div {
+                        width: 100%;
+                        height: 3rem;
+                        line-height: 3rem;
+                        border-bottom: 1px solid #dddddd;
+                        &.yahoo {
+                            border: 0;
+                        }
+                        color: #999999;
+                        padding-left: 0.4rem;
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+            .error {
+                height: 1rem;
+                position: absolute;
+                bottom: -1.5rem;
+                font-size: 0.8rem;
+                color: red;
             }
         }
     }

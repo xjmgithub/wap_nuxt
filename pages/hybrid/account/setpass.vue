@@ -39,7 +39,7 @@ export default {
             email: this.$route.query.email || '',
             pass: '',
             repass: '',
-            inviteCode: sessionStorage.getItem('invite_code'),
+            inviteCode: sessionStorage.getItem('invite_code') || '',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
             abled: false,
@@ -115,10 +115,12 @@ export default {
             const options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
-                invitedId: this.inviteCode,
                 invitedChannel: 0,
                 deviceId: this.$store.state.deviceId,
                 activity: 'invite_new',
+            }
+            if(this.inviteCode){
+                options.invitedId = this.inviteCode;
             }
             if (this.phone) {
                 options.phoneCc = this.phoneCc
