@@ -2,7 +2,8 @@
     <div class="container">
         <div class="goods">
             <p v-show="totalAmount" class="pay-money">
-                <span>{{currencySymbol}}</span>{{totalAmount | formatAmount}}
+                <span>{{currencySymbol}}</span>
+                {{totalAmount | formatAmount}}
             </p>
             <p class="pay-subject">Production Name: {{paySubject}}</p>
         </div>
@@ -10,13 +11,20 @@
             <div class="pay-channels">
                 <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
-                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)">
-                        <img v-else src="~assets/img/pay/ewallet.png">
+                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" />
+                        <img v-else src="~assets/img/pay/ewallet.png" />
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="checkThis(item)">
-                        <i/>
+                        <input
+                            :checked="lastpay==item.id || i===0?true:false"
+                            :value="item.payType"
+                            :data-id="item.id"
+                            type="radio"
+                            name="pay-options"
+                            @click="checkThis(item)"
+                        />
+                        <i />
                     </label>
                 </div>
             </div>
@@ -34,7 +42,7 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import { formatAmount, cdnPicSrc, setCookie, getCookie } from '~/functions/utils'
+import { formatAmount, cdnPicSrc, getCookie } from '~/functions/utils'
 import { updateWalletAccount, updateWalletConf, invoke, commonPayAfter } from '~/functions/pay'
 import countrys from '~/functions/countrys.json'
 export default {
@@ -59,19 +67,19 @@ export default {
         return {
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             payToken: this.$route.query.payToken,
-            payChannel: 9003,
+            payChannel: -1,
             appInterfaceMode: null,
+            payType: -1,
+            formConfigExist: false,
             currency: '', // 商品货币code
             currencySymbol: '', // 商品货币符号
             totalAmount: '',
             paySubject: '',
             payChannels: [],
             lastpay: '',
-            payType: 1,
             eAmount: '', // 电子钱包余额
             eCurrency: '', // 电子钱包货币code
             eCurrencySymbol: '', // 电子钱包货币符号
-            formConfigExist: false,
             oCurrency: '', // 渠道货币code 用于比较判断
             countrys: obj
         }
@@ -138,7 +146,7 @@ export default {
                 this.eCurrencySymbol = account.currencySymbol
                 sessionStorage.setItem('wallet', JSON.stringify(account))
                 updateWalletConf.call(this, account.accountNo)
-                if (this.lastpay == 9003) {
+                if (this.lastpay == 9003) { // TODO 
                     this.oCurrency = account.currency
                 }
             })
@@ -152,7 +160,6 @@ export default {
             this.payChannel = item.id
             this.formConfigExist = item.formConfigExist
             this.appInterfaceMode = item.appInterfaceMode
-            setCookie('lastpay', this.payChannel)
         },
         nextStep() {
             if (this.payType === 1) {
@@ -175,7 +182,6 @@ export default {
                 )
             } else {
                 invoke.call(this, this.payToken, this.payChannel, data => {
-                    setCookie('lastpay', this.payChannel)
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
                     commonPayAfter.call(this, data, this.payType, this.appInterfaceMode)
@@ -211,7 +217,7 @@ export default {
         }
     }
     .contain {
-        height: 60vh;
+        height: 60vh; // 兼容
         overflow-y: scroll;
         .pay-channels {
             width: 90%;
