@@ -72,7 +72,7 @@ export default {
             eCurrency: '', // 电子钱包货币code
             eCurrencySymbol: '', // 电子钱包货币符号
             formConfigExist: false,
-            oCurrency: '', // 渠道货币code
+            oCurrency: '', // 渠道货币code 用于比较判断
             countrys: obj
         }
     },
@@ -142,14 +142,12 @@ export default {
             return cdnPicSrc.call(this, src)
         },
         checkThis(item) {
-            console.log(1212)
             this.payType = item.payType
             this.oCurrency = item.payType == 1 ? this.eCurrency : item.currency
             this.payChannel = item.id
             this.formConfigExist = item.formConfigExist
             this.appInterfaceMode = item.appInterfaceMode
             setCookie('lastpay', this.payChannel)
-            console.log(this.currency, this.oCurrency)
         },
         nextStep() {
             if (this.payType === 1) {
