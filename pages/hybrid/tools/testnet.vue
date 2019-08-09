@@ -1,9 +1,7 @@
 <template>
     <div>
         <div>请在不同的网络环境下依次点击各个按钮，将最终结果截图保存</div>
-        <div>
-            不同环境包括2G/3G/4G/wifi/商场/宿舍等
-        </div>
+        <div>不同环境包括2G/3G/4G/wifi/商场/宿舍等</div>
         <div>
             <button @click="testimg1">测试cloudfront图片加载</button>
             <div>{{imgLoad1}}</div>
@@ -23,7 +21,7 @@
         <div>
             <button @click="testhtml">测试html加载</button>
             <div>{{htmlLoad}}</div>
-        </div> -->
+        </div>-->
     </div>
 </template>
 <script>
@@ -208,12 +206,14 @@ export default {
             xhr.send()
         }
     },
-    head: {
-        meta: [
-            { 'HTTP-EQUIV': 'pragma', content: 'no-cache' },
-            { 'HTTP-EQUIV': 'Cache-Control', content: 'no-cache, must-revalidate' },
-            { 'HTTP-EQUIV': 'expires', content: '0' }
-        ]
+    head() {
+        return {
+            meta: [
+                { 'http-equiv': 'Pragma', content: 'no-cache' },
+                { 'http-equiv': 'Cache-Control', content: 'no-cache, must-revalidate' },
+                { 'http-equiv': 'Expires', content: '0' }
+            ]
+        }
     }
 }
 </script>
