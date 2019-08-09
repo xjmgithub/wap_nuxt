@@ -38,11 +38,11 @@ export default {
         },
         click() {
             if (!this.gray && !this.waiting) {
-                this.startTimer()
                 this.waiting = true
                 this.$emit('click', second => {
-                    // 执行回调
-                    this.startTimer(second)
+                    if (!second || (typeof second == 'number')) {
+                        this.startTimer(second)
+                    }
                     this.waiting = false
                 })
             }
