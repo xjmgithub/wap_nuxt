@@ -2,20 +2,20 @@
     <div class="container">
         <div class="goods">
             <p v-show="totalAmount" class="pay-money">
-                <span>{{currency}}</span>{{totalAmount | formatAmount}}
+                <span>{{currencySymbol}}</span>{{totalAmount | formatAmount}}
             </p>
             <p class="pay-subject">Production Name: {{paySubject}}</p>
         </div>
         <div class="contain">
             <div class="pay-channels">
-                <div v-for="(item,i) in payChannels" :key="i" @click="checkThis(item)">
+                <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
                         <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)">
                         <img v-else src="~assets/img/pay/ewallet.png">
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options">
+                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="checkThis(item)">
                         <i/>
                     </label>
                 </div>
@@ -36,6 +36,7 @@
 import mButton from '~/components/button'
 import { formatAmount, cdnPicSrc, setCookie, getCookie } from '~/functions/utils'
 import { updateWalletAccount, updateWalletConf, invoke, commonPayAfter } from '~/functions/pay'
+import countrys from '~/functions/countrys.json'
 export default {
     layout: 'base',
     components: {
@@ -51,22 +52,28 @@ export default {
     },
     data() {
         const user = this.$store.state.user
+        const obj = {}
+        countrys.forEach(item => {
+            obj[item.country] = item
+        })
         return {
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             payToken: this.$route.query.payToken,
             payChannel: 9003,
             appInterfaceMode: null,
-            currency: '',
+            currency: '', // 商品货币code
+            currencySymbol: '', // 商品货币符号
             totalAmount: '',
             paySubject: '',
             payChannels: [],
             lastpay: '',
             payType: 1,
-            eAmount: '',
-            eCurrency: '',
-            eCurrencySymbol: '',
+            eAmount: '', // 电子钱包余额
+            eCurrency: '', // 电子钱包货币code
+            eCurrencySymbol: '', // 电子钱包货币符号
             formConfigExist: false,
-            oCurrency: ''
+            oCurrency: '', // 渠道货币code
+            countrys: obj
         }
     },
     computed: {
@@ -97,6 +104,7 @@ export default {
                 this.$alert('Query payToken needed! please check request')
                 return false
             }
+            this.lastpay = getCookie('lastpay') || ''
             this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
                 const data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
@@ -104,19 +112,17 @@ export default {
                         return a.orderSeq - b.orderSeq
                     })
                     this.currency = data.currency
+                    this.currencySymbol = this.countrys[data.country].currencySymbol
                     this.totalAmount = data.totalAmount
                     this.paySubject = data.paySubject
                     this.payChannels = data.payChannels
-
                     const payChannels = {}
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
                     })
-                    this.lastpay = getCookie('lastpay')
                     this.oCurrency = payChannels[this.lastpay].currency
                 } else {
                     this.$alert('payToken and payChannel Mismatch! please check request')
-                    // this.$alert('The merchant has not yet opened a supportable payment channel.')
                 }
             })
         },
@@ -127,24 +133,30 @@ export default {
                 this.eCurrencySymbol = account.currencySymbol
                 sessionStorage.setItem('wallet', JSON.stringify(account))
                 updateWalletConf.call(this, account.accountNo)
+                if (this.lastpay == 9003) {
+                    this.oCurrency = account.currency
+                }
             })
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
         },
         checkThis(item) {
+            console.log(1212)
             this.payType = item.payType
             this.oCurrency = item.payType == 1 ? this.eCurrency : item.currency
             this.payChannel = item.id
             this.formConfigExist = item.formConfigExist
             this.appInterfaceMode = item.appInterfaceMode
             setCookie('lastpay', this.payChannel)
+            console.log(this.currency, this.oCurrency)
         },
         nextStep() {
             if (this.payType === 1) {
                 if (!this.isLogin) {
                     this.$confirm('The eWallet needs to login the startimes first', () => {
-                        this.$router.push(`/hybrid/account/signin?pre=${location.href}`)
+                        // this.$router.push(`/hybrid/account/signin?pre=${location.href}`)
+                        window.location.href = `${location.origin}/hybrid/account/signin?pre=${location.href}`
                     })
                 } else {
                     const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
@@ -281,7 +293,6 @@ export default {
         button {
             width: 75%;
         }
-
     }
 }
 </style>
