@@ -2,32 +2,44 @@
     <div class="wrapper">
         <img class="st_logo" src="~assets/img/landpage/pic_freevip.png" />
         <div class="words">
-            <div class="tip">If you are new user, you can get 5000 coins after downloading app!</div>
-            <div class="rules" @click="showRules">Activity Rules</div>
+            <div class="tip">{{$store.state.lang.reward_tips}}</div>
+            <div class="rules" @click="showRules">{{$store.state.lang.activity_rules}}</div>
         </div>
         <nuxt-link to="/hybrid/account/register">
-            <div class="get-now">GET NOW!</div>
+            <div class="get-now">{{$store.state.lang.get_now}}</div>
         </nuxt-link>
-        <div v-show="showRulesPage" class="rules-page">
+        <div v-show="showRulesPage" class="rules-page" @click="showRulesPage=false">
             <div class="title">
-                Activity Rules
-                <div class="explain">Invited Friends to get rewards. More friends you invited, more rewards you will get.</div>
+                {{$store.state.lang.activity_rules}}
+                <!-- <div class="explain">{{$store.state.lang.invitation_rules_5}}</div> -->
             </div>
-            <div class="section">
-                <span>1</span>
-                <p>
-                    Tell your friends to download StarTimes ON app,
-                    <font color="#008BE9">you will get 100 coins</font>
-                </p>
+            <div class="sections">
+                <div class="section">
+                    <span>1</span>
+                    <p>
+                        {{$store.state.lang.activity_rules_1}}
+                    </p>
+                </div>
+                <div class="section">
+                    <span>2</span>
+                    <p>
+                        {{$store.state.lang.activity_rules_2}}
+                    </p>
+                </div>
+                <div class="section">
+                    <span>3</span>
+                    <p>
+                        {{$store.state.lang.activity_rules_3}}
+                    </p>
+                </div>
+                <div class="section">
+                    <span>4</span>
+                    <p>
+                        {{$store.state.lang.activity_rules_4}}
+                    </p>
+                </div>
             </div>
-            <div class="section">
-                <span>2</span>
-                <p>
-                    Ask your friends to register and fill in your invitation code,
-                    <font color="#008BE9">you will get free VIP 1 day.</font>
-                </p>
-            </div>
-            <div class="got-it" @click="showRulesPage=false">GOT IT</div>
+            <div class="got-it">{{$store.state.lang.got_it}}</div>
         </div>
         <shadowLayer v-show="showRulesPage" />
     </div>
@@ -132,6 +144,7 @@ export default {
     .rules-page {
         width: 17.5rem;
         height: 22rem;
+        // overflow: scroll;
         border-radius: 0.2rem;
         background-color: #ffffff;
         position: absolute;
@@ -147,37 +160,44 @@ export default {
             &.title {
                 font-size: 1.8rem;
                 font-weight: 800;
-                .explain {
+                // .explain {
+                //     font-size: 0.9rem;
+                //     color: rgba(0, 0, 0, 54%);
+                //     margin-top: 1.3rem;
+                // }
+            }
+            &.sections{
+                position: relative;
+                top: 1.5rem;
+                width: 14.5rem;
+                height: 14.5rem;
+                overflow: scroll;
+                .section {
+                    margin-bottom: 1rem;
                     font-size: 0.9rem;
                     color: rgba(0, 0, 0, 54%);
-                    margin-top: 1.3rem;
-                }
-            }
-            &.section {
-                margin-top: 1rem;
-                font-size: 0.9rem;
-                color: rgba(0, 0, 0, 54%);
-                position: relative;
-                span {
-                    position: absolute;
-                    top: 0.2rem;
-                    left: 0;
-                    display: block;
-                    width: 1rem;
-                    height: 1rem;
-                    line-height: 1rem;
-                    text-align: center;
-                    color: #ffffff;
-                    font-size: 0.6rem;
-                    border-radius: 50%;
-                    background: #008be9;
-                }
-                p {
-                    padding-left: 1.5rem;
+                    position: relative;
+                    span {
+                        position: absolute;
+                        top: 0.2rem;
+                        left: 0;
+                        display: block;
+                        width: 1rem;
+                        height: 1rem;
+                        line-height: 1rem;
+                        text-align: center;
+                        color: #ffffff;
+                        font-size: 0.6rem;
+                        border-radius: 50%;
+                        background: #008be9;
+                    }
+                    p {
+                        padding-left: 1.5rem;
+                    }
                 }
             }
             &.got-it {
-                margin-top: 0.5rem;
+                margin-top: 2rem;
                 float: right;
                 width: 4.6rem;
                 height: 2.3rem;

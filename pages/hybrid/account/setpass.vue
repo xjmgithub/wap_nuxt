@@ -5,8 +5,10 @@
                 <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2">
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1">
             </div>
-            <div v-show="focus_ps" class="passText">Please enter 6-18 digits or letters</div>
-            <input v-model="pass" :class="{focus:focus_ps,error:error_ps}" :type="pwdType" placeholder="Enter Password" @focus="focusPass" @blur="checkPass" >
+            <div v-show="focus_ps" class="passText">
+                {{$store.state.lang.register_input_enter_password_tip}}
+            </div>
+            <input v-model="pass" :class="{focus:focus_ps,error:error_ps}" :type="pwdType" :placeholder="enter_ps" @focus="focusPass" @blur="checkPass" >
             <div v-if="error_ps" class="error-tip">{{error_ps}}</div>
         </div>
         <div class="input-item">
@@ -14,12 +16,14 @@
                 <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext_confirm=2">
                 <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1">
             </div>
-            <div v-show="focus_reps" class="repassText">Corfirm Password</div>
-            <input v-model="repass" :class="{focus:focus_reps,error:error_reps}" :type="pwdType_confirm" placeholder="Corfirm Password" @focus="focusRepass" @blur="checkRepass" >
+            <div v-show="focus_reps" class="repassText">
+                {{$store.state.lang.register_input_enter_password_again_tip}}
+            </div>
+            <input v-model="repass" :class="{focus:focus_reps,error:error_reps}" :type="pwdType_confirm" :placeholder="enter_reps" @focus="focusRepass" @blur="checkRepass" >
             <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
-            <mButton :disabled="!abled" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="!abled" :text="next" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -47,6 +51,12 @@ export default {
             focus_reps: false,
             error_ps: '',
             error_reps: '',
+            enter_ps: this.$store.state.lang.register_input_enter_password,
+            enter_reps: this.$store.state.lang.register_input_enter_password_again,
+            next: this.$store.state.lang.text_onair_next,
+            error_setpass: this.$store.state.lang.error_setpass,
+            error_setrepass: this.$store.state.lang.error_setrepass,
+
         }
     },
     computed: {
@@ -96,18 +106,18 @@ export default {
             this.focus_ps = false;
             if(this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
             } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass)) && this.pass) {
-                this.error_ps = 'Password must be 6-18 digits or letters!'
+                this.error_ps = this.error_setpass
             } else if (this.repass) {
-                this.error_reps = 'The two passwords you entered did not match!'
+                this.error_reps = this.error_setrepass
             }
         },
         checkRepass() {
             this.focus_reps = false;
             if(this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
             } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass)) && this.pass) {
-                this.error_ps = 'Password must be 6-18 digits or letters!'
+                this.error_ps = this.error_setpass
             } else if (this.repass) {
-                this.error_reps = 'The two passwords you entered did not match!'
+                this.error_reps = this.error_setrepass
             }
         },
         nextStep() {
@@ -153,9 +163,7 @@ export default {
                     }
                     // sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
                     login(this, params)
-                } else {
-                    this.error_code = 'This code you entered is incorrect. Please try again.'
-                }
+                } 
             })
         }
     },

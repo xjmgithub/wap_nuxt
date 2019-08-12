@@ -5,15 +5,15 @@
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.png" />
                 <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.png" />
                 <span class="arrow"></span>
-                <span class="gray">Phone number</span>
-                <span class="blue">Phone number</span>
+                <span class="gray">{{$store.state.lang.phone_number}}</span>
+                <span class="blue">{{$store.state.lang.phone_number}}</span>
             </div>
             <div :class="{seled:type==1}" @click="type=1">
                 <img class="gray" src="~assets/img/users/ic_email_def_gray.png" />
                 <img class="blue" src="~assets/img/users/ic_email_sl_blue.png" />
                 <span class="arrow"></span>
-                <span class="gray">Email Address</span>
-                <span class="blue">Email Address</span>
+                <span class="gray">{{$store.state.lang.email_addr}}</span>
+                <span class="blue">{{$store.state.lang.email_addr}}</span>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
@@ -25,7 +25,7 @@
                 <div :class="{focus:focus_tel,error:error_tel}" class="input-tel">
                     <div class="prefix">+{{country.phonePrefix}}</div>
                     <div class="number">
-                        <input v-model="tel" type="tel" placeholder="Enter your Phone Number" @focus="focus_tel=true" @blur="focus_tel=false" />
+                        <input v-model="tel" type="tel" :placeholder="enter_phone" @focus="focus_tel=true" @blur="focus_tel=false" />
                     </div>
                     <div v-show="error_tel" class="error" v-html="error_tel"></div>
                 </div>
@@ -47,7 +47,7 @@
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
-                    <input v-model="email" type="email" placeholder="Enter your email address" @focus="focus_email=true" @blur="focus_email=false" />
+                    <input v-model="email" type="email" :placeholder="enter_email" @focus="focus_email=true" @blur="focus_email=false" />
                     <div v-show="showAutoInput" class="auto-input">
                         <div @click="autoInput('gamil.com')">{{email}}gamil.com</div>
                         <div @click="autoInput('fotmail.com')">{{email}}fotmail.com</div>
@@ -76,7 +76,7 @@
             </div>
         </div>
         <div style="width:80%;margin:0 auto;">
-            <mButton :disabled="!canNext" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="!canNext" :text="next" @click="nextStep" />
         </div>
         <div class="terms">
             <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
@@ -117,6 +117,9 @@ export default {
             countryDialogStatus: false,
             tel: '',
             email: '',
+            enter_phone: this.$store.state.lang.enter_your_phone_number,
+            enter_email: this.$store.state.lang.enter_your_email_addr,
+            next: this.$store.state.lang.text_onair_next,
             focus_tel: false,
             focus_email: false,
             error_tel: '',
@@ -129,7 +132,11 @@ export default {
             haveGetEmailCode: false,
             haveTelCodeVertify: false,
             haveEmailCodeVertify: false,
-            showAutoInput: false
+            showAutoInput: false,
+            error_tel_number_false: this.$store.state.lang.error_tel_number_false,
+            error_email_false: this.$store.state.lang.error_email_false,
+            error_registered: this.$store.state.lang.error_registered,
+            error_code: this.$store.state.lang.error_code,
         }
     },
     computed: {
@@ -182,13 +189,13 @@ export default {
                     if (res.data.code === 0) {
                         callback()
                         this.haveGetTelCode = true
+                        // TODO成功toast提示
                     } else if (res.data.code === 2) {
                         callback(timerIntercept)
-                        this.error_tel =
-                            'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
+                        this.error_tel = this.error_registered+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">Sign in</a>'
                     } else {
                         callback(timerIntercept)
-                        this.error_tel = 'This phone number you entered is incorrect. Please try again.'
+                        this.error_tel = this.error_tel_number_false
                     }
                 })
                 .catch(() => {
@@ -208,10 +215,10 @@ export default {
                     } else if (res.data.code === 2) {
                         callback(timerIntercept)
                         this.error_email =
-                            'You are not a new user because you have registered once.<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline"> Sign in</a>'
+                            this.error_registered+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">Sign in</a>'
                     } else {
                         callback(timerIntercept)
-                        this.error_email = 'This phone number you entered is incorrect. Please try again.'
+                        this.error_email = this.error_email_false
                     }
                 })
                 .catch(() => {
@@ -235,7 +242,7 @@ export default {
                     if (res.data.code == 0) {
                         this.haveTelCodeVertify = true
                     } else {
-                        this.error_tel_code = 'This code you entered is incorrect. Please try again.'
+                        this.error_tel_code = this.error_code
                         this.error_line_tel = true
                     }
                 })
@@ -260,7 +267,7 @@ export default {
                     if (res.data.code == 0) {
                         this.haveEmailCodeVertify = true
                     } else {
-                        this.error_email_code = 'This code you entered is incorrect. Please try again.'
+                        this.error_email_code = this.error_code
                         this.error_line_email = true
                     }
                 })

@@ -27,12 +27,12 @@ export default {
     vote_ok: 'OK',
     vote_cancel: 'CANCEL',
     vote_notstart_btn: 'Atenção! A votação começa no dia 1º de junho.',
-    
+
     vote_leftvote: 'Votos restantes',
     vote_vote_btn: 'VOTE',
     vote_join_now: 'Escolha o seu candidato',
     vote_about_word: "<p>O Festival Pan-Africano de Filmes Online (PAOFF) é um prémio online exclusivo da StarTimes ON, que visa premiar a excelente produção feita por produtores africanos que, por sua vez, apoiarão e promoverão o desenvolvimento da indústria cinematográfica e musical em toda a África.</p><p>O prêmio é uma iniciativa da operadora principal de TV digital da África, a StarTimes, e concentrar-se-á em três categorias: Melhor Filme da África, Melhor Curta Metragem da África, Melhor Vídeo Musical da África. </p><p>Temos a honra de convidar todos os usuários on-line para votar e apoiar o seu favorito via StarTimes ON. Estamos a celebrar a gala fabulosa na Nigéria este ano, a plataforma StarTimes ON contará os votos e garantirá uma plataforma transparente com imparcialidade e equidade.</p><p>©2019 por StarTimes Todos os Direitos Reservados</p>",
-    vote_rule_word:"<p>1.De 1 de junho a 31 de julho, você tem 5 votos por cada dia. Vote nos seus produtores e shows favoritos! </p><p>2.Partilhe o link com os seus amigos para conseguir mais votos! Pode conseguir mais 5 votos por cada ultilizador novo (Aqueles que nunca instalaram o APP nos seus telemóveis) por partilhar o link. Quanto mais usuários novos instalarem o app via link que você partilhou, mais votos você conseguirá!</p><p>3.Os votos podem ser acumulados e são válidos até ao prazo final.  Você pode votar qualquer show de que goste.</p><p>4.A classificação dos votos dos diferentes shows vai ser atualizada em tempo real, e os melhores shows que tenham o maior número de votos vão ganhar o prêmio do Melhor Filme da África, Melhor Curta Metragem da África e Melhor Vídeo Musical da África.</p>",
+    vote_rule_word: "<p>1.De 1 de junho a 31 de julho, você tem 5 votos por cada dia. Vote nos seus produtores e shows favoritos! </p><p>2.Partilhe o link com os seus amigos para conseguir mais votos! Pode conseguir mais 5 votos por cada ultilizador novo (Aqueles que nunca instalaram o APP nos seus telemóveis) por partilhar o link. Quanto mais usuários novos instalarem o app via link que você partilhou, mais votos você conseguirá!</p><p>3.Os votos podem ser acumulados e são válidos até ao prazo final.  Você pode votar qualquer show de que goste.</p><p>4.A classificação dos votos dos diferentes shows vai ser atualizada em tempo real, e os melhores shows que tenham o maior número de votos vão ganhar o prêmio do Melhor Filme da África, Melhor Curta Metragem da África e Melhor Vídeo Musical da África.</p>",
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
@@ -71,12 +71,10 @@ export default {
     loginfaq_have_grant_access_permission: 'Eu concedí o acesso mas ainda não consigo entrar.',
     loginfaq_other_reason: 'Outras razões',
     loginfaq_signed_success_lastest_week: 'Você entrou com sucesso noutros aplicativos, com a sua conta do Facebook nos últimos sete dias?',
-    loginfaq_thanks_for_your_feedback:
-        'Obrigado pelo seu feedback. Nós faremos o nosso melhor para reparar este problema. Você pode tentar outros meios para entrar.',
+    loginfaq_thanks_for_your_feedback: 'Obrigado pelo seu feedback. Nós faremos o nosso melhor para reparar este problema. Você pode tentar outros meios para entrar.',
 
     loginfaq_poor_network_to_access_Google: 'Seu acesso ao serviço Google falhou devido a problemas de conexão de rede, por favor, tente novamente.',
-    loginfaq_poor_network_to_access_Facebook:
-        'Seu acesso ao serviço Facebook falhou devido a problemas de conexão de rede, por favor, tente novamente.',
+    loginfaq_poor_network_to_access_Facebook: 'Seu acesso ao serviço Facebook falhou devido a problemas de conexão de rede, por favor, tente novamente.',
     loginfaq_please_update_your_google_play: 'Por favor, atualize o seu Goggle Play para a versão 12.0 ou superior para fazer login',
     loginfaq_cant_log_on_Google_due_to_network: 'Você não pode fazer logon Google devido a problemas de conexão de rede, por favor, tente novamente.',
     loginfaq_yes: 'SIM',
@@ -139,12 +137,10 @@ export default {
     next_: 'PRÓXIMO',
     more_recharge_method: 'Outras Maneiras de Recarga',
     membership_all: 'TODOS',
-    besure_input_ewallet:
-        'O que você inseriu parece não ser um número de cartão inteligente, mas uma conta de carteira eletrônica. Você vai recarregar a eWallet agora?',
+    besure_input_ewallet: 'O que você inseriu parece não ser um número de cartão inteligente, mas uma conta de carteira eletrônica. Você vai recarregar a eWallet agora?',
     agree_tip: 'Sim, eu vou tentar',
     refuse_tip: 'Não, obrigado.',
-    besure_have_card:
-        'Devido ao faturamento mensal do sistema, sua recarga pode ser atrasada. Em caso de problemas, ligue para o serviço de atendimento ao cliente.',
+    besure_have_card: 'Devido ao faturamento mensal do sistema, sua recarga pode ser atrasada. Em caso de problemas, ligue para o serviço de atendimento ao cliente.',
     account_signed_elsewhere: 'Sua conta está activo em outro lugar',
     error_network: 'rede de servidor não disponível, por favor tente mais tarde.',
 
@@ -156,8 +152,7 @@ export default {
     payment_details_promation: 'Promoção',
     recharge_no_promotion: 'Nenhuma promoção',
     payment_details_method: 'Métodos de Pagamento',
-    monthly_billing:
-        'Devido ao faturamento mensal do sistema, sua recarga pode ser atrasada. Em caso de problemas, ligue para o serviço de atendimento ao cliente.',
+    monthly_billing: 'Devido ao faturamento mensal do sistema, sua recarga pode ser atrasada. Em caso de problemas, ligue para o serviço de atendimento ao cliente.',
     refresh_wallet: 'Por favor, verifique o seu saldo de eWallet. Em seguida, use-o para recarregar sua conta de TV.',
     continue_to_pay: 'CONTINUAR',
     payment_details_total: 'Total',
@@ -169,14 +164,50 @@ export default {
     seo_title_bouquets: 'Pacotes',
 
     // seo description
-    seo_desc_browser:
-        'StarTimes On dedica-se a serviços de transmissão online com acesso a vídeos de entretenimento em qualquer hora e em todo locais e com qualquer dispositivo',
-    seo_desc_live:
-        'StarTimes deu primazia a conteúdos de televisão de grande audiência, como são os filmes e desporto para diferentes públicos independentes do tipo de dispositivo usados por estes. ',
+    seo_desc_browser: 'StarTimes On dedica-se a serviços de transmissão online com acesso a vídeos de entretenimento em qualquer hora e em todo locais e com qualquer dispositivo',
+    seo_desc_live: 'StarTimes deu primazia a conteúdos de televisão de grande audiência, como são os filmes e desporto para diferentes públicos independentes do tipo de dispositivo usados por estes. ',
     seo_desc_bouquets: 'Cada pacote de  DTT/DTH tem preços diferentes, vários canais em cada pacote. ',
 
     // seo keywords
     seo_keywords_browser: 'HD,Em Directo,Vídeo,transmissão online,futebol,Series,filmes,Africa',
     seo_keywords_live: 'HD,Em Directo,Vídeo,transmissão online,futebol,Series,filmes,Africa,Smart TV',
-    seo_keywords_bouquets: 'Pacotes,DTH,DTT,Básico,Clássico,Único,Smart,Super,Chinês,Francês,Desporto'
+    seo_keywords_bouquets: 'Pacotes,DTH,DTT,Básico,Clássico,Único,Smart,Super,Chinês,Francês,Desporto',
+
+    // 注册
+    // invite
+    reward_tips: 'p-If you are a new user, you can get oneday vip trial after registration.',
+    activity_rules: 'p-Activity rules',
+    activity_rules_1: 'p-New users will be rewarded with invitation by registering through the invitation link and completing the login in App.',
+    activity_rules_2: 'p-New User includes New Accounts and New Devices (StarTimes ON APP is not installed on the phone)',
+    activity_rules_3: 'p-After successful registration, please login in App within 7 days to receive the reward. If the reward exceeds 7 days, it will be invalid.',
+    activity_rules_4: 'p-The final right of interpretation rests with StarTimes ON App.',
+    got_it: 'p-GOT IT',
+    get_now: 'p-Get now!',
+
+    // register
+    phone_number: 'p-Phone Number',
+    email_addr: 'p-Email Address',
+    enter_your_phone_number: 'p-Enter your Phone Number',
+    enter_your_email_addr: 'p-Enter your email address',
+    wallet_hint_get_code: 'p-Get Code',
+    text_onair_next: 'p-NEXT',
+    // 错误信息提示
+    error_tel_number_false: 'p-This phone number you entered is incorrect. Please try again.',
+    error_email_false: 'p-This email you entered is incorrect. Please try again.',
+    error_registered: 'p-You are not a new user because you have registered once.',
+    error_code: 'p-This code you entered is incorrect. Please try again.',
+
+    // setpass
+    register_input_enter_password: 'p-Enter Password',
+    register_input_enter_password_tip: 'p-Please enter 6-18 digits or letters',
+    register_input_enter_password_again: 'p-Corfirm Password',
+    register_input_enter_password_again_tip: 'p-Pleace enter your password again',
+    // TODO注册失败文案
+    error_setpass: 'p-Password must be 6-18 digits or letters!',
+    error_setrepass: 'p-The two passwords you entered did not match!',
+
+    // toGooglePlay
+    tips_register_successful: 'Register Successful! ',
+    tips_register_successful_tip: 'You have get rewards! Download app and use reward!',
+    download_now: 'Download now!',
 }

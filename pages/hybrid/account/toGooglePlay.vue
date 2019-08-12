@@ -1,9 +1,11 @@
 <template>
     <div class="wrapper">
-        <div class="title">Register Successful!</div>
-        <div class="msg">You have get rewards! Download app and use reward!</div>
+        <div class="title">{{$store.state.lang.tips_register_successful}}</div>
+        <div class="msg">{{$store.state.lang.tips_register_successful_tip}}</div>
         <img src="~assets/img/pic_gift.png" />
-        <div class="down-now" @click="callMarket">DOWNLOAD NOW!</div>
+        <div class="down-now" @click="callMarket">
+            {{$store.state.lang.download_now}}
+        </div>
     </div>
 </template>
 <script>

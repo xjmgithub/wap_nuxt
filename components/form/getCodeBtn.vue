@@ -1,5 +1,6 @@
 <template>
-    <div :class="{gray:gray}" class="btn" @click="click">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+    <div :class="{gray:gray}" class="btn" @click="click">
+        {{codeDuring>0?`${codeDuring}s`:`${get_code}`}}</div>
 </template>
 <script>
 export default {
@@ -14,7 +15,8 @@ export default {
         return {
             codeDuring: 0,
             timer: null,
-            waiting: false // 等待回调,防止多次点击
+            waiting: false, // 等待回调,防止多次点击
+            get_code: this.$store.state.lang.wallet_hint_get_code,
         }
     },
     computed: {
