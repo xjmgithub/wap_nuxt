@@ -9,7 +9,7 @@
             <input v-model="password" :type="pwdType" />
         </div>
         <div class="footer">
-            <mButton :disabled="password.length<6" @click="checkSignPass" text="NEXT" />
+            <mButton :disabled="password.length<6" text="NEXT" @click="checkSignPass" />
         </div>
     </div>
 </template>
