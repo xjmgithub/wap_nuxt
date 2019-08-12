@@ -3,9 +3,7 @@
         <div class="title">{{$store.state.lang.tips_register_successful}}</div>
         <div class="msg">{{$store.state.lang.tips_register_successful_tip}}</div>
         <img src="~assets/img/pic_gift.png" />
-        <div class="down-now" @click="callMarket">
-            {{$store.state.lang.download_now}}
-        </div>
+        <div class="down-now" @click="callMarket">{{$store.state.lang.download_now}}</div>
     </div>
 </template>
 <script>
@@ -28,6 +26,7 @@ export default {
     },
     methods: {
         callMarket() {
+<<<<<<< HEAD
             this.sendEvLog({
                 category: 'tell_friends',
                 action: 'callMarket',
@@ -35,12 +34,18 @@ export default {
                 value: 1
             })
             const utmStr = sessionStorage.getItem('utm_str')
+=======
+            this.invokeByIntent()
+        },
+        invokeByIframe() {
+            const reffer = sessionStorage.getItem('utm_str')
+>>>>>>> bae938fdcc31c7b0f650179b94c3d5367018c73f
             const iframe = document.createElement('iframe')
             iframe.frameborder = '0'
             iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
             document.body.appendChild(iframe)
 
-            iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(utmStr)
+            iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(reffer)
 
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
@@ -50,6 +55,20 @@ export default {
                     label: this.invide_code,
                     value: 1
                 })
+                clearTimeout(s)
+            }, 2000)
+            document.addEventListener('visibilitychange', () => {
+                clearTimeout(s)
+                this.$nuxt.$loading.finish()
+            })
+        },
+        invokeByIntent(failback) {
+            // const reffer = sessionStorage.getItem('utm_str')
+            // window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
+            window.location.href =
+                'intent://details?id=com.star.mobile.video&referrer=utm_source%3Dawards%26utm_medium%3Dshare%26utm_campaign%3Dtell_friends#Intent;scheme=market;end'
+            const s = setTimeout(() => {
+                if (!document.hidden) downApk.call(this)
                 clearTimeout(s)
             }, 2000)
             document.addEventListener('visibilitychange', () => {
