@@ -95,8 +95,7 @@ export const initGoogleLogin = (elm, callback) => {
                 cookiepolicy: 'single_host_origin'
             })
             auth2.attachClickHandler(
-                elm,
-                {},
+                elm, {},
                 function(googleUser) {
                     // parse user info
                     // https://developers.google.com/identity/sign-in/web/people
@@ -352,7 +351,7 @@ export const getBrowser = function() {
     const isAndroid = /android/i.test(ua)
     const isIos = /iphone|ipad|ipod/i.test(ua)
     const isOriginalChrome = /chrome\/[\d.]+ Mobile Safari\/[\d.]+/i.test(ua) && isAndroid
-    // ios 上很多 app 都包含 safari 标识，但它们都是以自己的 app 标识开头，而不是 Mozilla
+        // ios 上很多 app 都包含 safari 标识，但它们都是以自己的 app 标识开头，而不是 Mozilla
     const isSafari = /safari\/([\d.]+)$/i.test(ua) && isIos && ua.indexOf('Crios') < 0 && ua.indexOf('Mozilla') === 0
     let version = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)
     if (version) {
