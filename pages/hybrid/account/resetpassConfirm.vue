@@ -115,7 +115,7 @@ export default {
                 url: url
             }).then(res => {
                 if (res.data.code === 0) {
-                    this.$router.push('/hybrid/account/login')
+                    this.$router.push('/hybrid/account/signIn')
                 } else {
                     this.$alert('This code you entered is incorrect. Please try again.')
                 }
