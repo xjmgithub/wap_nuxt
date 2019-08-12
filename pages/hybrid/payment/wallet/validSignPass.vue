@@ -32,9 +32,15 @@ export default {
         }
     },
     methods: {
-        checkSignPass(num){
+        checkSignPass(num) {
             // TODO check sigin
-            this.$router.push('/hybrid/payment/wallet/setPassword')
+            this.$router.push({
+                path: '/hybrid/payment/wallet/setPassword',
+                query: {
+                    channel: this.$route.query.channel,
+                    payToken: this.$route.query.payToken
+                }
+            })
         }
     }
 }
