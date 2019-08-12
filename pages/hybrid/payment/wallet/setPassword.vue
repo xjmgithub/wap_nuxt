@@ -1,7 +1,15 @@
 <template>
     <div class="container">
         <div v-show="step==1" class="step1">
-            <verify-tel ref="phone" :disabled="reset" @canNext="canStep2=true" />
+            <verify-tel
+                ref="phone"
+                :title="reset?'Confirm your cellphone number':'Enter your phone number'"
+                :disabled="reset"
+                @canNext="canStep2=true"
+            />
+            <div class="change-phone">
+                <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
+            </div>
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)" />
             </div>
@@ -230,6 +238,13 @@ export default {
         text-decoration: underline;
         font-size: 0.8rem;
         font-weight: bold;
+    }
+}
+.change-phone {
+    text-align: right;
+    text-decoration: underline;
+    a {
+        color: #0087eb;
     }
 }
 </style>
