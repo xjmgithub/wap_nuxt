@@ -26,20 +26,16 @@ export default {
     },
     methods: {
         callMarket() {
-<<<<<<< HEAD
-            this.sendEvLog({
-                category: 'tell_friends',
-                action: 'callMarket',
-                label: this.invide_code,
-                value: 1
-            })
-            const utmStr = sessionStorage.getItem('utm_str')
-=======
+        this.sendEvLog({
+            category: 'tell_friends',
+            action: 'callMarket',
+            label: this.invide_code,
+            value: 1
+        })
             this.invokeByIntent()
         },
         invokeByIframe() {
             const reffer = sessionStorage.getItem('utm_str')
->>>>>>> bae938fdcc31c7b0f650179b94c3d5367018c73f
             const iframe = document.createElement('iframe')
             iframe.frameborder = '0'
             iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
