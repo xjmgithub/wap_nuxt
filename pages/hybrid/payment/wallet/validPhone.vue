@@ -8,9 +8,6 @@
         </div>
         <div class="footer">
             <mButton :disabled="!canStep1" text="NEXT" style="margin-bottom:0.5rem" @click="goStep(2)" />
-            <nuxt-link v-if="!init&&wallet_email_config" to="/hybrid/payment/wallet/validEmail">
-                RESET IT BY EMAIL
-            </nuxt-link>
         </div>
         <div v-show="step==2" class="step2">
             <passInput />

@@ -109,7 +109,7 @@ export default {
                             this.$alert(
                                 'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
                                 () => {
-                                    this.$router.replace('/hybrid/account/login')
+                                    this.$router.replace('/hybrid/account/signIn')
                                 }
                             )
                         } else {

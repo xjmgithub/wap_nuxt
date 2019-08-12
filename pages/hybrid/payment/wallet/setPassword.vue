@@ -7,18 +7,21 @@
             </div>
         </div>
         <div v-show="step==2" class="step2">
-            <passInput ref="vscode" :length="4" :toggle-view="true" placeholder="Enter the code" @endinput="canStep3=true" @inputing="canStep3=false" />
+            <div class="label">Enter SMS vertification code</div>
+            <passInput ref="vscode" :length="4" :toggle-view="true" @endinput="canStep3=true" @inputing="canStep3=false" />
             <div class="footer">
                 <mButton :disabled="!canStep3" text="NEXT" @click="goStep(3)" />
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
+            <div class="label">Set payment password</div>
             <passInput ref="newpass" :toggle-view="true" placeholder="Set a 6-bit password" @endinput="canStep4=true" @inputing="canStep4=false" />
             <div class="footer">
                 <mButton :disabled="!canStep4" text="NEXT" @click="goStep(4)" />
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
+            <div class="label">Confirm password</div>
             <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm password" @endinput="canStep5=true" @inputing="canStep5=false" />
             <div class="footer">
                 <mButton :disabled="!canStep5" text="OK" @click="goStep(5)" />

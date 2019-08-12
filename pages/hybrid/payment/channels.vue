@@ -156,7 +156,7 @@ export default {
             if (this.channel.payType === 1) {
                 if (!this.isLogin) {
                     this.$confirm('The eWallet needs to login the startimes first', () => {
-                        window.location.href = `${location.origin}/hybrid/account/signin?pre=${location.href}`
+                        window.location.href = `${location.origin}/hybrid/account/signIn?pre=${location.href}`
                     })
                 } else {
                     const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
