@@ -114,7 +114,6 @@ export default {
                     data.payChannels.sort((a, b) => {
                         return a.orderSeq - b.orderSeq
                     })
-                    console.log(data.currency)
                     this.currency = data.currency
                     this.currencySymbol = this.countrys[data.country].currencySymbol
                     this.totalAmount = data.totalAmount
@@ -169,7 +168,9 @@ export default {
                 }
             } else if (this.channel.formConfigExist) {
                 this.$router.push(
-                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.channel.payChannel}&appInterfaceMode=${this.channel.appInterfaceMode}`
+                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.channel.payChannel}&appInterfaceMode=${
+                        this.channel.appInterfaceMode
+                    }`
                 )
             } else {
                 invoke.call(this, this.payToken, this.channel.payChannel, data => {
