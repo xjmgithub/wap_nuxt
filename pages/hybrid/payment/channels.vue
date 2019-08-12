@@ -16,14 +16,7 @@
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input
-                            :checked="lastpay==item.id || i===0?true:false"
-                            :value="item.payType"
-                            :data-id="item.id"
-                            type="radio"
-                            name="pay-options"
-                            @click="checkThis(item)"
-                        />
+                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <i />
                     </label>
                 </div>
@@ -67,10 +60,12 @@ export default {
         return {
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             payToken: this.$route.query.payToken,
-            payChannel: -1,
-            appInterfaceMode: null,
-            payType: -1,
-            formConfigExist: false,
+            channel: {
+                payChannel: -1,
+                appInterfaceMode: null,
+                payType: -1,
+                formConfigExist: false
+            },
             currency: '', // 商品货币code
             currencySymbol: '', // 商品货币符号
             totalAmount: '',
@@ -88,7 +83,7 @@ export default {
         payDesc() {
             let tmp = ''
             this.payChannels.forEach(ele => {
-                if (ele.payType == this.payType) {
+                if (ele.payType == this.channel.payType) {
                     tmp = ele.description
                 }
             })
@@ -96,15 +91,10 @@ export default {
         },
         errorMsg() {
             let tmp = ''
-            if (!this.isLogin && this.payType === 1) return tmp
+            if (!this.isLogin && this.channel.payType === 1) return tmp
             else if (this.currency != this.oCurrency) tmp = 'Commodity currency does not match wallet currency and cannot be paid'
-            else if (this.eAmount < this.totalAmount && this.payType === 1) tmp = 'The wallet balance is insufficient to pay for the goods'
+            else if (this.eAmount < this.totalAmount && this.channel.payType === 1) tmp = 'The wallet balance is insufficient to pay for the goods'
             return tmp
-        }
-    },
-    watch: {
-        $route(to, from) {
-            this.$router.go(0)
         }
     },
     mounted() {
@@ -124,6 +114,7 @@ export default {
                     data.payChannels.sort((a, b) => {
                         return a.orderSeq - b.orderSeq
                     })
+                    console.log(data.currency)
                     this.currency = data.currency
                     this.currencySymbol = this.countrys[data.country].currencySymbol
                     this.totalAmount = data.totalAmount
@@ -133,7 +124,8 @@ export default {
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
                     })
-                    this.oCurrency = payChannels[this.lastpay].currency
+                    this.lastpay && this.initChannel(payChannels[this.lastpay])
+                    !this.lastpay && this.initChannel(this.payChannels[0])
                 } else {
                     this.$alert('payToken and payChannel Mismatch! please check request')
                 }
@@ -146,7 +138,7 @@ export default {
                 this.eCurrencySymbol = account.currencySymbol
                 sessionStorage.setItem('wallet', JSON.stringify(account))
                 updateWalletConf.call(this, account.accountNo)
-                if (this.lastpay == 9003) { // TODO 
+                if (this.lastpay >= 9003 && this.lastpay <= 9034) {
                     this.oCurrency = account.currency
                 }
             })
@@ -154,37 +146,36 @@ export default {
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
         },
-        checkThis(item) {
-            this.payType = item.payType
+        initChannel(item) {
+            this.channel.payType = item.payType
+            this.channel.payChannel = item.id
+            this.channel.formConfigExist = item.formConfigExist
+            this.channel.appInterfaceMode = item.appInterfaceMode
             this.oCurrency = item.payType == 1 ? this.eCurrency : item.currency
-            this.payChannel = item.id
-            this.formConfigExist = item.formConfigExist
-            this.appInterfaceMode = item.appInterfaceMode
         },
         nextStep() {
-            if (this.payType === 1) {
+            if (this.channel.payType === 1) {
                 if (!this.isLogin) {
                     this.$confirm('The eWallet needs to login the startimes first', () => {
-                        // this.$router.push(`/hybrid/account/signin?pre=${location.href}`)
                         window.location.href = `${location.origin}/hybrid/account/signin?pre=${location.href}`
                     })
                 } else {
                     const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
                     if (passIsSet === 'true') {
-                        this.$router.push(`/hybrid/payment/wallet/paybyPass?channel=${this.payChannel}&payToken=${this.payToken}`)
+                        this.$router.push(`/hybrid/payment/wallet/paybyPass?channel=${this.channel.payChannel}&payToken=${this.payToken}`)
                     } else {
-                        this.$router.push(`/hybrid/payment/wallet/setPassword?channel=${this.payChannel}&payToken=${this.payToken}`)
+                        this.$router.push(`/hybrid/payment/wallet/setPassword?channel=${this.channel.payChannel}&payToken=${this.payToken}`)
                     }
                 }
-            } else if (this.formConfigExist) {
+            } else if (this.channel.formConfigExist) {
                 this.$router.push(
-                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.payChannel}&appInterfaceMode=${this.appInterfaceMode}`
+                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.channel.payChannel}&appInterfaceMode=${this.channel.appInterfaceMode}`
                 )
             } else {
-                invoke.call(this, this.payToken, this.payChannel, data => {
+                invoke.call(this, this.payToken, this.channel.payChannel, data => {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
-                    commonPayAfter.call(this, data, this.payType, this.appInterfaceMode)
+                    commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
                 })
             }
         }
