@@ -1,14 +1,14 @@
 <template>
     <div class="wrapper">
         <div class="tab">
-            <div :class="{seled:type==0}" @click="type=0">
+            <div :class="{seled:type==0}" @click="changeType(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.png" />
                 <img class="blue" src="~assets/img/users/ic_telephone_sl_blue.png" />
                 <span class="arrow"></span>
                 <span class="gray">{{$store.state.lang.phone_number}}</span>
                 <span class="blue">{{$store.state.lang.phone_number}}</span>
             </div>
-            <div :class="{seled:type==1}" @click="type=1">
+            <div :class="{seled:type==1}" @click="changeType(1)">
                 <img class="gray" src="~assets/img/users/ic_email_def_gray.png" />
                 <img class="blue" src="~assets/img/users/ic_email_sl_blue.png" />
                 <span class="arrow"></span>
@@ -167,7 +167,24 @@ export default {
             this.tel = ''
         }
     },
+    mounted() {
+        this.sendEvLog({
+            category: 'register',
+            action: 'register_show',
+            label: 1,
+            value: 1
+        })
+    },
     methods: {
+        changeType(num) {
+            this.type = num
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_switch',
+                label: num,
+                value: 1
+            })
+        },
         inputTelCode() {
             this.haveTelCodeVertify = false
             this.error_tel_code = ''
@@ -255,7 +272,7 @@ export default {
                 url: '/ums/v1/register/code/verify',
                 method: 'post',
                 headers: {
-                    'content-type': 'application/x-www-form-urlencoded',
+                    'content-type': 'application/x-www-form-urlencoded'
                     // token: this.$store.state.token
                 },
                 data: qs.stringify({
@@ -506,12 +523,12 @@ export default {
     .input-tel,
     .input-email {
         .error {
-                height: 1rem;
-                position: absolute;
-                bottom: -1.5rem;
-                font-size: 0.8rem;
-                color: red;
-            }
+            height: 1rem;
+            position: absolute;
+            bottom: -1.5rem;
+            font-size: 0.8rem;
+            color: red;
+        }
     }
     .next-btn {
         width: 80%;
