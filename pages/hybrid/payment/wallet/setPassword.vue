@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div v-show="step==1" class="step1">
-            <verify-tel ref="phone" @canNext="canStep2=true" />
+            <verify-tel ref="phone" :disabled="reset" @canNext="canStep2=true" />
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)" />
             </div>
@@ -87,6 +87,10 @@ export default {
     mounted() {
         const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
+        if (walletAccount.phone) {
+            this.reset = true
+            this.$refs.phone.setTel(walletAccount.phone.substr(3))
+        }
     },
     methods: {
         goStep(num) {
@@ -128,7 +132,7 @@ export default {
                 this.$axios
                     .put(`/mobilewallet/uc/v2/accounts/${this.accountNo}/pay-password?newPassword=${newpass}&verifyCode=${vscode}`, {})
                     .then(res => {
-                        if (res.data && res.data.code == '0') {
+                        if (res.data && res.data.code === 0) {
                             this.pay()
                         } else {
                             this.$alert(res.data.message)

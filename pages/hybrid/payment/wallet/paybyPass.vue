@@ -48,7 +48,7 @@ export default {
             if (this.$store.state.appType === 1) {
                 toNativePage('com.star.mobile.video.wallet.WalletForgetPwdActivity')
             } else {
-                this.$router.push('/hybrid/payment/wallet/resetPhone')
+                this.$router.push(`/hybrid/payment/wallet/setPassword?channel=${this.channel}&payToken=${this.payToken}`)
             }
         },
         nextStep() {
