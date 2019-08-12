@@ -33,8 +33,10 @@ export default {
             })
         },
         invokeByIntent(failback) {
-            const reffer = sessionStorage.getItem('utm_str')
-            window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
+            // const reffer = sessionStorage.getItem('utm_str')
+            // window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
+            window.location.href =
+                'intent://details?id=com.star.mobile.video&referrer=utm_source%3Dawards%26utm_medium%3Dshare%26utm_campaign%3Dtell_friends#Intent;scheme=market;end'
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 clearTimeout(s)
