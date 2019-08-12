@@ -3,9 +3,7 @@
         <div class="title">{{$store.state.lang.tips_register_successful}}</div>
         <div class="msg">{{$store.state.lang.tips_register_successful_tip}}</div>
         <img src="~assets/img/pic_gift.png" />
-        <div class="down-now" @click="callMarket">
-            {{$store.state.lang.download_now}}
-        </div>
+        <div class="down-now" @click="callMarket">{{$store.state.lang.download_now}}</div>
     </div>
 </template>
 <script>
@@ -14,14 +12,29 @@ export default {
     layout: 'base',
     methods: {
         callMarket() {
-            const utmStr = sessionStorage.getItem('utm_str')
+            this.invokeByIntent()
+        },
+        invokeByIframe() {
+            const reffer = sessionStorage.getItem('utm_str')
             const iframe = document.createElement('iframe')
             iframe.frameborder = '0'
             iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
             document.body.appendChild(iframe)
 
-            iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(utmStr)
+            iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(reffer)
 
+            const s = setTimeout(() => {
+                if (!document.hidden) downApk.call(this)
+                clearTimeout(s)
+            }, 2000)
+            document.addEventListener('visibilitychange', () => {
+                clearTimeout(s)
+                this.$nuxt.$loading.finish()
+            })
+        },
+        invokeByIntent(failback) {
+            const reffer = sessionStorage.getItem('utm_str')
+            window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 clearTimeout(s)
