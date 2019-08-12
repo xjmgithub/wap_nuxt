@@ -135,15 +135,38 @@ export default {
                 options.phoneCc = this.phoneCc
                 options.phone = this.phone
                 options.type = 10
+                this.sendEvLog({
+                    category: 'register',
+                    action: 'register_passwd_submit',
+                    label: 'register phone',
+                    value: 0
+                })
             } else {
                 options.email = this.email
                 options.type = 0
+                this.sendEvLog({
+                    category: 'register',
+                    action: 'register_passwd_submit',
+                    label: 'register email',
+                    value: 0
+                })
             }
-
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_passwd_submit',
+                label: this.phone ? 'register phone' : 'register email',
+                value: 0
+            })
             this.$axios.post('/ums/v3/register', options).then(res => {
                 if (res.data.code === 0) {
                     let params = {}
                     if (this.phone) {
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_passwd_ok',
+                            label: 'register phone',
+                            value: 0
+                        })
                         params = {
                             applicationId: 2,
                             phoneCc: this.phoneCc,
@@ -153,6 +176,12 @@ export default {
                             type: 10
                         }
                     } else {
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_passwd_ok',
+                            label: 'register email',
+                            value: 0
+                        })
                         params = {
                             applicationId: 2,
                             deviceId: this.$store.state.deviceId,
@@ -163,7 +192,15 @@ export default {
                     }
                     // sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
                     login(this, params)
-                } 
+                } else {
+                    this.$toast(this.$store.state.lang.error_register_tip)
+                    this.sendEvLog({
+                        category: 'register',
+                        action: 'register_passwd_err',
+                        label: 1,
+                        value: 0
+                    })
+                }
             })
         }
     },

@@ -12,8 +12,28 @@
 import { downApk } from '~/functions/app'
 export default {
     layout: 'base',
+    data () {
+        return {
+            invide_code: '',
+        }
+    },
+    mounted() {
+        this.invide_code = sessionStorage.getItem('invite_code');
+        this.sendEvLog({
+            category: 'tell_friends',
+            action: 'register_success_show',
+            label: this.invide_code,
+            value: 1
+        })
+    },
     methods: {
         callMarket() {
+            this.sendEvLog({
+                category: 'tell_friends',
+                action: 'callMarket',
+                label: this.invide_code,
+                value: 1
+            })
             const utmStr = sessionStorage.getItem('utm_str')
             const iframe = document.createElement('iframe')
             iframe.frameborder = '0'
@@ -24,6 +44,12 @@ export default {
 
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
+                this.sendEvLog({
+                    category: 'tell_friends',
+                    action: 'downApk',
+                    label: this.invide_code,
+                    value: 1
+                })
                 clearTimeout(s)
             }, 2000)
             document.addEventListener('visibilitychange', () => {

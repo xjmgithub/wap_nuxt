@@ -10,7 +10,7 @@
             <div v-show="length>=5" class="input-item" v-html="N5" />
             <div v-show="length>=6" class="input-item" v-html="N6" />
         </div>
-        <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd" />
+        <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd" @focus="focusPass"/>
     </div>
 </template>
 <script>
@@ -90,7 +90,17 @@ export default {
                 this.$emit('inputing', val)
             }
         }
-    }
+    },
+    methods: {
+        focusPass() {
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_verifycode',
+                label: 1,
+                value: 0
+            })
+        }
+    },
 }
 </script>
 <style lang="less">

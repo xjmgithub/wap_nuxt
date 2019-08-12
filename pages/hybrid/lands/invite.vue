@@ -5,9 +5,7 @@
             <div class="tip">{{$store.state.lang.reward_tips}}</div>
             <div class="rules" @click="showRules">{{$store.state.lang.activity_rules}}</div>
         </div>
-        <nuxt-link to="/hybrid/account/register">
-            <div class="get-now">{{$store.state.lang.get_now}}</div>
-        </nuxt-link>
+        <div class="get-now" @click="getNow">{{$store.state.lang.get_now}}</div>
         <div v-show="showRulesPage" class="rules-page" @click="showRulesPage=false">
             <div class="title">
                 {{$store.state.lang.activity_rules}}
@@ -59,6 +57,12 @@ export default {
         }
     },
     mounted() {
+        this.sendEvLog({
+            category: 'tell_friends',
+            action: 'lands_show',
+            label: this.invite_code,
+            value: 1
+        })
         if (this.$route.query.referrer) {
             this.utm_str = this.$route.query.referrer
         } else {
@@ -83,8 +87,23 @@ export default {
         }
     },
     methods: {
+        getNow() {
+            this.sendEvLog({
+            category: 'tell_friends',
+            action: 'get_it_btn_click',
+            label: this.invite_code,
+            value: 1
+            })
+            this.$router.push(`/hybrid/account/register`)
+        },
         showRules() {
             this.showRulesPage = true
+            this.sendEvLog({
+            category: 'tell_friends',
+            action: 'activity_rules_show',
+            label: this.invite_code,
+            value: 1
+            })
         }
     },
     head() {

@@ -190,6 +190,8 @@ export default {
     enter_your_phone_number: 'Enter your Phone Number',
     enter_your_email_addr: 'Enter your email address',
     wallet_hint_get_code: 'Get Code',
+    send_code_to_msg: 'The validation code mail has been sent to your short message, please check it in time.',
+    send_code_to_email: 'The validation code mail has been sent to your email, please check it in time.',
     text_onair_next: 'NEXT',
     // 错误信息提示
     error_tel_number_false: 'This phone number you entered is incorrect. Please try again.',
@@ -202,9 +204,10 @@ export default {
     register_input_enter_password_tip: 'Please enter 6-18 digits or letters',
     register_input_enter_password_again: 'Corfirm Password',
     register_input_enter_password_again_tip: 'Pleace enter your password again',
-    // TODO注册失败文案
+    // 注册失败文案
     error_setpass: 'Password must be 6-18 digits or letters!',
     error_setrepass: 'The two passwords you entered did not match!',
+    error_register_tip: 'Register Failed, Please Try Again!',
 
     // toGooglePlay
     tips_register_successful: 'Register Successful! ',

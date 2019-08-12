@@ -186,10 +186,12 @@ export default {
 
     // register
     phone_number: 'Numéro de téléphone',
-    email_addr: 'f-Email Address',
-    enter_your_phone_number: 'f-Enter your Phone Number',
-    enter_your_email_addr: 'f-Enter your email address',
+    email_addr: 'Adresse électronique',
+    enter_your_phone_number: 'Entrez votre numéro de téléphone',
+    enter_your_email_addr: 'Entrez votre adresse e-mail',
     wallet_hint_get_code: 'f-Get Code',
+    send_code_to_msg: 'f-The validation code mail has been sent to your short message, please check it in time.',
+    send_code_to_email: 'f-The validation code mail has been sent to your email, please check it in time.',
     text_onair_next: 'f-NEXT',
     // 错误信息提示
     error_tel_number_false: 'f-This phone number you entered is incorrect. Please try again.',
@@ -205,6 +207,7 @@ export default {
     // TODO注册失败文案
     error_setpass: 'f-Password must be 6-18 digits or letters!',
     error_setrepass: 'f-The two passwords you entered did not match!',
+    error_register_tip: 'f-Register Failed, Please Try Again!',
 
     // toGooglePlay
     tips_register_successful: 'f-Register Successful! ',

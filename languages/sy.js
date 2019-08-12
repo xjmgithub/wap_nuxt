@@ -185,11 +185,13 @@ export default {
     get_now: 's-Get now!',
 
     // register
-    phone_number: 's-Phone Number',
-    email_addr: 's-Email Address',
-    enter_your_phone_number: 's-Enter your Phone Number',
-    enter_your_email_addr: 's-Enter your email address',
+    phone_number: 'Namba ya simu',
+    email_addr: 'Anwani ya barua pepe',
+    enter_your_phone_number: 'Weka namba ya simu yako',
+    enter_your_email_addr: 'Weka anwani ya barua pepe',
     wallet_hint_get_code: 's-Get Code',
+    send_code_to_msg: 's-The validation code mail has been sent to your short message, please check it in time.',
+    send_code_to_email: 's-The validation code mail has been sent to your email, please check it in time.',
     text_onair_next: 's-NEXT',
     // 错误信息提示
     error_tel_number_false: 's-This phone number you entered is incorrect. Please try again.',
@@ -205,6 +207,7 @@ export default {
     // TODO注册失败文案
     error_setpass: 's-Password must be 6-18 digits or letters!',
     error_setrepass: 's-The two passwords you entered did not match!',
+    error_register_tip: 's-Register Failed, Please Try Again!',
 
     // toGooglePlay
     tips_register_successful: 's-Register Successful! ',

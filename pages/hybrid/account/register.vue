@@ -18,14 +18,14 @@
         </div>
         <div v-show="type==0" class="by_tel">
             <div class="phone_number">
-                <div class="country_choose" @click="countryDialogStatus=true">
+                <div class="country_choose" @click="showChooseCountry">
                     <img class="country_icon" :src="cdnPicSrc(country.nationalFlag)" />
                     <img class="ic_categary" src="~assets/img/users/ic_categary.png" />
                 </div>
                 <div :class="{focus:focus_tel,error:error_tel}" class="input-tel">
                     <div class="prefix">+{{country.phonePrefix}}</div>
                     <div class="number">
-                        <input v-model="tel" type="tel" :placeholder="enter_phone" @focus="focus_tel=true" @blur="focus_tel=false" />
+                        <input v-model="tel" type="tel" :placeholder="enter_phone" @focus="focusTel" @blur="focus_tel=false" />
                     </div>
                     <div v-show="error_tel" class="error" v-html="error_tel"></div>
                 </div>
@@ -47,11 +47,11 @@
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
-                    <input v-model="email" type="email" :placeholder="enter_email" @focus="focus_email=true" @blur="focus_email=false" />
+                    <input v-model="email" type="email" :placeholder="enter_email" @focus="focusEmail" @blur="focus_email=false" />
                     <div v-show="showAutoInput" class="auto-input">
-                        <div @click="autoInput('gamil.com')">{{email}}gamil.com</div>
-                        <div @click="autoInput('fotmail.com')">{{email}}fotmail.com</div>
-                        <div @click="autoInput('yahoo.com')">{{email}}yahoo.com</div>
+                        <div @click="autoInput('gamil')">{{email}}gamil.com</div>
+                        <div @click="autoInput('fotmail')">{{email}}fotmail.com</div>
+                        <div @click="autoInput('yahoo')">{{email}}yahoo.com</div>
                     </div>
                 </div>
                 <div v-show="error_email" class="error" v-html="error_email"></div>
@@ -78,8 +78,8 @@
         <div style="width:80%;margin:0 auto;">
             <mButton :disabled="!canNext" :text="next" @click="nextStep" />
         </div>
-        <div class="terms">
-            <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
+        <div class="terms" @click="toService">
+            Terms of Service
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">Country List</div>
@@ -158,7 +158,19 @@ export default {
             this.error_email = ''
             const str = this.email.substr(this.email.length - 1, 1)
             if (this.email.length > 1 && str == '@') {
+                this.sendEvLog({
+                    category: 'register',
+                    action: 'register_input_at',
+                    label: 1,
+                    value: 0
+                })
                 this.showAutoInput = true
+                this.sendEvLog({
+                    category: 'register',
+                    action: 'register_mailheip_show',
+                    label: 1,
+                    value: 0
+                })
             } else {
                 this.showAutoInput = false
             }
@@ -172,17 +184,53 @@ export default {
             category: 'register',
             action: 'register_show',
             label: 1,
-            value: 1
+            value: 0
         })
     },
     methods: {
+        toService() {
+            window.location.href = 'http://m.startimestv.com/copyright/copyright.html'
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_tos',
+                label: 1,
+                value: 0
+            })
+        },
+        focusTel() {
+            this.focus_tel=true
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_input',
+                label: 'register phone',
+                value: 0
+            })
+        },
+        focusEmail() {
+            this.focus_email=true
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_input',
+                label: 'register email',
+                value: 0
+            })
+        },
+        showChooseCountry() {
+            this.countryDialogStatus=true
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_country_switch',
+                label: 1,
+                value: 0
+            })
+        },
         changeType(num) {
             this.type = num
             this.sendEvLog({
                 category: 'register',
                 action: 'register_switch',
                 label: num,
-                value: 1
+                value: 0
             })
         },
         inputTelCode() {
@@ -196,6 +244,12 @@ export default {
             this.error_line_email = false
         },
         getTelCode(callback) {
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_getcode',
+                label: 'register phone',
+                value: 0
+            })
             const timerIntercept = 'error' // 倒计时拦截
             const index = getRandomInt(1, 10) // 发送短信平台的调用顺序
             this.$axios({
@@ -206,20 +260,56 @@ export default {
                     if (res.data.code === 0) {
                         callback()
                         this.haveGetTelCode = true
-                        // TODO成功toast提示
+                        this.$toast(this.$store.state.lang.send_code_to_msg)
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_getcode_ok',
+                            label: 'register phone',
+                            value: 0
+                        })
                     } else if (res.data.code === 2) {
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_getcode_err',
+                            label: 'register phone',
+                            value: 0
+                        })
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_toast_exit',
+                            label: 'register phone',
+                            value: 0
+                        })
                         callback(timerIntercept)
                         this.error_tel = this.error_registered+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">Sign in</a>'
                     } else {
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_getcode_err',
+                            label: 'register phone',
+                            value: 0
+                        })
                         callback(timerIntercept)
                         this.error_tel = this.error_tel_number_false
                     }
                 })
                 .catch(() => {
+                    this.sendEvLog({
+                        category: 'register',
+                        action: 'register_getcode_err',
+                        label: 'register phone',
+                        value: 0
+                    })
                     callback(timerIntercept)
                 })
         },
         getEmailCode(callback) {
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_getcode',
+                label: 'register email',
+                value: 0
+            })
             const timerIntercept = 'error'
             this.$axios({
                 url: `/ums/v1/register/code/email?email=${this.email}`,
@@ -229,16 +319,47 @@ export default {
                     if (res.data.code === 0) {
                         callback()
                         this.haveGetEmailCode = true
+                        this.$toast(this.$store.state.lang.send_code_to_email)
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_getcode_ok',
+                            label: 'register email',
+                            value: 0
+                        })
                     } else if (res.data.code === 2) {
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_getcode_err',
+                            label: 'register email',
+                            value: 0
+                        })
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_toast_exit',
+                            label: 'register email',
+                            value: 0
+                        })
                         callback(timerIntercept)
                         this.error_email =
                             this.error_registered+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">Sign in</a>'
                     } else {
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_getcode_err',
+                            label: 'register email',
+                            value: 0
+                        })
                         callback(timerIntercept)
                         this.error_email = this.error_email_false
                     }
                 })
                 .catch(() => {
+                    this.sendEvLog({
+                        category: 'register',
+                        action: 'register_getcode_err',
+                        label: 'register email',
+                        value: 0
+                    })
                     callback(timerIntercept)
                 })
         },
@@ -258,12 +379,30 @@ export default {
                 .then(res => {
                     if (res.data.code == 0) {
                         this.haveTelCodeVertify = true
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_verifycode_ok',
+                            label: 'register phone',
+                            value: 0
+                        })
                     } else {
                         this.error_tel_code = this.error_code
                         this.error_line_tel = true
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_verifycode_err',
+                            label: 'register phone',
+                            value: 0
+                        })
                     }
                 })
                 .catch(() => {
+                    this.sendEvLog({
+                        category: 'register',
+                        action: 'register_verifycode_err',
+                        label: 'register phone',
+                        value: 0
+                    })
                     // console.log('验证失败')
                 })
         },
@@ -283,30 +422,71 @@ export default {
                 .then(res => {
                     if (res.data.code == 0) {
                         this.haveEmailCodeVertify = true
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_verifycode_ok',
+                            label: 'register email',
+                            value: 0
+                        })
                     } else {
                         this.error_email_code = this.error_code
                         this.error_line_email = true
+                        this.sendEvLog({
+                            category: 'register',
+                            action: 'register_verifycode_err',
+                            label: 'register email',
+                            value: 0
+                        })
                     }
                 })
                 .catch(() => {
+                    this.sendEvLog({
+                        category: 'register',
+                        action: 'register_verifycode_err',
+                        label: 'register email',
+                        value: 0
+                    })
                     // console.log('验证失败')
                 })
         },
         autoInput(str) {
-            this.email += str
+            this.email += str + '.com'
             this.showAutoInput = false
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_mailheip_click',
+                label: str,
+                value: 0
+            })
         },
         chooseCountry(country) {
             this.country = country
             this.countryDialogStatus = false
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_country_choose',
+                label: 'register_country_'+country.country,
+                value: 0
+            })
         },
         nextStep() {
             if (this.type === 1) {
+                this.sendEvLog({
+                    category: 'register',
+                    action: 'register_username_submit',
+                    label: 'register email',
+                    value: 0
+                })
                 const email = this.email
                 const code = this.$refs.emailCode.password
                 this.$router.push(`/hybrid/account/setpass?email=${email}&code=${code}`)
             } else {
-                // TODO校验
+                this.sendEvLog({
+                    category: 'register',
+                    action: 'register_username_submit',
+                    label: 'register phone',
+                    value: 0
+                })
                 const phone = this.tel
                 const code = this.$refs.telCode.password
                 const phoneCc = this.country.phonePrefix
@@ -548,9 +728,8 @@ export default {
         font-size: 0.5rem;
         text-align: center;
         line-height: 2rem;
-        a {
-            text-decoration: underline;
-        }
+        text-decoration: underline;
+        color: #0087eb;
     }
     .country-choose-dialog {
         width: 18rem;
