@@ -26,7 +26,6 @@
                 <p v-html="payDesc" />
             </div>
         </div>
-
         <div class="footer">
             <div class="error-msg" v-html="errorMsg" />
             <mButton :disabled="Boolean(errorMsg)" text="PAY NOW" @click="nextStep" />
@@ -190,11 +189,20 @@ export default {
 </script>
 <style lang="less" scoped>
 .container {
+    width: 100%;
+    height: 100%;
+    padding: 0 5%;
     .goods {
-        width: 100%;
+        width: 90%;
         text-align: center;
         padding: 0.8rem 0;
         margin-bottom: 1.5rem;
+        height: 7.5rem;
+        position: fixed;
+        top: 0;
+        background: #ffffff;
+        z-index: 99;
+        word-break: break-all;
         .pay-money {
             font-weight: bold;
             font-size: 2.25rem;
@@ -209,11 +217,12 @@ export default {
         }
     }
     .contain {
-        height: 60vh; // 兼容
+        // height: 60vh; // 兼容
         overflow-y: scroll;
+        margin-top: 7.5rem;
+        margin-bottom: 6.5rem;
         .pay-channels {
-            width: 90%;
-            margin: 0 auto;
+            width: 100%;
             & > div {
                 border-bottom: 1px solid #eeeeee;
                 padding: 0.8rem 0;
@@ -269,8 +278,7 @@ export default {
             }
         }
         .desc {
-            width: 90%;
-            margin: 0 auto;
+            width: 100%;
             line-height: 1.3rem;
             margin-top: 0.8rem;
         }
@@ -278,11 +286,15 @@ export default {
     .footer {
         width: 100%;
         background: #ffffff;
+        z-index: 99;
         position: fixed;
-        bottom: 2rem;
+        bottom: 0rem;
         margin: 0 auto;
         left: 0;
         right: 0;
+        height: 6rem;
+        padding-bottom: 2rem;
+        box-sizing: border-box;
         .error-msg {
             color: red;
             font-size: 0.8rem;
@@ -290,6 +302,7 @@ export default {
             text-align: center;
             display: block;
             margin: 0 auto;
+            padding-top: 0.5rem;
         }
         button {
             width: 75%;
