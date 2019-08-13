@@ -118,8 +118,10 @@ export default {
             } else if (this.isApp === 2) {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
-                toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
+                // toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 // TODO this.$router.push('/browser')
+                // TODO 根据ua判断是否是我们的sdk
+                window.payment && window.payment.payResult(this.result == 1 ? 3 : 4)
             }
         },
         getPayStatus() {
@@ -150,7 +152,7 @@ export default {
             this.$router.go(0)
         }
     },
-     head() {
+    head() {
         return {
             title: 'Payment Results'
         }
