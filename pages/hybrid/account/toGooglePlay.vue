@@ -23,6 +23,10 @@ export default {
             label: this.invide_code,
             value: 1
         })
+        // window.onbeforeunload = function(e){
+        //     e = e || window.event;
+        //     e.returnValue = "您还没有交卷，已填答案会丢失。";
+        // }
     },
     methods: {
         callMarket() {
@@ -32,6 +36,7 @@ export default {
                 label: this.invide_code,
                 value: 1
             })
+
             this.invokeByIntent()
         },
         invokeByIframe() {
@@ -42,7 +47,6 @@ export default {
             document.body.appendChild(iframe)
 
             iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(reffer)
-
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 this.sendEvLog({
@@ -59,17 +63,11 @@ export default {
             })
         },
         invokeByIntent(failback) {
-            
             const reffer = sessionStorage.getItem('utm_str')
-
-             const iframe = document.createElement('iframe')
-            iframe.frameborder = '0'
-            iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
-            document.body.appendChild(iframe)
-
-            iframe.src = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
-            
-            // window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
+            // window.addEventListener('popstate', (event) => {
+            //     alert(123)
+            // });
+            window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 clearTimeout(s)
