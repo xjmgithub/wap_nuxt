@@ -8,6 +8,9 @@
             </div>
             <input v-model="password" :type="pwdType" />
             <div class="error-text">{{error_password}}</div>
+            <div class="forget-pass">
+                <nuxt-link to="/hybrid/account/resetpass">Forget sign in password</nuxt-link>
+            </div>
         </div>
         <div class="footer">
             <mButton :disabled="password.length<6" text="NEXT" @click="checkSignPass" />
@@ -126,6 +129,12 @@ export default {
             color: red;
             line-height: 1.5rem;
         }
+    }
+    .forget-pass {
+        text-decoration: underline;
+        color: #0087eb;
+        text-align: right;
+        line-height: 2rem;
     }
 }
 .footer {

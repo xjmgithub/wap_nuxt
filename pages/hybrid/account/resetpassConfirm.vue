@@ -3,38 +3,18 @@
         <div class="input-item">
             <div class="label">
                 Create a Password
-                <img
-                    v-if="isCiphertext==1"
-                    class="open-close"
-                    src="~assets/img/ic_hide_def_g.png"
-                    alt
-                >
-                <img
-                    v-if="isCiphertext==2"
-                    class="open-close"
-                    src="~assets/img/ic_show_def_g.png"
-                    alt
-                >
+                <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt />
+                <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt />
             </div>
-            <input v-model="pass" :type="pwdType" @blur="checkpass">
+            <input v-model="pass" :type="pwdType" @blur="checkpass" />
         </div>
         <div class="input-item">
             <div class="label">
                 Confirm New Password
-                <img
-                    v-if="isCiphertext_confirm==1"
-                    class="open-close"
-                    src="~assets/img/ic_hide_def_g.png"
-                    alt
-                >
-                <img
-                    v-if="isCiphertext_confirm==2"
-                    class="open-close"
-                    src="~assets/img/ic_show_def_g.png"
-                    alt
-                >
+                <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt />
+                <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt />
             </div>
-            <input v-model="repass" :type="pwdType_confirm" @blur="checkpass">
+            <input v-model="repass" :type="pwdType_confirm" @blur="checkpass" />
         </div>
         <div class="footer">
             <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep" />
@@ -44,6 +24,7 @@
 <script>
 import mButton from '~/components/button'
 import qs from 'qs'
+import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -115,7 +96,8 @@ export default {
                 url: url
             }).then(res => {
                 if (res.data.code === 0) {
-                    this.$router.push('/hybrid/account/signIn')
+                    setCookie('token', '')
+                    window.location.href = '/hybrid/account/signIn'
                 } else {
                     this.$alert('This code you entered is incorrect. Please try again.')
                 }

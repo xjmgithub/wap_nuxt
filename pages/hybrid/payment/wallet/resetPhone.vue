@@ -5,7 +5,8 @@
             <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)" />
         </div>
         <div v-show="step==2" class="step2">
-            <passInput ref="vscode" placeholder="Enter your msg code" :length="4" @endinput="codeEnd" />
+            <div class="label">Enter your msg code</div>
+            <passInput ref="vscode" :length="4" :toggle-view="true" :default-view="0" @endinput="codeEnd" />
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)" />
             </div>
@@ -74,7 +75,7 @@ export default {
                             const data = res.data
                             if (data && data.code === 0) {
                                 this.$alert('Set phone successfully.', () => {
-                                    window.location.href = '/hybrid/payment/wallet/payto'
+                                    window.location.href = '/hybrid/payment/channels'
                                 })
                             } else {
                                 this.$alert(data.message)
@@ -111,8 +112,8 @@ export default {
 <style lang="less" scoped>
 .container {
     padding: 3rem 1rem;
-    min-height:100%;
-    background:white;
+    min-height: 100%;
+    background: white;
     .step2 {
         width: 100%;
         height: 100%;

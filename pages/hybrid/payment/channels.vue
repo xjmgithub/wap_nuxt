@@ -16,7 +16,14 @@
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                        <input
+                            :checked="lastpay==item.id || i===0?true:false"
+                            :value="item.payType"
+                            :data-id="item.id"
+                            type="radio"
+                            name="pay-options"
+                            @click="initChannel(item)"
+                        />
                         <i />
                     </label>
                 </div>
@@ -58,7 +65,7 @@ export default {
         })
         return {
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
-            payToken: this.$route.query.payToken,
+            payToken: this.$route.query.payToken || '',
             channel: {
                 payChannel: -1,
                 appInterfaceMode: null,
@@ -97,15 +104,21 @@ export default {
         }
     },
     mounted() {
+        const sessionToken = sessionStorage.getItem('payToken')
+        if (!this.payToken) {
+            if (sessionToken) {
+                this.payToken = sessionToken
+            } else {
+                this.$alert('Query payToken needed! please check request')
+                return false
+            }
+        }
+        sessionStorage.setItem('payToken', this.payToken)
         this.getPayMethods()
         if (this.isLogin) this.getMyEwallet()
     },
     methods: {
         getPayMethods() {
-            if (!this.payToken) {
-                this.$alert('Query payToken needed! please check request')
-                return false
-            }
             this.lastpay = getCookie('lastpay') || ''
             this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
                 const data = res.data
