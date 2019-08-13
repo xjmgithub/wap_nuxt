@@ -49,9 +49,9 @@
                 <div class="number">
                     <input v-model="email" type="email" :placeholder="enter_email" @focus="focusEmail" @blur="focus_email=false" />
                     <div v-show="showAutoInput" class="auto-input">
-                        <div @click="autoInput('gamil')">{{email}}gamil.com</div>
-                        <div @click="autoInput('fotmail')">{{email}}fotmail.com</div>
+                        <div @click="autoInput('gmail')">{{email}}gmail.com</div>
                         <div @click="autoInput('yahoo')">{{email}}yahoo.com</div>
+                        <div @click="autoInput('hotmail')">{{email}}hotmail.com</div>
                     </div>
                 </div>
                 <div v-show="error_email" class="error" v-html="error_email"></div>
