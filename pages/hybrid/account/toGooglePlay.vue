@@ -10,28 +10,33 @@
 import { downApk } from '~/functions/app'
 export default {
     layout: 'base',
-    data () {
+    data() {
         return {
-            invide_code: '',
+            invide_code: ''
         }
     },
     mounted() {
-        this.invide_code = sessionStorage.getItem('invite_code');
+        this.invide_code = sessionStorage.getItem('invite_code')
         this.sendEvLog({
             category: 'tell_friends',
             action: 'register_success_show',
             label: this.invide_code,
             value: 1
         })
+        // window.onbeforeunload = function(e){
+        //     e = e || window.event;
+        //     e.returnValue = "您还没有交卷，已填答案会丢失。";
+        // }
     },
     methods: {
         callMarket() {
-        this.sendEvLog({
-            category: 'tell_friends',
-            action: 'callMarket',
-            label: this.invide_code,
-            value: 1
-        })
+            this.sendEvLog({
+                category: 'tell_friends',
+                action: 'callMarket',
+                label: this.invide_code,
+                value: 1
+            })
+
             this.invokeByIntent()
         },
         invokeByIframe() {
@@ -42,7 +47,6 @@ export default {
             document.body.appendChild(iframe)
 
             iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(reffer)
-
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 this.sendEvLog({
@@ -59,10 +63,11 @@ export default {
             })
         },
         invokeByIntent(failback) {
-            // const reffer = sessionStorage.getItem('utm_str')
-            // window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
-            window.location.href =
-                'intent://details?id=com.star.mobile.video&referrer=utm_source%3Dawards%26utm_medium%3Dshare%26utm_campaign%3Dtell_friends#Intent;scheme=market;end'
+            const reffer = sessionStorage.getItem('utm_str')
+            // window.addEventListener('popstate', (event) => {
+            //     alert(123)
+            // });
+            window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 clearTimeout(s)

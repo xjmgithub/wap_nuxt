@@ -5,6 +5,8 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Kupakua',
 
+    post_share_title: 'StarTimes ON inafungua dunia mpya!',
+
     // vote film
     vote_about: 'Kuhusu PAOFF',
     vote_tab_film: 'Sinema',
@@ -31,8 +33,8 @@ export default {
     vote_leftvote: 'Kura zilizobakia',
     vote_vote_btn: 'PIGA KURA',
     vote_join_now: 'Chagua mteule wako',
-    vote_about_word: "<p>The Pan African Online Film Festival (PAOFF) ni tuzo la kipekee la mtandaoni kwenye StarTimes ON ambalo lina lenga  kuzawadia uzalishaji bora kutoka kwa wazalishaji barani Afrika ambapo kwa njia hiyo imelenga kuisaidia na kukuza maendeleo ya sekata ya filamu na muziki kote Afrika.  </p><p>Tuzo hili ni jitihada za shirika inayoongoza katika televisheni ya kidigitali Afrika, StarTimes na italenga makundi matatu ambazo ni Filamu Bora zaidi Afrika, Filamu fupi bora zaidi Afrika na  Video ya Muziki bora zaidi Afrika.</p><p>Ni furaha yetu kuwaalika watumiaji wote mtandaoni kupiga kura na kuiunga mkono waipendayo kupitia StarTimes ON. Sherehe ya kutoa zawadi mwaka huu utaandaliwa nchini Nigeria, jukuwa la StarTimes ON itahesabu kura zote na kuhakikisha uwazi kwa wapiga kura pamoja na usawa usioegemea upande wowote.</p><p>©2019 na StarTimes Haki Zote Zimehifadhiwa</p>",
-    vote_rule_word: "<p>1.Kuanzia Juni 1 hadi Julai 31, utapata kura 5 kila siku. Mpigie kura mtayarishi wako umpendaye na shoo uipendayo! </p><p>2.Shirikisha kiunganishi kwa marafiki ili upate kura zaidi! Unaweza kujishindia kura 5 zaidi kwa kila mtumiaji mpya (wale ambao hawajaipakua APU katika simu zao) kupitia kushirikisha kiunganishi. Watumiaji wengi zaidi wanaopakua apu kupitia kwa kiunganishi unayoishirikisha, ndivyo utakavyojishindia kura zaidi! </p><p>3.Kura zinaweza kujumulishwa na vitaweza kutumika hadi siku ya mwisho. Unaweza kuipigia kura shoo yoyote uipendayo. </p><p>4.Hesabu za kura katika shoo tofauti zitajumulishwa moja kwa moja, na shoo iliyo bora zaidi yenye kujishindia kura za juu itajinyakulia zawadi ya  Filamu bora zaidi Afrika, Filamu fupi bora zaidi Afrika na Video ya muziki bora zaidi Afrika. </p>",
+    vote_about_word: '<p>The Pan African Online Film Festival (PAOFF) ni tuzo la kipekee la mtandaoni kwenye StarTimes ON ambalo lina lenga  kuzawadia uzalishaji bora kutoka kwa wazalishaji barani Afrika ambapo kwa njia hiyo imelenga kuisaidia na kukuza maendeleo ya sekata ya filamu na muziki kote Afrika.  </p><p>Tuzo hili ni jitihada za shirika inayoongoza katika televisheni ya kidigitali Afrika, StarTimes na italenga makundi matatu ambazo ni Filamu Bora zaidi Afrika, Filamu fupi bora zaidi Afrika na  Video ya Muziki bora zaidi Afrika.</p><p>Ni furaha yetu kuwaalika watumiaji wote mtandaoni kupiga kura na kuiunga mkono waipendayo kupitia StarTimes ON. Sherehe ya kutoa zawadi mwaka huu utaandaliwa nchini Nigeria, jukuwa la StarTimes ON itahesabu kura zote na kuhakikisha uwazi kwa wapiga kura pamoja na usawa usioegemea upande wowote.</p><p>©2019 na StarTimes Haki Zote Zimehifadhiwa</p>',
+    vote_rule_word: '<p>1.Kuanzia Juni 1 hadi Julai 31, utapata kura 5 kila siku. Mpigie kura mtayarishi wako umpendaye na shoo uipendayo! </p><p>2.Shirikisha kiunganishi kwa marafiki ili upate kura zaidi! Unaweza kujishindia kura 5 zaidi kwa kila mtumiaji mpya (wale ambao hawajaipakua APU katika simu zao) kupitia kushirikisha kiunganishi. Watumiaji wengi zaidi wanaopakua apu kupitia kwa kiunganishi unayoishirikisha, ndivyo utakavyojishindia kura zaidi! </p><p>3.Kura zinaweza kujumulishwa na vitaweza kutumika hadi siku ya mwisho. Unaweza kuipigia kura shoo yoyote uipendayo. </p><p>4.Hesabu za kura katika shoo tofauti zitajumulishwa moja kwa moja, na shoo iliyo bora zaidi yenye kujishindia kura za juu itajinyakulia zawadi ya  Filamu bora zaidi Afrika, Filamu fupi bora zaidi Afrika na Video ya muziki bora zaidi Afrika. </p>',
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
@@ -41,7 +43,7 @@ export default {
     mrright_voted: 'VOTED',
     mrright_left_vote_today: 'left vote today:',
     mrright_history_rank: 'History Rank',
-    mrright_all_candidates: 'All candidates encore on 14th Jul!',
+    mrright_all_candidates: 'All candidates encore on 31st Oct!',
     mrright_clips_you_cant_miss: "Clips You Can't Miss",
     mrright_vote_tomorrow_login: 'Continue vote tomorrow! More vote, more chances for prize!',
     mrright_vote_tomorrow: 'Continue vote tomorrow! Sign in for more chances to win prize!',

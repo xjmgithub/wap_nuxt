@@ -20,6 +20,7 @@ module.exports = {
         ],
         'import/order': 'off',
         eqeqeq: 'off',
+        'import/order': 'off',
         'vue/mustache-interpolation-spacing': 'off',
         'prettier/prettier': 0,
         'vue/singleline-html-element-content-newline': 'off',

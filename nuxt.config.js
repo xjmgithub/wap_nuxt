@@ -64,7 +64,9 @@ export default {
         '/self/': env.proxyHost,
         '/channel/': env.proxyHost,
         '/search-service/': env.proxyHost,
-        '/wxorder/': env.proxyHost
+        '/wxorder/': env.proxyHost,
+        '/like/': env.proxyHost,
+        '/feed/': env.proxyHost
     },
     router: {
         middleware: 'auth' // middleware before all pages render
@@ -77,7 +79,8 @@ export default {
         { path: '/hybrid/api/episode/submit', handler: '~/api/episode/submit.js' },
         { path: '/hybrid/api/episode/result', handler: '~/api/episode/result.js' },
         { path: '/hybrid/api/quiz/list', handler: '~/api/quiz/list.js' },
-        { path: '/hybrid/api/quiz/bet', handler: '~/api/quiz/bet.js' }
+        { path: '/hybrid/api/quiz/bet', handler: '~/api/quiz/bet.js' },
+        { path: '/hybrid/api/app/getApk', handler: '~/api/app/getApk.js' }
     ],
     hooks: {
         listen(server) {
@@ -93,8 +96,8 @@ export default {
         ** You can extend webpack config here
         */
         // parallel: true, 和下边的两个属性同时用会得到warning
-        cache: false,
-        hardSource: false,
+        // cache: true,
+        // hardSource: true,
         extend(config, ctx) {
             config.node = {
                 fs: 'empty',

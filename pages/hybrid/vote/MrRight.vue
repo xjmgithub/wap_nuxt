@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="Mr-Right">
             <div class="title">
-                <img src="~assets/img/vote/pic_title.png" />
+                <img src="~assets/img/vote/Banner2.jpg" />
                 <div class="video">
                     <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)" />
                     <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)" />
@@ -12,7 +12,8 @@
             <div class="rule">
                 <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
                 <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                    <img src="~assets/img/vote/tv.png" @click="mSendEvLog('banner_click',1,10)" />
+                    <img src="~assets/img/vote/VIVO.png" @click="mSendEvLog('banner_click',1,10)" />
+                    <span>HOW TO WIN</span>
                 </nuxt-link>
             </div>
             <div v-show="coupleList.length>0" class="vote">
@@ -22,12 +23,7 @@
                     <span class="voteleft">{{$store.state.lang.mrright_left_vote_today}} {{voteLeft}}</span>
                 </p>
                 <ul class="clearfix">
-                    <li
-                        v-for="(item,index) in coupleList"
-                        :key="index"
-                        :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
-                        data-id="item.id"
-                    >
+                    <li v-for="(item,index) in coupleList" :key="index" :class="{'only-two':advisorList.length>0&&advisorList.length<3}" data-id="item.id">
                         <div class="img-box" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,0)">
                             <img :src="cdnPic(item.icon)" class="icon" />
                             <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player" />
@@ -78,8 +74,7 @@
             </div>
             <div class="clips">
                 <p>
-                    <img class="heart" src="~assets/img/vote/heartpoint.png" />
-                    {{$store.state.lang.mrright_clips_you_cant_miss}}
+                    <img class="heart" src="~assets/img/vote/heartpoint.png" /> {{$store.state.lang.mrright_clips_you_cant_miss}}
                 </p>
                 <ul class="clearfix">
                     <li v-for="(item,index) in clipsList" :key="index">
@@ -102,17 +97,17 @@
     </div>
 </template>
 <script>
-import { animateCSS, cdnPicSrc } from '~/functions/utils'
-import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 import qs from 'qs'
 import BScroll from 'better-scroll'
+import { animateCSS, cdnPicSrc } from '~/functions/utils'
+import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
         return {
             isLogin: this.$store.state.user.type || false,
             isApp: this.$store.state.appType,
-            vote_id: 7,
+            vote_id: 14,
             videoList: [],
             advisorList: [],
             rankList: [],
@@ -450,17 +445,25 @@ body {
         img {
             width: 100%;
         }
-        .share {
-            position: absolute;
-            right: 4%;
-            color: #ffffff;
+        span {
+            color: #ffe6a4;
+            font-size: 0.7rem;
+            font-weight: bold;
             text-decoration: underline;
+            position: absolute;
+            bottom: 0;
+            right: 15%;
+            &.share {
+                right: 4%;
+                top: 0;
+            }
         }
     }
     .title {
         & > img {
             display: block;
             width: 100%;
+            margin-bottom: 0.5rem;
         }
         .video {
             padding: 0 0.5rem;
