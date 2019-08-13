@@ -6,7 +6,7 @@
             <div class="rules" @click="showRules">{{$store.state.lang.activity_rules}}</div>
         </div>
         <div class="get-now" @click="getNow">{{$store.state.lang.get_now}}</div>
-        <div v-show="showRulesPage" class="rules-page" @click="showRulesPage=false">
+        <div v-show="showRulesPage" class="rules-page">
             <div class="title">
                 {{$store.state.lang.activity_rules}}
                 <!-- <div class="explain">{{$store.state.lang.invitation_rules_5}}</div> -->
@@ -37,7 +37,7 @@
                     </p>
                 </div>
             </div>
-            <div class="got-it">{{$store.state.lang.got_it}}</div>
+            <div class="got-it" @click="showRulesPage=false">{{$store.state.lang.got_it}}</div>
         </div>
         <shadowLayer v-show="showRulesPage" />
     </div>
@@ -162,37 +162,35 @@ export default {
     }
     .rules-page {
         width: 17.5rem;
-        height: 22rem;
+        height: 30rem;
         // overflow: scroll;
         border-radius: 0.2rem;
         background-color: #ffffff;
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: -11rem;
+        margin-top: -15rem;
         margin-left: -8.75rem;
         z-index: 1000;
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
         div {
-            line-height: 1.3rem;
+            line-height: 1.2rem;
             font-weight: 400;
             &.title {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
                 font-weight: 800;
-                // .explain {
-                //     font-size: 0.9rem;
-                //     color: rgba(0, 0, 0, 54%);
-                //     margin-top: 1.3rem;
-                // }
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
             &.sections{
                 position: relative;
                 top: 1.5rem;
-                width: 14.5rem;
-                height: 14.5rem;
+                width: 15rem;
+                height: 22rem;
                 overflow: scroll;
                 .section {
-                    margin-bottom: 1rem;
+                    margin-bottom: 0.5rem;
                     font-size: 0.9rem;
                     color: rgba(0, 0, 0, 54%);
                     position: relative;
@@ -216,12 +214,12 @@ export default {
                 }
             }
             &.got-it {
-                margin-top: 2rem;
-                float: right;
-                width: 4.6rem;
-                height: 2.3rem;
-                text-align: center;
-                line-height: 2.3rem;
+                padding-top: 1.5rem;
+                // float: right;
+                width: 100%;
+                height: 3.5rem;
+                text-align: right;
+                line-height: 3.5rem;
                 font-size: 1rem;
                 font-weight: 700;
                 color: #008be9;

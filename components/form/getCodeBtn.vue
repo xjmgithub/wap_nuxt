@@ -62,6 +62,9 @@ export default {
     text-align: center;
     height: 2.4rem;
     line-height: 2.4rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
     cursor: pointer;
     &.gray {
         background: #dddddd;

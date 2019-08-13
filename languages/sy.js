@@ -175,29 +175,29 @@ export default {
 
     // 注册
     // invite
-    reward_tips: 's-If you are a new user, you can get oneday vip trial after registration.',
-    activity_rules: 's-Activity rules',
-    activity_rules_1: 's-New users will be rewarded with invitation by registering through the invitation link and completing the login in App.',
-    activity_rules_2: 's-New User includes New Accounts and New Devices (StarTimes ON APP is not installed on the phone)',
-    activity_rules_3: 's-After successful registration, please login in App within 7 days to receive the reward. If the reward exceeds 7 days, it will be invalid.',
-    activity_rules_4: 's-The final right of interpretation rests with StarTimes ON App.',
-    got_it: 's-GOT IT',
-    get_now: 's-Get now!',
+    reward_tips: 'Ikiwa wewe ni mtumiaji mpya, unaweza kupata siku moja ya  VIP Bure baada ya usajili.',
+    activity_rules: 'Sheria za Mchakato',
+    activity_rules_1: 'Watumiaji wapya watazawadiwa kwa kusajili kupitia linki ya muwaliko na kuingia kwenye Appu.',
+    activity_rules_2: 'Watumiaji wapya Warejeshe akaunti mpya na vifaa vipya. (Appu ya StarTimes ON haijasakinishwa kwenye simu)',
+    activity_rules_3: 'Tafadhali ingia kwenye Appu ya StarTimes ON ndani ya siku 7 baada ya kufanikisha usajili ili kupokea zawadi, au itakuwa batili.',
+    activity_rules_4: 'Appu ya StarTimes ON inahifadhi haki ya ufasiri wa mwisho.',
+    got_it: 'NIMEIPATA',
+    get_now: 'PATA SASA!',
 
     // register
     phone_number: 'Namba ya simu',
     email_addr: 'Anwani ya barua pepe',
     enter_your_phone_number: 'Weka namba ya simu yako',
     enter_your_email_addr: 'Weka anwani ya barua pepe',
-    wallet_hint_get_code: 's-Get Code',
+    wallet_hint_get_code: 'Pata Kificho',
     send_code_to_msg: 's-The validation code mail has been sent to your short message, please check it in time.',
     send_code_to_email: 's-The validation code mail has been sent to your email, please check it in time.',
-    text_onair_next: 's-NEXT',
+    text_onair_next: 'ENDELEA',
     // 错误信息提示
-    error_tel_number_false: 's-This phone number you entered is incorrect. Please try again.',
-    error_email_false: 's-This email you entered is incorrect. Please try again.',
-    error_registered: 's-You are not a new user because you have registered once.',
-    error_code: 's-This code you entered is incorrect. Please try again.',
+    error_tel_number_false: 'Namba ya simu uliyoingiza si sahihi, tafadhali angalia na jaribu tena.',
+    error_email_false: 's-The email you entered is incorrect. Please try again.',
+    error_registered: 'Wewe ni mtumiaji uliyesajiliwa.',
+    error_code: 'Haitambuliki.Tafadhali tazama na uingize tena.',
 
     // setpass
     register_input_enter_password: 's-Enter Password',
@@ -206,11 +206,11 @@ export default {
     register_input_enter_password_again_tip: 's-Pleace enter your password again',
     // TODO注册失败文案
     error_setpass: 's-Password must be 6-18 digits or letters!',
-    error_setrepass: 's-The two passwords you entered did not match!',
+    error_setrepass: 'Maneno ya siri mawili uliyoingiza hayafanani',
     error_register_tip: 's-Register Failed, Please Try Again!',
 
     // toGooglePlay
-    tips_register_successful: 's-Register Successful! ',
-    tips_register_successful_tip: 's-You have get rewards! Download app and use reward!',
-    download_now: 's-Download now!',
+    tips_register_successful: 'Usajili umefanikiwa. ',
+    tips_register_successful_tip: 'Utapata zawadi. Pakua Appu ya StarTimes ON sasa ili kuitumia.',
+    download_now: 'PAKUA SASA',
 }

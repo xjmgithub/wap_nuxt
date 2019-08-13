@@ -514,21 +514,25 @@ export default {
             position: relative;
             display: -webkit-box;
             display: flex;
+            img {
+                -webkit-box-flex: 1;
+                flex: 1;
+                width: 1rem;
+                height: 100%;
+                display: block;
+            }
             span {
                 -webkit-box-flex: 5;
                 flex: 5;
-                width: 6.2rem;
+                // width: auto;
                 height: 1.4rem;
                 padding-left: 4px;
                 display: block;
                 font-size: 14px;
                 line-height: 1.4rem;
-            }
-            img {
-                -webkit-box-flex: 1;
-                flex: 1;
-                width: 1rem;
-                display: block;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
             .arrow {
                 width: 24px;
@@ -582,7 +586,9 @@ export default {
                 flex: 1;
             }
             .error_code {
+                height: 1rem;
                 position: absolute;
+                left: 0;
                 bottom: -1rem;
                 font-size: 0.8rem;
                 color: red;
@@ -598,6 +604,9 @@ export default {
                 line-height: 1.5rem;
                 outline: none;
                 color: #333333;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
                 &::-webkit-input-placeholder {
                     font-size: 0.9rem;
                 }
@@ -705,6 +714,7 @@ export default {
         .error {
             height: 1rem;
             position: absolute;
+            left: 0;
             bottom: -1.5rem;
             font-size: 0.8rem;
             color: red;

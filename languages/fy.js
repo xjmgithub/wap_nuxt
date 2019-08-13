@@ -175,29 +175,29 @@ export default {
 
     // 注册
     // invite
-    reward_tips: 'f-If you are a new user, you can get oneday vip trial after registration.',
-    activity_rules: 'f-Activity rules',
-    activity_rules_1: 'f-New users will be rewarded with invitation by registering through the invitation link and completing the login in App.',
-    activity_rules_2: 'f-New User includes New Accounts and New Devices (StarTimes ON APP is not installed on the phone)',
-    activity_rules_3: 'f-After successful registration, please login in App within 7 days to receive the reward. If the reward exceeds 7 days, it will be invalid.',
-    activity_rules_4: 'f-The final right of interpretation rests with StarTimes ON App.',
-    got_it: 'f-GOT IT',
-    get_now: 'f-Get now!',
+    reward_tips: 'Si vous êtes un nouvel utilisateur, vous pourrez obtenir un jour d\'essaie VIP après votre inscription.',
+    activity_rules: 'Règle des activtés ',
+    activity_rules_1: 'Les nouveaux utilisateurs seront récompensés en s\'inscrivant via le lien d\'invitation et en se connectant à l\'application.',
+    activity_rules_2: 'Nouvel utilisateurs fait référence à un nouveau compte et à un nouvel appareil. (L\'application StarTimes ON  n\'a pas été installée sur le téléphone)',
+    activity_rules_3: 'Veuillez vous connecter à l\'application StarTimes ON sous les 7 jours suivant votre inscription pour recevoir les récompenses, sinon elles seront invalides.',
+    activity_rules_4: 'L\'application StarTimes ON  se réserve le droit de donner une interprétation finale',
+    got_it: 'JE L\'AI',
+    get_now: 'Récupérer maintenant',
 
-    // register
+    // register 
     phone_number: 'Numéro de téléphone',
     email_addr: 'Adresse électronique',
     enter_your_phone_number: 'Entrez votre numéro de téléphone',
     enter_your_email_addr: 'Entrez votre adresse e-mail',
-    wallet_hint_get_code: 'f-Get Code',
+    wallet_hint_get_code: 'Obtenir le Code',
     send_code_to_msg: 'f-The validation code mail has been sent to your short message, please check it in time.',
     send_code_to_email: 'f-The validation code mail has been sent to your email, please check it in time.',
-    text_onair_next: 'f-NEXT',
+    text_onair_next: 'SUIVANT',
     // 错误信息提示
-    error_tel_number_false: 'f-This phone number you entered is incorrect. Please try again.',
-    error_email_false: 'f-This email you entered is incorrect. Please try again.',
-    error_registered: 'f-You are not a new user because you have registered once.',
-    error_code: 'f-This code you entered is incorrect. Please try again.',
+    error_tel_number_false: 'Le numéro de téléphone que vous avez entré est incorrect. Veuillez vérifier et réessayer.',
+    error_email_false: 'f-The email you entered is incorrect. Please try again.',
+    error_registered: 'Vous vous êtes déjà enregistré.',
+    error_code: 'Non reconnu. Veuillez vérifier et entrer à nouveau.',
 
     // setpass
     register_input_enter_password: 'f-Enter Password',
@@ -206,11 +206,11 @@ export default {
     register_input_enter_password_again_tip: 'f-Pleace enter your password again',
     // TODO注册失败文案
     error_setpass: 'f-Password must be 6-18 digits or letters!',
-    error_setrepass: 'f-The two passwords you entered did not match!',
+    error_setrepass: 'Les deux mots de passe que vous avez entrés ne sont pas identiques!',
     error_register_tip: 'f-Register Failed, Please Try Again!',
 
     // toGooglePlay
-    tips_register_successful: 'f-Register Successful! ',
-    tips_register_successful_tip: 'f-You have get rewards! Download app and use reward!',
-    download_now: 'f-Download now!',
+    tips_register_successful: 'Inscription réussie.',
+    tips_register_successful_tip: 'Vous obtiendrez les récompenses. Téléchargez l\'application StarTimes ON maintenant pour les utiliser.',
+    download_now: 'TÉLÉCHARGER MAINTENANT',
 }

@@ -177,10 +177,10 @@ export default {
     // invite
     reward_tips: 'If you are a new user, you can get oneday vip trial after registration.',
     activity_rules: 'Activity rules',
-    activity_rules_1: 'New users will be rewarded with invitation by registering through the invitation link and completing the login in App.',
-    activity_rules_2: 'New User includes New Accounts and New Devices (StarTimes ON APP is not installed on the phone)',
-    activity_rules_3: 'After successful registration, please login in App within 7 days to receive the reward. If the reward exceeds 7 days, it will be invalid.',
-    activity_rules_4: 'The final right of interpretation rests with StarTimes ON App.',
+    activity_rules_1: 'New users will be rewarded by registering through the invitation link and logging into the App.',
+    activity_rules_2: 'New users refer to new accounts and new devices. (StarTimes ON APP hasn\'t been installed on the phone)',
+    activity_rules_3: 'Please log in StarTimes ON APP within 7 days after successful registration to receive rewards, or they\'ll be invalid.',
+    activity_rules_4: 'StarTimes ON App reserves the right of  final interpretation.',
     got_it: 'GOT IT',
     get_now: 'Get now!',
 
@@ -194,9 +194,9 @@ export default {
     send_code_to_email: 'The validation code mail has been sent to your email, please check it in time.',
     text_onair_next: 'NEXT',
     // 错误信息提示
-    error_tel_number_false: 'This phone number you entered is incorrect. Please try again.',
-    error_email_false: 'This email you entered is incorrect. Please try again.',
-    error_registered: 'You are not a new user because you have registered once.',
+    error_tel_number_false: 'The phone number you entered is incorrect, please check and try again.',
+    error_email_false: 'The email you entered is incorrect. please check and try again.',
+    error_registered: 'You\'re a registered user.',
     error_code: 'This code you entered is incorrect. Please try again.',
 
     // setpass
