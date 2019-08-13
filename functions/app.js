@@ -2,9 +2,9 @@
 // 仅在客户端执行
 
 import { Base64 } from 'js-base64'
-import { getBrowser, getCookie } from '~/functions/utils'
-import axios from 'axios'
 import qs from 'qs'
+import axios from 'axios'
+import { getBrowser, getCookie } from '~/functions/utils'
 
 const browser = getBrowser()
 const scheme = browser.isIos ? 'startimes' : 'starvideo'
@@ -12,19 +12,12 @@ const host = 'platformapi'
 const path = 'webtoapp'
 const appleStore = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
 
-/* 获取apk地址 */
-const getApkUrl = function(callback) {
-    axios.get('/cms/public/app').then(data => {
-        const url = data.data.apkUrl
-        callback && callback(url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : '')
-    })
-}
-
 export const envokeByIntent = function(page, failback) {
     let target = ''
     if (page) {
         target = '?target=' + Base64.encode(page.replace(/&/g, '**'))
     }
+    // window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
     window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
     const s = setTimeout(() => {
         if (!document.hidden) failback && failback()
@@ -63,11 +56,12 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
-    if (window.navigator.userAgent.indexOf('SamsungBrowser/2.1') > 0) {
-        envokeByIntent(page, failback)
-    } else {
-        invokeByIframe(page, failback)
-    }
+    envokeByIntent.call(this, page, failback)
+    // if (browser.isOriginalChrome) {
+    //     envokeByIntent.call(this, page, failback)
+    // } else {
+    //     invokeByIframe.call(this, page, failback)
+    // }
 }
 
 export const downApk = function(callback) {
@@ -80,12 +74,8 @@ export const downApk = function(callback) {
     if (browser.isIos) {
         window.location.href = appleStore
     } else {
-        getApkUrl(url => {
-            if (url) {
-                window.location.href = url
-            } else {
-                window.alert('Download error.Please retry.')
-            }
+        axios.get('/hybrid/api/app/getApk').then(data => {
+            window.location.href = data.data.data
         })
     }
     this.$nuxt.$loading.finish()
@@ -188,6 +178,13 @@ export const shareInvite = (link, shareTitle, shareContent, shareImg) => {
     if (window.getChannelId && window.getChannelId.showCustorm) {
         const content = '【' + shareTitle + '】' + shareContent + ' ' + link
         window.getChannelId.showCustorm(content, link, link, link, link, link, link, shareImg || '', shareTitle)
+    }
+}
+
+export const shareInApp = function(link, content, shareImg) {
+    if (window.getChannelId && window.getChannelId.showCustorm) {
+        const mainText = content + ' ' + link
+        window.getChannelId.showCustorm(mainText, link, link, link, link, link, link, shareImg || '', mainText)
     }
 }
 

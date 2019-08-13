@@ -32,11 +32,11 @@
     </div>
 </template>
 <script>
+import localforage from 'localforage'
+import { Base64 } from 'js-base64'
 import mShare from '~/components/web/share.vue'
 import { formatTime, initDB, cacheDateUpdate } from '~/functions/utils'
 import { callupFlow } from '~/functions/app'
-import localforage from 'localforage'
-import { Base64 } from 'js-base64'
 export default {
     components: {
         mShare

@@ -110,6 +110,9 @@ export default {
     methods: {
         click() {
             if (this.isApp === 1) {
+                if (this.result == 1) {
+                    window.getChannelId && window.getChannelId.noticePaySuccess && window.getChannelId.noticePaySuccess()
+                }
                 toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 window.getChannelId && window.getChannelId.finish()
             } else if (this.isApp === 2) {
@@ -135,6 +138,7 @@ export default {
                         }, 5000)
                     } else if (data && data.state === 4) {
                         this.result = 2
+                        this.fail_message = data.summary ? data.summary : this.fail_message
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
                     }
                 })

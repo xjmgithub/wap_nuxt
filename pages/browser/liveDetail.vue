@@ -76,10 +76,10 @@
     </div>
 </template>
 <script>
-import mShare from '~/components/web/share.vue'
-import { callupFlow } from '~/functions/app'
 import dayjs from 'dayjs'
 import { Base64 } from 'js-base64'
+import mShare from '~/components/web/share.vue'
+import { callupFlow } from '~/functions/app'
 export default {
     components: {
         mShare
@@ -292,7 +292,7 @@ export default {
                 this.$store.state.lang.officialwebsitemobile_downloadpromo,
                 () => {
                     this.$nuxt.$loading.start()
-                    callupFlow.call(this,`com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`)
+                    callupFlow.call(this, `com.star.mobile.video.player.PlayerLiveActivity?channelID=${this.channelID}`)
                 },
                 () => {
                     // cancel
