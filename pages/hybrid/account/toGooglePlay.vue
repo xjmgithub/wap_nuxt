@@ -23,10 +23,6 @@ export default {
             label: this.invide_code,
             value: 1
         })
-        // window.onbeforeunload = function(e){
-        //     e = e || window.event;
-        //     e.returnValue = "您还没有交卷，已填答案会丢失。";
-        // }
     },
     methods: {
         callMarket() {
@@ -36,8 +32,11 @@ export default {
                 label: this.invide_code,
                 value: 1
             })
-
-            this.invokeByIntent()
+            if (navigator.userAgent.indexOf('SAMSUNG') >= 0) {
+                this.invokeByIframe()
+            } else {
+                this.invokeByIntent()
+            }
         },
         invokeByIframe() {
             const reffer = sessionStorage.getItem('utm_str')
@@ -64,10 +63,7 @@ export default {
         },
         invokeByIntent(failback) {
             const reffer = sessionStorage.getItem('utm_str')
-            // window.addEventListener('popstate', (event) => {
-            //     alert(123)
-            // });
-            window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
+            window.location = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 clearTimeout(s)
