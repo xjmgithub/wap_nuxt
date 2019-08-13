@@ -260,7 +260,7 @@ export default {
                     if (res.data.code === 0) {
                         callback()
                         this.haveGetTelCode = true
-                        this.$toast(this.$store.state.lang.send_code_to_msg)
+                        // this.$toast(this.$store.state.lang.send_code_to_msg)
                         this.sendEvLog({
                             category: 'register',
                             action: 'register_getcode_ok',

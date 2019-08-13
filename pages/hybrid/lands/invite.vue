@@ -121,9 +121,8 @@ export default {
     padding-top: 5%;
     font-family: Roboto;
     font-weight: 600;
-    position: fixed;
-    top: 0;
-    left: 0;
+    height: 100vh;
+    overflow-y: scroll;
     .st_logo {
         display: block;
         width: 100%;

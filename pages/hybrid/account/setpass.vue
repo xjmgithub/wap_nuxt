@@ -260,12 +260,8 @@ export default {
         }
     }
     .footer {
-        // position: fixed;
-        // bottom: 2rem;
         width: 80%;
         margin: 7rem auto;
-        // left: 0;
-        // right: 0;
     }
 }
 </style>
