@@ -10,13 +10,13 @@
 import { downApk } from '~/functions/app'
 export default {
     layout: 'base',
-    data () {
+    data() {
         return {
-            invide_code: '',
+            invide_code: ''
         }
     },
     mounted() {
-        this.invide_code = sessionStorage.getItem('invite_code');
+        this.invide_code = sessionStorage.getItem('invite_code')
         this.sendEvLog({
             category: 'tell_friends',
             action: 'register_success_show',
@@ -26,12 +26,12 @@ export default {
     },
     methods: {
         callMarket() {
-        this.sendEvLog({
-            category: 'tell_friends',
-            action: 'callMarket',
-            label: this.invide_code,
-            value: 1
-        })
+            this.sendEvLog({
+                category: 'tell_friends',
+                action: 'callMarket',
+                label: this.invide_code,
+                value: 1
+            })
             this.invokeByIntent()
         },
         invokeByIframe() {
@@ -59,10 +59,17 @@ export default {
             })
         },
         invokeByIntent(failback) {
-            // const reffer = sessionStorage.getItem('utm_str')
+            
+            const reffer = sessionStorage.getItem('utm_str')
+
+             const iframe = document.createElement('iframe')
+            iframe.frameborder = '0'
+            iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
+            document.body.appendChild(iframe)
+
+            iframe.src = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
+            
             // window.location.href = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
-            window.location.href =
-                'intent://details?id=com.star.mobile.video&referrer=utm_source%3Dawards%26utm_medium%3Dshare%26utm_campaign%3Dtell_friends#Intent;scheme=market;end'
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
                 clearTimeout(s)
