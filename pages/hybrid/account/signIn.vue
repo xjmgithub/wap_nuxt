@@ -50,7 +50,7 @@
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
@@ -71,10 +71,10 @@ export default {
             password: '',
             email: '',
             countrys: countrArr,
-            pre: this.$route.query.pre,
+            pre: this.$route.query.pre
         }
     },
-    mounted(){
+    mounted() {
         if (this.pre) {
             sessionStorage.setItem('login_prefer', this.pre)
         }
@@ -124,11 +124,12 @@ export default {
 .wrapper {
     padding: 1rem 0.8rem;
     width: 100%;
-    .logo{
-        width:100%;
+    .logo {
+        width: 100%;
         text-align: center;
-        img{
-            width:50%;
+        margin: 2rem auto;
+        img {
+            width: 50%;
         }
     }
     .tab {
