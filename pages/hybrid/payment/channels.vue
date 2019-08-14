@@ -202,21 +202,18 @@ export default {
                 if (!this.isLogin) {
                     this.$confirm('The eWallet needs to login the startimes first', () => {
                         window.location.href = `${location.origin}/hybrid/account/signIn?pre=${location.href}`
-                        // this.$router.replace(`/hybrid/account/signIn?pre=${location.href}`)
                     })
                 } else {
                     const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
                     if (passIsSet === 'true') {
-                        this.$router.push(`/hybrid/payment/wallet/paybyPass?channel=${this.channel.payChannel}&payToken=${this.payToken}`)
+                        this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                     } else {
-                        this.$router.push(`/hybrid/payment/wallet/setPassword?channel=${this.channel.payChannel}&payToken=${this.payToken}`)
+                        this.$router.push(`/hybrid/payment/wallet/setPassword`)
                     }
                 }
             } else if (this.channel.formConfigExist) {
                 this.$router.push(
-                    `/hybrid/payment/form?payToken=${this.payToken}&payChannelId=${this.channel.payChannel}&appInterfaceMode=${
-                        this.channel.appInterfaceMode
-                    }`
+                    `/hybrid/payment/form?appInterfaceMode=${this.channel.appInterfaceMode}`
                 )
             } else {
                 invoke.call(this, this.payToken, this.channel.payChannel, data => {

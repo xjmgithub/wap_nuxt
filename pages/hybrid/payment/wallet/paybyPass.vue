@@ -24,8 +24,8 @@ export default {
         return {
             password: '',
             canPay: false,
-            payToken: this.$route.query.payToken,
-            channel: this.$route.query.channel,
+            payToken: this.$route.query.payToken || '',
+            channel: this.$route.query.channel || '',
             apiType: this.$route.query.apiType,
             card: this.$route.query.card
         }
@@ -39,6 +39,12 @@ export default {
             }
         }
     },
+    mounted() {
+        const sessionPayToken = sessionStorage.getItem('payToken')
+        const sessionChannel = sessionStorage.getItem('payChannel')
+        if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
+        if (!this.channel && sessionChannel) this.channel = sessionChannel
+    },
     methods: {
         setPassword(data) {
             this.password = this.$refs.pass.password
@@ -47,7 +53,7 @@ export default {
             if (this.$store.state.appType === 1) {
                 toNativePage('com.star.mobile.video.wallet.WalletForgetPwdActivity')
             } else {
-                this.$router.push(`/hybrid/payment/wallet/validSignPass?channel=${this.channel}&payToken=${this.payToken}`)
+                this.$router.push(`/hybrid/payment/wallet/validSignPass`)
             }
         },
         nextStep() {
@@ -82,7 +88,7 @@ export default {
             })
         }
     },
-     head() {
+    head() {
         return {
             title: 'Payment Details'
         }

@@ -83,13 +83,7 @@ export default {
                     if (res.data.code == 0) {
                         this.$store.commit('SET_TOKEN', res.data.data.token)
                         setCookie('token', res.data.data.token)
-                        this.$router.push({
-                            path: '/hybrid/payment/wallet/setPassword',
-                            query: {
-                                channel: this.$route.query.channel,
-                                payToken: this.$route.query.payToken
-                            }
-                        })
+                        this.$router.push('/hybrid/payment/wallet/setPassword')
                     } else {
                         this.error_password = 'Password error'
                     }

@@ -58,8 +58,8 @@ export default {
             canStep5: false,
             reset: false,
             accountNo: null,
-            channel: this.$route.query.channel,
-            payToken: this.$route.query.payToken,
+            channel: this.$route.query.channel || '',
+            payToken: this.$route.query.payToken || '',
             card: this.$route.query.card // paystack card
         }
     },
@@ -95,6 +95,10 @@ export default {
         }
     },
     mounted() {
+        const sessionPayToken = sessionStorage.getItem('payToken')
+        const sessionChannel = sessionStorage.getItem('payChannel')
+        if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
+        if (!this.channel && sessionChannel) this.channel = sessionChannel
         const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
         if (walletAccount.phone) {
@@ -181,7 +185,8 @@ export default {
                     payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                        // this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                        window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
                     })
                 })
             }
