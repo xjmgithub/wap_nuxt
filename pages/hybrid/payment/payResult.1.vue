@@ -26,7 +26,7 @@
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
-import { setCookie } from '~/functions/utils'
+// import { setCookie } from '~/functions/utils'
 import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',

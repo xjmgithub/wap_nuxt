@@ -180,6 +180,7 @@ export default {
             this.channel.currency = item.currency
         },
         nextStep() {
+            sessionStorage.setItem('payChannel', this.channel.payChannel)
             if (this.channel.payType === 1) {
                 if (!this.isLogin) {
                     this.$confirm('The eWallet needs to login the startimes first', () => {

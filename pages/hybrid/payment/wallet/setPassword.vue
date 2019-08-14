@@ -42,7 +42,6 @@ import verifyTel from '~/components/form/wallet_tel_verify'
 import passInput from '~/components/password'
 import mButton from '~/components/button'
 import { invoke, commonPayAfter, payWithBalance } from '~/functions/pay'
-import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {

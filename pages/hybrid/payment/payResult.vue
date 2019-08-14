@@ -81,13 +81,17 @@ export default {
     },
     mounted() {
         if (this.result > 0) {
+            window.payment && window.payment.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
             // 直接回调
             if (this.result === 1) {
+                const channel = sessionStorage.getItem('paychannel')
+                if (channel) setCookie('lastpay', channel)
                 setTimeout(() => {
                     this.click()
                 }, 5000)
             }
         } else {
+            window.payment && window.payment.payResult('PAYING')
             // wait 模式
             if (!this.seqNo) {
                 this.$alert('Query seqNo needed! please check request')
@@ -118,7 +122,7 @@ export default {
                 // toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 // TODO this.$router.push('/browser')
                 // TODO 根据ua判断是否是我们的sdk
-                window.payment && window.payment.payResult(this.result == 1 ? 3 : 4)
+                window.payment && window.payment.finishActivity(this.result == 1 ? 'SUCCESS' : 'FAIL')
             }
         },
         getPayStatus() {
@@ -129,8 +133,11 @@ export default {
                     const data = res.data
                     if (data && data.state === 3) {
                         this.result = 1
+                        const channel = sessionStorage.getItem('paychannel')
+                        if (channel) setCookie('lastpay', channel)
                         this.money = data.amount
                         this.currency = data.currencySymbol
+                        window.payment && window.payment.payResult('SUCCESS')
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
                         setTimeout(() => {
                             this.click()
@@ -138,6 +145,7 @@ export default {
                     } else if (data && data.state === 4) {
                         this.result = 2
                         this.fail_message = data.summary ? data.summary : this.fail_message
+                        window.payment && window.payment.payResult('FAIL')
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
                     }
                 })
