@@ -11,7 +11,7 @@
             <div class="pay-channels">
                 <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
-                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" />
+                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/ewallet.png'" />
                         <img v-else src="~assets/img/pay/ewallet.png" />
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
@@ -89,7 +89,7 @@ export default {
         payDesc() {
             let tmp = ''
             this.payChannels.forEach(ele => {
-                if (ele.payType == this.channel.payType) {
+                if (ele.id == this.channel.payChannel) {
                     tmp = ele.description
                 }
             })
@@ -123,14 +123,11 @@ export default {
             this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
                 const data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
-                    data.payChannels.sort((a, b) => {
-                        return a.orderSeq - b.orderSeq
-                    })
+                    this.payChannels = this.bubbleSort(data.payChannels)
                     this.currency = data.currency
                     this.currencySymbol = this.countrys[data.country].currencySymbol
                     this.totalAmount = data.totalAmount
                     this.paySubject = data.paySubject
-                    this.payChannels = data.payChannels
                     const payChannels = {}
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
@@ -141,6 +138,19 @@ export default {
                     this.$alert('payToken and payChannel Mismatch! please check request')
                 }
             })
+        },
+        bubbleSort: function(arr) {
+            let temp
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = 0; j < arr.length - i - 1; j++) {
+                    if (parseInt(arr[j].orderSeq) > parseInt(arr[j + 1].orderSeq)) {
+                        temp = arr[j]
+                        arr[j] = arr[j + 1]
+                        arr[j + 1] = temp
+                    }
+                }
+            }
+            return arr
         },
         getMyEwallet() {
             updateWalletAccount.call(this, account => {
