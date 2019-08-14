@@ -92,7 +92,7 @@ export default {
             let params = {}
             if (this.type === 1) {
                 params = {
-                    applicationId: 1,
+                    applicationId: 2,
                     deviceId: this.$store.state.deviceId,
                     type: 0,
                     email: this.email,

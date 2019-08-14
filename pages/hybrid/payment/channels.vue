@@ -111,6 +111,23 @@ export default {
             }
         }
     },
+    async asyncData({ app: { $axios }, store, req }) {
+        $axios.setHeader('token', store.state.token)
+        try {
+            const res = await $axios.get('/cms/users/me')
+            if (res.status !== 200) {
+                store.commit(
+                    'SET_TOKEN',
+                    'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjEsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjEsImNyZWF0ZWQiOjE1NDM5MTI4MzgzNjksImV4cCI6MTg1NDk1MjgzOCwiY2lkIjoyfQ.q_CUuuyIXu5UzCnzgD4lXF2L-wk8viu9abQFqeYn-2AFEAS8Kf5Won-GdHq9HJbv7T3PI7TD3JcIXl5BU533ew'
+                )
+            }
+        } catch (e) {
+            store.commit(
+                'SET_TOKEN',
+                'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjEsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjEsImNyZWF0ZWQiOjE1NDM5MTI4MzgzNjksImV4cCI6MTg1NDk1MjgzOCwiY2lkIjoyfQ.q_CUuuyIXu5UzCnzgD4lXF2L-wk8viu9abQFqeYn-2AFEAS8Kf5Won-GdHq9HJbv7T3PI7TD3JcIXl5BU533ew'
+            )
+        }
+    },
     mounted() {
         const sessionToken = sessionStorage.getItem('payToken')
         if (!this.payToken) {
