@@ -74,7 +74,6 @@ export default {
                 } else {
                     invoke.call(this, this.payToken, this.channel, data => {
                         payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
-                            setCookie('lastpay', this.channel)
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
                             commonPayAfter.call(this, data, 3, 3)

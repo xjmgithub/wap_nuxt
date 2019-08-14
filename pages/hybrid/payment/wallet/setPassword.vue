@@ -172,7 +172,6 @@ export default {
                     data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        setCookie('lastpay', this.channel)
                         commonPayAfter.call(this, data, 3, 3)
                     },
                     { authorization_code: this.card }
@@ -181,7 +180,6 @@ export default {
             } else {
                 invoke.call(this, this.payToken, this.channel, data => {
                     payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
-                        setCookie('lastpay', this.channel)
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
