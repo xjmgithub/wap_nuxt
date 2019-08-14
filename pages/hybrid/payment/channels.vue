@@ -12,7 +12,7 @@
                 <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
                         <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/ewallet.png'" />
-                        <img v-else src="~assets/img/pay/ewallet.png" />
+                        <img v-else src="http://cdn.startimestv.com/banner/ewallet.png" />
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
@@ -70,7 +70,8 @@ export default {
                 payChannel: -1,
                 appInterfaceMode: null,
                 payType: -1,
-                formConfigExist: false
+                formConfigExist: false,
+                currency: ''
             },
             currency: '', // 商品货币code
             currencySymbol: '', // 商品货币符号
@@ -81,7 +82,6 @@ export default {
             eAmount: '', // 电子钱包余额
             eCurrency: '', // 电子钱包货币code
             eCurrencySymbol: '', // 电子钱包货币符号
-            oCurrency: '', // 渠道货币code 用于比较判断
             countrys: obj
         }
     },
@@ -101,6 +101,14 @@ export default {
             else if (this.currency != this.oCurrency) tmp = 'Commodity currency does not match wallet currency and cannot be paid'
             else if (this.eAmount < this.totalAmount && this.channel.payType === 1) tmp = 'The wallet balance is insufficient to pay for the goods'
             return tmp
+        },
+        oCurrency() {
+            // 渠道货币code 用于比较判断
+            if (this.channel.payType == 1) {
+                return this.eCurrency
+            } else {
+                return this.channel.currency
+            }
         }
     },
     mounted() {
@@ -159,9 +167,6 @@ export default {
                 this.eCurrencySymbol = account.currencySymbol
                 sessionStorage.setItem('wallet', JSON.stringify(account))
                 updateWalletConf.call(this, account.accountNo)
-                if (this.lastpay >= 9003 && this.lastpay <= 9034) {
-                    this.oCurrency = account.currency
-                }
             })
         },
         cdnPic(src) {
@@ -172,7 +177,7 @@ export default {
             this.channel.payChannel = item.id
             this.channel.formConfigExist = item.formConfigExist
             this.channel.appInterfaceMode = item.appInterfaceMode
-            this.oCurrency = item.payType == 1 ? this.eCurrency : item.currency
+            this.channel.currency = item.currency
         },
         nextStep() {
             if (this.channel.payType === 1) {
