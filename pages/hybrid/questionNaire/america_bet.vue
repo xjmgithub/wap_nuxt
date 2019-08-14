@@ -117,8 +117,8 @@ export default {
     },
     data() {
         const id = this.$route.query.quizId
-        const title = id == 21 ? 'Challenge Of Football Knowledge' : 'Challengers Crazy Guess'
-        const shareTitle = id == 21 ? 'Challenge Of Football Knowledge' : 'Hisense Challengers Uganda Crazy Guess'
+        const title = id == 21 ? 'Football Knowledge Challenge' : 'Challengers Crazy Guess'
+        const shareTitle = id == 21 ? 'Football Knowledge Challenge' : 'Hisense Challengers Uganda Crazy Guess'
         const shareContent =
             id == 21
                 ? 'Are you knowledgeable about football？Fight for 300 million coins&VIPs together.'
