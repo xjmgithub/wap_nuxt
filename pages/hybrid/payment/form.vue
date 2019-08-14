@@ -57,7 +57,7 @@ export default {
     data() {
         return {
             payToken: this.$route.query.payToken || '',
-            payChannelId: this.$route.query.payChannelId || '',
+            channel: this.$route.query.payChannelId || '',
             apiInterface: this.$route.query.appInterfaceMode || 3,
             configs: []
         }
@@ -76,7 +76,7 @@ export default {
         const sessionChannel = sessionStorage.getItem('payChannel')
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
-        this.$axios.get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`).then(res => {
+        this.$axios.get(`/payment/v2/pay-channels/${this.channel}/form-configs`).then(res => {
             const data = res.data
             if (data && data instanceof Array && data.length > 0) {
                 const configs = data.sort(function(a, b) {
@@ -142,7 +142,7 @@ export default {
                 invoke.call(
                     this,
                     this.payToken,
-                    this.payChannelId,
+                    this.channel,
                     data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
