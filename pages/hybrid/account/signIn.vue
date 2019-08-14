@@ -1,5 +1,8 @@
 <template>
     <div class="wrapper">
+        <div class="logo">
+            <img src="~assets/img/ic_upgrade_icon.png">
+        </div>
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
@@ -121,7 +124,13 @@ export default {
 .wrapper {
     padding: 1rem 0.8rem;
     width: 100%;
-
+    .logo{
+        width:100%;
+        text-align: center;
+        img{
+            width:50%;
+        }
+    }
     .tab {
         div {
             padding-top: 1rem;
