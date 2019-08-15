@@ -25,15 +25,22 @@
         <div class="footer">
             <mButton :disabled="!abled" :text="next" @click="nextStep" />
         </div>
+        <div v-show="falseStatus" class="false-dialog">
+            <p>{{$store.state.lang.error_register_tip}}</p>
+            <div class="got-it" @click="falseStatus=false">{{$store.state.lang.got_it}}</div>
+        </div>
+        <shadowLayer v-show="falseStatus" />
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import { login } from '~/functions/utils'
+import shadowLayer from '~/components/shadow-layer'
 export default {
     layout: 'base',
     components: {
-        mButton
+        mButton,
+        shadowLayer
     },
     data() {
         return {
@@ -56,7 +63,7 @@ export default {
             next: this.$store.state.lang.text_onair_next,
             error_setpass: this.$store.state.lang.error_setpass,
             error_setrepass: this.$store.state.lang.error_setrepass,
-
+            falseStatus: false,
         }
     },
     computed: {
@@ -121,6 +128,7 @@ export default {
             }
         },
         nextStep() {
+            this.abled = false
             const options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
@@ -193,13 +201,15 @@ export default {
                     // sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
                     login(this, params)
                 } else {
-                    this.$toast(this.$store.state.lang.error_register_tip)
+                    // this.$toast(this.$store.state.lang.error_register_tip)
                     this.sendEvLog({
                         category: 'register',
                         action: 'register_passwd_err',
                         label: 1,
                         value: 0
                     })
+                    this.falseStatus = true
+                    this.abled = true
                 }
             })
         }
@@ -215,7 +225,7 @@ export default {
 .wrapper {
     padding: 0 1rem;
     .input-item {
-        margin-top: 1.5rem;
+        margin: 2rem 0 3rem;
         width: 100%;
         height: 3rem;
         position: relative;
@@ -228,7 +238,7 @@ export default {
                 right: 0;
             }
         }
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         .passText, .repassText {
             position: absolute;
             top: 0;
@@ -248,7 +258,7 @@ export default {
                 color: #999999;
             }
             &.focus {
-            border-bottom: 1px solid #0087EB;
+                border-bottom: 1px solid #0087EB;
             }
             &.error {
                 border-bottom: 1px solid red;
@@ -261,7 +271,33 @@ export default {
     }
     .footer {
         width: 80%;
-        margin: 7rem auto;
+        margin: 5rem auto;
+    }
+    .false-dialog {
+        width: 15rem;
+        height: 8rem;
+        background-color: #fff;
+        font-size: 1rem;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-top: -4rem;
+        margin-left: -7.5rem;
+        border-radius: 0.2rem;
+        z-index: 999;
+        p {
+            color: #000000;
+            margin: 1.5rem;
+            line-height: 1.3rem;
+        }
+        .got-it {
+            width: 100%;
+            height: 2rem;
+            line-height: 2rem;
+            color: #0087EB;
+            padding-right: 1.5rem;
+            text-align: right; 
+        }
     }
 }
 </style>

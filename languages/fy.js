@@ -184,7 +184,7 @@ export default {
     activity_rules_3: 'Veuillez vous connecter à l\'application StarTimes ON sous les 7 jours suivant votre inscription pour recevoir les récompenses, sinon elles seront invalides.',
     activity_rules_4: 'L\'application StarTimes ON  se réserve le droit de donner une interprétation finale',
     got_it: 'JE L\'AI',
-    get_now: 'Récupérer maintenant',
+    get_now: 'Récupérer maintenant!',
 
     // register 
     phone_number: 'Numéro de téléphone',
@@ -192,27 +192,27 @@ export default {
     enter_your_phone_number: 'Entrez votre numéro de téléphone',
     enter_your_email_addr: 'Entrez votre adresse e-mail',
     wallet_hint_get_code: 'Obtenir le Code',
-    send_code_to_msg: 'f-The validation code mail has been sent to your short message, please check it in time.',
-    send_code_to_email: 'f-The validation code mail has been sent to your email, please check it in time.',
+    send_code_success: 'Envoyé avec succès!',
     text_onair_next: 'SUIVANT',
     // 错误信息提示
     error_tel_number_false: 'Le numéro de téléphone que vous avez entré est incorrect. Veuillez vérifier et réessayer.',
-    error_email_false: 'f-The email you entered is incorrect. Please try again.',
+    error_email_false: 'L\'adresse email est incorrecte. Veuillez vérifier et essayer à nouveau.',
     error_registered: 'Vous vous êtes déjà enregistré.',
     error_code: 'Non reconnu. Veuillez vérifier et entrer à nouveau.',
+    login_btn: 'SE CONNECTER',
 
     // setpass
-    register_input_enter_password: 'f-Enter Password',
-    register_input_enter_password_tip: 'f-Please enter 6-18 digits or letters',
-    register_input_enter_password_again: 'f-Corfirm Password',
-    register_input_enter_password_again_tip: 'f-Pleace enter your password again',
+    register_input_enter_password: 'Entrez le mot de passe',
+    register_input_enter_password_tip: 'Veuillez entrer 6-18 lettres ou chiffres',
+    register_input_enter_password_again: 'Confirmez le mot de passe',
+    register_input_enter_password_again_tip: 'Resaisissez votre mot de passe',
     // TODO注册失败文案
-    error_setpass: 'f-Password must be 6-18 digits or letters!',
+    error_setpass: 'Le mot de passe doit comporter entre 6 et 18 caractères et doit être composé de lettres ou de chiffres!',
     error_setrepass: 'Les deux mots de passe que vous avez entrés ne sont pas identiques!',
-    error_register_tip: 'f-Register Failed, Please Try Again!',
+    error_register_tip: 'L\'inscription a échoué, veuillez réessayer!',
 
     // toGooglePlay
-    tips_register_successful: 'Inscription réussie.',
-    tips_register_successful_tip: 'Vous obtiendrez les récompenses. Téléchargez l\'application StarTimes ON maintenant pour les utiliser.',
+    tips_register_successful: 'Inscription réussie!',
+    tips_register_successful_tip: 'Vous obtiendrez les récompenses! Téléchargez l\'application StarTimes ON maintenant pour les utiliser!',
     download_now: 'TÉLÉCHARGER MAINTENANT',
 }

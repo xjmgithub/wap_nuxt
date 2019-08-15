@@ -260,7 +260,7 @@ export default {
                     if (res.data.code === 0) {
                         callback()
                         this.haveGetTelCode = true
-                        // this.$toast(this.$store.state.lang.send_code_to_msg)
+                        this.$toast(this.$store.state.lang.send_code_success)
                         this.sendEvLog({
                             category: 'register',
                             action: 'register_getcode_ok',
@@ -281,7 +281,7 @@ export default {
                             value: 0
                         })
                         callback(timerIntercept)
-                        this.error_tel = this.error_registered+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">Sign in</a>'
+                        this.error_tel = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.login_btn + '</a>'
                     } else {
                         this.sendEvLog({
                             category: 'register',
@@ -319,7 +319,7 @@ export default {
                     if (res.data.code === 0) {
                         callback()
                         this.haveGetEmailCode = true
-                        this.$toast(this.$store.state.lang.send_code_to_email)
+                        this.$toast(this.$store.state.lang.send_code_success)
                         this.sendEvLog({
                             category: 'register',
                             action: 'register_getcode_ok',
@@ -340,8 +340,7 @@ export default {
                             value: 0
                         })
                         callback(timerIntercept)
-                        this.error_email =
-                            this.error_registered+'<a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">Sign in</a>'
+                        this.error_email = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.login_btn + '</a>'
                     } else {
                         this.sendEvLog({
                             category: 'register',
@@ -618,7 +617,7 @@ export default {
         .phone_number {
             display: -webkit-box;
             display: flex;
-            margin-bottom: 2.4rem;
+            margin-bottom: 3.4rem;
             .country_choose {
                 -webkit-box-flex: 1;
                 flex: 1;
@@ -668,7 +667,7 @@ export default {
             width: 100%;
             border-bottom: #dddddd solid 1px;
             padding-bottom: 5px;
-            margin-bottom: 2.4rem;
+            margin-bottom: 3.4rem;
             position: relative;
             &.focus {
                 border-bottom: #0087eb solid 1px;

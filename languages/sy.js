@@ -192,27 +192,27 @@ export default {
     enter_your_phone_number: 'Weka namba ya simu yako',
     enter_your_email_addr: 'Weka anwani ya barua pepe',
     wallet_hint_get_code: 'Pata Kificho',
-    send_code_to_msg: 's-The validation code mail has been sent to your short message, please check it in time.',
-    send_code_to_email: 's-The validation code mail has been sent to your email, please check it in time.',
+    send_code_success: 'Imetumwa kikamilifu!',
     text_onair_next: 'ENDELEA',
     // 错误信息提示
     error_tel_number_false: 'Namba ya simu uliyoingiza si sahihi, tafadhali angalia na jaribu tena.',
-    error_email_false: 's-The email you entered is incorrect. Please try again.',
+    error_email_false: 'Anuwani ya barua pepe si sahihi. Tafadhali kagua na ujaribu tena.',
     error_registered: 'Wewe ni mtumiaji uliyesajiliwa.',
     error_code: 'Haitambuliki.Tafadhali tazama na uingize tena.',
+    login_btn: 'JISAJILI',
 
     // setpass
-    register_input_enter_password: 's-Enter Password',
-    register_input_enter_password_tip: 's-Please enter 6-18 digits or letters',
-    register_input_enter_password_again: 's-Corfirm Password',
-    register_input_enter_password_again_tip: 's-Pleace enter your password again',
+    register_input_enter_password: 'Ingiza nywila',
+    register_input_enter_password_tip: 'Tafadhali ingiza herufi au nambari kuanzia 6-18',
+    register_input_enter_password_again: 'Nywila ya imethibitika',
+    register_input_enter_password_again_tip: 'Ingiza namba yako ya siri tena',
     // TODO注册失败文案
-    error_setpass: 's-Password must be 6-18 digits or letters!',
-    error_setrepass: 'Maneno ya siri mawili uliyoingiza hayafanani',
-    error_register_tip: 's-Register Failed, Please Try Again!',
+    error_setpass: 'Nywila lazima ijengeke kwa herufi au nambari kuanzia 6-18!',
+    error_setrepass: 'Maneno ya siri mawili uliyoingiza hayafanani!',
+    error_register_tip: 'Imeshindwa kujiandikisha, Tafadhali jaribu tena!',
 
     // toGooglePlay
-    tips_register_successful: 'Usajili umefanikiwa. ',
-    tips_register_successful_tip: 'Utapata zawadi. Pakua Appu ya StarTimes ON sasa ili kuitumia.',
+    tips_register_successful: 'Usajili umefanikiwa! ',
+    tips_register_successful_tip: 'Utapata zawadi! Pakua Appu ya StarTimes ON sasa ili kuitumia!',
     download_now: 'PAKUA SASA',
 }

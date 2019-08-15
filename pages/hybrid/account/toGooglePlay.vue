@@ -66,6 +66,12 @@ export default {
             window.location = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
             const s = setTimeout(() => {
                 if (!document.hidden) downApk.call(this)
+                this.sendEvLog({
+                    category: 'tell_friends',
+                    action: 'downApk',
+                    label: this.invide_code,
+                    value: 1
+                })
                 clearTimeout(s)
             }, 2000)
             document.addEventListener('visibilitychange', () => {

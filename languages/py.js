@@ -192,27 +192,27 @@ export default {
     enter_your_phone_number: 'Insera o seu Número de Telemóvel',
     enter_your_email_addr: 'Insera o seu endereço de email',
     wallet_hint_get_code: 'Obter o Código',
-    send_code_to_msg: 'p-The validation code mail has been sent to your short message, please check it in time.',
-    send_code_to_email: 'p-The validation code mail has been sent to your email, please check it in time.',
+    send_code_success: 'Enviado com sucesso!',
     text_onair_next: 'A SEGUIR',
     // 错误信息提示
     error_tel_number_false: 'O número de telefone digitado está incorreto, por favor, verifique e tente novamente.',
-    error_email_false: 'p-The email you entered is incorrect. Please try again.',
+    error_email_false: 'O endereço de email está incorreto. Por favor verifique e tente novamente.',
     error_registered: 'Você já é um  utilizador registado.',
     error_code: 'Não reconhecido. Por favor verifique e tente de novo.',
+    login_btn: 'SIGN IN',
 
     // setpass
-    register_input_enter_password: 'p-Enter Password',
-    register_input_enter_password_tip: 'p-Please enter 6-18 digits or letters',
-    register_input_enter_password_again: 'p-Corfirm Password',
-    register_input_enter_password_again_tip: 'p-Pleace enter your password again',
+    register_input_enter_password: 'Insira a Senha',
+    register_input_enter_password_tip: 'Por favor, insira letras ou números entre 6-18',
+    register_input_enter_password_again: 'Confirme a Senha',
+    register_input_enter_password_again_tip: 'Insira outra vez a sua senha',
     // TODO注册失败文案
-    error_setpass: 'p-Password must be 6-18 digits or letters!',
-    error_setrepass: 'As duas Palavra Passe não são identicas',
-    error_register_tip: 'p-Register Failed, Please Try Again!',
+    error_setpass: 'A senha deve ser letras ou números entre 6-18!',
+    error_setrepass: 'As duas Palavra Passe não são identicas!',
+    error_register_tip: 'Falha ao registar, por favor, tente de novo!',
 
     // toGooglePlay
     tips_register_successful: 'Registo com sucesso! ',
-    tips_register_successful_tip: 'Você vai ganhar recompensas. Descarregue o StarTimes ON agora para usar as suas recompensas.',
+    tips_register_successful_tip: 'Você vai ganhar recompensas! Descarregue o StarTimes ON agora para usar as suas recompensas!',
     download_now: 'FAÇA DOWNLOAD AGORA',
 }
