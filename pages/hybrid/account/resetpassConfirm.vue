@@ -24,7 +24,6 @@
 <script>
 import mButton from '~/components/button'
 import qs from 'qs'
-import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -96,8 +95,14 @@ export default {
                 url: url
             }).then(res => {
                 if (res.data.code === 0) {
-                    setCookie('token', '')
-                    window.location.href = '/hybrid/account/signIn'
+                    const pre = sessionStorage.getItem('set_pass_pre')
+                    if (pre) {
+                        this.$router.replace(pre)
+                        sessionStorage.removeItem('set_pass_pre')
+                    } else {
+                        this.$router.replace('/hybrid/account/signIn')
+                        // window.location.href = '/hybrid/account/signIn'
+                    }
                 } else {
                     this.$alert('This code you entered is incorrect. Please try again.')
                 }

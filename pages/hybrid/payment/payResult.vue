@@ -60,14 +60,16 @@ export default {
                     result: result,
                     money: data.amount,
                     currency: data.currencySymbol,
-                    seqNo: data.seqNo
+                    seqNo: data.seqNo,
+                    merchantAppId: data.merchantAppId
                 }
             } catch (e) {
                 return {
                     result: 0,
                     money: 0,
                     currency: '',
-                    seqNo: route.query.reference
+                    seqNo: route.query.reference,
+                    merchantAppId: ''
                 }
             }
         } else {
@@ -75,13 +77,15 @@ export default {
                 result: 0, // 0 支付查询中， 1 支付成功，2 支付失败
                 money: 0,
                 currency: '',
-                seqNo: route.query.seqNo
+                seqNo: route.query.seqNo,
+                merchantAppId: ''
             }
         }
     },
     mounted() {
         if (this.result > 0) {
             window.payment && window.payment.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
+            window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
             // 直接回调
             if (this.result === 1) {
                 const channel = sessionStorage.getItem('paychannel')
@@ -92,6 +96,7 @@ export default {
             }
         } else {
             window.payment && window.payment.payResult('PAYING')
+            window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('PAYING')
             // wait 模式
             if (!this.seqNo) {
                 this.$alert('Query seqNo needed! please check request')
@@ -111,11 +116,16 @@ export default {
     methods: {
         click() {
             if (this.isApp === 1) {
-                if (this.result == 1) {
-                    window.getChannelId && window.getChannelId.noticePaySuccess && window.getChannelId.noticePaySuccess()
+                if (this.merchantAppId && this.merchantAppId > 2) {
+                    window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
+                    window.getChannelId && window.getChannelId.finish()
+                } else {
+                    if (this.result == 1) {
+                        window.getChannelId && window.getChannelId.noticePaySuccess && window.getChannelId.noticePaySuccess()
+                    }
+                    toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
+                    window.getChannelId && window.getChannelId.finish()
                 }
-                toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
-                window.getChannelId && window.getChannelId.finish()
             } else if (this.isApp === 2) {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
@@ -137,7 +147,9 @@ export default {
                         if (channel) setCookie('lastpay', channel)
                         this.money = data.amount
                         this.currency = data.currencySymbol
+                        this.merchantAppId = data.merchantAppId
                         window.payment && window.payment.payResult('SUCCESS')
+                        window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('SUCCESS')
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
                         setTimeout(() => {
                             this.click()
@@ -145,7 +157,9 @@ export default {
                     } else if (data && data.state === 4) {
                         this.result = 2
                         this.fail_message = data.summary ? data.summary : this.fail_message
+                        this.merchantAppId = data.merchantAppId
                         window.payment && window.payment.payResult('FAIL')
+                        window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('FAIL')
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
                     }
                 })

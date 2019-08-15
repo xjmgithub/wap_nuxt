@@ -9,7 +9,7 @@
             <input v-model="password" :type="pwdType" />
             <div class="error-text">{{error_password}}</div>
             <div class="forget-pass">
-                <nuxt-link to="/hybrid/account/resetpass">Forget sign in password</nuxt-link>
+                <a href="javascript:void(0)" @click="resetPass">Forget sign in password</a>
             </div>
         </div>
         <div class="footer">
@@ -44,6 +44,10 @@ export default {
         }
     },
     methods: {
+        resetPass() {
+            sessionStorage.setItem('set_pass_pre', '/hybrid/payment/wallet/validSignPass')
+            this.$router.push('/hybrid/account/resetpass')
+        },
         checkSignPass(num) {
             // TODO check sigin
             const user = this.$store.state.user
