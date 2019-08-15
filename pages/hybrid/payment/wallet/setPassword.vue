@@ -57,41 +57,11 @@ export default {
             canStep4: false,
             canStep5: false,
             reset: false,
+            step: this.$route.query.dissphone ? 3 : 1,
             accountNo: null,
             channel: this.$route.query.channel || '',
             payToken: this.$route.query.payToken || '',
             card: this.$route.query.card // paystack card
-        }
-    },
-    async asyncData({ app: { $axios }, store }) {
-        try {
-            $axios.setHeader('token', store.state.token)
-            const res = await $axios.get('/vup/v1/ums/user/area', {
-                headers: {
-                    versionCode: '5300',
-                    clientType: 'android',
-                    token: store.state.token
-                }
-            })
-            const configs = res.data && res.data.appFBConfigs
-            let type = true
-            configs.forEach(item => {
-                if (item.functionBlockType === 91) {
-                    if (item.validType === 2) {
-                        type = true
-                    } else {
-                        type = false
-                    }
-                }
-            })
-
-            if (type === true) {
-                return { step: 1 }
-            } else {
-                return { step: 3 }
-            }
-        } catch (e) {
-            return { step: 1 }
         }
     },
     mounted() {
