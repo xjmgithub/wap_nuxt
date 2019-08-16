@@ -1,5 +1,5 @@
 export default {
-    home: 'Home',
+    home: 'Home1',
     today: 'Today',
     leave_msg_btn: 'Leave a Message',
     live_chat_btn: 'Live Chat',
