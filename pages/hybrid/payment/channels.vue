@@ -232,7 +232,7 @@ export default {
         text-align: center;
         padding: 0.8rem 0;
         margin-bottom: 1.5rem;
-        height: 7.5rem;
+        height: 8.3rem;
         position: fixed;
         top: 0;
         background: #ffffff;
@@ -242,6 +242,7 @@ export default {
             font-weight: bold;
             font-size: 2.25rem;
             color: #212121;
+            margin-bottom: .8rem;
             span {
                 font-size: 1.25rem;
             }
