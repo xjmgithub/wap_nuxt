@@ -3,16 +3,16 @@
         <div class="input-item">
             <div class="label">
                 Create a Password
-                <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt />
-                <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt />
+                <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext=2" />
+                <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext=1" />
             </div>
             <input v-model="pass" :type="pwdType" @blur="checkpass" />
         </div>
         <div class="input-item">
             <div class="label">
                 Confirm New Password
-                <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt />
-                <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt />
+                <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext_confirm=2" />
+                <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext_confirm=1" />
             </div>
             <input v-model="repass" :type="pwdType_confirm" @blur="checkpass" />
         </div>
