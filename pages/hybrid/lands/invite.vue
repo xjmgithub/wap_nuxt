@@ -161,14 +161,14 @@ export default {
     }
     .rules-page {
         width: 17.5rem;
-        height: 30rem;
+        height: 26rem;
         // overflow: scroll;
         border-radius: 0.2rem;
         background-color: #ffffff;
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: -15rem;
+        margin-top: -13rem;
         margin-left: -8.75rem;
         z-index: 1000;
         padding: 1.5rem 1rem;
@@ -176,7 +176,8 @@ export default {
             line-height: 1.2rem;
             font-weight: 400;
             &.title {
-                font-size: 1.5rem;
+                line-height: 1.6rem;
+                font-size: 1.4rem;
                 font-weight: 800;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -186,7 +187,7 @@ export default {
                 position: relative;
                 top: 1.5rem;
                 width: 15rem;
-                height: 22rem;
+                height: 18rem;
                 overflow: scroll;
                 .section {
                     margin-bottom: 0.5rem;
