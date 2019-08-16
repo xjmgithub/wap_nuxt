@@ -201,7 +201,7 @@ export default {
                     if (passIsSet === 'true') {
                         this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                     } else {
-                        this.$router.push(`/hybrid/payment/wallet/setPassword`)
+                        this.$router.push(`/hybrid/payment/wallet/setPassword?passIsSet=1`)
                     }
                 }
             } else if (this.channel.formConfigExist) {
