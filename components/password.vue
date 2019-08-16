@@ -133,11 +133,7 @@ export default {
             margin-right: 0;
         }
     }
-    &.error {
-        .input-item {
-            border-bottom: 1px solid red;
-        }
-    }
+
     input {
         color: transparent;
     }
@@ -147,6 +143,13 @@ export default {
         top: 0;
         left: 0;
         opacity: 0;
+    }
+}
+.error {
+    .password-box {
+        .input-item {
+            border-bottom: 1px solid red;
+        }
     }
 }
 </style>
