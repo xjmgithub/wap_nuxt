@@ -43,7 +43,7 @@ export default {
             query: Object.assign({}, this.$route.query, {
                 utms: 'startimes_app',
                 utmm: 'share',
-                utmc: 'The blood sisters'
+                utmc: 'The_blood_sisters'
             })
         })
         const browser = getBrowser()
