@@ -177,7 +177,7 @@ export default {
 
     // 注册
     // invite
-    reward_tips: 'If you are a new user, you can get oneday vip trial after registration.',
+    reward_tips: 'If you are a new user, you can get oneday vip free trial after registration.',
     activity_rules: 'Activity rules',
     activity_rules_1: 'New users will be rewarded by registering through the invitation link and logging into the App.',
     activity_rules_2: 'New users refer to new accounts and new devices. (StarTimes ON APP hasn\'t been installed on the phone)',
