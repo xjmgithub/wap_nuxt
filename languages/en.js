@@ -186,7 +186,7 @@ export default {
 
     // 注册
     // invite
-    reward_tips: 'If you are a new user, you can get oneday vip trial after registration.',
+    reward_tips: 'If you are a new user, you can get oneday vip free trial after registration.',
     activity_rules: 'Activity rules',
     activity_rules_1: 'New users will be rewarded with invitation by registering through the invitation link and completing the login in App.',
     activity_rules_2: 'New User includes New Accounts and New Devices (StarTimes ON APP is not installed on the phone)',
@@ -202,24 +202,24 @@ export default {
     enter_your_phone_number: 'Enter your Phone Number',
     enter_your_email_addr: 'Enter your email address',
     wallet_hint_get_code: 'Get Code',
-    send_code_to_msg: 'The validation code mail has been sent to your short message, please check it in time.',
-    send_code_to_email: 'The validation code mail has been sent to your email, please check it in time.',
+    send_code_success: 'Sent successfully!',
     text_onair_next: 'NEXT',
     // 错误信息提示
-    error_tel_number_false: 'This phone number you entered is incorrect. Please try again.',
-    error_email_false: 'This email you entered is incorrect. Please try again.',
-    error_registered: 'You are not a new user because you have registered once.',
+    error_tel_number_false: 'The phone number you entered is incorrect, please check and try again.',
+    error_email_false: 'The email address is incorrect. Please check and try again.',
+    error_registered: 'You\'re a registered user.',
     error_code: 'This code you entered is incorrect. Please try again.',
+    login_btn: 'SIGN IN',
 
     // setpass
     register_input_enter_password: 'Enter Password',
-    register_input_enter_password_tip: 'Please enter 6-18 digits or letters',
+    register_input_enter_password_tip: 'Please enter 6-18 letters or numbers',
     register_input_enter_password_again: 'Corfirm Password',
-    register_input_enter_password_again_tip: 'Pleace enter your password again',
+    register_input_enter_password_again_tip: 'Enter your password again',
     // 注册失败文案
-    error_setpass: 'Password must be 6-18 digits or letters!',
+    error_setpass: 'The password must be 6-18 characters and must be letters or numbers!',
     error_setrepass: 'The two passwords you entered did not match!',
-    error_register_tip: 'Register Failed, Please Try Again!',
+    error_register_tip: 'Failed to Register, Please Try Again!',
 
     // toGooglePlay
     tips_register_successful: 'Register Successful! ',
