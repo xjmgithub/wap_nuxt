@@ -7,6 +7,11 @@ export default {
 
     post_share_title: 'StarTimes ON vous ouvre un nouveau monde !',
 
+    // star pay
+    starpay_payment_currency_error: 'Impossible de procéder à la transaction, opération erronée, veuillez essayer avec un autre moyen de paiement ou contactez-nous.',
+    starpay_payment_amount_error: 'Fonds insuffisants, veuillez vérifier votre solde',
+    starpay_payment_login_notice: 'Pour payer par eWallet, vous devez d\'abord vous connecter au compte StarTimes.',
+
     // vote film
     vote_about: 'À propos du PAOFF ',
     vote_tab_film: 'Films',
@@ -33,8 +38,10 @@ export default {
     vote_leftvote: 'Votes Restants',
     vote_vote_btn: 'VOTER',
     vote_join_now: 'Choisissez votre candidat',
-    vote_about_word: "<p> Le Festival Panafricain du Film en ligne (PAOFF) est un prix en ligne exclusif à l'application StarTimes ON qui vise à récompenser les productions exceptionnelles réalisées par des producteurs africains qui, à leur tour, soutiendront et encourageront le développement de l'industrie cinématographique et musicale en Afrique.</p><p>Le prix est une initiative de StarTimes,  principal opérateur de télévision numérique en Afrique, et se concentrera sur 3 catégories qui sont: le Meilleur Film africain, le Meilleur Court-métrage africain et la Meilleure Clip Vidéo africaine.</p><p>Nous sommes honorés d'inviter tous les  internautes à voter et à soutenir votre candidat favori via l'application StarTimes ON. Cette année, le fabuleux gala se tiendra au Nigeria. La plateforme StarTimes ON comptera les votes et assurera une tribune transparente, impartiale et équitable.</p><p>©Tous droits réservés par StarTimes 2019</p>",
-    vote_rule_word: "<p>1.Du 1er juin au 31 juillet, vous avez 5 votes par jour. Votez pour votre producteur et émissions préférés !</p><p>2.Partagez le lien avec vos amis pour obtenir plus de votes ! Vous pouvez obtenir 5 votes supplémentaires pour chaque nouvel utilisateur (ceux qui n'ont pas installé l'APPLICATION sur leur téléphone) en partageant le lien. Plus de nouveaux utilisateurs installent l'application via le lien que vous partagez, plus vous obtiendrez de votes !</p><p>3.Les votes peuvent être cumulés et sont valables jusqu'à la date limite. Vous pouvez voter pour tous les spectacles que vous voulez.</p><p>4.Le classement des votes des différents types de spectacles sera mis à jour en temps réel, et les meilleurs spectacles avec le plus grand nombre de votes remporteront le prix du meilleur film africain, du meilleur court métrage africain et du meilleur Clip africain.</p>",
+    vote_about_word:
+        "<p> Le Festival Panafricain du Film en ligne (PAOFF) est un prix en ligne exclusif à l'application StarTimes ON qui vise à récompenser les productions exceptionnelles réalisées par des producteurs africains qui, à leur tour, soutiendront et encourageront le développement de l'industrie cinématographique et musicale en Afrique.</p><p>Le prix est une initiative de StarTimes,  principal opérateur de télévision numérique en Afrique, et se concentrera sur 3 catégories qui sont: le Meilleur Film africain, le Meilleur Court-métrage africain et la Meilleure Clip Vidéo africaine.</p><p>Nous sommes honorés d'inviter tous les  internautes à voter et à soutenir votre candidat favori via l'application StarTimes ON. Cette année, le fabuleux gala se tiendra au Nigeria. La plateforme StarTimes ON comptera les votes et assurera une tribune transparente, impartiale et équitable.</p><p>©Tous droits réservés par StarTimes 2019</p>",
+    vote_rule_word:
+        "<p>1.Du 1er juin au 31 juillet, vous avez 5 votes par jour. Votez pour votre producteur et émissions préférés !</p><p>2.Partagez le lien avec vos amis pour obtenir plus de votes ! Vous pouvez obtenir 5 votes supplémentaires pour chaque nouvel utilisateur (ceux qui n'ont pas installé l'APPLICATION sur leur téléphone) en partageant le lien. Plus de nouveaux utilisateurs installent l'application via le lien que vous partagez, plus vous obtiendrez de votes !</p><p>3.Les votes peuvent être cumulés et sont valables jusqu'à la date limite. Vous pouvez voter pour tous les spectacles que vous voulez.</p><p>4.Le classement des votes des différents types de spectacles sera mis à jour en temps réel, et les meilleurs spectacles avec le plus grand nombre de votes remporteront le prix du meilleur film africain, du meilleur court métrage africain et du meilleur Clip africain.</p>",
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
@@ -65,20 +72,26 @@ export default {
     loginfaq_signway_hasproblem: 'Quel compte avez-vous utilisé pour vous connecter quand vous avez rencontré ce problème ?',
     loginfaq_toast_disappeared: "Quel est le message d'erreur que vous avez reçu ?",
     loginfaq_I_cancelled: "J'ai annulé.",
-    loginfaq_Twitter_SDK_repairing: "Le Kit de Développement Logiciel de la connexion Twitter est en réparation. Veuillez essayer d'autres moyens pour vous connecter.",
+    loginfaq_Twitter_SDK_repairing:
+        "Le Kit de Développement Logiciel de la connexion Twitter est en réparation. Veuillez essayer d'autres moyens pour vous connecter.",
     loginfaq_Why_cancelled: "Pourquoi avez-vous choisi d'annuler ?",
     loginfaq_loading_allthetime_towait: "C'est tout le temps en train de se charger, je ne veux pas attendre.",
     loginfaq_something_wrong_with_Facebook: 'Il y a un problème avec mon compte Facebook.',
     loginfaq_dont_want_grant_access_about_permission: "Je ne veux pas  accorder l'accès.",
     loginfaq_have_grant_access_permission: "J'ai  accordé l'accès mais je ne peux toujours pas me connecter.",
     loginfaq_other_reason: 'Autres raisons',
-    loginfaq_signed_success_lastest_week: "Avez-vous réussi à vous connecter à d'autres applications en utilisant votre compte Facebook au cours des sept derniers jours ?",
-    loginfaq_thanks_for_your_feedback: "Merci pour vos commentaires. Nous ferons de notre mieux pour régler ce problème.  Vous pouvez essayer de vous connecter par d'autres méthodes.",
+    loginfaq_signed_success_lastest_week:
+        "Avez-vous réussi à vous connecter à d'autres applications en utilisant votre compte Facebook au cours des sept derniers jours ?",
+    loginfaq_thanks_for_your_feedback:
+        "Merci pour vos commentaires. Nous ferons de notre mieux pour régler ce problème.  Vous pouvez essayer de vous connecter par d'autres méthodes.",
 
-    loginfaq_poor_network_to_access_Google: 'Votre accès au service Google a échoué en raison de problèmes de connexion au réseau, veuillez réessayer.',
-    loginfaq_poor_network_to_access_Facebook: 'Votre accès au service Facebook a échoué en raison de problèmes de connexion au réseau, veuillez réessayer.',
+    loginfaq_poor_network_to_access_Google:
+        'Votre accès au service Google a échoué en raison de problèmes de connexion au réseau, veuillez réessayer.',
+    loginfaq_poor_network_to_access_Facebook:
+        'Votre accès au service Facebook a échoué en raison de problèmes de connexion au réseau, veuillez réessayer.',
     loginfaq_please_update_your_google_play: 'Veuillez actualiser votre Google play à la version 12.0 ou au-dessus afin de se connecter',
-    loginfaq_cant_log_on_Google_due_to_network: 'Vous ne pouvez pas vous connecter à Google en raison de problèmes de connexion au réseau, veuillez réessayer.',
+    loginfaq_cant_log_on_Google_due_to_network:
+        'Vous ne pouvez pas vous connecter à Google en raison de problèmes de connexion au réseau, veuillez réessayer.',
     loginfaq_yes: 'OUI',
     loginfaq_no: 'NON',
 
@@ -139,10 +152,12 @@ export default {
     next_: 'SUIVANT',
     more_recharge_method: 'Autres options de recharge',
     membership_all: 'Tout',
-    besure_input_ewallet: 'Ce que vous avez saisi ne semble pas être un numéro de carte à puce, mais un compte eWallet. Voulez-vous recharger le portefeuille électronique maintenant?',
+    besure_input_ewallet:
+        'Ce que vous avez saisi ne semble pas être un numéro de carte à puce, mais un compte eWallet. Voulez-vous recharger le portefeuille électronique maintenant?',
     agree_tip: 'Oui je vais essayer',
     refuse_tip: 'Non merci.',
-    besure_have_card: "Ce que vous avez entré ne peut correspondre à aucun numéro de carte à puce. Contactez-nous pour profiter de l'émission de télévision StarTimes et obtenir de l'aide.",
+    besure_have_card:
+        "Ce que vous avez entré ne peut correspondre à aucun numéro de carte à puce. Contactez-nous pour profiter de l'émission de télévision StarTimes et obtenir de l'aide.",
     account_signed_elsewhere: 'Votre compte est connecté ailleurs',
     error_network: 'Serveur internet indisponible, veuillez réessayer plus tard.',
 
@@ -154,7 +169,8 @@ export default {
     payment_details_promation: 'Promotion',
     recharge_no_promotion: 'Aucune promotion',
     payment_details_method: 'Méthodes de Payement',
-    monthly_billing: 'En raison de la facturation mensuelle du système, votre recharge peut être retardée. En cas de problème, veuillez contacter le service clientèle.',
+    monthly_billing:
+        'En raison de la facturation mensuelle du système, votre recharge peut être retardée. En cas de problème, veuillez contacter le service clientèle.',
     refresh_wallet: 'Veuillez vérifier votre solde de portefeuille électronique. Ensuite, utilisez-le pour recharger votre compte TV.',
     continue_to_pay: 'CONTINUER',
     payment_details_total: 'Total',
@@ -166,8 +182,10 @@ export default {
     seo_title_bouquets: 'Bouquets',
 
     // seo description
-    seo_desc_browser: 'StarTimes ON est dédié au service de streaming vidéo en ligne qui vous permet d’accéder aux vidéos à tout moment, n’importe où avec n’importe quel appareil.',
-    seo_desc_live: "StarTimes a mis en évidence des programmes de télévision moderne, des films et des merveilleux contenus sportifs pour le public quel que soit le type d 'appareil que vous utilisez .",
+    seo_desc_browser:
+        'StarTimes ON est dédié au service de streaming vidéo en ligne qui vous permet d’accéder aux vidéos à tout moment, n’importe où avec n’importe quel appareil.',
+    seo_desc_live:
+        "StarTimes a mis en évidence des programmes de télévision moderne, des films et des merveilleux contenus sportifs pour le public quel que soit le type d 'appareil que vous utilisez .",
     seo_desc_bouquets: 'Each DTT/DTH bouquet has different price, it has various channels for each bouquet. ',
 
     // seo keywords
@@ -181,7 +199,8 @@ export default {
     activity_rules: 'f-Activity rules',
     activity_rules_1: 'f-New users will be rewarded with invitation by registering through the invitation link and completing the login in App.',
     activity_rules_2: 'f-New User includes New Accounts and New Devices (StarTimes ON APP is not installed on the phone)',
-    activity_rules_3: 'f-After successful registration, please login in App within 7 days to receive the reward. If the reward exceeds 7 days, it will be invalid.',
+    activity_rules_3:
+        'f-After successful registration, please login in App within 7 days to receive the reward. If the reward exceeds 7 days, it will be invalid.',
     activity_rules_4: 'f-The final right of interpretation rests with StarTimes ON App.',
     got_it: 'f-GOT IT',
     get_now: 'f-Get now!',
@@ -214,5 +233,5 @@ export default {
     // toGooglePlay
     tips_register_successful: 'f-Register Successful! ',
     tips_register_successful_tip: 'f-You have get rewards! Download app and use reward!',
-    download_now: 'f-Download now!',
+    download_now: 'f-Download now!'
 }

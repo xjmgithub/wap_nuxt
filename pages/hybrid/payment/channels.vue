@@ -16,14 +16,7 @@
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input
-                            :checked="lastpay==item.id || i===0?true:false"
-                            :value="item.payType"
-                            :data-id="item.id"
-                            type="radio"
-                            name="pay-options"
-                            @click="initChannel(item)"
-                        />
+                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <i />
                     </label>
                 </div>
@@ -98,8 +91,8 @@ export default {
         errorMsg() {
             let tmp = ''
             if (!this.isLogin && this.channel.payType === 1) return tmp
-            else if (this.currency != this.oCurrency) tmp = 'Commodity currency does not match wallet currency and cannot be paid'
-            else if (this.eAmount < this.totalAmount && this.channel.payType === 1) tmp = 'The wallet balance is insufficient to pay for the goods'
+            else if (this.currency != this.oCurrency) tmp = this.$store.state.lang.starpay_payment_currency_error
+            else if (this.eAmount < this.totalAmount && this.channel.payType === 1) tmp = this.$store.state.lang.starpay_payment_amount_error
             return tmp
         },
         oCurrency() {
@@ -200,7 +193,7 @@ export default {
             sessionStorage.setItem('payChannel', this.channel.payChannel)
             if (this.channel.payType === 1) {
                 if (!this.isLogin) {
-                    this.$confirm('The eWallet needs to login the startimes first', () => {
+                    this.$confirm(this.$store.state.lang.starpay_payment_login_notice, () => {
                         window.location.href = `${location.origin}/hybrid/account/signIn?pre=${location.href}`
                     })
                 } else {
@@ -212,9 +205,7 @@ export default {
                     }
                 }
             } else if (this.channel.formConfigExist) {
-                this.$router.push(
-                    `/hybrid/payment/form?appInterfaceMode=${this.channel.appInterfaceMode}`
-                )
+                this.$router.push(`/hybrid/payment/form?appInterfaceMode=${this.channel.appInterfaceMode}`)
             } else {
                 invoke.call(this, this.payToken, this.channel.payChannel, data => {
                     this.$nuxt.$loading.finish()
