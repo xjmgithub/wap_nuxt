@@ -7,7 +7,7 @@
                 :disabled="reset"
                 @canNext="canStep2=true"
             />
-            <div class="change-phone" v-if="!passIsSet">
+            <div v-if="!passIsSet" class="change-phone">
                 <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
             </div>
             <div class="footer">
