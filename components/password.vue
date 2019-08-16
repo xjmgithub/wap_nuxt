@@ -1,16 +1,18 @@
 <template>
-    <div class="password-box">
-        <img v-if="toggleView&&isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2" />
-        <img v-if="toggleView&&isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1" />
-        <div class="pwd-input">
-            <div class="input-item" v-html="N1" />
-            <div v-show="length>=2" class="input-item" v-html="N2" />
-            <div v-show="length>=3" class="input-item" v-html="N3" />
-            <div v-show="length>=4" class="input-item" v-html="N4" />
-            <div v-show="length>=5" class="input-item" v-html="N5" />
-            <div v-show="length>=6" class="input-item" v-html="N6" />
+    <div>
+        <img v-show="toggleView&&isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext=2" />
+        <img v-show="toggleView&&isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext=1" />
+        <div class="password-box">
+            <div class="pwd-input" style="clear:both;">
+                <div class="input-item" v-html="N1" />
+                <div v-show="length>=2" class="input-item" v-html="N2" />
+                <div v-show="length>=3" class="input-item" v-html="N3" />
+                <div v-show="length>=4" class="input-item" v-html="N4" />
+                <div v-show="length>=5" class="input-item" v-html="N5" />
+                <div v-show="length>=6" class="input-item" v-html="N6" />
+            </div>
+            <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd" @focus="focusPass" />
         </div>
-        <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd" @focus="focusPass"/>
     </div>
 </template>
 <script>
@@ -100,17 +102,18 @@ export default {
                 value: 0
             })
         }
-    },
+    }
 }
 </script>
 <style lang="less">
+.open-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    float: right;
+}
 .password-box {
     position: relative;
-    .open-close {
-        width: 1.5rem;
-        height: 1.5rem;
-        float: right;
-    }
+    clear: both;
     .pwd-input {
         width: 100%;
         display: -webkit-box;
@@ -140,7 +143,6 @@ export default {
     }
     .hidden-pwd {
         width: 100%;
-        height: 100%;
         position: absolute;
         top: 0;
         left: 0;

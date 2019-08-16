@@ -7,6 +7,11 @@ export default {
 
     post_share_title: 'StarTimes ON opens up a new world!',
 
+    // star pay
+    starpay_payment_currency_error: 'Cannot proceed with wrong currency, please try another channel or contact us',
+    starpay_payment_amount_error: 'Insufficient funds, please check your balance',
+    starpay_payment_login_notice: 'To pay by eWallet, you need to login StarTimes account first',
+
     // vote film
     vote_about: 'About PAOFF',
     vote_tab_film: 'Movies',
@@ -33,8 +38,10 @@ export default {
     vote_leftvote: 'Remaining Votes',
     vote_vote_btn: 'VOTE',
     vote_join_now: 'Pick Your Nominee ',
-    vote_about_word: '<p>The Pan African Online Film Festival (PAOFF) is an online awards exclusive to StarTimes ON which aims to reward outstanding production done by African producers which will in turn support and promote the development of the film and music industry across Africa.</p><p>The award is an initiative of Africa’s leading digital TV operator, StarTimes and will focus on 3 categories which are Best African Movie, Best African Short Film & Best African MV. </p><p>We are honored to invite all online users to vote and support for your favorite via StarTimes ON. We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p><p>©2019 by StarTimes All Rights Reserved</p>',
-    vote_rule_word: "<p>1.From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows!</p><p>2.Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven't installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get!</p><p>3.Votes can be accumulated and are valid until the deadline.You can vote for any shows you like.</p><p>4.Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>",
+    vote_about_word:
+        '<p>The Pan African Online Film Festival (PAOFF) is an online awards exclusive to StarTimes ON which aims to reward outstanding production done by African producers which will in turn support and promote the development of the film and music industry across Africa.</p><p>The award is an initiative of Africa’s leading digital TV operator, StarTimes and will focus on 3 categories which are Best African Movie, Best African Short Film & Best African MV. </p><p>We are honored to invite all online users to vote and support for your favorite via StarTimes ON. We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p><p>©2019 by StarTimes All Rights Reserved</p>',
+    vote_rule_word:
+        "<p>1.From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows!</p><p>2.Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven't installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get!</p><p>3.Votes can be accumulated and are valid until the deadline.You can vote for any shows you like.</p><p>4.Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>",
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
@@ -166,8 +173,10 @@ export default {
     seo_title_bouquets: 'Bouquets',
 
     // seo description
-    seo_desc_browser: 'StarTimes ON dedicated to online video streaming service which access you to video entertainment anytime, anywhere with any devices.',
-    seo_desc_live: "StarTimes have highlighted trendy TV programs, movies and marvelous sports content for the audience regardless of the device's type you are using. ",
+    seo_desc_browser:
+        'StarTimes ON dedicated to online video streaming service which access you to video entertainment anytime, anywhere with any devices.',
+    seo_desc_live:
+        "StarTimes have highlighted trendy TV programs, movies and marvelous sports content for the audience regardless of the device's type you are using. ",
     seo_desc_bouquets: 'Chaque bouquet de DTT/DTH a un prix différent, avec des chaines différentes pour chaque bouquet.',
 
     // seo keywords
@@ -180,8 +189,8 @@ export default {
     reward_tips: 'If you are a new user, you can get oneday vip free trial after registration.',
     activity_rules: 'Activity rules',
     activity_rules_1: 'New users will be rewarded by registering through the invitation link and logging into the App.',
-    activity_rules_2: 'New users refer to new accounts and new devices. (StarTimes ON APP hasn\'t been installed on the phone)',
-    activity_rules_3: 'Please log in StarTimes ON APP within 7 days after successful registration to receive rewards, or they\'ll be invalid.',
+    activity_rules_2: "New users refer to new accounts and new devices. (StarTimes ON APP hasn't been installed on the phone)",
+    activity_rules_3: "Please log in StarTimes ON APP within 7 days after successful registration to receive rewards, or they'll be invalid.",
     activity_rules_4: 'StarTimes ON App reserves the right of  final interpretation.',
     got_it: 'GOT IT',
     get_now: 'Get now!',
@@ -197,7 +206,7 @@ export default {
     // 错误信息提示
     error_tel_number_false: 'The phone number you entered is incorrect, please check and try again.',
     error_email_false: 'The email address is incorrect. Please check and try again.',
-    error_registered: 'You\'re a registered user.',
+    error_registered: "You're a registered user.",
     error_code: 'This code you entered is incorrect. Please try again.',
     login_btn: 'SIGN IN',
 
@@ -214,5 +223,5 @@ export default {
     // toGooglePlay
     tips_register_successful: 'Register Successful! ',
     tips_register_successful_tip: 'You have get rewards! Download app and use reward!',
-    download_now: 'Download now',
+    download_now: 'Download now'
 }

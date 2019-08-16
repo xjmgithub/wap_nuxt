@@ -1,11 +1,11 @@
 <template>
     <div class="container">
-        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword"/>
+        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword" />
         <div class="forgot-pwd">
             <a @click="forgetPass">Forgot payment password?</a>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep"/>
+            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -24,8 +24,8 @@ export default {
         return {
             password: '',
             canPay: false,
-            payToken: this.$route.query.paytoken,
-            channel: this.$route.query.channel,
+            payToken: this.$route.query.payToken || '',
+            channel: this.$route.query.channel || '',
             apiType: this.$route.query.apiType,
             card: this.$route.query.card
         }
@@ -39,6 +39,12 @@ export default {
             }
         }
     },
+    mounted() {
+        const sessionPayToken = sessionStorage.getItem('payToken')
+        const sessionChannel = sessionStorage.getItem('payChannel')
+        if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
+        if (!this.channel && sessionChannel) this.channel = sessionChannel
+    },
     methods: {
         setPassword(data) {
             this.password = this.$refs.pass.password
@@ -47,7 +53,7 @@ export default {
             if (this.$store.state.appType === 1) {
                 toNativePage('com.star.mobile.video.wallet.WalletForgetPwdActivity')
             } else {
-                this.$router.push('/hybrid/payment/wallet/resetPhone')
+                this.$router.push(`/hybrid/payment/wallet/validSignPass`)
             }
         },
         nextStep() {
@@ -80,6 +86,11 @@ export default {
                     })
                 }
             })
+        }
+    },
+    head() {
+        return {
+            title: 'Payment Details'
         }
     }
 }

@@ -7,8 +7,8 @@
                     <div class="radio-box">
                         <div v-for="(radio,i) in item.optionArr" :key="i" @click="item.value=radio">
                             <label class="radio">
-                                <input :name="item.name" :value="radio" :checked="radio === item.value ? 'checked' : false" type="radio">
-                                <i/>
+                                <input :name="item.name" :value="radio" :checked="radio === item.value ? 'checked' : false" type="radio" />
+                                <i />
                                 <span>{{radio}}</span>
                             </label>
                         </div>
@@ -22,7 +22,7 @@
                 >
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
-                        <input v-model="item.value" :placeholder="item.placeholder" type="tel">
+                        <input v-model="item.value" :placeholder="item.placeholder" type="tel" />
                     </div>
                     <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
@@ -32,17 +32,17 @@
                     class="form-item input-tel"
                 >
                     <div class="number">
-                        <input v-model="item.value" :type="item.formType" :placeholder="item.placeholder">
+                        <input v-model="item.value" :type="item.formType" :placeholder="item.placeholder" />
                     </div>
                     <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
                 <div v-if="item.formType=='hidden'">
-                    <input v-model="item.value" :name="item.name" type="hidden">
+                    <input v-model="item.value" :name="item.name" type="hidden" />
                 </div>
             </div>
         </template>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" class="next" @click="next"/>
+            <mButton :disabled="false" text="NEXT" class="next" @click="next" />
         </div>
     </div>
 </template>
@@ -56,8 +56,8 @@ export default {
     },
     data() {
         return {
-            payToken: this.$route.query.payToken,
-            payChannelId: this.$route.query.payChannelId,
+            payToken: this.$route.query.payToken || '',
+            channel: this.$route.query.payChannelId || '',
             apiInterface: this.$route.query.appInterfaceMode || 3,
             configs: []
         }
@@ -72,7 +72,11 @@ export default {
         }
     },
     mounted() {
-        this.$axios.get(`/payment/v2/pay-channels/${this.payChannelId}/form-configs`).then(res => {
+        const sessionPayToken = sessionStorage.getItem('payToken')
+        const sessionChannel = sessionStorage.getItem('payChannel')
+        if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
+        if (!this.channel && sessionChannel) this.channel = sessionChannel
+        this.$axios.get(`/payment/v2/pay-channels/${this.channel}/form-configs`).then(res => {
             const data = res.data
             if (data && data instanceof Array && data.length > 0) {
                 const configs = data.sort(function(a, b) {
@@ -138,7 +142,7 @@ export default {
                 invoke.call(
                     this,
                     this.payToken,
-                    this.payChannelId,
+                    this.channel,
                     data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')

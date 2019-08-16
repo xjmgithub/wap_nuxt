@@ -76,6 +76,9 @@ export default {
                     this.error_tel = res.data.message
                 }
             })
+        },
+        setTel(tel){
+            this.tel = tel
         }
     }
 }

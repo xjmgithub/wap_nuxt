@@ -26,7 +26,7 @@
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
-import { setCookie } from '~/functions/utils'
+// import { setCookie } from '~/functions/utils'
 import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
@@ -49,9 +49,6 @@ export default {
     mounted() {
         if (this.result > 0) {
             // 直接回调
-            if (this.$route.query.paytype === 'Paystack-NG') {
-                setCookie('lastpay', 'card')
-            }
             if (this.result === 1) {
                 setTimeout(() => {
                     this.click()

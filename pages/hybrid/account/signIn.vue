@@ -1,5 +1,8 @@
 <template>
     <div class="wrapper">
+        <div class="logo">
+            <img src="~assets/img/ic_upgrade_icon.png">
+        </div>
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
@@ -47,7 +50,7 @@
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
@@ -67,7 +70,13 @@ export default {
             phoneNum: '',
             password: '',
             email: '',
-            countrys: countrArr
+            countrys: countrArr,
+            pre: this.$route.query.pre
+        }
+    },
+    mounted() {
+        if (this.pre) {
+            sessionStorage.setItem('login_prefer', this.pre)
         }
     },
     methods: {
@@ -83,7 +92,7 @@ export default {
             let params = {}
             if (this.type === 1) {
                 params = {
-                    applicationId: 1,
+                    applicationId: 2,
                     deviceId: this.$store.state.deviceId,
                     type: 0,
                     email: this.email,
@@ -115,7 +124,14 @@ export default {
 .wrapper {
     padding: 1rem 0.8rem;
     width: 100%;
-
+    .logo {
+        width: 100%;
+        text-align: center;
+        margin: 2rem auto;
+        img {
+            width: 50%;
+        }
+    }
     .tab {
         div {
             padding-top: 1rem;

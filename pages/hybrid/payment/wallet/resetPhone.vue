@@ -5,7 +5,8 @@
             <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)" />
         </div>
         <div v-show="step==2" class="step2">
-            <passInput placeholder="Enter your msg code" @endinput="codeEnd" />
+            <div class="label">Enter your msg code</div>
+            <passInput ref="vscode" :length="4" :toggle-view="true" :default-view="0" @endinput="codeEnd" />
             <div class="footer">
                 <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)" />
             </div>
@@ -72,9 +73,9 @@ export default {
                         )
                         .then(res => {
                             const data = res.data
-                            if (data && data.code === '0') {
+                            if (data && data.code === 0) {
                                 this.$alert('Set phone successfully.', () => {
-                                    window.location.href = '/hybrid/payment/wallet/payto'
+                                    window.location.href = '/hybrid/payment/setPassword?dissphone=1'
                                 })
                             } else {
                                 this.$alert(data.message)
@@ -85,7 +86,7 @@ export default {
                         .get(`/mobilewallet/uc/v2/accounts/${this.accountNo}/verify-code?phone=${this.prefix + tel}&verifyCode=${vscode}`)
                         .then(res => {
                             const data = res.data
-                            if (data && data.code === '0') {
+                            if (data && data.code === 0) {
                                 window.location.href = `/hybrid/payment/wallet/resetPhone?nocheck=1&oldphone=${this.prefix + tel}&vscode=${vscode}`
                             } else {
                                 this.$alert(data.message)
@@ -111,8 +112,8 @@ export default {
 <style lang="less" scoped>
 .container {
     padding: 3rem 1rem;
-    min-height:100%;
-    background:white;
+    min-height: 100%;
+    background: white;
     .step2 {
         width: 100%;
         height: 100%;

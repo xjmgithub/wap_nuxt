@@ -12,7 +12,7 @@
             @click="bytwitter"
         >
         <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
-        <nuxt-link to="/hybrid/account/signin" replace>
+        <nuxt-link to="/hybrid/account/signIn" replace>
             <div class="login_btn">
                 SIGN IN
             </div>
