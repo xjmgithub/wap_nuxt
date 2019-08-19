@@ -11,8 +11,8 @@
             <div class="pay-channels">
                 <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
-                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/ewallet.png'" />
-                        <img v-else src="http://cdn.startimestv.com/banner/ewallet.png" />
+                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
+                        <img v-else src="~/assets/img/pay/pay_ment_default.png" />
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
