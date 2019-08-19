@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="page-top clear">
             <img class="landing-page-bg-center" src="~assets/img/landpage/sister3.jpg" alt="StarTimes APP" />
-            <div>
+            <div @click="toBind()">
                 <nuxt-link to="/hybrid/dvb/bind">
                     <img src="~assets/img/landpage/sister1.png">
                 </nuxt-link>
@@ -66,6 +66,14 @@ export default {
                     downApk.call(this)
                     this.$nuxt.$loading.finish()
                 })
+            })
+        },
+        toBind() {
+            this.sendEvLog({
+                category: 'callup_app',
+                action: 'landing_recharge',
+                label: window.location.pathname,
+                value: 1
             })
         }
     },
