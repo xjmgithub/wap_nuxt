@@ -21,8 +21,8 @@ export default function(req, res, next) {
         const payNote = getBodyData.payNote || '123456'
         const totalAmount = getBodyData.totalAmount || 10
         const notifyUrl = getBodyData.notifyUrl || ''
-        const country = getBodyData.country || 'TZ'
-        const currency = getBodyData.currency || 'TZS'
+        const country = getBodyData.country || 'NG'
+        const currency = getBodyData.currency || 'NGN'
         const txNo = getBodyData.txNo || 'mstar-' + new Date().getTime()
 
         axios({
