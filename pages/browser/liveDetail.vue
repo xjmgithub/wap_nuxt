@@ -328,7 +328,7 @@ export default {
                 {
                     name: 'al:ios:url',
                     property: 'al:ios:url',
-                    content: 'startimes://?target=' + Base64.encode('startimes://player?isLive=true&channelID=' + this.channelID)
+                    content: 'startimes://?target=' + encodeURIComponent(Base64.encode('startimes://player?isLive=true&channelID=' + this.channelID))
                 },
                 { name: 'al:ios:app_store_id', property: 'al:ios:app_store_id', content: '1168518958' }
             ]

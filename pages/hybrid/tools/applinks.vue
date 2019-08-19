@@ -11,7 +11,7 @@ export default {
     data() {
         return {
             link: this.$route.query.link,
-            ioslink: 'startimes://?target=' + Base64.encode('startimes://player?vodId=59072')
+            ioslink: 'startimes://?target=' + encodeURIComponent(Base64.encode('startimes://player?vodId=1~'))
         }
     }
 }
