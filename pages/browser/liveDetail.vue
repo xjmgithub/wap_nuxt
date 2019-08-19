@@ -324,7 +324,13 @@ export default {
                 },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
                 { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
-                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' },
+                {
+                    name: 'al:ios:url',
+                    property: 'al:ios:url',
+                    content: 'startimes://player?isLive=true&channelID=' + this.channelID
+                },
+                { name: 'al:ios:app_store_id', property: 'al:ios:app_store_id', content: '1168518958' }
             ]
         }
     }
