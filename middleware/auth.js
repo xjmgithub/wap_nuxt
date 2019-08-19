@@ -18,7 +18,7 @@ const authIgnore = [
     /^\/hybrid\/questionNaire/,
     /^\/hybrid\/dvb\/bind/,
     /^\/hybrid\/dvb\/order/,
-    /^\/hybrid\/post/,
+    /^\/hybrid\/post/
 ]
 const inIgnore = url => {
     let result = false
@@ -30,7 +30,7 @@ const inIgnore = url => {
     return result
 }
 
-export default ({ app, store, route, redirect,$axios }) => {
+export default ({ app, store, route, redirect, $axios }) => {
     const user = store.state.user
     const isLogin = user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
     if (!inIgnore(route.fullPath)) {
@@ -42,5 +42,4 @@ export default ({ app, store, route, redirect,$axios }) => {
             }
         }
     }
-    
 }
