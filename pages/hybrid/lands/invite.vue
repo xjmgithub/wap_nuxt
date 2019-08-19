@@ -9,7 +9,6 @@
         <div v-show="showRulesPage" class="rules-page">
             <div class="title">
                 {{$store.state.lang.activity_rules}}
-                <!-- <div class="explain">{{$store.state.lang.invitation_rules_5}}</div> -->
             </div>
             <div class="sections">
                 <div class="section">
@@ -162,7 +161,7 @@ export default {
     .rules-page {
         width: 17.5rem;
         height: 26rem;
-        // overflow: scroll;
+        overflow: hidden;
         border-radius: 0.2rem;
         background-color: #ffffff;
         position: absolute;
@@ -188,7 +187,11 @@ export default {
                 top: 1.5rem;
                 width: 15rem;
                 height: 18rem;
-                overflow: scroll;
+                overflow-x: hidden;
+                overflow-y: scroll;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
                 .section {
                     margin-bottom: 0.5rem;
                     font-size: 0.9rem;
