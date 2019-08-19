@@ -546,24 +546,24 @@ var CANVAS_WIDTH = 1360,
     GOALKEEPER_HEIGHT = 122,
     CENTER_INFO = {
         action: 'center',
-        width: 160,
-        height: 186,
+        width: 91,
+        height: 122,
         x: CANVAS_WIDTH / 2,
         y: 420,
         frames: 4
     },
     CENTER_HIGH_INFO = {
         action: 'center_high',
-        width: 160,
-        height: 186,
+        width: 106,
+        height: 163,
         x: CANVAS_WIDTH / 2,
         y: 420,
         frames: 9
     },
     DOWN_LEFT_INFO = {
         action: 'down_left',
-        width: 344,
-        height: 226,
+        width: 185,
+        height: 118,
         x: CANVAS_WIDTH / 2 - 45,
         y: 420,
         frames: 16
