@@ -141,12 +141,11 @@
             </div>
             <div class="games">
                 <div class="gam-item">
-                    <img src="~assets/img/vote/popup_game.png" />
-                    <img src="~assets/img/vote/popup_game_mask.png" class="mask" />
+                    <img src="~assets/img/naire/bet21.jpg" />
                 </div>
                 <div class="operation">
                     <img src="~assets/img/vote/button_forward.png" class="forward" />
-                    <a href="/hybrid/questionNaire/america_bet">
+                    <a href="/hybrid/questionNaire/america_bet?quizId=21">
                         <img src="~assets/img/vote/button_start.png" class="start" />
                     </a>
                     <img src="~assets/img/vote/button_next.png" class="next" />
@@ -839,8 +838,8 @@ canvas {
     }
     .games {
         width: 100%;
-        background: #398754;
-        padding-bottom: 2rem;
+        background: #1d55e1;
+        padding-bottom: 5rem;
         position: relative;
         .gam-item {
             position: relative;
