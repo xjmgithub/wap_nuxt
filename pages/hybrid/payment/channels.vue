@@ -5,7 +5,7 @@
                 <span>{{currencySymbol}}</span>
                 {{totalAmount | formatAmount}}
             </p>
-            <p class="pay-subject">Production Name: {{paySubject}}</p>
+            <p class="pay-subject">Product Name: {{paySubject}}</p>
         </div>
         <div class="contain">
             <div class="pay-channels">
