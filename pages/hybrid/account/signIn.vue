@@ -109,7 +109,6 @@ export default {
                     type: 10
                 }
             }
-
             login(this, params)
         }
     },
