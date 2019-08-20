@@ -132,7 +132,12 @@ export const login = (v, opt) => {
 
                 setCookie('token', token)
                 localStorage.setItem('user', JSON.stringify(user))
-                v.$router.replace('/browser')
+                const pre = sessionStorage.getItem('login_prefer') || ''
+                if (pre) {
+                    window.location.href = pre
+                } else {
+                    v.$router.replace('/browser')
+                }
             })
             .catch(() => {
                 v.$alert('Get user info error.')
