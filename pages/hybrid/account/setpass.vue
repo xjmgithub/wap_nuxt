@@ -255,8 +255,14 @@ export default {
                             pwd: this.pass
                         }
                     }
-                    // sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
-                    login.call(this, params, () => {})
+                    login.call(this, params, () => {
+                        const pre = sessionStorage.getItem('register_prefer') || ''
+                        if (pre) {
+                            window.location.href = pre
+                        } else {
+                            this.$router.replace('/browser')
+                        }
+                    })
                 } else {
                     this.sendEvLog({
                         category: 'register',
