@@ -74,6 +74,11 @@ export default {
             pre: this.$route.query.pre
         }
     },
+    watch: {
+        country(nv, ov) {
+            this.phoneNum = ''
+        }
+    },
     mounted() {
         if (this.pre) {
             sessionStorage.setItem('login_prefer', this.pre)
