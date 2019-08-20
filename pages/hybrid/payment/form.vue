@@ -122,7 +122,10 @@ export default {
             const optarr = {}
             const configBak = [...this.configs]
             configBak.forEach(item => {
-                if (item.displayState == 1 || (item.displayState == 2 && this.showCondition.indexOf(item.displayCondition) < 0)) {
+                if (
+                    item.type != 'hidden' &&
+                    (item.displayState == 1 || (item.displayState == 2 && this.showCondition.indexOf(item.displayCondition) < 0))
+                ) {
                     if (!item.value) {
                         item.error = 'Please enter the complete information.'
                         canSubmit = false
