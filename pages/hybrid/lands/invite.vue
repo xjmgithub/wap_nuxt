@@ -1,6 +1,8 @@
 <template>
     <div class="wrapper">
-        <img class="st_logo" src="~assets/img/landpage/pic_freevip.png" />
+        <div class="img-box">
+            <img class="st_logo" src="~assets/img/landpage/pic_freevip.png" />
+        </div>
         <div class="words">
             <div class="tip">{{$store.state.lang.reward_tips}}</div>
             <div class="rules" @click="showRules">{{$store.state.lang.activity_rules}}</div>
@@ -9,7 +11,6 @@
         <div v-show="showRulesPage" class="rules-page">
             <div class="title">
                 {{$store.state.lang.activity_rules}}
-                <!-- <div class="explain">{{$store.state.lang.invitation_rules_5}}</div> -->
             </div>
             <div class="sections">
                 <div class="section">
@@ -81,7 +82,7 @@ export default {
                 .replace('t_cn', 'utm_campaign')
         }
         sessionStorage.setItem('utm_str', this.utm_str)
-        sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
+        sessionStorage.setItem('register_prefer','/hybrid/account/toGooglePlay')
         if (this.invite_code) {
             sessionStorage.setItem('invite_code', this.invite_code)
         }
@@ -116,18 +117,26 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     width: 100%;
-    height: 100%;
     background-image: linear-gradient(to top, #954ab1 25%, #5c2479 75%);
     padding-top: 5%;
     font-family: Roboto;
     font-weight: 600;
     height: 100vh;
     overflow-y: scroll;
-    .st_logo {
-        display: block;
+    overflow-x: hidden;
+    min-height: 100%;
+    max-height: 100%;
+    max-width: 1300px;
+    position: relative;
+    .img-box {
         width: 100%;
-        height: auto;
-        margin: 0 auto;
+        min-height: 6rem;
+        .st_logo {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
     }
     .words {
         margin-top: -20%;
@@ -157,12 +166,13 @@ export default {
         font-weight: 900;
         background-color: #ffbe19;
         margin: 2rem 10%;
+        margin-bottom: 5rem;
         border-radius: 1.3rem;
     }
     .rules-page {
         width: 17.5rem;
         height: 26rem;
-        // overflow: scroll;
+        overflow: hidden;
         border-radius: 0.2rem;
         background-color: #ffffff;
         position: absolute;
@@ -188,7 +198,11 @@ export default {
                 top: 1.5rem;
                 width: 15rem;
                 height: 18rem;
-                overflow: scroll;
+                overflow-x: hidden;
+                overflow-y: scroll;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
                 .section {
                     margin-bottom: 0.5rem;
                     font-size: 0.9rem;
