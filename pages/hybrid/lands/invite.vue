@@ -3,11 +3,13 @@
         <div class="img-box">
             <img src="~assets/img/landpage/pic_freevip.png" />
         </div>
-        <div class="words">
-            <div class="tip">{{$store.state.lang.reward_tips}}</div>
-            <div class="rules" @click="showRules">{{$store.state.lang.activity_rules}}</div>
+        <div class="page-bom">
+            <div class="words">
+                <div class="tip">{{$store.state.lang.reward_tips}}</div>
+                <div class="rules" @click="showRules">{{$store.state.lang.activity_rules}}</div>
+            </div>
+            <div class="get-now" @click="getNow">{{$store.state.lang.get_now}}</div>
         </div>
-        <div class="get-now" @click="getNow">{{$store.state.lang.get_now}}</div>
         <div v-show="showRulesPage" class="rules-page">
             <div class="title">
                 {{$store.state.lang.activity_rules}}
@@ -82,7 +84,7 @@ export default {
                 .replace('t_cn', 'utm_campaign')
         }
         sessionStorage.setItem('utm_str', this.utm_str)
-        sessionStorage.setItem('register_prefer','/hybrid/account/toGooglePlay')
+        sessionStorage.setItem('register_prefer', '/hybrid/account/toGooglePlay')
         if (this.invite_code) {
             sessionStorage.setItem('invite_code', this.invite_code)
         }
@@ -90,20 +92,20 @@ export default {
     methods: {
         getNow() {
             this.sendEvLog({
-            category: 'tell_friends',
-            action: 'get_it_btn_click',
-            label: this.invite_code,
-            value: 1
+                category: 'tell_friends',
+                action: 'get_it_btn_click',
+                label: this.invite_code,
+                value: 1
             })
             this.$router.push(`/hybrid/account/register`)
         },
         showRules() {
             this.showRulesPage = true
             this.sendEvLog({
-            category: 'tell_friends',
-            action: 'activity_rules_show',
-            label: this.invite_code,
-            value: 1
+                category: 'tell_friends',
+                action: 'activity_rules_show',
+                label: this.invite_code,
+                value: 1
             })
         }
     },
@@ -118,50 +120,47 @@ export default {
 .wrapper {
     width: 100%;
     background-image: linear-gradient(to top, #954ab1 25%, #5c2479 75%);
-    padding-top: 5%;
-    font-family: Roboto;
     font-weight: 600;
     height: 100vh;
     overflow-y: scroll;
-    overflow-x: hidden;
     min-height: 100%;
     max-height: 100%;
     .img-box {
         width: 100%;
         min-height: 6rem;
-        img{
+        img {
             display: block;
             width: 100%;
         }
     }
-    .words {
+    .page-bom {
         margin-top: -20%;
-        div {
-            width: 100%;
+        .words {
             text-align: center;
-            &.tip {
+            .tip {
                 padding: 0 0.8rem;
                 color: #f2d884;
                 line-height: 1.2rem;
             }
-            &.rules {
-                margin-top: 1.5rem;
+            .rules {
+                margin-top: 1rem;
                 color: #ffffff;
                 text-decoration: underline;
             }
         }
+        .get-now {
+            width: 80%;
+            height: 2.4rem;
+            line-height: 2.4rem;
+            text-align: center;
+            color: #5c2479;
+            font-weight: 900;
+            background-color: #ffbe19;
+            margin: 1rem auto;
+            border-radius: 1.3rem;
+        }
     }
-    .get-now {
-        width: 80%;
-        height: 3rem;
-        line-height: 3rem;
-        text-align: center;
-        color: #5c2479;
-        font-weight: 900;
-        background-color: #ffbe19;
-        margin: 2rem 10% 5rem;
-        border-radius: 1.3rem;
-    }
+
     .rules-page {
         width: 17.5rem;
         height: 26rem;
@@ -186,13 +185,12 @@ export default {
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
-            &.sections{
+            &.sections {
                 position: relative;
                 top: 1.5rem;
                 width: 15rem;
                 height: 18rem;
                 overflow-x: hidden;
-                overflow-y: scroll;
                 &::-webkit-scrollbar {
                     display: none;
                 }
