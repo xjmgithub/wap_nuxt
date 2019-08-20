@@ -1,6 +1,8 @@
 <template>
     <div class="wrapper">
-        <img class="st_logo" src="~assets/img/landpage/pic_freevip.png" />
+        <div class="img-box">
+            <img class="st_logo" src="~assets/img/landpage/pic_freevip.png" />
+        </div>
         <div class="words">
             <div class="tip">{{$store.state.lang.reward_tips}}</div>
             <div class="rules" @click="showRules">{{$store.state.lang.activity_rules}}</div>
@@ -115,18 +117,26 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     width: 100%;
-    height: 100%;
     background-image: linear-gradient(to top, #954ab1 25%, #5c2479 75%);
     padding-top: 5%;
     font-family: Roboto;
     font-weight: 600;
     height: 100vh;
     overflow-y: scroll;
-    .st_logo {
-        display: block;
+    overflow-x: hidden;
+    min-height: 100%;
+    max-height: 100%;
+    max-width: 1300px;
+    position: relative;
+    .img-box {
         width: 100%;
-        height: auto;
-        margin: 0 auto;
+        min-height: 6rem;
+        .st_logo {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
     }
     .words {
         margin-top: -20%;
@@ -156,6 +166,7 @@ export default {
         font-weight: 900;
         background-color: #ffbe19;
         margin: 2rem 10%;
+        margin-bottom: 5rem;
         border-radius: 1.3rem;
     }
     .rules-page {
