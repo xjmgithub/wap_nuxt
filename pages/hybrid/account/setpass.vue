@@ -2,24 +2,34 @@
     <div class="wrapper">
         <div class="input-item">
             <div class="label">
-                <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2">
-                <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1">
+                <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2" />
+                <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1" />
             </div>
-            <div v-show="focus_ps" class="passText">
-                {{$store.state.lang.register_input_enter_password_tip}}
-            </div>
-            <input v-model="pass" :class="{focus:focus_ps,error:error_ps}" :type="pwdType" :placeholder="enter_ps" @focus="focusPass" @blur="checkPass" >
+            <div v-show="focus_ps" class="passText">{{$store.state.lang.register_input_enter_password_tip}}</div>
+            <input
+                v-model="pass"
+                :class="{focus:focus_ps,error:error_ps}"
+                :type="pwdType"
+                :placeholder="enter_ps"
+                @focus="focusPass"
+                @blur="checkPass"
+            />
             <div v-if="error_ps" class="error-tip">{{error_ps}}</div>
         </div>
         <div class="input-item">
             <div class="label">
-                <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext_confirm=2">
-                <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1">
+                <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext_confirm=2" />
+                <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1" />
             </div>
-            <div v-show="focus_reps" class="repassText">
-                {{$store.state.lang.register_input_enter_password_again_tip}}
-            </div>
-            <input v-model="repass" :class="{focus:focus_reps,error:error_reps}" :type="pwdType_confirm" :placeholder="enter_reps" @focus="focusRepass" @blur="checkRepass" >
+            <div v-show="focus_reps" class="repassText">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
+            <input
+                v-model="repass"
+                :class="{focus:focus_reps,error:error_reps}"
+                :type="pwdType_confirm"
+                :placeholder="enter_reps"
+                @focus="focusRepass"
+                @blur="checkRepass"
+            />
             <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
@@ -63,7 +73,7 @@ export default {
             next: this.$store.state.lang.text_onair_next,
             error_setpass: this.$store.state.lang.error_setpass,
             error_setrepass: this.$store.state.lang.error_setrepass,
-            falseStatus: false,
+            falseStatus: false
         }
     },
     computed: {
@@ -75,53 +85,100 @@ export default {
         }
     },
     watch: {
-        pass (nv, ov) {
-            this.abled = false;
-            this.error_ps = '';
-            this.error_reps = '';
-            if(nv == this.repass && /^[a-zA-Z0-9]{6,18}$/.test(nv)) {
-                this.abled = true;
-            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(nv))) {
-                this.abled = false;
+        pass(nv, ov) {
+            this.abled = false
+            this.error_ps = ''
+            this.error_reps = ''
+            if (nv == this.repass && /^[a-zA-Z0-9]{6,18}$/.test(nv)) {
+                this.abled = true
+            } else if (!/^[a-zA-Z0-9]{6,18}$/.test(nv)) {
+                this.abled = false
             } else {
-                this.abled = false;
+                this.abled = false
             }
-         },
-        repass (nv, ov) {
-            this.abled = false;
-            this.error_ps = '';
-            this.error_reps = '';
-            if(nv == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
-                this.abled = true;
-            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass))) {
-                this.abled = false;
+        },
+        repass(nv, ov) {
+            this.abled = false
+            this.error_ps = ''
+            this.error_reps = ''
+            if (nv == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
+                this.abled = true
+            } else if (!/^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
+                this.abled = false
             } else {
-                this.abled = false;
+                this.abled = false
             }
         }
     },
     methods: {
+        setCookie(name, value, time) {
+            if (!name) {
+                return false
+            }
+            let now = new Date().getTime()
+            if (time) {
+                now = now + time
+            } else {
+                now = now + 1000 * 60 * 60 * 24 * 7
+            }
+
+            const expires = '; expires=' + new Date(now).toUTCString()
+
+            document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) + expires + '; domain=;path=/'
+            return true
+        },
+        login(v, opt) {
+            v.$axios.post('/ums/v3/user/login', opt).then(res => {
+                res.data.code !== 0 && v.$alert(res.data.message)
+                const token = res.data.data.token
+                v.$axios
+                    .get('/cms/users/me', {
+                        headers: {
+                            token: token
+                        }
+                    })
+                    .then(res => {
+                        res.status !== 200 && v.$alert(res.data.message)
+
+                        const user = res.data
+                        v.$store.commit('SET_TOKEN', token)
+                        v.$store.commit('SET_USER', user)
+
+                        this.setCookie('token', token)
+                        localStorage.setItem('user', JSON.stringify(user))
+                        const pre = sessionStorage.getItem('register_prefer') || ''
+                        if (pre) {
+                            window.location.href = pre
+                        } else {
+                            v.$router.replace('/browser')
+                        }
+                    })
+                    .catch(() => {
+                        v.$alert('Get user info error.')
+                    })
+            })
+        },
         focusPass() {
-            this.focus_ps = true;
-            this.error_ps = '';
+            this.focus_ps = true
+            this.error_ps = ''
         },
         focusRepass() {
-            this.focus_reps = true;
-            this.error_reps = '';
+            this.focus_reps = true
+            this.error_reps = ''
         },
         checkPass() {
-            this.focus_ps = false;
-            if(this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
-            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass)) && this.pass) {
+            this.focus_ps = false
+            if (this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
+            } else if (!/^[a-zA-Z0-9]{6,18}$/.test(this.pass) && this.pass) {
                 this.error_ps = this.error_setpass
             } else if (this.repass) {
                 this.error_reps = this.error_setrepass
             }
         },
         checkRepass() {
-            this.focus_reps = false;
-            if(this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
-            } else if (!(/^[a-zA-Z0-9]{6,18}$/.test(this.pass)) && this.pass) {
+            this.focus_reps = false
+            if (this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
+            } else if (!/^[a-zA-Z0-9]{6,18}$/.test(this.pass) && this.pass) {
                 this.error_ps = this.error_setpass
             } else if (this.repass) {
                 this.error_reps = this.error_setrepass
@@ -133,11 +190,11 @@ export default {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
                 deviceId: this.$store.state.deviceId,
-                activity: 'invite_new',
+                activity: 'invite_new'
             }
-            this.inviteCode = sessionStorage.getItem('invite_code');
-            if(this.inviteCode){
-                options.invitedId = this.inviteCode;
+            this.inviteCode = sessionStorage.getItem('invite_code')
+            if (this.inviteCode) {
+                options.invitedId = this.inviteCode
             }
             if (this.phone) {
                 options.phoneCc = this.phoneCc
@@ -199,9 +256,8 @@ export default {
                         }
                     }
                     // sessionStorage.setItem('login_prefer','/hybrid/account/toGooglePlay')
-                    login(this, params)
+                    login.call(this, params, () => {})
                 } else {
-                    // this.$toast(this.$store.state.lang.error_register_tip)
                     this.sendEvLog({
                         category: 'register',
                         action: 'register_passwd_err',
@@ -218,7 +274,7 @@ export default {
         return {
             title: 'Set Password'
         }
-    },
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -239,11 +295,12 @@ export default {
             }
         }
         font-size: 0.8rem;
-        .passText, .repassText {
+        .passText,
+        .repassText {
             position: absolute;
             top: 0;
             left: 0;
-            color: #0087EB;
+            color: #0087eb;
             padding-left: 0.4rem;
         }
         input {
@@ -258,7 +315,7 @@ export default {
                 color: #999999;
             }
             &.focus {
-                border-bottom: 1px solid #0087EB;
+                border-bottom: 1px solid #0087eb;
             }
             &.error {
                 border-bottom: 1px solid red;
@@ -294,9 +351,9 @@ export default {
             width: 100%;
             height: 2rem;
             line-height: 2rem;
-            color: #0087EB;
+            color: #0087eb;
             padding-right: 1.5rem;
-            text-align: right; 
+            text-align: right;
         }
     }
 }

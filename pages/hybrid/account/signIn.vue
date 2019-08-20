@@ -1,40 +1,40 @@
 <template>
     <div class="wrapper">
         <div class="logo">
-            <img src="~assets/img/ic_upgrade_icon.png">
+            <img src="~assets/img/ic_upgrade_icon.png" />
         </div>
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
-                <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
+                <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg" />
                 <a href="javascript:void(0)" class="sign-way">Use phone number sign in</a>
             </div>
             <div v-show="type==0" @click="changetype(1)">
-                <img class="gray" src="~assets/img/users/ic_email_def_gray.svg">
+                <img class="gray" src="~assets/img/users/ic_email_def_gray.svg" />
                 <a href="javascript:void(0)" class="sign-way">Use Email sign in</a>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
             <div v-if="country" class="country_choose" @click="countryDialogStatus=true">
-                <img :src="cdnPicSrc(country.nationalFlag)">
+                <img :src="cdnPicSrc(country.nationalFlag)" />
                 <span>{{country.name}}</span>
             </div>
             <div class="img-box">
-                <img src="~assets/img/users/ic_user_def_w.png" alt>
-                <input v-model="phoneNum" type="tel" placeholder="Phone Number">
+                <img src="~assets/img/users/ic_user_def_w.png" alt />
+                <input v-model="phoneNum" type="tel" placeholder="Phone Number" />
             </div>
             <div class="img-box">
-                <img src="~assets/img/users/ic_lockr_def_w.png" alt>
-                <input v-model="password" type="password" placeholder="Password">
+                <img src="~assets/img/users/ic_lockr_def_w.png" alt />
+                <input v-model="password" type="password" placeholder="Password" />
             </div>
         </div>
         <div v-show="type==1" class="by_email">
             <div class="img-box">
-                <img src="~assets/img/users/ic_user_def_w.png" alt>
-                <input v-model="email" type="email" placeholder="E-mail">
+                <img src="~assets/img/users/ic_user_def_w.png" alt />
+                <input v-model="email" type="email" placeholder="E-mail" />
             </div>
             <div class="img-box">
-                <img src="~assets/img/users/ic_lockr_def_w.png" alt>
-                <input v-model="password" type="password" placeholder="Password">
+                <img src="~assets/img/users/ic_lockr_def_w.png" alt />
+                <input v-model="password" type="password" placeholder="Password" />
             </div>
         </div>
         <div class="next-btn" @click="login">SIGN IN</div>
@@ -45,7 +45,7 @@
             <div class="dialog-title">Country List</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="cdnPicSrc(item.nationalFlag)">
+                    <img :src="cdnPicSrc(item.nationalFlag)" />
                     <span>{{item.name}}</span>
                 </li>
             </ul>
@@ -72,6 +72,11 @@ export default {
             email: '',
             countrys: countrArr,
             pre: this.$route.query.pre
+        }
+    },
+    watch: {
+        country(nv, ov) {
+            this.phoneNum = ''
         }
     },
     mounted() {
@@ -110,7 +115,14 @@ export default {
                 }
             }
 
-            login(this, params)
+            login.call(this, params, () => {
+                const pre = sessionStorage.getItem('login_prefer') || ''
+                if (pre) {
+                    window.location.href = pre
+                } else {
+                    this.$router.replace('/browser')
+                }
+            })
         }
     },
     head() {
