@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="img-box">
-            <img class="st_logo" src="~assets/img/landpage/pic_freevip.png" />
+            <img src="~assets/img/landpage/pic_freevip.png" />
         </div>
         <div class="words">
             <div class="tip">{{$store.state.lang.reward_tips}}</div>
@@ -126,16 +126,12 @@ export default {
     overflow-x: hidden;
     min-height: 100%;
     max-height: 100%;
-    max-width: 1300px;
-    position: relative;
     .img-box {
         width: 100%;
         min-height: 6rem;
-        .st_logo {
+        img{
             display: block;
             width: 100%;
-            height: auto;
-            margin: 0 auto;
         }
     }
     .words {
@@ -145,13 +141,11 @@ export default {
             text-align: center;
             &.tip {
                 padding: 0 0.8rem;
-                font-size: 1rem;
                 color: #f2d884;
                 line-height: 1.2rem;
             }
             &.rules {
                 margin-top: 1.5rem;
-                font-size: 1rem;
                 color: #ffffff;
                 text-decoration: underline;
             }
@@ -165,8 +159,7 @@ export default {
         color: #5c2479;
         font-weight: 900;
         background-color: #ffbe19;
-        margin: 2rem 10%;
-        margin-bottom: 5rem;
+        margin: 2rem 10% 5rem;
         border-radius: 1.3rem;
     }
     .rules-page {
