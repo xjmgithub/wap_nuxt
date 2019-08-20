@@ -110,7 +110,14 @@ export default {
                 }
             }
 
-            login(this, params)
+            login.call(this, params,()=>{
+                const pre = sessionStorage.getItem('login_prefer') || ''
+                if (pre) {
+                    window.location.href = pre
+                } else {
+                    this.$router.replace('/browser')
+                }
+            })
         }
     },
     head() {
