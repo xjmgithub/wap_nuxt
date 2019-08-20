@@ -111,53 +111,6 @@ export default {
         }
     },
     methods: {
-        setCookie(name, value, time) {
-            if (!name) {
-                return false
-            }
-            let now = new Date().getTime()
-            if (time) {
-                now = now + time
-            } else {
-                now = now + 1000 * 60 * 60 * 24 * 7
-            }
-
-            const expires = '; expires=' + new Date(now).toUTCString()
-
-            document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) + expires + '; domain=;path=/'
-            return true
-        },
-        login(v, opt) {
-            v.$axios.post('/ums/v3/user/login', opt).then(res => {
-                res.data.code !== 0 && v.$alert(res.data.message)
-                const token = res.data.data.token
-                v.$axios
-                    .get('/cms/users/me', {
-                        headers: {
-                            token: token
-                        }
-                    })
-                    .then(res => {
-                        res.status !== 200 && v.$alert(res.data.message)
-
-                        const user = res.data
-                        v.$store.commit('SET_TOKEN', token)
-                        v.$store.commit('SET_USER', user)
-
-                        this.setCookie('token', token)
-                        localStorage.setItem('user', JSON.stringify(user))
-                        const pre = sessionStorage.getItem('register_prefer') || ''
-                        if (pre) {
-                            window.location.href = pre
-                        } else {
-                            v.$router.replace('/browser')
-                        }
-                    })
-                    .catch(() => {
-                        v.$alert('Get user info error.')
-                    })
-            })
-        },
         focusPass() {
             this.focus_ps = true
             this.error_ps = ''
