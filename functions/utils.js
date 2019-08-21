@@ -145,9 +145,10 @@ export const formatAmount = num => {
     if (!isNaN(num)) {
         const arr = num.toString().split('.')
         if (arr[1]) {
-            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + arr[1]
+            let tmp = Number(0 + '.' + arr[1]).toFixed(2)
+            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + tmp.toString().split('.')[1]
         } else {
-            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.00'
+            return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
         }
     } else {
         return ''

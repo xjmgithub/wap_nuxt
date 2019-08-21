@@ -120,10 +120,10 @@ export const commonPayAfter = function(data, payType, apiType) {
             window.location.href = '/hybrid/payment/payResult?seqNo=' + data.paySeqNo
             // this.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
-            this.$alert('The payment method is not supported for the time being')
+            this.$alert('This payment method is not supported, please try another one')
         }
     } else {
-        this.$alert('The payment method is not supported for the time being')
+        this.$alert('This payment method is not supported, please try another one')
     }
 }
 
