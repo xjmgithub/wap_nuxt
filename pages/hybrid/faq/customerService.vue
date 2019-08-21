@@ -74,7 +74,7 @@ export default {
     },
     data() {
         return {
-            isLogin: this.$store.state.user.type || false,
+            isLogin: this.$store.state.user.roleName != 'ANONYMOUS' || false,
             user: this.$store.state.user,
             config_id: this.$route.query.config_id || 0,
             entrance_id: this.$route.query.entrance_id,
@@ -143,7 +143,7 @@ export default {
 
         // 创建服务记录
         this.createServiceRecord(6, () => {
-            this.getLeaveMessage()
+            this.isLogin && this.getLeaveMessage()
 
             if (addMsg) {
                 // todo check
@@ -348,7 +348,7 @@ export default {
                 } else if (obj.tpl === 'tips') {
                     return false
                 }
-                
+
                 // this.sendEvLog({
                 //     category: 'onlineService',
                 //     action: 'error_debug',
