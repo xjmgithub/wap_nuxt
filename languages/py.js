@@ -11,7 +11,7 @@ export default {
     starpay_payment_currency_error: 'Nao pode proceder com uma cuerencia errada , por favor tente outro canal ou contacte nos.',
     starpay_payment_amount_error: 'Saldo insuficiente, por favor verifique o seu saldo',
     starpay_payment_login_notice: 'Para pagar por eWallet, você precisa fazer login na conta StarTimes primeiro',
-    
+
     // vote film
     vote_about: 'Sobre o PAOFF',
     vote_tab_film: 'Filmes',
@@ -194,7 +194,7 @@ export default {
     // register
     phone_number: 'Número de Telefone',
     email_addr: 'Endereço de E-mail',
-    enter_your_phone_number: 'Insera o seu Número de Telemóvel',
+    enter_your_phone_number: 'Insera o seu número de telemóvel',
     enter_your_email_addr: 'Insera o seu endereço de email',
     wallet_hint_get_code: 'Obter o Código',
     send_code_success: 'Enviado com sucesso!',

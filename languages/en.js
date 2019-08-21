@@ -38,10 +38,8 @@ export default {
     vote_leftvote: 'Remaining Votes',
     vote_vote_btn: 'VOTE',
     vote_join_now: 'Pick Your Nominee ',
-    vote_about_word:
-        '<p>The Pan African Online Film Festival (PAOFF) is an online awards exclusive to StarTimes ON which aims to reward outstanding production done by African producers which will in turn support and promote the development of the film and music industry across Africa.</p><p>The award is an initiative of Africa’s leading digital TV operator, StarTimes and will focus on 3 categories which are Best African Movie, Best African Short Film & Best African MV. </p><p>We are honored to invite all online users to vote and support for your favorite via StarTimes ON. We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p><p>©2019 by StarTimes All Rights Reserved</p>',
-    vote_rule_word:
-        "<p>1.From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows!</p><p>2.Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven't installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get!</p><p>3.Votes can be accumulated and are valid until the deadline.You can vote for any shows you like.</p><p>4.Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>",
+    vote_about_word: '<p>The Pan African Online Film Festival (PAOFF) is an online awards exclusive to StarTimes ON which aims to reward outstanding production done by African producers which will in turn support and promote the development of the film and music industry across Africa.</p><p>The award is an initiative of Africa’s leading digital TV operator, StarTimes and will focus on 3 categories which are Best African Movie, Best African Short Film & Best African MV. </p><p>We are honored to invite all online users to vote and support for your favorite via StarTimes ON. We are celebrating the fabulous gala in Nigeria this year, StarTimes ON platform will count the votes and ensure a transparent platform with impartiality and equity.</p><p>©2019 by StarTimes All Rights Reserved</p>',
+    vote_rule_word: "<p>1.From June 1st to July 31st, you have 5 votes each day. Vote for your favorite producer and shows!</p><p>2.Share the link with your friends to get more votes! You can get 5 extra votes for each new user (Those who haven't installed the APP on their phones) by sharing the link. More new users install the app via the link you share, more votes you will get!</p><p>3.Votes can be accumulated and are valid until the deadline.You can vote for any shows you like.</p><p>4.Ranking of votes of different types of shows will be updated in real-time, and top shows with the most votes will win the prize of Best African Movie, Best African Short Film and Best African MV.</p>",
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
@@ -173,10 +171,8 @@ export default {
     seo_title_bouquets: 'Bouquets',
 
     // seo description
-    seo_desc_browser:
-        'StarTimes ON dedicated to online video streaming service which access you to video entertainment anytime, anywhere with any devices.',
-    seo_desc_live:
-        "StarTimes have highlighted trendy TV programs, movies and marvelous sports content for the audience regardless of the device's type you are using. ",
+    seo_desc_browser: 'StarTimes ON dedicated to online video streaming service which access you to video entertainment anytime, anywhere with any devices.',
+    seo_desc_live: "StarTimes have highlighted trendy TV programs, movies and marvelous sports content for the audience regardless of the device's type you are using. ",
     seo_desc_bouquets: 'Chaque bouquet de DTT/DTH a un prix différent, avec des chaines différentes pour chaque bouquet.',
 
     // seo keywords
@@ -198,7 +194,7 @@ export default {
     // register
     phone_number: 'Phone Number',
     email_addr: 'Email Address',
-    enter_your_phone_number: 'Enter your Phone Number',
+    enter_your_phone_number: 'Enter your phone number',
     enter_your_email_addr: 'Enter your email address',
     wallet_hint_get_code: 'Get Code',
     send_code_success: 'Sent successfully!',
