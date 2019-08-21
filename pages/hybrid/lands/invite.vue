@@ -121,10 +121,11 @@ export default {
     width: 100%;
     background-image: linear-gradient(to top, #954ab1 25%, #5c2479 75%);
     font-weight: 600;
-    height: 100vh;
-    overflow-y: scroll;
     min-height: 100%;
     max-height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
     .img-box {
         width: 100%;
         min-height: 6rem;
@@ -134,7 +135,7 @@ export default {
         }
     }
     .page-bom {
-        margin-top: -20%;
+        margin-top: -25%;
         .words {
             text-align: center;
             .tip {
@@ -154,7 +155,7 @@ export default {
             line-height: 2.4rem;
             text-align: center;
             color: #5c2479;
-            font-weight: 900;
+            font-weight: 700;
             background-color: #ffbe19;
             margin: 1rem auto;
             border-radius: 1.3rem;
@@ -163,7 +164,7 @@ export default {
 
     .rules-page {
         width: 17.5rem;
-        height: 26rem;
+        height: 25rem;
         overflow: hidden;
         border-radius: 0.2rem;
         background-color: #ffffff;
@@ -180,14 +181,14 @@ export default {
             &.title {
                 line-height: 1.6rem;
                 font-size: 1.4rem;
-                font-weight: 800;
+                font-weight: 700;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
             &.sections {
                 position: relative;
-                top: 1.5rem;
+                top: 1rem;
                 width: 15rem;
                 height: 18rem;
                 overflow-x: hidden;
@@ -219,12 +220,11 @@ export default {
                 }
             }
             &.got-it {
-                padding-top: 1.5rem;
-                // float: right;
+                padding-top: 1rem;
                 width: 100%;
-                height: 3.5rem;
+                height: 2rem;
                 text-align: right;
-                line-height: 3.5rem;
+                line-height: 2rem;
                 font-size: 1rem;
                 font-weight: 700;
                 color: #008be9;
