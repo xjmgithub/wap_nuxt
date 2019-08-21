@@ -28,7 +28,7 @@
         </div>
         <div class="footer">
             <div class="error-msg" v-html="errorMsg" />
-            <mButton :disabled="Boolean(errorMsg)" text="PAY NOW" @click="nextStep" />
+            <mButton :disabled="Boolean(errorMsg)" text="PAY" @click="nextStep" />
         </div>
     </div>
 </template>
