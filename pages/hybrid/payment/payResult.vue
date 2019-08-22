@@ -40,7 +40,7 @@ export default {
             isApp: this.$store.state.appType,
             timer: null,
             maxReqNum: 10,
-            timer2:null
+            timer2: null
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -92,7 +92,9 @@ export default {
                 const channel = sessionStorage.getItem('paychannel')
                 if (channel) setCookie('lastpay', channel)
                 this.timer2 = setTimeout(() => {
-                    this.click()
+                    if (!document.hidden) {
+                        this.click()
+                    }
                 }, 5000)
             }
         } else {
@@ -133,8 +135,8 @@ export default {
                 // toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 // TODO this.$router.push('/browser')
                 // TODO 根据ua判断是否是我们的sdk
-                if(this.timer2) clearTimeout(this.timer2)
-                if(this.timer) clearInterval(this.timer)
+                if (this.timer2) clearTimeout(this.timer2)
+                if (this.timer) clearInterval(this.timer)
                 window.payment && window.payment.finishActivity(this.result == 1 ? 'SUCCESS' : 'FAIL')
             }
         },
@@ -155,7 +157,9 @@ export default {
                         window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('SUCCESS')
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
                         this.timer2 = setTimeout(() => {
-                            this.click()
+                            if (!document.hidden) {
+                                this.click()
+                            }
                         }, 5000)
                     } else if (data && data.state === 4) {
                         this.result = 2
