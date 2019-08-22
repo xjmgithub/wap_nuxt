@@ -154,7 +154,7 @@ export default {
                     !this.lastpay && this.initChannel(this.payChannels[0])
                     const msg = {
                         symbol: this.currencySymbol,
-                        amount: this.totalAmount
+                        amount: formatAmount(this.totalAmount)
                     }
                     sessionStorage.setItem('goodMsg', JSON.stringify(msg))
                 } else {
