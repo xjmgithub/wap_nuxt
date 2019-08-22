@@ -154,7 +154,7 @@ export default {
                         window.payment && window.payment.payResult('SUCCESS')
                         window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('SUCCESS')
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
-                        setTimeout(() => {
+                        this.timer2 = setTimeout(() => {
                             this.click()
                         }, 5000)
                     } else if (data && data.state === 4) {
