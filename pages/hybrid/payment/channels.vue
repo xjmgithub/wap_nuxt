@@ -152,6 +152,11 @@ export default {
                     })
                     this.lastpay && this.initChannel(payChannels[this.lastpay])
                     !this.lastpay && this.initChannel(this.payChannels[0])
+                    const msg = {
+                        symbol: this.currencySymbol,
+                        amount: this.totalAmount
+                    }
+                    sessionStorage.setItem('goodMsg', JSON.stringify(msg))
                 } else {
                     this.$alert('payToken and payChannel Mismatch! please check request')
                 }
@@ -242,7 +247,7 @@ export default {
             font-weight: bold;
             font-size: 2.25rem;
             color: #212121;
-            margin-bottom: .8rem;
+            margin-bottom: 0.8rem;
             span {
                 font-size: 1.25rem;
             }
