@@ -120,7 +120,7 @@ export default {
         click() {
             if (this.isApp === 1) {
                 if (this.merchantAppId && this.merchantAppId > 2) {
-                    window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
+                    window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResultFinish(this.result == 1 ? 'SUCCESS' : 'FAIL')
                     window.getChannelId && window.getChannelId.finish()
                 } else {
                     if (this.result == 1) {
