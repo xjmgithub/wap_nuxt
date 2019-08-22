@@ -5,14 +5,14 @@
                 <span>{{currencySymbol}}</span>
                 {{totalAmount | formatAmount}}
             </p>
-            <p class="pay-subject">Production Name: {{paySubject}}</p>
+            <p class="pay-subject">Product Name: {{paySubject}}</p>
         </div>
         <div class="contain">
             <div class="pay-channels">
                 <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
-                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/ewallet.png'" />
-                        <img v-else src="http://cdn.startimestv.com/banner/ewallet.png" />
+                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
+                        <img v-else src="~/assets/img/pay/pay_ment_default.png" />
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
@@ -28,7 +28,7 @@
         </div>
         <div class="footer">
             <div class="error-msg" v-html="errorMsg" />
-            <mButton :disabled="Boolean(errorMsg)" text="PAY NOW" @click="nextStep" />
+            <mButton :disabled="Boolean(errorMsg)" text="PAY" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -201,7 +201,7 @@ export default {
                     if (passIsSet === 'true') {
                         this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                     } else {
-                        this.$router.push(`/hybrid/payment/wallet/setPassword`)
+                        this.$router.push(`/hybrid/payment/wallet/setPassword?passIsSet=1`)
                     }
                 }
             } else if (this.channel.formConfigExist) {

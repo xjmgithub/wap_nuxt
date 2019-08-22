@@ -7,7 +7,7 @@
                 :disabled="reset"
                 @canNext="canStep2=true"
             />
-            <div class="change-phone">
+            <div v-if="!passIsSet" class="change-phone">
                 <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
             </div>
             <div class="footer">
@@ -61,7 +61,8 @@ export default {
             accountNo: null,
             channel: this.$route.query.channel || '',
             payToken: this.$route.query.payToken || '',
-            card: this.$route.query.card // paystack card
+            card: this.$route.query.card, // paystack card
+            passIsSet: this.$route.query.passIsSet || '',
         }
     },
     mounted() {

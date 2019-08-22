@@ -1,11 +1,11 @@
 <template>
-    <div id="pay-form" class="container">
+    <div class="container">
         <template v-for="(item,index) in configs">
-            <div v-if="item.displayState!=2" :key="index" class="form-item">
-                <div v-if="['select','radio'].indexOf(item.formType)>=0">
+            <div :key="index" class="form-item">
+                <div v-if="item.type=='radio'">
                     <p class="network">{{item.name}}</p>
                     <div class="radio-box">
-                        <div v-for="(radio,i) in item.optionArr" :key="i" @click="item.value=radio">
+                        <div v-for="(radio,i) in item.options" :key="i" @click="item.value=radio">
                             <label class="radio">
                                 <input :name="item.name" :value="radio" :checked="radio === item.value ? 'checked' : false" type="radio" />
                                 <i />
@@ -16,7 +16,7 @@
                     <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
                 <div
-                    v-if="item.formType=='tel'"
+                    v-if="item.type=='tel'"
                     v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0"
                     class="form-item input-tel"
                 >
@@ -27,7 +27,7 @@
                     <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
                 <div
-                    v-if="['text','password','email'].indexOf(item.formType)>=0"
+                    v-if="item.type=='text'"
                     v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0"
                     class="form-item input-tel"
                 >
@@ -36,7 +36,7 @@
                     </div>
                     <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
-                <div v-if="item.formType=='hidden'">
+                <div v-if="item.type=='hidden'">
                     <input v-model="item.value" :name="item.name" type="hidden" />
                 </div>
             </div>
@@ -76,43 +76,56 @@ export default {
         const sessionChannel = sessionStorage.getItem('payChannel')
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
+
         this.$axios.get(`/payment/v2/pay-channels/${this.channel}/form-configs`).then(res => {
             const data = res.data
             if (data && data instanceof Array && data.length > 0) {
                 const configs = data.sort(function(a, b) {
                     return a.orderSeq - b.orderSeq
                 })
+                const arr = []
                 configs.forEach((item, index) => {
-                    if (item.formType == 'radio' || item.formType == 'select') {
-                        item.optionArr = item.options.split('|')
+                    let type = 'hidden' // 默认是隐藏
+                    if (['select', 'radio'].indexOf(item.formType) >= 0) {
+                        type = 'radio'
                     }
-                    item.value = item.defaultValue
+                    if (['tel'].indexOf(item.formType) >= 0) {
+                        type = 'tel'
+                    }
+                    if (['text', 'password', 'email'].indexOf(item.formType) >= 0) {
+                        type = 'text'
+                    }
+                    if (item.displayState != 2) {
+                        arr.push({
+                            code: item.code,
+                            type: type,
+                            name: item.name,
+                            displayState: item.displayState,
+                            displayCondition: item.displayCondition || '',
+                            countryCallingCode: item.countryCallingCode || '',
+                            maxLength: item.maxLength,
+                            options: (item.options && item.options.split('|')) || [],
+                            placeholder: item.placeholder,
+                            pattern: item.pattern,
+                            value: item.defaultValue || '',
+                            error: ''
+                        })
+                    }
                 })
-                this.configs = configs
+                this.configs = arr
             }
         })
     },
     methods: {
-        conditionShow(val) {
-            const condition = val.split('=')
-            let result = false
-            this.configs.forEach(item => {
-                if (item.formType == 'radio' || item.formType == 'select') {
-                    if (item.name == condition[0]) {
-                        if (item.value == condition[1]) {
-                            result = true
-                        }
-                    }
-                }
-            })
-            return result
-        },
         next() {
             let canSubmit = true
             const optarr = {}
             const configBak = [...this.configs]
             configBak.forEach(item => {
-                if (['text', 'password', 'tel', 'email'].indexOf(item.formType) >= 0) {
+                if (
+                    item.type != 'hidden' &&
+                    (item.displayState == 1 || (item.displayState == 2 && this.showCondition.indexOf(item.displayCondition) < 0))
+                ) {
                     if (!item.value) {
                         item.error = 'Please enter the complete information.'
                         canSubmit = false
@@ -121,7 +134,7 @@ export default {
                         if (!reg.test(item.value)) {
                             item.error = `Please enter the correct ${item.name}.`
                             canSubmit = false
-                        } else if (item.formType == 'tel') {
+                        } else if (item.type == 'tel') {
                             item.error = ''
                             if (item.countryCallingCode && item.value.indexOf(item.countryCallingCode) !== 0) {
                                 if (item.value.indexOf('0') === 0) {
@@ -135,7 +148,6 @@ export default {
                 }
                 optarr[item.code] = item.value
             })
-            this.configs = configBak
             if (canSubmit) {
                 this.$nuxt.$loading.start()
                 this.$store.commit('SHOW_SHADOW_LAYER')
@@ -227,7 +239,7 @@ export default {
     .error {
         position: absolute;
         bottom: -1.4rem;
-        font-size: 0.5rem;
+        font-size: 0.9rem;
         color: red;
     }
 }

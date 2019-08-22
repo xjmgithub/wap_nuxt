@@ -75,7 +75,7 @@ export default {
                             const data = res.data
                             if (data && data.code === 0) {
                                 this.$alert('Set phone successfully.', () => {
-                                    window.location.href = '/hybrid/payment/setPassword?dissphone=1'
+                                    window.location.href = '/hybrid/payment/wallet/setPassword?dissphone=1'
                                 })
                             } else {
                                 this.$alert(data.message)
