@@ -134,6 +134,7 @@ export default {
                 // TODO this.$router.push('/browser')
                 // TODO 根据ua判断是否是我们的sdk
                 if(this.timer2) clearTimeout(this.timer2)
+                if(this.timer) clearInterval(this.timer)
                 window.payment && window.payment.finishActivity(this.result == 1 ? 'SUCCESS' : 'FAIL')
             }
         },
