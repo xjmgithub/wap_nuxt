@@ -236,6 +236,6 @@ export default {
     confirm_number: 'Por favor confirme que submeteu o número correcto.',
     mailbox_not_correct_format: 'O e-mail não está no formato correto!',
     password_is_incorrect: 'A Palavra Passe está incorrecta',
-    account_not_empty: 'p-Do not leave the account blank!',
+    account_not_empty: 'Não deixe a conta em branco!',
     password_not_empty: 'Não deixe a senha em branco!',
 }

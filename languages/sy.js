@@ -236,6 +236,6 @@ export default {
     confirm_number: 'Tafadhali hakikisha umeingiza namba sahihi',
     mailbox_not_correct_format: 'Barua pepe haipo katika muundo sahihi',
     password_is_incorrect: 'Namba yako ya siri sio sahihi',
-    account_not_empty: 's-Do not leave the account blank!',
+    account_not_empty: 'Usipaache tupu sehemu akaunti!',
     password_not_empty: 'Usipaache tupu sehemu ya neno siri!',
 }

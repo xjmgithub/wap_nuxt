@@ -95,8 +95,7 @@ export const initGoogleLogin = (elm, callback) => {
                 cookiepolicy: 'single_host_origin'
             })
             auth2.attachClickHandler(
-                elm,
-                {},
+                elm, {},
                 function(googleUser) {
                     // parse user info
                     // https://developers.google.com/identity/sign-in/web/people
@@ -116,28 +115,33 @@ export const initGoogleLogin = (elm, callback) => {
 
 export const login = function(opt, callback) {
     this.$axios.post('/ums/v3/user/login', opt).then(res => {
-        res.data.code !== 0 && this.$alert(res.data.message)
-        const token = res.data.data.token
-        this.$axios
-            .get('/cms/users/me', {
-                headers: {
-                    token: token
-                }
-            })
-            .then(res => {
-                res.status !== 200 && this.$alert(res.data.message)
+        if (res.data.code == 1) {
+            this.$alert(this.$store.state.lang.signin_notexist)
+        } else if (res.data.code == 2) {
+            this.$alert(this.$store.state.lang.password_is_incorrect)
+        } else {
+            const token = res.data.data.token
+            this.$axios
+                .get('/cms/users/me', {
+                    headers: {
+                        token: token
+                    }
+                })
+                .then(res => {
+                    res.status !== 200 && this.$alert(res.data.message)
 
-                const user = res.data
-                this.$store.commit('SET_TOKEN', token)
-                this.$store.commit('SET_USER', user)
+                    const user = res.data
+                    this.$store.commit('SET_TOKEN', token)
+                    this.$store.commit('SET_USER', user)
 
-                setCookie('token', token)
-                localStorage.setItem('user', JSON.stringify(user))
-                callback && callback()
-            })
-            .catch(() => {
-                this.$alert('Get user info error.')
-            })
+                    setCookie('token', token)
+                    localStorage.setItem('user', JSON.stringify(user))
+                    callback && callback()
+                })
+                .catch(() => {
+                    this.$alert('Get user info error.')
+                })
+        }
     })
 }
 
@@ -348,7 +352,7 @@ export const getBrowser = function() {
     const isAndroid = /android/i.test(ua)
     const isIos = /iphone|ipad|ipod/i.test(ua)
     const isOriginalChrome = /chrome\/[\d.]+ Mobile Safari\/[\d.]+/i.test(ua) && isAndroid
-    // ios 上很多 app 都包含 safari 标识，但它们都是以自己的 app 标识开头，而不是 Mozilla
+        // ios 上很多 app 都包含 safari 标识，但它们都是以自己的 app 标识开头，而不是 Mozilla
     const isSafari = /safari\/([\d.]+)$/i.test(ua) && isIos && ua.indexOf('Crios') < 0 && ua.indexOf('Mozilla') === 0
     let version = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)
     if (version) {

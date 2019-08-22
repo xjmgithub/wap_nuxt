@@ -6,15 +6,11 @@
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg" />
-                <a href="javascript:void(0)" class="sign-way">
-                    {{$store.state.lang.signin_switch_phone}}
-                </a>
+                <a href="javascript:void(0)" class="sign-way">{{$store.state.lang.signin_switch_phone}}</a>
             </div>
             <div v-show="type==0" @click="changetype(1)">
                 <img class="gray" src="~assets/img/users/ic_email_def_gray.svg" />
-                <a href="javascript:void(0)" class="sign-way">
-                    {{$store.state.lang.signin_switch_email}}
-                </a>
+                <a href="javascript:void(0)" class="sign-way">{{$store.state.lang.signin_switch_email}}</a>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
@@ -41,13 +37,9 @@
                 <input v-model="password" type="password" :placeholder="Password" />
             </div>
         </div>
-        <div class="next-btn" @click="login">
-            {{$store.state.lang.sign_in}}
-        </div>
+        <div class="next-btn" @click="login">{{$store.state.lang.sign_in}}</div>
         <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/account/resetpass">
-                {{$store.state.lang.forget_password}}
-            </nuxt-link>
+            <nuxt-link to="/hybrid/account/resetpass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">{{$store.state.lang.all}}</div>
@@ -82,7 +74,7 @@ export default {
             pre: this.$route.query.pre,
             account_phone: this.$store.state.lang.account_phone,
             account_email: this.$store.state.lang.account_email,
-            Password: this.$store.state.lang.Password,
+            Password: this.$store.state.lang.Password
         }
     },
     watch: {
@@ -105,35 +97,41 @@ export default {
             this.countryDialogStatus = false
         },
         login() {
-            let params = {}
-            if (this.type === 1) {
-                params = {
-                    applicationId: 2,
-                    deviceId: this.$store.state.deviceId,
-                    type: 0,
-                    email: this.email,
-                    pwd: this.password
-                }
+            if ((this.type === 0 && !this.phoneNum) || (this.type === 1 && !this.email)) {
+                this.$alert(this.$store.state.lang.account_not_empty)
+            } else if (!this.password) {
+                this.$alert(this.$store.state.lang.password_not_empty)
             } else {
-                const tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
-                params = {
-                    applicationId: 2,
-                    phoneCc: this.country.phonePrefix,
-                    phone: tel,
-                    pwd: this.password,
-                    deviceId: this.$store.state.deviceId,
-                    type: 10
-                }
-            }
-
-            login.call(this, params, () => {
-                const pre = sessionStorage.getItem('login_prefer') || ''
-                if (pre) {
-                    window.location.href = pre
+                let params = {}
+                if (this.type === 1) {
+                    params = {
+                        applicationId: 2,
+                        deviceId: this.$store.state.deviceId,
+                        type: 0,
+                        email: this.email,
+                        pwd: this.password
+                    }
                 } else {
-                    this.$router.replace('/browser')
+                    const tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
+                    params = {
+                        applicationId: 2,
+                        phoneCc: this.country.phonePrefix,
+                        phone: tel,
+                        pwd: this.password,
+                        deviceId: this.$store.state.deviceId,
+                        type: 10
+                    }
                 }
-            })
+
+                login.call(this, params, () => {
+                    const pre = sessionStorage.getItem('login_prefer') || ''
+                    if (pre) {
+                        window.location.href = pre
+                    } else {
+                        this.$router.replace('/browser')
+                    }
+                })
+            }
         }
     },
     head() {
@@ -303,3 +301,4 @@ export default {
     }
 }
 </style>
+
