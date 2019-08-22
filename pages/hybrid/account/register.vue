@@ -79,10 +79,10 @@
             <mButton :disabled="!canNext" :text="next" @click="nextStep" />
         </div>
         <div class="terms" @click="toService">
-            Terms of Service
+            {{$store.state.lang.terms_of_service}}
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
-            <div class="dialog-title">Country List</div>
+            <div class="dialog-title">{{$store.state.lang.all}}</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
                     <img :src="cdnPicSrc(item.nationalFlag)" />
@@ -281,7 +281,7 @@ export default {
                             value: 0
                         })
                         callback(timerIntercept)
-                        this.error_tel = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.login_btn + '</a>'
+                        this.error_tel = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.sign_in + '</a>'
                     } else {
                         this.sendEvLog({
                             category: 'register',
@@ -340,7 +340,7 @@ export default {
                             value: 0
                         })
                         callback(timerIntercept)
-                        this.error_email = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.login_btn + '</a>'
+                        this.error_email = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.sign_in + '</a>'
                     } else {
                         this.sendEvLog({
                             category: 'register',

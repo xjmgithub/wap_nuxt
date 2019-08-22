@@ -199,12 +199,13 @@ export default {
     wallet_hint_get_code: 'Get Code',
     send_code_success: 'Sent successfully!',
     text_onair_next: 'NEXT',
+    terms_of_service: 'Terms of Service',
     // 错误信息提示
     error_tel_number_false: 'The phone number you entered is incorrect, please check and try again.',
     error_email_false: 'The email address is incorrect. Please check and try again.',
     error_registered: "You're a registered user.",
     error_code: 'This code you entered is incorrect. Please try again.',
-    login_btn: 'SIGN IN',
+    sign_in: 'Sign In',
 
     // setpass
     register_input_enter_password: 'Enter Password',
@@ -219,5 +220,22 @@ export default {
     // toGooglePlay
     tips_register_successful: 'Register Successful! ',
     tips_register_successful_tip: 'You have get rewards! Download app and use reward!',
-    download_now: 'Download now'
+    download_now: 'Download now',
+
+    // 登录
+    signin_switch_phone: 'Sign in by phone',
+    signin_switch_email: 'Sign in by email',
+    all: 'Country List',
+    account_phone: 'Phone Number',
+    account_email: 'Email',
+    Password: 'Password',
+    forget_password: 'Forgot Password?',
+    // 错误提示
+    signin_notexist: 'The account doesn\'t exist.',
+    register: 'Register',
+    confirm_number: 'Please confirm you have entered the right number.',
+    mailbox_not_correct_format: 'The mailbox is not in the correct format!',
+    password_is_incorrect: 'The password is incorrect',
+    account_not_empty: 'Do not leave the account blank!',
+    password_not_empty: 'Do not leave the password blank!',
 }

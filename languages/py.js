@@ -199,12 +199,13 @@ export default {
     wallet_hint_get_code: 'Obter o Código',
     send_code_success: 'Enviado com sucesso!',
     text_onair_next: 'A SEGUIR',
+    terms_of_service: 'Termos de serviço',
     // 错误信息提示
     error_tel_number_false: 'O número de telefone digitado está incorreto, por favor, verifique e tente novamente.',
     error_email_false: 'O endereço de email está incorreto. Por favor verifique e tente novamente.',
     error_registered: 'Você já é um  utilizador registado.',
     error_code: 'Não reconhecido. Por favor verifique e tente de novo.',
-    login_btn: 'SIGN IN',
+    sign_in: 'Iniciar sessão',
 
     // setpass
     register_input_enter_password: 'Insira a Senha',
@@ -220,4 +221,21 @@ export default {
     tips_register_successful: 'Registo com sucesso! ',
     tips_register_successful_tip: 'Você vai ganhar recompensas! Descarregue o StarTimes ON agora para usar as suas recompensas!',
     download_now: 'FAÇA DOWNLOAD AGORA',
+
+    // 登录
+    signin_switch_phone: 'Faça login por telemóvel',
+    signin_switch_email: 'Faça login por e-mail',
+    all: 'Lista de Países',
+    account_phone: 'Número de Telemóvel',
+    account_email: 'E-mail',
+    Password: 'Senha',
+    forget_password: 'Esqueceu a senha?',
+    // 错误提示
+    signin_notexist: 'A conta não existe.',
+    register: 'Registrar',
+    confirm_number: 'Por favor confirme que submeteu o número correcto.',
+    mailbox_not_correct_format: 'O e-mail não está no formato correto!',
+    password_is_incorrect: 'A Palavra Passe está incorrecta',
+    account_not_empty: 'p-Do not leave the account blank!',
+    password_not_empty: 'Não deixe a senha em branco!',
 }
