@@ -39,7 +39,8 @@ export default {
             fail_message: 'Your request was not accepted. Please refresh the current page or try again the payment.',
             isApp: this.$store.state.appType,
             timer: null,
-            maxReqNum: 10
+            maxReqNum: 10,
+            timer2:null
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -90,7 +91,7 @@ export default {
             if (this.result === 1) {
                 const channel = sessionStorage.getItem('paychannel')
                 if (channel) setCookie('lastpay', channel)
-                setTimeout(() => {
+                this.timer2 = setTimeout(() => {
                     this.click()
                 }, 5000)
             }
@@ -132,6 +133,7 @@ export default {
                 // toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 // TODO this.$router.push('/browser')
                 // TODO 根据ua判断是否是我们的sdk
+                if(this.timer2) clearTimeout(this.timer2)
                 window.payment && window.payment.finishActivity(this.result == 1 ? 'SUCCESS' : 'FAIL')
             }
         },
