@@ -136,7 +136,7 @@ export default {
     },
     head() {
         return {
-            title: 'Sign In'
+            title: this.$store.state.lang.sign_in
         }
     }
 }

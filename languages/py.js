@@ -236,10 +236,15 @@ export default {
     confirm_number: 'Por favor confirme que submeteu o número correcto.',
     mailbox_not_correct_format: 'O e-mail não está no formato correto!',
     password_is_incorrect: 'A Palavra Passe está incorrecta',
-    account_not_empty: 'Não deixe a conta em branco!',
+    forget_password_account_security_questions_hint: 'Por favor, insera a sua conta.',
     password_not_empty: 'Não deixe a senha em branco!',
 
     // 重置密码
     register_mail_text_60_seconds_needed: 'O código de verificação já foi enviado, por favor, verifique a sua caixa de entrada ou  e-mails indesejados a tempop. Você pode receber um novo código de verificação após 60 segundos.',
     get_verification_code: 'Clique para obter o código de verficação',
+
+    // title
+    reg_title: 'Registrar',
+    set_password: 'Defina a senha',
+    reset_pass: 'Trocar senha',
 }

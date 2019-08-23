@@ -134,7 +134,7 @@ export default {
     },
     head() {
         return {
-            title: 'Forgot password'
+            title: this.$store.state.lang.reset_pass
         }
     }
 }

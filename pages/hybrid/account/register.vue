@@ -495,7 +495,7 @@ export default {
     },
     head() {
         return {
-            title: 'Register'
+            title: this.$store.state.lang.reg_title
         }
     }
 }

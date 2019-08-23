@@ -236,10 +236,15 @@ export default {
     confirm_number: 'Tafadhali hakikisha umeingiza namba sahihi',
     mailbox_not_correct_format: 'Barua pepe haipo katika muundo sahihi',
     password_is_incorrect: 'Namba yako ya siri sio sahihi',
-    account_not_empty: 'Usipaache tupu sehemu akaunti!',
+    forget_password_account_security_questions_hint: 'Tafadhali ingiza akantu yako.',
     password_not_empty: 'Usipaache tupu sehemu ya neno siri!',
 
     // 重置密码
     register_mail_text_60_seconds_needed: 'Namba ya uthibitisho imetumwa,tafadhali angali kikasha cha barua pepe yako au barua pepe zisizofaa kwa wakati.Unaweza kutumiwa namba nyingine ya uthibitisho baada ya sekunde 60.',
     get_verification_code: 'onyeza upata namba ya uthibitisho',
+
+    // title
+    reg_title: 'Jisajili',
+    set_password: 'Seti nywila',
+    reset_pass: 'Panga namba mpya ya siri',
 }

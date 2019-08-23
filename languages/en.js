@@ -236,15 +236,16 @@ export default {
     confirm_number: 'Please confirm you have entered the right number.',
     mailbox_not_correct_format: 'The mailbox is not in the correct format!',
     password_is_incorrect: 'The password is incorrect',
-    account_not_empty: 'Do not leave the account blank!',
+    forget_password_account_security_questions_hint: 'Please enter your account.',
     password_not_empty: 'Do not leave the password blank!',
 
     // 重置密码
     register_mail_text_60_seconds_needed: 'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
     get_verification_code: 'Click to get verification code',
 
-    // 确认重置密码
-
-
+    // title
+    reg_title: 'Register',
+    set_password: 'Set Password',
+    reset_pass: 'Reset Password',
 
 }

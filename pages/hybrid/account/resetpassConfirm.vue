@@ -110,6 +110,11 @@ export default {
                 }
             })
         }
+    },
+    head() {
+        return {
+            title: this.$store.state.lang.reset_pass
+        }
     }
 }
 </script>

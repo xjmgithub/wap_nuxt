@@ -223,7 +223,7 @@ export default {
     },
     head() {
         return {
-            title: 'Set Password'
+            title: this.$store.state.lang.set_password
         }
     }
 }

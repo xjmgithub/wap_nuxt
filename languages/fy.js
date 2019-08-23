@@ -236,10 +236,15 @@ export default {
     confirm_number: 'Veuillez confirmer que vous avez entré le bon numéro.',
     mailbox_not_correct_format: 'Le format de la boîte mail est incorrect!',
     password_is_incorrect: 'Le mot de passe est incorrect',
-    account_not_empty: 'Ne laisse pas le compte vide!',
+    forget_password_account_security_questions_hint: 'Veuillez saisir votre compte',
     password_not_empty: 'Ne laissez pas le mot de passe vide!',
 
     // 重置密码
     register_mail_text_60_seconds_needed: 'Le code de vérification a été envoyé. Veuillez consulter votre boîte e- mail ou votre courrier indésirable. Un nouveau code de vérification pourrait vous être envoyé après 60 secondes.',
     get_verification_code: 'Cliquez pour obtenir le code de vérification',
+
+    // title
+    reg_title: 'Inscription',
+    set_password: 'Définir le mot de passe',
+    reset_pass: 'Réinitialiser le mot de passe',
 }

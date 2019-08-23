@@ -82,7 +82,7 @@ export default {
     },
     head() {
         return {
-            title: 'Download'
+            title: this.$store.state.lang.tips_register_successful
         }
     }
 }
