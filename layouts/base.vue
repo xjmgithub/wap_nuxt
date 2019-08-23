@@ -40,8 +40,8 @@ export default {
         }
     },
     created() {
-        Vue.prototype.$alert = (msg, callback) => {
-            this.$refs.alert.show(msg, callback)
+        Vue.prototype.$alert = (msg, callback, text) => {
+            this.$refs.alert.show(msg, callback, text)
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {

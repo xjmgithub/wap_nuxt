@@ -1,17 +1,17 @@
 <template>
     <div class="frame">
-        <mheader/>
-        <download class="clearfix"/>
-        <nuxt class="page-main"/>
-        <div v-show="showNav" class="nav-layer" @click="closeNav"/>
+        <mheader />
+        <download class="clearfix" />
+        <nuxt class="page-main" />
+        <div v-show="showNav" class="nav-layer" @click="closeNav" />
         <div :class="{'nav-show':showNav}" class="slide-bar">
             <ul>
                 <li>
                     <div>
                         <div class="user_info">
-                            <img v-if="user" :src="cdnPicSrc(user.head)">
+                            <img v-if="user" :src="cdnPicSrc(user.head)" />
                             <nuxt-link v-else to="/hybrid/account/login">
-                                <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem">
+                                <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem" />
                             </nuxt-link>
                             <div v-if="user">{{user.nickName}}</div>
                         </div>
@@ -20,7 +20,7 @@
                 <li class="country">
                     <nuxt-link :class="{checked:$route.path=='/browser/country'}" to="/browser/country">
                         <span>{{country.name}}</span>
-                        <img :src="cdnPicSrc(country.nationalFlag)">
+                        <img :src="cdnPicSrc(country.nationalFlag)" />
                     </nuxt-link>
                 </li>
                 <li>
@@ -36,10 +36,10 @@
                 </li>
             </ul>
         </div>
-        <alert ref="alert"/>
-        <confirm ref="confirm"/>
-        <toast ref="toast"/>
-        <shadowLayer v-show="layer"/>
+        <alert ref="alert" />
+        <confirm ref="confirm" />
+        <toast ref="toast" />
+        <shadowLayer v-show="layer" />
     </div>
 </template>
 <script>
@@ -110,8 +110,8 @@ export default {
         }
     },
     created() {
-        Vue.prototype.$alert = (msg, callback) => {
-            this.$refs.alert.show(msg, callback)
+        Vue.prototype.$alert = (msg, callback, text) => {
+            this.$refs.alert.show(msg, callback, text)
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
         Vue.prototype.$confirm = (msg, callback, cancel, yes, no) => {

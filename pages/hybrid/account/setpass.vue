@@ -215,7 +215,7 @@ export default {
                         label: 1,
                         value: 0
                     })
-                    this.$alert(this.$store.state.lang.error_register_tip);
+                    this.$alert(this.$store.state.lang.error_register_tip, () => {}, this.$store.state.lang.got_it)
                     this.abled = true
                 }
             })
