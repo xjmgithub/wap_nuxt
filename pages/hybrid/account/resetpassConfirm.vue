@@ -104,7 +104,6 @@ export default {
                         sessionStorage.removeItem('set_pass_pre')
                     } else {
                         this.$router.replace('/hybrid/account/signIn')
-                        // window.location.href = '/hybrid/account/signIn'
                     }
                 } else {
                     this.$alert(this.$store.state.lang.error_code)

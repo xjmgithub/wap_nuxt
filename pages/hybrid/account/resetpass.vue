@@ -128,7 +128,7 @@ export default {
                 const code = this.$refs.telpicker.vscode
                 const phoneCc = this.country.phonePrefix
                 const countryId = this.country.id
-                this.$router.push(`/hybrid/account/resetpassConfirm?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
+                this.$router.push(`/hybrid/account/resetpassSubmit?phone=${phone}&phoneCc=${phoneCc}&countryId=${countryId}&code=${code}`)
             }
         }
     },
