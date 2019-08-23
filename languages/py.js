@@ -238,4 +238,8 @@ export default {
     password_is_incorrect: 'A Palavra Passe está incorrecta',
     account_not_empty: 'Não deixe a conta em branco!',
     password_not_empty: 'Não deixe a senha em branco!',
+
+    // 重置密码
+    register_mail_text_60_seconds_needed: 'O código de verificação já foi enviado, por favor, verifique a sua caixa de entrada ou  e-mails indesejados a tempop. Você pode receber um novo código de verificação após 60 segundos.',
+    get_verification_code: 'Clique para obter o código de verficação',
 }

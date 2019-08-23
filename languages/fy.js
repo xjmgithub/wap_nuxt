@@ -238,4 +238,8 @@ export default {
     password_is_incorrect: 'Le mot de passe est incorrect',
     account_not_empty: 'Ne laisse pas le compte vide!',
     password_not_empty: 'Ne laissez pas le mot de passe vide!',
+
+    // 重置密码
+    register_mail_text_60_seconds_needed: 'Le code de vérification a été envoyé. Veuillez consulter votre boîte e- mail ou votre courrier indésirable. Un nouveau code de vérification pourrait vous être envoyé après 60 secondes.',
+    get_verification_code: 'Cliquez pour obtenir le code de vérification',
 }

@@ -35,22 +35,15 @@
         <div class="footer">
             <mButton :disabled="!abled" :text="next" @click="nextStep" />
         </div>
-        <div v-show="falseStatus" class="false-dialog">
-            <p>{{$store.state.lang.error_register_tip}}</p>
-            <div class="got-it" @click="falseStatus=false">{{$store.state.lang.got_it}}</div>
-        </div>
-        <shadowLayer v-show="falseStatus" />
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
 import { login } from '~/functions/utils'
-import shadowLayer from '~/components/shadow-layer'
 export default {
     layout: 'base',
     components: {
         mButton,
-        shadowLayer
     },
     data() {
         return {
@@ -73,7 +66,6 @@ export default {
             next: this.$store.state.lang.text_onair_next,
             error_setpass: this.$store.state.lang.error_setpass,
             error_setrepass: this.$store.state.lang.error_setrepass,
-            falseStatus: false
         }
     },
     computed: {
@@ -223,7 +215,7 @@ export default {
                         label: 1,
                         value: 0
                     })
-                    this.falseStatus = true
+                    this.$alert(this.$store.state.lang.error_register_tip);
                     this.abled = true
                 }
             })

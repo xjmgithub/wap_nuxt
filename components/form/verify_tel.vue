@@ -5,7 +5,7 @@
                 +{{prefix}}
             </div>
             <div class="number">
-                <input v-model="tel" type="tel" placeholder="Enter your Phone Number" @focus="focus_tel=true" @blur="focus_tel=false">
+                <input v-model="tel" type="tel" :placeholder="enter_your_phone_number" @focus="focus_tel=true" @blur="focus_tel=false">
             </div>
             <div v-show="error_tel" class="error">
                 {{error_tel}}
@@ -17,12 +17,12 @@
                 :class="{focus:focus_code,error:error_code}"
                 type="text"
                 maxlength="4"
-                placeholder="Click to get verification code"
+                :placeholder="get_verification_code"
                 @focus="focus_code=true"
                 @blur="focus_code=false"
             >
             <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">
-                {{codeDuring>0?`${codeDuring}s`:'Get code'}}
+                {{codeDuring>0?`${codeDuring}s`:`${get_code}`}}
             </div>
             <div v-show="error_code" class="error_code">
                 {{error_code}}
@@ -52,7 +52,10 @@ export default {
             focus_code: false,
             error_code: '',
             codeDuring: 0,
-            waiting_res: false
+            waiting_res: false,
+            enter_your_phone_number: this.$store.state.lang.enter_your_phone_number,
+            get_code: this.$store.state.lang.wallet_hint_get_code,
+            get_verification_code: this.$store.state.lang.get_verification_code
         }
     },
     computed: {
@@ -84,7 +87,7 @@ export default {
                         this.$emit('pass', true)
                     } else {
                         this.$emit('pass', false)
-                        this.error_code = 'This code you entered is incorrect. Please try again.'
+                        this.error_code = this.$store.state.lang.error_code
                     }
                 })
             } else {
@@ -112,7 +115,7 @@ export default {
                 if (res.data.code === 0) {
                     this.codeDuring = 60
                 } else {
-                    this.error_tel = 'Please confirm you have entered the right number.'
+                    this.error_tel = this.$store.state.lang.confirm_number
                 }
             })
         }
@@ -160,6 +163,9 @@ export default {
             height: 1.5rem;
             line-height: 1.5rem;
             outline: none;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
             &::-webkit-input-placeholder {
                 font-size: 0.9rem;
             }
@@ -181,6 +187,9 @@ export default {
         flex: 2.6;
         border: none;
         border-bottom: #dddddd solid 1px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         &.focus {
             border-bottom: #0087eb solid 1px;
         }
@@ -202,8 +211,11 @@ export default {
         font-size: 0.9rem;
         font-weight: bold;
         text-align: center;
-        height: 2.3rem;
-        line-height: 2.3rem;
+        height: 2.4rem;
+        line-height: 2.4rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         cursor: pointer;
         &.disabled {
             background: #dddddd;

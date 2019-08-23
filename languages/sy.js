@@ -238,4 +238,8 @@ export default {
     password_is_incorrect: 'Namba yako ya siri sio sahihi',
     account_not_empty: 'Usipaache tupu sehemu akaunti!',
     password_not_empty: 'Usipaache tupu sehemu ya neno siri!',
+
+    // 重置密码
+    register_mail_text_60_seconds_needed: 'Namba ya uthibitisho imetumwa,tafadhali angali kikasha cha barua pepe yako au barua pepe zisizofaa kwa wakati.Unaweza kutumiwa namba nyingine ya uthibitisho baada ya sekunde 60.',
+    get_verification_code: 'onyeza upata namba ya uthibitisho',
 }
