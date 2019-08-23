@@ -43,6 +43,7 @@ export default {
     },
     mounted() {
         const walletAccount = JSON.parse(sessionStorage.getItem('wallet'))
+        const sessionAppId = sessionStorage.getItem('merchantAppId')
         this.accountNo = walletAccount.accountNo
         if (!this.nocheck) {
             if (walletAccount.phone) {
@@ -58,6 +59,14 @@ export default {
                 }
             })
         }
+        this.sendEvLog({
+            category: 'set_password',
+            action: 'reset_phone_show',
+            label: 1,
+            value: 1,
+            merchant_app_id: sessionAppId,
+            data_source: 2
+        })
     },
     methods: {
         goStep(num) {

@@ -1,12 +1,7 @@
 <template>
     <div class="container">
         <div v-show="step==1" class="step1">
-            <verify-tel
-                ref="phone"
-                :title="reset?'Confirm your cellphone number':'Enter your phone number'"
-                :disabled="reset"
-                @canNext="canStep2=true"
-            />
+            <verify-tel ref="phone" :title="reset?'Confirm your cellphone number':'Enter your phone number'" :disabled="reset" @canNext="canStep2=true" @passCode="goStep(6)" />
             <div v-if="!passIsSet" class="change-phone">
                 <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
             </div>
@@ -57,19 +52,68 @@ export default {
             canStep4: false,
             canStep5: false,
             reset: false,
-            step: this.$route.query.dissphone ? 3 : 1,
+            step: 0,
             accountNo: null,
             channel: this.$route.query.channel || '',
             payToken: this.$route.query.payToken || '',
             card: this.$route.query.card, // paystack card
             passIsSet: this.$route.query.passIsSet || '',
+            merchantAppId: ''
+        }
+    },
+    watch: {
+        step(nv) {
+            switch (nv) {
+                case 1:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'phone_show',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
+                    break
+                case 2:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'sms_code_show',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
+                    break
+                case 3:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'set_step1',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
+                    break
+                case 4:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'set_step2',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
+            }
         }
     },
     mounted() {
+        this.step = this.$route.query.dissphone ? 3 : 1
         const sessionPayToken = sessionStorage.getItem('payToken')
         const sessionChannel = sessionStorage.getItem('payChannel')
+        const sessionAppId = sessionStorage.getItem('merchantAppId')
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
+        if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
         const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
         if (walletAccount.phone) {
@@ -122,6 +166,14 @@ export default {
                         } else {
                             this.$alert(res.data.message)
                         }
+                        this.sendEvLog({
+                            category: 'set_password',
+                            action: 'set_result',
+                            label: 1,
+                            value: res.data.code === 0 ? 0 : 1,
+                            merchant_app_id: this.merchantAppId,
+                            data_source: 2
+                        })
                     })
             } else if (num === 4) {
                 const newpass = this.$refs.newpass.password
@@ -131,6 +183,15 @@ export default {
                     return false
                 }
                 this.step = num
+            } else if (num === 6) {
+                this.sendEvLog({
+                    category: 'set_password',
+                    action: 'get_phone_code',
+                    label: 1,
+                    value: this.reset ? 0 : 1,
+                    merchant_app_id: this.merchantAppId,
+                    data_source: 2
+                })
             } else {
                 this.step = num
             }

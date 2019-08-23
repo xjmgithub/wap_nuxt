@@ -8,9 +8,7 @@
                 <span>{{currency}}</span>
                 {{money}}
             </p>
-            <p
-                class="msg lf"
-            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
             <img src="~assets/img/pay/img_failed_def_b.png" alt />
@@ -40,7 +38,8 @@ export default {
             isApp: this.$store.state.appType,
             timer: null,
             maxReqNum: 10,
-            timer2:null
+            timer2: null,
+            merchantAppId: ''
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -92,7 +91,9 @@ export default {
                 const channel = sessionStorage.getItem('paychannel')
                 if (channel) setCookie('lastpay', channel)
                 this.timer2 = setTimeout(() => {
-                    this.click()
+                    if (!document.hidden) {
+                        this.click()
+                    }
                 }, 5000)
             }
         } else {
@@ -113,12 +114,30 @@ export default {
                 }
             }, 3000)
         }
+        const sessionAppId = sessionStorage.getItem('merchantAppId')
+        if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
+        this.sendEvLog({
+            category: 'pay_result',
+            action: 'page_show',
+            label: 1,
+            value: this.result,
+            merchant_app_id: this.merchantAppId,
+            data_source: 2
+        })
     },
     methods: {
         click() {
+            this.sendEvLog({
+                category: 'pay_result',
+                action: 'ok_click',
+                label: 1,
+                value: this.result,
+                merchant_app_id: this.merchantAppId,
+                data_source: 2
+            })
             if (this.isApp === 1) {
                 if (this.merchantAppId && this.merchantAppId > 2) {
-                    window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
+                    window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResultFinish(this.result == 1 ? 'SUCCESS' : 'FAIL')
                     window.getChannelId && window.getChannelId.finish()
                 } else {
                     if (this.result == 1) {
@@ -133,7 +152,8 @@ export default {
                 // toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
                 // TODO this.$router.push('/browser')
                 // TODO 根据ua判断是否是我们的sdk
-                if(this.timer2) clearTimeout(this.timer2)
+                if (this.timer2) clearTimeout(this.timer2)
+                if (this.timer) clearInterval(this.timer)
                 window.payment && window.payment.finishActivity(this.result == 1 ? 'SUCCESS' : 'FAIL')
             }
         },
@@ -153,8 +173,10 @@ export default {
                         window.payment && window.payment.payResult('SUCCESS')
                         window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('SUCCESS')
                         window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
-                        setTimeout(() => {
-                            this.click()
+                        this.timer2 = setTimeout(() => {
+                            if (!document.hidden) {
+                                this.click()
+                            }
                         }, 5000)
                     } else if (data && data.state === 4) {
                         this.result = 2
@@ -170,6 +192,14 @@ export default {
             }
         },
         refresh() {
+            this.sendEvLog({
+                category: 'pay_result',
+                action: 'refresh_click',
+                label: 1,
+                value: this.result,
+                merchant_app_id: this.merchantAppId,
+                data_source: 2
+            })
             this.$router.go(0)
         }
     },
