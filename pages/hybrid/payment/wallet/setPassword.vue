@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        {{step}}
         <div v-show="step==1" class="step1">
             <verify-tel ref="phone" :title="reset?'Confirm your cellphone number':'Enter your phone number'" :disabled="reset" @canNext="canStep2=true" @passCode="goStep(6)" />
             <div v-if="!passIsSet" class="change-phone">
