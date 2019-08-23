@@ -64,8 +64,10 @@ export default {
                 appInterfaceMode: null,
                 payType: -1,
                 formConfigExist: false,
-                currency: ''
+                currency: '',
+                payChannelName: ''
             },
+            merchantAppId: '',
             currency: '', // 商品货币code
             currencySymbol: '', // 商品货币符号
             totalAmount: '',
@@ -146,6 +148,7 @@ export default {
                     this.currencySymbol = this.countrys[data.country].currencySymbol
                     this.totalAmount = data.totalAmount
                     this.paySubject = data.paySubject
+                    this.merchantAppId = data.merchantAppId
                     const payChannels = {}
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
@@ -157,6 +160,15 @@ export default {
                         amount: formatAmount(this.totalAmount)
                     }
                     sessionStorage.setItem('goodMsg', JSON.stringify(msg))
+                    sessionStorage.setItem('merchantAppId', this.merchantAppId)
+                    this.sendEvLog({
+                        category: 'confirm_payment',
+                        action: 'payment_show',
+                        label: 1,
+                        value: 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
                 } else {
                     this.$alert('payToken and payChannel Mismatch! please check request')
                 }
@@ -193,16 +205,26 @@ export default {
             this.channel.formConfigExist = item.formConfigExist
             this.channel.appInterfaceMode = item.appInterfaceMode
             this.channel.currency = item.currency
+            this.channel.payChannelName = item.payType == 1 ? 'eWallet' : item.name
+            this.sendEvLog({
+                category: 'confirm_payment',
+                action: 'payment_channel_select',
+                label: 1,
+                value: 1,
+                merchant_app_id: this.merchantAppId,
+                data_source: 2
+            })
         },
         nextStep() {
             sessionStorage.setItem('payChannel', this.channel.payChannel)
+            let passIsSet
             if (this.channel.payType === 1) {
                 if (!this.isLogin) {
                     this.$confirm(this.$store.state.lang.starpay_payment_login_notice, () => {
                         window.location.href = `${location.origin}/hybrid/account/signIn?pre=${location.href}`
                     })
                 } else {
-                    const passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
+                    passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
                     if (passIsSet === 'true') {
                         this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                     } else {
@@ -210,7 +232,7 @@ export default {
                     }
                 }
             } else if (this.channel.formConfigExist) {
-                this.$router.push(`/hybrid/payment/form?appInterfaceMode=${this.channel.appInterfaceMode}`)
+                this.$router.push(`/hybrid/payment/form?appInterfaceMode=${this.channel.appInterfaceMode}&appId=${this.merchantAppId}`)
             } else {
                 invoke.call(this, this.payToken, this.channel.payChannel, data => {
                     this.$nuxt.$loading.finish()
@@ -218,6 +240,19 @@ export default {
                     commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
                 })
             }
+            this.sendEvLog({
+                category: 'confirm_payment',
+                action: 'pay_click',
+                label: 1,
+                value: 1,
+                merchant_app_id: this.merchantAppId,
+                data_source: 2,
+                payment_channel_id: this.channel.payChannel,
+                payment_channel_name: this.channel.payChannelName,
+                total_amount: this.totalAmount,
+                bindcard: 0,
+                paypwd: passIsSet === 'true' ? 1 : 0
+            })
         }
     },
     head() {
