@@ -166,11 +166,11 @@ export default {
                     },
                     optarr
                 )
-                Object.keys(optarr).forEach(key => {
-                    arr.push(key + '=' + optarr[key])
-                })
-                str = arr.join('|')
             }
+            Object.keys(optarr).forEach(key => {
+                arr.push(key + '=' + optarr[key])
+            })
+            str = arr.join('|')
             this.sendEvLog({
                 category: 'dynamic_form',
                 action: 'next_click',
