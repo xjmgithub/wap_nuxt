@@ -75,7 +75,7 @@
                 <div class="error_code">{{error_email_code}}</div>
             </div>
         </div>
-        <div style="width:80%;margin:0 auto;">
+        <div class="next-btn">
             <mButton :disabled="!canNext" :text="next" @click="nextStep" />
         </div>
         <div class="terms" @click="toService">
@@ -573,7 +573,7 @@ export default {
     }
     .by_tel,
     .by_email {
-        height: 15rem;
+        height: 13.5rem;
         .get-code {
             display: flex;
             position: relative;
@@ -617,7 +617,7 @@ export default {
         .phone_number {
             display: -webkit-box;
             display: flex;
-            margin-bottom: 3.4rem;
+            margin-bottom: 2.6rem;
             .country_choose {
                 -webkit-box-flex: 1;
                 flex: 1;
@@ -667,7 +667,7 @@ export default {
             width: 100%;
             border-bottom: #dddddd solid 1px;
             padding-bottom: 5px;
-            margin-bottom: 3.4rem;
+            margin-bottom: 2.6rem;
             position: relative;
             &.focus {
                 border-bottom: #0087eb solid 1px;
@@ -721,22 +721,12 @@ export default {
     }
     .next-btn {
         width: 80%;
-        background: #0087eb;
-        color: white;
-        text-align: center;
-        height: 2rem;
-        line-height: 2rem;
-        font-size: 0.8rem;
-        margin: 0 auto;
-        &.disabled {
-            background: #dddddd;
-            color: #aaaaaa;
-        }
+        margin: 0 auto 1.8rem;
     }
     .terms {
+        margin: 0 auto;
         font-size: 0.5rem;
         text-align: center;
-        line-height: 2rem;
         text-decoration: underline;
         color: #0087eb;
     }
