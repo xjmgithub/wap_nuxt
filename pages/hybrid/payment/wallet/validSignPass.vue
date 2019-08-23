@@ -30,7 +30,8 @@ export default {
         return {
             password: '',
             isCiphertext: 1,
-            error_password: ''
+            error_password: '',
+            merchantAppId: ''
         }
     },
     computed: {
@@ -43,12 +44,32 @@ export default {
             this.error_password = ''
         }
     },
+    mounted() {
+        const sessionAppId = sessionStorage.getItem('merchantAppId')
+        if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
+        this.sendEvLog({
+            category: 'set_password',
+            action: 'valid_signin_show',
+            label: 1,
+            value: 1,
+            merchant_app_id: this.merchantAppId,
+            data_source: 2
+        })
+    },
     methods: {
         resetPass() {
             sessionStorage.setItem('set_pass_pre', '/hybrid/payment/wallet/validSignPass')
             this.$router.push('/hybrid/account/resetpass')
         },
         checkSignPass(num) {
+            this.sendEvLog({
+                category: 'set_password',
+                action: 'valid_signin_next_click',
+                label: 1,
+                value: 1,
+                merchant_app_id: this.merchantAppId,
+                data_source: 2
+            })
             // TODO check sigin
             const user = this.$store.state.user
             let opt = {}

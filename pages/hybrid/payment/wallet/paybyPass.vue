@@ -1,11 +1,17 @@
 <template>
     <div class="container">
-        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword" />
+        <div v-show="goodMsg" class="goods">
+            <p class="pay-money">
+                <span>{{goodMsg.symbol}}</span>{{goodMsg.amount}}
+            </p>
+        </div>
+        <p class="password">Enter payment password</p>
+        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword" @inputing="setPassword" />
         <div class="forgot-pwd">
             <a @click="forgetPass">Forgot payment password?</a>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
+            <mButton :disabled="!canPay" :text="'NEXT'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -26,8 +32,10 @@ export default {
             canPay: false,
             payToken: this.$route.query.payToken || '',
             channel: this.$route.query.channel || '',
+            merchantAppId: this.$route.query.merchantAppId || '',
             apiType: this.$route.query.apiType,
-            card: this.$route.query.card
+            card: this.$route.query.card,
+            goodMsg: {}
         }
     },
     watch: {
@@ -42,8 +50,19 @@ export default {
     mounted() {
         const sessionPayToken = sessionStorage.getItem('payToken')
         const sessionChannel = sessionStorage.getItem('payChannel')
+        const sessionAppId = sessionStorage.getItem('merchantAppId')
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
+        if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
+        this.goodMsg = JSON.parse(sessionStorage.getItem('goodMsg'))
+        this.sendEvLog({
+            category: 'paybypass',
+            action: 'page_show',
+            label: 1,
+            value: 1,
+            merchant_app_id: this.merchantAppId,
+            data_source: 2
+        })
     },
     methods: {
         setPassword(data) {
@@ -86,6 +105,14 @@ export default {
                     })
                 }
             })
+            this.sendEvLog({
+                category: 'paybypass',
+                action: 'next_click',
+                label: 1,
+                value: 'pass_right',
+                merchant_app_id: this.merchantAppId,
+                data_source: 2
+            })
         }
     },
     head() {
@@ -97,11 +124,32 @@ export default {
 </script>
 <style scoped>
 .container {
-    padding: 6rem 1rem 0 1rem;
+    padding: 1rem;
     background: white;
     min-height: 100%;
+    position: relative;
 }
-
+.goods {
+    width: 90%;
+    text-align: center;
+    padding: 0.8rem 0;
+    background: #ffffff;
+    height: 5rem;
+}
+.pay-money {
+    font-weight: bold;
+    font-size: 2.25rem;
+    color: #212121;
+    margin-bottom: 0.8rem;
+}
+.pay-money span {
+    font-size: 1.25rem;
+}
+.password {
+    position: absolute;
+    top: 6rem;
+    left: 1rem;
+}
 .forgot-pwd {
     text-align: right;
 }

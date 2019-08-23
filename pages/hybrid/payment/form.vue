@@ -15,22 +15,14 @@
                     </div>
                     <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
-                <div
-                    v-if="item.type=='tel'"
-                    v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0"
-                    class="form-item input-tel"
-                >
+                <div v-if="item.type=='tel'" v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0" class="form-item input-tel">
                     <div v-if="item.countryCallingCode" class="prefix">+{{item.countryCallingCode}}</div>
                     <div class="number">
                         <input v-model="item.value" :placeholder="item.placeholder" type="tel" />
                     </div>
                     <div v-show="item.error" class="error">{{item.error}}</div>
                 </div>
-                <div
-                    v-if="item.type=='text'"
-                    v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0"
-                    class="form-item input-tel"
-                >
+                <div v-if="item.type=='text'" v-show="item.displayState!=3||showCondition.indexOf(item.displayCondition)>=0" class="form-item input-tel">
                     <div class="number">
                         <input v-model="item.value" :type="item.formType" :placeholder="item.placeholder" />
                     </div>
@@ -42,7 +34,8 @@
             </div>
         </template>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" class="next" @click="next" />
+            <mButton :disabled="false" text="NEXT" @click="next" />
+            <mButton text="CANCEL" class="cancel" @click="cancel" />
         </div>
     </div>
 </template>
@@ -59,6 +52,7 @@ export default {
             payToken: this.$route.query.payToken || '',
             channel: this.$route.query.payChannelId || '',
             apiInterface: this.$route.query.appInterfaceMode || 3,
+            merchantAppId: this.$route.query.appId,
             configs: []
         }
     },
@@ -115,12 +109,22 @@ export default {
                 this.configs = arr
             }
         })
+        this.sendEvLog({
+            category: 'dynamic_form',
+            action: 'page_show',
+            label: this.channel,
+            value: 1,
+            merchant_app_id: this.merchantAppId,
+            data_source: 2
+        })
     },
     methods: {
         next() {
             let canSubmit = true
             const optarr = {}
             const configBak = [...this.configs]
+            const arr = []
+            let str = ''
             configBak.forEach(item => {
                 if (
                     item.type != 'hidden' &&
@@ -163,6 +167,30 @@ export default {
                     optarr
                 )
             }
+            Object.keys(optarr).forEach(key => {
+                arr.push(key + '=' + optarr[key])
+            })
+            str = arr.join('|')
+            this.sendEvLog({
+                category: 'dynamic_form',
+                action: 'next_click',
+                label: this.channel,
+                value: canSubmit ? 1 : 2,
+                form_content: str,
+                merchant_app_id: this.merchantAppId,
+                data_source: 2
+            })
+        },
+        cancel() {
+            this.sendEvLog({
+                category: 'dynamic_form',
+                action: 'back_click',
+                label: this.channel,
+                value: 0,
+                merchant_app_id: this.merchantAppId,
+                data_source: 2
+            })
+            this.$router.go(-1)
         }
     }
 }
@@ -192,6 +220,11 @@ export default {
     margin: 0 auto;
     left: 0;
     right: 0;
+    .cancel {
+        border: #0087eb solid 1px;
+        background: #ffffff;
+        color: #0087eb;
+    }
 }
 .input-tel {
     border-bottom: #dddddd solid 1px;
