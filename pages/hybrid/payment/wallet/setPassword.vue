@@ -2,7 +2,7 @@
     <div class="container">
         {{step}}
         <div v-show="step==1" class="step1">
-            <verify-tel ref="phone" :title="reset?'Confirm your cellphone number':'Enter your phone number'" :disabled="reset" @canNext="canStep2=true" @passCode="goStep(6)"/>
+            <verify-tel ref="phone" :title="reset?'Confirm your cellphone number':'Enter your phone number'" :disabled="reset" @canNext="canStep2=true" @passCode="goStep(6)" />
             <div v-if="!passIsSet" class="change-phone">
                 <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
             </div>
@@ -84,7 +84,7 @@ export default {
                         merchant_app_id: this.merchantAppId,
                         data_source: 2
                     })
-                    break;
+                    break
                 case 3:
                     this.sendEvLog({
                         category: 'set_password',
@@ -94,21 +94,11 @@ export default {
                         merchant_app_id: this.merchantAppId,
                         data_source: 2
                     })
-                    break;
+                    break
                 case 4:
                     this.sendEvLog({
                         category: 'set_password',
                         action: 'set_step2',
-                        label: 1,
-                        value: this.reset ? 0 : 1,
-                        merchant_app_id: this.merchantAppId,
-                        data_source: 2
-                    })
-                    break;
-                case 6:
-                    this.sendEvLog({
-                        category: 'set_password',
-                        action: 'get_phone_code',
                         label: 1,
                         value: this.reset ? 0 : 1,
                         merchant_app_id: this.merchantAppId,
@@ -181,7 +171,7 @@ export default {
                             category: 'set_password',
                             action: 'set_result',
                             label: 1,
-                            value: res.data.code===0 ? 0 : 1,
+                            value: res.data.code === 0 ? 0 : 1,
                             merchant_app_id: this.merchantAppId,
                             data_source: 2
                         })
@@ -194,6 +184,15 @@ export default {
                     return false
                 }
                 this.step = num
+            } else if (num === 6) {
+                this.sendEvLog({
+                    category: 'set_password',
+                    action: 'get_phone_code',
+                    label: 1,
+                    value: this.reset ? 0 : 1,
+                    merchant_app_id: this.merchantAppId,
+                    data_source: 2
+                })
             } else {
                 this.step = num
             }
