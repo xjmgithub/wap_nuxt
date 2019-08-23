@@ -243,6 +243,8 @@ export default {
     register_mail_text_60_seconds_needed: 'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
     get_verification_code: 'Click to get verification code',
 
+    // 确认重置密码
+
 
 
 }

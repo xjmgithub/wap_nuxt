@@ -2,22 +2,22 @@
     <div class="wrapper">
         <div class="input-item">
             <div class="label">
-                Create a Password
+                {{$store.state.lang.register_input_enter_password_tip}}
                 <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext=2" />
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext=1" />
             </div>
-            <input v-model="pass" :type="pwdType" @blur="checkpass" />
+            <input v-model="pass" :type="pwdType" :placeholder="register_input_enter_password" @blur="checkpass" />
         </div>
         <div class="input-item">
             <div class="label">
-                Confirm New Password
+                {{$store.state.lang.register_input_enter_password_again_tip}}
                 <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext_confirm=2" />
                 <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext_confirm=1" />
             </div>
-            <input v-model="repass" :type="pwdType_confirm" @blur="checkpass" />
+            <input v-model="repass" :type="pwdType_confirm" :placeholder="register_input_enter_password_again" @blur="checkpass" />
         </div>
         <div class="footer">
-            <mButton :disabled="disabled" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="disabled" :text="next" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -39,7 +39,10 @@ export default {
             repass: '',
             isCiphertext: 1,
             isCiphertext_confirm: 1,
-            disabled: true
+            disabled: true,
+            next: this.$store.state.lang.text_onair_next,
+            register_input_enter_password: this.$store.state.lang.register_input_enter_password,
+            register_input_enter_password_again: this.$store.state.lang.register_input_enter_password_again,
         }
     },
     computed: {
@@ -104,7 +107,7 @@ export default {
                         // window.location.href = '/hybrid/account/signIn'
                     }
                 } else {
-                    this.$alert('This code you entered is incorrect. Please try again.')
+                    this.$alert(this.$store.state.lang.error_code)
                 }
             })
         }
