@@ -6,12 +6,12 @@
             </p>
         </div>
         <p class="password">Enter payment password</p>
-        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword"/>
+        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword" @inputing="setPassword"/>
         <div class="forgot-pwd">
             <a @click="forgetPass">Forgot payment password?</a>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'PAY NOW'" @click="nextStep" />
+            <mButton :disabled="!canPay" :text="'NEXT'" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -52,7 +52,6 @@ export default {
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
         this.goodMsg = JSON.parse(sessionStorage.getItem('goodMsg'))
-        console.log(this.goodMsg)
     },
     methods: {
         setPassword(data) {
