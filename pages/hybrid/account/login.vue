@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <img class="st_logo" src="~assets/img/logo01.png">
+        <img class="st_logo" src="~assets/img/ic_upgrade_icon.png">
         <img
             class="third_login facebook"
             src="~assets/img/users/btn_facebook_def.png"
@@ -21,6 +21,16 @@
             Don't have an account?
             <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
                 Register
+            </nuxt-link>
+        </div>
+        <div class="service">
+            By signing up, you are agreeing to our
+            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
+                Terms of Service
+            </nuxt-link>
+            and
+            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
+                Privacy Policy
             </nuxt-link>
         </div>
     </div>
@@ -104,7 +114,7 @@ export default {
 .wrapper {
     position: static;
     min-height: 100%;
-    padding-top: 25%;
+    padding-top: 10%;
     img {
         display: block;
         height: 2.3rem;
@@ -138,6 +148,16 @@ export default {
         font-size: 0.8rem;
         color: #424242;
         margin-top: 2.5rem;
+    }
+
+    .service {
+        position: absolute;
+        left: 0;
+        bottom: 2rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #424242;
+        margin: 1rem 10% 0;
     }
 }
 </style>
