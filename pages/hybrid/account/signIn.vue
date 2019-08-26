@@ -98,7 +98,7 @@ export default {
         },
         login() {
             if ((this.type === 0 && !this.phoneNum) || (this.type === 1 && !this.email)) {
-                this.$alert(this.$store.state.lang.account_not_empty)
+                this.$alert(this.$store.state.lang.forget_password_account_security_questions_hint)
             } else if (!this.password) {
                 this.$alert(this.$store.state.lang.password_not_empty)
             } else {
