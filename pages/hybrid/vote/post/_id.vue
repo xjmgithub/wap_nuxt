@@ -78,7 +78,9 @@ export default {
         $axios.setHeader('token', store.state.token)
         try {
             const res = await $axios.get(`/feed/v1/posts/${route.params.id}/details`)
+
             const data = res.data
+            console.log(route.params.id)
             const posters = data.posters
             let imgType = posters.length > 1 ? 2 : 1
             posters.forEach(item => {
@@ -106,7 +108,16 @@ export default {
             const endStr = dom.data.indexOf('</div><script')
             let detailHtml = dom.data.substring(startStr + 23, endStr)
             detailHtml = detailHtml.replace(/data-src/g, 'src')
-
+            // 处理相对路径的图文显示
+            detailHtml = detailHtml.replace(/src="(\S+)"/gm, function(match, p1) {
+                let result = p1
+                posters.forEach(item => {
+                    if (item.url.indexOf(p1) >= 0) {
+                        result = item.url
+                    }
+                })
+                return `src="${result}"`
+            })
             return {
                 id: route.params.id,
                 likeCount: data.upvote,
