@@ -6,7 +6,7 @@
             <p class="success">Payment Successful</p>
             <p class="money">
                 <span>{{currency}}</span>
-                {{money}}
+                {{money | formatAmount}}
             </p>
             <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
@@ -24,13 +24,19 @@
 <script>
 import mButton from '~/components/button'
 import loading from '~/components/loading'
-import { setCookie } from '~/functions/utils'
+import { setCookie, formatAmount } from '~/functions/utils'
 import { toNativePage } from '~/functions/app'
+
 export default {
     layout: 'base',
     components: {
         mButton,
         loading
+    },
+    filters: {
+        formatAmount(num) {
+            return formatAmount(num)
+        }
     },
     data() {
         return {
