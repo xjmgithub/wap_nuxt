@@ -9,7 +9,7 @@ export default {
     gtbankJdkHost: 'https://test-gateway.mastercard.com',
     proxyHost: 'http://staging.upms.startimestv.com/',
     apiURL: 'http://staging.upms.startimestv.com/',
-    mechantRequestUrl: 'http://10.0.63.5:8010/',
+    mechantRequestUrl: 'http://staging.payment.startimestv.com/',
     vodtab:'a868db298ef84dcbb22d919d02f473cb'
 }
 
