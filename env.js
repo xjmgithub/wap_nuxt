@@ -7,9 +7,9 @@ export default {
     pvCountlyServer: 'http://10.0.243.111:8080',
     evCountlyServer: 'http://10.0.243.111:8080',
     gtbankJdkHost: 'https://test-gateway.mastercard.com',
-    proxyHost: 'http://dev.upms.startimestv.com/',
-    apiURL: 'http://dev.upms.startimestv.com/',
-    mechantRequestUrl: 'http://qa.upms.startimestv.com:18010/',
-    vodtab: '8146c5ff88a245b9af2ce7d2bf301b27',
-    mysql: '10.0.230.10'
+    proxyHost: 'https://qa.upms.startimestv.com/',
+    apiURL: 'https://qa.upms.startimestv.com/',
+    mechantRequestUrl: 'http://qa.payment.startimestv.com/',
+    vodtab:'8146c5ff88a245b9af2ce7d2bf301b27',
+    mysql:'10.0.230.10'
 }
