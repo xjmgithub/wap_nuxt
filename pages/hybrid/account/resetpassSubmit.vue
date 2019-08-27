@@ -39,7 +39,7 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import { login } from '~/functions/utils'
+import qs from 'qs'
 export default {
     layout: 'base',
     components: {
@@ -132,90 +132,35 @@ export default {
         nextStep() {
             this.abled = false
             const options = {
-                verifyCode: this.verifyCode,
-                pwd: this.pass,
-                deviceId: this.$store.state.deviceId,
-                activity: 'invite_new'
-            }
-            this.inviteCode = sessionStorage.getItem('invite_code')
-            if (this.inviteCode) {
-                options.invitedId = this.inviteCode
+                code: this.verifyCode,
+                newPassword: this.pass,
             }
             if (this.phone) {
                 options.phoneCc = this.phoneCc
                 options.phone = this.phone
-                options.type = 10
-                this.sendEvLog({
-                    category: 'register',
-                    action: 'register_passwd_submit',
-                    label: 'register phone',
-                    value: 0
-                })
             } else {
                 options.email = this.email
                 options.type = 0
-                this.sendEvLog({
-                    category: 'register',
-                    action: 'register_passwd_submit',
-                    label: 'register email',
-                    value: 0
-                })
             }
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_passwd_submit',
-                label: this.phone ? 'register phone' : 'register email',
-                value: 0
-            })
-            this.$axios.post('/ums/v3/register', options).then(res => {
+            this.$axios({
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    token: this.$store.state.token
+                },
+                data: qs.stringify(options),
+                url: '/ums/v1/user/phone/pwd/reset'
+            }).then(res => {
                 if (res.data.code === 0) {
-                    let params = {}
-                    if (this.phone) {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register phone',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            phoneCc: this.phoneCc,
-                            phone: this.phone,
-                            pwd: this.pass,
-                            deviceId: this.$store.state.deviceId,
-                            type: 10
-                        }
+                    const pre = sessionStorage.getItem('set_pass_pre')
+                    if (pre) {
+                        this.$router.replace(pre)
+                        sessionStorage.removeItem('set_pass_pre')
                     } else {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register email',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            deviceId: this.$store.state.deviceId,
-                            type: 0,
-                            email: this.email,
-                            pwd: this.pass
-                        }
+                        this.$router.replace('/hybrid/account/signIn')
                     }
-                    login.call(this, params, () => {
-                        const pre = sessionStorage.getItem('register_prefer') || ''
-                        if (pre) {
-                            window.location.href = pre
-                        } else {
-                            this.$router.replace('/browser')
-                        }
-                    })
                 } else {
-                    this.sendEvLog({
-                        category: 'register',
-                        action: 'register_passwd_err',
-                        label: 1,
-                        value: 0
-                    })
-                    this.$alert(this.$store.state.lang.error_register_tip, () => {}, this.$store.state.lang.got_it)
+                    this.$alert(this.$store.state.lang.error_code)
                     this.abled = true
                 }
             })
@@ -223,7 +168,7 @@ export default {
     },
     head() {
         return {
-            title: this.$store.state.lang.set_password
+            title: this.$store.state.lang.reset_pass
         }
     }
 }

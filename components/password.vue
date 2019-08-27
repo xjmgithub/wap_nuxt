@@ -1,18 +1,18 @@
 <template>
-    <div class="password-box">
-        <p class="pwd-type">{{placeholder}}</p>
-        <img v-if="toggleView&&isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2">
-        <img v-if="toggleView&&isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1">
-        <div class="pwd-input">
-            <!-- TODO 支持自定义化数量 -->
-            <div class="input-item" v-html="N1"/>
-            <div v-show="length>=2" class="input-item" v-html="N2"/>
-            <div v-show="length>=3" class="input-item" v-html="N3"/>
-            <div v-show="length>=4" class="input-item" v-html="N4"/>
-            <div v-show="length>=5" class="input-item" v-html="N5"/>
-            <div v-show="length>=6" class="input-item" v-html="N6"/>
+    <div>
+        <img v-show="toggleView&&isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext=2" />
+        <img v-show="toggleView&&isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext=1" />
+        <div class="password-box">
+            <div class="pwd-input" style="clear:both;">
+                <div class="input-item" v-html="N1" />
+                <div v-show="length>=2" class="input-item" v-html="N2" />
+                <div v-show="length>=3" class="input-item" v-html="N3" />
+                <div v-show="length>=4" class="input-item" v-html="N4" />
+                <div v-show="length>=5" class="input-item" v-html="N5" />
+                <div v-show="length>=6" class="input-item" v-html="N6" />
+            </div>
+            <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd" />
         </div>
-        <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd">
     </div>
 </template>
 <script>
@@ -22,19 +22,19 @@ export default {
             type: Number, // max length 6
             default: 6
         },
-        placeholder: {
-            type: String,
-            required: true
-        },
         toggleView: {
             type: Boolean,
             default: false
+        },
+        defaultView: {
+            type: Number,
+            default: 1 // 1 密码格式，0 数字格式
         }
     },
     data() {
         return {
             password: '',
-            isCiphertext: 1
+            isCiphertext: this.defaultView
         }
     },
     computed: {
@@ -87,54 +87,59 @@ export default {
     watch: {
         password(val, oldVal) {
             if (val.length >= this.length) {
-                this.$emit('endinput', true)
+                this.$emit('endinput', val)
             } else {
-                this.$emit('inputing', true)
+                this.$emit('inputing', val)
             }
         }
-    }
+    },
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
+.open-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    float: right;
+}
 .password-box {
     position: relative;
-    .pwd-type {
-        color: #212121;
-        font-size: 1rem;
-        line-height: 1.5rem;
-        margin-bottom: 1rem;
-        display: inline-block;
-    }
-    .open-close {
-        width: 1.5rem;
-        height: 1.5rem;
-        float: right;
-    }
+    clear: both;
     .pwd-input {
         width: 100%;
+        display: -webkit-box;
         display: flex;
         height: 2.2rem;
-        .input-item {
-            flex: 1;
-            margin-right: 0.7rem;
-            border-bottom: 1px solid #ddd;
-            height: 2.2rem;
-            background: #fff;
-            text-align: center;
-            &:last-child {
-                margin-right: 0;
-            }
+    }
+    .input-item {
+        -webkit-box-flex: 1;
+        flex: 1;
+        margin-right: 0.7rem;
+        border-bottom: 1px solid #ddd;
+        height: 2.2rem;
+        line-height: 2.2rem;
+        background: #fff;
+        text-align: center;
+        &:last-child {
+            margin-right: 0;
         }
     }
+
     input {
         color: transparent;
     }
     .hidden-pwd {
         width: 100%;
         position: absolute;
-        top: 2.2rem;
+        top: 0;
         left: 0;
         opacity: 0;
+    }
+}
+.error {
+    .password-box {
+        .input-item {
+            border-bottom: 1px solid red;
+        }
     }
 }
 </style>

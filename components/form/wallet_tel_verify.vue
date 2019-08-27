@@ -64,6 +64,7 @@ export default {
     },
     methods: {
         getCode() {
+            this.$emit('passCode')
             if (!this.canGetCode || this.waiting_res) return false
             this.waiting_res = true
             const accountNo = JSON.parse(sessionStorage.getItem('wallet')).accountNo
@@ -76,6 +77,9 @@ export default {
                     this.error_tel = res.data.message
                 }
             })
+        },
+        setTel(tel){
+            this.tel = tel
         }
     }
 }

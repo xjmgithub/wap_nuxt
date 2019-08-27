@@ -7,6 +7,11 @@ export default {
 
     post_share_title: 'StarTimes ON inafungua dunia mpya!',
 
+    // star pay
+    starpay_payment_currency_error: 'Huwezi kuendelea, tafadhali jaribu chaneli nyingine au wasiliana nasi',
+    starpay_payment_amount_error: 'Huna pesa ya kutosha, tafadhali angalia salio lako',
+    starpay_payment_login_notice: 'Kulipa na eWallet, unahitaji kuingia akaunti ya StarTimes kwanza',
+
     // vote film
     vote_about: 'Kuhusu PAOFF',
     vote_tab_film: 'Sinema',
@@ -33,10 +38,8 @@ export default {
     vote_leftvote: 'Kura zilizobakia',
     vote_vote_btn: 'PIGA KURA',
     vote_join_now: 'Chagua mteule wako',
-    vote_about_word:
-        '<p>The Pan African Online Film Festival (PAOFF) ni tuzo la kipekee la mtandaoni kwenye StarTimes ON ambalo lina lenga  kuzawadia uzalishaji bora kutoka kwa wazalishaji barani Afrika ambapo kwa njia hiyo imelenga kuisaidia na kukuza maendeleo ya sekata ya filamu na muziki kote Afrika.  </p><p>Tuzo hili ni jitihada za shirika inayoongoza katika televisheni ya kidigitali Afrika, StarTimes na italenga makundi matatu ambazo ni Filamu Bora zaidi Afrika, Filamu fupi bora zaidi Afrika na  Video ya Muziki bora zaidi Afrika.</p><p>Ni furaha yetu kuwaalika watumiaji wote mtandaoni kupiga kura na kuiunga mkono waipendayo kupitia StarTimes ON. Sherehe ya kutoa zawadi mwaka huu utaandaliwa nchini Nigeria, jukuwa la StarTimes ON itahesabu kura zote na kuhakikisha uwazi kwa wapiga kura pamoja na usawa usioegemea upande wowote.</p><p>©2019 na StarTimes Haki Zote Zimehifadhiwa</p>',
-    vote_rule_word:
-        '<p>1.Kuanzia Juni 1 hadi Julai 31, utapata kura 5 kila siku. Mpigie kura mtayarishi wako umpendaye na shoo uipendayo! </p><p>2.Shirikisha kiunganishi kwa marafiki ili upate kura zaidi! Unaweza kujishindia kura 5 zaidi kwa kila mtumiaji mpya (wale ambao hawajaipakua APU katika simu zao) kupitia kushirikisha kiunganishi. Watumiaji wengi zaidi wanaopakua apu kupitia kwa kiunganishi unayoishirikisha, ndivyo utakavyojishindia kura zaidi! </p><p>3.Kura zinaweza kujumulishwa na vitaweza kutumika hadi siku ya mwisho. Unaweza kuipigia kura shoo yoyote uipendayo. </p><p>4.Hesabu za kura katika shoo tofauti zitajumulishwa moja kwa moja, na shoo iliyo bora zaidi yenye kujishindia kura za juu itajinyakulia zawadi ya  Filamu bora zaidi Afrika, Filamu fupi bora zaidi Afrika na Video ya muziki bora zaidi Afrika. </p>',
+    vote_about_word: '<p>The Pan African Online Film Festival (PAOFF) ni tuzo la kipekee la mtandaoni kwenye StarTimes ON ambalo lina lenga  kuzawadia uzalishaji bora kutoka kwa wazalishaji barani Afrika ambapo kwa njia hiyo imelenga kuisaidia na kukuza maendeleo ya sekata ya filamu na muziki kote Afrika.  </p><p>Tuzo hili ni jitihada za shirika inayoongoza katika televisheni ya kidigitali Afrika, StarTimes na italenga makundi matatu ambazo ni Filamu Bora zaidi Afrika, Filamu fupi bora zaidi Afrika na  Video ya Muziki bora zaidi Afrika.</p><p>Ni furaha yetu kuwaalika watumiaji wote mtandaoni kupiga kura na kuiunga mkono waipendayo kupitia StarTimes ON. Sherehe ya kutoa zawadi mwaka huu utaandaliwa nchini Nigeria, jukuwa la StarTimes ON itahesabu kura zote na kuhakikisha uwazi kwa wapiga kura pamoja na usawa usioegemea upande wowote.</p><p>©2019 na StarTimes Haki Zote Zimehifadhiwa</p>',
+    vote_rule_word: '<p>1.Kuanzia Juni 1 hadi Julai 31, utapata kura 5 kila siku. Mpigie kura mtayarishi wako umpendaye na shoo uipendayo! </p><p>2.Shirikisha kiunganishi kwa marafiki ili upate kura zaidi! Unaweza kujishindia kura 5 zaidi kwa kila mtumiaji mpya (wale ambao hawajaipakua APU katika simu zao) kupitia kushirikisha kiunganishi. Watumiaji wengi zaidi wanaopakua apu kupitia kwa kiunganishi unayoishirikisha, ndivyo utakavyojishindia kura zaidi! </p><p>3.Kura zinaweza kujumulishwa na vitaweza kutumika hadi siku ya mwisho. Unaweza kuipigia kura shoo yoyote uipendayo. </p><p>4.Hesabu za kura katika shoo tofauti zitajumulishwa moja kwa moja, na shoo iliyo bora zaidi yenye kujishindia kura za juu itajinyakulia zawadi ya  Filamu bora zaidi Afrika, Filamu fupi bora zaidi Afrika na Video ya muziki bora zaidi Afrika. </p>',
 
     // Mr Right
     mrright_weekly_candidates: 'Weekly Candidates',
@@ -75,13 +78,10 @@ export default {
     loginfaq_have_grant_access_permission: 'Nimeruhusu ufikiaji lakini bado siwezi kuingia.',
     loginfaq_other_reason: 'sababu nyingine',
     loginfaq_signed_success_lastest_week: 'Umeingia kwa ufanisi kwenye programu zingine kwa akaunti yako ya Facebook katika siku saba zilizopita?',
-    loginfaq_thanks_for_your_feedback:
-        'Asante kwa maoni yako. Tutafanya kazi nzuri ya kurekebisha tatizo hili. Unaweza kujaribu njia nyingine za kuingilia.',
+    loginfaq_thanks_for_your_feedback: 'Asante kwa maoni yako. Tutafanya kazi nzuri ya kurekebisha tatizo hili. Unaweza kujaribu njia nyingine za kuingilia.',
 
-    loginfaq_poor_network_to_access_Google:
-        'Upatikanaji wako wa huduma Google umeshindikana kutokana na masuala ya uunganisho wa mtandao,Tafadhali jaribu tena.',
-    loginfaq_poor_network_to_access_Facebook:
-        'Upatikanaji wako wa huduma Facebook umeshindikana kutokana na masuala ya uunganisho wa mtandao,Tafadhali jaribu tena.',
+    loginfaq_poor_network_to_access_Google: 'Upatikanaji wako wa huduma Google umeshindikana kutokana na masuala ya uunganisho wa mtandao,Tafadhali jaribu tena.',
+    loginfaq_poor_network_to_access_Facebook: 'Upatikanaji wako wa huduma Facebook umeshindikana kutokana na masuala ya uunganisho wa mtandao,Tafadhali jaribu tena.',
     loginfaq_please_update_your_google_play: 'Tafadhali sasisha Google play yako kuwa mfumo wa 12.0 au zaidi ili kuingia.',
     loginfaq_cant_log_on_Google_due_to_network: 'Huwezi ingia Google kutokana na masuala ya uunganisho wa mtandao,Tafadhali jaribu tena.',
     loginfaq_yes: 'NDIO',
@@ -144,12 +144,10 @@ export default {
     next_: 'KUTENDA',
     more_recharge_method: 'Chaguzi  nyegine za huduma.',
     membership_all: 'ZOTE',
-    besure_input_ewallet:
-        'Nini umepata pembejeo inaonekana kama si Nambari ya Kadi ya Smart lakini akaunti ya eWallet. Je! Utajifungua tena eWallet sasa?',
+    besure_input_ewallet: 'Nini umepata pembejeo inaonekana kama si Nambari ya Kadi ya Smart lakini akaunti ya eWallet. Je! Utajifungua tena eWallet sasa?',
     agree_tip: 'Ndiyo, nitajaribu',
     refuse_tip: 'La, Shukrani.',
-    besure_have_card:
-        'Nini umepata pembejeo hailingani na Nambari yoyote ya Kadi ya Smart. Wasiliana nasi kufurahia show ya StarTimes na kupata msaada.',
+    besure_have_card: 'Nini umepata pembejeo hailingani na Nambari yoyote ya Kadi ya Smart. Wasiliana nasi kufurahia show ya StarTimes na kupata msaada.',
     account_signed_elsewhere: 'Akaunti yako imesajiliwa kwengine',
     error_network: 'Seva ya wavuti haipatikani ,tafadhali jaribu baadae',
 
@@ -161,8 +159,7 @@ export default {
     payment_details_promation: 'Matangazo',
     recharge_no_promotion: 'Matangazo yamekwisha.',
     payment_details_method: 'Njia za Malipo',
-    monthly_billing:
-        'Kutokana na bili ya kila mwezi ya mfumo, recharge yako inaweza kuchelewa. Ikiwa kuna matatizo, tafadhali piga huduma ya wateja.',
+    monthly_billing: 'Kutokana na bili ya kila mwezi ya mfumo, recharge yako inaweza kuchelewa. Ikiwa kuna matatizo, tafadhali piga huduma ya wateja.',
     refresh_wallet: 'Tafadhali angalia uwiano wako wa eWallet. Kisha uitumie kurejesha kwa akaunti yako ya TV.',
     continue_to_pay: 'ENDELEA',
     payment_details_total: 'Jumla',
@@ -174,14 +171,80 @@ export default {
     seo_title_bouquets: 'Pacotes',
 
     // seo description
-    seo_desc_browser:
-        'StarTimes On dedica-se a serviços de transmissão online com acesso a vídeos de entretenimento em qualquer hora e em todo locais e com qualquer dispositivo',
-    seo_desc_live:
-        'StarTimes deu primazia a conteúdos de televisão de grande audiência, como são os filmes e desporto para diferentes públicos independentes do tipo de dispositivo usados por estes. ',
+    seo_desc_browser: 'StarTimes On dedica-se a serviços de transmissão online com acesso a vídeos de entretenimento em qualquer hora e em todo locais e com qualquer dispositivo',
+    seo_desc_live: 'StarTimes deu primazia a conteúdos de televisão de grande audiência, como são os filmes e desporto para diferentes públicos independentes do tipo de dispositivo usados por estes. ',
     seo_desc_bouquets: 'Cada pacote de  DTT/DTH tem preços diferentes, vários canais em cada pacote. ',
 
     // seo keywords
     seo_keywords_browser: 'HD,Em Directo,Vídeo,transmissão online,futebol,Series,filmes,Africa',
     seo_keywords_live: 'HD,Em Directo,Vídeo,transmissão online,futebol,Series,filmes,Africa,Smart TV',
-    seo_keywords_bouquets: 'Pacotes,DTH,DTT,Básico,Clássico,Único,Smart,Super,Chinês,Francês,Desporto'
+    seo_keywords_bouquets: 'Pacotes,DTH,DTT,Básico,Clássico,Único,Smart,Super,Chinês,Francês,Desporto',
+
+    // 注册
+    // invite
+    reward_tips: 'Ikiwa wewe ni mtumiaji mpya, unaweza kupata siku moja ya  VIP Bure baada ya usajili.',
+    activity_rules: 'Sheria za Mchakato',
+    activity_rules_1: 'Watumiaji wapya watazawadiwa kwa kusajili kupitia linki ya muwaliko na kuingia kwenye Appu.',
+    activity_rules_2: 'Watumiaji wapya Warejeshe akaunti mpya na vifaa vipya. (Appu ya StarTimes ON haijasakinishwa kwenye simu)',
+    activity_rules_3: 'Tafadhali ingia kwenye Appu ya StarTimes ON ndani ya siku 7 baada ya kufanikisha usajili ili kupokea zawadi, au itakuwa batili.',
+    activity_rules_4: 'Appu ya StarTimes ON inahifadhi haki ya ufasiri wa mwisho.',
+    got_it: 'NIMEIPATA',
+    get_now: 'PATA SASA!',
+
+    // register
+    phone_number: 'Namba ya simu',
+    email_addr: 'Anwani ya barua pepe',
+    enter_your_phone_number: 'Weka namba ya simu yako',
+    enter_your_email_addr: 'Weka anwani ya barua pepe',
+    wallet_hint_get_code: 'Pata Kificho',
+    send_code_success: 'Imetumwa kikamilifu!',
+    text_onair_next: 'ENDELEA',
+    terms_of_service: 'Masharti ya Huduma',
+    // 错误信息提示
+    error_tel_number_false: 'Namba ya simu uliyoingiza si sahihi, tafadhali angalia na jaribu tena.',
+    error_email_false: 'Anuwani ya barua pepe si sahihi. Tafadhali kagua na ujaribu tena.',
+    error_registered: 'Wewe ni mtumiaji uliyesajiliwa.',
+    error_code: 'Haitambuliki.Tafadhali tazama na uingize tena.',
+    sign_in: 'Ingia',
+
+    // setpass
+    register_input_enter_password: 'Ingiza nywila',
+    register_input_enter_password_tip: 'Tafadhali ingiza herufi au nambari kuanzia 6-18',
+    register_input_enter_password_again: 'Nywila ya imethibitika',
+    register_input_enter_password_again_tip: 'Ingiza namba yako ya siri tena',
+    // TODO注册失败文案
+    error_setpass: 'Nywila lazima ijengeke kwa herufi au nambari kuanzia 6-18!',
+    error_setrepass: 'Maneno ya siri mawili uliyoingiza hayafanani!',
+    error_register_tip: 'Imeshindwa kujiandikisha, Tafadhali jaribu tena!',
+
+    // toGooglePlay
+    tips_register_successful: 'Usajili umefanikiwa! ',
+    tips_register_successful_tip: 'Utapata zawadi! Pakua Appu ya StarTimes ON sasa ili kuitumia!',
+    download_now: 'PAKUA SASA',
+
+    // 登录
+    signin_switch_phone: 'Ingia kupitia simu',
+    signin_switch_email: 'Ingia kupitia barua pepe',
+    all: 'Orodha ya nchi',
+    account_phone: 'Namba ya simu',
+    account_email: 'Barua pepe',
+    Password: 'Neno siri',
+    forget_password: 'Umesahau namba ya siri?',
+    // 错误提示
+    signin_notexist: 'Akaunti haipo.',
+    register: 'Jisajili',
+    confirm_number: 'Tafadhali hakikisha umeingiza namba sahihi',
+    mailbox_not_correct_format: 'Barua pepe haipo katika muundo sahihi',
+    password_is_incorrect: 'Namba yako ya siri sio sahihi',
+    forget_password_account_security_questions_hint: 'Tafadhali ingiza akantu yako.',
+    password_not_empty: 'Usipaache tupu sehemu ya neno siri!',
+
+    // 重置密码
+    register_mail_text_60_seconds_needed: 'Namba ya uthibitisho imetumwa,tafadhali angali kikasha cha barua pepe yako au barua pepe zisizofaa kwa wakati.Unaweza kutumiwa namba nyingine ya uthibitisho baada ya sekunde 60.',
+    get_verification_code: 'onyeza upata namba ya uthibitisho',
+
+    // title
+    reg_title: 'Jisajili',
+    set_password: 'Seti nywila',
+    reset_pass: 'Panga namba mpya ya siri',
 }

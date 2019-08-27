@@ -18,6 +18,7 @@ module.exports = {
                 singleline: 10
             }
         ],
+        'import/order': 'off',
         eqeqeq: 'off',
         'import/order': 'off',
         'vue/mustache-interpolation-spacing': 'off',

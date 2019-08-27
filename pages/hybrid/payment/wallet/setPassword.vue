@@ -1,34 +1,33 @@
 <template>
     <div class="container">
         <div v-show="step==1" class="step1">
-            <verify-tel ref="phone" @canNext="canStep2=true"/>
+            <verify-tel ref="phone" :title="reset?'Confirm your cellphone number':'Enter your phone number'" :disabled="reset" @canNext="canStep2=true" @passCode="goStep(6)" />
+            <div v-if="!passIsSet" class="change-phone">
+                <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
+            </div>
             <div class="footer">
-                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)"/>
+                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)" />
             </div>
         </div>
         <div v-show="step==2" class="step2">
-            <passInput
-                ref="vscode"
-                :length="4"
-                :toggle-view="true"
-                placeholder="Enter the code"
-                @endinput="canStep3=true"
-                @inputing="canStep3=false"
-            />
+            <div class="label">Enter SMS vertification code</div>
+            <passInput ref="vscode" :length="4" :toggle-view="true" @endinput="canStep3=true" @inputing="canStep3=false" />
             <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(3)"/>
+                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(3)" />
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
-            <passInput ref="newpass" :toggle-view="true" placeholder="Set a 6-bit password" @endinput="canStep4=true" @inputing="canStep4=false"/>
+            <div class="label">Set payment password</div>
+            <passInput ref="newpass" :toggle-view="true" placeholder="Set a 6-bit password" @endinput="canStep4=true" @inputing="canStep4=false" />
             <div class="footer">
-                <mButton :disabled="!canStep4" text="NEXT" @click="goStep(4)"/>
+                <mButton :disabled="!canStep4" text="NEXT" @click="goStep(4)" />
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
-            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm password" @endinput="canStep5=true" @inputing="canStep5=false"/>
+            <div class="label">Confirm password</div>
+            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm password" @endinput="canStep5=true" @inputing="canStep5=false" />
             <div class="footer">
-                <mButton :disabled="!canStep5" text="OK" @click="goStep(5)"/>
+                <mButton :disabled="!canStep5" text="OK" @click="goStep(5)" />
             </div>
         </div>
     </div>
@@ -38,7 +37,6 @@ import verifyTel from '~/components/form/wallet_tel_verify'
 import passInput from '~/components/password'
 import mButton from '~/components/button'
 import { invoke, commonPayAfter, payWithBalance } from '~/functions/pay'
-import { setCookie } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -54,46 +52,74 @@ export default {
             canStep4: false,
             canStep5: false,
             reset: false,
+            step: 0,
             accountNo: null,
-            channel:this.$route.query.channel,
-            payToken: this.$route.query.paytoken,
-            card: this.$route.query.card // paystack card
+            channel: this.$route.query.channel || '',
+            payToken: this.$route.query.payToken || '',
+            card: this.$route.query.card, // paystack card
+            passIsSet: this.$route.query.passIsSet || '',
+            merchantAppId: ''
         }
     },
-    async asyncData({ app: { $axios }, store }) {
-        try {
-            $axios.setHeader('token', store.state.token)
-            const res = await $axios.get('/vup/v1/ums/user/area', {
-                headers: {
-                    versionCode: '5300',
-                    clientType: 'android',
-                    token: store.state.token
-                }
-            })
-            const configs = res.data && res.data.appFBConfigs
-            let type = true
-            configs.forEach(item => {
-                if (item.functionBlockType === 91) {
-                    if (item.validType === 2) {
-                        type = true
-                    } else {
-                        type = false
-                    }
-                }
-            })
-
-            if (type === true) {
-                return { step: 1 }
-            } else {
-                return { step: 3 }
+    watch: {
+        step(nv) {
+            switch (nv) {
+                case 1:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'phone_show',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
+                    break
+                case 2:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'sms_code_show',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
+                    break
+                case 3:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'set_step1',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
+                    break
+                case 4:
+                    this.sendEvLog({
+                        category: 'set_password',
+                        action: 'set_step2',
+                        label: 1,
+                        value: this.reset ? 0 : 1,
+                        merchant_app_id: this.merchantAppId,
+                        data_source: 2
+                    })
             }
-        } catch (e) {
-            return { step: 1 }
         }
     },
     mounted() {
+        this.step = this.$route.query.dissphone ? 3 : 1
+        const sessionPayToken = sessionStorage.getItem('payToken')
+        const sessionChannel = sessionStorage.getItem('payChannel')
+        const sessionAppId = sessionStorage.getItem('merchantAppId')
+        if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
+        if (!this.channel && sessionChannel) this.channel = sessionChannel
+        if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
         const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
+        if (walletAccount.phone) {
+            this.reset = true
+            this.$refs.phone.setTel(walletAccount.phone.substr(3))
+        }
     },
     methods: {
         goStep(num) {
@@ -135,11 +161,19 @@ export default {
                 this.$axios
                     .put(`/mobilewallet/uc/v2/accounts/${this.accountNo}/pay-password?newPassword=${newpass}&verifyCode=${vscode}`, {})
                     .then(res => {
-                        if (res.data && res.data.code == '0') {
+                        if (res.data && res.data.code === 0) {
                             this.pay()
                         } else {
                             this.$alert(res.data.message)
                         }
+                        this.sendEvLog({
+                            category: 'set_password',
+                            action: 'set_result',
+                            label: 1,
+                            value: res.data.code === 0 ? 0 : 1,
+                            merchant_app_id: this.merchantAppId,
+                            data_source: 2
+                        })
                     })
             } else if (num === 4) {
                 const newpass = this.$refs.newpass.password
@@ -149,6 +183,15 @@ export default {
                     return false
                 }
                 this.step = num
+            } else if (num === 6) {
+                this.sendEvLog({
+                    category: 'set_password',
+                    action: 'get_phone_code',
+                    label: 1,
+                    value: this.reset ? 0 : 1,
+                    merchant_app_id: this.merchantAppId,
+                    data_source: 2
+                })
             } else {
                 this.step = num
             }
@@ -164,22 +207,26 @@ export default {
                     data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        setCookie('lastpay', 'card')
                         commonPayAfter.call(this, data, 3, 3)
                     },
                     { authorization_code: this.card }
                 )
                 return false
-            }else{
+            } else {
                 invoke.call(this, this.payToken, this.channel, data => {
                     payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
-                        setCookie('lastpay', 'wallet')
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
-                        this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                        // this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                        window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
                     })
                 })
             }
+        }
+    },
+    head() {
+        return {
+            title: this.reset ? 'Reset Password' : 'Setting Password'
         }
     }
 }
@@ -187,8 +234,8 @@ export default {
 <style lang="less" scoped>
 .container {
     padding: 3rem 0.6rem;
-    height:100%;
-    background:white;
+    height: 100%;
+    background: white;
     .step2 {
         width: 100%;
         height: 100%;
@@ -225,6 +272,13 @@ export default {
         text-decoration: underline;
         font-size: 0.8rem;
         font-weight: bold;
+    }
+}
+.change-phone {
+    text-align: right;
+    text-decoration: underline;
+    a {
+        color: #0087eb;
     }
 }
 </style>

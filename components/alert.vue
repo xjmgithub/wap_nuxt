@@ -33,6 +33,7 @@ export default {
             if (this.callback) this.callback()
         },
         show(msg, callback, text) {
+            console.log(Boolean(text))
             const _this = this
             this.msg = msg
             this.text = text || 'OK'
@@ -72,7 +73,6 @@ export default {
         min-height: 4.5rem;
     }
     .dialog-footer .btn {
-        width: 3rem;
         float: right;
         color: #0087eb;
         font-weight: bold;

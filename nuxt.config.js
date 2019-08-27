@@ -66,7 +66,8 @@ export default {
         '/search-service/': env.proxyHost,
         '/wxorder/': env.proxyHost,
         '/like/': env.proxyHost,
-        '/feed/': env.proxyHost
+        '/feed/': env.proxyHost,
+        '/payment/api/v2/': `http://qa.payment.startimestv.com/payment/api/v2/`
     },
     router: {
         middleware: 'auth' // middleware before all pages render
@@ -86,7 +87,8 @@ export default {
         { path: '/hybrid/api/games/getTaskByGame', handler: '~/api/games/getTaskByGame.js' },
         { path: '/hybrid/api/games/setGoal', handler: '~/api/games/setGoal.js' },
         { path: '/hybrid/api/games/startGame', handler: '~/api/games/startGame.js' },
-        { path: '/hybrid/api/games/taskOver', handler: '~/api/games/taskOver.js' }
+        { path: '/hybrid/api/games/taskOver', handler: '~/api/games/taskOver.js' },
+        { path: '/hybrid/api/payment/createPayment', handler: '~/api/payment/createPayment.js' }
     ],
     hooks: {
         listen(server) {

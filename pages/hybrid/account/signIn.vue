@@ -1,53 +1,56 @@
 <template>
     <div class="wrapper">
+        <div class="logo">
+            <img src="~assets/img/ic_upgrade_icon.png" />
+        </div>
         <div class="tab">
             <div v-show="type==1" @click="changetype(0)">
-                <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg">
-                <a href="javascript:void(0)" class="sign-way">Use phone number sign in</a>
+                <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg" />
+                <a href="javascript:void(0)" class="sign-way">{{$store.state.lang.signin_switch_phone}}</a>
             </div>
             <div v-show="type==0" @click="changetype(1)">
-                <img class="gray" src="~assets/img/users/ic_email_def_gray.svg">
-                <a href="javascript:void(0)" class="sign-way">Use Email sign in</a>
+                <img class="gray" src="~assets/img/users/ic_email_def_gray.svg" />
+                <a href="javascript:void(0)" class="sign-way">{{$store.state.lang.signin_switch_email}}</a>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
             <div v-if="country" class="country_choose" @click="countryDialogStatus=true">
-                <img :src="cdnPicSrc(country.nationalFlag)">
+                <img :src="cdnPicSrc(country.nationalFlag)" />
                 <span>{{country.name}}</span>
             </div>
             <div class="img-box">
-                <img src="~assets/img/users/ic_user_def_w.png" alt>
-                <input v-model="phoneNum" type="tel" placeholder="Phone Number">
+                <img src="~assets/img/users/ic_user_def_w.png" alt />
+                <input v-model="phoneNum" type="tel" :placeholder="account_phone" />
             </div>
             <div class="img-box">
-                <img src="~assets/img/users/ic_lockr_def_w.png" alt>
-                <input v-model="password" type="password" placeholder="Password">
+                <img src="~assets/img/users/ic_lockr_def_w.png" alt />
+                <input v-model="password" type="password" :placeholder="Password" />
             </div>
         </div>
         <div v-show="type==1" class="by_email">
             <div class="img-box">
-                <img src="~assets/img/users/ic_user_def_w.png" alt>
-                <input v-model="email" type="email" placeholder="E-mail">
+                <img src="~assets/img/users/ic_user_def_w.png" alt />
+                <input v-model="email" type="email" :placeholder="account_email" />
             </div>
             <div class="img-box">
-                <img src="~assets/img/users/ic_lockr_def_w.png" alt>
-                <input v-model="password" type="password" placeholder="Password">
+                <img src="~assets/img/users/ic_lockr_def_w.png" alt />
+                <input v-model="password" type="password" :placeholder="Password" />
             </div>
         </div>
-        <div class="next-btn" @click="login">SIGN IN</div>
+        <div class="next-btn" @click="login">{{$store.state.lang.sign_in}}</div>
         <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/account/resetpass">Forgot password?</nuxt-link>
+            <nuxt-link to="/hybrid/account/resetpass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
-            <div class="dialog-title">Country List</div>
+            <div class="dialog-title">{{$store.state.lang.all}}</div>
             <ul>
                 <li v-for="(item,index) in countrys" :key="index" @click="chooseCountry(item)">
-                    <img :src="cdnPicSrc(item.nationalFlag)">
+                    <img :src="cdnPicSrc(item.nationalFlag)" />
                     <span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false"/>
+        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
     </div>
 </template>
 <script>
@@ -67,7 +70,21 @@ export default {
             phoneNum: '',
             password: '',
             email: '',
-            countrys: countrArr
+            countrys: countrArr,
+            pre: this.$route.query.pre,
+            account_phone: this.$store.state.lang.account_phone,
+            account_email: this.$store.state.lang.account_email,
+            Password: this.$store.state.lang.Password
+        }
+    },
+    watch: {
+        country(nv, ov) {
+            this.phoneNum = ''
+        }
+    },
+    mounted() {
+        if (this.pre) {
+            sessionStorage.setItem('login_prefer', this.pre)
         }
     },
     methods: {
@@ -80,33 +97,46 @@ export default {
             this.countryDialogStatus = false
         },
         login() {
-            let params = {}
-            if (this.type === 1) {
-                params = {
-                    applicationId: 1,
-                    deviceId: this.$store.state.deviceId,
-                    type: 0,
-                    email: this.email,
-                    pwd: this.password
-                }
+            if ((this.type === 0 && !this.phoneNum) || (this.type === 1 && !this.email)) {
+                this.$alert(this.$store.state.lang.forget_password_account_security_questions_hint)
+            } else if (!this.password) {
+                this.$alert(this.$store.state.lang.password_not_empty)
             } else {
-                const tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
-                params = {
-                    applicationId: 2,
-                    phoneCc: this.country.phonePrefix,
-                    phone: tel,
-                    pwd: this.password,
-                    deviceId: this.$store.state.deviceId,
-                    type: 10
+                let params = {}
+                if (this.type === 1) {
+                    params = {
+                        applicationId: 2,
+                        deviceId: this.$store.state.deviceId,
+                        type: 0,
+                        email: this.email,
+                        pwd: this.password
+                    }
+                } else {
+                    const tel = this.phoneNum.length > 10 ? this.phoneNum.substr(3) : this.phoneNum
+                    params = {
+                        applicationId: 2,
+                        phoneCc: this.country.phonePrefix,
+                        phone: tel,
+                        pwd: this.password,
+                        deviceId: this.$store.state.deviceId,
+                        type: 10
+                    }
                 }
-            }
 
-            login(this, params)
+                login.call(this, params, () => {
+                    const pre = sessionStorage.getItem('login_prefer') || ''
+                    if (pre) {
+                        window.location.href = pre
+                    } else {
+                        this.$router.replace('/browser')
+                    }
+                })
+            }
         }
     },
     head() {
         return {
-            title: 'Sign In'
+            title: this.$store.state.lang.sign_in
         }
     }
 }
@@ -115,7 +145,14 @@ export default {
 .wrapper {
     padding: 1rem 0.8rem;
     width: 100%;
-
+    .logo {
+        width: 100%;
+        text-align: center;
+        margin: 2rem auto;
+        img {
+            width: 50%;
+        }
+    }
     .tab {
         div {
             padding-top: 1rem;
@@ -264,3 +301,4 @@ export default {
     }
 }
 </style>
+

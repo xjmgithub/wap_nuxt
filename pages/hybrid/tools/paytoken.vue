@@ -15,10 +15,13 @@
             <input v-model="txNo" type="text" placeholder="txNo" />
         </div>
         <mButton text="生成订单并支付" @click="creatPayment"></mButton>
+        <br />
+        <input v-model="payToken" readonly type="text" style="width:100%" />
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
+import { copyClipboard } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
@@ -36,7 +39,8 @@ export default {
             notifyUrl: '',
             country: '',
             currency: '',
-            txNo: ''
+            txNo: '',
+            payToken: ''
         }
     },
 
@@ -61,7 +65,9 @@ export default {
             })
                 .then(res => {
                     if (res.data.resultCode == 'SUCCESS') {
-                        window.location.href = `/hybrid/payment/channels?payToken=${res.data.payToken}`
+                        copyClipboard.call(this, res.data.payToken)
+                        this.payToken = res.data.payToken
+                        this.$toast('payToken copied')
                     }
                 })
                 .catch(err => {
