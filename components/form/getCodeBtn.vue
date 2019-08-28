@@ -52,7 +52,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .btn {
     max-width: 10rem;
     background: #0087eb;
