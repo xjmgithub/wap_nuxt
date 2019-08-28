@@ -5,17 +5,17 @@
         <img class="third_login twitter" src="~assets/img/users/btn_twitter_def.png" @click="bytwitter" />
         <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png" />
         <nuxt-link to="/hybrid/account/signIn" replace>
-            <div class="login_btn">SIGN IN</div>
+            <div class="login_btn">{{$store.state.lang.login_btn}}</div>
         </nuxt-link>
         <div class="regtext">
-            Don't have an account?
-            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
+            {{$store.state.lang.no_have_account}}
+            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">{{$store.state.lang.register}}</nuxt-link>
         </div>
         <div class="service">
-            By signing up, you are agreeing to our
-            <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
-            and
-            <a href="https://m.startimestv.com/privacyPolicy/privacyPolicy.html">Privacy Policy</a>
+            {{$store.state.lang.firstpage_tips}}
+            <a href="http://m.startimestv.com/copyright/copyright.html">{{$store.state.lang.firstpage_tips2}}</a>
+            {{$store.state.lang.firstpage_tips3}}
+            <a href="https://m.startimestv.com/privacyPolicy/privacyPolicy.html">{{$store.state.lang.firstpage_tips4}}</a>
         </div>
     </div>
 </template>

@@ -261,4 +261,11 @@ export default {
     set_password: 'Set Password',
     reset_pass: 'Reset Password',
 
+    // login
+    login_btn: 'SIGN IN',
+    no_have_account: 'Don\'t have an account?',
+    firstpage_tips: 'By signing up, you are agreeing to our',
+    firstpage_tips2: "Terms of Service",
+    firstpage_tips3: "and",
+    firstpage_tips4: "Privacy Policy.",
 }

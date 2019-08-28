@@ -260,4 +260,12 @@ export default {
     sign_in: 'Se connecter',
     set_password: 'Définir le mot de passe',
     reset_pass: 'Réinitialiser le mot de passe',
+
+    // login
+    login_btn: 'SE CONNECTER',
+    no_have_account: 'Vous n\'avez pas de compte?',
+    firstpage_tips: 'En vous inscrivant, vous vous engagez à nos',
+    firstpage_tips2: "Termes de service",
+    firstpage_tips3: "et",
+    firstpage_tips4: "Politique de confidentialité.",
 }

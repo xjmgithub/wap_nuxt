@@ -260,4 +260,12 @@ export default {
     sign_in: 'Iniciar sessão',
     set_password: 'Defina a senha',
     reset_pass: 'Trocar senha',
+
+    // login
+    login_btn: 'SIGN IN',
+    no_have_account: 'Não tem uma conta?',
+    firstpage_tips: 'Ao se inscrever, você concorda com os nossos',
+    firstpage_tips2: "Termos de serviços",
+    firstpage_tips3: "e",
+    firstpage_tips4: "acordos de privacidade.",
 }

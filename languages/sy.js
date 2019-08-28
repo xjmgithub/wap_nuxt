@@ -260,4 +260,12 @@ export default {
     sign_in: 'Ingia',
     set_password: 'Seti nywila',
     reset_pass: 'Panga namba mpya ya siri',
+
+    // login
+    login_btn: 'JISAJILI',
+    no_have_account: 'Huna akaunti?',
+    firstpage_tips: 'Kwa kuingia, unakubaliana na',
+    firstpage_tips2: "Masharti ya Huduma",
+    firstpage_tips3: "yetu na",
+    firstpage_tips4: "Sera ya Faragha.",
 }
