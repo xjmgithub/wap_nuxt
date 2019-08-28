@@ -205,7 +205,6 @@ export default {
     error_email_false: 'Anuwani ya barua pepe si sahihi. Tafadhali kagua na ujaribu tena.',
     error_registered: 'Wewe ni mtumiaji uliyesajiliwa.',
     error_code: 'Haitambuliki.Tafadhali tazama na uingize tena.',
-    sign_in: 'Ingia',
 
     // setpass
     register_input_enter_password: 'Ingiza nywila',
@@ -231,20 +230,34 @@ export default {
     Password: 'Neno siri',
     forget_password: 'Umesahau namba ya siri?',
     // 错误提示
-    signin_notexist: 'Akaunti haipo.',
-    register: 'Jisajili',
     confirm_number: 'Tafadhali hakikisha umeingiza namba sahihi',
+    signin_notexist: 'Akaunti haipo.',
     mailbox_not_correct_format: 'Barua pepe haipo katika muundo sahihi',
+    password_cannot_less_letters: 'Neno la siri lisiwe  chini ya herufi 6!',
+    password_cannoe_greater: 'Neno la siri lisizidi herufi 18!',
     password_is_incorrect: 'Namba yako ya siri sio sahihi',
-    forget_password_account_security_questions_hint: 'Tafadhali ingiza akantu yako.',
-    password_not_empty: 'Usipaache tupu sehemu ya neno siri!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'Namba ya uthibitisho imetumwa,tafadhali angali kikasha cha barua pepe yako au barua pepe zisizofaa kwa wakati.Unaweza kutumiwa namba nyingine ya uthibitisho baada ya sekunde 60.',
-    get_verification_code: 'onyeza upata namba ya uthibitisho',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'Namba hii haijasajiliwa.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'Nambari ya kuthibitisha imesitishwa.Jaribu kutuma nambari tena.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Tafadhali angalia barua pepe,bonyeza kiungo cha usalama na rekebisha tena namba yako ya siri.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'Barua pepe hii bado haijasajiliwa.',
+    password_reset_failed: 'Utengenezaji upya wa namba ya siri  umeshindikana!',
 
     // title
-    reg_title: 'Jisajili',
+    register: 'Jisajili',
+    sign_in: 'Ingia',
     set_password: 'Seti nywila',
     reset_pass: 'Panga namba mpya ya siri',
 }

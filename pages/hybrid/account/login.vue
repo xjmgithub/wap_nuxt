@@ -1,37 +1,21 @@
 <template>
     <div class="wrapper">
-        <img class="st_logo" src="~assets/img/ic_upgrade_icon.png">
-        <img
-            class="third_login facebook"
-            src="~assets/img/users/btn_facebook_def.png"
-            @click="byfacebook"
-        >
-        <img
-            class="third_login twitter"
-            src="~assets/img/users/btn_twitter_def.png"
-            @click="bytwitter"
-        >
-        <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
+        <img class="st_logo" src="~assets/img/ic_upgrade_icon.png" />
+        <img class="third_login facebook" src="~assets/img/users/btn_facebook_def.png" @click="byfacebook" />
+        <img class="third_login twitter" src="~assets/img/users/btn_twitter_def.png" @click="bytwitter" />
+        <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png" />
         <nuxt-link to="/hybrid/account/signIn" replace>
-            <div class="login_btn">
-                SIGN IN
-            </div>
+            <div class="login_btn">SIGN IN</div>
         </nuxt-link>
         <div class="regtext">
             Don't have an account?
-            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
-                Register
-            </nuxt-link>
+            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">Register</nuxt-link>
         </div>
         <div class="service">
             By signing up, you are agreeing to our
-            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
-                Terms of Service
-            </nuxt-link>
+            <a href="http://m.startimestv.com/copyright/copyright.html">Terms of Service</a>
             and
-            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
-                Privacy Policy
-            </nuxt-link>
+            <a href="https://m.startimestv.com/privacyPolicy/privacyPolicy.html">Privacy Policy</a>
         </div>
     </div>
 </template>
@@ -69,7 +53,6 @@ export default {
         initGoogleLogin(document.getElementById('google-btn'), function(userId, nickname) {
             _this.loginByThird(userId, nickname, 3)
         })
-
     },
     methods: {
         byfacebook() {
@@ -157,7 +140,14 @@ export default {
         text-align: center;
         font-size: 0.8rem;
         color: #424242;
-        margin: 1rem 10% 0;
+        margin: 0 10%;
+    }
+    .regtext,
+    .service {
+        a {
+            color: #0084e5;
+            text-decoration: underline;
+        }
     }
 }
 </style>

@@ -4,13 +4,13 @@
             <img src="~assets/img/ic_upgrade_icon.png" />
         </div>
         <div class="tab">
-            <div v-show="type==1" @click="changetype(0)">
+            <div v-show="type==1">
                 <img class="gray" src="~assets/img/users/ic_telephone_def_g.svg" />
-                <a href="javascript:void(0)" class="sign-way">{{$store.state.lang.signin_switch_phone}}</a>
+                <a href="javascript:void(0)" class="sign-way" @click="changetype(0)">{{$store.state.lang.signin_switch_phone}}</a>
             </div>
-            <div v-show="type==0" @click="changetype(1)">
+            <div v-show="type==0">
                 <img class="gray" src="~assets/img/users/ic_email_def_gray.svg" />
-                <a href="javascript:void(0)" class="sign-way">{{$store.state.lang.signin_switch_email}}</a>
+                <a href="javascript:void(0)" class="sign-way" @click="changetype(1)">{{$store.state.lang.signin_switch_email}}</a>
             </div>
         </div>
         <div v-show="type==0" class="by_tel">
@@ -22,27 +22,33 @@
                 <div :class="{focus:focus_tel,error:error_tel}" class="input-tel">
                     <div class="prefix">+{{country.phonePrefix}}</div>
                     <div class="number">
-                        <input v-model="phoneNum" type="tel" :placeholder="account_phone" @focus="telFocus" @blur="telBlur" />
+                        <input v-model="phoneNum" type="tel" :placeholder="focus_tel?'':account_phone" @focus="telFocus" @blur="telBlur" />
                     </div>
-                    <div v-show="focus_tel" class="focus">Phone number</div>
-                    <div v-show="error_tel" class="focus-error">Phone number</div>
+                    <div v-show="focus_tel&&!error_tel" class="focus">{{account_phone}}</div>
+                    <div v-show="error_tel" class="focus-error">{{account_phone}}</div>
                     <div v-show="error_tel" class="error" v-html="error_tel"></div>
                 </div>
+            </div>
+            <div class="forgot-pwd">
+                <nuxt-link to="/hybrid/account/resetTelPass">{{$store.state.lang.forget_password}}</nuxt-link>
             </div>
         </div>
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
-                    <input v-model="email" type="email" :placeholder="account_email" @focus="emailFocus" @blur="emailBlur" />
+                    <input v-model="email" type="email" :placeholder="focus_email?'':account_email" @focus="emailFocus" @blur="emailBlur" />
                     <div v-show="showAutoInput" class="auto-input">
                         <div @click="autoInput('gmail')">{{email}}gmail.com</div>
                         <div @click="autoInput('yahoo')">{{email}}yahoo.com</div>
                         <div @click="autoInput('hotmail')">{{email}}hotmail.com</div>
                     </div>
                 </div>
-                <div v-show="focus_email" class="focus">Email</div>
-                <div v-show="error_email" class="focus-error">Email</div>
+                <div v-show="focus_email&&!error_email" class="focus">{{account_email}}</div>
+                <div v-show="error_email" class="focus-error">{{account_email}}</div>
                 <div v-show="error_email" class="error" v-html="error_email"></div>
+            </div>
+            <div class="forgot-pwd">
+                <nuxt-link to="/hybrid/account/resetEmailPass">{{$store.state.lang.forget_password}}</nuxt-link>
             </div>
         </div>
         <div :class="{focus:focus_pass,error:error_pass}" class="password-box">
@@ -50,16 +56,16 @@
                 <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2" />
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1" />
             </div>
-            <input v-model="password" :type="pwdType" :placeholder="Password" @focus="passFocus" @blur="PassBlur" />
-            <div v-show="focus_pass" class="focus">Password</div>
-            <div v-show="error_pass" class="focus-error">Password</div>
+            <input v-model="password" :type="pwdType" :placeholder="focus_pass?'':Password" @focus="passFocus" @blur="passBlur" />
+            <div v-show="focus_pass" class="focus">{{Password}}</div>
+            <div v-show="error_pass" class="focus-error">{{Password}}</div>
             <div v-show="error_pass" class="error" v-html="error_pass"></div>
         </div>
         <div class="footer">
             <mButton :disabled="!canNext" :text="signin" @click="login" />
         </div>
-        <div class="forgot-pwd">
-            <nuxt-link to="/hybrid/account/resetpass">{{$store.state.lang.forget_password}}</nuxt-link>
+        <div class="register">
+            <nuxt-link to="/hybrid/account/register">{{$store.state.lang.register}}</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">{{$store.state.lang.all}}</div>
@@ -160,11 +166,9 @@ export default {
     methods: {
         telFocus() {
             this.focus_tel = true
-            this.error_tel = ''
         },
         emailFocus() {
             this.focus_email = true
-            this.error_email = ''
         },
         passFocus() {
             if (this.error_pass && this.password.length >= 6 && this.password.length <= 18) {
@@ -176,7 +180,7 @@ export default {
         telBlur() {
             this.focus_tel = false
             if (this.phoneNum != 0 && !new RegExp(this.country.phoneRegex).test(this.phoneNum)) {
-                this.error_tel = 'geshicuowugeshicuowugeshicuowugeshicuowugeshicuowu'
+                this.error_tel = this.$store.state.lang.confirm_number
             } else if (this.phoneNum != 0) {
                 this.$axios({
                     url: `/ums/v1/user/check/username?phoneCc=${this.country.phonePrefix}&phone=${this.phoneNum}&type=10`,
@@ -185,8 +189,7 @@ export default {
                     .then(res => {
                         if (res.data.code === 1) {
                             // 号码未注册
-                            this.error_tel =
-                                'meizhuce' + ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline"> register </a>'
+                            this.error_tel = this.$store.state.lang.signin_notexist + ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.register + '</a>'
                         } else if (res.data.code === 0) {
                             // 已注册号码，格式正确
                             this.error_tel = ''
@@ -199,7 +202,7 @@ export default {
         emailBlur() {
             this.focus_email = false
             if (this.email != 0 && !new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(this.email)) {
-                this.error_email = 'email geshicuowu'
+                this.error_email = this.$store.state.lang.mailbox_not_correct_format
             } else if (this.email != 0) {
                 this.$axios({
                     url: `/ums/v1/user/check/username?email=${this.email}&type=0`,
@@ -208,9 +211,7 @@ export default {
                     .then(res => {
                         if (res.data.code === 1) {
                             // 号码未注册
-                            this.error_email =
-                                'email meizhuce' +
-                                ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline"> register </a>'
+                            this.error_email = this.$store.state.lang.signin_notexist + ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.register + '</a>'
                         } else if (res.data.code === 0) {
                             // 已注册号码，格式正确
                             this.error_email = ''
@@ -220,7 +221,7 @@ export default {
                     .catch(() => {})
             }
         },
-        PassBlur() {
+        passBlur() {
             this.focus_pass = false
         },
         autoInput(str) {
@@ -239,9 +240,9 @@ export default {
         },
         login() {
             if (this.password.length < 6) {
-                this.error_pass = 'buneng<6'
+                this.error_pass = this.$store.state.lang.password_cannot_less_letters
             } else if (this.password.length > 18) {
-                this.error_pass = 'buneng>18'
+                this.error_pass = this.$store.state.lang.password_cannoe_greater
             } else {
                 let params = {}
                 if (this.type === 1) {
@@ -337,6 +338,21 @@ export default {
     .by_email {
         height: 8.5rem;
         padding-top: 3rem;
+        position: relative;
+        .forgot-pwd {
+            position: absolute;
+            // left: 0;
+            right: 10%;
+            top: 17rem;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            a {
+                color: #0087eb;
+                font-size: 0.8rem;
+                text-decoration: underline;
+            }
+        }
     }
     .by_tel {
         .phone_number {
@@ -493,9 +509,9 @@ export default {
         width: 80%;
         margin: 0 auto;
     }
-    .forgot-pwd {
-        text-align: center;
-        margin-top: 1rem;
+    .register {
+        text-align: left;
+        margin: 1rem auto 2rem 10%;
         a {
             color: #0087eb;
             font-size: 0.8rem;

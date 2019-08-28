@@ -205,7 +205,6 @@ export default {
     error_email_false: 'The email address is incorrect. Please check and try again.',
     error_registered: "You're a registered user.",
     error_code: 'This code you entered is incorrect. Please try again.',
-    sign_in: 'Sign In',
 
     // setpass
     register_input_enter_password: 'Enter Password',
@@ -231,20 +230,34 @@ export default {
     Password: 'Password',
     forget_password: 'Forgot Password?',
     // 错误提示
-    signin_notexist: 'The account doesn\'t exist.',
-    register: 'Register',
     confirm_number: 'Please confirm you have entered the right number.',
+    signin_notexist: 'The account doesn\'t exist.',
     mailbox_not_correct_format: 'The mailbox is not in the correct format!',
+    password_cannot_less_letters: 'The password can not be less than 6 characters!',
+    password_cannoe_greater: 'The password can not be more than 18 letters!',
     password_is_incorrect: 'The password is incorrect',
-    forget_password_account_security_questions_hint: 'Please enter your account.',
-    password_not_empty: 'Do not leave the password blank!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
-    get_verification_code: 'Click to get verification code',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'This number is not registered.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'Verification code expired. Resend the code.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Please check your email, click the security link and reset your password.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'This email address has not been registered yet.',
+    password_reset_failed: 'Password reset failed!',
 
     // title
-    reg_title: 'Register',
+    register: 'Register',
+    sign_in: 'Sign In',
     set_password: 'Set Password',
     reset_pass: 'Reset Password',
 

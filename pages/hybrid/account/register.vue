@@ -25,8 +25,10 @@
                 <div :class="{focus:focus_tel,error:error_tel}" class="input-tel">
                     <div class="prefix">+{{country.phonePrefix}}</div>
                     <div class="number">
-                        <input v-model="tel" type="tel" :placeholder="enter_phone" @focus="focusTel" @blur="focus_tel=false" />
+                        <input v-model="tel" type="tel" :placeholder="focus_tel?'':enter_phone" @focus="focusTel" @blur="focus_tel=false" />
                     </div>
+                    <div v-show="focus_tel&&!error_tel" class="focus">{{enter_phone}}</div>
+                    <div v-show="error_tel" class="focus-error">{{enter_phone}}</div>
                     <div v-show="error_tel" class="error" v-html="error_tel"></div>
                 </div>
             </div>
@@ -47,13 +49,15 @@
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
-                    <input v-model="email" type="email" :placeholder="enter_email" @focus="focusEmail" @blur="focus_email=false" />
+                    <input v-model="email" type="email" :placeholder="focus_email?'':enter_email" @focus="focusEmail" @blur="focus_email=false" />
                     <div v-show="showAutoInput" class="auto-input">
                         <div @click="autoInput('gmail')">{{email}}gmail.com</div>
                         <div @click="autoInput('yahoo')">{{email}}yahoo.com</div>
                         <div @click="autoInput('hotmail')">{{email}}hotmail.com</div>
                     </div>
                 </div>
+                <div v-show="focus_email&&!error_email" class="focus">{{enter_email}}</div>
+                <div v-show="error_email" class="focus-error">{{enter_email}}</div>
                 <div v-show="error_email" class="error" v-html="error_email"></div>
             </div>
             <div class="get-code">
@@ -78,9 +82,7 @@
         <div class="next-btn">
             <mButton :disabled="!canNext" :text="next" @click="nextStep" />
         </div>
-        <div class="terms" @click="toService">
-            {{$store.state.lang.terms_of_service}}
-        </div>
+        <div class="terms" @click="toService">{{$store.state.lang.terms_of_service}}</div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">{{$store.state.lang.all}}</div>
             <ul>
@@ -136,7 +138,7 @@ export default {
             error_tel_number_false: this.$store.state.lang.error_tel_number_false,
             error_email_false: this.$store.state.lang.error_email_false,
             error_registered: this.$store.state.lang.error_registered,
-            error_code: this.$store.state.lang.error_code,
+            error_code: this.$store.state.lang.error_code
         }
     },
     computed: {
@@ -198,7 +200,7 @@ export default {
             })
         },
         focusTel() {
-            this.focus_tel=true
+            this.focus_tel = true
             this.sendEvLog({
                 category: 'register',
                 action: 'register_input',
@@ -207,7 +209,7 @@ export default {
             })
         },
         focusEmail() {
-            this.focus_email=true
+            this.focus_email = true
             this.sendEvLog({
                 category: 'register',
                 action: 'register_input',
@@ -216,7 +218,7 @@ export default {
             })
         },
         showChooseCountry() {
-            this.countryDialogStatus=true
+            this.countryDialogStatus = true
             this.sendEvLog({
                 category: 'register',
                 action: 'register_country_switch',
@@ -281,7 +283,11 @@ export default {
                             value: 0
                         })
                         callback(timerIntercept)
-                        this.error_tel = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.sign_in + '</a>'
+                        this.error_tel =
+                            this.error_registered +
+                            ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' +
+                            this.$store.state.lang.sign_in +
+                            '</a>'
                     } else {
                         this.sendEvLog({
                             category: 'register',
@@ -340,7 +346,11 @@ export default {
                             value: 0
                         })
                         callback(timerIntercept)
-                        this.error_email = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.sign_in + '</a>'
+                        this.error_email =
+                            this.error_registered +
+                            ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' +
+                            this.$store.state.lang.sign_in +
+                            '</a>'
                     } else {
                         this.sendEvLog({
                             category: 'register',
@@ -464,7 +474,7 @@ export default {
             this.sendEvLog({
                 category: 'register',
                 action: 'register_country_choose',
-                label: 'register_country_'+country.country,
+                label: 'register_country_' + country.country,
                 value: 0
             })
         },
@@ -495,7 +505,7 @@ export default {
     },
     head() {
         return {
-            title: this.$store.state.lang.reg_title
+            title: this.$store.state.lang.register
         }
     }
 }
@@ -675,13 +685,6 @@ export default {
             &.error {
                 border-bottom: red solid 1px;
             }
-            &:after {
-                content: '0';
-                display: block;
-                height: 0;
-                clear: both;
-                visibility: hidden;
-            }
             .number {
                 width: 100%;
                 .auto-input {
@@ -710,14 +713,34 @@ export default {
     }
     .input-tel,
     .input-email {
+        .focus,
+        .focus-error,
         .error {
             height: 1rem;
             position: absolute;
             left: 0;
-            bottom: -1.5rem;
             font-size: 0.8rem;
+        }
+        .focus {
+            bottom: 1.8rem;
+            color: #0087eb;
+        }
+        .focus-error {
+            bottom: 1.8rem;
             color: red;
         }
+        .error {
+            bottom: -1.4rem;
+            color: red;
+        }
+        // .error {
+        //     height: 1rem;
+        //     position: absolute;
+        //     left: 0;
+        //     bottom: -1.5rem;
+        //     font-size: 0.8rem;
+        //     color: red;
+        // }
     }
     .next-btn {
         width: 80%;
