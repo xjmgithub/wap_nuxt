@@ -27,7 +27,7 @@
                     <nuxt-link :class="{checked:$route.path=='/browser/language'}" to="/browser/language">{{language}}</nuxt-link>
                 </li>
                 <li>
-                    <a :href="faq_url">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</a>
+                    <nuxt-link :class="{checked:$route.path=='/browser/faq'}" to="/browser/faq">{{$store.state.lang.officialwebsitemobile_slidenav_faq}}</nuxt-link>
                 </li>
                 <li>
                     <nuxt-link :class="{checked:$route.path=='/browser/contactus'}" to="/browser/contactus">
@@ -62,7 +62,6 @@ export default {
     },
     data() {
         return {
-            faq_url: 'https://m.startimestv.com/faq.php'
         }
     },
     computed: {
