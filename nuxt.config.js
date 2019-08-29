@@ -66,8 +66,7 @@ export default {
         '/search-service/': env.proxyHost,
         '/wxorder/': env.proxyHost,
         '/like/': env.proxyHost,
-        '/feed/': env.proxyHost,
-        '/payment/api/v2/': `http://qa.payment.startimestv.com/payment/api/v2/`
+        '/feed/': env.proxyHost
     },
     router: {
         middleware: 'auth' // middleware before all pages render
