@@ -191,14 +191,14 @@ export default {
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         if (setted) {
                             this.$router.push(
-                                `/hybrid/payment/wallet/paybyPass?paytoken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
+                                `/hybrid/payment/wallet/paybyPass?payToken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
                                     channel.appInterfaceMode
                                 }&card=${card || ''}`
                             )
                         } else {
                             this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
                                 this.$router.push(
-                                    `/hybrid/payment/wallet/setPassword?paytoken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
+                                    `/hybrid/payment/wallet/setPassword?payToken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
                                         channel.appInterfaceMode
                                     }&card=${card || ''}`
                                 )
