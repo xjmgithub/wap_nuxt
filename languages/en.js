@@ -260,6 +260,7 @@ export default {
     sign_in: 'Sign In',
     set_password: 'Set Password',
     reset_pass: 'Reset Password',
+    login_title: 'Login',
 
     // login
     login_btn: 'SIGN IN',

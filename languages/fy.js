@@ -260,6 +260,7 @@ export default {
     sign_in: 'Se connecter',
     set_password: 'Définir le mot de passe',
     reset_pass: 'Réinitialiser le mot de passe',
+    login_title: 'S\'identifier',
 
     // login
     login_btn: 'SE CONNECTER',

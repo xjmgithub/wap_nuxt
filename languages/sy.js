@@ -260,6 +260,7 @@ export default {
     sign_in: 'Ingia',
     set_password: 'Seti nywila',
     reset_pass: 'Panga namba mpya ya siri',
+    login_title: 'Ingia',
 
     // login
     login_btn: 'JISAJILI',

@@ -169,45 +169,51 @@ export default {
             })
             this.$axios.post('/ums/v3/register', options).then(res => {
                 if (res.data.code === 0) {
-                    let params = {}
-                    if (this.phone) {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register phone',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            phoneCc: this.phoneCc,
-                            phone: this.phone,
-                            pwd: this.pass,
-                            deviceId: this.$store.state.deviceId,
-                            type: 10
-                        }
-                    } else {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register email',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            deviceId: this.$store.state.deviceId,
-                            type: 0,
-                            email: this.email,
-                            pwd: this.pass
-                        }
-                    }
-                    login.call(this, params, () => {
-                        const pre = sessionStorage.getItem('register_prefer') || ''
-                        if (pre) {
-                            window.location.href = pre
-                        } else {
-                            this.$router.replace('/browser')
-                        }
-                    })
+                    this.$alert(
+                        this.$store.state.lang.tips_register_successful,
+                        () => {
+                            let params = {}
+                            if (this.phone) {
+                                this.sendEvLog({
+                                    category: 'register',
+                                    action: 'register_passwd_ok',
+                                    label: 'register phone',
+                                    value: 0
+                                })
+                                params = {
+                                    applicationId: 2,
+                                    phoneCc: this.phoneCc,
+                                    phone: this.phone,
+                                    pwd: this.pass,
+                                    deviceId: this.$store.state.deviceId,
+                                    type: 10
+                                }
+                            } else {
+                                this.sendEvLog({
+                                    category: 'register',
+                                    action: 'register_passwd_ok',
+                                    label: 'register email',
+                                    value: 0
+                                })
+                                params = {
+                                    applicationId: 2,
+                                    deviceId: this.$store.state.deviceId,
+                                    type: 0,
+                                    email: this.email,
+                                    pwd: this.pass
+                                }
+                            }
+                            login.call(this, params, () => {
+                                const pre = sessionStorage.getItem('register_prefer') || ''
+                                if (pre) {
+                                    window.location.href = pre
+                                } else {
+                                    this.$router.replace('/browser')
+                                }
+                            })
+                        },
+                        this.$store.state.lang.login_title
+                    )
                 } else {
                     this.sendEvLog({
                         category: 'register',

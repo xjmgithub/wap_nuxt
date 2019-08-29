@@ -260,6 +260,7 @@ export default {
     sign_in: 'Iniciar sessão',
     set_password: 'Defina a senha',
     reset_pass: 'Trocar senha',
+    login_title: 'Entrar',
 
     // login
     login_btn: 'SIGN IN',
