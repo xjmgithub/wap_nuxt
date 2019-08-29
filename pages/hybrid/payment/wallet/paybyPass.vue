@@ -1,8 +1,9 @@
 <template>
     <div class="container">
-        <div v-show="goodMsg" class="goods">
+        <div v-if="goodMsg" class="goods">
             <p class="pay-money">
-                <span>{{goodMsg.symbol}}</span>{{goodMsg.amount}}
+                <span>{{goodMsg.symbol}}</span>
+                {{goodMsg.amount}}
             </p>
         </div>
         <p class="password">Enter payment password</p>
@@ -124,7 +125,7 @@ export default {
 </script>
 <style scoped>
 .container {
-    padding: 1rem;
+    padding: 2rem 1rem;
     background: white;
     min-height: 100%;
     position: relative;
@@ -144,11 +145,6 @@ export default {
 }
 .pay-money span {
     font-size: 1.25rem;
-}
-.password {
-    position: absolute;
-    top: 6rem;
-    left: 1rem;
 }
 .forgot-pwd {
     text-align: right;
