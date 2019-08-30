@@ -87,7 +87,8 @@ export default {
         { path: '/hybrid/api/games/setGoal', handler: '~/api/games/setGoal.js' },
         { path: '/hybrid/api/games/startGame', handler: '~/api/games/startGame.js' },
         { path: '/hybrid/api/games/taskOver', handler: '~/api/games/taskOver.js' },
-        { path: '/hybrid/api/payment/createPayment', handler: '~/api/payment/createPayment.js' }
+        { path: '/hybrid/api/payment/createPayment', handler: '~/api/payment/createPayment.js' },
+        { path: '/hybrid/api/app/getFaq', handler: '~/api/app/getFaq.js' }
     ],
     hooks: {
         listen(server) {
@@ -100,8 +101,8 @@ export default {
     },
     build: {
         /*
-        ** You can extend webpack config here
-        */
+         ** You can extend webpack config here
+         */
         // parallel: true, 和下边的两个属性同时用会得到warning
         // cache: true,
         // hardSource: true,
