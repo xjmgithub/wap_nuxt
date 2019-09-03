@@ -16,7 +16,7 @@
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                        <input :checked="item.lastSuccessPay|| i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <i />
                     </label>
                 </div>
@@ -34,7 +34,7 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import { formatAmount, cdnPicSrc, getCookie } from '~/functions/utils'
+import { formatAmount, cdnPicSrc } from '~/functions/utils'
 import { updateWalletAccount, updateWalletConf, invoke, commonPayAfter } from '~/functions/pay'
 import countrys from '~/functions/countrys.json'
 export default {
@@ -137,7 +137,6 @@ export default {
     },
     methods: {
         getPayMethods() {
-            this.lastpay = getCookie('lastpay') || ''
             this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
                 const data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
@@ -151,6 +150,9 @@ export default {
                     const payChannels = {}
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
+                        if(item.lastSuccessPay){
+                            this.lastpay = item.id
+                        }
                     })
                     this.lastpay && this.initChannel(payChannels[this.lastpay])
                     !this.lastpay && this.initChannel(this.payChannels[0])
