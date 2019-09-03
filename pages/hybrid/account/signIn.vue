@@ -42,9 +42,8 @@
             <nuxt-link to="/hybrid/account/resetpass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
         <div class="regtext">
-            Don't have an account?
             <nuxt-link to="/hybrid/account/register">
-                <span>Register</span> 
+                Don't have a StarTimes account? Register here
             </nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
@@ -245,12 +244,9 @@ export default {
     .regtext {
         text-align: center;
         font-size: 0.9rem;
-        color: #424242;
         margin-top: 2.5rem;
-        span{
-            color:#0087eb;
-            text-decoration: underline;
-        }
+        color: #0087eb;
+        text-decoration: underline;
     }
     .country-choose-dialog {
         width: 18rem;

@@ -1,6 +1,14 @@
 <template>
     <div :class="{'grey-back':result==2}" class="container">
-        <loading v-show="result<=0" />
+        <template v-if="result<=0">
+            <div class="top">
+                <img class="success_load" src="~assets/img/pay/img_load_def_b.png" alt />
+                <div class="loading">
+                    <loading />
+                </div>
+            </div>
+            <div class="paying" v-html="load_message" />
+        </template>
         <template v-if="result=='1'">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt />
             <p class="success">Payment Successful</p>
@@ -15,9 +23,11 @@
             <p class="fail">Payment Failed</p>
             <p class="msg">{{fail_message}}</p>
         </template>
-        <div v-show="result>0" class="footer">
+        <p v-show="showMore&&result>='0'" class="show-more" />
+        <div class="footer">
             <mButton text="REFRESH" @click="refresh" />
-            <mButton text="OK" @click="click" />
+            <mButton v-show="result>0" text="OK" @click="click" />
+            <p v-show="isApp===1&&result<=0" class="help">HELP</p>
         </div>
     </div>
 </template>
@@ -45,7 +55,10 @@ export default {
             timer: null,
             maxReqNum: 10,
             timer2: null,
-            merchantAppId: ''
+            merchantAppId: '',
+            load_message:
+                "1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......",
+            showMore: true
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -129,6 +142,9 @@ export default {
             value: this.result,
             merchant_app_id: this.merchantAppId,
             data_source: 2
+        })
+        document.addEventListener('scroll', () => {
+            this.showMore = false
         })
     },
     methods: {
@@ -218,60 +234,110 @@ export default {
 </script>
 <style scoped lang="less">
 .container {
-    padding: 3rem 1rem 0;
+    padding: 1rem 1rem 0;
     text-align: center;
     min-height: 100%;
     background: white;
+    .top {
+        height: 15rem;
+        position: fixed;
+        top: 1rem;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        background: #ffffff;
+        .loading {
+            width: 100%;
+            margin: 1rem 0;
+            .lds-ring {
+                left: 0;
+                top: 0;
+                position: relative;
+                margin: 0 auto;
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+    }
     &.grey-back {
         height: 100vh;
         background: #eeeeee;
     }
-}
-.container img {
-    width: 13rem;
-    height: 11rem;
-}
-.container img.success_img {
-    width: 3rem;
-    height: 3rem;
-    margin-top: 2rem;
-}
-.container .success {
-    color: #0087eb;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-top: 0.75rem;
-}
-.container .fail {
-    line-height: 2rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #ff6100;
-    margin-top: 1rem;
-}
-.container .money {
-    color: #212121;
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 1rem 0 1.5rem;
-}
-.container .money span {
-    font-size: 1.25rem;
-}
-.container .msg {
-    color: #666;
-    font-size: 1rem;
-    line-height: 1.4rem;
-}
-.container .msg.lf {
-    text-align: left;
-}
-.footer {
-    position: fixed;
-    bottom: 2rem;
-    width: 75%;
-    margin: 0 auto;
-    left: 0;
-    right: 0;
+    img {
+        width: 13rem;
+        height: 11rem;
+        &.success_img {
+            width: 3rem;
+            height: 3rem;
+            margin-top: 2rem;
+        }
+    }
+    .paying {
+        width: 100%;
+        color: #666666;
+        font-size: 0.9rem;
+        text-align: left;
+        overflow-y: scroll;
+        margin-top: 15rem;
+        margin-bottom: 6.5rem;
+    }
+    .success {
+        color: #0087eb;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-top: 0.75rem;
+    }
+    .fail {
+        line-height: 2rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #ff6100;
+        margin-top: 1rem;
+    }
+    .money {
+        color: #212121;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 1rem 0 1.5rem;
+        span {
+            font-size: 1.25rem;
+        }
+    }
+    .msg {
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.4rem;
+        &.lf {
+            text-align: left;
+        }
+    }
+    .show-more {
+        height: 1.3rem;
+        position: fixed;
+        bottom: 5.7rem;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(360deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    }
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        z-index: 99;
+        padding-bottom: 1rem;
+        button {
+            width: 75%;
+        }
+        .help {
+            color: #0087eb;
+            text-decoration: underline;
+            margin-top: 0.7rem;
+            font-weight: bold;
+        }
+    }
 }
 </style>

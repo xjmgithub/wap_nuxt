@@ -27,7 +27,7 @@
                     <div class="number">
                         <input v-model="tel" type="tel" :placeholder="$store.state.lang.enter_your_phone_number" @focus="focusTel" @blur="focus_tel=false" />
                     </div>
-                    <div v-show="error_tel" class="error" v-html="error_tel" @click="clear" />
+                    <div v-show="error_tel" class="error" @click="clear" v-html="error_tel" />
                 </div>
             </div>
             <div class="get-code">
@@ -46,7 +46,7 @@
                         <div @click="autoInput('hotmail')">{{email}}hotmail.com</div>
                     </div>
                 </div>
-                <div v-show="error_email" class="error" v-html="error_email" @click="clear" />
+                <div v-show="error_email" class="error" @click="clear" v-html="error_email" />
             </div>
             <div class="get-code">
                 <password ref="emailCode" :class="{error:error_line_email}" class="code_num" :default-view="0" :length="4" @endinput="vertifyEmailCode" @inputing="inputEmailCode" />
