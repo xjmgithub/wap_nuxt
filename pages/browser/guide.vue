@@ -49,7 +49,7 @@ export default {
         if (process.server) {
             return { serverTime: new Date().getTime() }
         } else {
-            const { headers } = await $axios.get('/hybrid/api/getServerTime')
+            const { headers } = await $axios.get('/hybrid/api/app/getApk')
             return {
                 serverTime: dayjs(headers.date).valueOf()
             }
