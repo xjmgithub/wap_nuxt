@@ -41,6 +41,12 @@
         <div class="forgot-pwd">
             <nuxt-link to="/hybrid/account/resetpass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
+        <div class="regtext">
+            Don't have an account?
+            <nuxt-link to="/hybrid/account/register">
+                <span>Register</span> 
+            </nuxt-link>
+        </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">{{$store.state.lang.all}}</div>
             <ul>
@@ -122,7 +128,6 @@ export default {
                         type: 10
                     }
                 }
-
                 login.call(this, params, () => {
                     const pre = sessionStorage.getItem('login_prefer') || ''
                     if (pre) {
@@ -164,7 +169,6 @@ export default {
                 margin-right: 0.5rem;
                 margin-top: -0.3rem;
             }
-
             .sign-way {
                 color: #0087eb;
                 font-size: 0.9rem;
@@ -172,11 +176,9 @@ export default {
             }
         }
     }
-
     .by_tel,
     .by_email {
         height: 15rem;
-
         input {
             border: none;
             outline: none;
@@ -187,7 +189,6 @@ export default {
             width: 85%;
             font-size: 1rem;
         }
-
         .img-box {
             img {
                 width: 1.4rem;
@@ -197,31 +198,26 @@ export default {
             }
         }
     }
-
     .by_tel {
         .country_choose {
             line-height: 4rem;
             height: 4rem;
             margin-top: 1rem;
             margin-bottom: 1rem;
-
             img {
                 width: 1.5rem;
                 height: 1.5rem;
                 margin-right: 0.5rem;
                 vertical-align: middle;
             }
-
             span {
                 vertical-align: middle;
             }
         }
     }
-
     .by_email {
         padding-top: 5rem;
     }
-
     .next-btn {
         width: 80%;
         background: #0087eb;
@@ -232,24 +228,30 @@ export default {
         font-size: 0.9rem;
         margin: 0 auto;
         border-radius: 2px;
-
         &.disabled {
             background: #dddddd;
             color: #aaaaaa;
         }
     }
-
     .forgot-pwd {
         text-align: center;
         margin-top: 1rem;
-
         a {
             color: #0087eb;
             font-size: 0.9rem;
             text-decoration: underline;
         }
     }
-
+    .regtext {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #424242;
+        margin-top: 2.5rem;
+        span{
+            color:#0087eb;
+            text-decoration: underline;
+        }
+    }
     .country-choose-dialog {
         width: 18rem;
         position: absolute;
@@ -261,23 +263,19 @@ export default {
         margin-left: -9rem;
         background: white;
         padding: 1rem;
-
         .dialog-title {
             height: 2rem;
         }
-
         ul {
             display: block;
             height: 21rem;
             overflow: auto;
-
             li {
                 display: block;
                 width: 8rem;
                 float: left;
                 height: 2.5rem;
                 line-height: 2.5rem;
-
                 img {
                     width: 1.3rem;
                     height: 1.3rem;
@@ -285,7 +283,6 @@ export default {
                     margin-right: 0.3rem;
                     float: left;
                 }
-
                 span {
                     width: 6.4rem;
                     overflow: hidden;

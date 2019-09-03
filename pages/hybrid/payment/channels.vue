@@ -3,7 +3,7 @@
         <div class="goods">
             <p v-show="totalAmount" class="pay-money">
                 <span>{{currencySymbol}}</span>
-                {{totalAmount | formatAmount}}
+                {{totalAmount }}
             </p>
             <p class="pay-subject">Product Name: {{paySubject}}</p>
         </div>
@@ -45,9 +45,6 @@ export default {
     filters: {
         formatAmount(num) {
             return formatAmount(num)
-        },
-        formatDefPay(num) {
-            return formatAmount(num)
         }
     },
     data() {
@@ -78,6 +75,7 @@ export default {
             eCurrency: '', // 电子钱包货币code
             eCurrencySymbol: '', // 电子钱包货币符号
             countrys: obj
+            // payChannelCardAuthDtoList   payChannelFormConfigDtoList
         }
     },
     computed: {
@@ -146,7 +144,7 @@ export default {
                     this.payChannels = this.bubbleSort(data.payChannels)
                     this.currency = data.currency
                     this.currencySymbol = this.countrys[data.country].currencySymbol
-                    this.totalAmount = data.totalAmount
+                    this.totalAmount = data.totalAmountFormat
                     this.paySubject = data.paySubject
                     this.merchantAppId = data.merchantAppId
                     const payChannels = {}
@@ -157,7 +155,7 @@ export default {
                     !this.lastpay && this.initChannel(this.payChannels[0])
                     const msg = {
                         symbol: this.currencySymbol,
-                        amount: formatAmount(this.totalAmount)
+                        amount: this.totalAmount
                     }
                     sessionStorage.setItem('goodMsg', JSON.stringify(msg))
                     sessionStorage.setItem('merchantAppId', this.merchantAppId)

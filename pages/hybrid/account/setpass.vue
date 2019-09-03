@@ -6,14 +6,7 @@
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1" />
             </div>
             <div v-show="focus_ps" class="passText">{{$store.state.lang.register_input_enter_password_tip}}</div>
-            <input
-                v-model="pass"
-                :class="{focus:focus_ps,error:error_ps}"
-                :type="pwdType"
-                :placeholder="enter_ps"
-                @focus="focusPass"
-                @blur="checkPass"
-            />
+            <input v-model="pass" :class="{focus:focus_ps,error:error_ps}" :type="pwdType" :placeholder="$store.state.lang.register_input_enter_password" @focus="focusPass" @blur="checkPass" />
             <div v-if="error_ps" class="error-tip">{{error_ps}}</div>
         </div>
         <div class="input-item">
@@ -22,18 +15,11 @@
                 <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1" />
             </div>
             <div v-show="focus_reps" class="repassText">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
-            <input
-                v-model="repass"
-                :class="{focus:focus_reps,error:error_reps}"
-                :type="pwdType_confirm"
-                :placeholder="enter_reps"
-                @focus="focusRepass"
-                @blur="checkRepass"
-            />
+            <input v-model="repass" :class="{focus:focus_reps,error:error_reps}" :type="pwdType_confirm" :placeholder="$store.state.lang.register_input_enter_password_again" @focus="focusRepass" @blur="checkRepass" />
             <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
-            <mButton :disabled="!abled" :text="next" @click="nextStep" />
+            <mButton :disabled="!abled" :text="$store.state.lang.text_onair_next" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -43,7 +29,7 @@ import { login } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
-        mButton,
+        mButton
     },
     data() {
         return {
@@ -60,12 +46,7 @@ export default {
             focus_ps: false,
             focus_reps: false,
             error_ps: '',
-            error_reps: '',
-            enter_ps: this.$store.state.lang.register_input_enter_password,
-            enter_reps: this.$store.state.lang.register_input_enter_password_again,
-            next: this.$store.state.lang.text_onair_next,
-            error_setpass: this.$store.state.lang.error_setpass,
-            error_setrepass: this.$store.state.lang.error_setrepass,
+            error_reps: ''
         }
     },
     computed: {
@@ -115,18 +96,18 @@ export default {
             this.focus_ps = false
             if (this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
             } else if (!/^[a-zA-Z0-9]{6,18}$/.test(this.pass) && this.pass) {
-                this.error_ps = this.error_setpass
+                this.error_ps = this.$store.state.lang.error_setpass
             } else if (this.repass) {
-                this.error_reps = this.error_setrepass
+                this.error_reps = this.$store.state.lang.error_setrepass
             }
         },
         checkRepass() {
             this.focus_reps = false
             if (this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
             } else if (!/^[a-zA-Z0-9]{6,18}$/.test(this.pass) && this.pass) {
-                this.error_ps = this.error_setpass
+                this.error_ps = this.$store.state.lang.error_setpass
             } else if (this.repass) {
-                this.error_reps = this.error_setrepass
+                this.error_reps = this.$store.state.lang.error_setrepass
             }
         },
         nextStep() {
@@ -201,7 +182,7 @@ export default {
                         }
                     }
                     login.call(this, params, () => {
-                        const pre = sessionStorage.getItem('register_prefer') || ''
+                        const pre = sessionStorage.getItem('login_prefer') || ''
                         if (pre) {
                             window.location.href = pre
                         } else {

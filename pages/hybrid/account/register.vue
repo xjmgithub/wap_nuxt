@@ -25,21 +25,13 @@
                 <div :class="{focus:focus_tel,error:error_tel}" class="input-tel">
                     <div class="prefix">+{{country.phonePrefix}}</div>
                     <div class="number">
-                        <input v-model="tel" type="tel" :placeholder="enter_phone" @focus="focusTel" @blur="focus_tel=false" />
+                        <input v-model="tel" type="tel" :placeholder="$store.state.lang.enter_your_phone_number" @focus="focusTel" @blur="focus_tel=false" />
                     </div>
-                    <div v-show="error_tel" class="error" v-html="error_tel"></div>
+                    <div v-show="error_tel" class="error" v-html="error_tel" @click="clear" />
                 </div>
             </div>
             <div class="get-code">
-                <password
-                    ref="telCode"
-                    :class="{error:error_line_tel}"
-                    class="code_num"
-                    :default-view="0"
-                    :length="4"
-                    @endinput="vertifyTelCode"
-                    @inputing="inputTelCode"
-                />
+                <password ref="telCode" :class="{error:error_line_tel}" class="code_num" :default-view="0" :length="4" @endinput="vertifyTelCode" @inputing="inputTelCode" />
                 <getCodeBtn ref="telGetCodeBtn" class="get-code-btn" :disabled="!new RegExp(country.phoneRegex).test(tel)" @click="getTelCode" />
                 <div class="error_code">{{error_tel_code}}</div>
             </div>
@@ -47,36 +39,23 @@
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
-                    <input v-model="email" type="email" :placeholder="enter_email" @focus="focusEmail" @blur="focus_email=false" />
+                    <input v-model="email" type="email" :placeholder="$store.state.lang.enter_your_email_addr" @focus="focusEmail" @blur="focus_email=false" />
                     <div v-show="showAutoInput" class="auto-input">
                         <div @click="autoInput('gmail')">{{email}}gmail.com</div>
                         <div @click="autoInput('yahoo')">{{email}}yahoo.com</div>
                         <div @click="autoInput('hotmail')">{{email}}hotmail.com</div>
                     </div>
                 </div>
-                <div v-show="error_email" class="error" v-html="error_email"></div>
+                <div v-show="error_email" class="error" v-html="error_email" @click="clear" />
             </div>
             <div class="get-code">
-                <password
-                    ref="emailCode"
-                    :class="{error:error_line_email}"
-                    class="code_num"
-                    :default-view="0"
-                    :length="4"
-                    @endinput="vertifyEmailCode"
-                    @inputing="inputEmailCode"
-                />
-                <getCodeBtn
-                    ref="emailGetCodeBtn"
-                    class="get-code-btn"
-                    :disabled="!new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(email)"
-                    @click="getEmailCode"
-                />
+                <password ref="emailCode" :class="{error:error_line_email}" class="code_num" :default-view="0" :length="4" @endinput="vertifyEmailCode" @inputing="inputEmailCode" />
+                <getCodeBtn ref="emailGetCodeBtn" class="get-code-btn" :disabled="!new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(email)" @click="getEmailCode" />
                 <div class="error_code">{{error_email_code}}</div>
             </div>
         </div>
         <div class="next-btn">
-            <mButton :disabled="!canNext" :text="next" @click="nextStep" />
+            <mButton :disabled="!canNext" :text="$store.state.lang.text_onair_next" @click="nextStep" />
         </div>
         <div class="terms" @click="toService">
             {{$store.state.lang.terms_of_service}}
@@ -117,9 +96,6 @@ export default {
             countryDialogStatus: false,
             tel: '',
             email: '',
-            enter_phone: this.$store.state.lang.enter_your_phone_number,
-            enter_email: this.$store.state.lang.enter_your_email_addr,
-            next: this.$store.state.lang.text_onair_next,
             focus_tel: false,
             focus_email: false,
             error_tel: '',
@@ -132,11 +108,7 @@ export default {
             haveGetEmailCode: false,
             haveTelCodeVertify: false,
             haveEmailCodeVertify: false,
-            showAutoInput: false,
-            error_tel_number_false: this.$store.state.lang.error_tel_number_false,
-            error_email_false: this.$store.state.lang.error_email_false,
-            error_registered: this.$store.state.lang.error_registered,
-            error_code: this.$store.state.lang.error_code,
+            showAutoInput: false
         }
     },
     computed: {
@@ -158,19 +130,9 @@ export default {
             this.error_email = ''
             const str = this.email.substr(this.email.length - 1, 1)
             if (this.email.length > 1 && str == '@') {
-                this.sendEvLog({
-                    category: 'register',
-                    action: 'register_input_at',
-                    label: 1,
-                    value: 0
-                })
+                this.mSendEvLog('register', 'register_input_at', 1, 0)
                 this.showAutoInput = true
-                this.sendEvLog({
-                    category: 'register',
-                    action: 'register_mailheip_show',
-                    label: 1,
-                    value: 0
-                })
+                 this.mSendEvLog('register', 'register_mailheip_show', 1, 0)
             } else {
                 this.showAutoInput = false
             }
@@ -180,58 +142,39 @@ export default {
         }
     },
     mounted() {
-        this.sendEvLog({
-            category: 'register',
-            action: 'register_show',
-            label: 1,
-            value: 0
-        })
+        this.mSendEvLog('register', 'register_show', 1, 0)
     },
     methods: {
         toService() {
             window.location.href = 'http://m.startimestv.com/copyright/copyright.html'
+            this.mSendEvLog('register', 'register_tos', 1, 0)
+        },
+        clear() {
+            sessionStorage.setItem('login_prefer', '')
+        },
+        mSendEvLog(category, action, label, value) {
             this.sendEvLog({
-                category: 'register',
-                action: 'register_tos',
-                label: 1,
-                value: 0
+                category: category,
+                action: action,
+                label: label,
+                value: value
             })
         },
         focusTel() {
-            this.focus_tel=true
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_input',
-                label: 'register phone',
-                value: 0
-            })
+            this.focus_tel = true
+            this.mSendEvLog('register', 'register_input', 'register phone', 0)
         },
         focusEmail() {
-            this.focus_email=true
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_input',
-                label: 'register email',
-                value: 0
-            })
+            this.focus_email = true
+            this.mSendEvLog('register', 'register_input', 'register email', 0)
         },
         showChooseCountry() {
-            this.countryDialogStatus=true
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_country_switch',
-                label: 1,
-                value: 0
-            })
+            this.countryDialogStatus = true
+            this.mSendEvLog('register', 'register_country_switch', '1', 0)
         },
         changeType(num) {
             this.type = num
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_switch',
-                label: num,
-                value: 0
-            })
+            this.mSendEvLog('register', 'register_switch', num, 0)
         },
         inputTelCode() {
             this.haveTelCodeVertify = false
@@ -244,12 +187,7 @@ export default {
             this.error_line_email = false
         },
         getTelCode(callback) {
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_getcode',
-                label: 'register phone',
-                value: 0
-            })
+            this.mSendEvLog('register', 'register_getcode', 'register phone', 0)
             const timerIntercept = 'error' // 倒计时拦截
             const index = getRandomInt(1, 10) // 发送短信平台的调用顺序
             this.$axios({
@@ -261,55 +199,29 @@ export default {
                         callback()
                         this.haveGetTelCode = true
                         this.$toast(this.$store.state.lang.send_code_success)
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_getcode_ok',
-                            label: 'register phone',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_getcode_ok', 'register phone', 0)
                     } else if (res.data.code === 2) {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_getcode_err',
-                            label: 'register phone',
-                            value: 0
-                        })
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_toast_exit',
-                            label: 'register phone',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_getcode_err', 'register phone', 0)
+                        this.mSendEvLog('register', 'register_toast_exit', 'register phone', 0)
                         callback(timerIntercept)
-                        this.error_tel = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.sign_in + '</a>'
+                        this.error_tel =
+                            this.$store.state.lang.error_registered +
+                            ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' +
+                            this.$store.state.lang.sign_in +
+                            '</a>'
                     } else {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_getcode_err',
-                            label: 'register phone',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_getcode_err', 'register phone', 0)
                         callback(timerIntercept)
-                        this.error_tel = this.error_tel_number_false
+                        this.error_tel = this.$store.state.lang.error_tel_number_false
                     }
                 })
                 .catch(() => {
-                    this.sendEvLog({
-                        category: 'register',
-                        action: 'register_getcode_err',
-                        label: 'register phone',
-                        value: 0
-                    })
+                    this.mSendEvLog('register', 'register_getcode_err', 'register phone', 0)
                     callback(timerIntercept)
                 })
         },
         getEmailCode(callback) {
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_getcode',
-                label: 'register email',
-                value: 0
-            })
+            this.mSendEvLog('register', 'register_getcode', 'register email', 0)
             const timerIntercept = 'error'
             this.$axios({
                 url: `/ums/v1/register/code/email?email=${this.email}`,
@@ -320,45 +232,24 @@ export default {
                         callback()
                         this.haveGetEmailCode = true
                         this.$toast(this.$store.state.lang.send_code_success)
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_getcode_ok',
-                            label: 'register email',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_getcode_ok', 'register email', 0)
                     } else if (res.data.code === 2) {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_getcode_err',
-                            label: 'register email',
-                            value: 0
-                        })
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_toast_exit',
-                            label: 'register email',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_getcode_err', 'register email', 0)
+                        this.mSendEvLog('register', 'register_toast_exit', 'register email', 0)
                         callback(timerIntercept)
-                        this.error_email = this.error_registered + ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.sign_in + '</a>'
+                        this.error_email =
+                            this.$store.state.lang.error_registered +
+                            ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' +
+                            this.$store.state.lang.sign_in +
+                            '</a>'
                     } else {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_getcode_err',
-                            label: 'register email',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_getcode_err', 'register email', 0)
                         callback(timerIntercept)
-                        this.error_email = this.error_email_false
+                        this.error_email = this.$store.state.lang.error_email_false
                     }
                 })
                 .catch(() => {
-                    this.sendEvLog({
-                        category: 'register',
-                        action: 'register_getcode_err',
-                        label: 'register email',
-                        value: 0
-                    })
+                    this.mSendEvLog('register', 'register_getcode_err', 'register email', 0)
                     callback(timerIntercept)
                 })
         },
@@ -378,31 +269,15 @@ export default {
                 .then(res => {
                     if (res.data.code == 0) {
                         this.haveTelCodeVertify = true
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_verifycode_ok',
-                            label: 'register phone',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_verifycode_ok', 'register phone', 0)
                     } else {
-                        this.error_tel_code = this.error_code
+                        this.error_tel_code = this.$store.state.lang.error_code
                         this.error_line_tel = true
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_verifycode_err',
-                            label: 'register phone',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_verifycode_err', 'register phone', 0)
                     }
                 })
                 .catch(() => {
-                    this.sendEvLog({
-                        category: 'register',
-                        action: 'register_verifycode_err',
-                        label: 'register phone',
-                        value: 0
-                    })
-                    // console.log('验证失败')
+                    this.mSendEvLog('register', 'register_verifycode_err', 'register phone', 0)
                 })
         },
         vertifyEmailCode(val) {
@@ -411,7 +286,6 @@ export default {
                 method: 'post',
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'
-                    // token: this.$store.state.token
                 },
                 data: qs.stringify({
                     email: this.email,
@@ -421,71 +295,35 @@ export default {
                 .then(res => {
                     if (res.data.code == 0) {
                         this.haveEmailCodeVertify = true
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_verifycode_ok',
-                            label: 'register email',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_verifycode_ok', 'register email', 0)
                     } else {
-                        this.error_email_code = this.error_code
+                        this.error_email_code = this.$store.state.lang.error_code
                         this.error_line_email = true
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_verifycode_err',
-                            label: 'register email',
-                            value: 0
-                        })
+                        this.mSendEvLog('register', 'register_verifycode_err', 'register email', 0)
                     }
                 })
                 .catch(() => {
-                    this.sendEvLog({
-                        category: 'register',
-                        action: 'register_verifycode_err',
-                        label: 'register email',
-                        value: 0
-                    })
-                    // console.log('验证失败')
+                    this.mSendEvLog('register', 'register_verifycode_err', 'register email', 0)
                 })
         },
         autoInput(str) {
             this.email += str + '.com'
             this.showAutoInput = false
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_mailheip_click',
-                label: str,
-                value: 0
-            })
+            this.mSendEvLog('register', 'register_mailheip_click', str, 0)
         },
         chooseCountry(country) {
             this.country = country
             this.countryDialogStatus = false
-            this.sendEvLog({
-                category: 'register',
-                action: 'register_country_choose',
-                label: 'register_country_'+country.country,
-                value: 0
-            })
+            this.mSendEvLog('register', 'register_country_choose', 'register_country_' + country.country, 0)
         },
         nextStep() {
             if (this.type === 1) {
-                this.sendEvLog({
-                    category: 'register',
-                    action: 'register_username_submit',
-                    label: 'register email',
-                    value: 0
-                })
+                this.mSendEvLog('register', 'register_username_submit', 'register email', 0)
                 const email = this.email
                 const code = this.$refs.emailCode.password
                 this.$router.push(`/hybrid/account/setpass?email=${email}&code=${code}`)
             } else {
-                this.sendEvLog({
-                    category: 'register',
-                    action: 'register_username_submit',
-                    label: 'register phone',
-                    value: 0
-                })
+                this.mSendEvLog('register', 'register_username_submit', 'register phone', 0)
                 const phone = this.tel
                 const code = this.$refs.telCode.password
                 const phoneCc = this.country.phonePrefix
