@@ -146,8 +146,8 @@ export default {
     },
     methods: {
         toService() {
-            window.location.href = 'http://m.startimestv.com/copyright/copyright.html'
             this.mSendEvLog('register', 'register_tos', 1, 0)
+            window.location.href = 'http://m.startimestv.com/copyright/copyright.html'
         },
         clear() {
             sessionStorage.setItem('login_prefer', '')

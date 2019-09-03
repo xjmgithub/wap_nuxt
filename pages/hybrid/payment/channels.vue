@@ -143,7 +143,8 @@ export default {
                 if (data && data.payChannels && data.payChannels.length > 0) {
                     this.payChannels = this.bubbleSort(data.payChannels)
                     this.currency = data.currency
-                    this.currencySymbol = this.countrys[data.country].currencySymbol
+                    // this.currencySymbol = this.countrys[data.country].currencySymbol
+                    this.currencySymbol = data.currencySymbol
                     this.totalAmount = data.totalAmountFormat
                     this.paySubject = data.paySubject
                     this.merchantAppId = data.merchantAppId
