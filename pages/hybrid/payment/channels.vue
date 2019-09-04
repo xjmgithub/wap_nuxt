@@ -24,7 +24,7 @@
                             <label class="radio">
                                 <div :class="card.brand" class="img-box" />
                                 <span>{{card.cardType}}({{card.last4}})</span>
-                                <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                                <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(card)" />
                                 <i />
                             </label>
                         </div>
@@ -77,20 +77,18 @@ export default {
                 appInterfaceMode: null,
                 payType: -1,
                 formConfigExist: false,
-                currency: '',
+                currencySymbol: '',
                 payChannelName: ''
             },
             merchantAppId: '',
-            currency: '', // 商品货币code
             currencySymbol: '', // 商品货币符号
             totalAmount: '',
             paySubject: '',
             payChannels: [],
             eAmount: '', // 电子钱包余额
-            eCurrency: '', // 电子钱包货币code
             eCurrencySymbol: '', // 电子钱包货币符号
-            countrys: obj
-            // payChannelCardAuthDtoList   payChannelFormConfigDtoList
+            countrys: obj,
+            authorizationCode: ''
         }
     },
     computed: {
@@ -106,16 +104,16 @@ export default {
         errorMsg() {
             let tmp = ''
             if (!this.isLogin && this.channel.payType === 1) return tmp
-            else if (this.currency != this.oCurrency) tmp = this.$store.state.lang.starpay_payment_currency_error
+            else if (this.currencySymbol != this.oCurrencySymbol) tmp = this.$store.state.lang.starpay_payment_currency_error
             else if (this.eAmount < this.totalAmount && this.channel.payType === 1) tmp = this.$store.state.lang.starpay_payment_amount_error
             return tmp
         },
-        oCurrency() {
-            // 渠道货币code 用于比较判断
+        oCurrencySymbol() {
+            // 渠道货币符号 用于比较判断
             if (this.channel.payType == 1) {
-                return this.eCurrency
+                return this.eCurrencySymbol
             } else {
-                return this.channel.currency
+                return this.channel.currencySymbol
             }
         }
     },
@@ -156,22 +154,26 @@ export default {
                 const data = res.data
                 if (data && data.payChannels && data.payChannels.length > 0) {
                     this.payChannels = this.bubbleSort(data.payChannels)
-                    this.currency = data.currency
-                    // this.currencySymbol = this.countrys[data.country].currencySymbol
                     this.currencySymbol = data.currencySymbol
                     this.totalAmount = data.totalAmountFormat
                     this.paySubject = data.paySubject
                     this.merchantAppId = data.merchantAppId
                     const payChannels = {}
                     let lastpay = ''
+                    let authCode = ''
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
                         if (item.lastSuccessPay) {
                             lastpay = item.id
+                            authCode =
+                                item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0
+                                    ? item.payChannelCardAuthDtoList[0].authorizationCode
+                                    : ''
                         }
                     })
                     lastpay && this.initChannel(payChannels[lastpay])
                     !lastpay && this.initChannel(this.payChannels[0])
+                    this.authorizationCode = authCode
                     const msg = {
                         symbol: this.currencySymbol,
                         amount: this.totalAmount
@@ -207,7 +209,6 @@ export default {
         getMyEwallet() {
             updateWalletAccount.call(this, account => {
                 this.eAmount = account.amount
-                this.eCurrency = account.currency
                 this.eCurrencySymbol = account.currencySymbol
                 sessionStorage.setItem('wallet', JSON.stringify(account))
                 updateWalletConf.call(this, account.accountNo)
@@ -221,7 +222,7 @@ export default {
             this.channel.payChannel = item.id
             this.channel.formConfigExist = item.formConfigExist
             this.channel.appInterfaceMode = item.appInterfaceMode
-            this.channel.currency = item.currency
+            this.channel.currencySymbol = this.countrys[item.country].currencySymbol
             this.channel.payChannelName = item.payType == 1 ? 'eWallet' : item.name
             this.sendEvLog({
                 category: 'confirm_payment',
@@ -231,11 +232,16 @@ export default {
                 merchant_app_id: this.merchantAppId,
                 data_source: 2
             })
+            this.authorizationCode = ''
+        },
+        initSubChannel(card) {
+            this.authorizationCode = card.authorizationCode
+            // TODO 绑卡信息埋点
         },
         nextStep() {
             sessionStorage.setItem('payChannel', this.channel.payChannel)
             let passIsSet
-            if (this.channel.payType === 1) {
+            if (this.channel.payType === 1 || this.authorizationCode) {
                 if (!this.isLogin) {
                     this.$confirm(this.$store.state.lang.starpay_payment_login_notice, () => {
                         window.location.href = `${location.origin}/hybrid/account/signIn?pre=${location.href}`
@@ -243,9 +249,15 @@ export default {
                 } else {
                     passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
                     if (passIsSet === 'true') {
-                        this.$router.push(`/hybrid/payment/wallet/paybyPass`)
+                        const route = this.authorizationCode
+                            ? `/hybrid/payment/wallet/paybyPass?card=${this.authorizationCode}`
+                            : `/hybrid/payment/wallet/paybyPass`
+                        this.$router.push(route)
                     } else {
-                        this.$router.push(`/hybrid/payment/wallet/setPassword?passIsSet=1`)
+                        const route = this.authorizationCode
+                            ? `/hybrid/payment/wallet/setPassword?passIsSet=1&card=${this.authorizationCode}`
+                            : `/hybrid/payment/wallet/passIsSet=1`
+                        this.$router.push(route)
                     }
                 }
             } else if (this.channel.formConfigExist) {

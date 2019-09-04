@@ -203,7 +203,7 @@ export default {
                 invoke.call(
                     this,
                     this.payToken,
-                    993102,
+                    this.channel,
                     data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
