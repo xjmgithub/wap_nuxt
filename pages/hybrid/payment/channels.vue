@@ -17,8 +17,24 @@
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
                         <input :checked="item.lastSuccessPay|| i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
-                        <i />
+                        <i v-show="!item.payChannelCardAuthDtoList||item.payChannelCardAuthDtoList.length<=0" />
                     </label>
+                    <div v-show="item.payChannelCardAuthDtoList" class="sub-channels">
+                        <div v-for="(card,si) in item.payChannelCardAuthDtoList" :key="si">
+                            <label class="radio">
+                                <div :class="card.brand" class="img-box" />
+                                <span>{{card.cardType}}({{card.last4}})</span>
+                                <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                                <i />
+                            </label>
+                        </div>
+                        <label class="radio">
+                            <img src="~/assets/img/dvb/ic_ewallet_add.png" />
+                            <span>Add a Card to pay</span>
+                            <input :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                            <i />
+                        </label>
+                    </div>
                 </div>
             </div>
             <div v-show="payDesc" class="desc">
@@ -70,7 +86,6 @@ export default {
             totalAmount: '',
             paySubject: '',
             payChannels: [],
-            lastpay: '',
             eAmount: '', // 电子钱包余额
             eCurrency: '', // 电子钱包货币code
             eCurrencySymbol: '', // 电子钱包货币符号
@@ -148,14 +163,15 @@ export default {
                     this.paySubject = data.paySubject
                     this.merchantAppId = data.merchantAppId
                     const payChannels = {}
+                    let lastpay = ''
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
-                        if(item.lastSuccessPay){
-                            this.lastpay = item.id
+                        if (item.lastSuccessPay) {
+                            lastpay = item.id
                         }
                     })
-                    this.lastpay && this.initChannel(payChannels[this.lastpay])
-                    !this.lastpay && this.initChannel(this.payChannels[0])
+                    lastpay && this.initChannel(payChannels[lastpay])
+                    !lastpay && this.initChannel(this.payChannels[0])
                     const msg = {
                         symbol: this.currencySymbol,
                         amount: this.totalAmount
@@ -300,18 +316,39 @@ export default {
         margin-bottom: 6.5rem;
         .pay-channels {
             width: 100%;
+            font-weight: bold;
             & > div {
                 border-bottom: 1px solid #eeeeee;
                 padding: 0.8rem 0;
             }
             .radio {
+                position: relative;
+                .img-box {
+                    display: inline-block;
+                    vertical-align: middle;
+                    height: 1.3rem;
+                    width: 1.3rem;
+                    background-size: 100% !important;
+                    background: url('~assets/img/dvb/ic_no_logo_card.png') no-repeat;
+                    &.balance {
+                        background: url('~assets/img/dvb/ic_ewallet_balance.png') no-repeat;
+                    }
+                    &.visa {
+                        background: url('~assets/img/dvb/ic_visa.png') no-repeat;
+                    }
+                    &.verve {
+                        background: url('~assets/img/dvb/ic_verve.png') no-repeat;
+                    }
+                    &.mastercard {
+                        background: url('~assets/img/dvb/ic_mastercard.png') no-repeat;
+                    }
+                }
                 img {
                     width: 1.5rem;
                 }
                 span {
                     margin-left: 0.5rem;
                     color: #333333;
-                    font-weight: bold;
                 }
                 position: relative;
                 cursor: pointer;
@@ -351,6 +388,13 @@ export default {
                         -webkit-transition: opacity 0.1s;
                         margin: auto;
                     }
+                }
+            }
+            .sub-channels {
+                padding-left: 2rem;
+                font-weight: normal;
+                img {
+                    width: 1.3rem;
                 }
             }
         }
