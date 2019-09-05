@@ -19,12 +19,11 @@
                         <input :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <i v-show="!item.payChannelCardAuthDtoList||item.payChannelCardAuthDtoList.length<=0" />
                     </label>
-                    <div v-show="item.payChannelCardAuthDtoList" class="sub-channels">
+                    <div v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" class="sub-channels">
                         <div v-for="(card,si) in item.payChannelCardAuthDtoList" :key="si">
                             <label class="radio">
                                 <div :class="card.brand" class="img-box" />
                                 <span>{{card.cardType}}({{card.last4}})</span>
-                                <!-- <span>{{card.authorizationCode}}({{card.last4}})</span>  verve authorizationCode 返回不正确-->
                                 <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(card)" />
                                 <i />
                             </label>
