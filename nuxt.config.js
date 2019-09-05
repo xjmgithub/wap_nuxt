@@ -66,7 +66,8 @@ export default {
         '/search-service/': env.proxyHost,
         '/wxorder/': env.proxyHost,
         '/like/': env.proxyHost,
-        '/feed/': env.proxyHost
+        '/feed/': env.proxyHost,
+        '/processtoken/':'http://op-test1.startimes.me/'
     },
     router: {
         middleware: 'auth' // middleware before all pages render
