@@ -16,7 +16,7 @@
         </div>
         <div class="next-btn">
             <mButton
-                :disabled="!new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(email)"
+                :disabled="(!new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(email))||disabled"
                 :text="next"
                 @click="getEmailCode"
             />
@@ -39,7 +39,8 @@ export default {
             error_email: '',
             error_email_code: '',
             showAutoInput: false,
-            error_email_false: this.$store.state.lang.error_email_false
+            error_email_false: this.$store.state.lang.error_email_false,
+            disabled: false,
         }
     },
     computed: {},
@@ -61,6 +62,7 @@ export default {
             this.focus_email = true
         },
         getEmailCode() {
+            this.disabled = true
             this.$axios({
                 url: `ums/v1/register/password/change?email=${this.email}`,
                 method: 'get'
@@ -72,11 +74,13 @@ export default {
                         })
                     } else if (res.data.code === 9) {
                         this.error_email = this.$store.state.lang.email_address_has_not_been
+                        this.disabled = false
                     } else {
                         this.$alert(this.$store.state.lang.password_reset_failed)
+                        this.disabled = false
                     }
                 })
-                .catch(() => {})
+                .catch(() => {this.disabled = false})
         },
         autoInput(str) {
             this.email += str + '.com'
