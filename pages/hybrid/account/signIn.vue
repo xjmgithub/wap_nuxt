@@ -64,13 +64,8 @@
         <div class="footer">
             <mButton :disabled="!canNext" :text="signin" @click="login" />
         </div>
-        <div class="register">
-            <nuxt-link to="/hybrid/account/register">{{$store.state.lang.register}}</nuxt-link>
-        </div>
         <div class="regtext">
-            <nuxt-link to="/hybrid/account/register">
-                Don't have a StarTimes account? Register here
-            </nuxt-link>
+            <nuxt-link to="/hybrid/account/register">Don't have a StarTimes account? Register here</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">{{$store.state.lang.all}}</div>
@@ -194,7 +189,11 @@ export default {
                     .then(res => {
                         if (res.data.code === 1) {
                             // 号码未注册
-                            this.error_tel = this.$store.state.lang.signin_notexist + ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.register + '</a>'
+                            this.error_tel =
+                                this.$store.state.lang.signin_notexist +
+                                ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline">' +
+                                this.$store.state.lang.register +
+                                '</a>'
                         } else if (res.data.code === 0) {
                             // 已注册号码，格式正确
                             this.error_tel = ''
@@ -216,7 +215,11 @@ export default {
                     .then(res => {
                         if (res.data.code === 1) {
                             // 号码未注册
-                            this.error_email = this.$store.state.lang.signin_notexist + ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline">' + this.$store.state.lang.register + '</a>'
+                            this.error_email =
+                                this.$store.state.lang.signin_notexist +
+                                ' <a href="/hybrid/account/register" style="color:#0087eb;text-decoration:underline">' +
+                                this.$store.state.lang.register +
+                                '</a>'
                         } else if (res.data.code === 0) {
                             // 已注册号码，格式正确
                             this.error_email = ''
@@ -313,7 +316,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
-    padding: 1rem 0.8rem;
+    padding: 1rem;
     .logo {
         width: 100%;
         text-align: center;
@@ -346,10 +349,9 @@ export default {
         position: relative;
         .forgot-pwd {
             position: absolute;
-            // left: 0;
-            right: 10%;
             top: 17rem;
             text-align: center;
+            width:100%;
             margin-top: 1rem;
             margin-bottom: 2rem;
             a {
@@ -359,6 +361,21 @@ export default {
             }
         }
     }
+
+    .regtext {
+        text-align: center;
+        font-size: 0.8rem;
+        color: #424242;
+        position:absolute;
+        bottom:3rem;
+        width:100%;
+        margin-left:-1rem;
+        a {
+            color: #0087eb;
+            text-decoration: underline;
+        }
+    }
+
     .by_tel {
         .phone_number {
             display: -webkit-box;
