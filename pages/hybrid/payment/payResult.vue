@@ -1,10 +1,10 @@
 <template>
-    <div :class="{'grey-back':result==2}" class="container">
+    <div :class="{'grey-back':result==2||result==0}" class="container">
         <template v-if="result<=0">
             <div class="top">
                 <img class="success_load" src="~assets/img/pay/img_load_def_b.png" alt />
                 <div class="loading">
-                    <loading />
+                    <img style="display:block;width:3rem;height:3rem;margin:0 auto;" src="~assets/img/Spinner-1s-200px.gif" />
                 </div>
             </div>
             <div class="paying" v-html="load_message" />
@@ -16,7 +16,9 @@
                 <span>{{currency}}</span>
                 {{money | formatAmount}}
             </p>
-            <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            <p
+                class="msg lf"
+            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
             <img src="~assets/img/pay/img_failed_def_b.png" alt />
@@ -33,15 +35,13 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import loading from '~/components/loading'
 import { setCookie, formatAmount } from '~/functions/utils'
 import { toNativePage } from '~/functions/app'
 
 export default {
     layout: 'base',
     components: {
-        mButton,
-        loading
+        mButton
     },
     filters: {
         formatAmount(num) {
@@ -56,8 +56,7 @@ export default {
             maxReqNum: 10,
             timer2: null,
             merchantAppId: '',
-            load_message:
-                "1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......1.Dial *150+60#<br>2.Select 'Make payment'<br> 3.Select 'Enter Business Number'<br>4.......",
+            load_message: '',
             showMore: true
         }
     },
@@ -123,6 +122,8 @@ export default {
                 this.$alert('Query seqNo needed! please check request')
                 return false
             }
+
+            this.load_message = sessionStorage.getItem('instructions') || ''
 
             this.getPayStatus()
             this.timer = setInterval(() => {
@@ -245,7 +246,6 @@ export default {
         left: 0;
         width: 100%;
         text-align: center;
-        background: #ffffff;
         .loading {
             width: 100%;
             margin: 1rem 0;
@@ -317,16 +317,14 @@ export default {
         bottom: 5.7rem;
         left: 0;
         width: 100%;
-        background: linear-gradient(360deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
     }
     .footer {
         position: fixed;
-        bottom: 0;
+        bottom: 1rem;
         width: 100%;
         margin: 0 auto;
         left: 0;
         right: 0;
-        background: #ffffff;
         z-index: 99;
         padding-bottom: 1rem;
         button {

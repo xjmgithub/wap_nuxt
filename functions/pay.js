@@ -93,6 +93,9 @@ export const invoke = function(payToken, channel, callback, extend) {
     })
         .then(res => {
             if (res.data.resultCode === '0') {
+                if(res.data.extendInfo.instructions){
+                    sessionStorage.setItem('instructions',res.data.extendInfo.instructions)
+                }
                 callback && callback(res.data)
             } else {
                 this.$nuxt.$loading.finish()

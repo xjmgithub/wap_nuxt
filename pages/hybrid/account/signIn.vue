@@ -161,6 +161,7 @@ export default {
     mounted() {
         if (this.pre) {
             sessionStorage.setItem('login_prefer', this.pre)
+            sessionStorage.setItem('register_prefer', this.pre)
         }
     },
     methods: {
@@ -351,7 +352,7 @@ export default {
             position: absolute;
             top: 17rem;
             text-align: center;
-            width:100%;
+            width: 100%;
             margin-top: 1rem;
             margin-bottom: 2rem;
             a {
@@ -366,10 +367,10 @@ export default {
         text-align: center;
         font-size: 0.8rem;
         color: #424242;
-        position:absolute;
-        bottom:3rem;
-        width:100%;
-        margin-left:-1rem;
+        position: absolute;
+        bottom: 3rem;
+        width: 100%;
+        margin-left: -1rem;
         a {
             color: #0087eb;
             text-decoration: underline;
