@@ -66,7 +66,8 @@ export default {
         '/search-service/': env.proxyHost,
         '/wxorder/': env.proxyHost,
         '/like/': env.proxyHost,
-        '/feed/': env.proxyHost
+        '/feed/': env.proxyHost,
+        '/lottery/': env.proxyHost
     },
     router: {
         middleware: 'auth' // middleware before all pages render
@@ -100,8 +101,8 @@ export default {
     },
     build: {
         /*
-        ** You can extend webpack config here
-        */
+         ** You can extend webpack config here
+         */
         // parallel: true, 和下边的两个属性同时用会得到warning
         // cache: true,
         // hardSource: true,

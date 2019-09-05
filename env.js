@@ -10,6 +10,7 @@ export default {
     proxyHost: 'https://qa.upms.startimestv.com/',
     apiURL: 'https://qa.upms.startimestv.com/',
     mechantRequestUrl: 'http://qa.payment.startimestv.com/',
-    vodtab:'8146c5ff88a245b9af2ce7d2bf301b27',
-    mysql:'10.0.230.10'
+    vodtab: '8146c5ff88a245b9af2ce7d2bf301b27',
+    redisHost: 'test1-mysql-redis',
+    redisPort: '6379'
 }
