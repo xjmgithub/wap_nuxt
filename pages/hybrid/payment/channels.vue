@@ -125,13 +125,13 @@ export default {
             if (res.status !== 200) {
                 store.commit(
                     'SET_TOKEN',
-                    'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjEsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjEsImNyZWF0ZWQiOjE1NDM5MTI4MzgzNjksImV4cCI6MTg1NDk1MjgzOCwiY2lkIjoyfQ.q_CUuuyIXu5UzCnzgD4lXF2L-wk8viu9abQFqeYn-2AFEAS8Kf5Won-GdHq9HJbv7T3PI7TD3JcIXl5BU533ew'
+                    'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjIsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjAsImNyZWF0ZWQiOjE1Njc2NzAyNTY0MTgsImdwcyI6MCwiZXhwIjoxODgzMDMwMjU2LCJjaWQiOjJ9.mgMzKuLEKt1ZtS1d4f2s9mX6mDj0vOsu2xwzf09vj250XLtPhrn7RtFwj9BLkdgwvvQDfLHcRMCxt5TgzbzsYQ'
                 )
             }
         } catch (e) {
             store.commit(
                 'SET_TOKEN',
-                'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjEsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjEsImNyZWF0ZWQiOjE1NDM5MTI4MzgzNjksImV4cCI6MTg1NDk1MjgzOCwiY2lkIjoyfQ.q_CUuuyIXu5UzCnzgD4lXF2L-wk8viu9abQFqeYn-2AFEAS8Kf5Won-GdHq9HJbv7T3PI7TD3JcIXl5BU533ew'
+                'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjIsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjAsImNyZWF0ZWQiOjE1Njc2NzAyNTY0MTgsImdwcyI6MCwiZXhwIjoxODgzMDMwMjU2LCJjaWQiOjJ9.mgMzKuLEKt1ZtS1d4f2s9mX6mDj0vOsu2xwzf09vj250XLtPhrn7RtFwj9BLkdgwvvQDfLHcRMCxt5TgzbzsYQ'
             )
         }
     },
