@@ -5,8 +5,15 @@
                 <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2" />
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1" />
             </div>
-            <div v-show="focus_ps" class="passText">{{$store.state.lang.register_input_enter_password_tip}}</div>
-            <input v-model="pass" :class="{focus:focus_ps,error:error_ps}" :type="pwdType" :placeholder="$store.state.lang.register_input_enter_password" @focus="focusPass" @blur="checkPass" />
+            <div class="tag" :class="{focus:focus_ps,error:error_ps}">{{$store.state.lang.register_input_enter_password_tip}}</div>
+            <input
+                v-model="pass"
+                :class="{focus:focus_ps,error:error_ps}"
+                :type="pwdType"
+                :placeholder="focus_ps?'':enter_ps"
+                @focus="focusPass"
+                @blur="checkPass"
+            />
             <div v-if="error_ps" class="error-tip">{{error_ps}}</div>
         </div>
         <div class="input-item">
@@ -14,8 +21,15 @@
                 <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext_confirm=2" />
                 <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1" />
             </div>
-            <div v-show="focus_reps" class="repassText">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
-            <input v-model="repass" :class="{focus:focus_reps,error:error_reps}" :type="pwdType_confirm" :placeholder="$store.state.lang.register_input_enter_password_again" @focus="focusRepass" @blur="checkRepass" />
+            <div class="tag" :class="{focus:focus_reps,error:error_reps}">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
+            <input
+                v-model="repass"
+                :class="{focus:focus_reps,error:error_reps}"
+                :type="pwdType_confirm"
+                :placeholder="focus_reps?'':enter_reps"
+                @focus="focusRepass"
+                @blur="checkRepass"
+            />
             <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
@@ -46,7 +60,12 @@ export default {
             focus_ps: false,
             focus_reps: false,
             error_ps: '',
-            error_reps: ''
+            error_reps: '',
+            enter_ps: this.$store.state.lang.register_input_enter_password,
+            enter_reps: this.$store.state.lang.register_input_enter_password_again,
+            next: this.$store.state.lang.text_onair_next,
+            error_setpass: this.$store.state.lang.error_setpass,
+            error_setrepass: this.$store.state.lang.error_setrepass
         }
     },
     computed: {
@@ -150,45 +169,51 @@ export default {
             })
             this.$axios.post('/ums/v3/register', options).then(res => {
                 if (res.data.code === 0) {
-                    let params = {}
-                    if (this.phone) {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register phone',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            phoneCc: this.phoneCc,
-                            phone: this.phone,
-                            pwd: this.pass,
-                            deviceId: this.$store.state.deviceId,
-                            type: 10
-                        }
-                    } else {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register email',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            deviceId: this.$store.state.deviceId,
-                            type: 0,
-                            email: this.email,
-                            pwd: this.pass
-                        }
-                    }
-                    login.call(this, params, () => {
-                        const pre = sessionStorage.getItem('login_prefer') || ''
-                        if (pre) {
-                            window.location.href = pre
-                        } else {
-                            this.$router.replace('/browser')
-                        }
-                    })
+                    this.$alert(
+                        this.$store.state.lang.tips_register_successful,
+                        () => {
+                            let params = {}
+                            if (this.phone) {
+                                this.sendEvLog({
+                                    category: 'register',
+                                    action: 'register_passwd_ok',
+                                    label: 'register phone',
+                                    value: 0
+                                })
+                                params = {
+                                    applicationId: 2,
+                                    phoneCc: this.phoneCc,
+                                    phone: this.phone,
+                                    pwd: this.pass,
+                                    deviceId: this.$store.state.deviceId,
+                                    type: 10
+                                }
+                            } else {
+                                this.sendEvLog({
+                                    category: 'register',
+                                    action: 'register_passwd_ok',
+                                    label: 'register email',
+                                    value: 0
+                                })
+                                params = {
+                                    applicationId: 2,
+                                    deviceId: this.$store.state.deviceId,
+                                    type: 0,
+                                    email: this.email,
+                                    pwd: this.pass
+                                }
+                            }
+                            login.call(this, params, () => {
+                                const pre = sessionStorage.getItem('register_prefer') || ''
+                                if (pre) {
+                                    window.location.href = pre
+                                } else {
+                                    this.$router.replace('/browser')
+                                }
+                            })
+                        },
+                        this.$store.state.lang.login_title
+                    )
                 } else {
                     this.sendEvLog({
                         category: 'register',
@@ -233,7 +258,19 @@ export default {
             top: 0;
             left: 0;
             color: #0087eb;
-            padding-left: 0.4rem;
+        }
+        .tag {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.8rem;
+            color: transparent;
+            &.focus {
+                color: #0087eb;
+            }
+            &.error {
+                color: red;
+            }
         }
         input {
             padding: 1rem 0 0 0.4rem;

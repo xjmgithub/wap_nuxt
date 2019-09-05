@@ -205,7 +205,6 @@ export default {
     error_email_false: 'O endereço de email está incorreto. Por favor verifique e tente novamente.',
     error_registered: 'Você já é um  utilizador registado.',
     error_code: 'Não reconhecido. Por favor verifique e tente de novo.',
-    sign_in: 'Iniciar sessão',
 
     // setpass
     register_input_enter_password: 'Insira a Senha',
@@ -231,20 +230,43 @@ export default {
     Password: 'Senha',
     forget_password: 'Esqueceu a senha?',
     // 错误提示
-    signin_notexist: 'A conta não existe.',
-    register: 'Registrar',
     confirm_number: 'Por favor confirme que submeteu o número correcto.',
+    signin_notexist: 'A conta não existe.',
     mailbox_not_correct_format: 'O e-mail não está no formato correto!',
+    password_cannot_less_letters: 'A Palavra Passe não pode ter menos do que 6 letras!',
+    password_cannoe_greater: 'A Palavra Passe não pode ter Mais do que 18 letras!',
     password_is_incorrect: 'A Palavra Passe está incorrecta',
-    forget_password_account_security_questions_hint: 'Por favor, insera a sua conta.',
-    password_not_empty: 'Não deixe a senha em branco!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'O código de verificação já foi enviado, por favor, verifique a sua caixa de entrada ou  e-mails indesejados a tempop. Você pode receber um novo código de verificação após 60 segundos.',
-    get_verification_code: 'Clique para obter o código de verficação',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'Este número não se encontra registado.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'O código de verificação expirou. Tente reenviar o código.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Por favor, verifique o seu e-mail, clique o link de segurança e reponha a sua senha.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'Este endereço de e-mail não foi ainda registado.',
+    password_reset_failed: 'Falha no reset da Palavra Passe!',
 
     // title
-    reg_title: 'Registrar',
+    register: 'Registrar',
+    sign_in: 'Iniciar sessão',
     set_password: 'Defina a senha',
     reset_pass: 'Trocar senha',
+    login_title: 'Entrar',
+
+    // login
+    login_btn: 'SIGN IN',
+    no_have_account: 'Não tem uma conta?',
+    firstpage_tips: 'Ao se inscrever, você concorda com os nossos',
+    firstpage_tips2: "Termos de serviços",
+    firstpage_tips3: "e",
+    firstpage_tips4: "acordos de privacidade.",
 }

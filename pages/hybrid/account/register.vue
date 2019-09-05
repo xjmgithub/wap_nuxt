@@ -25,9 +25,11 @@
                 <div :class="{focus:focus_tel,error:error_tel}" class="input-tel">
                     <div class="prefix">+{{country.phonePrefix}}</div>
                     <div class="number">
-                        <input v-model="tel" type="tel" :placeholder="$store.state.lang.enter_your_phone_number" @focus="focusTel" @blur="focus_tel=false" />
+                        <input v-model="tel" type="tel" :placeholder="focus_tel?'':enter_phone" @focus="focusTel" @blur="focus_tel=false" />
                     </div>
-                    <div v-show="error_tel" class="error" @click="clear" v-html="error_tel" />
+                    <div v-show="focus_tel&&!error_tel" class="focus">{{enter_phone}}</div>
+                    <div v-show="error_tel" class="focus-error">{{enter_phone}}</div>
+                    <div v-show="error_tel" class="error" v-html="error_tel"></div>
                 </div>
             </div>
             <div class="get-code">
@@ -39,14 +41,16 @@
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
-                    <input v-model="email" type="email" :placeholder="$store.state.lang.enter_your_email_addr" @focus="focusEmail" @blur="focus_email=false" />
+                    <input v-model="email" type="email" :placeholder="focus_email?'':enter_email" @focus="focusEmail" @blur="focus_email=false" />
                     <div v-show="showAutoInput" class="auto-input">
                         <div @click="autoInput('gmail')">{{email}}gmail.com</div>
                         <div @click="autoInput('yahoo')">{{email}}yahoo.com</div>
                         <div @click="autoInput('hotmail')">{{email}}hotmail.com</div>
                     </div>
                 </div>
-                <div v-show="error_email" class="error" @click="clear" v-html="error_email" />
+                <div v-show="focus_email&&!error_email" class="focus">{{enter_email}}</div>
+                <div v-show="error_email" class="focus-error">{{enter_email}}</div>
+                <div v-show="error_email" class="error" v-html="error_email"></div>
             </div>
             <div class="get-code">
                 <password ref="emailCode" :class="{error:error_line_email}" class="code_num" :default-view="0" :length="4" @endinput="vertifyEmailCode" @inputing="inputEmailCode" />
@@ -57,9 +61,7 @@
         <div class="next-btn">
             <mButton :disabled="!canNext" :text="$store.state.lang.text_onair_next" @click="nextStep" />
         </div>
-        <div class="terms" @click="toService">
-            {{$store.state.lang.terms_of_service}}
-        </div>
+        <div class="terms" @click="toService">{{$store.state.lang.terms_of_service}}</div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">{{$store.state.lang.all}}</div>
             <ul>
@@ -108,7 +110,11 @@ export default {
             haveGetEmailCode: false,
             haveTelCodeVertify: false,
             haveEmailCodeVertify: false,
-            showAutoInput: false
+            showAutoInput: false,
+            error_tel_number_false: this.$store.state.lang.error_tel_number_false,
+            error_email_false: this.$store.state.lang.error_email_false,
+            error_registered: this.$store.state.lang.error_registered,
+            error_code: this.$store.state.lang.error_code
         }
     },
     computed: {
@@ -162,15 +168,30 @@ export default {
         },
         focusTel() {
             this.focus_tel = true
-            this.mSendEvLog('register', 'register_input', 'register phone', 0)
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_input',
+                label: 'register phone',
+                value: 0
+            })
         },
         focusEmail() {
             this.focus_email = true
-            this.mSendEvLog('register', 'register_input', 'register email', 0)
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_input',
+                label: 'register email',
+                value: 0
+            })
         },
         showChooseCountry() {
             this.countryDialogStatus = true
-            this.mSendEvLog('register', 'register_country_switch', '1', 0)
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_country_switch',
+                label: 1,
+                value: 0
+            })
         },
         changeType(num) {
             this.type = num
@@ -205,7 +226,7 @@ export default {
                         this.mSendEvLog('register', 'register_toast_exit', 'register phone', 0)
                         callback(timerIntercept)
                         this.error_tel =
-                            this.$store.state.lang.error_registered +
+                            this.error_registered +
                             ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' +
                             this.$store.state.lang.sign_in +
                             '</a>'
@@ -238,7 +259,7 @@ export default {
                         this.mSendEvLog('register', 'register_toast_exit', 'register email', 0)
                         callback(timerIntercept)
                         this.error_email =
-                            this.$store.state.lang.error_registered +
+                            this.error_registered +
                             ' <a href="/hybrid/account/signIn" style="color:#0087eb;text-decoration:underline">' +
                             this.$store.state.lang.sign_in +
                             '</a>'
@@ -314,7 +335,12 @@ export default {
         chooseCountry(country) {
             this.country = country
             this.countryDialogStatus = false
-            this.mSendEvLog('register', 'register_country_choose', 'register_country_' + country.country, 0)
+            this.sendEvLog({
+                category: 'register',
+                action: 'register_country_choose',
+                label: 'register_country_' + country.country,
+                value: 0
+            })
         },
         nextStep() {
             if (this.type === 1) {
@@ -333,7 +359,7 @@ export default {
     },
     head() {
         return {
-            title: this.$store.state.lang.reg_title
+            title: this.$store.state.lang.register
         }
     }
 }
@@ -513,13 +539,6 @@ export default {
             &.error {
                 border-bottom: red solid 1px;
             }
-            &:after {
-                content: '0';
-                display: block;
-                height: 0;
-                clear: both;
-                visibility: hidden;
-            }
             .number {
                 width: 100%;
                 .auto-input {
@@ -548,14 +567,34 @@ export default {
     }
     .input-tel,
     .input-email {
+        .focus,
+        .focus-error,
         .error {
             height: 1rem;
             position: absolute;
             left: 0;
-            bottom: -1.5rem;
             font-size: 0.8rem;
+        }
+        .focus {
+            bottom: 1.8rem;
+            color: #0087eb;
+        }
+        .focus-error {
+            bottom: 1.8rem;
             color: red;
         }
+        .error {
+            bottom: -1.4rem;
+            color: red;
+        }
+        // .error {
+        //     height: 1rem;
+        //     position: absolute;
+        //     left: 0;
+        //     bottom: -1.5rem;
+        //     font-size: 0.8rem;
+        //     color: red;
+        // }
     }
     .next-btn {
         width: 80%;

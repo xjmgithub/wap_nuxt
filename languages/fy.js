@@ -205,7 +205,6 @@ export default {
     error_email_false: 'L\'adresse email est incorrecte. Veuillez vérifier et essayer à nouveau.',
     error_registered: 'Vous vous êtes déjà enregistré.',
     error_code: 'Non reconnu. Veuillez vérifier et entrer à nouveau.',
-    sign_in: 'Se connecter',
 
     // setpass
     register_input_enter_password: 'Entrez le mot de passe',
@@ -231,20 +230,43 @@ export default {
     Password: 'Mot de passe',
     forget_password: 'Mot de Passe oublié?',
     // 错误提示
-    signin_notexist: 'Le compte n\'existe pas.',
-    register: 'Inscription',
     confirm_number: 'Veuillez confirmer que vous avez entré le bon numéro.',
+    signin_notexist: 'Le compte n\'existe pas.',
     mailbox_not_correct_format: 'Le format de la boîte mail est incorrect!',
+    password_cannot_less_letters: 'Le mot de passe ne peut pas être inférieur à 6 lettres!',
+    password_cannoe_greater: 'Le mot de passe ne peut pas être supérieur à 18 lettres!',
     password_is_incorrect: 'Le mot de passe est incorrect',
-    forget_password_account_security_questions_hint: 'Veuillez saisir votre compte',
-    password_not_empty: 'Ne laissez pas le mot de passe vide!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'Le code de vérification a été envoyé. Veuillez consulter votre boîte e- mail ou votre courrier indésirable. Un nouveau code de vérification pourrait vous être envoyé après 60 secondes.',
-    get_verification_code: 'Cliquez pour obtenir le code de vérification',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'Ce numéro n\'est pas inscrit.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'Expiration du code de vérification. Envoyez le code à nouveau.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Veuillez consulter votre boîte Mail. Cliquez sur le code de sécurité et réinitialisez votre mot de passe.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'Cette adresse e-mail n\'a pas encore été enregistrée.',
+    password_reset_failed: 'Échec de réinitialisation du mot de passe!',
 
     // title
-    reg_title: 'Inscription',
+    register: 'Inscription',
+    sign_in: 'Se connecter',
     set_password: 'Définir le mot de passe',
     reset_pass: 'Réinitialiser le mot de passe',
+    login_title: 'S\'identifier',
+
+    // login
+    login_btn: 'SE CONNECTER',
+    no_have_account: 'Vous n\'avez pas de compte?',
+    firstpage_tips: 'En vous inscrivant, vous vous engagez à nos',
+    firstpage_tips2: "Termes de service",
+    firstpage_tips3: "et",
+    firstpage_tips4: "Politique de confidentialité.",
 }
