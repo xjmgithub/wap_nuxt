@@ -13,6 +13,7 @@ const authIgnore = [
     /^\/hybrid\/faq/,
     /^\/hybrid\/packet/,
     /^\/hybrid\/lands/,
+    /^\/hybrid\/sports/,
     /^\/hybrid\/tools/,
     /^\/hybrid\/vote/,
     /^\/browser/,
