@@ -29,9 +29,7 @@
                     <div v-show="error_tel" class="error" v-html="error_tel"></div>
                 </div>
             </div>
-            <div class="forgot-pwd">
-                <nuxt-link to="/hybrid/account/resetTelPass">{{$store.state.lang.forget_password}}</nuxt-link>
-            </div>
+
         </div>
         <div v-show="type==1" class="by_email">
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
@@ -47,9 +45,7 @@
                 <div v-show="error_email" class="focus-error">{{account_email}}</div>
                 <div v-show="error_email" class="error" v-html="error_email"></div>
             </div>
-            <div class="forgot-pwd">
-                <nuxt-link to="/hybrid/account/resetEmailPass">{{$store.state.lang.forget_password}}</nuxt-link>
-            </div>
+
         </div>
         <div :class="{focus:focus_pass,error:error_pass}" class="password-box">
             <div class="label">
@@ -63,6 +59,10 @@
         </div>
         <div class="footer">
             <mButton :disabled="!canNext" :text="signin" @click="login" />
+        </div>
+        <div class="forgot-pwd">
+            <nuxt-link v-show="type==0" to="/hybrid/account/resetTelPass">{{$store.state.lang.forget_password}}</nuxt-link>
+            <nuxt-link v-show="type==1" to="/hybrid/account/resetEmailPass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
         <div class="regtext">
             <nuxt-link to="/hybrid/account/register">Don't have a StarTimes account? Register here</nuxt-link>
@@ -328,7 +328,7 @@ export default {
     }
     .tab {
         div {
-            padding-top: 1.5rem;
+            padding-top: 1rem;
             text-align: right;
             img {
                 height: 1.3rem;
@@ -345,43 +345,24 @@ export default {
     }
     .by_tel,
     .by_email {
-        height: 8.5rem;
-        padding-top: 3rem;
+        padding-top: 1.5rem;
         position: relative;
-        .forgot-pwd {
-            position: absolute;
-            top: 17rem;
-            text-align: center;
-            width: 100%;
-            margin-top: 1rem;
-            margin-bottom: 2rem;
-            a {
-                color: #0087eb;
-                font-size: 0.8rem;
-                text-decoration: underline;
-            }
-        }
     }
-
     .regtext {
         text-align: center;
         font-size: 0.8rem;
         color: #424242;
-        position: absolute;
-        bottom: 3rem;
         width: 100%;
-        margin-left: -1rem;
         a {
             color: #0087eb;
             text-decoration: underline;
         }
     }
-
     .by_tel {
         .phone_number {
             display: -webkit-box;
             display: flex;
-            margin-bottom: 2.6rem;
+            margin-bottom: 3.5rem;
             .country_choose {
                 -webkit-box-flex: 1;
                 flex: 1;
@@ -397,8 +378,6 @@ export default {
                 -webkit-box-flex: 4;
                 flex: 4;
                 align-content: flex-end;
-                // padding-bottom: 5px;
-                // border-bottom: #dddddd solid 1px;
                 position: relative;
                 &.focus {
                     border-bottom: #0087eb solid 1px;
@@ -421,9 +400,7 @@ export default {
     .by_email {
         .input-email {
             width: 100%;
-            // border-bottom: #dddddd solid 1px;
-            // padding-bottom: 5px;
-            margin-bottom: 2.6rem;
+            margin-bottom: 3.5rem;
             position: relative;
             &.focus {
                 border-bottom: #0087eb solid 1px;
@@ -460,9 +437,8 @@ export default {
     .password-box {
         display: -webkit-box;
         display: flex;
-        margin-bottom: 4.5rem;
+        margin-bottom: 3.5rem;
         position: relative;
-        // border-bottom: #dddddd solid 1px;
         &.focus {
             border-bottom: #0087eb solid 1px;
         }
@@ -527,7 +503,17 @@ export default {
             color: red;
         }
     }
-
+    .forgot-pwd {
+        text-align: center;
+        width: 100%;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        a {
+            color: #0087eb;
+            font-size: 0.8rem;
+            text-decoration: underline;
+        }
+    }
     .footer {
         width: 80%;
         margin: 0 auto;
