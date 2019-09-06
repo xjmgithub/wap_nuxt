@@ -1,5 +1,5 @@
 <template>
-    <div>{{ua}}</div>
+    <div>userAgent{{ua}}</div>
 </template>
 <script>
 export default {
