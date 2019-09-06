@@ -31,7 +31,9 @@ export default {
     mounted() {
         const url = '/hybrid/api/app/getFaq?areaID=' + this.country.id
         const that = this
-        this.$nuxt.$loading.start()
+        this.$nextTick(()=>{
+            this.$nuxt.$loading.start()
+        })
         this.$axios.get(url).then(res => {
             this.$nuxt.$loading.finish()
             Object.values(res.data.data).forEach(val => {
