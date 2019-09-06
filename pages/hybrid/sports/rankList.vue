@@ -29,7 +29,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div v-if="index<7" class="line"></div>
+            <div v-if="index<rankList.length-1" class="line"></div>
         </div>
     </div>
 </template>
