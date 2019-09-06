@@ -233,6 +233,7 @@ export default {
                 data_source: 2
             })
             this.authorizationCode = ''
+            sessionStorage.removeItem('card')
         },
         initSubChannel(card) {
             this.authorizationCode = card.authorizationCode
@@ -240,6 +241,7 @@ export default {
         },
         nextStep() {
             sessionStorage.setItem('payChannel', this.channel.payChannel)
+            this.authorizationCode && sessionStorage.setItem('card', this.authorizationCode)
             let passIsSet
             if (this.channel.payType === 1 || this.authorizationCode) {
                 if (!this.isLogin) {
@@ -249,15 +251,9 @@ export default {
                 } else {
                     passIsSet = JSON.parse(localStorage.getItem('wallet_config')).payPassword
                     if (passIsSet === 'true') {
-                        const route = this.authorizationCode
-                            ? `/hybrid/payment/wallet/paybyPass?card=${this.authorizationCode}`
-                            : `/hybrid/payment/wallet/paybyPass`
-                        this.$router.push(route)
+                        this.$router.push(`/hybrid/payment/wallet/paybyPass`)
                     } else {
-                        const route = this.authorizationCode
-                            ? `/hybrid/payment/wallet/setPassword?passIsSet=1&card=${this.authorizationCode}`
-                            : `/hybrid/payment/wallet/passIsSet=1`
-                        this.$router.push(route)
+                        this.$router.push(`/hybrid/payment/wallet/setPassword?passIsSet=1`)
                     }
                 }
             } else if (this.channel.formConfigExist) {

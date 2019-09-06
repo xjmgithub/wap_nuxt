@@ -111,9 +111,11 @@ export default {
         const sessionPayToken = sessionStorage.getItem('payToken')
         const sessionChannel = sessionStorage.getItem('payChannel')
         const sessionAppId = sessionStorage.getItem('merchantAppId')
+        const card = sessionStorage.getItem('card')
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
         if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
+        if (!this.card && card) this.card = card
         const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
         if (walletAccount.phone) {

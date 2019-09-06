@@ -35,7 +35,7 @@ export default {
             channel: this.$route.query.channel || '',
             merchantAppId: this.$route.query.merchantAppId || '',
             apiType: this.$route.query.apiType,
-            card: this.$route.query.card,
+            card: this.$route.query.card || '',
             goodMsg: {}
         }
     },
@@ -52,9 +52,11 @@ export default {
         const sessionPayToken = sessionStorage.getItem('payToken')
         const sessionChannel = sessionStorage.getItem('payChannel')
         const sessionAppId = sessionStorage.getItem('merchantAppId')
+        const card = sessionStorage.getItem('card') || ''
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
         if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
+        if (!this.card && card) this.card = card
         this.goodMsg = JSON.parse(sessionStorage.getItem('goodMsg'))
         this.sendEvLog({
             category: 'paybypass',
@@ -87,6 +89,7 @@ export default {
                         this.payToken,
                         this.channel,
                         data => {
+                            console.log(data)
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
                             commonPayAfter.call(this, data, 3, 2)
