@@ -4,7 +4,7 @@
             <div class="top">
                 <img class="success_load" src="~assets/img/pay/img_load_def_b.png" alt />
                 <div class="loading">
-                    <img style="display:block;width:3rem;height:3rem;margin:0 auto;" src="~assets/img/Spinner-1s-200px.gif" />
+                    <img src="~assets/img/Spinner-1s-200px.gif" />
                 </div>
             </div>
             <div class="paying" v-html="load_message" />
@@ -16,16 +16,13 @@
                 <span>{{currency}}</span>
                 {{money | formatAmount}}
             </p>
-            <p
-                class="msg lf"
-            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
             <img src="~assets/img/pay/img_failed_def_b.png" alt />
             <p class="fail">Payment Failed</p>
             <p class="msg">{{fail_message}}</p>
         </template>
-        <p v-show="showMore&&result>='0'" class="show-more" />
         <div class="footer">
             <mButton text="REFRESH" @click="refresh" />
             <mButton v-show="result>0" text="OK" @click="click" />
@@ -56,8 +53,7 @@ export default {
             maxReqNum: 10,
             timer2: null,
             merchantAppId: '',
-            load_message: '',
-            showMore: true
+            load_message: ''
         }
     },
     async asyncData({ app: { $axios }, store, route }) {
@@ -123,7 +119,7 @@ export default {
                 return false
             }
 
-            this.load_message = sessionStorage.getItem('instructions') || ''
+            // this.load_message = sessionStorage.getItem('instructions') || ''
 
             this.getPayStatus()
             this.timer = setInterval(() => {
@@ -143,9 +139,6 @@ export default {
             value: this.result,
             merchant_app_id: this.merchantAppId,
             data_source: 2
-        })
-        document.addEventListener('scroll', () => {
-            this.showMore = false
         })
     },
     methods: {
@@ -234,28 +227,31 @@ export default {
 }
 </script>
 <style scoped lang="less">
+html {
+    background: #eeeeee;
+}
 .container {
     padding: 1rem 1rem 0;
     text-align: center;
     min-height: 100%;
-    background: white;
+    background: #eeeeee;
+    height: 100vh;
     .top {
         height: 15rem;
+        background: #eeeeee;
         position: fixed;
-        top: 1rem;
+        top: 3rem;
         left: 0;
         width: 100%;
         text-align: center;
         .loading {
             width: 100%;
             margin: 1rem 0;
-            .lds-ring {
-                left: 0;
-                top: 0;
-                position: relative;
+            img {
+                display: block;
+                width: 3rem;
+                height: 3rem;
                 margin: 0 auto;
-                width: 2rem;
-                height: 2rem;
             }
         }
     }
@@ -276,10 +272,9 @@ export default {
         width: 100%;
         color: #666666;
         font-size: 0.9rem;
-        text-align: left;
         overflow-y: scroll;
-        margin-top: 15rem;
-        margin-bottom: 6.5rem;
+        margin-top: 17rem;
+        padding-bottom: 8rem;
     }
     .success {
         color: #0087eb;
@@ -311,22 +306,17 @@ export default {
             text-align: left;
         }
     }
-    .show-more {
-        height: 1.3rem;
-        position: fixed;
-        bottom: 5.7rem;
-        left: 0;
-        width: 100%;
-    }
     .footer {
         position: fixed;
-        bottom: 1rem;
+        bottom: 0rem;
         width: 100%;
         margin: 0 auto;
         left: 0;
         right: 0;
         z-index: 99;
-        padding-bottom: 1rem;
+        padding-bottom: 2rem;
+        background: #eeeeee;
+
         button {
             width: 75%;
         }
