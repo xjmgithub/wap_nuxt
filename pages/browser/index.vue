@@ -36,9 +36,9 @@
                 <a href="javascript:void(0)" @click="downloadApk">
                     <img src="~assets/img/web/pic_downloadapk.png">
                 </a>
-                <a href="market://details?id=com.star.mobile.video" target="_blank">
+                <!-- <a href="market://details?id=com.star.mobile.video" target="_blank">
                     <img src="~assets/img/web/pic_googleplay.png">
-                </a>
+                </a> -->
                 <a href="https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8">
                     <img src="~assets/img/web/pic_appstore.png">
                 </a>

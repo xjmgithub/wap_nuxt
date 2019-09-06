@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             rankList: [],
-            league_id: this.$route.query.league_id,
+            league_id: this.$route.query.league_id||1,
         }
     },
     mounted() {
