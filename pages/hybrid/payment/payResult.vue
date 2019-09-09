@@ -16,7 +16,9 @@
                 <span>{{currency}}</span>
                 {{money | formatAmount}}
             </p>
-            <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            <p
+                class="msg lf"
+            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
             <img src="~assets/img/pay/img_failed_def_b.png" alt />
