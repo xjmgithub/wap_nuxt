@@ -16,7 +16,8 @@
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                        <input v-if="!item.payChannelCardAuthDtoList||item.payChannelCardAuthDtoList.length<=0" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)"/>
+                        <input v-if="item.payChannelCardAuthDtoList&&item.payChannelCardAuthDtoList.length>0" />
                         <i v-show="!item.payChannelCardAuthDtoList||item.payChannelCardAuthDtoList.length<=0" />
                     </label>
                     <div v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" class="sub-channels">
