@@ -1,35 +1,48 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
-            <div class="tab">
-                <div class="rules" @click="showRules">Rules</div>
-                <div class="share" @click="toShare('upshare')">Share</div>
-            </div>
-            <div v-show="coupleList.length>0" class="vote-box">
-                <div class="vote-remaining">Vote remaining: {{voteLeft}}</div>
-                <ul class="clearfix">
-                    <li
-                        v-for="(item,key) in coupleList"
-                        :key="key"
-                        :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
-                        data-id="item.id"
-                    >
-                        <div class="img-box" @click="toPlayer(item)">
-                            <img :src="cdnPic(item.icon)" class="icon" />
-                            <img v-show="item.link_vod_code" src="~assets/img/vote/ic_play_small_white.png" class="player" />
-                        </div>
-                        <span class="player-name">{{item.name.split('&')[0]}}</span>
-                        <span class="player-name">{{item.name.split('&')[1]}}</span>
-                        <div class="vote-btn">
-                            <div class="votes">{{item.ballot_num}}</div>
-                            <div :class="{disabled:voteLeft==0}" class="btn" @touchstart="handleViceVote(item,$event)">
-                                <span v-if="item.user_ballot_num>0">{{$store.state.lang.mrright_voted}}</span>
-                                <span v-else>{{$store.state.lang.mrright_vote}}</span>
+            <img src="~assets/img/vote/voiceToFame/bg-img.jpg" alt="bg-img" />
+            <div class="vote-box">
+                <div class="tab">
+                    <div class="rules" @click="showRules">
+                        <p>RULES</p>
+                        <img src="~assets/img/vote/voiceToFame/ic-rule.png" alt="ic-rule" />
+                    </div>
+                    <div class="share" @click="toShare('upshare')">
+                        <p>SHARE</p>
+                        <img src="~assets/img/vote/voiceToFame/ic-share.png" alt="ic-share" />
+                    </div>
+                </div>
+                <div v-show="coupleList.length>0">
+                    <div class="vote-flag">
+                        <img src="~assets/img/vote/voiceToFame/con-left.png" alt="con-left" class="con-left" />
+                        <p>VOTE</p>
+                        <img src="~assets/img/vote/voiceToFame/con-right.png" alt="con-right" class="con-right" />
+                    </div>
+                    <div class="vote-remaining">
+                        <div>VOTES REMAINING:{{voteLeft}}</div>
+                    </div>
+                    <ul class="clearfix">
+                        <li
+                            v-for="(item,key) in coupleList"
+                            :key="key"
+                            :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
+                            data-id="item.id"
+                        >
+                            <div class="item-box" @click="toPlayer(item)">
+                                <img v-show="item.link_vod_code" src="~assets/img/vote/voiceToFame/flag-vote.png" class="flag" />
+                                <img :src="cdnPic(item.icon)" class="icon" />
+                                <span class="name">{{item.name}}</span>
+                                <span class="poll">poll:{{item.ballot_num}}</span>
                             </div>
-                        </div>
-                    </li>
-                </ul>
+                            <div class="vote-btn">
+                                <div class="btn" @touchstart="handleViceVote(item,$event)">
+                                    {{$store.state.lang.mrright_vote}}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div v-if="appType==1" class="share-box">
                 <div class="text">Share for more votes!</div>
@@ -44,22 +57,61 @@
                 <div class="count">left lottery: {{appType>0&&isLogin?lotteryLeft:0}}</div>
                 <div class="lottery">
                     <ul>
-                        <li>
+                        <li v-for="(item,key) in lotteryType" :key="key" class="lottry-type">
+                            <div v-if="item.id==3" :class="index==0?'active':''">
+                                <div class="prize">
+                                    <p>{{item.name}}</p>
+                                </div>
+                                <div class="mask"></div>
+                            </div>
+                            <div v-if="item.id==1" :class="index==1?'active':''">
+                                <div class="prize">
+                                    <p>{{item.name}}</p>
+                                </div>
+                                <div class="mask"></div>
+                            </div>
+                            <div v-if="item.id==5" :class="index==2?'active':''">
+                                <div class="prize">
+                                    <p>{{item.name}}</p>
+                                </div>
+                                <div class="mask"></div>
+                            </div>
+                            <div v-if="item.id==4" :class="index==5?'active':''">
+                                <div class="prize">
+                                    <p>{{item.name}}</p>
+                                </div>
+                                <div class="mask"></div>
+                            </div>
+                            <div v-if="item.id==2" :class="index==4?'active':''">
+                                <div class="prize">
+                                    <p>{{item.name}}</p>
+                                </div>
+                                <div class="mask"></div>
+                            </div>
+                            <div v-if="item.id==6" :class="index==3?'active':''">
+                                <div class="prize">
+                                    <p>{{item.name}}</p>
+                                </div>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+
+                        <!-- <li>
                             <div :class="index==0?'active':''">
                                 <div class="prize">
-                                    <p>Coupons</p>
+                                    <p>{{lotteryType[2].name}}</p>
                                 </div>
                                 <div class="mask"></div>
                             </div>
                             <div :class="index==1?'active':''">
                                 <div class="prize">
-                                    <p>DVB包+月会员</p>
+                                    <p>{{lotteryType[0].name}}</p>
                                 </div>
                                 <div class="mask"></div>
                             </div>
                             <div :class="index==2?'active':''">
                                 <div class="prize">
-                                    <p>Try Again</p>
+                                    <p>{{lotteryType[4].name}}</p>
                                 </div>
                                 <div class="mask"></div>
                             </div>
@@ -67,29 +119,27 @@
                         <li>
                             <div :class="index==5?'active':''">
                                 <div class="prize">
-                                    <p>More Votes</p>
+                                    <p>{{lotteryType[3].name}}</p>
                                 </div>
                                 <div class="mask"></div>
                             </div>
                             <div :class="index==4?'active':''">
                                 <div class="prize">
-                                    <p>月会员</p>
+                                    <p>{{lotteryType[1].name}}</p>
                                 </div>
                                 <div class="mask"></div>
                             </div>
                             <div :class="index==3?'active':''">
                                 <div class="prize">
-                                    <p>Sorry</p>
+                                    <p>{{lotteryType[5].name}}</p>
                                 </div>
                                 <div class="mask"></div>
                             </div>
-                        </li>
-                        <li>
-                            <div class="getLuck" @click="startLottery">
-                                <p>START</p>
-                            </div>
-                        </li>
+                        </li>-->
                     </ul>
+                    <div class="getLuck" @click="startLottery">
+                        <p>START</p>
+                    </div>
                 </div>
                 <div class="tip">Find the prize in Me -> My Coupon</div>
                 <div class="msg">
@@ -126,14 +176,14 @@ import qs from 'qs'
 // import { Base64 } from 'js-base64'
 import { cdnPicSrc } from '~/functions/utils'
 // import { animateCSS, cdnPicSrc } from '~/functions/utils'
-import mVoteSwiper from '~/components/vote/vote_swiper'
+// import mVoteSwiper from '~/components/vote/vote_swiper'
 import mShare from '~/components/web/share.vue'
 import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
-        mShare,
-        mVoteSwiper
+        mShare
+        // mVoteSwiper
     },
     data() {
         return {
@@ -144,6 +194,7 @@ export default {
             // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             isLogin: true,
             title: 'Voice to Fame',
+            imgUrl: '',
 
             // 投票
             voteLeft: 0,
@@ -165,22 +216,23 @@ export default {
             lotteryLeft: 0,
             lottery_id: 1,
             lotteryType: [],
+            loaded_l: false,
 
             // 消息轮播
             animate: false,
             items: [
                 {
                     name: '消息1',
-                    key: 1,
+                    key: 1
                 },
                 {
                     name: '消息2',
-                    key: 2,
+                    key: 2
                 },
                 {
                     name: '消息3',
-                    key: 3,
-                },
+                    key: 3
+                }
             ]
         }
     },
@@ -204,37 +256,36 @@ export default {
     },
     // 唯一标识处理
     async asyncData({ app: { $axios }, store, req }) {
-        let banners = []
+        // let banners = []
         $axios.setHeader('token', store.state.token)
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
-            if (data.data.banner) {
-                banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-            }
+            // if (data.data.banner) {
+            //     banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
+            // }
             return {
-                banners: banners.data.data || [],
+                // banners: banners.data.data || [],
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 voteTitle: data.data.name,
                 serverTime: new Date()
             }
         } catch (e) {
             return {
-                banners: [],
+                // banners: [],
                 vote_sign: (req && req.headers.vote_sign) || '',
                 voteTitle: 'Voice to Fame',
                 serverTime: new Date()
             }
         }
     },
-
     mounted() {
-        this.mSendEvLog('page_show','','')
+        this.mSendEvLog('page_show', '', '')
         this.getVoteRemain()
         this.getAdvisorList()
         this.getLeftLottery()
         this.getLotteryType()
         this.getMsgList()
-        setInterval(()=>{
+        setInterval(() => {
             this.getMsgList()
         }, 60000)
         setInterval(this.scroll, 2000)
@@ -252,11 +303,11 @@ export default {
                 label: label,
                 value: value
             })
-            console.log(action,label,value)
+            console.log(action, label, value)
         },
         // app登录方法
         toSignIn() {
-            this.mSendEvLog('signin_click','','')
+            this.mSendEvLog('signin_click', '', '')
             if (this.appType == 1) {
                 // 原生登录，跳回活动页面
                 toNativePage(
@@ -277,13 +328,13 @@ export default {
         },
         // 调出分享弹层(app/web)
         toShare(label) {
-            this.mSendEvLog('share_click',label,'')
+            this.mSendEvLog('share_click', label, '')
             if (this.appType == 1) {
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=VOICE&utm_campaign=${this.platform}`,
                     this.title,
                     'Download StarTimes ON app. Vote and win FREE VIP!',
-                    this.banners.length > 0 ? this.banners[0].materials : ''
+                    this.imgUrl
                 )
             } else {
                 this.$store.commit('SET_SHARE_STATE', true)
@@ -299,15 +350,15 @@ export default {
             // 唤醒App
             callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
-                this.mSendEvLog('downloadpopup_show',label,'')
+                this.mSendEvLog('downloadpopup_show', label, '')
                 this.$confirm(
                     'Download StarTimes ON app. Vote and win FREE VIP!',
                     () => {
-                        this.mSendEvLog('downloadpopup_clickok',label,'')
+                        this.mSendEvLog('downloadpopup_clickok', label, '')
                         callMarket.call(this)
                     },
                     () => {
-                        this.mSendEvLog('downloadpopup_clicknot',label,'')
+                        this.mSendEvLog('downloadpopup_clicknot', label, '')
                     },
                     'Download Now',
                     'Cancle'
@@ -391,7 +442,7 @@ export default {
         },
         // 播放视频方法
         toPlayer(advisor) {
-            this.mSendEvLog('votepic_click',advisor.name,'')
+            this.mSendEvLog('votepic_click', advisor.name, '')
             if (this.appType == 0) {
                 this.callOrDownApp('pic')
                 return
@@ -402,7 +453,7 @@ export default {
         },
         // 投票方法
         handleViceVote(advisor) {
-            this.mSendEvLog('votebtn_click',advisor.name,'')
+            this.mSendEvLog('votebtn_click', advisor.name, '')
             if (this.appType == 0) {
                 this.callOrDownApp('vote')
                 return
@@ -470,7 +521,7 @@ export default {
         // 获取剩余抽奖机会
         getLeftLottery() {
             this.$axios
-                .get(`/lottery/v1/draw/user-draw-nums?lotteryId=${this.lottery_id}`)
+                .get(`/voting/lottery/v1/draw/user-draw-nums?lottery_id=${this.lottery_id}&vote_id=${this.vote_id}`)
                 .then(res => {
                     if (res.data.code === 0) {
                         this.lotteryLeft = res.data.data
@@ -485,13 +536,15 @@ export default {
         // 获取抽奖种类
         getLotteryType() {
             this.$axios
-                .get(`/lottery/v1/admin/reward/pool?lotteryId=${this.lottery_id}`)
+                .get(`/voting/lottery/v1/admin/reward/pool?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 0) {
                         this.lotteryType = res.data.data
+                        console.log(this.lotteryType)
                     } else {
                         this.lotteryType = [] // 服务器端计算数据错误时
                     }
+                    this.loaded_l = true
                 })
                 .catch(() => {
                     this.lotteryLeft = []
@@ -500,7 +553,7 @@ export default {
         // 获取消息列表
         getMsgList() {
             this.$axios
-                .get(`/lottery/v1/admin/reward/users?lotteryId=${this.lottery_id}`)
+                .get(`/voting/lottery/v1/admin/reward/users?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 0) {
                         this.items = res.data.data
@@ -614,6 +667,10 @@ export default {
                     this.speed -= 10 // 加快转动速度
                 } else if (this.times === this.cycle) {
                     // TODO后台取得一个中奖位置 随机数代替
+                    this.$axios
+                        .post(`/voting/lottery/v1/drawing?lottery_id=${this.lottery_id}&vote_id=${this.vote_id}`)
+                        .then(res => {})
+                        .catch(() => {})
                     const index = Math.floor(Math.random() * 10) > 5 ? 5 : Math.floor(Math.random() * 5)
                     // const index = 2
                     this.prize = index
@@ -664,39 +721,98 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
 .wrapper {
-    background-color: chocolate;
+    background-color: #28007b;
+    font-size: 0.9rem;
     .container {
-        .ad {
+        > img {
             width: 100%;
-            height: 10rem;
-            background-color: #fe9;
-        }
-        .tab {
-            width: 100%;
-            height: 2rem;
-            line-height: 2rem;
-            color: #87e;
-            display: flex;
-            text-align: center;
-            position: relative;
-            .rules {
-                flex: 1;
-            }
-            .share {
-                flex: 1;
-            }
+            height: auto;
         }
         .vote-box {
             width: 100%;
             height: auto;
             margin-bottom: 1rem;
+            position: relative;
+            .tab {
+                width: 100%;
+                position: absolute;
+                color: #fff;
+                top: -3.6rem;
+                left: 0;
+                height: 3rem;
+                line-height: 3rem;
+                .rules {
+                    width: 6rem;
+                    float: left;
+                    background: url('~assets/img/vote/voiceToFame/btn-rules.png') no-repeat;
+                    background-size: 6rem 3rem;
+                    text-align: left;
+                    padding-left: 0.5rem;
+                    position: relative;
+                    img {
+                        width: 1rem;
+                        height: auto;
+                        position: absolute;
+                        left: 3.8rem;
+                        top: 0.9rem;
+                    }
+                }
+                .share {
+                    width: 6rem;
+                    float: right;
+                    background: url('~assets/img/vote/voiceToFame/btn-share.png') no-repeat;
+                    background-size: 6rem 3rem;
+                    text-align: right;
+                    padding-right: 0.5rem;
+                    position: relative;
+                }
+                img {
+                    width: 1rem;
+                    height: auto;
+                    position: absolute;
+                    right: 3.8rem;
+                    top: 1.2rem;
+                }
+            }
+            .vote-flag {
+                width: 5rem;
+                margin: 0 auto;
+                color: #fff;
+                text-align: center;
+                font-weight: 600;
+                height: 2.7rem;
+                line-height: 2.7rem;
+                position: relative;
+                img {
+                    width: 0.7rem;
+                    height: 0.7rem;
+                    position: absolute;
+                    top: 1rem;
+                    &.con-left {
+                        left: 0;
+                    }
+                    &.con-right {
+                        right: 0;
+                    }
+                }
+            }
             .vote-remaining {
                 width: 100%;
-                height: 2rem;
-                line-height: 2rem;
-                text-align: right;
-                padding-right: 2.5%;
-                margin-bottom: 1rem;
+                height: 2.5rem;
+                line-height: 2.5rem;
+                font-size: 0.8rem;
+                div {
+                    width: 10rem;
+                    // margin: 0 auto;
+                    height: 1.7rem;
+                    line-height: 1.7rem;
+                    text-align: center;
+                    margin-right: 1rem;
+                    border-radius: 0.7rem;
+                    color: #b69af3;
+                    background: #1c0251;
+                    float: right;
+                }
             }
             ul {
                 width: 100%;
@@ -710,15 +826,14 @@ export default {
                     &.only-two {
                         margin: 0 10% 0.5rem;
                     }
-                    .img-box {
+                    .item-box {
                         position: relative;
                         width: 100%;
+                        height: 11rem;
+                        background-color: #410eb1;
                         margin-bottom: 0.5rem;
                         overflow: hidden;
-                        border-radius: 2px;
-                        opacity: 0.9262;
-                        border: 2px solid #ffffff;
-                        box-shadow: 0px 0px 10px #f7ebe2, 0px 0px 10px #f7ebe2 inset;
+                        border-radius: 0.6rem;
                         &:before {
                             content: '';
                             display: inline-block;
@@ -726,13 +841,19 @@ export default {
                             width: 0.1px;
                             vertical-align: middle;
                         }
-                        .icon {
-                            width: 100%;
-                            height: 100%;
-                            display: block;
+                        .flag {
+                            width: 1.5rem;
+                            height: auto;
                             position: absolute;
                             top: 0;
-                            left: 0;
+                            left: 1rem;
+                        }
+                        .icon {
+                            width: 95%;
+                            height: auto;
+                            margin: 0 auto;
+                            display: block;
+                            border-radius: 0.6rem;
                         }
                         .player {
                             width: 1.5rem;
@@ -842,21 +963,37 @@ export default {
                 ul {
                     width: 100%;
                     margin: 0 auto;
+                    &:after {
+                        display: block;
+                        visibility: hidden;
+                        clear: both;
+                        height: 0;
+                        content: '';
+                    }
                     li {
-                        width: 100%;
-                        margin: 0 auto;
-                        height: 5rem;
-                        display: flex;
+                        width: 30%;
+                        // height: 5rem;
+                        // line-height: 5rem;
+                        float: left;
+                        // margin: 0 auto;
                         margin-top: 0.4rem;
+                        margin-right: 0.4rem;
+                        // display: flex;
+                        &:last-chile {
+                            margin-bottom: 0.4rem;
+                        }
                         > div {
-                            flex: 1;
-                            margin-right: 0.4rem;
-                            width: 5.5rem;
+                            width: 100%;
                             height: 5rem;
                             line-height: 5rem;
+                            // flex: 1;
+                            // margin-right: 0.4rem;
+                            background-color: #faf;
                             text-align: center;
                             position: relative;
-                            background-color: #faf;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                             .prize {
                                 p {
                                     display: block;
@@ -885,21 +1022,32 @@ export default {
                                     display: block;
                                 }
                             }
+
+                            // &.getLuck {
+                            //     flex: 1/3;
+                            //     margin: auto;
+                            //     p {
+                            //         font-size: 1.2rem;
+                            //         font-weight: 600;
+                            //     }
+                            // }
                             &:first-child {
                                 margin-left: 0.4rem;
                             }
-                            &.getLuck {
-                                flex: 1/3;
-                                margin: auto;
-                                p {
-                                    font-size: 1.2rem;
-                                    font-weight: 600;
-                                }
-                            }
                         }
-                        &:last-chile {
-                            margin-bottom: 0.4rem;
-                        }
+                    }
+                }
+                .getLuck {
+                    // flex: 1/3;
+                    width: 30%;
+                    height: 2rem;
+                    line-height: 2rem;
+                    text-align: center;
+                    margin: 1rem auto;
+                    background-color: red;
+                    p {
+                        font-size: 1.2rem;
+                        font-weight: 600;
                     }
                 }
             }
@@ -974,7 +1122,7 @@ export default {
             overflow-x: hidden;
             overflow-y: scroll;
             margin-bottom: 1rem;
-            
+
             .rules-text {
                 width: 100%;
                 height: 20rem;
