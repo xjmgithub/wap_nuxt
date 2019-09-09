@@ -6,6 +6,8 @@ const authIgnore = [
     /^\/hybrid\/account\/toGooglePlay/,
     /^\/hybrid\/account\/setpass/,
     /^\/hybrid\/account\/resetpass/,
+    /^\/hybrid\/account\/resetTelPass/,
+    /^\/hybrid\/account\/resetTelPassSubmit/,
     /^\/hybrid\/payment\/channels/,
     /^\/hybrid\/payment\/payResult/,
     /^\/hybrid\/payment\/form/,
