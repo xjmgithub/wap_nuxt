@@ -103,8 +103,6 @@ export default {
             window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
             // 直接回调
             if (this.result === 1) {
-                const channel = sessionStorage.getItem('paychannel')
-                if (channel) setCookie('lastpay', channel)
                 this.timer2 = setTimeout(() => {
                     if (!document.hidden) {
                         this.click()
@@ -188,8 +186,6 @@ export default {
                     const data = res.data
                     if (data && data.state === 3) {
                         this.result = 1
-                        const channel = sessionStorage.getItem('paychannel')
-                        if (channel) setCookie('lastpay', channel)
                         this.money = data.amount
                         this.currency = data.currencySymbol
                         this.merchantAppId = data.merchantAppId
