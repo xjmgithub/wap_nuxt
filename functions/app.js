@@ -83,12 +83,6 @@ export const downApk = function(callback) {
 }
 
 export const callMarket = function(failback) {
-    // TODO google play 下架
-
-    downApk.call(this)
-    return false
-    /* eslint-disable */
-
     const query = this.$route.query
     const referrer = query.referrer
     let source = '&referrer='
