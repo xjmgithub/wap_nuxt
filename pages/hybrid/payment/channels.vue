@@ -32,7 +32,7 @@
                         <label v-show="item.payChannelCardAuthDtoList" class="radio">
                             <img src="~/assets/img/dvb/ic_ewallet_add.png" />
                             <span>Add a Card to pay</span>
-                            <input :checked="item.lastSuccessPay && item.payChannelCardAuthDtoList.length<=0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                            <input :checked="item.lastSuccessPay && item.payChannelCardAuthDtoList&&item.payChannelCardAuthDtoList.length<=0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                             <i />
                         </label>
                     </div>

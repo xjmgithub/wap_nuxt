@@ -2,10 +2,8 @@
     <div :class="{'grey-back':result==2||result==0}" class="container">
         <template v-if="result<=0">
             <div class="top">
-                <img class="success_load" src="~assets/img/pay/img_load_def_b.png" alt />
-                <div class="loading">
-                    <img src="~assets/img/Spinner-1s-200px.gif" />
-                </div>
+                <img class="wait" src="~assets/img/pay/img_load_def_b.png" alt />
+                <img class="loading" src="~assets/img/Spinner-1s-200px.gif" />
             </div>
             <div class="paying" v-html="load_message" />
         </template>
@@ -16,9 +14,7 @@
                 <span>{{currency}}</span>
                 {{money | formatAmount}}
             </p>
-            <p
-                class="msg lf"
-            >Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
             <img src="~assets/img/pay/img_failed_def_b.png" alt />
@@ -238,21 +234,30 @@ html {
     background: #eeeeee;
     height: 100vh;
     .top {
-        height: 15rem;
+        height: 19rem;
         background: #eeeeee;
         position: fixed;
-        top: 3rem;
+        top: 0rem;
         left: 0;
+        padding-top: 3rem;
         width: 100%;
         text-align: center;
-        .loading {
-            width: 100%;
-            margin: 1rem 0;
-            img {
+        box-sizing: border-box;
+        img {
+            &.wait {
+                width: 13rem;
+                height: 11rem;
+            }
+            &.loading {
                 display: block;
                 width: 3rem;
                 height: 3rem;
-                margin: 0 auto;
+                margin: 1rem auto;
+            }
+            &.success_img {
+                width: 3rem;
+                height: 3rem;
+                margin-top: 2rem;
             }
         }
     }
@@ -260,23 +265,19 @@ html {
         height: 100vh;
         background: #eeeeee;
     }
-    img {
-        width: 13rem;
-        height: 11rem;
-        &.success_img {
-            width: 3rem;
-            height: 3rem;
-            margin-top: 2rem;
-        }
-    }
+
     .paying {
         width: 100%;
         color: #666666;
         font-size: 0.9rem;
         overflow-y: scroll;
-        margin-top: 18rem;
-        padding-bottom: 8rem;
+        position: absolute;
+        top: 19rem;
+        bottom:7rem;
+        left: 0;
         text-align: left;
+        background: #eeeeee;
+        padding: 0px 1rem;
     }
     .success {
         color: #0087eb;
@@ -316,9 +317,10 @@ html {
         left: 0;
         right: 0;
         z-index: 99;
-        padding-bottom: 2rem;
+        padding-bottom: 1rem;
         background: #eeeeee;
-
+        max-height: 8rem;
+        box-sizing: border-box;
         button {
             width: 75%;
         }
