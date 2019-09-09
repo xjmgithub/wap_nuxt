@@ -52,6 +52,7 @@ export default {
             timer: null,
             maxReqNum: 10,
             timer2: null,
+            timer3: null,
             merchantAppId: '',
             load_message: ''
         }
@@ -119,7 +120,7 @@ export default {
                 return false
             }
 
-            // this.load_message = sessionStorage.getItem('instructions') || ''
+            this.load_message = sessionStorage.getItem('instructions') || 'Processing you payment, please wait for a moment'
 
             this.getPayStatus()
             this.timer = setInterval(() => {
@@ -129,6 +130,11 @@ export default {
                     this.getPayStatus()
                 }
             }, 3000)
+
+            this.timer3 = setTimeout(() => {
+                this.load_message =
+                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
+            }, 300000)
         }
         const sessionAppId = sessionStorage.getItem('merchantAppId')
         if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
@@ -151,6 +157,7 @@ export default {
                 merchant_app_id: this.merchantAppId,
                 data_source: 2
             })
+            if (this.timer3) clearTimeout(this.timer3)
             if (this.isApp === 1) {
                 if (this.merchantAppId && this.merchantAppId > 2) {
                     window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResultFinish(this.result == 1 ? 'SUCCESS' : 'FAIL')

@@ -36,7 +36,7 @@
 import verifyTel from '~/components/form/wallet_tel_verify'
 import passInput from '~/components/password'
 import mButton from '~/components/button'
-import { invoke, commonPayAfter, payWithBalance } from '~/functions/pay'
+import { invoke, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
 export default {
     layout: 'base',
     components: {
@@ -199,31 +199,37 @@ export default {
             }
         },
         pay() {
+            const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
+            const newpass = this.$refs.newpass.password
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            if (this.card) {
-                invoke.call(
-                    this,
-                    this.payToken,
-                    this.channel,
-                    data => {
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter.call(this, data, 3, 3)
-                    },
-                    { authorization_code: this.card }
-                )
-                return false
-            } else {
-                invoke.call(this, this.payToken, this.channel, data => {
-                    payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
-                        // this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
-                        window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
+            verifyWalletPass.call(this, ewallet.accountNo, newpass, result => {
+                if (this.card) {
+                    invoke.call(
+                        this,
+                        this.payToken,
+                        this.channel,
+                        data => {
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            commonPayAfter.call(this, data, 3, 2)
+                        },
+                        {
+                            payPwdVerifyToken: result.data,
+                            authorization_code: this.card
+                        }
+                    )
+                } else {
+                    invoke.call(this, this.payToken, this.channel, data => {
+                        payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            // this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                            window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
+                        })
                     })
-                })
-            }
+                }
+            })
         }
     },
     head() {
