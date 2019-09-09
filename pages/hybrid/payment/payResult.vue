@@ -274,8 +274,9 @@ html {
         color: #666666;
         font-size: 0.9rem;
         overflow-y: scroll;
-        margin-top: 17rem;
+        margin-top: 18rem;
         padding-bottom: 8rem;
+        text-align: left;
     }
     .success {
         color: #0087eb;

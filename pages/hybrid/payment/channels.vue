@@ -16,12 +16,12 @@
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input v-if="!item.payChannelCardAuthDtoList||item.payChannelCardAuthDtoList.length<=0" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)"/>
-                        <input v-if="item.payChannelCardAuthDtoList&&item.payChannelCardAuthDtoList.length>0" />
-                        <i v-show="!item.payChannelCardAuthDtoList||item.payChannelCardAuthDtoList.length<=0" />
+                        <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)"/>
+                        <input v-if="item.payChannelCardAuthDtoList" />
+                        <i v-show="!item.payChannelCardAuthDtoList" />
                     </label>
-                    <div v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" class="sub-channels">
-                        <div v-for="(card,si) in item.payChannelCardAuthDtoList" :key="si">
+                    <div class="sub-channels">
+                        <div v-for="(card,si) in item.payChannelCardAuthDtoList" v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" :key="si">
                             <label class="radio">
                                 <div :class="card.brand" class="img-box" />
                                 <span>{{card.cardType}}({{card.last4}})</span>
@@ -29,10 +29,10 @@
                                 <i />
                             </label>
                         </div>
-                        <label class="radio">
+                        <label v-show="item.payChannelCardAuthDtoList" class="radio">
                             <img src="~/assets/img/dvb/ic_ewallet_add.png" />
                             <span>Add a Card to pay</span>
-                            <input :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                            <input :checked="item.lastSuccessPay && item.payChannelCardAuthDtoList.length<=0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                             <i />
                         </label>
                     </div>
