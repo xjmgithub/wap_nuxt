@@ -32,7 +32,7 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import { setCookie, formatAmount } from '~/functions/utils'
+import { formatAmount } from '~/functions/utils'
 import { toNativePage } from '~/functions/app'
 
 export default {
@@ -103,8 +103,6 @@ export default {
             window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
             // 直接回调
             if (this.result === 1) {
-                const channel = sessionStorage.getItem('paychannel')
-                if (channel) setCookie('lastpay', channel)
                 this.timer2 = setTimeout(() => {
                     if (!document.hidden) {
                         this.click()
@@ -130,11 +128,6 @@ export default {
                     this.getPayStatus()
                 }
             }, 3000)
-
-            this.timer3 = setTimeout(() => {
-                this.load_message =
-                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
-            }, 300000)
         }
         const sessionAppId = sessionStorage.getItem('merchantAppId')
         if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
@@ -188,8 +181,6 @@ export default {
                     const data = res.data
                     if (data && data.state === 3) {
                         this.result = 1
-                        const channel = sessionStorage.getItem('paychannel')
-                        if (channel) setCookie('lastpay', channel)
                         this.money = data.amount
                         this.currency = data.currencySymbol
                         this.merchantAppId = data.merchantAppId
@@ -211,7 +202,8 @@ export default {
                     }
                 })
             } else {
-                this.result = 2
+                this.load_message =
+                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
             }
         },
         refresh() {

@@ -11,7 +11,56 @@ export default {
     starpay_payment_currency_error: 'Cannot proceed with wrong currency, please try another channel or contact us',
     starpay_payment_amount_error: 'Insufficient funds, please check your balance',
     starpay_payment_login_notice: 'To pay by eWallet, you need to login StarTimes account first',
-
+    // payment/channels
+    product_name:'',
+    eWallet:'',
+    note:'',
+    query_paytoken_needed:'',
+    payToken_payChannel_mismatch:'',
+    pay_now:'',
+    confirm_payment:'',
+    // payment/form
+    enter_complete_info:'',
+    enter_correct_info:'',
+    // payment/payResult
+    payment_successful:'',
+    pay_successful_desc:'',
+    payment_failed:'',
+    pay_failed_desc:'',
+    pay_refresh:'',
+    pay_ok:'',
+    error_notice:'',
+    payment_results:'',
+    // wallet/paybyPass
+    forgot_payment_password:'',
+    payment_details:'',
+    enter_pay_password:'',
+    // wallet/resetPhone 
+    confirm_phone_number:'',
+    enter_phone_number:'',
+    enter_code:'',
+    unknown_error:'',
+    phone_already_set:'',
+    // wallet/setPassword 
+    change_phone_number:'',
+    enter_SMS_code:'',
+    set_payment_password:'',
+    set_6bit_password:'',
+    confirm_password:'',
+    two_password_not_match:'',
+    enter_pure_numbers:'',
+    reset_password:'',
+    setting_password:'',
+    // wallet/validSignPass
+    enter_signin_pass:'',
+    fotget_signin_pass:'',
+    password_error:'',
+    // form/wallet_tel_verify  
+    cellphone_number:'',
+    get_code:'',
+    // pay.js
+    payment_method_not_supported:'',
+    incorrect_pay_password:'',
     // vote film
     vote_about: 'About PAOFF',
     vote_tab_film: 'Movies',

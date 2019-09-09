@@ -88,7 +88,7 @@ export default {
     },
     head() {
         return {
-            title: 'Login'
+            title: this.$store.state.lang.login_title
         }
     }
 }
