@@ -598,7 +598,7 @@ export default {
     }
     .terms {
         margin: 0 auto;
-        font-size: 0.5rem;
+        font-size: 0.8rem;
         text-align: center;
         text-decoration: underline;
         color: #0087eb;

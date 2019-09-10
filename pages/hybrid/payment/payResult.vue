@@ -200,8 +200,11 @@ export default {
                     }
                 })
             } else {
+                // this.load_message =
+                //     'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
+                // 测试滚动
                 this.load_message =
-                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
+                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
             }
         },
         refresh() {
