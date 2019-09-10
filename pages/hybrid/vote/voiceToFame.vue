@@ -14,10 +14,12 @@
                     </div>
                 </div>
                 <div v-show="coupleList.length>0">
-                    <div class="vote-flag">
-                        <img src="~assets/img/vote/voiceToFame/con-left.png" alt="con-left" class="con-left" />
-                        <p>VOTE</p>
-                        <img src="~assets/img/vote/voiceToFame/con-right.png" alt="con-right" class="con-right" />
+                    <div class="flag-box">
+                        <div class="vote-flag">
+                            <img src="~assets/img/vote/voiceToFame/con-left.png" alt="con-left" class="con-left" />
+                            <p>VOTE</p>
+                            <img src="~assets/img/vote/voiceToFame/con-right.png" alt="con-right" class="con-right" />
+                        </div>
                     </div>
                     <div class="vote-remaining">
                         <div>VOTES REMAINING:{{voteLeft}}</div>
@@ -31,123 +33,74 @@
                         >
                             <div class="item-box" @click="toPlayer(item)">
                                 <img v-show="item.link_vod_code" src="~assets/img/vote/voiceToFame/flag-vote.png" class="flag" />
+                                <p>{{key+1}}</p>
                                 <img :src="cdnPic(item.icon)" class="icon" />
                                 <span class="name">{{item.name}}</span>
-                                <span class="poll">poll:{{item.ballot_num}}</span>
+                                <span class="poll">poll: {{item.ballot_num}}</span>
                             </div>
                             <div class="vote-btn">
-                                <div class="btn" @touchstart="handleViceVote(item,$event)">
-                                    {{$store.state.lang.mrright_vote}}
-                                </div>
+                                <div class="btn" @touchstart="handleViceVote(item,$event)">VOTE</div>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div v-if="appType==1" class="share-box">
-                <div class="text">Share for more votes!</div>
-                <div class="share-btn" @click="toShare('midshare')">Share now</div>
-            </div>
-            <div v-if="appType==1&&!isLogin" class="sign-in-box">
-                <div class="sign-in" @click="toSignIn">SIGN IN</div>
-                <div class="text">to get started</div>
+            <div v-if="appType==1" class="share-box" @click="toShare('midshare')">
+                <img src="~assets/img/vote/voiceToFame/bg-left.png" alt class="bg-left" />
+                <img src="~assets/img/vote/voiceToFame/img-sharefor.png" alt="img-sharefor" class="sharefor" />
+                <img src="~assets/img/vote/voiceToFame/bg-right.png" alt class="bg-right" />
             </div>
             <div class="lottery-box">
-                <div class="title">Every 1 votes you vote, exchange 1 lottery</div>
-                <div class="count">left lottery: {{appType>0&&isLogin?lotteryLeft:0}}</div>
+                <div class="flag-box">
+                    <div class="vote-flag">
+                        <img src="~assets/img/vote/voiceToFame/con-left.png" alt="con-left" class="con-left" />
+                        <p>LOTTERY</p>
+                        <img src="~assets/img/vote/voiceToFame/con-right.png" alt="con-right" class="con-right" />
+                    </div>
+                </div>
+                <div v-if="appType==1&&!isLogin" class="sign-in-box">
+                    <div class="text">
+                        <img src="~assets/img/vote/voiceToFame/line-left.png" alt class="line-left" />
+                        <div class="sign-in-text">
+                            <div class="btn" @click="toSignIn">SIGN IN</div>
+                            <div class="word">to get started</div>
+                        </div>
+                        <img src="~assets/img/vote/voiceToFame/line-right.png" alt class="line-right" />
+                    </div>
+                </div>
+                <div v-else class="title">
+                    <div class="text">
+                        <img src="~assets/img/vote/voiceToFame/line-left.png" alt class="line-left" />
+                        <div>Every time you vote</div>
+                        <div>you'll get a chance to win a prize</div>
+                        <img src="~assets/img/vote/voiceToFame/line-right.png" alt class="line-right" />
+                    </div>
+                </div>
                 <div class="lottery">
-                    <ul>
-                        <li v-for="(item,key) in lotteryType" :key="key" class="lottry-type">
-                            <div v-if="item.id==3" :class="index==0?'active':''">
-                                <div class="prize">
-                                    <p>{{item.name}}</p>
+                    <div class="count">left lottery: {{appType>0&&isLogin?lotteryLeft:0}}</div>
+                    <div class="lottery-type">
+                        <ul>
+                            <li v-for="(item,key) in lotteryType" :key="key" class="lottry-type">
+                                <div :class="index==key?'active':''">
+                                    <div class="prize">
+                                        <p>{{item.name}}</p>
+                                    </div>
+                                    <div class="mask"></div>
                                 </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div v-if="item.id==1" :class="index==1?'active':''">
-                                <div class="prize">
-                                    <p>{{item.name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div v-if="item.id==5" :class="index==2?'active':''">
-                                <div class="prize">
-                                    <p>{{item.name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div v-if="item.id==4" :class="index==5?'active':''">
-                                <div class="prize">
-                                    <p>{{item.name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div v-if="item.id==2" :class="index==4?'active':''">
-                                <div class="prize">
-                                    <p>{{item.name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div v-if="item.id==6" :class="index==3?'active':''">
-                                <div class="prize">
-                                    <p>{{item.name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                        </li>
-
-                        <!-- <li>
-                            <div :class="index==0?'active':''">
-                                <div class="prize">
-                                    <p>{{lotteryType[2].name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div :class="index==1?'active':''">
-                                <div class="prize">
-                                    <p>{{lotteryType[0].name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div :class="index==2?'active':''">
-                                <div class="prize">
-                                    <p>{{lotteryType[4].name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                        </li>
-                        <li>
-                            <div :class="index==5?'active':''">
-                                <div class="prize">
-                                    <p>{{lotteryType[3].name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div :class="index==4?'active':''">
-                                <div class="prize">
-                                    <p>{{lotteryType[1].name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                            <div :class="index==3?'active':''">
-                                <div class="prize">
-                                    <p>{{lotteryType[5].name}}</p>
-                                </div>
-                                <div class="mask"></div>
-                            </div>
-                        </li>-->
-                    </ul>
-                    <div class="getLuck" @click="startLottery">
-                        <p>START</p>
+                            </li>
+                        </ul>
+                        <div class="getLuck" @click="startLottery">
+                            <p>START</p>
+                        </div>
+                    </div>
+                    <div class="msg">
+                        <img src alt />
+                        <ul ref="msgul" :class="{anim:animate==true}">
+                            <li v-for="item in items" :key="item.key">: {{item.name}}</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="tip">Find the prize in Me -> My Coupon</div>
-                <div class="msg">
-                    <img src alt />
-                    <ul ref="msgul" :class="{anim:animate==true}">
-                        <li v-for="item in items" :key="item.key">: {{item.name}}</li>
-                    </ul>
-                </div>
             </div>
         </div>
         <div v-show="show_rules" class="alert-rules-box">
@@ -193,6 +146,7 @@ export default {
             appType: 1,
             // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             isLogin: true,
+            // isLogin: false,
             title: 'Voice to Fame',
             imgUrl: '',
 
@@ -256,22 +210,16 @@ export default {
     },
     // 唯一标识处理
     async asyncData({ app: { $axios }, store, req }) {
-        // let banners = []
         $axios.setHeader('token', store.state.token)
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
-            // if (data.data.banner) {
-            //     banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-            // }
             return {
-                // banners: banners.data.data || [],
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 voteTitle: data.data.name,
                 serverTime: new Date()
             }
         } catch (e) {
             return {
-                // banners: [],
                 vote_sign: (req && req.headers.vote_sign) || '',
                 voteTitle: 'Voice to Fame',
                 serverTime: new Date()
@@ -721,8 +669,9 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
 .wrapper {
-    background-color: #28007b;
+    background-color: #2f0081;
     font-size: 0.9rem;
+    letter-spacing: -0.03rem;
     .container {
         > img {
             width: 100%;
@@ -731,8 +680,11 @@ export default {
         .vote-box {
             width: 100%;
             height: auto;
-            margin-bottom: 1rem;
+            // margin-bottom: 1rem;
             position: relative;
+            .vote-flag {
+                width: 5rem;
+            }
             .tab {
                 width: 100%;
                 position: absolute;
@@ -774,28 +726,6 @@ export default {
                     top: 1.2rem;
                 }
             }
-            .vote-flag {
-                width: 5rem;
-                margin: 0 auto;
-                color: #fff;
-                text-align: center;
-                font-weight: 600;
-                height: 2.7rem;
-                line-height: 2.7rem;
-                position: relative;
-                img {
-                    width: 0.7rem;
-                    height: 0.7rem;
-                    position: absolute;
-                    top: 1rem;
-                    &.con-left {
-                        left: 0;
-                    }
-                    &.con-right {
-                        right: 0;
-                    }
-                }
-            }
             .vote-remaining {
                 width: 100%;
                 height: 2.5rem;
@@ -829,225 +759,294 @@ export default {
                     .item-box {
                         position: relative;
                         width: 100%;
-                        height: 11rem;
                         background-color: #410eb1;
                         margin-bottom: 0.5rem;
                         overflow: hidden;
                         border-radius: 0.6rem;
-                        &:before {
+                        &:after {
+                            display: block;
+                            visibility: hidden;
+                            clear: both;
+                            height: 0;
                             content: '';
-                            display: inline-block;
-                            padding-bottom: 100%;
-                            width: 0.1px;
-                            vertical-align: middle;
                         }
                         .flag {
-                            width: 1.5rem;
+                            width: 1.2rem;
                             height: auto;
                             position: absolute;
                             top: 0;
-                            left: 1rem;
+                            left: 0.4rem;
+                            z-index: 1;
+                        }
+                        p {
+                            display: block;
+                            width: 1rem;
+                            height: 1.2rem;
+                            position: absolute;
+                            top: 0;
+                            left: 0.5rem;
+                            z-index: 1;
+                            color: #fff;
+                            font-size: 0.75rem;
+                            font-weight: 200;
+                            text-align: center;
+                            line-height: 1.2rem;
                         }
                         .icon {
-                            width: 95%;
+                            width: 100%;
+                            padding: 0.2rem 0.2rem 0;
                             height: auto;
                             margin: 0 auto;
                             display: block;
                             border-radius: 0.6rem;
+                            position: relative;
                         }
-                        .player {
-                            width: 1.5rem;
+                        .name {
+                            width: 100%;
                             height: 1.5rem;
-                            position: absolute;
-                            right: 3px;
-                            bottom: 3px;
+                            padding: 0 0.2rem;
+                            line-height: 1.5rem;
+                            font-size: 0.8rem;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            color: #fff;
+                            display: block;
+                            text-align: center;
                         }
-                    }
-                    .player-name {
-                        height: 1.2rem;
-                        line-height: 1.2rem;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        color: #666666;
-                        display: block;
-                        text-align: center;
+                        .poll {
+                            width: 80%;
+                            height: 1.2rem;
+                            line-height: 1.2rem;
+                            font-size: 0.75rem;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            color: #b69af3;
+                            display: block;
+                            text-align: center;
+                            margin: 0 auto 0.3rem;
+                            background-color: #381091;
+                            border-radius: 0.4rem;
+                        }
                     }
                     .vote-btn {
                         width: 100%;
-                        height: 2rem;
-                        line-height: 1.6rem;
-                        background: #fed56b;
-                        border-radius: 15px;
-                        font-size: 0.88rem;
-                        text-align: center;
-                        padding: 0.2rem 0.1rem;
-                        margin-top: 0.5rem;
-                        position: relative;
-                        .votes {
-                            position: absolute;
-                            left: 0;
-                            width: 40%;
-                            color: #ff598c;
-                            font-size: 0.75rem;
-                        }
+                        margin: 1rem 0 0.3rem;
                         .btn {
-                            position: absolute;
-                            right: 2px;
-                            width: 55%;
+                            width: 4.5rem;
+                            height: 1.3rem;
+                            line-height: 1.3rem;
                             color: #ffffff;
-                            font-weight: bold;
-                            background: #ff598c;
-                            border-radius: 15px;
-                            &.disabled {
-                                background: #b0b0b0;
-                            }
+                            background: url('~assets/img/vote/voiceToFame/btn-vote.png') no-repeat;
+                            background-size: 100%;
+                            margin: 0 auto;
+                            text-align: center;
+                            font-size: 0.8rem;
                         }
                     }
                 }
             }
         }
         .share-box {
-            width: 90%;
-            height: 2rem;
-            line-height: 2rem;
-            margin: 0 auto;
-            margin-bottom: 1rem;
-            display: flex;
-            .text {
-                flex: 2;
-                text-align: left;
+            width: 100%;
+            height: 4rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            .bg-left {
+                width: 3rem;
+                position: absolute;
+                left: 0;
+                top: -2rem;
+                z-index: 0;
             }
-            .share-btn {
-                flex: 1;
-                text-align: right;
+            .bg-right {
+                width: 4rem;
+                position: absolute;
+                right: 0;
+                top: 0;
+                z-index: 0;
             }
-        }
-        .sign-in-box {
-            width: 90%;
-            height: 2rem;
-            line-height: 2rem;
-            margin: 0 auto;
-            margin-bottom: 1rem;
-            text-align: center;
-            .sign-in {
-                color: #87e;
-                display: inline-block;
-            }
-            .text {
-                display: inline-block;
+            .sharefor {
+                display: block;
+                width: 84%;
+                position: relative;
+                margin: 0 auto;
+                z-index: 1;
             }
         }
         .lottery-box {
+            .vote-flag {
+                width: 7rem;
+            }
+            .sign-in-box {
+                .sign-in-text {
+                    margin: 0 auto;
+                    line-height: 2rem;
+                    div {
+                        display: inline-block;
+                        &.btn {
+                            color: #f739fb;
+                        }
+                    }
+                }
+                .text {
+                    width: 10rem;
+                }
+            }
+            .title {
+                .text {
+                    width: 14rem;
+                    line-height: 1rem;
+                }
+            }
+            .sign-in-box,
             .title {
                 width: 100%;
                 margin: 0 auto 0.5rem;
                 height: 2rem;
-                line-height: 2rem;
-                font-weight: 600;
-                font-size: 1rem;
-                text-align: center;
-            }
-            .count {
-                height: 1.5rem;
-                line-height: 1.5rem;
-                font-size: 0.9rem;
-                color: #666;
-                text-align: right;
-                margin-right: 7%;
-                margin-bottom: 1rem;
+                color: #b69af3;
+                font-size: 0.75rem;
+                .text {
+                    // width: 14rem;
+                    margin: 0 auto;
+                    height: 2rem;
+                    // line-height: 1rem;
+                    text-align: center;
+                    position: relative;
+                    img {
+                        width: 1rem;
+                        position: absolute;
+                        top: 0.5rem;
+                    }
+                    .line-left {
+                        left: -1rem;
+                    }
+                    .line-right {
+                        right: -1rem;
+                    }
+                }
             }
             .lottery {
-                width: 80%;
-                margin: 0 auto 1rem;
-                ul {
-                    width: 100%;
-                    margin: 0 auto;
-                    &:after {
-                        display: block;
-                        visibility: hidden;
-                        clear: both;
-                        height: 0;
-                        content: '';
-                    }
-                    li {
-                        width: 30%;
-                        // height: 5rem;
-                        // line-height: 5rem;
-                        float: left;
-                        // margin: 0 auto;
-                        margin-top: 0.4rem;
-                        margin-right: 0.4rem;
-                        // display: flex;
-                        &:last-chile {
-                            margin-bottom: 0.4rem;
+                width: 90%;
+                height: 15rem;
+                background-color: #6427c2;
+                margin: 0 auto;
+                .count {
+                    height: 1.5rem;
+                    line-height: 1.5rem;
+                    font-size: 0.9rem;
+                    color: #666;
+                    text-align: right;
+                    margin-right: 7%;
+                    margin-bottom: 1rem;
+                }
+                .lottery-type {
+                    width: 80%;
+                    margin: 0 auto 1rem;
+                    ul {
+                        width: 100%;
+                        margin: 0 auto;
+                        &:after {
+                            display: block;
+                            visibility: hidden;
+                            clear: both;
+                            height: 0;
+                            content: '';
                         }
-                        > div {
-                            width: 100%;
-                            height: 5rem;
-                            line-height: 5rem;
-                            // flex: 1;
-                            // margin-right: 0.4rem;
-                            background-color: #faf;
-                            text-align: center;
-                            position: relative;
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            .prize {
-                                p {
-                                    display: block;
+                        li {
+                            width: 30%;
+                            float: left;
+                            margin-top: 0.4rem;
+                            margin-right: 0.4rem;
+                            &:last-chile {
+                                margin-bottom: 0.4rem;
+                            }
+                            > div {
+                                width: 100%;
+                                height: 5rem;
+                                line-height: 5rem;
+                                // flex: 1;
+                                // margin-right: 0.4rem;
+                                background-color: #faf;
+                                text-align: center;
+                                position: relative;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                .prize {
+                                    p {
+                                        display: block;
+                                        width: 100%;
+                                        height: 100%;
+                                        position: absolute;
+                                        left: 0;
+                                        right: 0;
+                                        top: 0;
+                                        bottom: 0;
+                                        font-size: 0.8rem;
+                                    }
+                                }
+                                .mask {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
                                     width: 100%;
                                     height: 100%;
-                                    position: absolute;
-                                    left: 0;
-                                    right: 0;
-                                    top: 0;
-                                    bottom: 0;
-                                    font-size: 0.8rem;
+                                    opacity: 0.3;
+                                    background-color: #000;
+                                    display: none;
+                                }
+                                &.active {
+                                    .mask {
+                                        display: block;
+                                    }
+                                }
+                                &:first-child {
+                                    margin-left: 0.4rem;
                                 }
                             }
-                            .mask {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                height: 100%;
-                                opacity: 0.3;
-                                background-color: #000;
-                                display: none;
-                            }
-                            &.active {
-                                .mask {
-                                    display: block;
-                                }
-                            }
-
-                            // &.getLuck {
-                            //     flex: 1/3;
-                            //     margin: auto;
-                            //     p {
-                            //         font-size: 1.2rem;
-                            //         font-weight: 600;
-                            //     }
-                            // }
-                            &:first-child {
-                                margin-left: 0.4rem;
-                            }
+                        }
+                    }
+                    .getLuck {
+                        // flex: 1/3;
+                        width: 30%;
+                        height: 2rem;
+                        line-height: 2rem;
+                        text-align: center;
+                        margin: 1rem auto;
+                        background-color: red;
+                        p {
+                            font-size: 1.2rem;
+                            font-weight: 600;
                         }
                     }
                 }
-                .getLuck {
-                    // flex: 1/3;
-                    width: 30%;
+                .msg {
+                    width: 100%;
                     height: 2rem;
                     line-height: 2rem;
-                    text-align: center;
-                    margin: 1rem auto;
-                    background-color: red;
-                    p {
-                        font-size: 1.2rem;
-                        font-weight: 600;
+                    overflow: hidden;
+                    border: 1px solid black;
+                    transition: all 0.5s;
+                    position: relative;
+                    margin-bottom: 1rem;
+                    .anim {
+                        transition: all 0.5s;
+                    }
+                    img {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                    }
+                    ul {
+                        width: 100%;
+                        li {
+                            width: 100%;
+                            padding-left: 4rem;
+                            line-height: 2rem;
+                            height: 2rem;
+                        }
                     }
                 }
             }
@@ -1059,31 +1058,33 @@ export default {
                 font-size: 0.8rem;
                 margin-bottom: 1rem;
             }
-            .msg {
+        }
+        .vote-box,
+        .lottery-box {
+            .flag-box {
                 width: 100%;
-                height: 2rem;
-                line-height: 2rem;
-                overflow: hidden;
-                // padding-left: 2rem;
-                border: 1px solid black;
-                transition: all 0.5s;
-                position: relative;
-                // margin-bottom: 1rem;
-                .anim {
-                    transition: all 0.5s;
-                }
-                img {
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                }
-                ul {
-                    width: 100%;
-                    li {
-                        width: 100%;
-                        padding-left: 4rem;
-                        line-height: 2rem;
-                        height: 2rem;
+                height: 3rem;
+                background: url('~assets/img/vote/voiceToFame/bg-title.png') no-repeat;
+                background-size: 100% 3rem;
+                .vote-flag {
+                    margin: 0 auto;
+                    color: #fff;
+                    text-align: center;
+                    font-weight: 600;
+                    height: 2.7rem;
+                    line-height: 2.7rem;
+                    position: relative;
+                    img {
+                        width: 0.7rem;
+                        height: 0.7rem;
+                        position: absolute;
+                        top: 1rem;
+                        &.con-left {
+                            left: 0;
+                        }
+                        &.con-right {
+                            right: 0;
+                        }
                     }
                 }
             }
