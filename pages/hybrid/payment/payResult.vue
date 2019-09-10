@@ -48,7 +48,6 @@ export default {
             fail_message: 'Your request was not accepted. Please refresh the current page or try again the payment.',
             isApp: this.$store.state.appType,
             timer: null,
-            maxReqNum: 10,
             timer2: null,
             timer3: null,
             merchantAppId: '',
@@ -126,6 +125,13 @@ export default {
                     this.getPayStatus()
                 }
             }, 3000)
+            setTimeout(() => {
+                // this.load_message =
+                //     'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
+                // 测试滚动
+                this.load_message =
+                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
+            }, 30000)
         }
         const sessionAppId = sessionStorage.getItem('merchantAppId')
         if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
@@ -172,40 +178,31 @@ export default {
             }
         },
         getPayStatus() {
-            if (this.maxReqNum > 0) {
-                this.maxReqNum--
-                this.$axios.get(`/payment/v2/order-pay-bills/${this.seqNo}`).then(res => {
-                    if (this.result > 0) return false
-                    const data = res.data
-                    if (data && data.state === 3) {
-                        this.result = 1
-                        this.money = data.amount
-                        this.currency = data.currencySymbol
-                        this.merchantAppId = data.merchantAppId
-                        window.payment && window.payment.payResult('SUCCESS')
-                        window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('SUCCESS')
-                        window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
-                        this.timer2 = setTimeout(() => {
-                            if (!document.hidden) {
-                                this.click()
-                            }
-                        }, 5000)
-                    } else if (data && data.state === 4) {
-                        this.result = 2
-                        this.fail_message = data.summary ? data.summary : this.fail_message
-                        this.merchantAppId = data.merchantAppId
-                        window.payment && window.payment.payResult('FAIL')
-                        window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('FAIL')
-                        window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
-                    }
-                })
-            } else {
-                // this.load_message =
-                //     'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
-                // 测试滚动
-                this.load_message =
-                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
-            }
+            this.$axios.get(`/payment/v2/order-pay-bills/${this.seqNo}`).then(res => {
+                if (this.result > 0) return false
+                const data = res.data
+                if (data && data.state === 3) {
+                    this.result = 1
+                    this.money = data.amount
+                    this.currency = data.currencySymbol
+                    this.merchantAppId = data.merchantAppId
+                    window.payment && window.payment.payResult('SUCCESS')
+                    window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('SUCCESS')
+                    window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
+                    this.timer2 = setTimeout(() => {
+                        if (!document.hidden) {
+                            this.click()
+                        }
+                    }, 5000)
+                } else if (data && data.state === 4) {
+                    this.result = 2
+                    this.fail_message = data.summary ? data.summary : this.fail_message
+                    this.merchantAppId = data.merchantAppId
+                    window.payment && window.payment.payResult('FAIL')
+                    window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('FAIL')
+                    window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
+                }
+            })
         },
         refresh() {
             this.sendEvLog({
