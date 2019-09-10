@@ -16,7 +16,7 @@
                         <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                         <span v-else-if="item.payType==1">eWallet</span>
                         <span v-else>{{item.name}}</span>
-                        <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)"/>
+                        <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <input v-if="item.payChannelCardAuthDtoList" />
                         <i v-show="!item.payChannelCardAuthDtoList" />
                     </label>
@@ -25,7 +25,7 @@
                             <label class="radio">
                                 <div :class="card.brand" class="img-box" />
                                 <span>{{card.cardType}}({{card.last4}})</span>
-                                <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(card)" />
+                                <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(item,card)" />
                                 <i />
                             </label>
                         </div>
@@ -236,7 +236,8 @@ export default {
             this.authorizationCode = ''
             sessionStorage.removeItem('card')
         },
-        initSubChannel(card) {
+        initSubChannel(item,card) {
+            this.initChannel(item)
             this.authorizationCode = card.authorizationCode
             // TODO 绑卡信息埋点
         },
@@ -263,7 +264,7 @@ export default {
                 invoke.call(this, this.payToken, this.channel.payChannel, data => {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
-                    commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
+                        commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
                 })
             }
             this.sendEvLog({
