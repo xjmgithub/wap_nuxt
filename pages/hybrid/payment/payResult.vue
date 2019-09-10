@@ -17,7 +17,7 @@
             <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
         </template>
         <template v-if="result=='2'">
-            <img src="~assets/img/pay/img_failed_def_b.png" alt />
+            <img class="fail_img" src="~assets/img/pay/img_failed_def_b.png" alt />
             <p class="fail">Payment Failed</p>
             <p class="msg">{{fail_message}}</p>
         </template>
@@ -246,22 +246,26 @@ html {
         width: 100%;
         text-align: center;
         box-sizing: border-box;
-        img {
-            &.wait {
-                width: 13rem;
-                height: 11rem;
-            }
-            &.loading {
-                display: block;
-                width: 3rem;
-                height: 3rem;
-                margin: 1rem auto;
-            }
-            &.success_img {
-                width: 3rem;
-                height: 3rem;
-                margin-top: 2rem;
-            }
+    }
+    img {
+        &.wait {
+            width: 13rem;
+            height: 11rem;
+        }
+        &.loading {
+            display: block;
+            width: 3rem;
+            height: 3rem;
+            margin: 1rem auto;
+        }
+        &.success_img {
+            width: 3rem;
+            height: 3rem;
+            margin-top: 2rem;
+        }
+        &.fail_img {
+            width: 13rem;
+            height: 11rem;
         }
     }
     &.grey-back {
@@ -276,7 +280,7 @@ html {
         overflow-y: scroll;
         position: absolute;
         top: 19rem;
-        bottom:7rem;
+        bottom: 7rem;
         left: 0;
         text-align: left;
         background: #eeeeee;
