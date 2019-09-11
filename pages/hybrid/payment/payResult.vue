@@ -96,6 +96,7 @@ export default {
         }
     },
     mounted() {
+        window.payment && window.payment.setCloseVisibility(true)
         if (this.result > 0) {
             window.payment && window.payment.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
             window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
