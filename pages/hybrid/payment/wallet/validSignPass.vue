@@ -2,18 +2,18 @@
     <div class="container">
         <div class="input-item" :class="{error:error_password}">
             <div class="label">
-                Enter sign in password
+                {{$store.state.lang.enter_signin_pass}}
                 <img v-show="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext=2" />
                 <img v-show="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext=1" />
             </div>
             <input v-model="password" :type="pwdType" />
             <div class="error-text">{{error_password}}</div>
             <div class="forget-pass">
-                <a href="javascript:void(0)" @click="resetPass">Forget sign in password</a>
+                <a href="javascript:void(0)" @click="resetPass">{{$store.state.lang.fotget_signin_pass}}</a>
             </div>
         </div>
         <div class="footer">
-            <mButton :disabled="password.length<6" text="NEXT" @click="checkSignPass" />
+            <mButton :disabled="password.length<6" :text="$store.state.lang.text_onair_next" @click="checkSignPass" />
         </div>
     </div>
 </template>
@@ -110,11 +110,11 @@ export default {
                         setCookie('token', res.data.data.token)
                         this.$router.push('/hybrid/payment/wallet/setPassword')
                     } else {
-                        this.error_password = 'Password error'
+                        this.error_password = this.$store.state.lang.password_error
                     }
                 })
                 .catch(() => {
-                    this.error_password = 'Password error'
+                    this.error_password = this.$store.state.lang.password_error
                 })
         }
     }

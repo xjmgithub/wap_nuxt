@@ -9,22 +9,22 @@
         </template>
         <template v-if="result=='1'">
             <img class="success_img" src="~assets/img/pay/pic_done_b.png" alt />
-            <p class="success">Payment Successful</p>
+            <p class="success">{{$store.state.lang.payment_successful}}</p>
             <p class="money">
                 <span>{{currency}}</span>
                 {{money | formatAmount}}
             </p>
-            <p class="msg lf">Thanks for your payment. Your account has been successfully paymented. Please click "OK" if you are not redirected within 5s.</p>
+            <p class="msg lf">{{$store.state.lang.pay_successful_desc}}</p>
         </template>
         <template v-if="result=='2'">
             <img class="fail_img" src="~assets/img/pay/img_failed_def_b.png" alt />
-            <p class="fail">Payment Failed</p>
-            <p class="msg">{{fail_message}}</p>
+            <p class="fail">{{$store.state.lang.payment_failed}}</p>
+            <p class="msg">{{$store.state.lang.pay_failed_desc}}</p>
         </template>
         <div class="footer">
-            <mButton text="REFRESH" @click="refresh" />
-            <mButton v-show="result>0" text="OK" @click="click" />
-            <p v-show="isApp===1&&result<=0" class="help">HELP</p>
+            <mButton :text="$store.state.lang.pay_refresh" @click="refresh" />
+            <mButton v-show="result>0" :text="$store.state.lang.pay_ok" @click="click" />
+            <p v-show="isApp===1&&result<=0" class="help">{{$store.state.lang.pay_help}}</p>
         </div>
     </div>
 </template>
@@ -112,11 +112,11 @@ export default {
             window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('PAYING')
             // wait 模式
             if (!this.seqNo) {
-                this.$alert('Query seqNo needed! please check request')
+                this.$alert(this.$store.state.lang.error_notice)
                 return false
             }
 
-            this.load_message = sessionStorage.getItem('instructions') || 'Processing you payment, please wait for a moment'
+            this.load_message = sessionStorage.getItem('instructions') || this.$store.state.lang.starpay_payment_pending_message
 
             this.getPayStatus()
             this.timer = setInterval(() => {
@@ -127,11 +127,7 @@ export default {
                 }
             }, 3000)
             setTimeout(() => {
-                // this.load_message =
-                //     'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
-                // 测试滚动
-                this.load_message =
-                    'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.'
+                this.load_message = this.$store.state.lang.starpay_payment_timeout_notice
             }, 30000)
         }
         const sessionAppId = sessionStorage.getItem('merchantAppId')
@@ -219,7 +215,7 @@ export default {
     },
     head() {
         return {
-            title: 'Payment Results'
+            title: this.$store.state.lang.payment_results
         }
     }
 }

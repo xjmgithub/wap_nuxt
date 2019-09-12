@@ -5,16 +5,16 @@
                 <span>{{currencySymbol}}</span>
                 {{totalAmount }}
             </p>
-            <p class="pay-subject">Product Name: {{paySubject}}</p>
+            <p class="pay-subject">{{$store.state.lang.product_name}}: {{paySubject}}</p>
         </div>
-        <div class="contain">
+        <div v-if="payChannels&&payChannels.length>0" class="contain">
             <div class="pay-channels">
                 <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
                         <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
                         <img v-else src="~/assets/img/pay/pay_ment_default.png" />
-                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
-                        <span v-else-if="item.payType==1">eWallet</span>
+                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">{{$store.state.lang.eWallet}}: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
+                        <span v-else-if="item.payType==1">{{$store.state.lang.eWallet}}</span>
                         <span v-else>{{item.name}}</span>
                         <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <i v-show="!item.payChannelCardAuthDtoList" />
@@ -30,7 +30,7 @@
                         </div>
                         <label v-show="item.payChannelCardAuthDtoList" class="radio">
                             <img src="~/assets/img/dvb/ic_ewallet_add.png" />
-                            <span>Add a Card to pay</span>
+                            <span>{{$store.state.lang.add_card_topay}}</span>
                             <input :checked="item.lastSuccessPay && item.payChannelCardAuthDtoList&&item.payChannelCardAuthDtoList.length<=0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                             <i />
                         </label>
@@ -38,13 +38,16 @@
                 </div>
             </div>
             <div v-show="payDesc" class="desc">
-                <p>Note:</p>
+                <p>{{$store.state.lang.note}}:</p>
                 <p v-html="payDesc" />
             </div>
         </div>
+        <div v-else class="contain">
+            {{$store.state.lang.starpay_payment_no_paychannel}}
+        </div>
         <div class="footer">
             <div class="error-msg" v-html="errorMsg" />
-            <mButton :disabled="Boolean(errorMsg)" text="PAY" @click="nextStep" />
+            <mButton :disabled="Boolean(errorMsg)" :text="$store.state.lang.pay_now" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -140,7 +143,7 @@ export default {
             if (sessionToken) {
                 this.payToken = sessionToken
             } else {
-                this.$alert('Query payToken needed! please check request')
+                this.$alert(this.$store.state.lang.query_paytoken_needed)
                 return false
             }
         }
@@ -189,7 +192,7 @@ export default {
                         data_source: 2
                     })
                 } else {
-                    this.$alert('payToken and payChannel Mismatch! please check request')
+                    this.$alert(this.$store.state.lang.payToken_payChannel_mismatch)
                 }
             })
         },
@@ -235,7 +238,7 @@ export default {
             this.authorizationCode = ''
             sessionStorage.removeItem('card')
         },
-        initSubChannel(item,card) {
+        initSubChannel(item, card) {
             this.initChannel(item)
             this.authorizationCode = card.authorizationCode
             // TODO 绑卡信息埋点
@@ -263,7 +266,7 @@ export default {
                 invoke.call(this, this.payToken, this.channel.payChannel, data => {
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
+                    commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
                 })
             }
             this.sendEvLog({
@@ -283,7 +286,7 @@ export default {
     },
     head() {
         return {
-            title: 'Confirm Payment'
+            title: this.$store.state.lang.confirm_payment
         }
     }
 }

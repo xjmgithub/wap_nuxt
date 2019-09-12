@@ -65,7 +65,7 @@
             <nuxt-link v-show="type==1" to="/hybrid/account/resetEmailPass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
         <div class="regtext">
-            <nuxt-link to="/hybrid/account/register">Don't have a StarTimes account? Register here</nuxt-link>
+            <nuxt-link to="/hybrid/account/register">{{$store.state.lang.register_text}}</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
             <div class="dialog-title">{{$store.state.lang.all}}</div>
@@ -301,7 +301,7 @@ export default {
                                 }
                             })
                             .catch(() => {
-                                this.$alert('Get user info error.')
+                                this.$alert(this.$store.state.lang.get_userinfo_error)
                             })
                     }
                 })

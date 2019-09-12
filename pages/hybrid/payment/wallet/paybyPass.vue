@@ -6,13 +6,13 @@
                 {{goodMsg.amount}}
             </p>
         </div>
-        <p class="password">Enter payment password</p>
-        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword" @inputing="setPassword" />
+        <p class="password">{{$store.state.lang.enter_pay_password}}</p>
+        <Password ref="pass" :toggle-view="true" :placeholder="$store.state.lang.enter_pay_password" @endinput="setPassword" @inputing="setPassword" />
         <div class="forgot-pwd">
-            <a @click="forgetPass">Forgot payment password?</a>
+            <a @click="forgetPass">{{$store.state.lang.forgot_payment_password}}</a>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="!canPay" :text="$store.state.lang.text_onair_next" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -89,7 +89,6 @@ export default {
                         this.payToken,
                         this.channel,
                         data => {
-                            console.log(data)
                             this.$nuxt.$loading.finish()
                             this.$store.commit('HIDE_SHADOW_LAYER')
                             commonPayAfter.call(this, data, 3, 2)
@@ -121,7 +120,7 @@ export default {
     },
     head() {
         return {
-            title: 'Payment Details'
+            title: this.$store.state.lang.payment_details
         }
     }
 }

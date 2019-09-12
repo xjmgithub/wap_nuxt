@@ -34,8 +34,8 @@
             </div>
         </template>
         <div class="footer">
-            <mButton :disabled="false" text="NEXT" @click="next" />
-            <mButton text="CANCEL" class="cancel" @click="cancel" />
+            <mButton :disabled="false" :text="$store.state.lang.text_onair_next" @click="next" />
+            <mButton :text="$store.state.lang.vote_cancel" class="cancel" @click="cancel" />
         </div>
     </div>
 </template>
@@ -131,12 +131,13 @@ export default {
                     (item.displayState == 1 || (item.displayState == 2 && this.showCondition.indexOf(item.displayCondition) < 0))
                 ) {
                     if (!item.value) {
-                        item.error = 'Please enter the complete information.'
+                        item.error = this.$store.state.lang.enter_complete_info
                         canSubmit = false
                     } else {
                         const reg = new RegExp(item.pattern)
                         if (!reg.test(item.value)) {
-                            item.error = `Please enter the correct ${item.name}.`
+                            item.error = this.$store.state.lang.enter_complete_info.replace('XXX', item.name)
+                            // item.error = `Please enter the correct ${item.name}.`
                             canSubmit = false
                         } else if (item.type == 'tel') {
                             item.error = ''

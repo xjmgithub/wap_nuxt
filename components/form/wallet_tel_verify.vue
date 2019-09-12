@@ -9,13 +9,13 @@
                     :disabled="disabled"
                     :class="{focus:focus_tel,'input-error':error_tel}"
                     type="tel"
-                    placeholder="Cellphone number"
+                    :placeholder="$store.state.lang.cellphone_number"
                     @focus="focus_tel=true"
                     @blur="focus_tel=false"
                 >
             </div>
             <div class="get-code">
-                <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">{{codeDuring>0?`${codeDuring}s`:$store.state.lang.get_code}}</div>
             </div>
         </div>
         <div v-show="error_tel" class="error">{{error_tel}}</div>
@@ -26,7 +26,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: 'Enter your phone number'
+            default: this.$store.state.lang.enter_phone_number
         },
         disabled: {
             type: Boolean,
