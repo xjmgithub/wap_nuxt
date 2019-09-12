@@ -42,7 +42,7 @@
                 <p v-html="payDesc" />
             </div>
         </div>
-        <div v-else class="contain">
+        <div v-if="loaded&&payChannels.length<=0" class="contain nochannel">
             {{$store.state.lang.starpay_payment_no_paychannel}}
         </div>
         <div class="footer">
@@ -91,7 +91,8 @@ export default {
             eAmount: '', // 电子钱包余额
             eCurrencySymbol: '', // 电子钱包货币符号
             countrys: obj,
-            authorizationCode: ''
+            authorizationCode: '',
+            loaded: false
         }
     },
     computed: {
@@ -106,6 +107,7 @@ export default {
         },
         errorMsg() {
             let tmp = ''
+            if (this.loaded && this.payChannels.length <= 0) tmp = this.$store.state.lang.starpay_payment_no_paychannel
             if (!this.isLogin && this.channel.payType === 1) return tmp
             else if (this.currencySymbol != this.oCurrencySymbol) tmp = this.$store.state.lang.starpay_payment_currency_error
             else if (this.eAmount < this.totalAmount && this.channel.payType === 1) tmp = this.$store.state.lang.starpay_payment_amount_error
@@ -155,6 +157,7 @@ export default {
         getPayMethods() {
             this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
                 const data = res.data
+                this.loaded = true
                 if (data && data.payChannels && data.payChannels.length > 0) {
                     this.payChannels = this.bubbleSort(data.payChannels)
                     this.currencySymbol = data.currencySymbol
@@ -414,6 +417,11 @@ export default {
             width: 100%;
             line-height: 1.3rem;
             margin-top: 0.8rem;
+        }
+        &.nochannel {
+            padding-top: 2rem;
+            text-align: center;
+            color: #666666;
         }
     }
     .footer {
