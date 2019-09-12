@@ -4,7 +4,7 @@
             <img src="~assets/img/vote/voiceToFame/bg-img.jpg" alt="bg-img" />
             <div class="vote-box">
                 <div class="tab">
-                    <div class="rules" @click="showRules">
+                    <div class="rules" @click="show_rules=true">
                         <p>RULES</p>
                         <img src="~assets/img/vote/voiceToFame/ic-rule.png" alt="ic-rule" />
                     </div>
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="vote-remaining">
-                        <div>VOTES REMAINING:{{voteLeft}}</div>
+                        <div>VOTES REMAINING:{{appType==0?0:voteLeft}}</div>
                     </div>
                     <ul class="clearfix">
                         <li
@@ -35,11 +35,11 @@
                                 <img v-show="item.link_vod_code" src="~assets/img/vote/voiceToFame/flag-vote.png" class="flag" />
                                 <p>{{key+1}}</p>
                                 <img :src="cdnPic(item.icon)" class="icon" />
-                                <span class="name">{{item.name}}</span>
+                                <span class="name">{{item.name.toUpperCase()}}</span>
                                 <span class="poll">poll: {{item.ballot_num}}</span>
                             </div>
                             <div class="vote-btn">
-                                <div class="btn" @touchstart="handleViceVote(item,$event)">VOTE</div>
+                                <div class="btn" @click="handleViceVote(item,$event)">VOTE</div>
                             </div>
                         </li>
                     </ul>
@@ -77,87 +77,120 @@
                     </div>
                 </div>
                 <div class="lottery">
-                    <div class="count">left lottery: {{appType>0&&isLogin?lotteryLeft:0}}</div>
+                    <div class="coins">
+                        <img class="left" src="~assets/img/vote/voiceToFame/coins1.png" alt />
+                        <img class="right" src="~assets/img/vote/voiceToFame/coins2.png" alt />
+                    </div>
+                    <div class="count">CHANCES REMAINING:{{appType>0&&isLogin?lotteryLeft:0}}</div>
                     <div class="lottery-type">
                         <ul>
                             <li v-for="(item,key) in lotteryType" :key="key" class="lottry-type">
                                 <div :class="index==key?'active':''">
                                     <div class="prize">
-                                        <p>{{item.name}}</p>
+                                        <img :src="cdnPic(item.picture_url)" alt />
+                                        <p>{{item.name.toUpperCase()}}</p>
                                     </div>
-                                    <div class="mask"></div>
                                 </div>
                             </li>
                         </ul>
-                        <div class="getLuck" @click="startLottery">
+                        <div v-if="appType>0&&isLogin&&lotteryLeft>0" class="getLuck" @click="startLottery">
+                            <p>START</p>
+                        </div>
+                        <div v-else class="getLuck-gray" @click="canNotLottery">
                             <p>START</p>
                         </div>
                     </div>
                     <div class="msg">
-                        <img src alt />
                         <ul ref="msgul" :class="{anim:animate==true}">
-                            <li v-for="item in items" :key="item.key">: {{item.name}}</li>
+                            <img src="~assets/img/vote/voiceToFame/sound.png" alt />
+                            <li
+                                v-for="item in items"
+                                :key="item.key"
+                            >{{item.nick_name?item.nick_name:(item.user_name?item.user_name:item.user_id)}} has won {{lotteryType[item.fk_reward-1].name}}!</li>
                         </ul>
                     </div>
                 </div>
-                <div class="tip">Find the prize in Me -> My Coupon</div>
+                <div class="tip">
+                    <img src="~assets/img/vote/voiceToFame/bg-left2.png" class="left" alt />
+                    <p>Find the prize in ME → My Coupons</p>
+                    <img src="~assets/img/vote/voiceToFame/bg-right2.png" class="right" alt />
+                </div>
             </div>
         </div>
         <div v-show="show_rules" class="alert-rules-box">
-            <div class="rules-title">Voting Rules</div>
-            <div class="rules-close" @click="closeRules">✖️</div>
+            <div class="rules-title">VOTING RULES</div>
+            <div class="rules-close" @click="show_rules=false">✖️</div>
             <div class="rules-box">
                 <div class="rules-text">
-                    <div class="rules-item">From Sep. 23rd to Oct. 27th, you have 5 votes each day.</div>
-                    <div class="rules-item">You can vote for any contestants you like!</div>
-                    <div class="rules-item">Every time you vote, you‘ll get a chance to win a prize!</div>
+                    <div class="rules-item">1. From Sep. 23rd to Oct. 27th, you have 5 votes each day.</div>
+                    <div class="rules-item">2. You can vote for any contestants you like!</div>
+                    <div class="rules-item">3. Every time you vote, you‘ll get a chance to win a prize!</div>
                     <div
                         class="rules-item"
-                    >Share the link with your friends and ask them to download StarTimes ON app to get more votes! You\'ll get 5 more votes for each new user. The more new users you bring, the more votes you will gain!</div>
-                    <div class="rules-item">Votes can be accumulated and are valid until the end of the activity.</div>
-                    <div class="rules-item">The contestant with the most votes will win a 55-inch TV!</div>
+                    >4. Share the link with your friends and ask them to download StarTimes ON app to get more votes! You\'ll get 5 more votes for each new user. The more new users you bring, the more votes you will gain!</div>
+                    <div class="rules-item">5. Votes can be accumulated and are valid until the end of the activity.</div>
+                    <div class="rules-item">6. The contestant with the most votes will win a 55-inch TV!</div>
                 </div>
             </div>
-            <div class="share-btn" @click="rulesToShare">Share</div>
+            <div class="share-btn" @click="toShare('voterules')">Share</div>
         </div>
         <div v-show="show_rules" class="shadow-box"></div>
         <mShare />
+        <div :style="{display:style}" class="alert">
+            <div class="alert-body">
+                <div class="alert-default">
+                    <p>
+                        <span v-html="msg" />
+                    </p>
+                </div>
+            </div>
+            <div class="alert-footer">
+                <div class="btn sure" @click="sure" v-html="yes"></div>
+                <div class="btn close" @click="close" v-html="no"></div>
+            </div>
+        </div>
+        <div v-show="tip" class="vote-toast">{{tip}}</div>
     </div>
 </template>
 <script>
 import qs from 'qs'
-// import { Base64 } from 'js-base64'
-import { cdnPicSrc } from '~/functions/utils'
-// import { animateCSS, cdnPicSrc } from '~/functions/utils'
-// import mVoteSwiper from '~/components/vote/vote_swiper'
+import { animateCSS, cdnPicSrc } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
 import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
         mShare
-        // mVoteSwiper
     },
     data() {
         return {
             // 页面
             show_rules: false,
-            // appType: this.$store.state.appType || 0,
-            appType: 1,
-            // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
-            isLogin: true,
-            // isLogin: false,
+            appType: this.$store.state.appType || 0,
+            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
+            // appType: 1,
+            // isLogin: true,
             title: 'Voice to Fame',
             imgUrl: '',
+            firstTime: true,
+            msg: '',
+            style: 'none',
+            callback: '',
+            yes: '',
+            no: '',
 
             // 投票
             voteLeft: 0,
             loaded: false,
             advisorList: [],
-            vote_id: 1,
+            vote_id: 15,
+            startTime: '',
+            endTime: '',
+            currentTime: '',
+            tip: '',
+            tip_timer: null,
 
             // 抽奖
-            // title: '积分转盘',
             index: -1, // 当前转动到哪个位置，起点位置
             count: 6, // 总共有多少个位置
             timer: 0, // 每次转动定时器
@@ -174,20 +207,8 @@ export default {
 
             // 消息轮播
             animate: false,
-            items: [
-                {
-                    name: '消息1',
-                    key: 1
-                },
-                {
-                    name: '消息2',
-                    key: 2
-                },
-                {
-                    name: '消息3',
-                    key: 3
-                }
-            ]
+            items: [],
+            star: ''
         }
     },
     computed: {
@@ -210,9 +231,10 @@ export default {
     },
     // 唯一标识处理
     async asyncData({ app: { $axios }, store, req }) {
+        // console.log(store.state.deviceId)
         $axios.setHeader('token', store.state.token)
         try {
-            const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
+            const { data } = await $axios.get(`/voting/v1/vote?vote_id=15`)
             return {
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 voteTitle: data.data.name,
@@ -228,9 +250,8 @@ export default {
     },
     mounted() {
         this.mSendEvLog('page_show', '', '')
-        this.getVoteRemain()
+        this.getLotteryMsg()
         this.getAdvisorList()
-        this.getLeftLottery()
         this.getLotteryType()
         this.getMsgList()
         setInterval(() => {
@@ -266,18 +287,11 @@ export default {
                 toNativePage('startimes://login')
             }
         },
-        // 展示规则弹窗
-        showRules() {
-            this.show_rules = true
-        },
-        // 关闭规则弹窗
-        closeRules() {
-            this.show_rules = false
-        },
         // 调出分享弹层(app/web)
         toShare(label) {
+            if (label == 'voterules') this.show_rules = false
             this.mSendEvLog('share_click', label, '')
-            if (this.appType == 1) {
+            if (this.appType >= 1) {
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=VOICE&utm_campaign=${this.platform}`,
                     this.title,
@@ -288,19 +302,14 @@ export default {
                 this.$store.commit('SET_SHARE_STATE', true)
             }
         },
-        // 关闭规则弹窗，并调出分享弹层
-        rulesToShare() {
-            this.closeRules()
-            this.toShare('voterules')
-        },
         // 唤醒转入活动页或下载App
         callOrDownApp(label) {
             // 唤醒App
             callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.mSendEvLog('downloadpopup_show', label, '')
-                this.$confirm(
-                    'Download StarTimes ON app. Vote and win FREE VIP!',
+                this.show(
+                    `<p style="padding-top: 1rem;">Download StarTimes ON app. Vote and win FREE VIP!</p>`,
                     () => {
                         this.mSendEvLog('downloadpopup_clickok', label, '')
                         callMarket.call(this)
@@ -308,80 +317,40 @@ export default {
                     () => {
                         this.mSendEvLog('downloadpopup_clicknot', label, '')
                     },
-                    'Download Now',
-                    'Cancle'
+                    `<p style="padding: 0 1rem">Download Now</p>`,
+                    `<p style="padding: 0 1rem">Cancle</p>`
                 )
             })
         },
         // 获取剩余票数
         getVoteRemain() {
-            this.$axios.get(`/voting/v1/ballot/user-ballot-nums?vote_id=${this.vote_id}`).then(res => {
-                if (res.data.code === 0) {
-                    this.voteLeft = res.data.data
-                } else {
-                    this.voteLeft = 0 // 服务器端计算数据错误时
-                }
-            })
+            if (this.currentTime >= this.startTime && this.currentTime < this.endTime) {
+                this.$axios({
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        vote_id: this.vote_id
+                    }),
+                    url: '/voting/v1/ticket/sign-in'
+                }).then(res => {
+                    if (res.data.code == 0 || res.data.code == 1) {
+                        this.voteLeft = res.data.data
+                    } else {
+                        this.voteLeft = 0 // 服务器端计算数据错误时
+                    }
+                })
+            }
         },
         // 获取投票单元数据
         getAdvisorList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {
                 if (res.data.code === 0) {
-                    // this.advisorList = res.data.data
-                    this.advisorList = [
-                        {
-                            show: true,
-                            id: 659,
-                            created_time: '2019-08-05T02:28:11',
-                            updated_time: '2019-08-14T06:02:32',
-                            index: 3,
-                            name: 'Chesoli brian & Lillian',
-                            icon: 'http://cdn.startimestv.com/banner/708.jpg',
-                            link_vod_code: '56948',
-                            state: 3,
-                            ballot_num: 555,
-                            user_ballot_num: 2
-                        },
-                        {
-                            show: true,
-                            id: 660,
-                            created_time: '2019-08-05T02:28:14',
-                            updated_time: '2019-08-14T06:02:36',
-                            index: 4,
-                            name: 'Chesoli briane & Lillian',
-                            icon: 'http://cdn.startimestv.com/banner/708.jpg',
-                            link_vod_code: '56949',
-                            state: 3,
-                            ballot_num: 235,
-                            user_ballot_num: 0
-                        },
-                        {
-                            show: true,
-                            id: 661,
-                            created_time: '2019-08-05T02:28:31',
-                            updated_time: '2019-08-14T06:02:52',
-                            index: 5,
-                            name: 'Chesoli brianf & Lillian',
-                            icon: 'http://cdn.startimestv.com/banner/708.jpg',
-                            link_vod_code: '56958',
-                            state: 3,
-                            ballot_num: 373,
-                            user_ballot_num: 1
-                        },
-                        {
-                            show: true,
-                            id: 662,
-                            created_time: '2019-08-05T02:29:11',
-                            updated_time: '2019-08-14T06:03:32',
-                            index: 6,
-                            name: 'Chesoli briang & Lillian',
-                            icon: 'http://cdn.startimestv.com/banner/708.jpg',
-                            link_vod_code: '56948',
-                            state: 3,
-                            ballot_num: 276,
-                            user_ballot_num: 0
-                        }
-                    ]
+                    this.advisorList = res.data.data
+                    this.advisorList.sort(function(a, b) {
+                        return b.ballot_num - a.ballot_num
+                    })
                 } else {
                     this.advisorList = []
                 }
@@ -400,33 +369,43 @@ export default {
             }
         },
         // 投票方法
-        handleViceVote(advisor) {
+        handleViceVote(advisor, _evt1) {
             this.mSendEvLog('votebtn_click', advisor.name, '')
             if (this.appType == 0) {
                 this.callOrDownApp('vote')
                 return
             }
-            const startTime = Date.parse('2019-09-23')
-            const endTime = Date.parse('2019-10-28')
-            const currentTime = Date.parse(new Date(this.serverTime))
-            if (currentTime < startTime) {
-                this.$alert('Stay tuned! Voting will begin on September 23rd', () => {}, 'GOT IT')
+            if (this.currentTime < this.startTime) {
+                this.show(
+                    `<p style="padding-top:0.5rem">Stay tuned! Voting will begin on September 23rd.</p>`,
+                    () => {},
+                    () => {},
+                    `<p style="padding: 0 1rem">GOT IT</p>`,
+                    ''
+                )
                 return
-            } else if (currentTime > endTime) {
-                this.$alert('Sorry, the voting has ended.', () => {}, 'GOT IT')
+            } else if (this.currentTime > this.endTime) {
+                this.show(
+                    `<p style="padding-top: 1rem">Sorry, the voting has ended.</p>`,
+                    () => {},
+                    () => {},
+                    `<p style="padding: 0 1rem">GOT IT</p>`,
+                    ''
+                )
                 return
             }
             if (this.voteLeft <= 0) {
-                this.$confirm(
-                    'Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!',
-                    () => {},
+                this.show(
+                    `<p style="font-size:0.9rem">Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!</p>`,
                     () => {
                         this.toShare('votefail')
                     },
-                    'CANCEL',
-                    'SHARE'
+                    () => {},
+                    `<p style="padding: 0 1rem">SHARE</p>`,
+                    `<p style="padding: 0 1rem">CANCEL</p>`
                 )
             } else {
+                const animateTarget = _evt1.currentTarget
                 this.$axios({
                     url: '/voting/v1/ballot',
                     method: 'POST',
@@ -440,46 +419,80 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            this.getVoteRemain()
+                            animateCSS(animateTarget, 'slideOutLeft', () => {
+                                this.getVoteLeft()
+                            })
+                            this.voteLeft--
+                            this.lotteryLeft++
                             this.getAdvisorList()
+                            // this.getLeftLottery()
                             if (this.voteLeft > 0) {
-                                this.$alert(
-                                    'Congrats! You‘ve successfully voted! You‘ve got 1 chance to win VIP! Swipe down and try your luck!',
-                                    () => {},
-                                    'GOT IT'
-                                )
+                                if (this.firstTime) {
+                                    this.show(
+                                        `<p style="font-size:0.9rem">Congrats! You‘ve successfully voted! You‘ve got 1 chance to win VIP! Swipe down and try your luck!</p>`,
+                                        () => {
+                                            this.firstTime = false
+                                        },
+                                        () => {},
+                                        `<p style="padding: 0 1rem">GOT IT</p>`,
+                                        ''
+                                    )
+                                } else {
+                                    this.tipShow("Successfully voted! And you've got 1 chance to win VIP!")
+                                }
                             } else {
-                                this.$confirm(
-                                    'Congrats! You‘ve successfully voted! Share with your friends to earn more votes! ',
-                                    () => {},
+                                this.show(
+                                    `<p style="font-size:0.9rem">Congrats! You‘ve successfully voted! Share with your friends to earn more votes!</p>`,
                                     () => {
                                         this.toShare('0leftvote')
                                     },
-                                    'CONCLE',
-                                    'SHARE'
+                                    () => {},
+                                    `<p style="padding: 0 1rem">SHARE</p>`,
+                                    `<p style="padding: 0 1rem">CANCEL</p>`
                                 )
                             }
                         }
                     })
                     .catch(err => {
-                        this.$alert(err, () => {}, 'GOT IT')
+                        this.show(err, () => {}, () => {}, `<p style="padding: 0 1rem">GOT IT</p>`, '')
                     })
             }
         },
-        // 获取剩余抽奖机会
-        getLeftLottery() {
+        // 获取抽奖信息
+        getLotteryMsg() {
+            this.currentTime = Date.parse(this.serverTime)
             this.$axios
-                .get(`/voting/lottery/v1/draw/user-draw-nums?lottery_id=${this.lottery_id}&vote_id=${this.vote_id}`)
+                .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
-                    if (res.data.code === 0) {
-                        this.lotteryLeft = res.data.data
-                    } else {
-                        this.lotteryLeft = 0 // 服务器端计算数据错误时
+                    if (res.data.code === 200) {
+                        this.startTime = new Date(res.data.data.start_time).getTime()
+                        this.endTime = new Date(res.data.data.end_time).getTime()
+                        // console.log(this.startTime)
+                        // console.log(this.endTime)
+                        this.getVoteRemain()
+                        this.getLeftLottery()
                     }
                 })
-                .catch(() => {
-                    this.lotteryLeft = 0
+                .catch(err => {
+                    console.log(err)
                 })
+        },
+        // 获取剩余抽奖机会
+        getLeftLottery() {
+            if (this.currentTime >= this.startTime && this.currentTime < this.endTime) {
+                this.$axios
+                    .get(`/voting/lottery/v1/draw/user-draw-nums?lottery_id=${this.lottery_id}&vote_id=${this.vote_id}`)
+                    .then(res => {
+                        if (res.data.code === 0) {
+                            this.lotteryLeft = res.data.data
+                        } else {
+                            this.lotteryLeft = 0 // 服务器端计算数据错误时
+                        }
+                    })
+                    .catch(() => {
+                        this.lotteryLeft = 0
+                    })
+            }
         },
         // 获取抽奖种类
         getLotteryType() {
@@ -488,7 +501,6 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.lotteryType = res.data.data
-                        console.log(this.lotteryType)
                     } else {
                         this.lotteryType = [] // 服务器端计算数据错误时
                     }
@@ -505,34 +517,103 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.items = res.data.data
+                        this.items.forEach((item, index, arrs) => {
+                            if (item.user_name) {
+                                if (
+                                    new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(item.user_name)
+                                ) {
+                                    // 邮箱用户
+                                    const arr = item.user_name.split('@')
+                                    if (arr[0].length > 3) {
+                                        item.user_name =
+                                            arr[0].substr(0, 2) +
+                                            arr[0].slice(2, -1).replace(/[^\s]/g, '*') +
+                                            arr[0].substring(arr[0].length - 1) +
+                                            '@' +
+                                            arr[1]
+                                    }
+                                    if (arr[0].length == 3) {
+                                        item.user_name = arr[0].replace(/(\w{1})\w{1}(\w{1})/, '$1*$2') + '@' + arr[1]
+                                    }
+                                    if (arr[0].length == 2) {
+                                        item.user_name = arr[0].replace(/\w{1}(\w{1})/, '*$1') + '@' + arr[1]
+                                    }
+                                    if (arr[0].length == 1) {
+                                        item.user_name = arr[0].replace(/\w{1}/, '*') + '@' + arr[1]
+                                    }
+                                } else if (new RegExp(/^\d{1,}$/).test(item.user_name)) {
+                                    // 手机用户
+                                    item.user_name = item.user_name.toString().replace(/(.*)\d{3}(\d{3})/, '$1***$2')
+                                }
+                            }
+                            item.user_id = item.user_id.toString().replace(/(.*)\d{2}/, '$1**')
+                        })
                     } else {
                         this.items = [] // 服务器端计算数据错误时
                     }
                 })
                 .catch(() => {
-                    // this.items = []
+                    this.items = []
                 })
         },
-        // 开始抽奖
-        startLottery() {
+        // 抽奖按钮为灰提示
+        canNotLottery() {
             if (this.appType == 0) {
+                this.mSendEvLog('lottery_click', '', '-1')
                 this.callOrDownApp('lottery')
                 return
             }
             if (!this.isLogin) {
+                this.mSendEvLog('lottery_click', '', '-1')
                 // 移动端未登录
-                this.$alert(
-                    'Please sign in to start the luck draw',
+                this.show(
+                    `<p style="padding-top:0.5rem">Please sign in to start the luck draw.</p>`,
                     () => {
                         this.toSignIn()
                     },
-                    'SIGN IN'
+                    () => {},
+                    `<p style="padding: 0 1rem">SIGN IN</p>`,
+                    ''
                 )
                 return
             }
+            if (this.currentTime < this.startTime) {
+                this.mSendEvLog('lottery_click', '', '-1')
+                this.show(
+                    `<p style="padding-top:0.5rem">Stay tuned! Lottery will begin on September 23rd.</p>`,
+                    () => {},
+                    () => {},
+                    `<p style="padding: 0 1rem">GOT IT</p>`,
+                    ''
+                )
+                return
+            }
+            if (this.currentTime >= this.endTime) {
+                this.mSendEvLog('lottery_click', '', '-1')
+                this.show(
+                    `<p style="padding-top:0.5rem">Sorry, the lottery has ended.</p>`,
+                    () => {},
+                    () => {},
+                    `<p style="padding: 0 1rem">GOT IT</p>`,
+                    ''
+                )
+                return
+            }
+            this.mSendEvLog('lottery_click', '', '-1')
+            this.show(
+                `<p>Vote and win more chances! Every time you vote, you‘ll get a chance to win a prize.</p>`,
+                () => {},
+                () => {},
+                `<p style="padding: 0 1rem">GOT IT</p>`,
+                ''
+            )
+        },
+        // 开始抽奖
+        startLottery() {
             if (!this.click) {
                 return
             }
+            this.lotteryLeft--
             this.speed = 200
             this.click = false
             this.startRoll()
@@ -547,66 +628,58 @@ export default {
                 clearTimeout(this.timer) // 清除转动定时器，停止转动
                 // this.prize = -1
                 this.times = 0
-                console.log('你已经中奖了，位置' + this.index)
-                if (this.index === 0) {
+                console.log('你已经中奖了，位置' + (this.index + 1))
+                if (this.index < 3) {
                     setTimeout(() => {
-                        this.$alert(
-                            'Coupons',
+                        this.show(
+                            `<p>Congrats! You've got ` +
+                                this.lotteryType[this.index].name +
+                                `!</p> <p style="font-size:0.75rem">Prize will be offered on the second business day in Me→My Coupon</p>`,
                             () => {
                                 this.click = true
                             },
-                            '收下了'
-                        )
-                    }, 1000)
-                } else if (this.index === 1) {
-                    setTimeout(() => {
-                        this.$alert(
-                            'DVB包+月会员~',
-                            () => {
-                                this.click = true
-                            },
-                            '收下了'
-                        )
-                    }, 1000)
-                } else if (this.index === 2) {
-                    setTimeout(() => {
-                        this.$alert(
-                            'Try Again~',
-                            () => {
-                                this.click = true
-                                this.startLottery()
-                            },
-                            'Try Again'
+                            () => {},
+                            `<p style="padding: 0 1rem">GOT IT</p>`,
+                            ''
                         )
                     }, 1000)
                 } else if (this.index === 3) {
+                    const randomVotes = Math.ceil(Math.random() * 5)
                     setTimeout(() => {
-                        this.$alert(
-                            'sorry~',
+                        this.show(
+                            `<p style="padding-top: 1rem;">Congrats! You've got ` + randomVotes + ` more votes!</p>`,
                             () => {
                                 this.click = true
                             },
-                            'Got It'
+                            () => {},
+                            `<p style="padding: 0 1rem">GOT IT</p>`,
+                            ''
                         )
                     }, 1000)
                 } else if (this.index === 4) {
                     setTimeout(() => {
-                        this.$alert(
-                            '月会员~',
+                        this.lotteryLeft++
+                        this.show(
+                            `<p style="padding-top: 1rem;">Congrats! You've got 1 more chance!</p>`,
                             () => {
                                 this.click = true
+                                this.startLottery()
                             },
-                            '收下了'
+                            () => {},
+                            `<p style="padding: 0 1rem">TRY AGAIN</p>`,
+                            ''
                         )
                     }, 1000)
                 } else if (this.index === 5) {
                     setTimeout(() => {
-                        this.$alert(
-                            'You Have Got ' + Math.ceil(Math.random() * 5) + ' Votes~',
+                        this.show(
+                            `<p style="padding-top: 1rem;">Thanks for your participation.</p>`,
                             () => {
                                 this.click = true
                             },
-                            '收下了'
+                            () => {},
+                            `<p style="padding: 0 1rem">GOT IT</p>`,
+                            ''
                         )
                     }, 1000)
                 }
@@ -615,14 +688,44 @@ export default {
                     this.speed -= 10 // 加快转动速度
                 } else if (this.times === this.cycle) {
                     // TODO后台取得一个中奖位置 随机数代替
-                    this.$axios
-                        .post(`/voting/lottery/v1/drawing?lottery_id=${this.lottery_id}&vote_id=${this.vote_id}`)
-                        .then(res => {})
-                        .catch(() => {})
-                    const index = Math.floor(Math.random() * 10) > 5 ? 5 : Math.floor(Math.random() * 5)
-                    // const index = 2
-                    this.prize = index
-                    console.log(`中奖位置${this.prize}`)
+                    this.$axios({
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/x-www-form-urlencoded',
+                            token: this.$store.state.token
+                        },
+                        data: qs.stringify({
+                            lottery_id: 1,
+                            vote_id: 15
+                        }),
+                        url: '/voting/lottery/v1/drawing'
+                    }).then(res => {
+                        if (res.data.code == 0) {
+                            this.prize = res.data.data - 1
+                            console.log(`中奖位置${this.prize + 1}`)
+                            if (res.data.data == 1) this.mSendEvLog('lottery_click', 'dvb', '1')
+                            else if (res.data.data == 2) this.mSendEvLog('lottery_click', 'vip', '1')
+                            else if (res.data.data == 3) this.mSendEvLog('lottery_click', 'coupon', '1')
+                            else if (res.data.data == 4) this.mSendEvLog('lottery_click', 'morevotes', '1')
+                            else if (res.data.data == 5) this.mSendEvLog('lottery_click', 'tryagain', '0')
+                            else if (res.data.data == 6) this.mSendEvLog('lottery_click', 'sorry', '0')
+                        } else {
+                            setTimeout(() => {
+                                clearTimeout(this.timer)
+                                this.times = 0
+                                this.show(
+                                    `<p style="padding-top: 1rem;">LOTTERY ERROR!</p>`,
+                                    () => {
+                                        this.click = true
+                                        this.getLeftLottery()
+                                    },
+                                    () => {},
+                                    `<p style="padding: 0 1rem">GOT IT</p>`,
+                                    ''
+                                )
+                            }, 3000)
+                        }
+                    })
                 } else if (this.times > this.cycle + 10 && ((this.prize === 0 && this.index === 5) || this.prize === this.index + 1)) {
                     this.speed += 110
                 } else {
@@ -656,6 +759,44 @@ export default {
                 msg.style.marginTop = '0'
                 this.animate = !this.animate // 避免回滚
             }, 500)
+        },
+        // 弹窗方法
+        show(msg, callback, cancel, yes, no) {
+            if (yes) this.yes = yes
+            if (no) this.no = no
+            this.msg = msg
+            this.style = 'block'
+            this.$store.commit('SHOW_SHADOW_LAYER')
+            if (callback) {
+                this.callback = callback
+            } else {
+                this.callback = ''
+            }
+            if (cancel) {
+                this.cancel = cancel
+            } else {
+                this.cancel = ''
+            }
+        },
+        close() {
+            this.style = 'none'
+            this.$store.commit('HIDE_SHADOW_LAYER')
+            if (this.cancel) {
+                this.cancel()
+            }
+        },
+        sure() {
+            this.style = 'none'
+            this.$store.commit('HIDE_SHADOW_LAYER')
+            if (this.callback) this.callback()
+        },
+        tipShow(text, duration = 2000) {
+            clearInterval(this.tip_timer)
+            const _this = this
+            this.tip = text
+            this.tip_timer = setTimeout(() => {
+                _this.tip = ''
+            }, duration)
         }
     },
     head() {
@@ -672,6 +813,7 @@ export default {
     background-color: #2f0081;
     font-size: 0.9rem;
     letter-spacing: -0.03rem;
+    position: static;
     .container {
         > img {
             width: 100%;
@@ -788,7 +930,7 @@ export default {
                             z-index: 1;
                             color: #fff;
                             font-size: 0.75rem;
-                            font-weight: 200;
+                            // font-weight: 200;
                             text-align: center;
                             line-height: 1.2rem;
                         }
@@ -796,9 +938,10 @@ export default {
                             width: 100%;
                             padding: 0.2rem 0.2rem 0;
                             height: auto;
+                            min-height: 3rem;
                             margin: 0 auto;
                             display: block;
-                            border-radius: 0.6rem;
+                            border-radius: 0.5rem;
                             position: relative;
                         }
                         .name {
@@ -832,6 +975,7 @@ export default {
                     }
                     .vote-btn {
                         width: 100%;
+                        height: 1.3rem;
                         margin: 1rem 0 0.3rem;
                         .btn {
                             width: 4.5rem;
@@ -839,10 +983,18 @@ export default {
                             line-height: 1.3rem;
                             color: #ffffff;
                             background: url('~assets/img/vote/voiceToFame/btn-vote.png') no-repeat;
-                            background-size: 100%;
+                            background-size: 4.5rem 1.3rem;
                             margin: 0 auto;
                             text-align: center;
                             font-size: 0.8rem;
+                            &:active {
+                                width: 4.3rem;
+                                height: 1.1rem;
+                                line-height: 1.1rem;
+                                font-size: 0.75rem;
+                                background-size: 4.3rem 1.1rem;
+                                margin-top: 0.1rem;
+                            }
                         }
                     }
                 }
@@ -851,7 +1003,7 @@ export default {
         .share-box {
             width: 100%;
             height: 4rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.2rem;
             position: relative;
             .bg-left {
                 width: 3rem;
@@ -908,10 +1060,8 @@ export default {
                 color: #b69af3;
                 font-size: 0.75rem;
                 .text {
-                    // width: 14rem;
                     margin: 0 auto;
                     height: 2rem;
-                    // line-height: 1rem;
                     text-align: center;
                     position: relative;
                     img {
@@ -929,24 +1079,49 @@ export default {
             }
             .lottery {
                 width: 90%;
-                height: 15rem;
+                height: 21rem;
                 background-color: #6427c2;
                 margin: 0 auto;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                position: relative;
+                z-index: 2;
+                .coins {
+                    img {
+                        position: absolute;
+                        width: 2rem;
+                        height: auto;
+                        &.left {
+                            bottom: 4rem;
+                            left: -5%;
+                        }
+                        &.right {
+                            top: 4rem;
+                            right: -5%;
+                        }
+                    }
+                }
                 .count {
+                    width: 11rem;
                     height: 1.5rem;
                     line-height: 1.5rem;
-                    font-size: 0.9rem;
-                    color: #666;
-                    text-align: right;
-                    margin-right: 7%;
-                    margin-bottom: 1rem;
+                    border-radius: 1rem;
+                    color: #fff;
+                    background-color: #350e73;
+                    text-align: center;
+                    margin: 0 auto 0.5rem;
+                    font-size: 0.75rem;
+                    // font-weight: 200;
                 }
                 .lottery-type {
-                    width: 80%;
-                    margin: 0 auto 1rem;
+                    width: 100%;
+                    margin: 0 auto 0.5rem;
                     ul {
                         width: 100%;
                         margin: 0 auto;
+                        background-color: #350e73;
+                        border-radius: 0.5rem;
+                        padding: 2%;
                         &:after {
                             display: block;
                             visibility: hidden;
@@ -955,71 +1130,80 @@ export default {
                             content: '';
                         }
                         li {
-                            width: 30%;
-                            float: left;
-                            margin-top: 0.4rem;
-                            margin-right: 0.4rem;
-                            &:last-chile {
-                                margin-bottom: 0.4rem;
+                            width: 31%;
+                            &:nth-child(1),
+                            &:nth-child(2),
+                            &:nth-child(3) {
+                                float: left;
+                                margin-right: 3.4%;
+                                margin-bottom: 2%;
+                            }
+                            &:nth-child(3) {
+                                margin-right: 0;
+                            }
+                            &:nth-child(4),
+                            &:nth-child(5),
+                            &:nth-child(6) {
+                                float: right;
+                                margin-left: 3.4%;
+                            }
+                            &:nth-child(6) {
+                                margin-left: 0;
                             }
                             > div {
                                 width: 100%;
                                 height: 5rem;
-                                line-height: 5rem;
-                                // flex: 1;
-                                // margin-right: 0.4rem;
-                                background-color: #faf;
-                                text-align: center;
-                                position: relative;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
+                                background-color: #6427c2;
+                                border-radius: 0.5rem;
+                                border: 2px solid transparent;
                                 .prize {
+                                    img {
+                                        display: block;
+                                        width: auto;
+                                        height: 3rem;
+                                        margin: 0 auto;
+                                        padding: 0.5rem 0;
+                                    }
                                     p {
                                         display: block;
                                         width: 100%;
-                                        height: 100%;
-                                        position: absolute;
-                                        left: 0;
-                                        right: 0;
-                                        top: 0;
-                                        bottom: 0;
-                                        font-size: 0.8rem;
+                                        text-align: center;
+                                        font-size: 0.75rem;
+                                        color: #fff;
                                     }
-                                }
-                                .mask {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    opacity: 0.3;
-                                    background-color: #000;
-                                    display: none;
                                 }
                                 &.active {
-                                    .mask {
-                                        display: block;
-                                    }
-                                }
-                                &:first-child {
-                                    margin-left: 0.4rem;
+                                    background-color: #7839dd;
+                                    border: 2px solid #fb0bd1;
                                 }
                             }
                         }
                     }
-                    .getLuck {
-                        // flex: 1/3;
-                        width: 30%;
-                        height: 2rem;
-                        line-height: 2rem;
+                    .getLuck,
+                    .getLuck-gray {
+                        width: 8rem;
+                        height: 2.2rem;
+                        line-height: 2.2rem;
+                        color: #fff;
                         text-align: center;
-                        margin: 1rem auto;
-                        background-color: red;
-                        p {
-                            font-size: 1.2rem;
-                            font-weight: 600;
+                        margin: 0.5rem auto;
+                        font-size: 1.2rem;
+                    }
+                    .getLuck {
+                        background: url('~assets/img/vote/voiceToFame/btn-start.png') no-repeat;
+                        background-size: 8rem 2.2rem;
+                        &:active {
+                            width: 7.5rem;
+                            height: 2rem;
+                            line-height: 2rem;
+                            margin: 0.6rem auto;
+                            font-size: 1rem;
+                            background-size: 7.5rem 2rem;
                         }
+                    }
+                    .getLuck-gray {
+                        background: url('~assets/img/vote/voiceToFame/btn-start-gray.png') no-repeat;
+                        background-size: 8rem 2.2rem;
                     }
                 }
                 .msg {
@@ -1027,36 +1211,61 @@ export default {
                     height: 2rem;
                     line-height: 2rem;
                     overflow: hidden;
-                    border: 1px solid black;
                     transition: all 0.5s;
                     position: relative;
                     margin-bottom: 1rem;
+                    background-color: #350e72;
+                    border-radius: 1rem;
                     .anim {
                         transition: all 0.5s;
                     }
                     img {
                         position: absolute;
-                        left: 0;
-                        top: 0;
+                        display: block;
+                        width: 1.23rem;
+                        height: 1rem;
+                        left: 0.8rem;
+                        top: 0.5rem;
                     }
                     ul {
                         width: 100%;
                         li {
                             width: 100%;
-                            padding-left: 4rem;
+                            padding-left: 2.5rem;
                             line-height: 2rem;
                             height: 2rem;
+                            color: #927db3;
+                            // font-weight: 200;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }
             }
             .tip {
-                width: 100%;
-                height: 1rem;
-                line-height: 1rem;
-                text-align: center;
-                font-size: 0.8rem;
-                margin-bottom: 1rem;
+                position: relative;
+                img {
+                    display: block;
+                    width: 4rem;
+                    height: auto;
+                    position: absolute;
+                    bottom: 0.4rem;
+                    &.left {
+                        left: 0;
+                    }
+                    &.right {
+                        right: 0;
+                    }
+                }
+                p {
+                    width: 100%;
+                    height: 3rem;
+                    line-height: 3rem;
+                    text-align: center;
+                    color: #7a58b0;
+                    padding-bottom: 1rem;
+                }
             }
         }
         .vote-box,
@@ -1091,46 +1300,44 @@ export default {
         }
     }
     .alert-rules-box {
-        width: 18rem;
-        height: 26rem;
-        background-color: #fff;
+        width: 17rem;
+        height: 25rem;
+        background-color: #8150fc;
         position: fixed;
         overflow: hidden;
         left: 50%;
         top: 50%;
         margin: auto;
-        margin-left: -9rem;
-        margin-top: -13rem;
+        margin-left: -8.5rem;
+        margin-top: -12.5rem;
         z-index: 999;
-        padding: 1rem 1.5rem;
+        padding: 1rem 1.5rem 0;
+        border-radius: 1rem;
+        color: #fff;
+        // font-weight: 200;
         .rules-title {
             width: 100%;
             height: 1rem;
             line-height: 1rem;
             text-align: center;
-            color: #000;
             margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 400;
         }
         .rules-close {
-            // width: 1rem;
-            // height: 1rem;
             position: absolute;
             right: 1rem;
             top: 1rem;
-            color: #ff598c;
         }
         .rules-box {
             overflow-x: hidden;
             overflow-y: scroll;
-            margin-bottom: 1rem;
-
+            margin-bottom: 0.5rem;
             .rules-text {
                 width: 100%;
-                height: 20rem;
+                height: 18.5rem;
                 .rules-item {
                     text-align: left;
-                    font-size: 0.9rem;
-                    color: royalblue;
                     line-height: 1.1rem;
                 }
             }
@@ -1139,10 +1346,14 @@ export default {
             }
         }
         .share-btn {
-            height: 1rem;
-            line-height: 1rem;
+            width: 7rem;
+            margin: 0 auto;
+            height: 2rem;
+            line-height: 2rem;
             text-align: center;
-            color: #ff598c;
+            color: #965500;
+            background-color: #f0c846;
+            border-radius: 1rem;
         }
     }
     .shadow-box {
@@ -1154,6 +1365,64 @@ export default {
         opacity: 0.5;
         background-color: #000;
         z-index: 998;
+    }
+    .alert {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background-color: #8150fc;
+        border-radius: 2px;
+        overflow: hidden;
+        zoom: 1;
+        z-index: 1001;
+        width: 17rem;
+        height: 10rem;
+        margin-top: -5rem;
+        margin-left: -8.5rem;
+        padding: 1.5rem 1.2rem 1rem;
+        color: #fff;
+        font-size: 1rem;
+        text-align: center;
+        .alert-default {
+            line-height: 1.3rem;
+            padding-bottom: 0.5rem;
+            height: 5.5rem;
+        }
+        .alert-footer .btn {
+            width: auto;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            &.sure {
+                float: right;
+                color: #965500;
+                background-color: #f0c846;
+                margin-right: 0.5rem;
+            }
+            &.close {
+                float: left;
+                color: #d7d4fe;
+                background-color: #a099fd;
+                margin-left: 0.5rem;
+            }
+        }
+    }
+    .vote-toast {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -7.5rem;
+        margin-top: -1.7rem;
+        font-size: 0.9rem;
+        background: rgba(0, 0, 0, 0.65);
+        padding: 0.6rem 1.5rem;
+        border-radius: 3px;
+        width: 15rem;
+        height: 3.4rem;
+        color: #fff;
+        z-index: 9999;
     }
 }
 </style>
