@@ -154,6 +154,7 @@
 </template>
 <script>
 import qs from 'qs'
+import { Base64 } from 'js-base64'
 import { animateCSS, cdnPicSrc } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
 import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
@@ -170,14 +171,15 @@ export default {
             isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             // appType: 1,
             // isLogin: true,
-            title: 'Voice to Fame',
-            imgUrl: '',
+            title: 'voice to fame',
+            imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
             firstTime: true,
             msg: '',
             style: 'none',
             callback: '',
             yes: '',
             no: '',
+            shareTitle: 'voice to fame',
 
             // 投票
             voteLeft: 0,
@@ -294,7 +296,7 @@ export default {
             if (this.appType >= 1) {
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=VOICE&utm_campaign=${this.platform}`,
-                    this.title,
+                    this.shareTitle,
                     'Download StarTimes ON app. Vote and win FREE VIP!',
                     this.imgUrl
                 )
@@ -802,7 +804,32 @@ export default {
     head() {
         return {
             title: this.title,
-            meta: []
+            meta: [
+                { name: 'description', property: 'description', content: 'Download StarTimes ON app. Vote and win FREE VIP!' },
+                { name: 'og:description', property: 'og:description', content: 'Download StarTimes ON app. Vote and win FREE VIP!' },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.imgUrl
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: this.shareTitle },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/voiceToFame`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
+            ]
         }
     }
 }
