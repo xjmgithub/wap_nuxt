@@ -155,9 +155,9 @@
 <script>
 import qs from 'qs'
 import { Base64 } from 'js-base64'
-import { animateCSS, cdnPicSrc } from '~/functions/utils'
+import { animateCSS, cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
-import { callApp, callMarket, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
+import { callApp, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -260,6 +260,8 @@ export default {
             this.getMsgList()
         }, 60000)
         setInterval(this.scroll, 2000)
+        this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin) // 分享源用户记录
+        !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
     },
 
     methods: {
@@ -314,7 +316,25 @@ export default {
                     `<p style="padding-top: 1rem;">Download StarTimes ON app. Vote and win FREE VIP!</p>`,
                     () => {
                         this.mSendEvLog('downloadpopup_clickok', label, '')
-                        callMarket.call(this)
+                        downApk.call(this)
+                        const voteDownTag = getCookie('vote_share_down')
+                        const user = getCookie('vote_share_user')
+                        if (voteDownTag && voteDownTag != -1) {
+                            this.$axios({
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/x-www-form-urlencoded',
+                                    token: this.$store.state.token,
+                                    'X-Secret': voteDownTag
+                                },
+                                data: qs.stringify({
+                                    vote_id: this.vote_id,
+                                    target: user,
+                                    action: 'SHARE_DOWNLOAD'
+                                }),
+                                url: '/voting/v1/ticket'
+                            })
+                        }
                     },
                     () => {
                         this.mSendEvLog('downloadpopup_clicknot', label, '')
@@ -453,6 +473,8 @@ export default {
                                     `<p style="padding: 0 1rem">CANCEL</p>`
                                 )
                             }
+                        } else {
+                            this.$alert(res.data.message)
                         }
                     })
                     .catch(err => {

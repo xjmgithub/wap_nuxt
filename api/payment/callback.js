@@ -1,4 +1,3 @@
-import 'url'
 import qs from 'qs'
 import axios from 'axios'
 import env from '../../env.js'

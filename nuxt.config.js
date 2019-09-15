@@ -77,6 +77,7 @@ export default {
         { path: '/hybrid/api/twitter/callback', handler: '~/api/twitter/callback.js' },
         { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' },
         { path: '/hybrid/vote/FilmFestival', handler: '~/api/film/index.js' },
+        { path: '/hybrid/vote/getTicketAward', handler: '~/api/film/getTicketAward.js' },
         { path: '/hybrid/api/episode/submit', handler: '~/api/episode/submit.js' },
         { path: '/hybrid/api/episode/result', handler: '~/api/episode/result.js' },
         { path: '/hybrid/api/quiz/list', handler: '~/api/quiz/list.js' },
