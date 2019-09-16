@@ -238,7 +238,7 @@ export default {
         $axios.setHeader('token', store.state.token)
         try {
             const { data } = await $axios.get(`/voting/v1/vote?vote_id=15`)
-            console.log(req.headers.vote_sign)
+            // console.log(req.headers.vote_sign)
             return {
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 voteTitle: data.data.name,
@@ -533,7 +533,7 @@ export default {
                     this.loaded_l = true
                 })
                 .catch(() => {
-                    this.lotteryLeft = []
+                    this.lotteryType = []
                 })
         },
         // 获取消息列表
