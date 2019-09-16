@@ -167,10 +167,10 @@ export default {
         return {
             // 页面
             show_rules: false,
-            // appType: this.$store.state.appType || 0,
-            // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
-            appType: 1,
-            isLogin: true,
+            appType: this.$store.state.appType || 0,
+            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
+            // appType: 1,
+            // isLogin: true,
             title: 'voice to fame',
             imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
             firstTime: true,
