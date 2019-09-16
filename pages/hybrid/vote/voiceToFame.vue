@@ -134,7 +134,7 @@
             </div>
             <div class="share-btn" @click="toShare('voterules')">Share</div>
         </div>
-        <div v-show="show_rules" class="shadow-box"></div>
+        <div v-show="show_rules" class="shadow-box" @click="show_rules=false"></div>
         <mShare />
         <div :style="{display:style}" class="alert">
             <div class="alert-body">
@@ -167,10 +167,10 @@ export default {
         return {
             // 页面
             show_rules: false,
-            appType: this.$store.state.appType || 0,
-            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
-            // appType: 1,
-            // isLogin: true,
+            // appType: this.$store.state.appType || 0,
+            // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
+            appType: 1,
+            isLogin: true,
             title: 'voice to fame',
             imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
             firstTime: true,
@@ -449,6 +449,7 @@ export default {
                             this.voteLeft--
                             this.lotteryLeft++
                             this.getAdvisorList()
+                            advisor.ballot_num++
                             // this.getLeftLottery()
                             if (this.voteLeft > 0) {
                                 if (this.firstTime) {
@@ -764,8 +765,8 @@ export default {
                     this.speed += 20
                 }
 
-                if (this.speed < 40) {
-                    this.speed = 40
+                if (this.speed < 80) {
+                    this.speed = 80
                 }
                 this.timer = setTimeout(this.startRoll, this.speed)
             }
