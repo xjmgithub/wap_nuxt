@@ -467,7 +467,7 @@ export default {
                                 }
                             } else {
                                 this.show(
-                                    `<p style="font-size:0.9rem">Congrats! You‘ve successfully voted! Share with your friends to earn more votes!</p>`,
+                                    `<p style="font-size:0.9rem">Successfully voted! you have 0 vote remaining. Share with your friends to earn more votes!</p>`,
                                     () => {
                                         this.toShare('0leftvote')
                                     },
