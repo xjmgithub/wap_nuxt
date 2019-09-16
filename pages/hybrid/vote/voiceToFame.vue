@@ -671,18 +671,22 @@ export default {
                     }, 1000)
                 } else if (this.index === 3) {
                     this.getTicketAward((res)=>{
-                        setTimeout(() => {
-                        this.show(
-                            `<p style="padding-top: 1rem;">Congrats! You've got ` + res.data.data + ` more votes!</p>`,
-                            () => {
-                                this.click = true
-                            },
-                            () => {},
-                            `<p style="padding: 0 1rem">GOT IT</p>`,
-                            ''
-                        )
-                        this.voteLeft += res.data.data
-                    }, 1000)
+                        if(res.data.code == 200) {
+                            setTimeout(() => {
+                                this.show(
+                                    `<p style="padding-top: 1rem;">Congrats! You've got ` + res.data.data + ` more votes!</p>`,
+                                    () => {
+                                        this.click = true
+                                    },
+                                    () => {},
+                                    `<p style="padding: 0 1rem">GOT IT</p>`,
+                                    ''
+                                )
+                                this.voteLeft += res.data.data
+                            }, 1000)
+                        } else {
+                            window.alert(res.data.message)
+                        }
                     })
                 } else if (this.index === 4) {
                     setTimeout(() => {
