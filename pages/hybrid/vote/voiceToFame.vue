@@ -180,6 +180,7 @@ export default {
             yes: '',
             no: '',
             shareTitle: 'voice to fame',
+            user_id: this.$store.state.user.id,
 
             // 投票
             voteLeft: 0,
@@ -669,10 +670,10 @@ export default {
                         )
                     }, 1000)
                 } else if (this.index === 3) {
-                    const randomVotes = Math.ceil(Math.random() * 5)
-                    setTimeout(() => {
+                    this.getTicketAward((res)=>{
+                        setTimeout(() => {
                         this.show(
-                            `<p style="padding-top: 1rem;">Congrats! You've got ` + randomVotes + ` more votes!</p>`,
+                            `<p style="padding-top: 1rem;">Congrats! You've got ` + res.data.data + ` more votes!</p>`,
                             () => {
                                 this.click = true
                             },
@@ -680,7 +681,9 @@ export default {
                             `<p style="padding: 0 1rem">GOT IT</p>`,
                             ''
                         )
+                        this.voteLeft += res.data.data
                     }, 1000)
+                    })
                 } else if (this.index === 4) {
                     setTimeout(() => {
                         this.lotteryLeft++
@@ -784,6 +787,23 @@ export default {
                 msg.style.marginTop = '0'
                 this.animate = !this.animate // 避免回滚
             }, 500)
+        },
+        // 获得加票方法
+        getTicketAward(callback) {
+            this.$axios({
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                        // token: this.$store.state.token
+                    },
+                    data: qs.stringify({
+                        vote_id: this.vote_id,
+                        user_id: this.user_id,
+                    }),
+                    url: 'hybrid/vote/getTicketAward'
+                }).then(res => {
+                    callback && callback(res)
+            })
         },
         // 弹窗方法
         show(msg, callback, cancel, yes, no) {
