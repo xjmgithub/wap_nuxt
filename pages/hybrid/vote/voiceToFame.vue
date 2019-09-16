@@ -127,7 +127,7 @@
                     <div class="rules-item">3. Every time you vote, you‘ll get a chance to win a prize!</div>
                     <div
                         class="rules-item"
-                    >4. Share the link with your friends and ask them to download StarTimes ON app to get more votes! You\'ll get 5 more votes for each new user. The more new users you bring, the more votes you will gain!</div>
+                    >4. Share the link with your friends and ask them to download StarTimes ON app to get more votes! You'll get 5 more votes for each new user. The more new users you bring, the more votes you will gain!</div>
                     <div class="rules-item">5. Votes can be accumulated and are valid until the end of the activity.</div>
                     <div class="rules-item">6. The contestant with the most votes will win a 55-inch TV!</div>
                 </div>
