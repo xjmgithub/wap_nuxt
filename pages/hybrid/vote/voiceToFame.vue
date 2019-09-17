@@ -963,7 +963,7 @@ export default {
                     list-style: none;
                     width: 30%;
                     float: left;
-                    margin: 0 1.5% 0.5rem;
+                    margin: 0 1.5% 1.3rem;
                     &.only-two {
                         margin: 0 10% 0.5rem;
                     }
@@ -971,7 +971,7 @@ export default {
                         position: relative;
                         width: 100%;
                         background-color: #410eb1;
-                        margin-bottom: 0.5rem;
+                        // margin-bottom: rem;
                         overflow: hidden;
                         border-radius: 0.6rem;
                         &:after {
@@ -1045,7 +1045,7 @@ export default {
                     .vote-btn {
                         width: 100%;
                         height: 1.3rem;
-                        margin: 1rem 0 0.3rem;
+                        margin: 1.5rem 0 0;
                         .btn {
                             width: 4.5rem;
                             height: 1.3rem;
