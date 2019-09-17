@@ -132,8 +132,7 @@ export default {
     .registration {
         padding: 1.5rem 5%;
         color: #999999;
-        // background: #eeeeee url('~assets/img/vote/regist_btm.png') no-repeat bottom;
-        background: #eeeeee;
+        background: #eeeeee url('~assets/img/vote/regist_btm.png') no-repeat bottom;
         background-size: contain;
             .error {
             margin-left: 38%;
@@ -147,8 +146,7 @@ export default {
             font-weight: bold;
             margin-top: 0;
             width: 100%;
-            // background: url('~assets/img/vote/line_d.png') no-repeat center;
-            background: #f00;
+            background: url('~assets/img/vote/line_d.png') no-repeat center;
             background-size: contain;
         }
         div{
@@ -182,8 +180,7 @@ export default {
                 }
             }
             select {
-                // background: transparent url('~assets/img/vote/ic_menuarrow_def_g.png') no-repeat 96% center;
-                background: transparent;
+                background: transparent url('~assets/img/vote/ic_menuarrow_def_g.png') no-repeat 96% center;
                 appearance: none;
                 -webkit-apperance: none;
                 -moz-appearance: none;
