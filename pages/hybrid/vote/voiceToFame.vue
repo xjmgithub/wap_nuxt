@@ -31,10 +31,10 @@
                             :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
                             data-id="item.id"
                         >
-                            <div class="item-box" @click="toPlayer(item)">
+                            <div class="item-box">
                                 <img v-show="item.link_vod_code" src="~assets/img/vote/voiceToFame/flag-vote.png" class="flag" />
                                 <p>{{key+1}}</p>
-                                <img :src="cdnPic(item.icon)" class="icon" />
+                                <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item)" />
                                 <span class="name">{{item.name.toUpperCase()}}</span>
                                 <span class="poll">poll: {{item.ballot_num}}</span>
                             </div>
