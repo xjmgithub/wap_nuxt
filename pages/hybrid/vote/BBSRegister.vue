@@ -69,6 +69,7 @@
     </div>
 </template>
 <script>
+import qs from 'qs'
 export default {
     layout: 'base',
     components: {},
@@ -100,7 +101,8 @@ export default {
             city: '',
             cityList: ['Dodoma', 'Dar es salaam', 'Mwanza', 'Arusha', 'Zanzibar', 'Moshi', 'Mbeya', 'Bagamoyo', 'Iringa', 'Others '],
             number: '',
-            validNum: null
+            validNum: null,
+            repeatSub: true
         }
     },
     computed: {
@@ -117,8 +119,56 @@ export default {
         }
     },
     watch: {},
-    mounted() {},
-    methods: {},
+    mounted() {
+        
+    },
+    methods: {
+        checkout() {
+            // TODO 电话号码校验正则
+            const reg = /^[0-9+-]+$/
+            if (reg.test(this.number) && this.number.replace(/[^0-9]/gi, '').length >= 9) {
+                this.validNum = true
+            } else {
+                this.validNum = false
+            }
+        },
+        submit() {
+            if (this.canSubmit && this.validNum && this.repeatSub) {
+                this.repeatSub = false
+                this.$axios({
+                    url: '/hybrid/api/acitvity/regist',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        first_name: this.firsName,
+                        last_name: this.lastName,
+                        gender: this.gender,
+                        age: this.age,
+                        profession: this.profession,
+                        city: this.city,
+                        phone: this.number,
+                        activity: 'tz challenger'
+                    })
+                })
+                    .then(res => {
+                        console.log('success')
+                        // if (res.data.code === 200) {
+                        //     this.$router.replace(`/hybrid/vote/challenger_succ`)
+                        // } else {
+                        //     this.$alert('please fill in the correct information and try again')
+                        // }
+                        // this.repeatSub = true
+                    })
+                    .catch(() => {
+                        console.log('error')
+                    })
+            } else {
+                console.log('false')
+            }
+        }
+    },
     head() {
         return {
             title: 'Bongo Star Search'
@@ -134,7 +184,7 @@ export default {
         color: #999999;
         background: #eeeeee url('~assets/img/vote/regist_btm.png') no-repeat bottom;
         background-size: contain;
-            .error {
+        .error {
             margin-left: 38%;
             color: #ff0066;
             font-size: 0.8rem;
@@ -149,17 +199,17 @@ export default {
             background: url('~assets/img/vote/line_d.png') no-repeat center;
             background-size: contain;
         }
-        div{
-            font-weight:bold;
-            font-size:0.8rem;
+        div {
+            font-weight: bold;
+            font-size: 0.8rem;
             margin: 0.8rem 0;
-            span{
-                width:35%;
-                display:inline-block;
-                text-align:right;
-                margin-right:3%;
-                .required{
-                    color:red;
+            span {
+                width: 35%;
+                display: inline-block;
+                text-align: right;
+                margin-right: 3%;
+                .required {
+                    color: red;
                 }
             }
             input,
@@ -206,7 +256,7 @@ export default {
             margin-top: 1rem;
             font-size: 0.95rem;
             &.submit {
-            background: #00cccc;
+                background: #00cccc;
             }
         }
     }
