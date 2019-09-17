@@ -806,6 +806,8 @@ export default {
         },
         // 弹窗方法
         show(msg, callback, cancel, yes, no) {
+            this.yes = ''
+            this.no = ''
             if (yes) this.yes = yes
             if (no) this.no = no
             this.msg = msg
