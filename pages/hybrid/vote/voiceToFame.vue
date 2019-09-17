@@ -39,7 +39,7 @@
                                 <span class="poll">poll: {{item.ballot_num}}</span>
                             </div>
                             <div class="vote-btn">
-                                <div class="btn" @click="handleViceVote(item,$event)">VOTE</div>
+                                <div class="btn" @click="handleViceVote(item)">VOTE</div>
                             </div>
                         </li>
                     </ul>
@@ -155,7 +155,7 @@
 <script>
 import qs from 'qs'
 import { Base64 } from 'js-base64'
-import { animateCSS, cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
+import { cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
 import { callApp, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
@@ -393,7 +393,7 @@ export default {
             }
         },
         // 投票方法
-        handleViceVote(advisor, _evt1) {
+        handleViceVote(advisor) {
             this.mSendEvLog('votebtn_click', advisor.name, '')
             if (this.appType == 0) {
                 this.callOrDownApp('vote')
@@ -429,7 +429,6 @@ export default {
                     `<p style="padding: 0 1rem">CANCEL</p>`
                 )
             } else {
-                const animateTarget = _evt1.currentTarget
                 this.$axios({
                     url: '/voting/v1/ballot',
                     method: 'POST',
@@ -443,14 +442,9 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            animateCSS(animateTarget, 'slideOutLeft', () => {
-                                this.getVoteLeft()
-                            })
+                            advisor.ballot_num++
                             this.voteLeft--
                             this.lotteryLeft++
-                            this.getAdvisorList()
-                            advisor.ballot_num++
-                            // this.getLeftLottery()
                             if (this.voteLeft > 0) {
                                 if (this.firstTime) {
                                     this.show(
