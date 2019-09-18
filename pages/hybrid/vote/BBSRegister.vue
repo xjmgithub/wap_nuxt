@@ -4,23 +4,15 @@
             <h4>Registration</h4>
             <div>
                 <span>
-                    First Name
+                    Name
                     <sup class="required">*</sup>
                 </span>
-                <input v-model="firstName" type="text" />
+                <input v-model="name" type="text" />
             </div>
-            <p v-show="firstName.length>100" class="error">Please enter less than 100 characters.</p>
+            <p v-show="name.length>100" class="error">Please enter less than 100 characters.</p>
             <div>
                 <span>
-                    Last Name
-                    <sup class="required">*</sup>
-                </span>
-                <input v-model="lastName" type="text" />
-            </div>
-            <p v-show="lastName.length>100" class="error">Please enter less than 100 characters.</p>
-            <div>
-                <span>
-                    Gender
+                    Sex
                     <sup class="required">*</sup>
                 </span>
                 <select v-model="gender" required>
@@ -31,11 +23,23 @@
             </div>
             <div>
                 <span>
-                    Age
+                    Birthday
                     <sup class="required">*</sup>
                 </span>
-                <input v-model="age" type="number" />
+                <select v-model="formData.year" @change="getDay">
+                    <option value disabled selected class="normal">year</option>
+                    <option v-for="item in year" :key="item" :value="item">{{item}}</option>
+                </select>年
+                <select v-model="formData.month" @change="getDay">
+                    <option value disabled selected class="normal">mouth</option>
+                    <option v-for="item in month" :key="item" :value="item">{{item}}</option>
+                </select>月
+                <select v-model="formData.day">
+                    <option value disabled selected class="normal">day</option>
+                    <option v-for="item in day" :key="item" :value="item">{{item}}</option>
+                </select>日
             </div>
+            <!-- <button @click="checkBirthday" >confirm</button> -->
             <div>
                 <span>
                     Profession
@@ -61,7 +65,7 @@
                     Contact Number
                     <sup class="required">*</sup>
                 </span>
-                <input v-model="number" type="text" :class="{'unvalid':validNum==false}" @blur="checkout" @input="validNum=null" />
+                <input v-model="number" type="text" :class="{'unvalid':validNum==false}" @blur="checkPhone" @input="validNum=null" />
             </div>
             <p v-show="validNum==false&&number.length" class="error">Please enter a valid phone number</p>
             <div class="disabled" :class="{'submit':canSubmit&&validNum}" @click="submit()">SUBMIT</div>
@@ -76,10 +80,17 @@ export default {
     data() {
         return {
             appType: this.$store.state.appType || 0,
-            firstName: '',
-            lastName: '',
+            name: '',
             gender: '',
-            age: '',
+            year: [],
+            month: [],
+            day: [],
+            formData: {
+                year: '',
+                month: '',
+                day: ''
+            },
+            birthday: '',
             profession: '',
             professionList: [
                 'Sales/ Marketing',
@@ -102,16 +113,16 @@ export default {
             cityList: ['Dodoma', 'Dar es salaam', 'Mwanza', 'Arusha', 'Zanzibar', 'Moshi', 'Mbeya', 'Bagamoyo', 'Iringa', 'Others '],
             number: '',
             validNum: null,
+            birthdayErr: false,
+            link: '',
             repeatSub: true
         }
     },
     computed: {
         canSubmit() {
             // TODO 确认表单填写完整
-            if (!this.firstName.replace(/\s/g, '')) return false
-            if (!this.lastName.replace(/\s/g, '')) return false
+            if (!this.name.replace(/\s/g, '')) return false
             if (!this.gender.replace(/\s/g, '')) return false
-            if (!this.age.replace(/\s/g, '')) return false
             if (!this.profession.replace(/\s/g, '')) return false
             if (!this.city.replace(/\s/g, '')) return false
             if (!this.number.replace(/\s/g, '')) return false
@@ -120,10 +131,34 @@ export default {
     },
     watch: {},
     mounted() {
-        
+        this.getYear()
+        this.getMouth()
     },
     methods: {
-        checkout() {
+        // 获取生日年份
+        getYear() {
+            for (let i = 0; i < 100; i++) {
+                const y = new Date().getFullYear() - i
+                this.year.push(y)
+            }
+        },
+        // 获取生日月份
+        getMouth() {
+            for (let i = 1; i < 13; i++) {
+                this.month.push(i)
+            }
+        },
+        // 获取生日日期
+        getDay() {
+            this.day = []
+            this.formData.month = parseInt(this.formData.month, 10)
+            const day = new Date(this.formData.year, this.formData.month, 0).getDate()
+            for (let i = 1; i <= day; i++) {
+                this.day.push(i)
+            }
+        },
+        // 校验电话
+        checkPhone() {
             // TODO 电话号码校验正则
             const reg = /^[0-9+-]+$/
             if (reg.test(this.number) && this.number.replace(/[^0-9]/gi, '').length >= 9) {
@@ -132,7 +167,20 @@ export default {
                 this.validNum = false
             }
         },
+        // 提交表单
         submit() {
+            if(typeof(this.formData.year)=='string' || typeof(this.formData.month)=='string' || typeof(this.formData.day)=='string') {
+                this.birthdayErr = true
+                return
+            } 
+            const birthday = this.formData.year + '-' + (this.formData.month.toString().length <= 1 ? '0' + this.formData.month : this.formData.month) + '-' +(this.formData.day.toString().length <= 1 ? '0' + this.formData.day : this.formData.day)
+            console.log(birthday)
+
+            if (new Date() < new Date(birthday)) {
+                this.birthdayErr = true
+                return
+            }
+
             if (this.canSubmit && this.validNum && this.repeatSub) {
                 this.repeatSub = false
                 this.$axios({
@@ -142,27 +190,27 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     data: qs.stringify({
-                        first_name: this.firsName,
-                        last_name: this.lastName,
-                        gender: this.gender,
-                        age: this.age,
-                        profession: this.profession,
-                        city: this.city,
-                        phone: this.number,
-                        activity: 'tz challenger'
+                        "fk_enroll": 1,
+                        "name": this.name,
+                        "gender": this.gender,
+                        "birthday": this.birthday,
+                        "phone": this.number,
+                        "address": this.city,
+                        "profession": this.profession,
+                        "other_description": this.link,
                     })
                 })
                     .then(res => {
-                        console.log('success')
-                        // if (res.data.code === 200) {
-                        //     this.$router.replace(`/hybrid/vote/challenger_succ`)
-                        // } else {
-                        //     this.$alert('please fill in the correct information and try again')
-                        // }
-                        // this.repeatSub = true
+                        if (res.data.code === 200) {
+                            // this.$router.replace(`/hybrid/vote/challenger_succ`)
+                            console.log('success200')
+                        } else {
+                            this.$alert('please fill in the correct information and try again')
+                        }
+                        this.repeatSub = true
                     })
-                    .catch(() => {
-                        console.log('error')
+                    .catch((err) => {
+                        console.log(err)
                     })
             } else {
                 console.log('false')
