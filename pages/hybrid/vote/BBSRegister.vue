@@ -26,7 +26,7 @@
                     Birthday
                     <sup class="required">*</sup>
                 </span>
-                <select v-model="formData.year" class="birth" @change="getDay" >
+                <select v-model="formData.year" class="birth" @change="getMouth" >
                     <option value disabled selected class="normal">year</option>
                     <option v-for="item in year" :key="item" :value="item">{{item}}</option>
                 </select>
@@ -131,7 +131,7 @@ export default {
     watch: {},
     mounted() {
         this.getYear()
-        this.getMouth()
+        // this.getMouth()
     },
     methods: {
         // 获取生日年份
@@ -265,7 +265,7 @@ export default {
                 width: 55%;
                 height: 2rem;
                 line-height: 2rem;
-                border-radius: 20px;
+                border-radius: 0.5rem;
                 border: 1px solid #d1d1d1;
                 background: #eeeeee;
                 padding: 0 0.5rem;
@@ -301,7 +301,7 @@ export default {
         }
         .disabled {
             width: 80%;
-            border-radius: 20px;
+            border-radius: 0.5rem;
             background: #d1d1d1;
             color: #ffffff;
             text-align: center;
