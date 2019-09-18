@@ -171,7 +171,7 @@ export default {
             isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             // appType: 1,
             // isLogin: true,
-            title: 'voice to fame',
+            title: 'Voice To Fame',
             imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
             firstTime: true,
             msg: '',
@@ -179,7 +179,7 @@ export default {
             callback: '',
             yes: '',
             no: '',
-            shareTitle: 'voice to fame',
+            shareTitle: 'Voice To Fame',
             user_id: this.$store.state.user.id,
 
             // 投票
