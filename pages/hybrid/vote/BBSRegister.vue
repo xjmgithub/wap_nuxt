@@ -26,20 +26,19 @@
                     Birthday
                     <sup class="required">*</sup>
                 </span>
-                <select v-model="formData.year" @change="getDay">
+                <select v-model="formData.year" class="birth" @change="getDay" >
                     <option value disabled selected class="normal">year</option>
                     <option v-for="item in year" :key="item" :value="item">{{item}}</option>
-                </select>年
-                <select v-model="formData.month" @change="getDay">
+                </select>
+                <select v-model="formData.month" class="birth" @change="getDay">
                     <option value disabled selected class="normal">mouth</option>
                     <option v-for="item in month" :key="item" :value="item">{{item}}</option>
-                </select>月
-                <select v-model="formData.day">
+                </select>
+                <select v-model="formData.day" class="birth" >
                     <option value disabled selected class="normal">day</option>
                     <option v-for="item in day" :key="item" :value="item">{{item}}</option>
-                </select>日
+                </select>
             </div>
-            <!-- <button @click="checkBirthday" >confirm</button> -->
             <div>
                 <span>
                     Profession
@@ -251,6 +250,7 @@ export default {
             font-weight: bold;
             font-size: 0.8rem;
             margin: 0.8rem 0;
+            position: relative;
             span {
                 width: 35%;
                 display: inline-block;
@@ -271,7 +271,6 @@ export default {
                 padding: 0 0.5rem;
                 color: #00cccc;
                 font-size: 0.8rem;
-                font-weight: bold;
                 outline: none;
                 &.unvalid {
                     color: #ff0066;
@@ -286,6 +285,14 @@ export default {
                 background-size: 11%;
                 .normal {
                     display: none;
+                }
+                &.birth {
+                    width: 17%;
+                    margin-right: 2%;
+                    background-size: 35%;
+                    &:last-child {
+                        margin-right: 0;
+                    }
                 }
                 &:invalid {
                     color: #aaaaaa;
