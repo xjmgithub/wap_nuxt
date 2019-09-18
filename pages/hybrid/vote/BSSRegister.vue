@@ -87,7 +87,8 @@
                 </span>
                 <input v-model="link" type="text" />
             </div>
-            <div>如何获得链接？</div>
+            <div @click="howToUploadShow">如何获得链接？</div>
+            
             <div class="disabled" :class="{'submit':canSubmit&&validNum}" @click="submit()">SUBMIT</div>
         </div>
         <div class="ad"></div>
@@ -152,7 +153,8 @@ export default {
             enroll_id: 1,
             vote_id: 14,
             clipsList: [],
-            loaded: false
+            loaded: false,
+            howToUploadShow: false,
         }
     },
     computed: {
