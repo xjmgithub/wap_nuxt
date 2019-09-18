@@ -54,14 +54,12 @@
             </div>
             <div>
                 <span>
-                    Profession
+                    Contact Number
                     <sup class="required">*</sup>
                 </span>
-                <select v-model="profession" required>
-                    <option value disabled selected class="normal">Please Select</option>
-                    <option v-for="(item,index) in professionList" :key="index" :value="item">{{item}}</option>
-                </select>
+                <input v-model="number" type="text" :class="{'unvalid':validNum==false}" @blur="checkPhone" @input="validNum=null" />
             </div>
+            <p v-show="validNum==false&&number.length" class="error">Please enter a valid phone number</p>
             <div>
                 <span>
                     Your City
@@ -74,14 +72,25 @@
             </div>
             <div>
                 <span>
-                    Contact Number
+                    Profession
                     <sup class="required">*</sup>
                 </span>
-                <input v-model="number" type="text" :class="{'unvalid':validNum==false}" @blur="checkPhone" @input="validNum=null" />
+                <select v-model="profession" required>
+                    <option value disabled selected class="normal">Please Select</option>
+                    <option v-for="(item,index) in professionList" :key="index" :value="item">{{item}}</option>
+                </select>
             </div>
-            <p v-show="validNum==false&&number.length" class="error">Please enter a valid phone number</p>
+            <div>
+                <span>
+                    Link
+                    <sup class="required">*</sup>
+                </span>
+                <input v-model="link" type="text" />
+            </div>
+            <div>如何获得链接？</div>
             <div class="disabled" :class="{'submit':canSubmit&&validNum}" @click="submit()">SUBMIT</div>
         </div>
+        <div class="ad"></div>
         <div class="past-programme">
             <ul class="clearfix">
                 <li v-for="(item,index) in clipsList" :key="index">
@@ -115,6 +124,11 @@ export default {
                 day: ''
             },
             birthday: '',
+            birthdayErr: false,
+            number: '',
+            validNum: null,
+            city: '',
+            cityList: ['Dodoma', 'Dar es salaam', 'Mwanza', 'Arusha', 'Zanzibar', 'Moshi', 'Mbeya', 'Bagamoyo', 'Iringa', 'Others '],
             profession: '',
             professionList: [
                 'Sales/ Marketing',
@@ -133,11 +147,6 @@ export default {
                 'Scientific Research',
                 'Part-time/Intern/Other'
             ],
-            city: '',
-            cityList: ['Dodoma', 'Dar es salaam', 'Mwanza', 'Arusha', 'Zanzibar', 'Moshi', 'Mbeya', 'Bagamoyo', 'Iringa', 'Others '],
-            number: '',
-            validNum: null,
-            birthdayErr: false,
             link: '',
             repeatSub: true,
             enroll_id: 1,
