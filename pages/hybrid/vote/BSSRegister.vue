@@ -1,24 +1,29 @@
 <template>
     <div ref="page" class="wrapper">
         <div class="container">
-            <img src="~assets/img/vote/BSSRegister/bg-img.jpg" alt="bg-img" />
+            <img src="~assets/img/vote/BSSRegister/bg-img.png" alt="bg-img" />
             <div class="tab-box">
                 <div class="tab">
                     <div class="rules" @click="show_rules=true">
-                        <p>RULES</p>
+                        <p>
+                            SHERIA
+                            <br />ZA KINA
+                        </p>
                         <img src="~assets/img/vote/BSSRegister/ic-rule.png" alt="ic-rule" />
                     </div>
                     <div class="share" @click="toShare('upshare')">
-                        <p>SHARE</p>
+                        <p>SHIRIKI</p>
                         <img src="~assets/img/vote/BSSRegister/ic-share.png" alt="ic-share" />
                     </div>
                 </div>
             </div>
+            <img class="text" src="~assets/img/vote/BSSRegister/text-one.png" alt />
+            <img src="~assets/img/vote/BSSRegister/bg-form-top.png" alt class="form-img" />
+            <img src="~assets/img/vote/BSSRegister/rule-img.png" alt class="form-img rule-img" />
             <div class="registration">
-                <h4>Registration</h4>
                 <div>
                     <span>
-                        Name
+                        JINA
                         <sup class="required">*</sup>
                     </span>
                     <input v-model="name" type="text" />
@@ -26,36 +31,36 @@
                 <p v-show="name.length>100" class="error">Please enter less than 100 characters.</p>
                 <div>
                     <span>
-                        Sex
+                        JINSIA
                         <sup class="required">*</sup>
                     </span>
                     <select v-model="gender" required>
-                        <option value disabled selected class="normal">Please Select</option>
+                        <!-- <option value disabled selected class="normal">Please Select</option> -->
                         <option value="male">male</option>
                         <option value="female">female</option>
                     </select>
                 </div>
                 <div>
                     <span>
-                        Birthday
+                        SIKU YA KUZALIWA
                         <sup class="required">*</sup>
                     </span>
                     <select v-model="formData.year" class="birth" @change="getMouth">
-                        <option value disabled selected class="normal">year</option>
+                        <option value disabled selected class="normal">Mwaka</option>
                         <option v-for="item in year" :key="item" :value="item">{{item}}</option>
                     </select>
                     <select v-model="formData.month" class="birth" @change="getDay">
-                        <option value disabled selected class="normal">mouth</option>
+                        <option value disabled selected class="normal">Mwezi</option>
                         <option v-for="item in month" :key="item" :value="item">{{item}}</option>
                     </select>
                     <select v-model="formData.day" class="birth">
-                        <option value disabled selected class="normal">day</option>
+                        <option value disabled selected class="normal">Siku</option>
                         <option v-for="item in day" :key="item" :value="item">{{item}}</option>
                     </select>
                 </div>
                 <div>
                     <span>
-                        Contact Number
+                        NAMBARI YA SIMU
                         <sup class="required">*</sup>
                     </span>
                     <input v-model="number" type="text" :class="{'unvalid':validNum==false}" @blur="checkPhone" @input="validNum=null" />
@@ -63,45 +68,52 @@
                 <p v-show="validNum==false&&number.length" class="error">Please enter a valid phone number</p>
                 <div>
                     <span>
-                        Your City
+                        MAKAZI YA SASA
                         <sup class="required">*</sup>
                     </span>
                     <select v-model="city" required>
-                        <option value disabled selected class="normal">Please Select</option>
+                        <option value disabled selected class="normal">Tafadhali chagua</option>
                         <option v-for="(item,index) in cityList" :key="index" :value="item">{{item}}</option>
                     </select>
                 </div>
                 <div>
                     <span>
-                        Profession
+                        KAZI
                         <sup class="required">*</sup>
                     </span>
                     <select v-model="profession" required>
-                        <option value disabled selected class="normal">Please Select</option>
+                        <option value disabled selected class="normal">Tafadhali chagua</option>
                         <option v-for="(item,index) in professionList" :key="index" :value="item">{{item}}</option>
                     </select>
                 </div>
                 <div>
                     <span>
-                        Link
+                        LINK YA VIDEO
                         <sup class="required">*</sup>
                     </span>
-                    <input v-model="link" type="text" />
+                    <input v-model="link" type="text" placeholder="Links za video za Instagram au Youtube" />
                 </div>
-                <div @click="showUploadWay">如何获得链接？</div>
+                <div class="link" @click="showUploadWay">JINSI YA KUPATA LINK YA VIDEO?</div>
 
-                <div class="disabled" :class="{'submit':canSubmit&&validNum}" @click="submit()">SUBMIT</div>
+                <div class="disabled" :class="{'submit':canSubmit&&validNum}" @click="submit()">WASILISHA</div>
             </div>
+            <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
             <div v-if="isEnd" class="endMsg">活动已结束</div>
             <div class="ad"></div>
+            <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
+            <div class="share-box">
+                <img src="~assets/img/vote/BSSRegister/share-rule-img.png" alt />
+                <img src="~assets/img/vote/BSSRegister/img-share.png" alt />
+            </div>
+            <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
             <div class="past-programme">
+                <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
                 <ul class="clearfix">
                     <li v-for="(item,index) in clipsList" :key="index">
                         <div @click="toPlayer(item)">
                             <img class="url" :src="cdnPic(item.cover)" />
-                            <img src="~assets/img/vote/ic_play_small_white.png" class="player" />
                         </div>
-                        <span class="title">{{item.description||item.name}}</span>
+                        <p class="title">{{item.description||item.name}}</p>
                     </li>
                 </ul>
             </div>
@@ -428,211 +440,229 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
 .wrapper {
-    background-color: #2f0081;
+    background-image: url('~assets/img/vote/BSSRegister/bg-img-re.jpg');
+    background-size: contain;
+    background-repeat: repeat-y;
     font-size: 0.9rem;
     letter-spacing: -0.03rem;
     position: static;
     .container {
         > img {
-            width: 100%;
+            display: block;
+            margin: 0 auto;
+            padding-top: 0.5rem;
+            width: 95%;
             height: auto;
+            &.form-img {
+                padding-top: 0;
+                width: 90%;
+            }
+            &.rule-img {
+                padding: 1.5rem 5% 0;
+                background-color: #fff;
+            }
         }
         .tab-box {
             width: 100%;
-            height: auto;
+            height: 2.2rem;
             position: relative;
+            &:after {
+                content: '';
+                width: 1rem;
+                height: 1rem;
+                background-color: red;
+                display: block;
+            }
             .tab {
                 width: 100%;
                 position: absolute;
                 color: #fff;
-                top: -3.6rem;
+                top: -1rem;
                 left: 0;
-                height: 3rem;
-                line-height: 3rem;
+                height: 4rem;
+                // line-height: 3.8rem;
                 .rules {
-                    width: 6rem;
+                    width: 7rem;
                     float: left;
-                    background: url('~assets/img/vote/BSSRegister/btn-rules.png') no-repeat;
-                    background-size: 6rem 3rem;
+                    background: url('~assets/img/vote/BSSRegister/btn-left.png') no-repeat;
+                    background-size: 7rem 4rem;
                     text-align: left;
                     padding-left: 0.5rem;
                     position: relative;
+                    line-height: 4rem;
+                    p {
+                        display: block;
+                        height: 4rem;
+                        padding: 1rem 0 1.2rem;
+                        line-height: 0.9rem;
+                    }
                     img {
                         width: 1rem;
                         height: auto;
                         position: absolute;
-                        left: 3.8rem;
-                        top: 0.9rem;
+                        left: 4.1rem;
+                        top: 1.2rem;
                     }
                 }
                 .share {
-                    width: 6rem;
+                    width: 7rem;
                     float: right;
-                    background: url('~assets/img/vote/BSSRegister/btn-share.png') no-repeat;
-                    background-size: 6rem 3rem;
+                    background: url('~assets/img/vote/BSSRegister/btn-right.png') no-repeat;
+                    background-size: 7rem 4rem;
                     text-align: right;
                     padding-right: 0.5rem;
                     position: relative;
+                    line-height: 3.8rem;
                 }
                 img {
                     width: 1rem;
                     height: auto;
                     position: absolute;
-                    right: 3.8rem;
-                    top: 1.2rem;
+                    right: 4.1rem;
+                    top: 1.5rem;
                 }
             }
         }
+        .text {
+            width: 100%;
+            display: block;
+        }
         .registration {
-            padding: 1.5rem 5%;
-            color: #999999;
-            background: #eeeeee url('~assets/img/vote/regist_btm.png') no-repeat bottom;
-            background-size: contain;
+            width: 90%;
+            margin: 0 auto;
+            padding: 1rem 5% 2rem;
+            color: #36ad5e;
+            background-color: #fff;
             .error {
-                // margin-left: 38%;
                 color: #ff0066;
-                font-size: 0.8rem;
-                font-weight: bold;
-            }
-            h4 {
-                color: #666666;
-                text-align: center;
-                font-weight: bold;
-                margin-top: 0;
-                width: 100%;
-                background: url('~assets/img/vote/line_d.png') no-repeat center;
-                background-size: contain;
             }
             div {
-                font-weight: bold;
-                font-size: 0.8rem;
-                margin: 0.8rem 0;
+                margin: 0 auto;
                 position: relative;
-                span,input,select {
+                span,
+                input,
+                select {
                     width: 100%;
                     height: 2rem;
-                    // line-height: 2rem;
-                    // display: block;
                     text-align: left;
+                    line-height: 2rem;
                     margin: 0 auto;
                 }
                 span {
-                    // width: 80%;
-                    // height: 2rem;
                     display: block;
-                    // text-align: left;
-                    // margin-right: 3%;
                     .required {
                         color: red;
+                        position: relative;
+                        top: 0.2rem;
                     }
                 }
                 input,
                 select {
-                    // width: 80%;
-                    // height: 2rem;
                     line-height: 2rem;
-                    border-radius: 0.5rem;
-                    border: 1px solid #d1d1d1;
-                    background: #eeeeee;
-                    padding: 0 0.5rem;
-                    color: #00cccc;
-                    font-size: 0.8rem;
+                    border: 0;
+                    background-color: #f2f0f0;
+                    padding: 0 0.6rem;
+                    color: #bcbcbc;
                     outline: none;
                     &.unvalid {
                         color: #ff0066;
                     }
                 }
+                input {
+                    &::-webkit-input-placeholder {
+                        color: #898989;
+                    }
+                }
                 select {
-                    background: transparent url('~assets/img/vote/ic_menuarrow_def_g.png') no-repeat 96% center;
+                    // background: transparent url('~assets/img/vote/ic_menuarrow_def_g.png') no-repeat 96% center;
                     appearance: none;
                     -webkit-apperance: none;
                     -moz-appearance: none;
-                    padding-right: 6%;
-                    background-size: 6%;
+                    // padding-right: 6%;
+                    // background-size: 6%;
                     .normal {
                         display: none;
                     }
                     &.birth {
-                        width: 30%;
-                        margin-right: 4.2%;
+                        width: 29%;
+                        margin-right: 5.48%;
                         background-size: 20%;
                         &:last-child {
                             margin-right: 0;
                         }
                     }
                     &:invalid {
-                        color: #aaaaaa;
+                        color: #bcbcbc;
                     }
                 }
             }
+            .link {
+                color: #ff892a;
+                text-align: right;
+                font-size: 0.8rem;
+                margin-top: 0.3rem;
+            }
             .disabled {
-                width: 80%;
-                border-radius: 0.5rem;
+                width: 14rem;
+                border-radius: 0.2rem;
                 background: #d1d1d1;
                 color: #ffffff;
                 text-align: center;
                 margin: 0 auto;
-                height: 2.5rem;
-                line-height: 2.5rem;
+                height: 2.2rem;
+                line-height: 2.2rem;
                 margin-top: 1rem;
-                font-size: 0.95rem;
+                font-size: 1rem;
                 &.submit {
-                    background: #00cccc;
+                    background: url('~assets/img/vote/BSSRegister/bg-btn.png') no-repeat;
+                    background-size: contain;
                 }
             }
         }
-        .past-programme {
-            padding: 0 2.5%;
-            margin-bottom: 1rem;
-            p {
-                margin: 1rem 0;
-                height: 1rem;
-                line-height: 1rem;
-                color: #f93874;
-                font-weight: bold;
+        .share-box {
+            margin-top: 1rem;
+            > img {
+                display: block;
+                width: 90%;
+                margin: 1rem auto;
             }
-            li {
-                list-style: none;
-                float: left;
-                width: 48%;
-                line-height: 1.1rem;
-                color: #000;
-                margin-bottom: 0.3rem;
-                &:nth-child(2n) {
-                    float: right;
-                }
-                div {
-                    position: relative;
-                    width: 100%;
-                    &:before {
-                        content: '';
-                        display: inline-block;
-                        padding-bottom: 56%;
-                        width: 0.1px;
-                        vertical-align: middle;
+        }
+        .past-programme {
+            margin: 1rem auto 0;
+            width: 90%;
+            img {
+                width: 100%;
+                display: block;
+            }
+            ul {
+                width: 100%;
+                background-color: #e98005;
+                border-radius: 0.2rem;
+                padding: 1rem 3%;
+                li {
+                    float: left;
+                    width: 48.5%;
+                    &:nth-child(2n) {
+                        float: right;
                     }
-                    .player {
-                        position: absolute;
-                        bottom: 5px;
-                        right: 5px;
-                        width: 1.5rem;
-                    }
-                    .url {
+                    div {
+                        position: relative;
                         width: 100%;
-                        height: 100%;
-                        position: absolute;
-                    }
-                }
-                span {
-                    font-size: 0.88rem;
-                    &.title {
-                        display: -webkit-box;
-                        overflow: hidden;
-                        height: 3.6rem;
-                        padding-top: 0.4rem;
-                        -webkit-line-clamp: 3;
-                        /* autoprefixer: off */
-                        -webkit-box-orient: vertical;
+                        &:before {
+                            content: '';
+                            display: inline-block;
+                            padding-bottom: 56%;
+                            width: 0.1px;
+                            vertical-align: middle;
+                        }
+                        .url {
+                            width: 100%;
+                            height: 100%;
+                            position: absolute;
+                        }
+                        .title {
+                            color: red;
+                        }
                     }
                 }
             }
