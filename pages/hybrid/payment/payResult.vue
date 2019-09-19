@@ -22,7 +22,7 @@
             <p class="msg">{{$store.state.lang.pay_failed_desc}}</p>
         </template>
         <div class="footer">
-            <mButton :text="$store.state.lang.pay_refresh" @click="refresh" />
+            <mButton v-show="result>0" :text="$store.state.lang.pay_refresh" @click="refresh" />
             <mButton v-show="result>0" :text="$store.state.lang.pay_ok" @click="click" />
             <p v-show="isApp===1&&result<=0" class="help">{{$store.state.lang.pay_help}}</p>
         </div>
