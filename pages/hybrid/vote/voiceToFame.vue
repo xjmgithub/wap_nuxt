@@ -34,7 +34,9 @@
                             <div class="item-box">
                                 <img v-show="item.link_vod_code" src="~assets/img/vote/voiceToFame/flag-vote.png" class="flag" />
                                 <p>{{key+1}}</p>
-                                <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item)" />
+                                <div>
+                                    <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item)" />
+                                </div>
                                 <span class="name">{{item.name.toUpperCase()}}</span>
                                 <span class="poll">poll: {{item.ballot_num}}</span>
                             </div>
@@ -665,8 +667,8 @@ export default {
                         )
                     }, 1000)
                 } else if (this.index === 3) {
-                    this.getTicketAward((res)=>{
-                        if(res.data.code == 200) {
+                    this.getTicketAward(res => {
+                        if (res.data.code == 200) {
                             setTimeout(() => {
                                 this.show(
                                     `<p style="padding-top: 1rem;">Congrats! You've got ` + res.data.data + ` more votes!</p>`,
@@ -790,18 +792,18 @@ export default {
         // 获得加票方法
         getTicketAward(callback) {
             this.$axios({
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded',
-                        // token: this.$store.state.token
-                    },
-                    data: qs.stringify({
-                        vote_id: this.vote_id,
-                        user_id: this.user_id,
-                    }),
-                    url: 'hybrid/vote/getTicketAward'
-                }).then(res => {
-                    callback && callback(res)
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                    // token: this.$store.state.token
+                },
+                data: qs.stringify({
+                    vote_id: this.vote_id,
+                    user_id: this.user_id
+                }),
+                url: 'hybrid/vote/getTicketAward'
+            }).then(res => {
+                callback && callback(res)
             })
         },
         // 弹窗方法
@@ -976,13 +978,6 @@ export default {
                         // margin-bottom: rem;
                         overflow: hidden;
                         border-radius: 0.6rem;
-                        &:after {
-                            display: block;
-                            visibility: hidden;
-                            clear: both;
-                            height: 0;
-                            content: '';
-                        }
                         .flag {
                             width: 1.2rem;
                             height: auto;
@@ -1005,15 +1000,24 @@ export default {
                             text-align: center;
                             line-height: 1.2rem;
                         }
-                        .icon {
-                            width: 100%;
-                            padding: 0.2rem 0.2rem 0;
-                            height: auto;
-                            min-height: 3rem;
-                            margin: 0 auto;
-                            display: block;
-                            border-radius: 0.5rem;
+                        div {
                             position: relative;
+                            width: 100%;
+                            .icon {
+                                width: 100%;
+                                padding: 0.2rem 0.2rem 0;
+                                height: 100%;
+                                border-radius: 0.5rem;
+                                position: absolute;
+                                top: 0;
+                            }
+                            &:before {
+                                content: '';
+                                display: inline-block;
+                                padding-bottom: 110%;
+                                width: 0.1px;
+                                vertical-align: middle;
+                            }
                         }
                         .name {
                             width: 100%;
