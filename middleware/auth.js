@@ -7,6 +7,7 @@ const authIgnore = [
     /^\/hybrid\/account\/setpass/,
     /^\/hybrid\/account\/resetpass/,
     /^\/hybrid\/account\/resetTelPass/,
+    /^\/hybrid\/account\/resetEmailPass/,
     /^\/hybrid\/account\/resetTelPassSubmit/,
     /^\/hybrid\/payment\/channels/,
     /^\/hybrid\/payment\/payResult/,

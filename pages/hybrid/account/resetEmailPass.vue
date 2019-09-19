@@ -4,7 +4,7 @@
             <div :class="{focus:focus_email,error:error_email}" class="input-email">
                 <div class="number">
                     <div class="tag" :class="{focus:focus_email,error:error_email}">{{enter_email}}</div>
-                    <input v-model="email" type="email" :placeholder="focus_email?'':enter_email" @focus="focusEmail" @blur="focus_email=false" />
+                    <input v-model="email" type="email" :placeholder="focus_email?'':enter_email" @focus="focus_email=true" @blur="focus_email=false" />
                     <div v-show="showAutoInput" class="auto-input">
                         <div @click="autoInput('gmail')">{{email}}gmail.com</div>
                         <div @click="autoInput('yahoo')">{{email}}yahoo.com</div>
@@ -17,7 +17,7 @@
         <div class="next-btn">
             <mButton
                 :disabled="(!new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(email))||disabled"
-                :text="next"
+                :text="$store.state.lang.text_onair_next"
                 @click="getEmailCode"
             />
         </div>
@@ -39,11 +39,9 @@ export default {
             error_email: '',
             error_email_code: '',
             showAutoInput: false,
-            error_email_false: this.$store.state.lang.error_email_false,
             disabled: false,
         }
     },
-    computed: {},
     watch: {
         email(nv, ov) {
             this.haveGetEmailCode = false
@@ -56,11 +54,7 @@ export default {
             }
         }
     },
-    mounted() {},
     methods: {
-        focusEmail() {
-            this.focus_email = true
-        },
         getEmailCode() {
             this.disabled = true
             this.$axios({

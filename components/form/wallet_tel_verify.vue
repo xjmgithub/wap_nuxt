@@ -4,15 +4,7 @@
         <div class="input-tel">
             <div class="prefix">+{{prefix}}</div>
             <div class="number">
-                <input
-                    v-model="tel"
-                    :disabled="disabled"
-                    :class="{focus:focus_tel,'input-error':error_tel}"
-                    type="tel"
-                    :placeholder="$store.state.lang.cellphone_number"
-                    @focus="focus_tel=true"
-                    @blur="focus_tel=false"
-                >
+                <input v-model="tel" :disabled="disabled" :class="{focus:focus_tel,'input-error':error_tel}" type="tel" :placeholder="$store.state.lang.cellphone_number" @focus="focus_tel=true" @blur="focus_tel=false">
             </div>
             <div class="get-code">
                 <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">{{codeDuring>0?`${codeDuring}s`:$store.state.lang.get_code}}</div>
@@ -26,7 +18,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: this.$store.state.lang.enter_phone_number
+            default: ''
         },
         disabled: {
             type: Boolean,
@@ -78,7 +70,7 @@ export default {
                 }
             })
         },
-        setTel(tel){
+        setTel(tel) {
             this.tel = tel
         }
     }
