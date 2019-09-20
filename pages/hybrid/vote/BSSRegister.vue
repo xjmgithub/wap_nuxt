@@ -18,92 +18,101 @@
                 </div>
             </div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-one.png" alt />
-            <img src="~assets/img/vote/BSSRegister/bg-form-top.png" alt class="form-img" />
-            <img src="~assets/img/vote/BSSRegister/rule-img.png" alt class="form-img rule-img" />
-            <div class="registration">
-                <div>
-                    <span>
-                        JINA
-                        <sup class="required">*</sup>
-                    </span>
-                    <input v-model="name" type="text" />
-                </div>
-                <p v-show="name.length>100" class="error">Please enter less than 100 characters.</p>
-                <div>
-                    <span>
-                        JINSIA
-                        <sup class="required">*</sup>
-                    </span>
-                    <select v-model="gender" required>
-                        <option value="male">male</option>
-                        <option value="female">female</option>
-                    </select>
-                </div>
-                <div class="birth-box clearfix">
-                    <span>
-                        SIKU YA KUZALIWA
-                        <sup class="required">*</sup>
-                    </span>
-                    <select v-model="formData.month" class="birth" @change="getDay">
-                        <option value disabled selected class="normal">Mwezi</option>
-                        <option v-for="item in month" :key="item" :value="item">{{item}}</option>
-                    </select>
-                    <select v-model="formData.year" class="birth" @change="getMouth">
-                        <option value disabled selected class="normal">Mwaka</option>
-                        <option v-for="item in year" :key="item" :value="item">{{item}}</option>
-                    </select>
-                    <select v-model="formData.day" class="birth">
-                        <option value disabled selected class="normal">Siku</option>
-                        <option v-for="item in day" :key="item" :value="item">{{item}}</option>
-                    </select>
-                </div>
-                <div>
-                    <span>
-                        NAMBARI YA SIMU
-                        <sup class="required">*</sup>
-                    </span>
-                    <input v-model="number" type="text" :class="{'unvalid':validNum==false}" @blur="checkPhone" @input="validNum=null" />
-                </div>
-                <p v-show="validNum==false&&number.length" class="error">Please enter a valid phone number</p>
-                <div>
-                    <span>
-                        MAKAZI YA SASA
-                        <sup class="required">*</sup>
-                    </span>
-                    <select v-model="city" required>
-                        <option value disabled selected class="normal">Tafadhali chagua</option>
-                        <option v-for="(item,index) in cityList" :key="index" :value="item">{{item}}</option>
-                    </select>
-                </div>
-                <div>
-                    <span>
-                        KAZI
-                        <sup class="required">*</sup>
-                    </span>
-                    <select v-model="profession" required>
-                        <option value disabled selected class="normal">Tafadhali chagua</option>
-                        <option v-for="(item,index) in professionList" :key="index" :value="item">{{item}}</option>
-                    </select>
-                </div>
-                <div>
-                    <span>
-                        LINK YA VIDEO
-                        <sup class="required">*</sup>
-                    </span>
-                    <input v-model="link" type="text" placeholder="Links za video za Instagram au Youtube" />
-                </div>
-                <div class="link" @click="showUploadWay">JINSI YA KUPATA LINK YA VIDEO?</div>
-
-                <div class="disabled" :class="{'submit':canSubmit&&validNum}" @click="submit()">WASILISHA</div>
+            <div v-if="isEnd" class="register-end">
+                <img src="~assets/img/vote/BSSRegister/ic-end.png" alt />
+                <p>SAMAHANI, USAJILI UMEKWISHA</p>
             </div>
-            <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
-            <!-- <div v-if="isEnd" class="register-end">SAMAHANI, USAJILI UMEKWISHA</div> -->
-            <div class="register-end">SAMAHANI, USAJILI UMEKWISHA</div>
+            <div v-else class="register-normal">
+                <img src="~assets/img/vote/BSSRegister/bg-form-top.png" alt class="form-img" />
+                <img src="~assets/img/vote/BSSRegister/rule-img.png" alt class="form-img rule-img" />
+                <div v-if="!isEnd" class="registration">
+                    <div>
+                        <span>
+                            JINA
+                            <sup class="required">*</sup>
+                        </span>
+                        <input v-model="name" type="text" :class="{'error-line':name_error}" @input="name_error=false" />
+                    </div>
+                    <div>
+                        <span>
+                            JINSIA
+                            <sup class="required">*</sup>
+                        </span>
+                        <select v-model="gender" required :class="{'error-line':gender_error}" @change="gender_error=false">
+                            <option value disabled selected class="normal">Tafadhali chagua</option>
+                            <option value="male">Kiume</option>
+                            <option value="female">Kike</option>
+                        </select>
+                    </div>
+                    <div class="birth-box clearfix">
+                        <span>
+                            SIKU YA KUZALIWA
+                            <sup class="required">*</sup>
+                        </span>
+                        <select v-model="formData.month" class="birth" :class="{'error-line':birth_error}" @change="getDay">
+                            <option value disabled selected class="normal">Mwezi</option>
+                            <option v-for="item in month" :key="item" :value="item">{{item}}</option>
+                        </select>
+                        <select v-model="formData.year" class="birth" :class="{'error-line':birth_error}" @change="getMouth">
+                            <option value disabled selected class="normal">Mwaka</option>
+                            <option v-for="item in year" :key="item" :value="item">{{item}}</option>
+                        </select>
+                        <select v-model="formData.day" class="birth" :class="{'error-line':birth_error}" @change="birth_error=false">
+                            <option value disabled selected class="normal">Siku</option>
+                            <option v-for="item in day" :key="item" :value="item">{{item}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span>
+                            NAMBARI YA SIMU
+                            <sup class="required">*</sup>
+                        </span>
+                        <input v-model="number" type="text" :class="{'error-line':number_error}" @input="number_error=false" />
+                    </div>
+                    <p v-show="number_error" class="error">Tafadhali ingiza namba ya simu halali</p>
+                    <div>
+                        <span>
+                            MAKAZI YA SASA
+                            <sup class="required">*</sup>
+                        </span>
+                        <select v-model="city" required :class="{'error-line':city_error}" @change="city_error=false">
+                            <option value disabled selected class="normal">Tafadhali chagua</option>
+                            <option v-for="(item,index) in cityList" :key="index" :value="item">{{item}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span>
+                            KAZI
+                            <sup class="required">*</sup>
+                        </span>
+                        <select v-model="profession" required :class="{'error-line':profession_error}" @change="profession_error=false">
+                            <option value disabled selected class="normal">Tafadhali chagua</option>
+                            <option v-for="(item,index) in professionList" :key="index" :value="item">{{item}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span>
+                            LINK YA VIDEO
+                            <sup class="required">*</sup>
+                        </span>
+                        <input
+                            v-model="link"
+                            type="text"
+                            placeholder="Links za video za Instagram au Youtube"
+                            :class="{'error-line':link_error}"
+                            @input="link_error=false"
+                        />
+                    </div>
+                    <div class="link" @click="showUploadWay">JINSI YA KUPATA LINK YA VIDEO?</div>
+                    <div class="submit-btn" :class="{'disabled':!isFinish}" @click="submit()">WASILISHA</div>
+                </div>
+                <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
+            </div>
             <div class="ad"></div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
                 <img src="~assets/img/vote/BSSRegister/share-rule-img.png" alt />
-                <img src="~assets/img/vote/BSSRegister/img-share.png" alt />
+                <img src="~assets/img/vote/BSSRegister/img-share.png" alt @click="toShare('downshare')" />
             </div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
             <div class="past-programme">
@@ -122,30 +131,44 @@
             <img src="~assets/img/vote/BSSRegister/alert-img.png" alt />
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="show_howToUpload=false" />
         </div>
-        <div v-show="show_howToUpload" class="shadow-box"></div>
-        <div :style="{display:style}" class="alert">
-            <div class="alert-body">
-                <div class="alert-default">
-                    <p>
-                        <span v-html="msg" />
-                    </p>
-                </div>
+        <div v-show="show_rules" class="rules-box">
+            <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
+            <div class="rule-text">
+                1.yixie guize yixie guiz eyix ieg uiz eyix ie guiz eyix ieguiz
+                <br />2.eyixi egui zeyix ieguiz eyix iegui zeyixi eguize yixi eguize yixi eguizey ixieg uizeyi xiegu izeyix ieguizeyi xieg uize yixiegui
+                <br />3.zeyi xieg izeyixie guizeyi xiegu izeyix ieg uize yixiegu izeyixi egu ize yixieg uiz eyixi
+                <br />4.egui zeyix iegu izeyix iegui zeyix ieg
+                <br />5.uizeyi xieg uizeyix iegui zeyix iegui zeyixieg uiz eyix ieguizeyix iegu ize yi xie guiz eyix
+                <br />6.ie guize yixie guize yi xieg uize yixie gui zeyix iegu izeyixiegu izeyixi eg uize yi xiegu izeyixie guiz eyix ieguiz eyi xieguize
+                <br />7.y ixie guiz eyixiegu izeyi xiegui zeyi xiegu izeyixi eguizeyix ieguize yixiegu izeyix ieg
+                <br />5.uizeyi xieg uizeyix iegui zeyix iegui zeyixieg uiz eyix ieguizeyix iegu ize yi xie guiz eyix
+                <br />6.ie guize yixie guize yi xieg uize yixie gui zeyix iegu izeyixiegu izeyixi eg uize yi xiegu izeyixie guiz eyix ieguiz eyi xieguize
+                <br />7.y ixie guiz eyixiegu izeyi xiegui zeyi xiegu izeyixi eguizeyix ieguize yixiegu izeyix ieg
             </div>
-            <div class="alert-footer">
-                <div class="btn sure" @click="sure" v-html="yes"></div>
-                <div class="btn close" @click="close" v-html="no"></div>
-            </div>
+            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="show_rules=false" />
         </div>
-        <div v-show="tip" class="vote-toast">{{tip}}</div>
+        <div v-show="show_success" class="success-box">
+            <img src="~assets/img/vote/BSSRegister/ic-success.png" alt />
+            <div class="success-text">
+                <p>USAJILI UMEFANIKIWA!</p>
+                <p>Tutaikagua kazi yako kama imeidhinishwa, kazi yako itaonyeshwa kwenye Startimes ON APP ndani ya masaa 48. Usisahau kujipigia kampeni mwenyewe!</p>
+            </div>
+            <div class="share-btn" @click="closeSuccessPage('successRegist')">SHIRIKI SASA</div>
+            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeSuccessPage('close')" />
+        </div>
+        <div v-show="show_howToUpload||show_rules||show_success" class="shadow-box"></div>
+        <mShare />
     </div>
 </template>
 <script>
-import qs from 'qs'
+import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
-import { callApp, downApk, playVodinApp } from '~/functions/app'
+import { playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
-    components: {},
+    components: {
+        mShare
+    },
     data() {
         return {
             appType: this.$store.state.appType || 0,
@@ -160,9 +183,9 @@ export default {
                 day: ''
             },
             birthday: '',
-            birthdayErr: false,
+            // birth_error: false,
             number: '',
-            validNum: null,
+            // validNum: null,
             city: '',
             cityList: ['Dodoma', 'Dar es salaam', 'Mwanza', 'Arusha', 'Zanzibar', 'Moshi', 'Mbeya', 'Bagamoyo', 'Iringa', 'Others '],
             profession: '',
@@ -185,31 +208,58 @@ export default {
             ],
             link: '',
             repeatSub: true,
+
+            name_error: false,
+            gender_error: false,
+            birth_error: false,
+            number_error: false,
+            profession_error: false,
+            city_error: false,
+            link_error: false,
+            canSubmit: false,
+
             enroll_id: 1,
             vote_id: 16,
             clipsList: [],
             loaded: false,
             show_howToUpload: false,
+            show_rules: false,
+            show_success: false,
             isEnd: false,
 
-            msg: '',
-            style: 'none',
-            callback: '',
-            yes: '',
-            no: '',
-            tip: '',
-            tip_timer: null
+            title: 'Bongo Star Search',
+            shareText: 'Bongo Star Search!',
+            user_id: this.$store.state.user.id,
+            imgUrl: ''
         }
     },
     computed: {
-        canSubmit() {
-            // TODO 确认表单填写完整
+        // 校验是否填写完整
+        isFinish() {
+            // name
             if (!this.name.replace(/\s/g, '')) return false
+            // gender
             if (!this.gender.replace(/\s/g, '')) return false
-            if (!this.profession.replace(/\s/g, '')) return false
-            if (!this.city.replace(/\s/g, '')) return false
+            // birthday
+            if (typeof this.formData.year == 'string' || typeof this.formData.month == 'string' || typeof this.formData.day == 'string') return false
+            // phone
             if (!this.number.replace(/\s/g, '')) return false
+            // profession
+            if (!this.profession.replace(/\s/g, '')) return false
+            // city
+            if (!this.city.replace(/\s/g, '')) return false
+            // link
+            if (!this.link.replace(/\s/g, '')) return false
             return true
+        },
+        platform() {
+            if (this.appType == 1) {
+                return 'Android'
+            } else if (this.appType == 2) {
+                return 'iOS'
+            } else {
+                return 'web'
+            }
         }
     },
     asyncData({ app: { $axios }, store }) {
@@ -238,26 +288,21 @@ export default {
             })
             console.log(action, label, value)
         },
-        // 唤醒转入活动页或下载App
-        callOrDownApp(label) {
-            // 唤醒App
-            callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
-                // 下载App
-                this.mSendEvLog('downloadpopup_show', label, '')
-                this.show(
-                    `<p style="padding-top: 1rem;">Download StarTimes ON app. Vote and win FREE VIP!</p>`,
-                    () => {
-                        this.mSendEvLog('downloadpopup_clickok', label, '')
-                        downApk.call(this)
-                    },
-                    () => {
-                        this.mSendEvLog('downloadpopup_clicknot', label, '')
-                    },
-                    `<p style="padding: 0 1rem">Download Now</p>`,
-                    `<p style="padding: 0 1rem">Cancle</p>`
+        // 调出分享弹层(app/web)
+        toShare(label) {
+            this.mSendEvLog('share_click', label, '')
+            if (this.appType >= 1) {
+                shareInvite(
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=REGISTER&utm_medium=BSS&utm_campaign=${this.platform}`,
+                    this.title,
+                    this.shareText,
+                    this.imgUrl
                 )
-            })
+            } else {
+                this.$store.commit('SET_SHARE_STATE', true)
+            }
         },
+
         // 播放视频方法
         toPlayer(advisor) {
             this.mSendEvLog('votepic_click', advisor.name, '')
@@ -298,12 +343,15 @@ export default {
         },
         // 获取生日月份
         getMouth() {
+            this.birth_error = false
+            this.month = []
             for (let i = 1; i < 13; i++) {
                 this.month.push(i)
             }
         },
         // 获取生日日期
         getDay() {
+            this.birth_error = false
             this.day = []
             this.formData.month = parseInt(this.formData.month, 10)
             const day = new Date(this.formData.year, this.formData.month, 0).getDate()
@@ -320,69 +368,116 @@ export default {
             })
             this.show_howToUpload = true
         },
-        // 校验电话
-        checkPhone() {
-            // TODO 电话号码校验正则
-            const reg = /^[0-9+-]+$/
-            if (reg.test(this.number) && this.number.replace(/[^0-9]/gi, '').length >= 9) {
-                this.validNum = true
+        // 校验是否符合要求
+        checkForm() {
+            this.canSubmit = true
+            if (!this.isFinish) {
+                this.canSubmit = false
+                // return
+            }
+            // name
+            if (!this.name.replace(/\s/g, '') || this.name.length > 100) {
+                this.canSubmit = false
+                this.name_error = true
+            }
+            // gender
+            if (!this.gender.replace(/\s/g, '')) {
+                this.canSubmit = false
+                this.gender_error = true
+            }
+
+            // birthday
+            if (typeof this.formData.year == 'string' || typeof this.formData.month == 'string' || typeof this.formData.day == 'string') {
+                this.canSubmit = false
+                this.birth_error = true
             } else {
-                this.validNum = false
+                this.birthday =
+                    this.formData.year +
+                    '-' +
+                    (this.formData.month.toString().length <= 1 ? '0' + this.formData.month : this.formData.month) +
+                    '-' +
+                    (this.formData.day.toString().length <= 1 ? '0' + this.formData.day : this.formData.day)
+                if (new Date() < new Date(this.birthday)) {
+                    this.canSubmit = false
+                    this.birth_error = true
+                }
+            }
+
+            // phone
+            if (!this.number.replace(/\s/g, '') || !/^[0-9,+]\d{8,}$/.test(this.number)) {
+                this.canSubmit = false
+                this.number_error = true
+            }
+            // profession
+            if (!this.profession.replace(/\s/g, '')) {
+                this.canSubmit = false
+                this.profession_error = true
+            }
+            // city
+            if (!this.city.replace(/\s/g, '')) {
+                this.canSubmit = false
+                this.city_error = true
+            }
+            // link
+            if (!this.city.replace(/\s/g, '') || (this.link.indexOf('instagram.com') == -1 && this.link.indexOf('youtu.be') == -1)) {
+                this.canSubmit = false
+                this.link_error = true
             }
         },
+
         // 提交表单
         submit() {
-            if (typeof this.formData.year == 'string' || typeof this.formData.month == 'string' || typeof this.formData.day == 'string') {
-                this.birthdayErr = true
-                return
-            }
-            const birthday =
-                this.formData.year +
-                '-' +
-                (this.formData.month.toString().length <= 1 ? '0' + this.formData.month : this.formData.month) +
-                '-' +
-                (this.formData.day.toString().length <= 1 ? '0' + this.formData.day : this.formData.day)
-            console.log(birthday)
-
-            if (new Date() < new Date(birthday)) {
-                this.birthdayErr = true
-                return
-            }
-
-            if (this.canSubmit && this.validNum && this.repeatSub) {
+            this.checkForm()
+            if (this.canSubmit && this.repeatSub) {
                 this.repeatSub = false
-                this.$axios({
-                    url: '/hybrid/api/acitvity/regist',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    data: qs.stringify({
-                        fk_enroll: 1,
-                        name: this.name,
-                        gender: this.gender,
-                        birthday: this.birthday,
-                        phone: this.number,
-                        address: this.city,
-                        profession: this.profession,
-                        other_description: this.link
-                    })
-                })
+                const options = {
+                    fk_enroll: 1,
+                    name: this.name,
+                    sex: this.gender == 'male' ? 1 : 2,
+                    birthday: this.birthday,
+                    phone: this.number,
+                    address: this.city,
+                    profession: this.profession,
+                    other_description: this.link
+                }
+                this.$axios
+                    .post('voting/enroll/v1/register', options)
                     .then(res => {
-                        if (res.data.code === 200) {
-                            // this.$router.replace(`/hybrid/vote/challenger_succ`)
-                            console.log('success200')
+                        if (res.data.code == 200) {
+                            this.show_success = true
                         } else {
-                            this.$alert('please fill in the correct information and try again')
+                            this.$alert(res.data.data)
+                            this.repeatSub = true
                         }
-                        this.repeatSub = true
                     })
                     .catch(err => {
-                        console.log(err)
+                        this.$alert(err)
+                        this.repeatSub = true
                     })
-            } else {
-                console.log('false')
             }
+        },
+        closeSuccessPage(lable) {
+            if (lable=='successRegist') {
+                this.toShare(lable)
+            }
+            this.name = ''
+            this.gender = ''
+            this.year = []
+            this.month = []
+            this.day = []
+            this.formData = {
+                year: '',
+                month: '',
+                day: ''
+            }
+            this.birthday = ''
+            this.number = ''
+            this.profession = ''
+            this.city = ''
+            this.link = ''
+            this.getYear()
+            this.show_success = false
+            this.repeatSub = true
         },
         getVideoMsg() {
             // 获取投票单元数据
@@ -394,52 +489,12 @@ export default {
                     // })
                 }
             })
-        },
-        // 弹窗方法
-        show(msg, callback, cancel, yes, no) {
-            this.yes = ''
-            this.no = ''
-            if (yes) this.yes = yes
-            if (no) this.no = no
-            this.msg = msg
-            this.style = 'block'
-            this.$store.commit('SHOW_SHADOW_LAYER')
-            if (callback) {
-                this.callback = callback
-            } else {
-                this.callback = ''
-            }
-            if (cancel) {
-                this.cancel = cancel
-            } else {
-                this.cancel = ''
-            }
-        },
-        close() {
-            this.style = 'none'
-            this.$store.commit('HIDE_SHADOW_LAYER')
-            if (this.cancel) {
-                this.cancel()
-            }
-        },
-        sure() {
-            this.style = 'none'
-            this.$store.commit('HIDE_SHADOW_LAYER')
-            if (this.callback) this.callback()
-        },
-        tipShow(text, duration = 2000) {
-            clearInterval(this.tip_timer)
-            const _this = this
-            this.tip = text
-            this.tip_timer = setTimeout(() => {
-                _this.tip = ''
-            }, duration)
         }
     },
 
     head() {
         return {
-            title: 'Bongo Star Search'
+            title: this.title
         }
     }
 }
@@ -460,14 +515,6 @@ export default {
             padding-top: 0.5rem;
             width: 95%;
             height: auto;
-            &.form-img {
-                padding-top: 0;
-                width: 90%;
-            }
-            &.rule-img {
-                padding: 1.5rem 5% 0;
-                background-color: #fff;
-            }
         }
         .tab-box {
             width: 100%;
@@ -534,116 +581,146 @@ export default {
             width: 100%;
             display: block;
         }
-        .registration {
-            width: 90%;
-            margin: 0 auto;
-            padding: 1rem 5% 2rem;
-            color: #36ad5e;
-            background-color: #fff;
-            .error {
-                color: #ff0066;
-            }
-            div {
+        .register-normal {
+            > img {
+                display: block;
                 margin: 0 auto;
-                position: relative;
-                span,
-                input,
-                select {
-                    width: 100%;
-                    height: 2rem;
-                    text-align: left;
-                    line-height: 2rem;
+                &.form-img {
+                    padding-top: 0;
+                    width: 90%;
+                }
+                &.rule-img {
+                    padding: 1.5rem 5% 0;
+                    background-color: #fff;
+                }
+            }
+            .registration {
+                width: 90%;
+                margin: 0 auto;
+                padding: 1rem 5% 2rem;
+                color: #36ad5e;
+                background-color: #fff;
+                .error {
+                    color: #ff336e;
+                    font-size: 0.75rem;
+                    margin-top: 0.25rem;
+                }
+                div {
                     margin: 0 auto;
-                }
-                span {
-                    display: block;
-                    .required {
-                        color: red;
-                        position: relative;
-                        top: 0.2rem;
-                    }
-                }
-                input,
-                select {
-                    line-height: 2rem;
-                    border: 0;
-                    background-color: #f2f0f0;
-                    padding: 0 0.6rem;
-                    color: #bcbcbc;
-                    outline: none;
-                    &.unvalid {
-                        color: #ff0066;
-                    }
-                }
-                input {
-                    &::-webkit-input-placeholder {
-                        color: #898989;
-                    }
-                }
-                select {
-                    background-image: url('~assets/img/vote/ic-select.png');
-                    background-size: 0.7rem 0.4rem;
-                    background-position: 97% 0.8rem;
-                    appearance: none;
-                    -webkit-apperance: none;
-                    -moz-appearance: none;
-                    .normal {
-                        display: none;
-                    }
-                    &:invalid {
-                        color: #bcbcbc;
-                    }
-                }
-                &.birth-box {
-                    height: 4rem;
                     position: relative;
-                    .birth {
-                        width: 30%;
-                        position: absolute;
-                        background-position: 89% 0.8rem;
-                        &:first-child {
-                            left: 0;
+                    span,
+                    input,
+                    select {
+                        width: 100%;
+                        height: 2rem;
+                        text-align: left;
+                        line-height: 2rem;
+                        margin: 0 auto;
+                    }
+                    span {
+                        display: block;
+                        .required {
+                            color: #ff336e;
+                            position: relative;
+                            top: 0.2rem;
                         }
-                        &:nth-child(2) {
-                            left: 0;
-                            right: 0;
+                    }
+                    input,
+                    select {
+                        line-height: 2rem;
+                        border: 1px solid transparent;
+                        background-color: #f2f0f1;
+                        padding: 0 0.6rem;
+                        color: #666;
+                        outline: none;
+                        border-radius: 0.2rem;
+                        // &.error-line {
+                        //     border: 1px solid #ff336e;
+                        // }
+                        &.error-line {
+                            border: 1px solid #ff336e;
+                            background-image: url('~assets/img/vote/BSSRegister/ic-error.png');
+                            background-size: 0.8rem 0.8rem;
+                            background-position: 98% 0.5rem;
                         }
-                        &:last-child {
-                            right: 0;
+                    }
+                    select {
+                        background-image: url('~assets/img/vote/ic-select.png');
+                        background-size: 0.7rem 0.4rem;
+                        background-position: 98% 0.8rem;
+                        appearance: none;
+                        -webkit-apperance: none;
+                        -moz-appearance: none;
+                        .normal {
+                            display: none;
+                        }
+                        &:invalid {
+                            color: #bcbcbc;
+                        }
+                    }
+                    &.birth-box {
+                        height: 4rem;
+                        position: relative;
+                        .birth {
+                            width: 30%;
+                            position: absolute;
+                            background-position: 93% 0.8rem;
+                            &.error-line {
+                                background-position: 93% 0.5rem;
+                            }
+                            &:first-child {
+                                left: 0;
+                            }
+                            &:nth-child(2) {
+                                left: 0;
+                                right: 0;
+                            }
+                            &:last-child {
+                                right: 0;
+                            }
                         }
                     }
                 }
-            }
-            .link {
-                color: #ff892a;
-                text-align: right;
-                font-size: 0.8rem;
-                margin-top: 0.6rem;
-            }
-            .disabled {
-                width: 14rem;
-                border-radius: 0.2rem;
-                background: #d1d1d1;
-                color: #ffffff;
-                text-align: center;
-                margin: 0 auto;
-                height: 2.2rem;
-                line-height: 2.2rem;
-                margin-top: 2rem;
-                font-size: 1rem;
-                &.submit {
+                .link {
+                    float: right;
+                    color: #ff892a;
+                    font-size: 0.8rem;
+                    margin-top: 0.6rem;
+                }
+                .submit-btn {
+                    width: 14rem;
+                    border-radius: 0.2rem;
+                    // background: #d1d1d1;
+                    color: #ffffff;
+                    text-align: center;
+                    margin: 0 auto;
+                    height: 2.2rem;
+                    line-height: 2.2rem;
+                    margin-top: 3rem;
+                    font-size: 1rem;
                     background: url('~assets/img/vote/BSSRegister/bg-btn.png') no-repeat;
                     background-size: contain;
+                    &.disabled {
+                        background: #d1d1d1;
+                    }
                 }
             }
         }
         .register-end {
-            width: 17rem;
-            height: 3rem;
-            line-height: 3rem;
-            color: #fff;
+            width: 90%;
+            height: 11.5rem;
+            border-radius: 0.2rem;
+            text-align: center;
+            background-color: #fff;
+            color: #8f8f8f;
             font-size: 1rem;
-            margin: 0 auto;
+            margin: 1rem auto;
+            padding: 2rem 0;
+            img {
+                width: 4.5rem;
+                height: 4.5rem;
+                margin: 0 auto 2rem;
+            }
         }
         .share-box {
             margin-top: 1rem;
@@ -723,6 +800,94 @@ export default {
                 display: block;
                 margin: 2.5rem auto;
             }
+        }
+    }
+    .rules-box {
+        width: 17rem;
+        height: 26rem;
+        position: fixed;
+        overflow: hidden;
+        top: 50%;
+        left: 50%;
+        margin-left: -8.5rem;
+        margin-top: -13rem;
+        z-index: 999;
+        img {
+            &:first-child {
+                width: 100%;
+                display: block;
+            }
+            &:last-child {
+                width: 10%;
+                display: block;
+                margin: 1.5rem auto 0;
+            }
+        }
+        .rule-text {
+            width: 15rem;
+            height: 16.5rem;
+            color: #1b9145;
+            position: absolute;
+            left: 1rem;
+            top: 4rem;
+            padding: 0.5rem;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+    .success-box {
+        width: 80%;
+        height: 16rem;
+        background-color: #fff;
+        position: fixed;
+        top: 50%;
+        left: 10%;
+        margin-top: -10rem;
+        z-index: 999;
+        text-align: center;
+        border-radius: 0.2rem;
+        img {
+            &:first-child {
+                width: 4rem;
+                margin: 1.5rem auto 0.5rem;
+                display: block;
+            }
+            &:last-child {
+                width: 10%;
+                display: block;
+                margin: 2.5rem auto 0;
+            }
+        }
+        .success-text {
+            width: 100%;
+            height: 8rem;
+            color: #1b9145;
+            // background-color:red;
+            padding: 0.5rem;
+            margin: 0 auto;
+            p {
+                &:first-child {
+                    font-size: 1.2rem;
+                    color: #333;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                }
+                &:last-child {
+                    color: #666;
+                }
+            }
+        }
+        .share-btn {
+            width: 60%;
+            margin: 0 auto;
+            height: 2rem;
+            line-height: 2rem;
+            border-radius: 0.2rem;
+            background-color: #ff892a;
+            color: #fff;
         }
     }
     .shadow-box {
