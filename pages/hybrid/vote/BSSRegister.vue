@@ -35,23 +35,22 @@
                         <sup class="required">*</sup>
                     </span>
                     <select v-model="gender" required>
-                        <!-- <option value disabled selected class="normal">Please Select</option> -->
                         <option value="male">male</option>
                         <option value="female">female</option>
                     </select>
                 </div>
-                <div>
+                <div class="birth-box clearfix">
                     <span>
                         SIKU YA KUZALIWA
                         <sup class="required">*</sup>
                     </span>
-                    <select v-model="formData.year" class="birth" @change="getMouth">
-                        <option value disabled selected class="normal">Mwaka</option>
-                        <option v-for="item in year" :key="item" :value="item">{{item}}</option>
-                    </select>
                     <select v-model="formData.month" class="birth" @change="getDay">
                         <option value disabled selected class="normal">Mwezi</option>
                         <option v-for="item in month" :key="item" :value="item">{{item}}</option>
+                    </select>
+                    <select v-model="formData.year" class="birth" @change="getMouth">
+                        <option value disabled selected class="normal">Mwaka</option>
+                        <option v-for="item in year" :key="item" :value="item">{{item}}</option>
                     </select>
                     <select v-model="formData.day" class="birth">
                         <option value disabled selected class="normal">Siku</option>
@@ -98,7 +97,8 @@
                 <div class="disabled" :class="{'submit':canSubmit&&validNum}" @click="submit()">WASILISHA</div>
             </div>
             <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
-            <div v-if="isEnd" class="endMsg">活动已结束</div>
+            <!-- <div v-if="isEnd" class="register-end">SAMAHANI, USAJILI UMEKWISHA</div> -->
+            <div class="register-end">SAMAHANI, USAJILI UMEKWISHA</div>
             <div class="ad"></div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
@@ -113,13 +113,16 @@
                         <div @click="toPlayer(item)">
                             <img class="url" :src="cdnPic(item.cover)" />
                         </div>
-                        <p class="title">{{item.description||item.name}}</p>
+                        <p class="title">{{(item.description||item.name).toUpperCase()}}</p>
                     </li>
                 </ul>
             </div>
         </div>
-        <div v-show="show_howToUpload" class="uploadWay"></div>
-        <div v-show="show_howToUpload" class="shadow-box" @click="show_howToUpload=false"></div>
+        <div v-show="show_howToUpload" class="uploadWay">
+            <img src="~assets/img/vote/BSSRegister/alert-img.png" alt />
+            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="show_howToUpload=false" />
+        </div>
+        <div v-show="show_howToUpload" class="shadow-box"></div>
         <div :style="{display:style}" class="alert">
             <div class="alert-body">
                 <div class="alert-default">
@@ -309,8 +312,12 @@ export default {
             }
         },
         showUploadWay() {
-            const page = this.$refs.page
-            page.scrollIntoView()
+            // const page = this.$refs.page
+            // page.scrollIntoView()
+            window.scrollTo({
+                top: '800',
+                behavior: 'smooth'
+            })
             this.show_howToUpload = true
         },
         // 校验电话
@@ -574,25 +581,36 @@ export default {
                     }
                 }
                 select {
-                    // background: transparent url('~assets/img/vote/ic_menuarrow_def_g.png') no-repeat 96% center;
+                    background-image: url('~assets/img/vote/ic-select.png');
+                    background-size: 0.7rem 0.4rem;
+                    background-position: 97% 0.8rem;
                     appearance: none;
                     -webkit-apperance: none;
                     -moz-appearance: none;
-                    // padding-right: 6%;
-                    // background-size: 6%;
                     .normal {
                         display: none;
                     }
-                    &.birth {
-                        width: 29%;
-                        margin-right: 5.48%;
-                        background-size: 20%;
-                        &:last-child {
-                            margin-right: 0;
-                        }
-                    }
                     &:invalid {
                         color: #bcbcbc;
+                    }
+                }
+                &.birth-box {
+                    height: 4rem;
+                    position: relative;
+                    .birth {
+                        width: 30%;
+                        position: absolute;
+                        background-position: 89% 0.8rem;
+                        &:first-child {
+                            left: 0;
+                        }
+                        &:nth-child(2) {
+                            left: 0;
+                            right: 0;
+                        }
+                        &:last-child {
+                            right: 0;
+                        }
                     }
                 }
             }
@@ -600,7 +618,7 @@ export default {
                 color: #ff892a;
                 text-align: right;
                 font-size: 0.8rem;
-                margin-top: 0.3rem;
+                margin-top: 0.6rem;
             }
             .disabled {
                 width: 14rem;
@@ -611,13 +629,21 @@ export default {
                 margin: 0 auto;
                 height: 2.2rem;
                 line-height: 2.2rem;
-                margin-top: 1rem;
+                margin-top: 2rem;
                 font-size: 1rem;
                 &.submit {
                     background: url('~assets/img/vote/BSSRegister/bg-btn.png') no-repeat;
                     background-size: contain;
                 }
             }
+        }
+        .register-end {
+            width: 17rem;
+            height: 3rem;
+            line-height: 3rem;
+            color: #fff;
+            font-size: 1rem;
+            margin: 0 auto;
         }
         .share-box {
             margin-top: 1rem;
@@ -630,6 +656,7 @@ export default {
         .past-programme {
             margin: 1rem auto 0;
             width: 90%;
+            padding-bottom: 1rem;
             img {
                 width: 100%;
                 display: block;
@@ -638,7 +665,7 @@ export default {
                 width: 100%;
                 background-color: #e98005;
                 border-radius: 0.2rem;
-                padding: 1rem 3%;
+                padding: 1rem 3% 0.5rem;
                 li {
                     float: left;
                     width: 48.5%;
@@ -648,36 +675,55 @@ export default {
                     div {
                         position: relative;
                         width: 100%;
-                        &:before {
-                            content: '';
-                            display: inline-block;
-                            padding-bottom: 56%;
-                            width: 0.1px;
-                            vertical-align: middle;
-                        }
                         .url {
                             width: 100%;
                             height: 100%;
+                            border-radius: 0.3rem;
                             position: absolute;
+                            top: 0;
                         }
-                        .title {
-                            color: red;
+                        &:before {
+                            content: '';
+                            display: inline-block;
+                            padding-bottom: 62%;
+                            width: 0.1px;
+                            vertical-align: middle;
                         }
+                    }
+                    .title {
+                        margin: 0.5rem 0;
+                        width: 100%;
+                        height: 2rem;
+                        line-height: 1rem;
+                        color: #fff;
+                        font-size: 0.75rem;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        overflow: hidden;
                     }
                 }
             }
         }
     }
     .uploadWay {
-        width: 17rem;
-        height: 40rem;
-        background-color: #8150fc;
+        width: 80%;
         position: absolute;
         overflow: hidden;
-        left: 50%;
-        top: 5rem;
-        margin-left: -8.5rem;
+        left: 10%;
+        top: 820px;
         z-index: 999;
+        img {
+            &:first-child {
+                width: 100%;
+                display: block;
+            }
+            &:last-child {
+                width: 10%;
+                display: block;
+                margin: 2.5rem auto;
+            }
+        }
     }
     .shadow-box {
         position: fixed;
