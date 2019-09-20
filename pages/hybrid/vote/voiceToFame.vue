@@ -758,6 +758,8 @@ export default {
                             }
                         })
                         .catch(err => {
+                            clearTimeout(this.timer)
+                            this.times = 0
                             this.$alert(err, () => {
                                 this.lotteryLeft = 0
                             })
