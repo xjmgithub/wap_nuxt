@@ -728,33 +728,40 @@ export default {
                             vote_id: 15
                         }),
                         url: '/voting/lottery/v1/drawing'
-                    }).then(res => {
-                        if (res.data.code == 0) {
-                            this.prize = res.data.data - 1
-                            console.log(`中奖位置${this.prize + 1}`)
-                            if (res.data.data == 1) this.mSendEvLog('lottery_click', 'dvb', '1')
-                            else if (res.data.data == 2) this.mSendEvLog('lottery_click', 'vip', '1')
-                            else if (res.data.data == 3) this.mSendEvLog('lottery_click', 'coupon', '1')
-                            else if (res.data.data == 4) this.mSendEvLog('lottery_click', 'morevotes', '1')
-                            else if (res.data.data == 5) this.mSendEvLog('lottery_click', 'tryagain', '0')
-                            else if (res.data.data == 6) this.mSendEvLog('lottery_click', 'sorry', '0')
-                        } else {
-                            setTimeout(() => {
-                                clearTimeout(this.timer)
-                                this.times = 0
-                                this.show(
-                                    `<p style="padding-top: 1rem;">LOTTERY ERROR!</p>`,
-                                    () => {
-                                        this.click = true
-                                        this.getLeftLottery()
-                                    },
-                                    () => {},
-                                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                                    ''
-                                )
-                            }, 3000)
-                        }
                     })
+                        .then(res => {
+                            if (res.data.code == 0) {
+                                this.prize = res.data.data - 1
+                                console.log(`中奖位置${this.prize + 1}`)
+                                if (res.data.data == 1) this.mSendEvLog('lottery_click', 'dvb', '1')
+                                else if (res.data.data == 2) this.mSendEvLog('lottery_click', 'vip', '1')
+                                else if (res.data.data == 3) this.mSendEvLog('lottery_click', 'coupon', '1')
+                                else if (res.data.data == 4) this.mSendEvLog('lottery_click', 'morevotes', '1')
+                                else if (res.data.data == 5) this.mSendEvLog('lottery_click', 'tryagain', '0')
+                                else if (res.data.data == 6) this.mSendEvLog('lottery_click', 'sorry', '0')
+                            } else {
+                                setTimeout(() => {
+                                    clearTimeout(this.timer)
+                                    this.times = 0
+                                    this.show(
+                                        `<p style="padding-top: 1rem;">LOTTERY ERROR!</p>`,
+                                        () => {
+                                            // this.click = true
+                                            // this.getLeftLottery()
+                                            this.lotteryLeft = 0
+                                        },
+                                        () => {},
+                                        `<p style="padding: 0 1rem">GOT IT</p>`,
+                                        ''
+                                    )
+                                }, 3000)
+                            }
+                        })
+                        .catch(err => {
+                            this.$alert(err, () => {
+                                this.lotteryLeft = 0
+                            })
+                        })
                 } else if (this.times > this.cycle + 10 && ((this.prize === 0 && this.index === 5) || this.prize === this.index + 1)) {
                     this.speed += 110
                 } else {
