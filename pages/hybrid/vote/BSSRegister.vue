@@ -4,7 +4,7 @@
             <img src="~assets/img/vote/BSSRegister/bg-img.png" alt="bg-img" />
             <div class="tab-box">
                 <div class="tab">
-                    <div class="rules" @click="show_rules=true">
+                    <div class="rules" @click="showRule">
                         <p>
                             SHERIA
                             <br />ZA KINA
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <img class="text" src="~assets/img/vote/BSSRegister/text-one.png" alt />
+            <img class="text text-one" src="~assets/img/vote/BSSRegister/text-one.png" alt />
             <div v-if="isEnd" class="register-end">
                 <img src="~assets/img/vote/BSSRegister/ic-end.png" alt />
                 <p>SAMAHANI, USAJILI UMEKWISHA</p>
@@ -49,17 +49,17 @@
                             SIKU YA KUZALIWA
                             <sup class="required">*</sup>
                         </span>
-                        <select v-model="formData.month" class="birth" :class="{'error-line':birth_error}" @change="getDay">
+                        <select v-model="month" required class="birth" :class="{'error-line':birth_error}" @change="getDay">
                             <option value disabled selected class="normal">Mwezi</option>
-                            <option v-for="item in month" :key="item" :value="item">{{item}}</option>
+                            <option v-for="(item,index) in monthList" :key="index" :value="item">{{item}}</option>
                         </select>
-                        <select v-model="formData.year" class="birth" :class="{'error-line':birth_error}" @change="getMouth">
+                        <select v-model="year" required class="birth" :class="{'error-line':birth_error}" @change="getMouth">
                             <option value disabled selected class="normal">Mwaka</option>
-                            <option v-for="item in year" :key="item" :value="item">{{item}}</option>
+                            <option v-for="(item,index) in yearList" :key="index" :value="item">{{item}}</option>
                         </select>
-                        <select v-model="formData.day" class="birth" :class="{'error-line':birth_error}" @change="birth_error=false">
+                        <select v-model="day" required class="birth" :class="{'error-line':birth_error}" @change="birth_error=false">
                             <option value disabled selected class="normal">Siku</option>
-                            <option v-for="item in day" :key="item" :value="item">{{item}}</option>
+                            <option v-for="(item,index) in dayList" :key="index" :value="item">{{item}}</option>
                         </select>
                     </div>
                     <div>
@@ -112,7 +112,7 @@
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
                 <img src="~assets/img/vote/BSSRegister/share-rule-img.png" alt />
-                <img src="~assets/img/vote/BSSRegister/img-share.png" alt @click="toShare('downshare')" />
+                <img src="~assets/img/vote/BSSRegister/img-share.png" alt @click="toShare('midshare')" />
             </div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
             <div class="past-programme">
@@ -122,7 +122,7 @@
                         <div @click="toPlayer(item)">
                             <img class="url" :src="cdnPic(item.cover)" />
                         </div>
-                        <p class="title">{{(item.description||item.name).toUpperCase()}}</p>
+                        <p class="title">{{(item.description||item.name)}}</p>
                     </li>
                 </ul>
             </div>
@@ -145,7 +145,8 @@
                 <br />6.ie guize yixie guize yi xieg uize yixie gui zeyix iegu izeyixiegu izeyixi eg uize yi xiegu izeyixie guiz eyix ieguiz eyi xieguize
                 <br />7.y ixie guiz eyixiegu izeyi xiegui zeyi xiegu izeyixi eguizeyix ieguize yixiegu izeyix ieg
             </div>
-            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="show_rules=false" />
+            <div class="share-btn" @click="toShare('rule')">SHIRIKI</div>
+            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
         </div>
         <div v-show="show_success" class="success-box">
             <img src="~assets/img/vote/BSSRegister/ic-success.png" alt />
@@ -153,7 +154,7 @@
                 <p>USAJILI UMEFANIKIWA!</p>
                 <p>Tutaikagua kazi yako kama imeidhinishwa, kazi yako itaonyeshwa kwenye Startimes ON APP ndani ya masaa 48. Usisahau kujipigia kampeni mwenyewe!</p>
             </div>
-            <div class="share-btn" @click="closeSuccessPage('successRegist')">SHIRIKI SASA</div>
+            <div class="share-btn" @click="closeSuccessPage('submit')">SHIRIKI SASA</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeSuccessPage('close')" />
         </div>
         <div v-show="show_howToUpload||show_rules||show_success" class="shadow-box"></div>
@@ -161,9 +162,10 @@
     </div>
 </template>
 <script>
+import { Base64 } from 'js-base64'
 import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
-import { playVodinApp, shareInvite } from '~/functions/app'
+import { callApp, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -174,14 +176,12 @@ export default {
             appType: this.$store.state.appType || 0,
             name: '',
             gender: '',
-            year: [],
-            month: [],
-            day: [],
-            formData: {
-                year: '',
-                month: '',
-                day: ''
-            },
+            yearList: [],
+            monthList: [],
+            dayList: [],
+            year: '',
+            month: '',
+            day: '',
             birthday: '',
             // birth_error: false,
             number: '',
@@ -227,10 +227,11 @@ export default {
             show_success: false,
             isEnd: false,
 
-            title: 'Bongo Star Search',
-            shareText: 'Bongo Star Search!',
-            user_id: this.$store.state.user.id,
-            imgUrl: ''
+            title: 'Bongo Star Search 2019',
+            shareTitle: 'Bongo Star Search 2019',
+            shareText: 'Pakua Startimes ON app na shiriki BSS2019!',
+            imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
+            content: 'Pakua Startimes ON app na shiriki BSS2019!'
         }
     },
     computed: {
@@ -241,7 +242,7 @@ export default {
             // gender
             if (!this.gender.replace(/\s/g, '')) return false
             // birthday
-            if (typeof this.formData.year == 'string' || typeof this.formData.month == 'string' || typeof this.formData.day == 'string') return false
+            if (typeof this.year == 'string' || typeof this.month == 'string' || typeof this.day == 'string') return false
             // phone
             if (!this.number.replace(/\s/g, '')) return false
             // profession
@@ -271,17 +272,30 @@ export default {
         this.getRegisterInfo()
     },
     mounted() {
+        this.mSendEvLog('page_show', '', '')
         this.getYear()
         this.getVideoMsg()
     },
     methods: {
+        showRule() {
+            this.show_rules=true
+            // 页面静止
+            document.body.style.overflow = 'hidden'
+            document.body.style.position = 'fixed'
+        },
+        closeRule() {
+            this.show_rules=false
+            // 页面静止
+            document.body.style.overflow = 'auto'
+            document.body.style.position = 'static'
+        },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
         },
         // 埋点方法
         mSendEvLog(action, label, value) {
             this.sendEvLog({
-                category: 'vote_VoiceToFame_' + this.platform,
+                category: 'form_BSSReg_' + this.platform,
                 action: action,
                 label: label,
                 value: value
@@ -290,11 +304,12 @@ export default {
         },
         // 调出分享弹层(app/web)
         toShare(label) {
+            if (label == 'rule') this.closeRule()
             this.mSendEvLog('share_click', label, '')
             if (this.appType >= 1) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=REGISTER&utm_medium=BSS&utm_campaign=${this.platform}`,
-                    this.title,
+                    `${window.location.href}?utm_source=REGISTER&utm_medium=BSS&utm_campaign=${this.platform}`,
+                    this.shareTitle,
                     this.shareText,
                     this.imgUrl
                 )
@@ -302,12 +317,29 @@ export default {
                 this.$store.commit('SET_SHARE_STATE', true)
             }
         },
-
+        callOrDownApp() {
+            // 唤醒App
+            callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+                // 下载App
+                this.$confirm(
+                    'Pakua Startimes ON app na shiriki BSS2019',
+                    () => {
+                        this.mSendEvLog('downloadpopup_clickok', '', '')
+                        downApk.call(this)
+                    },
+                    () => {
+                        this.mSendEvLog('downloadpopup_clicknot', '', '')
+                    },
+                    'PAKUA',
+                    'FUTA'
+                )
+            })
+        },
         // 播放视频方法
         toPlayer(advisor) {
-            this.mSendEvLog('votepic_click', advisor.name, '')
+            this.mSendEvLog('video_click', advisor.name, '')
             if (this.appType == 0) {
-                this.callOrDownApp('pic')
+                this.callOrDownApp()
                 return
             }
             if (advisor.link_vod_code) {
@@ -338,34 +370,37 @@ export default {
         getYear() {
             for (let i = 0; i < 100; i++) {
                 const y = new Date().getFullYear() - i
-                this.year.push(y)
+                this.yearList.push(y)
             }
         },
         // 获取生日月份
         getMouth() {
             this.birth_error = false
-            this.month = []
+            // this.month = []
+            this.monthList = []
             for (let i = 1; i < 13; i++) {
-                this.month.push(i)
+                this.monthList.push(i)
             }
         },
         // 获取生日日期
         getDay() {
             this.birth_error = false
-            this.day = []
-            this.formData.month = parseInt(this.formData.month, 10)
-            const day = new Date(this.formData.year, this.formData.month, 0).getDate()
+            // this.day = []
+            this.dayList = []
+            this.month = parseInt(this.month, 10)
+            const day = new Date(this.year, this.month, 0).getDate()
             for (let i = 1; i <= day; i++) {
-                this.day.push(i)
+                this.dayList.push(i)
             }
         },
         showUploadWay() {
-            // const page = this.$refs.page
-            // page.scrollIntoView()
-            window.scrollTo({
-                top: '800',
-                behavior: 'smooth'
-            })
+            this.mSendEvLog('guide_click','','')
+            if(this.appType == '0') {
+                window.scrollTo({
+                    top: '800',
+                    behavior: 'smooth'
+                })
+            }
             this.show_howToUpload = true
         },
         // 校验是否符合要求
@@ -387,16 +422,16 @@ export default {
             }
 
             // birthday
-            if (typeof this.formData.year == 'string' || typeof this.formData.month == 'string' || typeof this.formData.day == 'string') {
+            if (typeof this.year == 'string' || typeof this.month == 'string' || typeof this.day == 'string') {
                 this.canSubmit = false
                 this.birth_error = true
             } else {
                 this.birthday =
-                    this.formData.year +
+                    this.year +
                     '-' +
-                    (this.formData.month.toString().length <= 1 ? '0' + this.formData.month : this.formData.month) +
+                    (this.month.toString().length <= 1 ? '0' + this.month : this.month) +
                     '-' +
-                    (this.formData.day.toString().length <= 1 ? '0' + this.formData.day : this.formData.day)
+                    (this.day.toString().length <= 1 ? '0' + this.day : this.day)
                 if (new Date() < new Date(this.birthday)) {
                     this.canSubmit = false
                     this.birth_error = true
@@ -419,7 +454,7 @@ export default {
                 this.city_error = true
             }
             // link
-            if (!this.city.replace(/\s/g, '') || (this.link.indexOf('instagram.com') == -1 && this.link.indexOf('youtu.be') == -1)) {
+            if (!this.city.replace(/\s/g, '') || (this.link.toLowerCase().indexOf('instagram.com') == -1 && this.link.toLowerCase().indexOf('youtu.be') == -1)) {
                 this.canSubmit = false
                 this.link_error = true
             }
@@ -428,6 +463,9 @@ export default {
         // 提交表单
         submit() {
             this.checkForm()
+            if(!this.canSubmit) {
+                this.mSendEvLog('submit_click','','2')
+            }
             if (this.canSubmit && this.repeatSub) {
                 this.repeatSub = false
                 const options = {
@@ -444,32 +482,35 @@ export default {
                     .post('voting/enroll/v1/register', options)
                     .then(res => {
                         if (res.data.code == 200) {
+                            this.mSendEvLog('submit_click','','1')
                             this.show_success = true
                         } else {
+                            // 服务器返回不为200时
+                            this.mSendEvLog('submit_click','','3')
                             this.$alert(res.data.data)
                             this.repeatSub = true
                         }
                     })
                     .catch(err => {
+                        // 异常情况
+                        this.mSendEvLog('submit_click','','0')
                         this.$alert(err)
                         this.repeatSub = true
                     })
             }
         },
         closeSuccessPage(lable) {
-            if (lable=='successRegist') {
+            if (lable=='submit') {
                 this.toShare(lable)
             }
             this.name = ''
             this.gender = ''
-            this.year = []
-            this.month = []
-            this.day = []
-            this.formData = {
-                year: '',
-                month: '',
-                day: ''
-            }
+            this.yearList = []
+            this.monthList = []
+            this.dayList = []
+            this.year = ''
+            this.month = ''
+            this.day = ''
             this.birthday = ''
             this.number = ''
             this.profession = ''
@@ -494,7 +535,33 @@ export default {
 
     head() {
         return {
-            title: this.title
+            title: this.title,
+            meta: [
+                { name: 'description', property: 'description', content: this.content },
+                { name: 'og:description', property: 'og:description', content: this.content },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: this.imgUrl
+                },
+                { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+                { name: 'og:title', property: 'og:title', content: this.shareTitle },
+                {
+                    name: 'al:android:url',
+                    property: 'al:android:url',
+                    content:
+                        'starvideo://platformapi/webtoapp?channel=facebook&target=' +
+                        Base64.encode(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSRegister`.replace(
+                                /&/g,
+                                '**'
+                            )
+                        )
+                },
+                { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
+                { name: 'al:android:package', property: 'al:android:package', content: 'com.star.mobile.video' },
+                { name: 'al:web:url', property: 'al:web:url', content: 'http://m.startimestv.com' }
+            ]
         }
     }
 }
@@ -520,13 +587,6 @@ export default {
             width: 100%;
             height: 2.2rem;
             position: relative;
-            &:after {
-                content: '';
-                width: 1rem;
-                height: 1rem;
-                background-color: red;
-                display: block;
-            }
             .tab {
                 width: 100%;
                 position: absolute;
@@ -580,13 +640,26 @@ export default {
         .text {
             width: 100%;
             display: block;
+            &.text-one {
+                padding-top: 1rem;
+            }
         }
         .register-normal {
             > img {
                 display: block;
                 margin: 0 auto;
                 &.form-img {
-                    padding-top: 0;
+                    &:first-child {
+                        padding-top: 0.5rem;
+                        position: relative;
+                        top: 2px;
+                    }
+                    &:last-child {
+                        padding-bottom: 0.5rem;
+                        position: relative;
+                        top: -2px;
+                    }
+                    // padding-top: 0;
                     width: 90%;
                 }
                 &.rule-img {
@@ -825,7 +898,7 @@ export default {
         }
         .rule-text {
             width: 15rem;
-            height: 16.5rem;
+            height: 14.5rem;
             color: #1b9145;
             position: absolute;
             left: 1rem;
@@ -836,6 +909,19 @@ export default {
             &::-webkit-scrollbar {
                 display: none;
             }
+        }
+        .share-btn {
+            width: 8rem;
+            height: 1.8rem;
+            text-align: center;
+            line-height: 1.8rem;
+            color: #fff;
+            background-image: url('~assets/img/vote/BSSRegister/btn-success.png');
+            background-size: 8rem 1.8rem;
+            position: absolute;
+            left: 4.5rem;
+            top: 19.2rem;
+            border-radius: 0.2rem;
         }
     }
     .success-box {
