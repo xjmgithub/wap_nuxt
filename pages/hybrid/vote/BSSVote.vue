@@ -212,7 +212,7 @@ export default {
             voteLeft: 0,
             loaded: false,
             advisorList: [],
-            vote_id: 15,
+            vote_id: 16,
             startTime: '',
             endTime: '',
             currentTime: '',
@@ -221,7 +221,7 @@ export default {
 
             // 抽奖
             index: -1, // 当前转动到哪个位置，起点位置
-            count: 6, // 总共有多少个位置
+            count: 8, // 总共有多少个位置
             timer: 0, // 每次转动定时器
             speed: 200, // 初始转动速度
             times: 0, // 转动次数
@@ -676,7 +676,7 @@ export default {
                 // this.prize = -1
                 this.times = 0
                 console.log('你已经中奖了，位置' + (this.index + 1))
-                if (this.index < 3) {
+                if (this.index < 5) {
                     setTimeout(() => {
                         this.show(
                             `<p>Congrats! You've got ` +
@@ -690,7 +690,7 @@ export default {
                             ''
                         )
                     }, 1000)
-                } else if (this.index === 3) {
+                } else if (this.index === 5) {
                     this.getTicketAward(res => {
                         if (res.data.code == 200) {
                             setTimeout(() => {
@@ -709,7 +709,7 @@ export default {
                             window.alert(res.data.message)
                         }
                     })
-                } else if (this.index === 4) {
+                } else if (this.index === 6) {
                     setTimeout(() => {
                         this.lotteryLeft++
                         this.show(
@@ -723,7 +723,7 @@ export default {
                             ''
                         )
                     }, 1000)
-                } else if (this.index === 5) {
+                } else if (this.index === 7) {
                     setTimeout(() => {
                         this.show(
                             `<p style="padding-top: 1rem;">Thanks for your participation.</p>`,
@@ -1038,16 +1038,18 @@ export default {
                             width: 100%;
                             .icon {
                                 width: 100%;
-                                padding: 0.2rem 0.2rem 0;
+                                // padding: 0.2rem 0.2rem 0;
+                                padding: 0.2rem;
                                 height: 100%;
                                 border-radius: 0.5rem;
+                                // border-radius: 50%;
                                 position: absolute;
                                 top: 0;
                             }
                             &:before {
                                 content: '';
                                 display: inline-block;
-                                padding-bottom: 110%;
+                                padding-bottom: 100%;
                                 width: 0.1px;
                                 vertical-align: middle;
                             }
@@ -1250,9 +1252,11 @@ export default {
                             }
                             &:nth-child(8) {
                                 position: absolute;
+                                // position: relative;
                                 top: 5.4rem;
                                 left: 2%;
                                 margin-bottom: 0.2rem;
+                                background-color: red;
                             }
                             &:nth-child(5),
                             &:nth-child(6),
