@@ -191,7 +191,6 @@ export default {
             vote_id: 15,
             startTime: '',
             endTime: '',
-            currentTime: '',
             tip: '',
             tip_timer: null,
 
@@ -280,7 +279,6 @@ export default {
                 label: label,
                 value: value
             })
-            console.log(action, label, value)
         },
         // app登录方法
         toSignIn() {
@@ -350,7 +348,7 @@ export default {
         },
         // 获取剩余票数
         getVoteRemain() {
-            if (this.currentTime >= this.startTime && this.currentTime < this.endTime) {
+            if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
                 this.$axios({
                     method: 'POST',
                     headers: {
@@ -401,7 +399,7 @@ export default {
                 this.callOrDownApp('vote')
                 return
             }
-            if (this.currentTime < this.startTime) {
+            if (this.serverTime < this.startTime) {
                 this.show(
                     `<p style="padding-top:0.5rem">Stay tuned! Voting will begin on September 23rd.</p>`,
                     () => {},
@@ -410,7 +408,7 @@ export default {
                     ''
                 )
                 return
-            } else if (this.currentTime > this.endTime) {
+            } else if (this.serverTime > this.endTime) {
                 this.show(
                     `<p style="padding-top: 1rem">Sorry, the voting has ended.</p>`,
                     () => {},
@@ -483,19 +481,18 @@ export default {
         },
         // 获取抽奖信息
         getLotteryMsg() {
-            this.currentTime = Date.parse(this.serverTime)
             this.$axios
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime = new Date(res.data.data.start_time).getTime()
-                        this.endTime = new Date(res.data.data.end_time).getTime()
+                        this.startTime = new Date(res.data.data.start_time)
+                        this.endTime = new Date(res.data.data.end_time)
                         // console.log(this.startTime)
                         // console.log(this.endTime)
                         this.getVoteRemain()
                         this.getLeftLottery()
                         const msg = this.$refs.msgul
-                        if(this.currentTime < this.startTime) {
+                        if(this.serverTime < this.startTime) {
                             msg.style.display = 'none'
                         } else {
                             msg.style.display = 'block'
@@ -508,7 +505,7 @@ export default {
         },
         // 获取剩余抽奖机会
         getLeftLottery() {
-            if (this.currentTime >= this.startTime && this.currentTime < this.endTime) {
+            if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
                 this.$axios
                     .get(`/voting/lottery/v1/draw/user-draw-nums?lottery_id=${this.lottery_id}&vote_id=${this.vote_id}`)
                     .then(res => {
@@ -606,7 +603,7 @@ export default {
                 )
                 return
             }
-            if (this.currentTime < this.startTime) {
+            if (this.serverTime < this.startTime) {
                 this.mSendEvLog('lottery_click', '', '-1')
                 this.show(
                     `<p style="padding-top:0.5rem">Stay tuned! Lottery will begin on September 23rd.</p>`,
@@ -617,7 +614,7 @@ export default {
                 )
                 return
             }
-            if (this.currentTime >= this.endTime) {
+            if (this.serverTime >= this.endTime) {
                 this.mSendEvLog('lottery_click', '', '-1')
                 this.show(
                     `<p style="padding-top:0.5rem">Sorry, the lottery has ended.</p>`,
