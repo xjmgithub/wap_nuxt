@@ -124,6 +124,9 @@ export default {
 .get-code {
     position: relative;
     flex: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     .btn {
         max-width: 10rem;
         margin-left: 0.3rem;
@@ -134,6 +137,9 @@ export default {
         height: 2.3rem;
         line-height: 2.3rem;
         border-radius: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         cursor: pointer;
         &.disabled {
             background: #eeeeee;
