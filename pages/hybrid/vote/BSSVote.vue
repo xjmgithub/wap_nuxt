@@ -1,26 +1,24 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <img src="~assets/img/vote/voiceToFame/bg-img.jpg" alt="bg-img" />
-            <div class="vote-box">
+            <img src="~assets/img/vote/BSSRegister/bg-img.png" alt="bg-img" />
+            <div class="tab-box">
                 <div class="tab">
-                    <div class="rules" @click="show_rules=true">
-                        <p>RULES</p>
-                        <img src="~assets/img/vote/voiceToFame/ic-rule.png" alt="ic-rule" />
+                    <div class="rules" @click="showRule">
+                        <p>
+                            SHERIA
+                            <br />ZA KINA
+                        </p>
+                        <img src="~assets/img/vote/BSSRegister/ic-rule.png" alt="ic-rule" />
                     </div>
                     <div class="share" @click="toShare('upshare')">
-                        <p>SHARE</p>
-                        <img src="~assets/img/vote/voiceToFame/ic-share.png" alt="ic-share" />
+                        <p>SHIRIKI</p>
+                        <img src="~assets/img/vote/BSSRegister/ic-share.png" alt="ic-share" />
                     </div>
                 </div>
+            </div>
+            <div class="vote-box">
                 <div v-show="coupleList.length>0">
-                    <div class="flag-box">
-                        <div class="vote-flag">
-                            <img src="~assets/img/vote/voiceToFame/con-left.png" alt="con-left" class="con-left" />
-                            <p>VOTE</p>
-                            <img src="~assets/img/vote/voiceToFame/con-right.png" alt="con-right" class="con-right" />
-                        </div>
-                    </div>
                     <div class="vote-remaining">
                         <div>VOTES REMAINING:{{appType==0?0:voteLeft}}</div>
                     </div>
@@ -293,6 +291,18 @@ export default {
     },
 
     methods: {
+        showRule() {
+            this.show_rules=true
+            // 页面静止
+            document.body.style.overflow = 'hidden'
+            document.body.style.position = 'fixed'
+        },
+        closeRule() {
+            this.show_rules=false
+            // 页面静止
+            document.body.style.overflow = 'auto'
+            document.body.style.position = 'static'
+        },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
         },
@@ -916,64 +926,125 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
 .wrapper {
-    background-color: #2f0081;
+    background-image: url('~assets/img/vote/BSSRegister/bg-img-re.jpg');
+    background-size: contain;
+    background-repeat: repeat-y;
     font-size: 0.9rem;
     letter-spacing: -0.03rem;
     position: static;
     .container {
         > img {
-            width: 100%;
+            display: block;
+            margin: 0 auto;
+            padding-top: 0.5rem;
+            width: 95%;
             height: auto;
         }
-        .vote-box {
+        .tab-box {
             width: 100%;
-            height: auto;
-            // margin-bottom: 1rem;
+            height: 2.2rem;
             position: relative;
-            .vote-flag {
-                width: 5rem;
-            }
             .tab {
                 width: 100%;
                 position: absolute;
                 color: #fff;
-                top: -3.6rem;
+                top: -1rem;
                 left: 0;
-                height: 3rem;
-                line-height: 3rem;
+                height: 4rem;
+                // line-height: 3.8rem;
                 .rules {
-                    width: 6rem;
+                    width: 7rem;
                     float: left;
-                    background: url('~assets/img/vote/voiceToFame/btn-rules.png') no-repeat;
-                    background-size: 6rem 3rem;
+                    background: url('~assets/img/vote/BSSRegister/btn-left.png') no-repeat;
+                    background-size: 7rem 4rem;
                     text-align: left;
                     padding-left: 0.5rem;
                     position: relative;
+                    line-height: 4rem;
+                    p {
+                        display: block;
+                        height: 4rem;
+                        padding: 1rem 0 1.2rem;
+                        line-height: 0.9rem;
+                    }
                     img {
                         width: 1rem;
                         height: auto;
                         position: absolute;
-                        left: 3.8rem;
-                        top: 0.9rem;
+                        left: 4.1rem;
+                        top: 1.2rem;
                     }
                 }
                 .share {
-                    width: 6rem;
+                    width: 7rem;
                     float: right;
-                    background: url('~assets/img/vote/voiceToFame/btn-share.png') no-repeat;
-                    background-size: 6rem 3rem;
+                    background: url('~assets/img/vote/BSSRegister/btn-right.png') no-repeat;
+                    background-size: 7rem 4rem;
                     text-align: right;
                     padding-right: 0.5rem;
                     position: relative;
+                    line-height: 3.8rem;
                 }
                 img {
                     width: 1rem;
                     height: auto;
                     position: absolute;
-                    right: 3.8rem;
-                    top: 1.2rem;
+                    right: 4.1rem;
+                    top: 1.5rem;
                 }
             }
+        }
+        .vote-box {
+            width: 90%;
+            height: auto;
+            // margin-bottom: 1rem;
+            background-color: lightgreen;
+            margin: 0 auto;
+            position: relative;
+            .vote-flag {
+                width: 5rem;
+            }
+            // .tab {
+            //     width: 100%;
+            //     position: absolute;
+            //     color: #fff;
+            //     top: -3.6rem;
+            //     left: 0;
+            //     height: 3rem;
+            //     line-height: 3rem;
+            //     .rules {
+            //         width: 6rem;
+            //         float: left;
+            //         background: url('~assets/img/vote/voiceToFame/btn-rules.png') no-repeat;
+            //         background-size: 6rem 3rem;
+            //         text-align: left;
+            //         padding-left: 0.5rem;
+            //         position: relative;
+            //         img {
+            //             width: 1rem;
+            //             height: auto;
+            //             position: absolute;
+            //             left: 3.8rem;
+            //             top: 0.9rem;
+            //         }
+            //     }
+            //     .share {
+            //         width: 6rem;
+            //         float: right;
+            //         background: url('~assets/img/vote/voiceToFame/btn-share.png') no-repeat;
+            //         background-size: 6rem 3rem;
+            //         text-align: right;
+            //         padding-right: 0.5rem;
+            //         position: relative;
+            //     }
+            //     img {
+            //         width: 1rem;
+            //         height: auto;
+            //         position: absolute;
+            //         right: 3.8rem;
+            //         top: 1.2rem;
+            //     }
+            // }
             .vote-remaining {
                 width: 100%;
                 height: 2.5rem;
@@ -1221,7 +1292,6 @@ export default {
                     text-align: center;
                     margin: 0 auto 0.5rem;
                     font-size: 0.75rem;
-                    // font-weight: 200;
                 }
                 .lottery-type {
                     width: 100%;
@@ -1231,47 +1301,55 @@ export default {
                         margin: 0 auto;
                         background-color: #350e73;
                         border-radius: 0.5rem;
-                        padding: 0.2rem 2%;
+                        padding: 0.2rem 0;
                         position: relative;
+                        height: 15.8rem;
                         li {
-                            width: 31%;
-                            &:nth-child(1),
-                            &:nth-child(2),
-                            &:nth-child(3) {
-                                float: left;
-                                margin-right: 3.4%;
-                                margin-bottom: 0.2rem;
+                            width: 30%;
+                            display: block;
+                            position: absolute;
+                            overflow: hidden;
+                            border-radius: 0.2rem;
+                            &:nth-child(1) {
+                                border-top-left-radius: 1rem;
+                                left: 2.5%;
+                                top: 0.2rem;
+                            }
+                            &:nth-child(2) {
+                                left: 35%;
+                                top: 0.2rem;
                             }
                             &:nth-child(3) {
-                                margin-right: 0;
+                                border-top-right-radius: 1rem;
+                                left: 67.5%;
+                                top: 0.2rem;
                             }
                             &:nth-child(4) {
-                                float: right;
-                                margin-left: 68.8%;
-                                margin-bottom: 0.2rem;
+                                left: 67.5%;
+                                top: 5.4rem;
+                            }
+                            &:nth-child(5) {
+                                border-bottom-right-radius: 1rem;
+                                left: 67.5%;
+                                top: 10.6rem;
+                            }
+                            &:nth-child(6) {
+                                left: 35%;
+                                top: 10.6rem;
+                            }
+                            &:nth-child(7) {
+                                border-bottom-left-radius: 1rem;
+                                left: 2.5%;
+                                top: 10.6rem;
                             }
                             &:nth-child(8) {
-                                position: absolute;
-                                // position: relative;
+                                left: 2.5%;
                                 top: 5.4rem;
-                                left: 2%;
-                                margin-bottom: 0.2rem;
-                                background-color: red;
-                            }
-                            &:nth-child(5),
-                            &:nth-child(6),
-                            &:nth-child(7) {
-                                float: right;
-                                margin-left: 3.4%;
-                            }
-                            &:nth-child(7) {
-                                margin-left: 0;
                             }
                             > div {
                                 width: 100%;
                                 height: 5rem;
                                 background-color: #6427c2;
-                                border-radius: 0.5rem;
                                 border: 2px solid transparent;
                                 .prize {
                                     img {
@@ -1301,17 +1379,13 @@ export default {
                             line-height: 5rem;
                             height: 5rem;
                             background-color: #6427c2;
-                            border-radius: 0.5rem;
+                            border-radius: 0.2rem;
                             border: 2px solid transparent;
                             color: #fff;
                             text-align: center;
-                            // margin-left: 3.4%;
-                            // margin-bottom: 2%;
-                            // float: right;
                             position: absolute;
                             top: 5.4rem;
-                            left: 36.4%;
-                            margin-bottom: 0.2rem;
+                            left: 35%;
                             font-size: 1.2rem;
                         }
                         .getLuck {
