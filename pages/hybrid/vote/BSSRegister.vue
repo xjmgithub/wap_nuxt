@@ -157,7 +157,7 @@
             <div class="share-btn" @click="closeSuccessPage('submit')">SHIRIKI SASA</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeSuccessPage('close')" />
         </div>
-        <div v-show="show_howToUpload||show_rules||show_success" class="shadow-box"></div>
+        <div v-show="show_howToUpload||show_rules||show_success" class="shadow-box" @click="closeRule"></div>
         <mShare />
     </div>
 </template>
@@ -452,7 +452,7 @@ export default {
                 this.city_error = true
             }
             // link
-            if (!this.city.replace(/\s/g, '') || (this.link.toLowerCase().indexOf('instagram.com') == -1 && this.link.toLowerCase().indexOf('youtu.be') == -1)) {
+            if (!this.link.replace(/\s/g, '') || (this.link.toLowerCase().indexOf('instagram.com') == -1 && this.link.toLowerCase().indexOf('youtu.be') == -1)) {   
                 this.canSubmit = false
                 this.link_error = true
             }
