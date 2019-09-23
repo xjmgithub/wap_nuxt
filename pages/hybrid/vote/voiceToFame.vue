@@ -485,10 +485,8 @@ export default {
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime = new Date(res.data.data.start_time).getTime() - new Date().getTimezoneOffset()*60*1000
-                        this.endTime = new Date(res.data.data.end_time).getTime() - new Date().getTimezoneOffset()*60*1000
-                        // console.log(this.startTime)
-                        // console.log(this.endTime)
+                        this.startTime = new Date(res.data.data.start_time).getTime()
+                        this.endTime = new Date(res.data.data.end_time).getTime()
                         this.getVoteRemain()
                         this.getLeftLottery()
                         const msg = this.$refs.msgul
