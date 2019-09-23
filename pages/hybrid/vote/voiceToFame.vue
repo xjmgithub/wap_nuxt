@@ -494,6 +494,12 @@ export default {
                         // console.log(this.endTime)
                         this.getVoteRemain()
                         this.getLeftLottery()
+                        const msg = this.$refs.msgul
+                        if(this.currentTime < this.startTime) {
+                            msg.style.display = 'none'
+                        } else {
+                            msg.style.display = 'block'
+                        }
                     }
                 })
                 .catch(err => {
