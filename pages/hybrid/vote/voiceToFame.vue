@@ -160,6 +160,7 @@ import { Base64 } from 'js-base64'
 import { cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
 import { invokeByIframe, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
+import dayjs from 'dayjs'
 export default {
     layout: 'base',
     components: {
@@ -243,13 +244,13 @@ export default {
             return {
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 voteTitle: data.data.name,
-                serverTime: new Date()
+                serverTime: new Date().getTime()
             }
         } catch (e) {
             return {
                 vote_sign: (req && req.headers.vote_sign) || '',
                 voteTitle: 'Voice to Fame',
-                serverTime: new Date()
+                serverTime: new Date().getTime()
             }
         }
     },
@@ -485,8 +486,8 @@ export default {
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime = new Date(res.data.data.start_time)
-                        this.endTime = new Date(res.data.data.end_time)
+                        this.startTime = new Date(res.data.data.start_time).getTime() - new Date().getTimezoneOffset()*60*1000
+                        this.endTime = new Date(res.data.data.end_time).getTime() - new Date().getTimezoneOffset()*60*1000
                         // console.log(this.startTime)
                         // console.log(this.endTime)
                         this.getVoteRemain()
