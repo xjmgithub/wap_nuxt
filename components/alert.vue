@@ -33,7 +33,6 @@ export default {
             if (this.callback) this.callback()
         },
         show(msg, callback, text) {
-            console.log(Boolean(text))
             const _this = this
             this.msg = msg
             this.text = text || 'OK'
