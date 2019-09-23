@@ -160,7 +160,6 @@ import { Base64 } from 'js-base64'
 import { cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
 import { invokeByIframe, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
-import dayjs from 'dayjs'
 export default {
     layout: 'base',
     components: {
