@@ -18,6 +18,7 @@
                 </div>
             </div>
             <img src="~assets/img/vote/BSSRegister/share-rule-img.png" alt class="ic-green" />
+            <img class="text text-one" src="~assets/img/vote/BSSRegister/text-one.png" alt />
             <div class="vote-box">
                 <div v-show="coupleList.length>0">
                     <div class="vote-remaining">
@@ -46,11 +47,13 @@
                     </ul>
                 </div>
             </div>
+            <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div v-if="appType==1" class="share-box" @click="toShare('midshare')">
                 <img src="~assets/img/vote/voiceToFame/bg-left.png" alt class="bg-left" />
                 <img src="~assets/img/vote/voiceToFame/img-sharefor.png" alt="img-sharefor" class="sharefor" />
                 <img src="~assets/img/vote/voiceToFame/bg-right.png" alt class="bg-right" />
             </div>
+            <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
             <div class="lottery-box">
                 <div class="flag-box">
                     <div class="vote-flag">
@@ -196,7 +199,7 @@ export default {
             // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             appType: 1,
             isLogin: true,
-            title: 'Voice To Fame',
+            title: 'Bongo Star Search 2019',
             imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
             firstTime: true,
             msg: '',
@@ -204,7 +207,8 @@ export default {
             callback: '',
             yes: '',
             no: '',
-            shareTitle: 'Voice To Fame',
+            shareTitle: 'Wewe ndiye nyota wa Bongo unayefuata',
+            shareText: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.',
             user_id: this.$store.state.user.id,
 
             // 投票
@@ -338,7 +342,7 @@ export default {
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=VOICE&utm_campaign=${this.platform}`,
                     this.shareTitle,
-                    'Download StarTimes ON app. Vote and win FREE VIP!',
+                    this.shareText,
                     this.imgUrl
                 )
             } else {
@@ -895,8 +899,8 @@ export default {
         return {
             title: this.title,
             meta: [
-                { name: 'description', property: 'description', content: 'Download StarTimes ON app. Vote and win FREE VIP!' },
-                { name: 'og:description', property: 'og:description', content: 'Download StarTimes ON app. Vote and win FREE VIP!' },
+                { name: 'description', property: 'description', content: this.shareText },
+                { name: 'og:description', property: 'og:description', content: this.shareText },
                 {
                     name: 'og:image',
                     property: 'og:image',
@@ -1002,10 +1006,18 @@ export default {
             }
         }
 
+        .text {
+            width: 100%;
+            display: block;
+            &.text-one {
+                padding-top: 1rem;
+            }
+        }
+
         .vote-box {
             width: 90%;
             height: auto;
-            background-color: lightgreen;
+            background-color: #00701a;
             margin: 0 auto;
             position: relative;
             .vote-flag {
@@ -1024,8 +1036,8 @@ export default {
                     text-align: center;
                     margin-right: 1rem;
                     border-radius: 0.7rem;
-                    color: #b69af3;
-                    background: #1c0251;
+                    color: #fff;
+                    background: #006313;
                     float: right;
                 }
             }
@@ -1075,18 +1087,16 @@ export default {
                             width: 100%;
                             .icon {
                                 width: 100%;
-                                // padding: 0.2rem 0.2rem 0;
                                 padding: 0.2rem;
                                 height: 100%;
                                 border-radius: 0.5rem;
-                                // border-radius: 50%;
                                 position: absolute;
                                 top: 0;
                             }
                             &:before {
                                 content: '';
                                 display: inline-block;
-                                padding-bottom: 100%;
+                                padding-bottom: 65%;
                                 width: 0.1px;
                                 vertical-align: middle;
                             }
