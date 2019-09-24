@@ -534,6 +534,14 @@ export default {
                     this.lotteryType = []
                 })
         },
+        randomList(arr) {
+            for (let i = 0; i < arr.length; i++) {
+                const randomIndex = Math.round(Math.random() * (arr.length - 1 - i)) + i
+                ;
+                [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+            }
+            return arr
+        },
         // 获取消息列表
         getMsgList() {
             this.$axios
@@ -541,6 +549,7 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.items = res.data.data
+                        this.randomList(this.items)
                         this.items.forEach((item, index, arrs) => {
                             if (item.user_name) {
                                 if (
