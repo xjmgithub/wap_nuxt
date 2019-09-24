@@ -18,95 +18,9 @@
                 </div>
             </div>
             <img class="text text-one" src="~assets/img/vote/BSSRegister/text-one.png" alt />
-            <div v-if="isEnd" class="register-end">
+            <div class="register-end">
                 <img src="~assets/img/vote/BSSRegister/ic-end.png" alt />
                 <p>SAMAHANI, USAJILI UMEKWISHA</p>
-            </div>
-            <div v-else class="register-normal">
-                <img src="~assets/img/vote/BSSRegister/bg-form-top.png" alt class="form-img" />
-                <img src="~assets/img/vote/BSSRegister/rule-img.png" alt class="form-img rule-img" />
-                <div v-if="!isEnd" class="registration">
-                    <div>
-                        <span>
-                            JINA
-                            <sup class="required">*</sup>
-                        </span>
-                        <input v-model="name" type="text" :class="{'error-line':name_error}" @input="name_error=false" />
-                    </div>
-                    <div>
-                        <span>
-                            JINSIA
-                            <sup class="required">*</sup>
-                        </span>
-                        <select v-model="gender" required :class="{'error-line':gender_error}" @change="gender_error=false">
-                            <option value disabled selected class="normal">Tafadhali chagua</option>
-                            <option value="male">Kiume</option>
-                            <option value="female">Kike</option>
-                        </select>
-                    </div>
-                    <div class="birth-box clearfix">
-                        <span>
-                            SIKU YA KUZALIWA
-                            <sup class="required">*</sup>
-                        </span>
-                        <select v-model="month" required class="birth" :class="{'error-line':birth_error}" @change="getDay">
-                            <option value disabled selected class="normal">Mwezi</option>
-                            <option v-for="(item,index) in monthList" :key="index" :value="item">{{item}}</option>
-                        </select>
-                        <select v-model="year" required class="birth" :class="{'error-line':birth_error}" @change="getMouth">
-                            <option value disabled selected class="normal">Mwaka</option>
-                            <option v-for="(item,index) in yearList" :key="index" :value="item">{{item}}</option>
-                        </select>
-                        <select v-model="day" required class="birth" :class="{'error-line':birth_error}" @change="birth_error=false">
-                            <option value disabled selected class="normal">Siku</option>
-                            <option v-for="(item,index) in dayList" :key="index" :value="item">{{item}}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <span>
-                            NAMBARI YA SIMU
-                            <sup class="required">*</sup>
-                        </span>
-                        <input v-model="number" type="text" :class="{'error-line':number_error}" @input="number_error=false" />
-                    </div>
-                    <p v-show="number_error" class="error">Tafadhali ingiza namba ya simu halali</p>
-                    <div>
-                        <span>
-                            MAKAZI YA SASA
-                            <sup class="required">*</sup>
-                        </span>
-                        <select v-model="city" required :class="{'error-line':city_error}" @change="city_error=false">
-                            <option value disabled selected class="normal">Tafadhali chagua</option>
-                            <option v-for="(item,index) in cityList" :key="index" :value="item">{{item}}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <span>
-                            KAZI
-                            <sup class="required">*</sup>
-                        </span>
-                        <select v-model="profession" required :class="{'error-line':profession_error}" @change="profession_error=false">
-                            <option value disabled selected class="normal">Tafadhali chagua</option>
-                            <option v-for="(item,index) in professionList" :key="index" :value="item">{{item}}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <span>
-                            LINK YA VIDEO
-                            <sup class="required">*</sup>
-                        </span>
-                        <input
-                            v-model="link"
-                            type="text"
-                            placeholder="Links za video za Instagram au Youtube"
-                            :class="{'error-line':link_error}"
-                            @input="link_error=false"
-                        />
-                    </div>
-                    <div class="link" @click="showUploadWay">JINSI YA KUPATA LINK YA VIDEO?</div>
-                    <div class="submit-btn" :class="{'disabled':!isFinish}" @click="submit()">WASILISHA</div>
-                </div>
-                <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
             </div>
             <img v-show="true" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt="" class="to-vote" @click="toVote">
             <div class="ad"></div>
@@ -277,7 +191,7 @@ export default {
     },
     methods: {
         toVote() {
-            this.$router.push(`/hybrid/vote/BSSVote2`)
+            this.$router.push(`/hybrid/vote/BSSVote`)
         },
         showRule() {
             this.show_rules=true
