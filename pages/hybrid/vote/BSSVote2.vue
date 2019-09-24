@@ -20,9 +20,9 @@
             <img class="text text-one" src="~assets/img/vote/BSSRegister/text-one.png" alt />
             <div class="register-end">
                 <img src="~assets/img/vote/BSSRegister/ic-end.png" alt />
-                <p>SAMAHANI, USAJILI UMEKWISHA</p>
+                <p>WAITING...</p>
             </div>
-            <img v-show="true" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt="" class="to-vote" @click="toVote">
+            <img src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt="" class="to-vote" @click="toRegister">
             <div class="ad"></div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
@@ -133,12 +133,14 @@ export default {
 
             enroll_id: 1,
             vote_id: 16,
+            lottery_id: 2,
             clipsList: [],
             loaded: false,
             show_howToUpload: false,
             show_rules: false,
             show_success: false,
             isEnd: false,
+            isVoteStart: false,
 
             title: 'Bongo Star Search 2019',
             shareTitle: 'Bongo Star Search 2019',
@@ -178,11 +180,12 @@ export default {
     },
     asyncData({ app: { $axios }, store }) {
         return {
-            serverTime: new Date()
+            serverTime: new Date().getTime()
         }
     },
     created() {
         this.getRegisterInfo()
+        this.getVoteInfo()
     },
     mounted() {
         this.mSendEvLog('page_show', '', '')
@@ -190,8 +193,8 @@ export default {
         this.getVideoMsg()
     },
     methods: {
-        toVote() {
-            this.$router.push(`/hybrid/vote/BSSVote`)
+        toRegister() {
+            this.$router.push(`/hybrid/vote/BSSRegister`)
         },
         showRule() {
             this.show_rules=true
@@ -264,15 +267,32 @@ export default {
         },
         // 获取报名活动信息
         getRegisterInfo() {
-            this.currentTime = Date.parse(this.serverTime)
             this.$axios
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
                         this.startTime = new Date(res.data.data.start_time).getTime()
                         this.endTime = new Date(res.data.data.end_time).getTime()
-                        if (this.currentTime >= this.endTime) {
+                        if (this.serverTime >= this.endTime) {
                             this.isEnd = true
+                        }
+                    } else {
+                        this.$alert('获取活动时间失败')
+                    }
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
+        },
+        // 获取抽奖活动信息
+        getVoteInfo() {
+            this.$axios
+                .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
+                .then(res => {
+                    if (res.data.code === 200) {
+                        const voteStartTime = new Date(res.data.data.start_time).getTime()
+                        if (this.serverTime >= voteStartTime) {
+                            this.isVoteStart = true
                         }
                     } else {
                         this.$alert('获取活动时间失败')

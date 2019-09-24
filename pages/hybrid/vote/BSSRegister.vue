@@ -108,7 +108,7 @@
                 </div>
                 <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
             </div>
-            <img v-show="true" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt="" class="to-vote" @click="toVote">
+            <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt="" class="to-vote" @click="toVote">
             <div class="ad"></div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
@@ -219,12 +219,14 @@ export default {
 
             enroll_id: 1,
             vote_id: 16,
+            lottery_id: 2,
             clipsList: [],
             loaded: false,
             show_howToUpload: false,
             show_rules: false,
             show_success: false,
             isEnd: false,
+            isVoteStart: false,
 
             title: 'Bongo Star Search 2019',
             shareTitle: 'Bongo Star Search 2019',
@@ -264,11 +266,12 @@ export default {
     },
     asyncData({ app: { $axios }, store }) {
         return {
-            serverTime: new Date()
+            serverTime: new Date().getTime()
         }
     },
     created() {
         this.getRegisterInfo()
+        this.getVoteInfo()
     },
     mounted() {
         this.mSendEvLog('page_show', '', '')
@@ -350,15 +353,32 @@ export default {
         },
         // 获取报名活动信息
         getRegisterInfo() {
-            this.currentTime = Date.parse(this.serverTime)
             this.$axios
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
                         this.startTime = new Date(res.data.data.start_time).getTime()
                         this.endTime = new Date(res.data.data.end_time).getTime()
-                        if (this.currentTime >= this.endTime) {
+                        if (this.serverTime >= this.endTime) {
                             this.isEnd = true
+                        }
+                    } else {
+                        this.$alert('获取活动时间失败')
+                    }
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
+        },
+        // 获取抽奖活动信息
+        getVoteInfo() {
+            this.$axios
+                .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
+                .then(res => {
+                    if (res.data.code === 200) {
+                        const voteStartTime = new Date(res.data.data.start_time).getTime()
+                        if (this.serverTime >= voteStartTime) {
+                            this.isVoteStart = true
                         }
                     } else {
                         this.$alert('获取活动时间失败')
