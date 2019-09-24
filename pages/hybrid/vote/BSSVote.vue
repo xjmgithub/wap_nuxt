@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <img src="~assets/img/vote/BSSRegister/bg-img.png" alt="bg-img" />
+            <img src="~assets/img/vote/BSSRegister/bg-img.png" alt="bg-img" class="bg-img" />
             <div class="tab-box">
                 <div class="tab">
                     <div class="rules" @click="showRule">
@@ -9,7 +9,7 @@
                             SHERIA
                             <br />ZA KINA
                         </p>
-                        <img src="~assets/img/vote/BSSRegister/ic-rule.png" alt="ic-rule" />
+                        <img src="~assets/img/vote/BSSRegister/ic-rule.png" alt="ic-rule" class />
                     </div>
                     <div class="share" @click="toShare('upshare')">
                         <p>SHIRIKI</p>
@@ -17,6 +17,7 @@
                     </div>
                 </div>
             </div>
+            <img src="~assets/img/vote/BSSRegister/share-rule-img.png" alt class="ic-green" />
             <div class="vote-box">
                 <div v-show="coupleList.length>0">
                     <div class="vote-remaining">
@@ -99,7 +100,7 @@
                                         <p>{{item.name.toUpperCase()}}</p>
                                     </div>
                                 </div>
-                            </li> -->
+                            </li>-->
                             <div v-if="appType>0&&isLogin&&lotteryLeft>0" class="getLuck" @click="startLottery">
                                 <p>START</p>
                             </div>
@@ -121,7 +122,7 @@
                                         <p>{{item.name.toUpperCase()}}</p>
                                     </div>
                                 </div>
-                            </li> -->
+                            </li>-->
                         </ul>
                     </div>
                     <div class="msg">
@@ -292,13 +293,13 @@ export default {
 
     methods: {
         showRule() {
-            this.show_rules=true
+            this.show_rules = true
             // 页面静止
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
         },
         closeRule() {
-            this.show_rules=false
+            this.show_rules = false
             // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
@@ -939,11 +940,17 @@ export default {
             padding-top: 0.5rem;
             width: 95%;
             height: auto;
+            &.ic-green {
+                width: 90%;
+                position: relative;
+                top: -2rem;
+            }
         }
         .tab-box {
             width: 100%;
             height: 2.2rem;
             position: relative;
+            z-index: 1;
             .tab {
                 width: 100%;
                 position: absolute;
@@ -994,57 +1001,16 @@ export default {
                 }
             }
         }
+
         .vote-box {
             width: 90%;
             height: auto;
-            // margin-bottom: 1rem;
             background-color: lightgreen;
             margin: 0 auto;
             position: relative;
             .vote-flag {
                 width: 5rem;
             }
-            // .tab {
-            //     width: 100%;
-            //     position: absolute;
-            //     color: #fff;
-            //     top: -3.6rem;
-            //     left: 0;
-            //     height: 3rem;
-            //     line-height: 3rem;
-            //     .rules {
-            //         width: 6rem;
-            //         float: left;
-            //         background: url('~assets/img/vote/voiceToFame/btn-rules.png') no-repeat;
-            //         background-size: 6rem 3rem;
-            //         text-align: left;
-            //         padding-left: 0.5rem;
-            //         position: relative;
-            //         img {
-            //             width: 1rem;
-            //             height: auto;
-            //             position: absolute;
-            //             left: 3.8rem;
-            //             top: 0.9rem;
-            //         }
-            //     }
-            //     .share {
-            //         width: 6rem;
-            //         float: right;
-            //         background: url('~assets/img/vote/voiceToFame/btn-share.png') no-repeat;
-            //         background-size: 6rem 3rem;
-            //         text-align: right;
-            //         padding-right: 0.5rem;
-            //         position: relative;
-            //     }
-            //     img {
-            //         width: 1rem;
-            //         height: auto;
-            //         position: absolute;
-            //         right: 3.8rem;
-            //         top: 1.2rem;
-            //     }
-            // }
             .vote-remaining {
                 width: 100%;
                 height: 2.5rem;
