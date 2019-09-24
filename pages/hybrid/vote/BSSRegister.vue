@@ -123,7 +123,7 @@
                         <div @click="toPlayer(item)">
                             <img class="url" :src="cdnPic(item.cover)" />
                         </div>
-                        <p class="title">{{(item.description||item.name)}}</p>
+                        <p class="title">{{item.description}}</p>
                     </li>
                 </ul>
             </div>
@@ -229,10 +229,10 @@ export default {
             isVoteStart: false,
 
             title: 'Bongo Star Search 2019',
-            shareTitle: 'Bongo Star Search 2019',
-            shareText: 'Pakua Startimes ON app na shiriki BSS2019!',
+            shareTitle: 'Wewe ndiye nyota wa Bongo unayefuata',
+            shareText: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.',
             imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
-            content: 'Pakua Startimes ON app na shiriki BSS2019!'
+            content: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.'
         }
     },
     computed: {
