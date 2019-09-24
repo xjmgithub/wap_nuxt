@@ -26,7 +26,7 @@ export default {
     enter_complete_info: 'Please enter the complete information.',
     enter_correct_info: 'Please enter the correct XXX',
     payment_successful: 'Payment Successful',
-    pay_successful_desc: 'Thanks for your payment. Your order has been successfully paid. Please click "OK" if you are not redirected within 5s.',
+    pay_successful_desc: 'Thanks for your payment. Your order has been successfully paid. Please click "OK" if you are not redirected within 10s.',
     payment_failed: 'Payment Failed',
     pay_failed_desc: 'Your request was not accepted. Please refresh the current page or try again the payment.',
     pay_refresh: 'REFRESH',

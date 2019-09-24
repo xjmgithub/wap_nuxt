@@ -26,7 +26,7 @@ export default {
     enter_complete_info: 'S\'il vous plaît entrer les informations complètes.',
     enter_correct_info: 'S\'il vous plaît entrez le XXX correct',
     payment_successful: 'Paiement Réussi',
-    pay_successful_desc: 'Merci pour votre paiement. Votre commande a été payée avec succès. S\'il vous plaît cliquez sur "OK" si vous n\'êtes pas redirigé dans les 5s.',
+    pay_successful_desc: 'Merci pour votre paiement. Votre commande a été payée avec succès. S\'il vous plaît cliquez sur "OK" si vous n\'êtes pas redirigé dans les 10s.',
     payment_failed: 'Paiement échoué',
     pay_failed_desc: 'Votre demande n\'a pas été acceptée. S\'il vous plaît actualiser la page ou essayer à nouveau le paiement.',
     pay_refresh: 'RAFRAÎCHIR',

@@ -26,7 +26,7 @@ export default {
     enter_complete_info: 'Digite as informações completas.',
     enter_correct_info: 'Digite o XXX correto',
     payment_successful: 'Pagamento com Sucesso',
-    pay_successful_desc: 'pagamento. Seu pedido foi pago com sucesso. Por favor, clique em "OK" se você não for redirecionado dentro de 5s.',
+    pay_successful_desc: 'pagamento. Seu pedido foi pago com sucesso. Por favor, clique em "OK" se você não for redirecionado dentro de 10s.',
     payment_failed: 'Pagamento falhado',
     pay_failed_desc: 'Seu pedido não foi aceito. Atualize a página atual ou tente novamente o pagamento.',
     pay_refresh: 'ATUALIZAR',

@@ -105,7 +105,7 @@ export default {
                     if (!document.hidden) {
                         this.click()
                     }
-                }, 5000)
+                }, 10000)
             }
         } else {
             window.payment && window.payment.payResult('PAYING')
@@ -190,7 +190,7 @@ export default {
                         if (!document.hidden) {
                             this.click()
                         }
-                    }, 5000)
+                    }, 10000)
                 } else if (data && data.state === 4) {
                     this.result = 2
                     this.fail_message = data.summary ? data.summary : this.fail_message

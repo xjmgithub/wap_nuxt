@@ -26,7 +26,7 @@ export default {
     enter_complete_info: 'Tafadhali weka taarifa sahihi',
     enter_correct_info: 'Tafadhali weka XXX sahihi',
     payment_successful: 'Lipia Tayari',
-    pay_successful_desc: 'Akhsante kwa malipo. Ombi lako limefanikiwa. Tafadhali bonyeza ‘OK’ kama bado haijaelekezwa ndani ya sekunde 5',
+    pay_successful_desc: 'Akhsante kwa malipo. Ombi lako limefanikiwa. Tafadhali bonyeza ‘OK’ kama bado haijaelekezwa ndani ya sekunde 10',
     payment_failed: 'Malipo hayajafanikiwa',
     pay_failed_desc: 'Ombi lako limekataliwa. Tafadhali rudia kuingia kwenye ukurasa huu au jaribu kulipia tena.',
     pay_refresh: 'Rudia',
