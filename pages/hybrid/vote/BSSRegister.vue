@@ -119,7 +119,7 @@
             <div class="past-programme">
                 <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
                 <ul class="clearfix">
-                    <li v-for="(item,index) in clipsList" :key="index">
+                    <li v-for="(item,index) in clipsListNew" :key="index">
                         <div @click="toPlayer(item)">
                             <img class="url" :src="cdnPic(item.cover)" />
                         </div>
@@ -221,6 +221,7 @@ export default {
             vote_id: 16,
             lottery_id: 2,
             clipsList: [],
+            clipsListNew: [],
             loaded: false,
             show_howToUpload: false,
             show_rules: false,
@@ -547,12 +548,14 @@ export default {
             this.$axios.get(`/voting/v1/program?vote_id=${this.vote_id}`).then(res => {
                 if (res.data.code === 0) {
                     this.clipsList = res.data.data
-                    // this.clipsList.forEach(ele => {
-                    //     this.mSendEvLog('video_show', ele.name || ele.description, 10)
-                    // })
+                    this.clipsList.forEach(item => {
+                        if(item.name.substr(0,1) == 'a') {
+                            this.clipsListNew.push(item)
+                        }
+                    })
                 }
             })
-        }
+        },
     },
 
     head() {
