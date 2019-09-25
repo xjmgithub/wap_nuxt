@@ -153,7 +153,7 @@ export default {
             })
             if (this.timer3) clearTimeout(this.timer3)
             if (this.isApp === 1) {
-                if (this.merchantAppId && this.merchantAppId > 2) {
+                if (this.merchantAppId && this.merchantAppId > 1000) {
                     window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResultFinish(this.result == 1 ? 'SUCCESS' : 'FAIL')
                     window.getChannelId && window.getChannelId.finish()
                 } else {
