@@ -17,166 +17,107 @@
                     </div>
                 </div>
             </div>
-            <img src="~assets/img/vote/BSSRegister/share-rule-img.png" alt class="ic-green" />
-            <img class="text text-one" src="~assets/img/vote/BSSRegister/text-one.png" alt />
+            <img src="~assets/img/vote/BSSRegister/bg-register.png" alt class="ic-green" />
+            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/bg-ask.png" alt class="ic-green-a" />
+            <img class="text text-one" src="~assets/img/vote/BSSRegister/text1.png" alt />
             <div class="vote-box">
                 <div v-show="coupleList.length>0">
                     <div class="vote-remaining">
-                        <div>VOTES REMAINING:{{appType==0?0:voteLeft}}</div>
+                        <div class="remain">VOTES REMAINING:{{appType==0?0:voteLeft}}</div>
+                        <div class="ask">JINSI YA KUPIGA KURA ZAIDI?</div>
                     </div>
                     <ul class="clearfix">
-                        <li
-                            v-for="(item,key) in coupleList.slice(0,9)"
-                            :key="key"
-                            :class="{'only-two':advisorList.length>0&&advisorList.length<3}"
-                            data-id="item.id"
-                        >
+                        <li v-for="(item,key) in coupleList.slice(0,9)" :key="key" data-id="item.id">
                             <div class="item-box">
-                                <img v-show="item.link_vod_code" src="~assets/img/vote/voiceToFame/flag-vote.png" class="flag" />
-                                <p>{{key+1}}</p>
                                 <div>
                                     <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item)" />
+                                    <p>{{item.ballot_num}}</p>
                                 </div>
+                                <!-- <p>{{item.ballot_num}}</p> -->
                                 <span class="name">{{item.name.toUpperCase()}}</span>
-                                <span class="poll">poll: {{item.ballot_num}}</span>
                             </div>
                             <div class="vote-btn">
                                 <div class="btn" @click="handleViceVote(item)">VOTE</div>
                             </div>
                         </li>
                     </ul>
+                    <div class="more">ANGALIA WASHIRIKI WOTE</div>
                 </div>
             </div>
-            <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
-            <div v-if="appType==1" class="share-box" @click="toShare('midshare')">
-                <img src="~assets/img/vote/voiceToFame/bg-left.png" alt class="bg-left" />
-                <img src="~assets/img/vote/voiceToFame/img-sharefor.png" alt="img-sharefor" class="sharefor" />
-                <img src="~assets/img/vote/voiceToFame/bg-right.png" alt class="bg-right" />
+            <img src="~assets/img/vote/BSSRegister/ic-link.png" alt class="link-register" @click="toRegister"/>
+            <img class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
+            <div class="share-box" @click="toShare('midshare')">
+                <div>
+                    <img v-if="isLogin" src="~assets/img/vote/BSSRegister/bg-login.png" alt="img-sharefor" />
+                    <img v-else src="~assets/img/vote/BSSRegister/bg-login-no.png" alt="img-sharefor-no" />
+                    <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt="img-sharefor-no" />
+
+                    <div class="num">
+                        <p>FANIKIWA KUALIKA RAFIKI {{share_num}}</p>
+                    </div>
+                </div>
+                <img src="~assets/img/vote/BSSRegister/img-share.png" alt="img-sharefor" />
             </div>
-            <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
+            <img class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
             <div class="lottery-box">
-                <div class="flag-box">
-                    <div class="vote-flag">
-                        <img src="~assets/img/vote/voiceToFame/con-left.png" alt="con-left" class="con-left" />
-                        <p>LOTTERY</p>
-                        <img src="~assets/img/vote/voiceToFame/con-right.png" alt="con-right" class="con-right" />
-                    </div>
-                </div>
-                <div v-if="appType==1&&!isLogin" class="sign-in-box">
-                    <div class="text">
-                        <img src="~assets/img/vote/voiceToFame/line-left.png" alt class="line-left" />
-                        <div class="sign-in-text">
-                            <div class="btn" @click="toSignIn">SIGN IN</div>
-                            <div class="word">to get started</div>
-                        </div>
-                        <img src="~assets/img/vote/voiceToFame/line-right.png" alt class="line-right" />
-                    </div>
-                </div>
-                <div v-else class="title">
-                    <div class="text">
-                        <img src="~assets/img/vote/voiceToFame/line-left.png" alt class="line-left" />
-                        <div>Every time you vote</div>
-                        <div>you'll get a chance to win a prize</div>
-                        <img src="~assets/img/vote/voiceToFame/line-right.png" alt class="line-right" />
-                    </div>
-                </div>
                 <div class="lottery">
-                    <div class="coins">
-                        <img class="left" src="~assets/img/vote/voiceToFame/coins1.png" alt />
-                        <img class="right" src="~assets/img/vote/voiceToFame/coins2.png" alt />
-                    </div>
                     <div class="count">CHANCES REMAINING:{{appType>0&&isLogin?lotteryLeft:0}}</div>
                     <div class="lottery-type">
                         <ul class="clearfix">
-                            <li v-for="(item,key) in lotteryType" :key="key" class="lottry-type">
-                                <div :class="index==key?'active':''">
+                            <li v-for="(item,key) in lotteryList" :key="key" class="lottry-type" :class="index==key?'active':''">
+                                <div>
                                     <div class="prize">
                                         <img :src="cdnPic(item.picture_url)" alt />
-                                        <p>{{item.name.toUpperCase()}}</p>
+                                        <p>{{item.name}}</p>
                                     </div>
                                 </div>
                             </li>
-                            <!-- <li v-for="(item,key) in lotteryType.slice(7,8)" :key="key" class="lottry-type">
-                                <div :class="index==key?'active':''">
-                                    <div class="prize">
-                                        <img :src="cdnPic(item.picture_url)" alt />
-                                        <p>{{item.name.toUpperCase()}}</p>
-                                    </div>
-                                </div>
-                            </li>-->
-                            <div v-if="appType>0&&isLogin&&lotteryLeft>0" class="getLuck" @click="startLottery">
-                                <p>START</p>
-                            </div>
-                            <div v-else class="getLuck-gray" @click="canNotLottery">
-                                <p>START</p>
-                            </div>
-                            <!-- <li v-for="(item,key) in lotteryType.slice(3,4)" :key="key" class="lottry-type">
-                                <div :class="index==key?'active':''">
-                                    <div class="prize">
-                                        <img :src="cdnPic(item.picture_url)" alt />
-                                        <p>{{item.name.toUpperCase()}}</p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li v-for="(item,key) in lotteryType.slice(4,7)" :key="key" class="lottry-type">
-                                <div :class="index==key?'active':''">
-                                    <div class="prize">
-                                        <img :src="cdnPic(item.picture_url)" alt />
-                                        <p>{{item.name.toUpperCase()}}</p>
-                                    </div>
-                                </div>
-                            </li>-->
+                            <div v-if="appType>0&&isLogin&&lotteryLeft>0" class="getLuck" @click="startLottery">Anza</div>
+                            <div v-else class="getLuck-gray" @click="canNotLottery">Anza</div>
                         </ul>
                     </div>
                     <div class="msg">
                         <ul ref="msgul" :class="{anim:animate==true}">
-                            <img src="~assets/img/vote/voiceToFame/sound.png" alt />
+                            <img src="~assets/img/vote/BSSRegister/sound.png" alt />
                             <li
-                                v-for="item in items"
+                                v-for="item in msgList"
                                 :key="item.key"
-                            >{{item.nick_name?item.nick_name:(item.user_name?item.user_name:item.user_id)}} has won {{lotteryType[item.fk_reward-1].name}}!</li>
+                            >{{item.nick_name?item.nick_name:(item.user_name?item.user_name:item.user_id)}} has won {{(lotteryList[item.fk_reward-1-6]||{}).name}}!</li>
                         </ul>
                     </div>
-                </div>
-                <div class="tip">
-                    <img src="~assets/img/vote/voiceToFame/bg-left2.png" class="left" alt />
-                    <p>Find the prize in ME → My Coupons</p>
-                    <img src="~assets/img/vote/voiceToFame/bg-right2.png" class="right" alt />
+                    <div class="tip">
+                        <p>Find the prize in ME → My Coupons</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div v-show="show_rules" class="alert-rules-box">
-            <div class="rules-title">VOTING RULES</div>
-            <div class="rules-close" @click="show_rules=false">✖️</div>
-            <div class="rules-box">
-                <div class="rules-text">
-                    <div class="rules-item">1. From Sep. 23rd to Oct. 27th, you have 5 votes each day.</div>
-                    <div class="rules-item">2. You can vote for any contestants you like!</div>
-                    <div class="rules-item">3. Every time you vote, you‘ll get a chance to win a prize!</div>
-                    <div
-                        class="rules-item"
-                    >4. Share the link with your friends and ask them to download StarTimes ON app to get more votes! You'll get 5 more votes for each new user. The more new users you bring, the more votes you will gain!</div>
-                    <div class="rules-item">5. Votes can be accumulated and are valid until the end of the activity.</div>
-                    <div class="rules-item">6. The contestant with the most votes will win a 55-inch TV!</div>
-                </div>
+            <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
+            <div class="past-programme">
+                <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
+                <ul class="clearfix">
+                    <li v-for="(item,i) in clipsListNew" :key="i">
+                        <div @click="toPlayer(item)">
+                            <img class="url" :src="cdnPic(item.cover)" />
+                        </div>
+                        <p class="title">{{(item.description)}}</p>
+                    </li>
+                </ul>
             </div>
-            <div class="share-btn" @click="toShare('voterules')">Share</div>
         </div>
-        <div v-show="show_rules" class="shadow-box" @click="show_rules=false"></div>
+        <div v-show="show_rules" class="rules-box">
+            <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
+            <div class="rule-text">
+                1. Kutoka  tarehe 8th Oct  hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
+                <br />2. Unaweza kumpigia kura mshiriki yeyote unayempenda!
+                <br />3. Washirikishe link rafiki zako na waombe wapakue app ya StarTimes ON ili kupata kura zaidi! Utapata kura 5 zaidi kwa kila mtumiaji mpya. Unavyozidi kuleta watumiaji wapya, ndivyo unavyopata kura zaidi!
+                <br />4. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi! Una nafasi ya kushinda kila mwezi Max VIP na kuponi kwenye App ya StarTimes ON.
+                <br />5. Zawadi zitakuwa zinatolewa siku ya pili ya kazi katika Me-> Kuponi zangu.
+                <br />6. Washiriki 10 wa mwanzo wenye kura nyingi zaidi wataingia kwenye orodha ya uchaguzi wa mwisho na kupata nafasi ya kuonekana rasmi kwenye onyesho la BSS2019.
+            </div>
+            <div class="share-btn" @click="toShare('voterules')">SHIRIKI</div>
+            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
+        </div>
+        <div v-show="show_rules" class="shadow-box" @click="closeRule"></div>
         <mShare />
-        <div :style="{display:style}" class="alert">
-            <div class="alert-body">
-                <div class="alert-default">
-                    <p>
-                        <span v-html="msg" />
-                    </p>
-                </div>
-            </div>
-            <div class="alert-footer">
-                <div class="btn sure" @click="sure" v-html="yes"></div>
-                <div class="btn close" @click="close" v-html="no"></div>
-            </div>
-        </div>
         <div v-show="tip" class="vote-toast">{{tip}}</div>
     </div>
 </template>
@@ -203,13 +144,13 @@ export default {
             imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
             firstTime: true,
             msg: '',
-            style: 'none',
-            callback: '',
-            yes: '',
-            no: '',
             shareTitle: 'Wewe ndiye nyota wa Bongo unayefuata',
             shareText: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.',
             user_id: this.$store.state.user.id,
+            share_num: 0,
+            isCommentStart: false,
+            clipsList: [],
+            clipsListNew: [],
 
             // 投票
             voteLeft: 0,
@@ -240,13 +181,29 @@ export default {
             // 消息轮播
             animate: false,
             items: [],
-            star: ''
+            star: '',
+            loaded_m: false,
+            msgul: ''
         }
     },
     computed: {
         coupleList() {
             if (this.loaded) {
                 return this.advisorList
+            } else {
+                return []
+            }
+        },
+        lotteryList() {
+            if (this.loaded_l) {
+                return this.lotteryType
+            } else {
+                return []
+            }
+        },
+        msgList() {
+            if (this.loaded_l && this.loaded_m) {
+                return this.items
             } else {
                 return []
             }
@@ -283,10 +240,12 @@ export default {
     },
     mounted() {
         this.mSendEvLog('page_show', '', '')
+        this.msgul = this.$refs.msgul
         this.getLotteryMsg()
         this.getAdvisorList()
         this.getLotteryType()
         this.getMsgList()
+        this.getVideoMsg()
         setInterval(() => {
             this.getMsgList()
         }, 60000)
@@ -307,6 +266,9 @@ export default {
             // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
+        },
+        toRegister() {
+            this.$router.push(`/hybrid/vote/BSSRegister`)
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
@@ -336,11 +298,11 @@ export default {
         },
         // 调出分享弹层(app/web)
         toShare(label) {
-            if (label == 'voterules') this.show_rules = false
+            if (label == 'voterules') this.closeRule()
             this.mSendEvLog('share_click', label, '')
             if (this.appType >= 1) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=VOICE&utm_campaign=${this.platform}`,
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=BSS&utm_campaign=${this.platform}`,
                     this.shareTitle,
                     this.shareText,
                     this.imgUrl
@@ -355,8 +317,8 @@ export default {
             invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.mSendEvLog('downloadpopup_show', label, '')
-                this.show(
-                    `<p style="padding-top: 1rem;">Download StarTimes ON app. Vote and win FREE VIP!</p>`,
+                this.$confirm(
+                    'Download StarTimes ON app. Vote and win FREE VIP!',
                     () => {
                         this.mSendEvLog('downloadpopup_clickok', label, '')
                         downApk.call(this)
@@ -382,8 +344,8 @@ export default {
                     () => {
                         this.mSendEvLog('downloadpopup_clicknot', label, '')
                     },
-                    `<p style="padding: 0 1rem">Download Now</p>`,
-                    `<p style="padding: 0 1rem">Cancle</p>`
+                    'Download Now',
+                    'Cancle'
                 )
             })
         },
@@ -441,33 +403,21 @@ export default {
                 return
             }
             if (this.currentTime < this.startTime) {
-                this.show(
-                    `<p style="padding-top:0.5rem">Stay tuned! Voting will begin on September 23rd.</p>`,
-                    () => {},
-                    () => {},
-                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                    ''
-                )
+                this.$alert('Stay tuned! Voting will begin on September 23rd.', () => {}, 'GOT IT')
                 return
             } else if (this.currentTime > this.endTime) {
-                this.show(
-                    `<p style="padding-top: 1rem">Sorry, the voting has ended.</p>`,
-                    () => {},
-                    () => {},
-                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                    ''
-                )
+                this.$alert('Sorry, the voting has ended.', () => {}, 'GOT IT')
                 return
             }
             if (this.voteLeft <= 0) {
-                this.show(
-                    `<p style="font-size:0.9rem">Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!</p>`,
+                this.$confirm(
+                    'Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!',
                     () => {
                         this.toShare('votefail')
                     },
                     () => {},
-                    `<p style="padding: 0 1rem">SHARE</p>`,
-                    `<p style="padding: 0 1rem">CANCEL</p>`
+                    'SHARE',
+                    'CANCEL'
                 )
             } else {
                 this.$axios({
@@ -488,27 +438,25 @@ export default {
                             this.lotteryLeft++
                             if (this.voteLeft > 0) {
                                 if (this.firstTime) {
-                                    this.show(
-                                        `<p style="font-size:0.9rem">Congrats! You‘ve successfully voted! You‘ve got 1 chance to win VIP! Swipe down and try your luck!</p>`,
+                                    this.$alert(
+                                        'Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!',
                                         () => {
                                             this.firstTime = false
                                         },
-                                        () => {},
-                                        `<p style="padding: 0 1rem">GOT IT</p>`,
-                                        ''
+                                        'GOT IT'
                                     )
                                 } else {
                                     this.tipShow("Successfully voted! And you've got 1 chance to win VIP!")
                                 }
                             } else {
-                                this.show(
-                                    `<p style="font-size:0.9rem">Successfully voted! you have 0 vote remaining. Share with your friends to earn more votes!</p>`,
+                                this.$confirm(
+                                    'Successfully voted! you have 0 vote remaining. Share with your friends to earn more votes!',
                                     () => {
                                         this.toShare('0leftvote')
                                     },
                                     () => {},
-                                    `<p style="padding: 0 1rem">SHARE</p>`,
-                                    `<p style="padding: 0 1rem">CANCEL</p>`
+                                    'SHARE',
+                                    'CANCEL'
                                 )
                             }
                         } else {
@@ -516,7 +464,7 @@ export default {
                         }
                     })
                     .catch(err => {
-                        this.show(err, () => {}, () => {}, `<p style="padding: 0 1rem">GOT IT</p>`, '')
+                        this.$alert(err)
                     })
             }
         },
@@ -529,14 +477,14 @@ export default {
                     if (res.data.code === 200) {
                         this.startTime = new Date(res.data.data.start_time).getTime()
                         this.endTime = new Date(res.data.data.end_time).getTime()
-                        // console.log(this.startTime)
-                        // console.log(this.endTime)
                         this.getVoteRemain()
                         this.getLeftLottery()
+                    } else {
+                        this.$alert('error')
                     }
                 })
                 .catch(err => {
-                    console.log(err)
+                    this.$alert(err)
                 })
         },
         // 获取剩余抽奖机会
@@ -610,6 +558,7 @@ export default {
                             }
                             item.user_id = item.user_id.toString().replace(/(.*)\d{2}/, '$1**')
                         })
+                        this.loaded_m = true
                     } else {
                         this.items = [] // 服务器端计算数据错误时
                     }
@@ -628,47 +577,27 @@ export default {
             if (!this.isLogin) {
                 this.mSendEvLog('lottery_click', '', '-1')
                 // 移动端未登录
-                this.show(
-                    `<p style="padding-top:0.5rem">Please sign in to start the luck draw.</p>`,
+                this.$alert(
+                    'Please sign in to start the luck draw.',
                     () => {
                         this.toSignIn()
                     },
-                    () => {},
-                    `<p style="padding: 0 1rem">SIGN IN</p>`,
-                    ''
+                    'SIGN IN'
                 )
                 return
             }
             if (this.currentTime < this.startTime) {
                 this.mSendEvLog('lottery_click', '', '-1')
-                this.show(
-                    `<p style="padding-top:0.5rem">Stay tuned! Lottery will begin on September 23rd.</p>`,
-                    () => {},
-                    () => {},
-                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                    ''
-                )
+                this.$alert('Stay tuned! Lottery will begin on September 23rd.', () => {}, 'GOT IT')
                 return
             }
             if (this.currentTime >= this.endTime) {
                 this.mSendEvLog('lottery_click', '', '-1')
-                this.show(
-                    `<p style="padding-top:0.5rem">Sorry, the lottery has ended.</p>`,
-                    () => {},
-                    () => {},
-                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                    ''
-                )
+                this.$alert('Sorry, the lottery has ended.', () => {}, 'GOT IT')
                 return
             }
             this.mSendEvLog('lottery_click', '', '-1')
-            this.show(
-                `<p>Vote and win more chances! Every time you vote, you‘ll get a chance to win a prize.</p>`,
-                () => {},
-                () => {},
-                `<p style="padding: 0 1rem">GOT IT</p>`,
-                ''
-            )
+            this.$alert('Vote and win more chances! Every time you vote, you‘ll get a chance to win a prize.', () => {}, 'GOT IT')
         },
         // 开始抽奖
         startLottery() {
@@ -693,61 +622,54 @@ export default {
                 console.log('你已经中奖了，位置' + (this.index + 1))
                 if (this.index < 5) {
                     setTimeout(() => {
-                        this.show(
-                            `<p>Congrats! You've got ` +
+                        this.$alert(
+                            "Congrats! You've got " +
                                 this.lotteryType[this.index].name +
-                                `!</p> <p style="font-size:0.75rem">Prize will be offered on the second business day in Me→My Coupon</p>`,
+                                '! Prize will be offered on the second business day in Me→My Coupon',
                             () => {
                                 this.click = true
                             },
-                            () => {},
-                            `<p style="padding: 0 1rem">GOT IT</p>`,
-                            ''
+                            'GOT IT'
                         )
                     }, 1000)
                 } else if (this.index === 5) {
                     this.getTicketAward(res => {
                         if (res.data.code == 200) {
                             setTimeout(() => {
-                                this.show(
-                                    `<p style="padding-top: 1rem;">Congrats! You've got ` + res.data.data + ` more votes!</p>`,
+                                this.$alert(
+                                    "Congrats! You've got " + res.data.data + ' more votes!',
                                     () => {
                                         this.click = true
                                     },
-                                    () => {},
-                                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                                    ''
+                                    'GOT IT'
                                 )
                                 this.voteLeft += res.data.data
                             }, 1000)
                         } else {
-                            window.alert(res.data.message)
+                            this.$alert(res.data.message)
                         }
                     })
                 } else if (this.index === 6) {
                     setTimeout(() => {
                         this.lotteryLeft++
-                        this.show(
-                            `<p style="padding-top: 1rem;">Congrats! You've got 1 more chance!</p>`,
+                        this.$alert(
+                            "Congrats! You've got 1 more chance!",
                             () => {
                                 this.click = true
                                 this.startLottery()
                             },
-                            () => {},
-                            `<p style="padding: 0 1rem">TRY AGAIN</p>`,
-                            ''
+                            'TRY AGAIN'
                         )
                     }, 1000)
                 } else if (this.index === 7) {
                     setTimeout(() => {
-                        this.show(
-                            `<p style="padding-top: 1rem;">Thanks for your participation.</p>`,
+                        this.$alert(
+                            'hanks for your participation.',
                             () => {
                                 this.click = true
+                                this.startLottery()
                             },
-                            () => {},
-                            `<p style="padding: 0 1rem">GOT IT</p>`,
-                            ''
+                            'GOT IT'
                         )
                     }, 1000)
                 }
@@ -782,16 +704,12 @@ export default {
                                 setTimeout(() => {
                                     clearTimeout(this.timer)
                                     this.times = 0
-                                    this.show(
-                                        `<p style="padding-top: 1rem;">LOTTERY ERROR!</p>`,
+                                    this.$alert(
+                                        'LOTTERY ERROR!',
                                         () => {
-                                            // this.click = true
-                                            // this.getLeftLottery()
                                             this.lotteryLeft = 0
                                         },
-                                        () => {},
-                                        `<p style="padding: 0 1rem">GOT IT</p>`,
-                                        ''
+                                        'GOT IT'
                                     )
                                 }, 3000)
                             }
@@ -827,13 +745,13 @@ export default {
         },
         // 消息轮播
         scroll() {
-            const msg = this.$refs.msgul
-            msg.style.marginTop = '-30px'
+            // const msg = this.$refs.msgul
+            this.msgul.style.marginTop = '-30px'
             this.animate = !this.animate
             setTimeout(() => {
-                this.items.push(this.items[0])
-                this.items.shift()
-                msg.style.marginTop = '0'
+                this.msgList.push(this.msgList[0])
+                this.msgList.shift()
+                this.msgul.style.marginTop = '0'
                 this.animate = !this.animate // 避免回滚
             }, 500)
         },
@@ -854,38 +772,24 @@ export default {
                 callback && callback(res)
             })
         },
-        // 弹窗方法
-        show(msg, callback, cancel, yes, no) {
-            this.yes = ''
-            this.no = ''
-            if (yes) this.yes = yes
-            if (no) this.no = no
-            this.msg = msg
-            this.style = 'block'
-            this.$store.commit('SHOW_SHADOW_LAYER')
-            if (callback) {
-                this.callback = callback
-            } else {
-                this.callback = ''
-            }
-            if (cancel) {
-                this.cancel = cancel
-            } else {
-                this.cancel = ''
-            }
+        // 获取往期视频
+        getVideoMsg() {
+            // 获取投票单元数据
+            this.$axios.get(`/voting/v1/program?vote_id=${this.vote_id}`).then(res => {
+                if (res.data.code === 0) {
+                    this.clipsList = res.data.data
+                    this.clipsList.forEach(item => {
+                        if(item.name.substr(0,1) == 'c') {
+                            this.clipsListNew.push(item)
+                        }
+                    })
+                    // this.clipsList.forEach(ele => {
+                    //     this.mSendEvLog('video_show', ele.name || ele.description, 10)
+                    // })
+                }
+            })
         },
-        close() {
-            this.style = 'none'
-            this.$store.commit('HIDE_SHADOW_LAYER')
-            if (this.cancel) {
-                this.cancel()
-            }
-        },
-        sure() {
-            this.style = 'none'
-            this.$store.commit('HIDE_SHADOW_LAYER')
-            if (this.callback) this.callback()
-        },
+        // toast方法
         tipShow(text, duration = 2000) {
             clearInterval(this.tip_timer)
             const _this = this
@@ -946,8 +850,19 @@ export default {
             height: auto;
             &.ic-green {
                 width: 90%;
+                padding-top: 0;
                 position: relative;
-                top: -2rem;
+                top: -0.3rem;
+            }
+            &.ic-green-a {
+                width: 90%;
+                position: relative;
+                padding-top: 0;
+                top: -0.5rem;
+            }
+            &.link-register {
+                width: 90%;
+                margin: 0.3rem auto 0.8rem;
             }
         }
         .tab-box {
@@ -966,7 +881,7 @@ export default {
                 .rules {
                     width: 7rem;
                     float: left;
-                    background: url('~assets/img/vote/BSSRegister/btn-left.png') no-repeat;
+                    background: url('~assets/img/vote/BSSRegister/bg-ruleb.png') no-repeat;
                     background-size: 7rem 4rem;
                     text-align: left;
                     padding-left: 0.5rem;
@@ -989,7 +904,7 @@ export default {
                 .share {
                     width: 7rem;
                     float: right;
-                    background: url('~assets/img/vote/BSSRegister/btn-right.png') no-repeat;
+                    background: url('~assets/img/vote/BSSRegister/bg-shareb.png') no-repeat;
                     background-size: 7rem 4rem;
                     text-align: right;
                     padding-right: 0.5rem;
@@ -1005,98 +920,68 @@ export default {
                 }
             }
         }
-
         .text {
             width: 100%;
             display: block;
-            &.text-one {
-                padding-top: 1rem;
-            }
         }
-
         .vote-box {
             width: 90%;
             height: auto;
             background-color: #00701a;
-            margin: 0 auto;
+            border-radius: 0.2rem;
+            margin: 0.5rem auto 0;
+            padding-bottom: 1rem;
             position: relative;
-            .vote-flag {
-                width: 5rem;
-            }
             .vote-remaining {
                 width: 100%;
-                height: 2.5rem;
-                line-height: 2.5rem;
-                font-size: 0.8rem;
+                height: 5rem;
+                font-size: 0.75rem;
+                padding-top: 1rem;
                 div {
-                    width: 10rem;
-                    // margin: 0 auto;
                     height: 1.7rem;
                     line-height: 1.7rem;
                     text-align: center;
-                    margin-right: 1rem;
-                    border-radius: 0.7rem;
-                    color: #fff;
-                    background: #006313;
-                    float: right;
+                    border-radius: 0.2rem;
+                    &.remain {
+                        margin: 0 auto;
+                        width: 10rem;
+                        color: #fff;
+                        background: #006313;
+                    }
+                    &.ask {
+                        width: 100%;
+                        color: #0fff95;
+                        text-decoration: underline;
+                    }
                 }
             }
             ul {
                 width: 100%;
                 height: auto;
-                padding: 0 2.5%;
+                padding: 0 0.5% 0 1.3%;
                 li {
                     list-style: none;
-                    width: 30%;
+                    width: 31%;
                     float: left;
-                    margin: 0 1.5% 1.3rem;
-                    &.only-two {
-                        margin: 0 10% 0.5rem;
-                    }
+                    margin: 0 1% 1.3rem;
                     .item-box {
                         position: relative;
                         width: 100%;
-                        background-color: #410eb1;
-                        // margin-bottom: rem;
                         overflow: hidden;
-                        border-radius: 0.6rem;
-                        .flag {
-                            width: 1.2rem;
-                            height: auto;
-                            position: absolute;
-                            top: 0;
-                            left: 0.4rem;
-                            z-index: 1;
-                        }
-                        p {
-                            display: block;
-                            width: 1rem;
-                            height: 1.2rem;
-                            position: absolute;
-                            top: 0;
-                            left: 0.5rem;
-                            z-index: 1;
-                            color: #fff;
-                            font-size: 0.75rem;
-                            // font-weight: 200;
-                            text-align: center;
-                            line-height: 1.2rem;
-                        }
+                        border-radius: 0.2rem;
                         div {
                             position: relative;
                             width: 100%;
                             .icon {
                                 width: 100%;
-                                padding: 0.2rem;
                                 height: 100%;
-                                border-radius: 0.5rem;
                                 position: absolute;
                                 top: 0;
                             }
                             &:before {
                                 content: '';
                                 display: inline-block;
-                                padding-bottom: 65%;
+                                padding-bottom: 62%;
                                 width: 0.1px;
                                 vertical-align: middle;
                             }
@@ -1105,6 +990,7 @@ export default {
                             width: 100%;
                             height: 1.5rem;
                             padding: 0 0.2rem;
+                            margin-top: 0.2rem;
                             line-height: 1.5rem;
                             font-size: 0.8rem;
                             overflow: hidden;
@@ -1114,32 +1000,31 @@ export default {
                             display: block;
                             text-align: center;
                         }
-                        .poll {
-                            width: 80%;
-                            height: 1.2rem;
-                            line-height: 1.2rem;
-                            font-size: 0.75rem;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                            color: #b69af3;
+                        p {
                             display: block;
+                            width: 101%;
+                            height: 1.3rem;
+                            position: absolute;
+                            bottom: -0.1rem;
+                            z-index: 1;
+                            color: #fff;
+                            font-size: 0.75rem;
                             text-align: center;
-                            margin: 0 auto 0.3rem;
-                            background-color: #381091;
-                            border-radius: 0.4rem;
+                            line-height: 1.3rem;
+                            background-image: url('~assets/img/vote/BSSRegister/bg-pull.png');
+                            background-size: 100% 1.3rem;
                         }
                     }
                     .vote-btn {
                         width: 100%;
                         height: 1.3rem;
-                        margin: 1.5rem 0 0;
+                        margin: 0.2rem 0 0;
                         .btn {
                             width: 4.5rem;
                             height: 1.3rem;
                             line-height: 1.3rem;
                             color: #ffffff;
-                            background: url('~assets/img/vote/voiceToFame/btn-vote.png') no-repeat;
+                            background-image: url('~assets/img/vote/BSSRegister/bg-vote.png');
                             background-size: 4.5rem 1.3rem;
                             margin: 0 auto;
                             text-align: center;
@@ -1156,260 +1041,195 @@ export default {
                     }
                 }
             }
+            .more {
+                width: 14rem;
+                background-color: #06b42e;
+                text-align: center;
+                height: 1.5rem;
+                line-height: 1.5rem;
+                border-radius: 1rem;
+                color: #fff;
+                margin: 0.2rem auto 0;
+            }
         }
         .share-box {
             width: 100%;
-            height: 4rem;
-            margin-bottom: 1.2rem;
-            position: relative;
-            .bg-left {
-                width: 3rem;
-                position: absolute;
-                left: 0;
-                top: -2rem;
-                z-index: 0;
-            }
-            .bg-right {
-                width: 4rem;
-                position: absolute;
-                right: 0;
-                top: 0;
-                z-index: 0;
-            }
-            .sharefor {
+            margin-bottom: 0.7rem;
+            > img {
                 display: block;
-                width: 84%;
+                width: 90%;
+                margin: 1rem auto 0;
+            }
+            > div {
+                width: 90%;
+                margin: 1rem auto 0;
+                font-size: 0.75rem;
+                text-align: center;
+                padding: 1.3rem 2.5% 0.8rem;
+                background-color: #1e91d6;
                 position: relative;
-                margin: 0 auto;
-                z-index: 1;
+                border-radius: 0.2rem;
+                img {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                }
+                .num {
+                    width: 100%;
+                    height: 1.1rem;
+                    line-height: 1.1rem;
+                    position: absolute;
+                    bottom: 1.7rem;
+                    left: 0;
+                    p {
+                        display: block;
+                        border-radius: 0.2rem;
+                        width: 13rem;
+                        margin: 0 auto;
+                        background-color: #02609c;
+                        color: #fec808;
+                    }
+                }
             }
         }
         .lottery-box {
-            .vote-flag {
-                width: 7rem;
-            }
-            .sign-in-box {
-                .sign-in-text {
-                    margin: 0 auto;
-                    line-height: 2rem;
-                    div {
-                        display: inline-block;
-                        &.btn {
-                            color: #f739fb;
-                        }
-                    }
-                }
-                .text {
-                    width: 10rem;
-                }
-            }
-            .title {
-                .text {
-                    width: 14rem;
-                    line-height: 1rem;
-                }
-            }
-            .sign-in-box,
-            .title {
-                width: 100%;
-                margin: 0 auto 0.5rem;
-                height: 2rem;
-                color: #b69af3;
-                font-size: 0.75rem;
-                .text {
-                    margin: 0 auto;
-                    height: 2rem;
-                    text-align: center;
-                    position: relative;
-                    img {
-                        width: 1rem;
-                        position: absolute;
-                        top: 0.5rem;
-                    }
-                    .line-left {
-                        left: -1rem;
-                    }
-                    .line-right {
-                        right: -1rem;
-                    }
-                }
-            }
+            width: 100%;
+            height: 28rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
             .lottery {
                 width: 90%;
-                height: 21rem;
-                background-color: #6427c2;
+                height: 28rem;
+                background-color: #fea42f;
                 margin: 0 auto;
                 border-radius: 0.5rem;
-                padding: 1rem 5%;
+                padding: 1rem 2%;
                 position: relative;
                 z-index: 2;
-                .coins {
-                    img {
-                        position: absolute;
-                        width: 2rem;
-                        height: auto;
-                        &.left {
-                            bottom: 4rem;
-                            left: -5%;
-                        }
-                        &.right {
-                            top: 4rem;
-                            right: -5%;
-                        }
-                    }
-                }
                 .count {
                     width: 11rem;
                     height: 1.5rem;
                     line-height: 1.5rem;
-                    border-radius: 1rem;
+                    border-radius: 0.2rem;
                     color: #fff;
-                    background-color: #350e73;
+                    background-color: #ff6d21;
                     text-align: center;
                     margin: 0 auto 0.5rem;
                     font-size: 0.75rem;
                 }
                 .lottery-type {
                     width: 100%;
-                    margin: 0 auto 0.5rem;
+                    margin: 0 auto;
+                    background-image: url('~assets/img/vote/BSSRegister/bg-border.png');
+                    background-size: 100% 19.8rem;
+                    color: #ad5500;
                     ul {
-                        width: 100%;
+                        width: 90%;
                         margin: 0 auto;
-                        background-color: #350e73;
                         border-radius: 0.5rem;
                         padding: 0.2rem 0;
                         position: relative;
-                        height: 15.8rem;
+                        height: 19.8rem;
                         li {
-                            width: 30%;
+                            width: 33%;
                             display: block;
                             position: absolute;
                             overflow: hidden;
                             border-radius: 0.2rem;
+                            background-image: url('~assets/img/vote/BSSRegister/bg-lottery.png');
+                            background-size: 100% 5.5rem;
                             &:nth-child(1) {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery2.png');
                                 border-top-left-radius: 1rem;
-                                left: 2.5%;
-                                top: 0.2rem;
+                                left: 1.5%;
+                                top: 1.8rem;
                             }
                             &:nth-child(2) {
-                                left: 35%;
-                                top: 0.2rem;
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery2.png');
+                                left: 33.5%;
+                                top: 1.8rem;
                             }
                             &:nth-child(3) {
                                 border-top-right-radius: 1rem;
-                                left: 67.5%;
-                                top: 0.2rem;
+                                left: 65.5%;
+                                top: 1.8rem;
                             }
                             &:nth-child(4) {
-                                left: 67.5%;
-                                top: 5.4rem;
+                                left: 65.5%;
+                                top: 7.3rem;
                             }
                             &:nth-child(5) {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery3.png');
                                 border-bottom-right-radius: 1rem;
-                                left: 67.5%;
-                                top: 10.6rem;
+                                left: 65.5%;
+                                top: 12.8rem;
                             }
                             &:nth-child(6) {
-                                left: 35%;
-                                top: 10.6rem;
+                                left: 33.5%;
+                                top: 12.8rem;
                             }
                             &:nth-child(7) {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery4.png');
                                 border-bottom-left-radius: 1rem;
-                                left: 2.5%;
-                                top: 10.6rem;
+                                left: 1.5%;
+                                top: 12.8rem;
                             }
                             &:nth-child(8) {
-                                left: 2.5%;
-                                top: 5.4rem;
+                                left: 1.5%;
+                                top: 7.3rem;
+                            }
+                            &.active {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-light.png');
                             }
                             > div {
                                 width: 100%;
-                                height: 5rem;
-                                background-color: #6427c2;
-                                border: 2px solid transparent;
+                                height: 5.5rem;
+                                padding: 0 0.2rem;
                                 .prize {
                                     img {
                                         display: block;
                                         width: auto;
-                                        height: 3rem;
+                                        height: 2.75rem;
                                         margin: 0 auto;
-                                        padding: 0.5rem 0;
+                                        padding: 0.3rem 0;
                                     }
                                     p {
                                         display: block;
                                         width: 100%;
                                         text-align: center;
                                         font-size: 0.75rem;
-                                        color: #fff;
+                                        display: -webkit-box;
+                                        -webkit-box-orient: vertical;
+                                        -webkit-line-clamp: 2;
+                                        overflow: hidden;
                                     }
-                                }
-                                &.active {
-                                    background-color: #7839dd;
-                                    border: 2px solid #fb0bd1;
                                 }
                             }
                         }
                         .getLuck,
                         .getLuck-gray {
-                            width: 30.5%;
-                            line-height: 5rem;
-                            height: 5rem;
-                            background-color: #6427c2;
+                            width: 33%;
+                            height: 5.5rem;
                             border-radius: 0.2rem;
-                            border: 2px solid transparent;
-                            color: #fff;
                             text-align: center;
                             position: absolute;
-                            top: 5.4rem;
-                            left: 35%;
-                            font-size: 1.2rem;
+                            top: 7.3rem;
+                            left: 33.5%;
+                            background-size: 100% 5.5rem;
+                            font-size: 1.3rem;
+                            font-weight: bold;
+                            line-height: 4.5rem;
                         }
                         .getLuck {
-                            // background: url('~assets/img/vote/voiceToFame/btn-start.png') no-repeat;
-                            background-color: red;
-                            // background-size: 8rem 2.2rem;
+                            background-image: url('~assets/img/vote/BSSRegister/start.png');
                             &:active {
-                                background-color: yellow;
-                                // width: 7.5rem;
-                                // height: 2rem;
-                                // line-height: 2rem;
-                                // margin: 0.6rem auto;
-                                // font-size: 1rem;
-                                // background-size: 7.5rem 2rem;
+                                background-image: url('~assets/img/vote/BSSRegister/start-ac.png');
                             }
                         }
                         .getLuck-gray {
-                            // background: url('~assets/img/vote/voiceToFame/btn-start-gray.png') no-repeat;
-                            background-color: green;
-                            // background-size: 8rem 2.2rem;
+                            background-image: url('~assets/img/vote/BSSRegister/start-gray.png');
+                            color: #ccc;
                         }
                     }
-                    // .getLuck,
-                    // .getLuck-gray {
-                    //     width: 8rem;
-                    //     height: 2.2rem;
-                    //     line-height: 2.2rem;
-                    //     color: #fff;
-                    //     text-align: center;
-                    //     // margin: 0 auto;
-                    //     font-size: 1.2rem;
-                    // }
-                    // .getLuck {
-                    //     background: url('~assets/img/vote/voiceToFame/btn-start.png') no-repeat;
-                    //     background-size: 8rem 2.2rem;
-                    //     &:active {
-                    //         width: 7.5rem;
-                    //         height: 2rem;
-                    //         line-height: 2rem;
-                    //         margin: 0.6rem auto;
-                    //         font-size: 1rem;
-                    //         background-size: 7.5rem 2rem;
-                    //     }
-                    // }
-                    // .getLuck-gray {
-                    //     background: url('~assets/img/vote/voiceToFame/btn-start-gray.png') no-repeat;
-                    //     background-size: 8rem 2.2rem;
-                    // }
                 }
                 .msg {
                     width: 100%;
@@ -1418,8 +1238,9 @@ export default {
                     overflow: hidden;
                     transition: all 0.5s;
                     position: relative;
-                    margin-bottom: 1rem;
-                    background-color: #350e72;
+                    margin-top: 0.3rem;
+                    margin-bottom: 0.5rem;
+                    background-color: #c86a02;
                     border-radius: 1rem;
                     .anim {
                         transition: all 0.5s;
@@ -1439,126 +1260,123 @@ export default {
                             padding-left: 2.5rem;
                             line-height: 2rem;
                             height: 2rem;
-                            color: #927db3;
-                            // font-weight: 200;
+                            color: #fde8ae;
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
                         }
                     }
                 }
-            }
-            .tip {
-                position: relative;
-                img {
-                    display: block;
-                    width: 4rem;
-                    height: auto;
-                    position: absolute;
-                    bottom: 0.4rem;
-                    &.left {
-                        left: 0;
-                    }
-                    &.right {
-                        right: 0;
-                    }
-                }
-                p {
+                .tip {
                     width: 100%;
-                    height: 3rem;
-                    line-height: 3rem;
+                    height: 1.3rem;
+                    line-height: 1.3rem;
                     text-align: center;
-                    color: #7a58b0;
-                    padding-bottom: 1rem;
+                    color: #fff;
                 }
             }
         }
-        .vote-box,
-        .lottery-box {
-            .flag-box {
+        .past-programme {
+            margin: 1rem auto 0;
+            width: 90%;
+            padding-bottom: 1rem;
+            img {
                 width: 100%;
-                height: 3rem;
-                background: url('~assets/img/vote/voiceToFame/bg-title.png') no-repeat;
-                background-size: 100% 3rem;
-                .vote-flag {
-                    margin: 0 auto;
-                    color: #fff;
-                    text-align: center;
-                    font-weight: 600;
-                    height: 2.7rem;
-                    line-height: 2.7rem;
-                    position: relative;
-                    img {
-                        width: 0.7rem;
-                        height: 0.7rem;
-                        position: absolute;
-                        top: 1rem;
-                        &.con-left {
-                            left: 0;
+                display: block;
+            }
+            ul {
+                width: 100%;
+                background-color: #e98005;
+                border-radius: 0.2rem;
+                padding: 1rem 3% 0.5rem;
+                li {
+                    float: left;
+                    width: 48.5%;
+                    &:nth-child(2n) {
+                        float: right;
+                    }
+                    div {
+                        position: relative;
+                        width: 100%;
+                        .url {
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 0.3rem;
+                            position: absolute;
+                            top: 0;
                         }
-                        &.con-right {
-                            right: 0;
+                        &:before {
+                            content: '';
+                            display: inline-block;
+                            padding-bottom: 62%;
+                            width: 0.1px;
+                            vertical-align: middle;
                         }
+                    }
+                    .title {
+                        margin: 0.5rem 0;
+                        width: 100%;
+                        height: 2rem;
+                        line-height: 1rem;
+                        color: #fff;
+                        font-size: 0.75rem;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        overflow: hidden;
                     }
                 }
             }
         }
     }
-    .alert-rules-box {
+    .rules-box {
         width: 17rem;
-        height: 25rem;
-        background-color: #8150fc;
+        height: 26rem;
+        line-height: 1.2rem;
         position: fixed;
         overflow: hidden;
-        left: 50%;
         top: 50%;
-        margin: auto;
+        left: 50%;
         margin-left: -8.5rem;
-        margin-top: -12.5rem;
+        margin-top: -13rem;
         z-index: 999;
-        padding: 1rem 1.5rem 0;
-        border-radius: 1rem;
-        color: #fff;
-        // font-weight: 200;
-        .rules-title {
-            width: 100%;
-            height: 1rem;
-            line-height: 1rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            font-weight: 400;
+        img {
+            &:first-child {
+                width: 100%;
+                display: block;
+            }
+            &:last-child {
+                width: 10%;
+                display: block;
+                margin: 1.5rem auto 0;
+            }
         }
-        .rules-close {
+        .rule-text {
+            width: 15rem;
+            height: 14.5rem;
+            color: #1b9145;
             position: absolute;
-            right: 1rem;
-            top: 1rem;
-        }
-        .rules-box {
+            left: 1rem;
+            top: 4rem;
+            padding: 0.5rem;
             overflow-x: hidden;
             overflow-y: scroll;
-            margin-bottom: 0.5rem;
-            .rules-text {
-                width: 100%;
-                height: 18.5rem;
-                .rules-item {
-                    text-align: left;
-                    line-height: 1.1rem;
-                }
-            }
             &::-webkit-scrollbar {
                 display: none;
             }
         }
         .share-btn {
-            width: 7rem;
-            margin: 0 auto;
-            height: 2rem;
-            line-height: 2rem;
+            width: 8rem;
+            height: 1.8rem;
             text-align: center;
-            color: #965500;
-            background-color: #f0c846;
-            border-radius: 1rem;
+            line-height: 1.8rem;
+            color: #fff;
+            background-image: url('~assets/img/vote/BSSRegister/btn-success.png');
+            background-size: 8rem 1.8rem;
+            position: absolute;
+            left: 4.5rem;
+            top: 19.2rem;
+            border-radius: 0.2rem;
         }
     }
     .shadow-box {
@@ -1570,64 +1388,6 @@ export default {
         opacity: 0.5;
         background-color: #000;
         z-index: 998;
-    }
-    .alert {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        background-color: #8150fc;
-        border-radius: 2px;
-        overflow: hidden;
-        zoom: 1;
-        z-index: 1001;
-        width: 17rem;
-        height: 10rem;
-        margin-top: -5rem;
-        margin-left: -8.5rem;
-        padding: 1.5rem 1.2rem 1rem;
-        color: #fff;
-        font-size: 1rem;
-        text-align: center;
-        .alert-default {
-            line-height: 1.3rem;
-            padding-bottom: 0.5rem;
-            height: 5.5rem;
-        }
-        .alert-footer .btn {
-            width: auto;
-            height: 2rem;
-            line-height: 2rem;
-            text-align: center;
-            border-radius: 1rem;
-            font-size: 0.9rem;
-            &.sure {
-                float: right;
-                color: #965500;
-                background-color: #f0c846;
-                margin-right: 0.5rem;
-            }
-            &.close {
-                float: left;
-                color: #d7d4fe;
-                background-color: #a099fd;
-                margin-left: 0.5rem;
-            }
-        }
-    }
-    .vote-toast {
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        margin-left: -7.5rem;
-        margin-top: -1.7rem;
-        font-size: 0.9rem;
-        background: rgba(0, 0, 0, 0.65);
-        padding: 0.6rem 1.5rem;
-        border-radius: 3px;
-        width: 15rem;
-        height: 3.4rem;
-        color: #fff;
-        z-index: 9999;
     }
 }
 </style>
