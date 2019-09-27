@@ -28,10 +28,10 @@
                         <div :class="index==i?'active':''" @touchstart="toWord(word)">{{word}}</div>
                     </div>
                 </div>
-                <div v-for="(item,key) in wordTree" :id="key" :key="key" :ref="key" class="vote-word">
-                    <div class="vote-title">{{key}}</div>
+                <div v-for="(item,key) in dataList" v-show="dataList.length" :id="item.letter" :key="key" class="vote-word">
+                    <div class="vote-title">{{item.letter}}</div>
                     <ul class="clearfix">
-                        <li v-for="(n,i) in item" :key="i">
+                        <li v-for="(n,i) in item.data" :key="i">
                             <div class="item-box">
                                 <div>
                                     <img v-if="n.icon" :src="n.icon" class="icon" />
@@ -80,6 +80,7 @@ export default {
     components: {
         mShare
     },
+    filters: {},
     data() {
         return {
             // 页面
@@ -93,6 +94,7 @@ export default {
             title: 'Bongo Star Search 2019 Vote Detail',
             wordListReady: [],
             wordTree: {},
+            dataList: [],
             adviserList: {},
             isload: false,
             vote_id: 16,
@@ -177,6 +179,7 @@ export default {
             this.$nextTick(() => {
                 this.wordListReady.forEach((item, index) => {
                     const el = document.getElementById(item)
+                    // this.reqWordList.push(item)
                     const clientH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
                     const elTop = el.getBoundingClientRect().top
                     const elbottom = el.getBoundingClientRect().bottom
@@ -216,11 +219,13 @@ export default {
                         this.wordTree[key] = this.adviserList[key]
                     }
                     this.isload_a = true
+                    this.formatDataList()
                 })
                 .catch(err => {
                     this.$alert(err)
                 })
         },
+
         toWord(id) {
             document.getElementById(id).scrollIntoView()
             this.wordListReady.forEach((item, index) => {
@@ -263,18 +268,27 @@ export default {
                 .then(res => {
                     Object.keys(res.data.data).forEach(key => {
                         if (key.charCodeAt() >= 65 && key.charCodeAt() <= 90) {
-                            // this.adviserList[key] = res.data.data[key]
                             this.wordTree[key] = res.data.data[key]
                             this.count += res.data.data[key]
                             this.wordListReady.push(key)
                         }
                     })
                     this.isload_w = true
+                    this.formatDataList()
                     this.canSeeWordList()
                 })
                 .catch(err => {
                     this.$alert(err)
                 })
+        },
+        formatDataList() {
+            this.dataList = []
+            for (const key in this.wordTree) {
+                this.dataList.push({
+                    letter: key,
+                    data: this.wordTree[key]
+                })
+            }
         },
         // 播放视频方法
         toPlayer(advisor) {
