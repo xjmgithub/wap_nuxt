@@ -31,18 +31,6 @@
                 <div v-for="(item,key) in wordTree" :id="key" :key="key" :ref="key" class="vote-word">
                     <div class="vote-title">{{key}}</div>
                     <ul class="clearfix">
-                        <!-- <li v-for="n in item" :key="n">
-                            <div class="item-box">
-                                <div>
-                                    <img :src="adviserList[key][n-1]" class="icon" @click="toPlayer(adviserList[key][n-1])" />
-                                    <p>{{adviserList[key][n-1].ballot_num}}</p>
-                                </div>
-                                <span class="name">{{adviserList[key][n-1].name}}</span>
-                            </div>
-                            <div class="vote-btn">
-                                <div class="btn" @click="handleVote(adviserList[key][n-1])">VOTE</div>
-                            </div>
-                        </li>-->
                         <li v-for="(n,i) in item" :key="i">
                             <div class="item-box">
                                 <div>
@@ -55,37 +43,60 @@
                                 <span v-else class="name">{{n.name}}</span>
                             </div>
                             <div class="vote-btn">
-                                <div class="btn">VOTE</div>
+                                <div v-if="n.name" class="btn" @click="handleViceVote(n)">VOTE</div>
+                                <div v-else class="btn">VOTE</div>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
+        <div v-show="show_rules" class="rules-box">
+            <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
+            <div class="rule-text">
+                1. Kutoka tarehe 8th Oct hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
+                <br />2. Unaweza kumpigia kura mshiriki yeyote unayempenda!
+                <br />3. Washirikishe link rafiki zako na waombe wapakue app ya StarTimes ON ili kupata kura zaidi! Utapata kura 5 zaidi kwa kila mtumiaji mpya. Unavyozidi kuleta watumiaji wapya, ndivyo unavyopata kura zaidi!
+                <br />4. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi! Una nafasi ya kushinda kila mwezi Max VIP na kuponi kwenye App ya StarTimes ON.
+                <br />5. Zawadi zitakuwa zinatolewa siku ya pili ya kazi katika Me-> Kuponi zangu.
+                <br />6. Washiriki 10 wa mwanzo wenye kura nyingi zaidi wataingia kwenye orodha ya uchaguzi wa mwisho na kupata nafasi ya kuonekana rasmi kwenye onyesho la BSS2019.
+            </div>
+            <div class="share-btn" @click="toShare('voterules')">SHIRIKI</div>
+            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
+        </div>
+        <div v-show="show_rules" class="shadow-box" @click="closeRule"></div>
+        <mShare />
+        <div v-show="tip" class="vote-toast">{{tip}}</div>
     </div>
 </template>
 <script>
 import qs from 'qs'
 import { Base64 } from 'js-base64'
 import { cdnPicSrc } from '~/functions/utils'
+import mShare from '~/components/web/share.vue'
 import { playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
-    components: {},
+    components: {
+        mShare
+    },
     data() {
         return {
             // 页面
+            // appType: this.$store.state.appType || 0,
+            // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             appType: 1,
+            isLogin: true,
+            show_rules: false,
+            tip: '',
+            tip_timer: null,
             title: 'Bongo Star Search 2019 Vote Detail',
             wordListReady: [],
             wordTree: {},
-            // voteList: [],
-            // voteListWord: [[]],
             adviserList: {},
             isload: false,
             vote_id: 16,
             isload_w: false,
-            isload_a: false,
             index: 0,
             adviser: {},
             timer: null,
@@ -97,21 +108,14 @@ export default {
             imgUrl: '',
 
             voteLeft: 0,
-            // scrollTop: 0
             startTime: '',
             endTime: '',
             finishWord: '',
-            reqWordList: []
+            reqWordList: [],
+            firstTime: true
         }
     },
     computed: {
-        adviserListReady() {
-            if (this.isload_a) {
-                return this.adviserList
-            } else {
-                return []
-            }
-        },
         scrollTop() {
             return this.t1
         }
@@ -135,15 +139,28 @@ export default {
         }
     },
     created() {
-        this.getVoteMsg()
+        // this.getVoteMsg()
     },
     mounted() {
+        this.getVoteMsg()
         this.mSendEvLog('page_show', '', '')
         this.getVoteinfo()
         window.addEventListener('scroll', this.handleScroll)
     },
 
     methods: {
+        showRule() {
+            this.show_rules = true
+            // 页面静止
+            document.body.style.overflow = 'hidden'
+            document.body.style.position = 'fixed'
+        },
+        closeRule() {
+            this.show_rules = false
+            // 页面静止
+            document.body.style.overflow = 'auto'
+            document.body.style.position = 'static'
+        },
         handleScroll() {
             clearTimeout(this.timer)
             this.t1 = document.documentElement.scrollTop || document.body.scrollTop
@@ -166,7 +183,6 @@ export default {
 
                     if ((elbottom > 100 || elTop >= 0) && (elbottom < clientH || elTop <= clientH)) {
                         this.reqWordList.push(item)
-                        console.log(this.reqWordList)
                     }
                 })
                 this.getAdviserList()
@@ -195,24 +211,19 @@ export default {
                     if (this.finishWord.indexOf(key) < 0) {
                         this.finishWord += key
                     }
-                    this.wordTree[key] = this.adviserList[key]
-                }
-                this.isload_a = true
-            })
+                    }
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
         },
         toWord(id) {
             document.getElementById(id).scrollIntoView()
-            this.wordListReady.forEach((item, index) => {
+            this.wordList.forEach((item, index) => {
                 if (id == item) {
                     this.index = index
                 }
             })
-        },
-        showRule() {
-            this.show_rules = true
-            // 页面静止
-            document.body.style.overflow = 'hidden'
-            document.body.style.position = 'fixed'
         },
         toShare(label) {
             if (label == 'voterules') this.show_rules = false
@@ -248,14 +259,12 @@ export default {
                 .then(res => {
                     Object.keys(res.data.data).forEach(key => {
                         if (key.charCodeAt() >= 65 && key.charCodeAt() <= 90) {
+                            // this.adviserList[key] = res.data.data[key]
                             this.wordTree[key] = res.data.data[key]
                             this.count += res.data.data[key]
                             this.wordListReady.push(key)
                         }
                     })
-                    // this.wordList.sort((a, b) => {
-                    //     return a - b
-                    // })
                     this.isload_w = true
                     this.canSeeWordList()
                 })
@@ -295,41 +304,32 @@ export default {
                 })
             }
         },
+        toThousands(num) {
+            return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+        },
         // 投票方法
-        handleVote(advisor) {
+        handleViceVote(advisor) {
             this.mSendEvLog('votebtn_click', advisor.name, '')
             if (this.appType == 0) {
                 this.callOrDownApp('vote')
                 return
             }
             if (this.serverTime < this.startTime) {
-                this.show(
-                    `<p style="padding-top:0.5rem">Stay tuned! Voting will begin on September 23rd.</p>`,
-                    () => {},
-                    () => {},
-                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                    ''
-                )
+                this.$alert('Upigaji kura utaanza tarehe 8th Octoba, kwa hiyo kaa tayari!', () => {}, 'SAWA')
                 return
             } else if (this.serverTime > this.endTime) {
-                this.show(
-                    `<p style="padding-top: 1rem">Sorry, the voting has ended.</p>`,
-                    () => {},
-                    () => {},
-                    `<p style="padding: 0 1rem">GOT IT</p>`,
-                    ''
-                )
+                this.$alert('Samahani, kura zimekwisha.', () => {}, 'SAWA')
                 return
             }
             if (this.voteLeft <= 0) {
-                this.show(
-                    `<p style="font-size:0.9rem">Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!</p>`,
+                this.$confirm(
+                    'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
                     () => {
                         this.toShare('votefail')
                     },
                     () => {},
-                    `<p style="padding: 0 1rem">SHARE</p>`,
-                    `<p style="padding: 0 1rem">CANCEL</p>`
+                    'SHIRIKI',
+                    'FUTA'
                 )
             } else {
                 this.$axios({
@@ -345,32 +345,31 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            advisor.ballot_num++
+                            advisor.ballot_num = this.toThousands(parseInt(advisor.ballot_num.replace(',', '')) + 1)
+                            // advisor.ballot_num++
                             this.voteLeft--
                             this.lotteryLeft++
                             if (this.voteLeft > 0) {
                                 if (this.firstTime) {
-                                    this.show(
-                                        `<p style="font-size:0.9rem">Congrats! You‘ve successfully voted! You‘ve got 1 chance to win VIP! Swipe down and try your luck!</p>`,
+                                    this.$alert(
+                                        'Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.',
                                         () => {
                                             this.firstTime = false
                                         },
-                                        () => {},
-                                        `<p style="padding: 0 1rem">GOT IT</p>`,
-                                        ''
+                                        'GOT IT'
                                     )
                                 } else {
-                                    this.tipShow("Successfully voted! And you've got 1 chance to win VIP!")
+                                    this.tipShow('Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.')
                                 }
                             } else {
-                                this.show(
-                                    `<p style="font-size:0.9rem">Successfully voted! you have 0 vote remaining. Share with your friends to earn more votes!</p>`,
+                                this.$confirm(
+                                    'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
                                     () => {
                                         this.toShare('0leftvote')
                                     },
                                     () => {},
-                                    `<p style="padding: 0 1rem">SHARE</p>`,
-                                    `<p style="padding: 0 1rem">CANCEL</p>`
+                                    'SHIRIKI',
+                                    'FUTA'
                                 )
                             }
                         } else {
@@ -378,7 +377,7 @@ export default {
                         }
                     })
                     .catch(err => {
-                        this.show(err, () => {}, () => {}, `<p style="padding: 0 1rem">GOT IT</p>`, '')
+                        this.$alert(err)
                     })
             }
         },
@@ -399,6 +398,15 @@ export default {
                 .catch(err => {
                     this.$alert(err)
                 })
+        },
+        // toast方法
+        tipShow(text, duration = 2000) {
+            clearInterval(this.tip_timer)
+            const _this = this
+            this.tip = text
+            this.tip_timer = setTimeout(() => {
+                _this.tip = ''
+            }, duration)
         }
     },
     head() {
@@ -604,14 +612,16 @@ export default {
                             }
                             .name {
                                 width: 100%;
-                                height: 1.5rem;
+                                height: 2rem;
                                 padding: 0 0.2rem;
                                 margin-top: 0.2rem;
-                                line-height: 1.5rem;
+                                line-height: 1rem;
                                 font-size: 0.8rem;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
-                                white-space: nowrap;
+                                display: -webkit-box;
+                                -webkit-line-clamp: 2;
+                                -webkit-box-orient: vertical;
                                 color: #fff;
                                 display: block;
                                 text-align: center;
@@ -659,6 +669,81 @@ export default {
                 }
             }
         }
+    }
+    .rules-box {
+        width: 17rem;
+        height: 26rem;
+        line-height: 1.2rem;
+        position: fixed;
+        overflow: hidden;
+        top: 50%;
+        left: 50%;
+        margin-left: -8.5rem;
+        margin-top: -13rem;
+        z-index: 999;
+        img {
+            &:first-child {
+                width: 100%;
+                display: block;
+            }
+            &:last-child {
+                width: 10%;
+                display: block;
+                margin: 1.5rem auto 0;
+            }
+        }
+        .rule-text {
+            width: 15rem;
+            height: 14.5rem;
+            color: #1b9145;
+            position: absolute;
+            left: 1rem;
+            top: 4rem;
+            padding: 0.5rem;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+        .share-btn {
+            width: 8rem;
+            height: 1.8rem;
+            text-align: center;
+            line-height: 1.8rem;
+            color: #fff;
+            background-image: url('~assets/img/vote/BSSRegister/btn-success.png');
+            background-size: 8rem 1.8rem;
+            position: absolute;
+            left: 4.5rem;
+            top: 19.2rem;
+            border-radius: 0.2rem;
+        }
+    }
+    .shadow-box {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        opacity: 0.5;
+        background-color: #000;
+        z-index: 998;
+    }
+    .vote-toast {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -7.5rem;
+        margin-top: -2.1rem;
+        font-size: 0.9rem;
+        background: rgba(0, 0, 0, 0.65);
+        padding: 0.6rem 1.5rem;
+        border-radius: 3px;
+        width: 15rem;
+        height: 4.2rem;
+        color: #fff;
+        z-index: 9999;
     }
 }
 </style>

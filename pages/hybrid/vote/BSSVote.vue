@@ -43,13 +43,13 @@
                     <div class="more" @click="toAll">ANGALIA WASHIRIKI WOTE</div>
                 </div>
             </div>
-            <img src="~assets/img/vote/BSSRegister/ic-link-register.png" alt class="link" @click="toRegister"/>
+            <img src="~assets/img/vote/BSSRegister/ic-link-register.png" alt class="link" @click="toRegister" />
             <img id="text2" class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
             <div class="share-box" @click="toShare('midshare')">
                 <div>
-                    <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt="" />
-                    <img v-else src="~assets/img/vote/BSSRegister/bg-login.png" alt="" @click="toSignIn"/>
-                    <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt="" />
+                    <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt />
+                    <img v-else src="~assets/img/vote/BSSRegister/bg-login.png" alt @click="toSignIn" />
+                    <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt />
                     <div class="num">
                         <p>FANIKIWA KUALIKA RAFIKI {{share_num}}</p>
                     </div>
@@ -86,10 +86,11 @@
                     </div>
                     <div class="tip">
                         <p>TAFUTA ZAWADI KWENYE ME -> KUPONI YANGU</p>
+                        <!-- <p>Tafuta zawadi kwenye Me-> Kuponi yangu</p> -->
                     </div>
                 </div>
             </div>
-            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/ic-link-comment.png" alt class="link" @click="toComment"/>
+            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/ic-link-comment.png" alt class="link" @click="toComment" />
             <img v-if="isCommentStart" class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
             <div v-if="isCommentStart" class="past-programme">
                 <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
@@ -106,7 +107,7 @@
         <div v-show="show_rules" class="rules-box">
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
-                1. Kutoka  tarehe 8th Oct  hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
+                1. Kutoka tarehe 8th Oct hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
                 <br />2. Unaweza kumpigia kura mshiriki yeyote unayempenda!
                 <br />3. Washirikishe link rafiki zako na waombe wapakue app ya StarTimes ON ili kupata kura zaidi! Utapata kura 5 zaidi kwa kila mtumiaji mpya. Unavyozidi kuleta watumiaji wapya, ndivyo unavyopata kura zaidi!
                 <br />4. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi! Una nafasi ya kushinda kila mwezi Max VIP na kuponi kwenye App ya StarTimes ON.
@@ -260,7 +261,7 @@ export default {
 
     methods: {
         toHowToGetVote() {
-            document.getElementById('text2').scrollIntoView();
+            document.getElementById('text2').scrollIntoView()
         },
         toAll() {
             this.$router.push(`/hybrid/vote/BSSVoteDetail`)
@@ -384,8 +385,8 @@ export default {
             }
         },
         toThousands(num) {
-		    return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
-		},
+            return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+        },
         // 获取投票单元数据
         getAdvisorList() {
             this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}&sort_type=BALLOT&size=9`).then(res => {
@@ -394,7 +395,7 @@ export default {
                     this.advisorList.sort(function(a, b) {
                         return b.ballot_num - a.ballot_num
                     })
-                    this.advisorList.forEach((item,index)=>{
+                    this.advisorList.forEach((item, index) => {
                         item.ballot_num = this.toThousands(item.ballot_num)
                     })
                 } else {
@@ -452,7 +453,7 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            advisor.ballot_num = this.toThousands(parseInt(advisor.ballot_num.replace(',','')) + 1)
+                            advisor.ballot_num = this.toThousands(parseInt(advisor.ballot_num.replace(',', '')) + 1)
                             // advisor.ballot_num++
                             this.voteLeft--
                             this.lotteryLeft++
@@ -466,7 +467,7 @@ export default {
                                         'GOT IT'
                                     )
                                 } else {
-                                    this.tipShow("Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.")
+                                    this.tipShow('Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.')
                                 }
                             } else {
                                 this.$confirm(
@@ -651,7 +652,11 @@ export default {
                 return
             }
             this.mSendEvLog('lottery_click', '', '-1')
-            this.$alert('Nenda kupiga kura ili kushinda bahati nzuri ya kuteka. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi.', () => {}, 'SAWA')
+            this.$alert(
+                'Nenda kupiga kura ili kushinda bahati nzuri ya kuteka. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi.',
+                () => {},
+                'SAWA'
+            )
         },
         // 开始抽奖
         startLottery() {
@@ -677,7 +682,7 @@ export default {
                 if (this.index < 5) {
                     setTimeout(() => {
                         this.$alert(
-                            "Hongera! Umepata " +
+                            'Hongera! Umepata ' +
                                 this.lotteryType[this.index].name +
                                 '! Zawadi zitatolewa kwenye siku ya pili ya kazi katika Me-> Kuponi zangu.',
                             () => {
@@ -691,7 +696,7 @@ export default {
                         if (res.data.code == 200) {
                             setTimeout(() => {
                                 this.$alert(
-                                    "Hongera! Umepata kura " + res.data.data + ' zaidi!',
+                                    'Hongera! Umepata kura ' + res.data.data + ' zaidi!',
                                     () => {
                                         this.click = true
                                     },
@@ -707,7 +712,7 @@ export default {
                     setTimeout(() => {
                         this.lotteryLeft++
                         this.$alert(
-                            "Hongera! Umepata nafasi moja zaidi!",
+                            'Hongera! Umepata nafasi moja zaidi!',
                             () => {
                                 this.click = true
                                 this.startLottery()
@@ -832,7 +837,7 @@ export default {
                 if (res.data.code === 0) {
                     this.clipsList = res.data.data
                     this.clipsList.forEach(item => {
-                        if(item.name.substr(0,1) == 'c') {
+                        if (item.name.substr(0, 1) == 'c') {
                             this.clipsListNew.push(item)
                         }
                     })
@@ -1039,14 +1044,16 @@ export default {
                         }
                         .name {
                             width: 100%;
-                            height: 1.5rem;
+                            height: 2rem;
                             padding: 0 0.2rem;
                             margin-top: 0.2rem;
-                            line-height: 1.5rem;
+                            line-height: 1rem;
                             font-size: 0.8rem;
                             overflow: hidden;
                             text-overflow: ellipsis;
-                            white-space: nowrap;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            -webkit-box-orient: vertical;
                             color: #fff;
                             display: block;
                             text-align: center;
@@ -1321,9 +1328,13 @@ export default {
                 .tip {
                     width: 100%;
                     height: 1.3rem;
+                    font-size: 0.75rem;
                     line-height: 1.3rem;
                     text-align: center;
                     color: #fff;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }
