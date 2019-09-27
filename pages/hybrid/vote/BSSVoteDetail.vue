@@ -77,8 +77,7 @@ export default {
             // 页面
             appType: 1,
             title: 'Bongo Star Search 2019 Vote Detail',
-            wordList: [],
-            wordListReady:[],
+            wordListReady: [],
             wordTree: {},
             // voteList: [],
             // voteListWord: [[]],
@@ -88,7 +87,6 @@ export default {
             isload_w: false,
             isload_a: false,
             index: 0,
-            array: [],
             adviser: {},
             timer: null,
             t1: 0,
@@ -102,7 +100,8 @@ export default {
             // scrollTop: 0
             startTime: '',
             endTime: '',
-            finishWord: ''
+            finishWord: '',
+            reqWordList: []
         }
     },
     computed: {
@@ -139,11 +138,9 @@ export default {
         this.getVoteMsg()
     },
     mounted() {
-        // this.getVoteMsg()
         this.mSendEvLog('page_show', '', '')
         this.getVoteinfo()
         window.addEventListener('scroll', this.handleScroll)
-        this.getAdviserList(this.canSeeWordList())
     },
 
     methods: {
@@ -154,43 +151,45 @@ export default {
                 this.t2 = document.documentElement.scrollTop || document.body.scrollTop
                 if (this.t2 === this.t1) {
                     console.log('滚动结束了')
-                    this.getAdviserList(this.canSeeWordList())
+                    this.canSeeWordList()
                 }
             }, 500)
         },
         canSeeWordList() {
-            const array = []
-            this.wordListReady.forEach((item, index) => {
-                // const el = this.$refs.item
-                const el = document.getElementById(item)
-                const clientH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-                const elTop = el.getBoundingClientRect().top
-                const elbottom = el.getBoundingClientRect().bottom
+            this.reqWordList = []
+            this.$nextTick(() => {
+                this.wordListReady.forEach((item, index) => {
+                    const el = document.getElementById(item)
+                    const clientH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+                    const elTop = el.getBoundingClientRect().top
+                    const elbottom = el.getBoundingClientRect().bottom
 
-                if ((elbottom > 100 || elTop >= 0) && (elbottom < clientH || elTop <= clientH)) {
-                    array.push(item)
-                }
+                    if ((elbottom > 100 || elTop >= 0) && (elbottom < clientH || elTop <= clientH)) {
+                        this.reqWordList.push(item)
+                        console.log(this.reqWordList)
+                    }
+                })
+                this.getAdviserList()
             })
-            const len = array.length
+
+            const len = this.reqWordList.length
             this.wordListReady.forEach((item, index) => {
-                if (array[len-1] == item) {
+                if (this.reqWordList[len - 1] == item) {
                     this.index = index
                 }
             })
-            return array
         },
-        getAdviserList(array) {
-            array.forEach((item,index)=>{
-                if(this.finishWord.indexOf(item) >=0 ) {
-                    array[index] = ''
+        getAdviserList() {
+            this.reqWordList.forEach((item, index) => {
+                if (this.finishWord.indexOf(item) >= 0) {
+                    this.reqWordList[index] = ''
                 }
             })
-            array = array.join('').split('')
-            if(array.length <= 0) return
-            const labels = '&labels=' + array.join('&labels=')
+            const tmp = this.reqWordList.join('').split('')
+            if (tmp.length <= 0) return
+            const labels = '&labels=' + this.reqWordList.join('&labels=')
             this.$axios.get(`/voting/v2/candidates-show?vote_id=${this.vote_id}` + labels).then(res => {
                 this.adviserList = {}
-                console.log('000')
                 for (const key in res.data.data) {
                     this.adviserList[key] = res.data.data[key]
                     if (this.finishWord.indexOf(key) < 0) {
@@ -251,15 +250,14 @@ export default {
                         if (key.charCodeAt() >= 65 && key.charCodeAt() <= 90) {
                             this.wordTree[key] = res.data.data[key]
                             this.count += res.data.data[key]
-                            this.wordList.push(key)
+                            this.wordListReady.push(key)
                         }
                     })
                     // this.wordList.sort((a, b) => {
                     //     return a - b
                     // })
                     this.isload_w = true
-                    this.wordListReady = this.wordList
-                    this.getAdviserList(this.canSeeWordList())
+                    this.canSeeWordList()
                 })
                 .catch(err => {
                     this.$alert(err)
