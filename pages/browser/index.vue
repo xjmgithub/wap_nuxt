@@ -138,10 +138,8 @@ export default {
         downloadApk() {
             if(this.$store.state.country.country=='NG'){
                 this.$axios.get('/hybrid/api/app/getApk').then(data => {
-                    console.log(data.data.data.replace())
-                    // window.location.href = data.data.data
+                    window.location.href = data.data.data.replace('cdn.startimestv.com','cloudflare-cdn.startimestv.com/appinfo')
                 })
-                window.location.href = ""
             }else{
                 downApk.call(this)
             }
