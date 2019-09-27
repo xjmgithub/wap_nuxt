@@ -4,18 +4,10 @@
         <div class="input-tel">
             <div class="prefix">+{{prefix}}</div>
             <div class="number">
-                <input
-                    v-model="tel"
-                    :disabled="disabled"
-                    :class="{focus:focus_tel,'input-error':error_tel}"
-                    type="tel"
-                    placeholder="Cellphone number"
-                    @focus="focus_tel=true"
-                    @blur="focus_tel=false"
-                >
+                <input v-model="tel" :disabled="disabled" :class="{focus:focus_tel,'input-error':error_tel}" type="tel" :placeholder="$store.state.lang.cellphone_number" @focus="focus_tel=true" @blur="focus_tel=false">
             </div>
             <div class="get-code">
-                <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">{{codeDuring>0?`${codeDuring}s`:'Get Code'}}</div>
+                <div :class="{disabled:!canGetCode}" class="btn" @click="getCode">{{codeDuring>0?`${codeDuring}s`:$store.state.lang.get_code}}</div>
             </div>
         </div>
         <div v-show="error_tel" class="error">{{error_tel}}</div>
@@ -26,7 +18,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: 'Enter your phone number'
+            default: ''
         },
         disabled: {
             type: Boolean,
@@ -78,7 +70,7 @@ export default {
                 }
             })
         },
-        setTel(tel){
+        setTel(tel) {
             this.tel = tel
         }
     }
@@ -132,6 +124,9 @@ export default {
 .get-code {
     position: relative;
     flex: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     .btn {
         max-width: 10rem;
         margin-left: 0.3rem;
@@ -142,6 +137,9 @@ export default {
         height: 2.3rem;
         line-height: 2.3rem;
         border-radius: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         cursor: pointer;
         &.disabled {
             background: #eeeeee;

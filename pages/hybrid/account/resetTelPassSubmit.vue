@@ -5,12 +5,12 @@
                 <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2" />
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1" />
             </div>
-            <div v-show="focus_ps" class="passText">{{$store.state.lang.register_input_enter_password_tip}}</div>
+            <div class="tag" :class="{focus:focus_ps,error:error_ps}">{{$store.state.lang.register_input_enter_password_tip}}</div>
             <input
                 v-model="pass"
                 :class="{focus:focus_ps,error:error_ps}"
                 :type="pwdType"
-                :placeholder="enter_ps"
+                :placeholder="focus_ps?'':enter_ps"
                 @focus="focusPass"
                 @blur="checkPass"
             />
@@ -21,12 +21,12 @@
                 <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext_confirm=2" />
                 <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1" />
             </div>
-            <div v-show="focus_reps" class="repassText">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
+            <div class="tag" :class="{focus:focus_reps,error:error_reps}">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
             <input
                 v-model="repass"
                 :class="{focus:focus_reps,error:error_reps}"
                 :type="pwdType_confirm"
-                :placeholder="enter_reps"
+                :placeholder="focus_reps?'':enter_reps"
                 @focus="focusRepass"
                 @blur="checkRepass"
             />
@@ -160,7 +160,7 @@ export default {
                         this.$router.replace('/hybrid/account/signIn')
                     }
                 } else {
-                    this.$alert(this.$store.state.lang.error_code)
+                    this.$alert(this.$store.state.lang.verify_code_expired)
                     this.abled = true
                 }
             })
@@ -191,13 +191,18 @@ export default {
             }
         }
         font-size: 0.8rem;
-        .passText,
-        .repassText {
+        .tag {
             position: absolute;
-            top: 0;
             left: 0;
-            color: #0087eb;
-            padding-left: 0.4rem;
+            top: 0;
+            font-size: 0.8rem;
+            color: transparent;
+            &.focus {
+                color: #0087eb;
+            }
+            &.error {
+                color: red;
+            }
         }
         input {
             padding: 1rem 0 0 0.4rem;

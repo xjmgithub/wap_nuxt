@@ -2,7 +2,7 @@
     <div>
         <img v-show="toggleView&&isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" @click="isCiphertext=2" />
         <img v-show="toggleView&&isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" @click="isCiphertext=1" />
-        <div class="password-box">
+        <div class="password-box" :class="{focus:focus_password}">
             <div class="pwd-input" style="clear:both;">
                 <div class="input-item" v-html="N1" />
                 <div v-show="length>=2" class="input-item" v-html="N2" />
@@ -11,7 +11,7 @@
                 <div v-show="length>=5" class="input-item" v-html="N5" />
                 <div v-show="length>=6" class="input-item" v-html="N6" />
             </div>
-            <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd" />
+            <input v-model="password" :maxlength="length" type="tel" class="hidden-pwd" @focus="focus_password=true" @blur="focus_password=false" />
         </div>
     </div>
 </template>
@@ -34,7 +34,8 @@ export default {
     data() {
         return {
             password: '',
-            isCiphertext: this.defaultView
+            isCiphertext: this.defaultView,
+            focus_password: false,
         }
     },
     computed: {
@@ -133,6 +134,11 @@ export default {
         top: 0;
         left: 0;
         opacity: 0;
+    }
+    &.focus {
+        .input-item {
+            border-bottom: 1px solid #0087eb;
+        }
     }
 }
 .error {

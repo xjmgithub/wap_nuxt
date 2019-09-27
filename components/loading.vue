@@ -37,8 +37,8 @@ export default {
     box-sizing: border-box;
     display: block;
     position: absolute;
-    width: 3rem;
-    height: 3rem;
+    width: 100%;
+    height: 100%;
     margin: 0;
     border: 0.3rem solid #0087eb;
     border-radius: 50%;

@@ -11,6 +11,56 @@ export default {
     starpay_payment_currency_error: 'Impossible de procéder à la transaction, opération erronée, veuillez essayer avec un autre moyen de paiement ou contactez-nous.',
     starpay_payment_amount_error: 'Fonds insuffisants, veuillez vérifier votre solde',
     starpay_payment_login_notice: 'Pour payer par eWallet, vous devez d\'abord vous connecter au compte StarTimes.',
+    starpay_payment_paytoken_error: 'Requête code de paiement nécessaire! S\'il vous plaît contactez-nous pour obtenir de l\'aide',
+    starpay_payment_timeout_notice: 'Délai de transaction expiré, nous sommes toujours en train d\'effectuer le paiement et cela pourrait prendre plus de temps. Le résultat sera immédiatement actualisé,merci de patienter.',
+    starpay_payment_pending_message: 'Votre paiement est en cours merci de patienter un instant',
+    starpay_payment_no_paychannel: 'Pas de canal de paiement disponible',
+    product_name: 'Nom du produit',
+    eWallet: 'eWallet',
+    note: 'Remarque',
+    query_paytoken_needed: 'Requête code de paiement nécessaire! S\'il vous plaît contactez-nous pour obtenir de l\'aide',
+    payToken_payChannel_mismatch: 'Code de paiement ne correspond pas ! S\'il vous plaît contactez-nous pour obtenir de l\'aide',
+    pay_now: 'PAYER',
+    confirm_payment: 'Confirmer le paiement',
+    add_card_topay: 'Ajouter la carte pour payer',
+    enter_complete_info: 'S\'il vous plaît entrer les informations complètes.',
+    enter_correct_info: 'S\'il vous plaît entrez le XXX correct',
+    payment_successful: 'Paiement Réussi',
+    pay_successful_desc: 'Merci pour votre paiement. Votre commande a été payée avec succès. S\'il vous plaît cliquez sur "OK" si vous n\'êtes pas redirigé dans les 10s.',
+    payment_failed: 'Paiement échoué',
+    pay_failed_desc: 'Votre demande n\'a pas été acceptée. S\'il vous plaît actualiser la page ou essayer à nouveau le paiement.',
+    pay_refresh: 'RAFRAÎCHIR',
+    pay_ok: 'OK',
+    pay_help: 'HELP',
+    error_notice: 'L\'ordre id est vide, demande invalide. S\'il vous plaît contactez-nous pour obtenir de l\'aide',
+    payment_results: 'Résultats de Paiement',
+    forgot_payment_password: 'Mot de passe de paiement oublié?',
+    payment_details: 'Détails de paiement',
+    enter_pay_password: 'Entrer le mot de passe de paiement',
+    confirm_phone_number: 'Confirmer votre numéro de téléphone',
+    enter_phone_number: 'Entrez votre numéro de téléphone',
+    enter_code: 'Commencez par entrer votre code d\'activation.',
+    unknown_error: 'Désolé ! Erreur inconnue.',
+    phone_already_set: 'Ce numero de téléphone est occupé, prière utiliser un autre',
+    change_phone_number: 'Modifier le numéro de téléphone',
+    enter_SMS_code: 'Entrez le code d\'authentification',
+    set_payment_password: 'Définir le mot de passe de paiement',
+    set_6bit_password: 'Définir un mot de passe à 6 chiffres',
+    confirm_password: 'Confirmez le mot de passe',
+    set_phone_succ: 'Votre numero de telephone a ete defini avec succes!',
+    two_password_not_match: 'Les mots de passe ne correspondent pas.',
+    enter_pure_numbers: 'Le mot de passe doit être uniquement des chiffres',
+    reset_password: 'Réinitialiser le mot de passe',
+    setting_password: 'Définir le mot de passe',
+    enter_signin_pass: 'Entrez le mot de passe de connexion',
+    fotget_signin_pass: 'Mot de passe oublié?',
+    password_error: 'Mot de passe incorrect',
+    cellphone_number: 'Numéro de téléphone',
+    get_code: 'Obtenir le Code',
+    payment_method_not_supported: 'Ce mode de paiement n\'est pas supporté, veuillez en essayer un autre.',
+    incorrect_pay_password: 'Mot de passe de paiement incorrect. Réessayez.',
+    register_text: 'Créer un nouveau compte StarTimes ON',
+    get_userinfo_error: 'Obtenir des informations sur l\'utilisateur',
 
     // vote film
     vote_about: 'À propos du PAOFF ',
@@ -205,7 +255,6 @@ export default {
     error_email_false: 'L\'adresse email est incorrecte. Veuillez vérifier et essayer à nouveau.',
     error_registered: 'Vous vous êtes déjà enregistré.',
     error_code: 'Non reconnu. Veuillez vérifier et entrer à nouveau.',
-    sign_in: 'Se connecter',
 
     // setpass
     register_input_enter_password: 'Entrez le mot de passe',
@@ -231,20 +280,43 @@ export default {
     Password: 'Mot de passe',
     forget_password: 'Mot de Passe oublié?',
     // 错误提示
-    signin_notexist: 'Le compte n\'existe pas.',
-    register: 'Inscription',
     confirm_number: 'Veuillez confirmer que vous avez entré le bon numéro.',
+    signin_notexist: 'Le compte n\'existe pas.',
     mailbox_not_correct_format: 'Le format de la boîte mail est incorrect!',
+    password_cannot_less_letters: 'Le mot de passe ne peut pas être inférieur à 6 lettres!',
+    password_cannoe_greater: 'Le mot de passe ne peut pas être supérieur à 18 lettres!',
     password_is_incorrect: 'Le mot de passe est incorrect',
-    forget_password_account_security_questions_hint: 'Veuillez saisir votre compte',
-    password_not_empty: 'Ne laissez pas le mot de passe vide!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'Le code de vérification a été envoyé. Veuillez consulter votre boîte e- mail ou votre courrier indésirable. Un nouveau code de vérification pourrait vous être envoyé après 60 secondes.',
-    get_verification_code: 'Cliquez pour obtenir le code de vérification',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'Ce numéro n\'est pas inscrit.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'Expiration du code de vérification. Envoyez le code à nouveau.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Veuillez consulter votre boîte Mail. Cliquez sur le code de sécurité et réinitialisez votre mot de passe.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'Cette adresse e-mail n\'a pas encore été enregistrée.',
+    password_reset_failed: 'Échec de réinitialisation du mot de passe!',
 
     // title
-    reg_title: 'Inscription',
+    register: 'Inscription',
+    sign_in: 'Se connecter',
     set_password: 'Définir le mot de passe',
     reset_pass: 'Réinitialiser le mot de passe',
+    login_title: 'S\'identifier',
+
+    // login
+    login_btn: 'SE CONNECTER',
+    no_have_account: 'Vous n\'avez pas de compte?',
+    firstpage_tips: 'En vous inscrivant, vous vous engagez à nos',
+    firstpage_tips2: "Termes de service",
+    firstpage_tips3: "et",
+    firstpage_tips4: "Politique de confidentialité.",
 }

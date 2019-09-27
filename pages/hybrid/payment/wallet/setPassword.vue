@@ -1,33 +1,33 @@
 <template>
     <div class="container">
         <div v-show="step==1" class="step1">
-            <verify-tel ref="phone" :title="reset?'Confirm your cellphone number':'Enter your phone number'" :disabled="reset" @canNext="canStep2=true" @passCode="goStep(6)" />
+            <verify-tel ref="phone" :title="reset?$store.state.lang.confirm_phone_number:$store.state.lang.enter_phone_number" :disabled="reset" @canNext="canStep2=true" @passCode="goStep(6)" />
             <div v-if="!passIsSet" class="change-phone">
-                <nuxt-link to="/hybrid/payment/wallet/resetPhone">Change cellphone number</nuxt-link>
+                <nuxt-link to="/hybrid/payment/wallet/resetPhone">{{$store.state.lang.change_phone_number}}</nuxt-link>
             </div>
             <div class="footer">
-                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(2)" />
+                <mButton :disabled="!canStep2" :text="$store.state.lang.text_onair_next" @click="goStep(2)" />
             </div>
         </div>
         <div v-show="step==2" class="step2">
-            <div class="label">Enter SMS vertification code</div>
+            <div class="label">{{$store.state.lang.enter_SMS_code}}</div>
             <passInput ref="vscode" :length="4" :toggle-view="true" @endinput="canStep3=true" @inputing="canStep3=false" />
             <div class="footer">
-                <mButton :disabled="!canStep3" text="NEXT" @click="goStep(3)" />
+                <mButton :disabled="!canStep3" :text="$store.state.lang.text_onair_next" @click="goStep(3)" />
             </div>
         </div>
         <div v-show="step==3" class="step2 step3">
-            <div class="label">Set payment password</div>
-            <passInput ref="newpass" :toggle-view="true" placeholder="Set a 6-bit password" @endinput="canStep4=true" @inputing="canStep4=false" />
+            <div class="label">{{$store.state.lang.set_payment_password}}</div>
+            <passInput ref="newpass" :toggle-view="true" :placeholder="$store.state.lang.set_6bit_password" @endinput="canStep4=true" @inputing="canStep4=false" />
             <div class="footer">
-                <mButton :disabled="!canStep4" text="NEXT" @click="goStep(4)" />
+                <mButton :disabled="!canStep4" :text="$store.state.lang.text_onair_next" @click="goStep(4)" />
             </div>
         </div>
         <div v-show="step==4" class="step2 step4">
-            <div class="label">Confirm password</div>
-            <passInput ref="confirmpass" :toggle-view="true" placeholder="Confirm password" @endinput="canStep5=true" @inputing="canStep5=false" />
+            <div class="label">{{$store.state.lang.confirm_password}}</div>
+            <passInput ref="confirmpass" :toggle-view="true" :placeholder="$store.state.lang.confirm_password" @endinput="canStep5=true" @inputing="canStep5=false" />
             <div class="footer">
-                <mButton :disabled="!canStep5" text="OK" @click="goStep(5)" />
+                <mButton :disabled="!canStep5" :text="$store.state.lang.pay_ok" @click="goStep(5)" />
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
 import verifyTel from '~/components/form/wallet_tel_verify'
 import passInput from '~/components/password'
 import mButton from '~/components/button'
-import { invoke, commonPayAfter, payWithBalance } from '~/functions/pay'
+import { invoke, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
 export default {
     layout: 'base',
     components: {
@@ -111,9 +111,11 @@ export default {
         const sessionPayToken = sessionStorage.getItem('payToken')
         const sessionChannel = sessionStorage.getItem('payChannel')
         const sessionAppId = sessionStorage.getItem('merchantAppId')
+        const card = sessionStorage.getItem('card')
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
         if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
+        if (!this.card && card) this.card = card
         const walletAccount = JSON.parse(window.sessionStorage.getItem('wallet'))
         this.accountNo = walletAccount.accountNo
         if (walletAccount.phone) {
@@ -142,7 +144,7 @@ export default {
                     this.$axios.put(`/mobilewallet/v1/accounts/${this.accountNo}/phone?phone=${prefix + tel}&verifyCode=${vscode}`, {}).then(res => {
                         const data = res.data
                         if (data && data.code === 0) {
-                            this.$alert('Set phone successfully', () => {
+                            this.$alert(this.$store.state.lang.set_phone_succ, () => {
                                 this.step = num
                             })
                         } else {
@@ -155,7 +157,7 @@ export default {
                 const newpass = this.$refs.newpass.password
                 const confirmpass = this.$refs.confirmpass.password
                 if (newpass !== confirmpass) {
-                    this.$alert('Password do not match.Please try again.')
+                    this.$alert(this.$store.state.lang.two_password_not_match)
                     return false
                 }
                 this.$axios
@@ -179,7 +181,7 @@ export default {
                 const newpass = this.$refs.newpass.password
                 const reg = /^[\d]+$/
                 if (!reg.test(newpass)) {
-                    this.$alert('You must enter pure numbers.')
+                    this.$alert(this.$store.state.lang.enter_pure_numbers)
                     return false
                 }
                 this.step = num
@@ -197,36 +199,42 @@ export default {
             }
         },
         pay() {
+            const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
+            const newpass = this.$refs.newpass.password
             this.$nuxt.$loading.start()
             this.$store.commit('SHOW_SHADOW_LAYER')
-            if (this.card) {
-                invoke.call(
-                    this,
-                    this.payToken,
-                    993102,
-                    data => {
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter.call(this, data, 3, 3)
-                    },
-                    { authorization_code: this.card }
-                )
-                return false
-            } else {
-                invoke.call(this, this.payToken, this.channel, data => {
-                    payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
-                        // this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
-                        window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
+            verifyWalletPass.call(this, ewallet.accountNo, newpass, result => {
+                if (this.card) {
+                    invoke.call(
+                        this,
+                        this.payToken,
+                        this.channel,
+                        data => {
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            commonPayAfter.call(this, data, 3, 2)
+                        },
+                        {
+                            payPwdVerifyToken: result.data,
+                            authorization_code: this.card
+                        }
+                    )
+                } else {
+                    invoke.call(this, this.payToken, this.channel, data => {
+                        payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
+                            this.$nuxt.$loading.finish()
+                            this.$store.commit('HIDE_SHADOW_LAYER')
+                            // this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
+                            window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
+                        })
                     })
-                })
-            }
+                }
+            })
         }
     },
     head() {
         return {
-            title: this.reset ? 'Reset Password' : 'Setting Password'
+            title: this.reset ? this.$store.state.lang.reset_password : this.$store.state.lang.setting_password
         }
     }
 }

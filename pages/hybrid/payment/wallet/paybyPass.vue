@@ -6,13 +6,13 @@
                 {{goodMsg.amount}}
             </p>
         </div>
-        <p class="password">Enter payment password</p>
-        <Password ref="pass" :toggle-view="true" placeholder="Enter Payment Password" @endinput="setPassword" @inputing="setPassword" />
+        <p class="password">{{$store.state.lang.enter_pay_password}}</p>
+        <Password ref="pass" :toggle-view="true" :placeholder="$store.state.lang.enter_pay_password" @endinput="setPassword" @inputing="setPassword" />
         <div class="forgot-pwd">
-            <a @click="forgetPass">Forgot payment password?</a>
+            <a @click="forgetPass">{{$store.state.lang.forgot_payment_password}}</a>
         </div>
         <div class="footer">
-            <mButton :disabled="!canPay" :text="'NEXT'" @click="nextStep" />
+            <mButton :disabled="!canPay" :text="$store.state.lang.text_onair_next" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -35,7 +35,7 @@ export default {
             channel: this.$route.query.channel || '',
             merchantAppId: this.$route.query.merchantAppId || '',
             apiType: this.$route.query.apiType,
-            card: this.$route.query.card,
+            card: this.$route.query.card || '',
             goodMsg: {}
         }
     },
@@ -52,9 +52,11 @@ export default {
         const sessionPayToken = sessionStorage.getItem('payToken')
         const sessionChannel = sessionStorage.getItem('payChannel')
         const sessionAppId = sessionStorage.getItem('merchantAppId')
+        const card = sessionStorage.getItem('card') || ''
         if (!this.payToken && sessionPayToken) this.payToken = sessionPayToken
         if (!this.channel && sessionChannel) this.channel = sessionChannel
         if (!this.merchantAppId && sessionAppId) this.merchantAppId = sessionAppId
+        if (!this.card && card) this.card = card
         this.goodMsg = JSON.parse(sessionStorage.getItem('goodMsg'))
         this.sendEvLog({
             category: 'paybypass',
@@ -118,7 +120,7 @@ export default {
     },
     head() {
         return {
-            title: 'Payment Details'
+            title: this.$store.state.lang.payment_details
         }
     }
 }

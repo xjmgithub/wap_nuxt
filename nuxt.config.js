@@ -68,7 +68,8 @@ export default {
         '/like/': env.proxyHost,
         '/feed/': env.proxyHost,
         '/sports/': env.proxyHost,
-        '/lottery/': env.proxyHost
+        '/lottery/': env.proxyHost,
+        '/processtoken/':'http://op-test1.startimes.me/'
     },
     router: {
         middleware: 'auth' // middleware before all pages render

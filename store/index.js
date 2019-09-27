@@ -40,7 +40,7 @@ export const state = () => ({
 })
 
 export const mutations = {
-    SET_APPTYPE: function(state, type) {
+    SET_APPTYPE: function (state, type) {
         switch (type) {
             case 'android':
                 state.appType = 1
@@ -52,10 +52,10 @@ export const mutations = {
                 state.appType = 0
         }
     },
-    SET_DEVICE: function(state, deviceId) {
+    SET_DEVICE: function (state, deviceId) {
         state.deviceId = deviceId || ''
     },
-    SET_LANG: function(state, lang = 'en') {
+    SET_LANG: function (state, lang = 'en') {
         if (lang.indexOf('fr') >= 0) {
             state.lang = LANG.fy
             state.langType = 'fr'
@@ -70,71 +70,71 @@ export const mutations = {
             state.langType = 'en'
         }
     },
-    SET_GA_CLIENT: function(state, id) {
+    SET_GA_CLIENT: function (state, id) {
         state.gaClientId = id || ''
     },
-    SET_APP_VERSION_CODE: function(state, v) {
+    SET_APP_VERSION_CODE: function (state, v) {
         state.appVersionCode = v || -99
     },
-    SET_APP_VERSION: function(state, v) {
+    SET_APP_VERSION: function (state, v) {
         state.appVersion = v || 'unknown'
     },
-    SET_NET_TYPE: function(state, val) {
+    SET_NET_TYPE: function (state, val) {
         state.netType = val || 0
     },
-    SET_CARRIER: function(state, val) {
+    SET_CARRIER: function (state, val) {
         state.carrier = val || ''
     },
-    SET_PHONE_MODEL: function(state, val) {
+    SET_PHONE_MODEL: function (state, val) {
         state.phoneModel = val || ''
     },
-    SET_INIT_TIME: function(state, val) {
+    SET_INIT_TIME: function (state, val) {
         state.appInitTime = val || new Date().getTime()
     },
-    SET_TOKEN: function(state, token) {
+    SET_TOKEN: function (state, token) {
         state.token = token
     },
-    SET_GTOKEN: function(state, token) {
+    SET_GTOKEN: function (state, token) {
         state.gtoken = token
     },
-    SET_USER: function(state, user) {
+    SET_USER: function (state, user) {
         state.user = user
     },
-    SET_AREA_INFO: function(state, conf) {
+    SET_AREA_INFO: function (state, conf) {
         state.country = conf
     },
-    SHOW_SHADOW_LAYER: function(state) {
+    SHOW_SHADOW_LAYER: function (state) {
         state.shadowStatus = true
     },
-    HIDE_SHADOW_LAYER: function(state) {
+    HIDE_SHADOW_LAYER: function (state) {
         state.shadowStatus = false
     },
-    SET_PAYTOKEN: function(state, token) {
+    SET_PAYTOKEN: function (state, token) {
         state.payToken = token
     },
-    SET_TXNO: function(state, txNo) {
+    SET_TXNO: function (state, txNo) {
         state.txNo = txNo
     },
-    ADD_SELECT_COMP: function(state, val) {
+    ADD_SELECT_COMP: function (state, val) {
         state.selectCompId = val
     },
-    SET_RANKLIST: function(state, val) {
+    SET_RANKLIST: function (state, val) {
         const [...arr] = val
         state.rankList = arr
     },
-    SET_SERVER_TIME: function(state, val) {
+    SET_SERVER_TIME: function (state, val) {
         state.serverTime = val
     },
-    SET_NAV_STATE: function(state, val) {
+    SET_NAV_STATE: function (state, val) {
         state.navState = val
     },
-    SET_SHARE_STATE: function(state, val) {
+    SET_SHARE_STATE: function (state, val) {
         state.shareState = val
     },
-    SET_NEED_LOGIN: function(state, val) {
+    SET_NEED_LOGIN: function (state, val) {
         state.needLoginAlert = val
     },
-    SCROLL_PAGE: function(state, val) {
+    SCROLL_PAGE: function (state, val) {
         state.scrollPage = val
     }
 }
