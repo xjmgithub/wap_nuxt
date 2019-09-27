@@ -137,9 +137,16 @@ export default {
         },
         downloadApk() {
             if(this.$store.state.country.country=='NG'){
+                this.sendEvLog({
+                    category: 'new_cdn_apk',
+                    action: 'download_click',
+                    label: 'office',
+                    value: 10,
+                })
                 this.$axios.get('/hybrid/api/app/getApk').then(data => {
                     window.location.href = data.data.data.replace('cdn.startimestv.com','cloudflare-cdn.startimestv.com/appinfo')
                 })
+                
             }else{
                 downApk.call(this)
             }
