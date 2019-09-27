@@ -23,17 +23,16 @@
             <div class="vote-box">
                 <div v-show="coupleList.length>0">
                     <div class="vote-remaining">
-                        <div class="remain">VOTES REMAINING:{{appType==0?0:voteLeft}}</div>
-                        <div class="ask">JINSI YA KUPIGA KURA ZAIDI?</div>
+                        <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:voteLeft}}</div>
+                        <div class="ask" @click="toHowToGetVote">JINSI YA KUPIGA KURA ZAIDI?</div>
                     </div>
                     <ul class="clearfix">
-                        <li v-for="(item,key) in coupleList.slice(0,9)" :key="key" data-id="item.id">
+                        <li v-for="(item,key) in coupleList" :key="key" data-id="item.id">
                             <div class="item-box">
                                 <div>
                                     <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item)" />
                                     <p>{{item.ballot_num}}</p>
                                 </div>
-                                <!-- <p>{{item.ballot_num}}</p> -->
                                 <span class="name">{{item.name.toUpperCase()}}</span>
                             </div>
                             <div class="vote-btn">
@@ -41,27 +40,27 @@
                             </div>
                         </li>
                     </ul>
-                    <div class="more">ANGALIA WASHIRIKI WOTE</div>
+                    <div class="more" @click="toAll">ANGALIA WASHIRIKI WOTE</div>
                 </div>
             </div>
-            <img src="~assets/img/vote/BSSRegister/ic-link.png" alt class="link-register" @click="toRegister"/>
-            <img class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
+            <img src="~assets/img/vote/BSSRegister/ic-link-register.png" alt class="link" @click="toRegister"/>
+            <img id="text2" class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
             <div class="share-box" @click="toShare('midshare')">
                 <div>
-                    <img v-if="isLogin" src="~assets/img/vote/BSSRegister/bg-login.png" alt="img-sharefor" />
-                    <img v-else src="~assets/img/vote/BSSRegister/bg-login-no.png" alt="img-sharefor-no" />
-                    <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt="img-sharefor-no" />
-
+                    <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt="" />
+                    <img v-else src="~assets/img/vote/BSSRegister/bg-login.png" alt="" @click="toSignIn"/>
+                    <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt="" />
                     <div class="num">
                         <p>FANIKIWA KUALIKA RAFIKI {{share_num}}</p>
                     </div>
                 </div>
                 <img src="~assets/img/vote/BSSRegister/img-share.png" alt="img-sharefor" />
             </div>
-            <img class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
+            <img v-if="appType>0&&!isLogin" class="text" src="~assets/img/vote/BSSRegister/text3-sign.png" alt />
+            <img v-else class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
             <div class="lottery-box">
                 <div class="lottery">
-                    <div class="count">CHANCES REMAINING:{{appType>0&&isLogin?lotteryLeft:0}}</div>
+                    <div class="count">NAFASI ZILIZOBAKI:{{appType>0&&isLogin?lotteryLeft:0}}</div>
                     <div class="lottery-type">
                         <ul class="clearfix">
                             <li v-for="(item,key) in lotteryList" :key="key" class="lottry-type" :class="index==key?'active':''">
@@ -82,16 +81,17 @@
                             <li
                                 v-for="item in msgList"
                                 :key="item.key"
-                            >{{item.nick_name?item.nick_name:(item.user_name?item.user_name:item.user_id)}} has won {{(lotteryList[item.fk_reward-1-6]||{}).name}}!</li>
+                            >{{item.nick_name?item.nick_name:(item.user_name?item.user_name:item.user_id)}} umeshinda {{(lotteryList[item.fk_reward-1-6]||{}).name}}!</li>
                         </ul>
                     </div>
                     <div class="tip">
-                        <p>Find the prize in ME → My Coupons</p>
+                        <p>TAFUTA ZAWADI KWENYE ME -> KUPONI YANGU</p>
                     </div>
                 </div>
             </div>
-            <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
-            <div class="past-programme">
+            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/ic-link-comment.png" alt class="link" @click="toComment"/>
+            <img v-if="isCommentStart" class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
+            <div v-if="isCommentStart" class="past-programme">
                 <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
                 <ul class="clearfix">
                     <li v-for="(item,i) in clipsListNew" :key="i">
@@ -148,7 +148,10 @@ export default {
             shareText: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.',
             user_id: this.$store.state.user.id,
             share_num: 0,
+            enroll_id: 2,
             isCommentStart: false,
+            startTime_comment: '',
+            endTime_comment: '',
             clipsList: [],
             clipsListNew: [],
 
@@ -159,7 +162,7 @@ export default {
             vote_id: 16,
             startTime: '',
             endTime: '',
-            currentTime: '',
+            // currentTime: '',
             tip: '',
             tip_timer: null,
 
@@ -228,13 +231,13 @@ export default {
             return {
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
                 voteTitle: data.data.name,
-                serverTime: new Date()
+                serverTime: new Date().getTime()
             }
         } catch (e) {
             return {
                 vote_sign: (req && req.headers.vote_sign) || '',
-                voteTitle: 'Voice to Fame',
-                serverTime: new Date()
+                voteTitle: 'Bongo Star Search 2019',
+                serverTime: new Date().getTime()
             }
         }
     },
@@ -242,6 +245,7 @@ export default {
         this.mSendEvLog('page_show', '', '')
         this.msgul = this.$refs.msgul
         this.getLotteryMsg()
+        this.getCommentInfo()
         this.getAdvisorList()
         this.getLotteryType()
         this.getMsgList()
@@ -255,6 +259,12 @@ export default {
     },
 
     methods: {
+        toHowToGetVote() {
+            document.getElementById('text2').scrollIntoView();
+        },
+        toAll() {
+            this.$router.push(`/hybrid/vote/BSSVoteDetail`)
+        },
         showRule() {
             this.show_rules = true
             // 页面静止
@@ -269,6 +279,9 @@ export default {
         },
         toRegister() {
             this.$router.push(`/hybrid/vote/BSSRegister`)
+        },
+        toComment() {
+            this.$router.push(`/hybrid/vote/BSSComment`)
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
@@ -318,7 +331,7 @@ export default {
                 // 下载App
                 this.mSendEvLog('downloadpopup_show', label, '')
                 this.$confirm(
-                    'Download StarTimes ON app. Vote and win FREE VIP!',
+                    'Pakua Startimes ON app na shiriki BSS2019',
                     () => {
                         this.mSendEvLog('downloadpopup_clickok', label, '')
                         downApk.call(this)
@@ -344,14 +357,14 @@ export default {
                     () => {
                         this.mSendEvLog('downloadpopup_clicknot', label, '')
                     },
-                    'Download Now',
-                    'Cancle'
+                    'PAKUA',
+                    'FUTA'
                 )
             })
         },
         // 获取剩余票数
         getVoteRemain() {
-            if (this.currentTime >= this.startTime && this.currentTime < this.endTime) {
+            if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
                 this.$axios({
                     method: 'POST',
                     headers: {
@@ -370,13 +383,19 @@ export default {
                 })
             }
         },
+        toThousands(num) {
+		    return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+		},
         // 获取投票单元数据
         getAdvisorList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}`).then(res => {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}&sort_type=BALLOT&size=9`).then(res => {
                 if (res.data.code === 0) {
                     this.advisorList = res.data.data
                     this.advisorList.sort(function(a, b) {
                         return b.ballot_num - a.ballot_num
+                    })
+                    this.advisorList.forEach((item,index)=>{
+                        item.ballot_num = this.toThousands(item.ballot_num)
                     })
                 } else {
                     this.advisorList = []
@@ -402,22 +421,22 @@ export default {
                 this.callOrDownApp('vote')
                 return
             }
-            if (this.currentTime < this.startTime) {
-                this.$alert('Stay tuned! Voting will begin on September 23rd.', () => {}, 'GOT IT')
+            if (this.serverTime < this.startTime) {
+                this.$alert('Upigaji kura utaanza tarehe 8th Octoba, kwa hiyo kaa tayari!', () => {}, 'SAWA')
                 return
-            } else if (this.currentTime > this.endTime) {
-                this.$alert('Sorry, the voting has ended.', () => {}, 'GOT IT')
+            } else if (this.serverTime > this.endTime) {
+                this.$alert('Samahani, kura zimekwisha.', () => {}, 'SAWA')
                 return
             }
             if (this.voteLeft <= 0) {
                 this.$confirm(
-                    'Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!',
+                    'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
                     () => {
                         this.toShare('votefail')
                     },
                     () => {},
-                    'SHARE',
-                    'CANCEL'
+                    'SHIRIKI',
+                    'FUTA'
                 )
             } else {
                 this.$axios({
@@ -433,30 +452,31 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            advisor.ballot_num++
+                            advisor.ballot_num = this.toThousands(parseInt(advisor.ballot_num.replace(',','')) + 1)
+                            // advisor.ballot_num++
                             this.voteLeft--
                             this.lotteryLeft++
                             if (this.voteLeft > 0) {
                                 if (this.firstTime) {
                                     this.$alert(
-                                        'Sorry, your have 0 vote remaining. Come here tomorrow or Share with your friends to earn more votes!',
+                                        'Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.',
                                         () => {
                                             this.firstTime = false
                                         },
                                         'GOT IT'
                                     )
                                 } else {
-                                    this.tipShow("Successfully voted! And you've got 1 chance to win VIP!")
+                                    this.tipShow("Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.")
                                 }
                             } else {
                                 this.$confirm(
-                                    'Successfully voted! you have 0 vote remaining. Share with your friends to earn more votes!',
+                                    'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
                                     () => {
                                         this.toShare('0leftvote')
                                     },
                                     () => {},
-                                    'SHARE',
-                                    'CANCEL'
+                                    'SHIRIKI',
+                                    'FUTA'
                                 )
                             }
                         } else {
@@ -468,9 +488,43 @@ export default {
                     })
             }
         },
-        // 获取抽奖信息
+        // 获取大众评审活动信息
+        getCommentInfo() {
+            this.$axios
+                .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
+                .then(res => {
+                    if (res.data.code === 200) {
+                        this.startTime_comment = new Date(res.data.data.start_time).getTime()
+                        this.endTime_comment = new Date(res.data.data.end_time).getTime()
+                        if (this.serverTime > this.startTime_comment) {
+                            this.isCommentStart = true
+                        }
+                    } else {
+                        this.$alert('ERROR TO GET COMMENT TIME')
+                    }
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
+        },
+        // 获取大众评审活动信息
+        getShareNum() {
+            this.$axios
+                .get(`/voting/v1/action/count?vote_id=${this.vote_id}&action=SHARE_DOWNLOAD`)
+                .then(res => {
+                    if (res.data.code == 0) {
+                        this.share_num = res.data.data
+                    } else {
+                        this.$alert('ERROR TO GET SHARE NUM')
+                    }
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
+        },
+        // 获取抽奖活动时间信息
         getLotteryMsg() {
-            this.currentTime = Date.parse(this.serverTime)
+            // this.serverTime = Date.parse(this.serverTime)
             this.$axios
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
@@ -480,7 +534,7 @@ export default {
                         this.getVoteRemain()
                         this.getLeftLottery()
                     } else {
-                        this.$alert('error')
+                        this.$alert('ERROR TO GET LOTTERY TIME')
                     }
                 })
                 .catch(err => {
@@ -489,7 +543,7 @@ export default {
         },
         // 获取剩余抽奖机会
         getLeftLottery() {
-            if (this.currentTime >= this.startTime && this.currentTime < this.endTime) {
+            if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
                 this.$axios
                     .get(`/voting/lottery/v1/draw/user-draw-nums?lottery_id=${this.lottery_id}&vote_id=${this.vote_id}`)
                     .then(res => {
@@ -578,26 +632,26 @@ export default {
                 this.mSendEvLog('lottery_click', '', '-1')
                 // 移动端未登录
                 this.$alert(
-                    'Please sign in to start the luck draw.',
+                    'Tafadhali jisajili ili uanze mchuano wa bahati.',
                     () => {
                         this.toSignIn()
                     },
-                    'SIGN IN'
+                    'JISAJILI'
                 )
                 return
             }
-            if (this.currentTime < this.startTime) {
+            if (this.serverTime < this.startTime) {
                 this.mSendEvLog('lottery_click', '', '-1')
-                this.$alert('Stay tuned! Lottery will begin on September 23rd.', () => {}, 'GOT IT')
+                this.$alert('Shughuli haijaanza.', () => {}, 'SAWA')
                 return
             }
-            if (this.currentTime >= this.endTime) {
+            if (this.serverTime >= this.endTime) {
                 this.mSendEvLog('lottery_click', '', '-1')
-                this.$alert('Sorry, the lottery has ended.', () => {}, 'GOT IT')
+                this.$alert('Shughuli imemalizika.', () => {}, 'SAWA')
                 return
             }
             this.mSendEvLog('lottery_click', '', '-1')
-            this.$alert('Vote and win more chances! Every time you vote, you‘ll get a chance to win a prize.', () => {}, 'GOT IT')
+            this.$alert('Nenda kupiga kura ili kushinda bahati nzuri ya kuteka. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi.', () => {}, 'SAWA')
         },
         // 开始抽奖
         startLottery() {
@@ -623,25 +677,25 @@ export default {
                 if (this.index < 5) {
                     setTimeout(() => {
                         this.$alert(
-                            "Congrats! You've got " +
+                            "Hongera! Umepata " +
                                 this.lotteryType[this.index].name +
-                                '! Prize will be offered on the second business day in Me→My Coupon',
+                                '! Zawadi zitatolewa kwenye siku ya pili ya kazi katika Me-> Kuponi zangu.',
                             () => {
                                 this.click = true
                             },
-                            'GOT IT'
+                            'SAWA'
                         )
                     }, 1000)
-                } else if (this.index === 5) {
+                } else if (this.index == 5) {
                     this.getTicketAward(res => {
                         if (res.data.code == 200) {
                             setTimeout(() => {
                                 this.$alert(
-                                    "Congrats! You've got " + res.data.data + ' more votes!',
+                                    "Hongera! Umepata kura " + res.data.data + ' zaidi!',
                                     () => {
                                         this.click = true
                                     },
-                                    'GOT IT'
+                                    'SAWA'
                                 )
                                 this.voteLeft += res.data.data
                             }, 1000)
@@ -653,23 +707,22 @@ export default {
                     setTimeout(() => {
                         this.lotteryLeft++
                         this.$alert(
-                            "Congrats! You've got 1 more chance!",
+                            "Hongera! Umepata nafasi moja zaidi!",
                             () => {
                                 this.click = true
                                 this.startLottery()
                             },
-                            'TRY AGAIN'
+                            'SAWA'
                         )
                     }, 1000)
                 } else if (this.index === 7) {
                     setTimeout(() => {
                         this.$alert(
-                            'hanks for your participation.',
+                            'Asante kwa ushiriki wako.',
                             () => {
                                 this.click = true
-                                this.startLottery()
                             },
-                            'GOT IT'
+                            'SAWA'
                         )
                     }, 1000)
                 }
@@ -685,21 +738,21 @@ export default {
                             token: this.$store.state.token
                         },
                         data: qs.stringify({
-                            lottery_id: 1,
-                            vote_id: 15
+                            lottery_id: this.lottery_id,
+                            vote_id: this.vote_id
                         }),
                         url: '/voting/lottery/v1/drawing'
                     })
                         .then(res => {
                             if (res.data.code == 0) {
-                                this.prize = res.data.data - 1
+                                this.prize = res.data.data - 7
                                 console.log(`中奖位置${this.prize + 1}`)
-                                if (res.data.data == 1) this.mSendEvLog('lottery_click', 'dvb', '1')
-                                else if (res.data.data == 2) this.mSendEvLog('lottery_click', 'vip', '1')
-                                else if (res.data.data == 3) this.mSendEvLog('lottery_click', 'coupon', '1')
-                                else if (res.data.data == 4) this.mSendEvLog('lottery_click', 'morevotes', '1')
-                                else if (res.data.data == 5) this.mSendEvLog('lottery_click', 'tryagain', '0')
-                                else if (res.data.data == 6) this.mSendEvLog('lottery_click', 'sorry', '0')
+                                if (res.data.data == 9) this.mSendEvLog('lottery_click', 'vip', '1')
+                                else if (res.data.data == 10) this.mSendEvLog('lottery_click', '40offcoupon', '1')
+                                else if (res.data.data == 11) this.mSendEvLog('lottery_click', '30offcoupon', '1')
+                                else if (res.data.data == 12) this.mSendEvLog('lottery_click', 'morevotes', '1')
+                                else if (res.data.data == 13) this.mSendEvLog('lottery_click', 'tryagain', '0')
+                                else if (res.data.data == 14) this.mSendEvLog('lottery_click', 'sorry', '0')
                             } else {
                                 setTimeout(() => {
                                     clearTimeout(this.timer)
@@ -783,14 +836,12 @@ export default {
                             this.clipsListNew.push(item)
                         }
                     })
-                    // this.clipsList.forEach(ele => {
-                    //     this.mSendEvLog('video_show', ele.name || ele.description, 10)
-                    // })
                 }
             })
         },
         // toast方法
         tipShow(text, duration = 2000) {
+            console.log(text)
             clearInterval(this.tip_timer)
             const _this = this
             this.tip = text
@@ -860,7 +911,7 @@ export default {
                 padding-top: 0;
                 top: -0.5rem;
             }
-            &.link-register {
+            &.link {
                 width: 90%;
                 margin: 0.3rem auto 0.8rem;
             }
@@ -1093,9 +1144,9 @@ export default {
         }
         .lottery-box {
             width: 100%;
-            height: 28rem;
+            height: 29rem;
             margin-top: 1rem;
-            margin-bottom: 1rem;
+            padding-bottom: 1rem;
             .lottery {
                 width: 90%;
                 height: 28rem;
@@ -1388,6 +1439,21 @@ export default {
         opacity: 0.5;
         background-color: #000;
         z-index: 998;
+    }
+    .vote-toast {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -7.5rem;
+        margin-top: -2.1rem;
+        font-size: 0.9rem;
+        background: rgba(0, 0, 0, 0.65);
+        padding: 0.6rem 1.5rem;
+        border-radius: 3px;
+        width: 15rem;
+        height: 4.2rem;
+        color: #fff;
+        z-index: 9999;
     }
 }
 </style>
