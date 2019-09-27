@@ -136,7 +136,11 @@ export default {
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         downloadApk() {
-            downApk.call(this)
+            if(this.$store.state.country.country=='NG'){
+                window.location.href = ""
+            }else{
+                downApk.call(this)
+            }
         },
         getPrograms() {
             const tmp = new Date().toLocaleDateString()
