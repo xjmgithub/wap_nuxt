@@ -40,7 +40,7 @@
                                     <p v-else />
                                 </div>
                                 <span v-if="n.name" class="name">{{n.name}}</span>
-                                <span v-else class="name">{{n.name}}</span>
+                                <span v-else class="name"></span>
                             </div>
                             <div class="vote-btn">
                                 <div v-if="n.name" class="btn" @click="handleViceVote(n)">VOTE</div>
@@ -84,10 +84,10 @@ export default {
     data() {
         return {
             // 页面
-            // appType: this.$store.state.appType || 0,
-            // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
-            appType: 1,
-            isLogin: true,
+            appType: this.$store.state.appType || 0,
+            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
+            // appType: 1,
+            // isLogin: true,
             show_rules: false,
             tip: '',
             tip_timer: null,
@@ -140,9 +140,6 @@ export default {
             }
         }
     },
-    created() {
-        // this.getVoteMsg()
-    },
     mounted() {
         this.getVoteMsg()
         this.mSendEvLog('page_show', '', '')
@@ -169,7 +166,7 @@ export default {
             this.timer = setTimeout(() => {
                 this.t2 = document.documentElement.scrollTop || document.body.scrollTop
                 if (this.t2 === this.t1) {
-                    console.log('滚动结束了')
+                    // console.log('滚动结束了')
                     this.canSeeWordList()
                 }
             }, 500)
@@ -188,14 +185,12 @@ export default {
                         this.reqWordList.push(item)
                     }
                 })
+                this.wordListReady.forEach((item, index) => {
+                    if (this.reqWordList[0] == item) {
+                        this.index = index
+                    }
+                })
                 this.getAdviserList()
-            })
-
-            const len = this.reqWordList.length
-            this.wordListReady.forEach((item, index) => {
-                if (this.reqWordList[len - 1] == item) {
-                    this.index = index
-                }
             })
         },
         getAdviserList() {
@@ -204,8 +199,8 @@ export default {
                     this.reqWordList[index] = ''
                 }
             })
-            const tmp = this.reqWordList.join('').split('')
-            if (tmp.length <= 0) return
+            this.reqWordList = this.reqWordList.join('').split('')
+            if (this.reqWordList.length <= 0) return
             const labels = '&labels=' + this.reqWordList.join('&labels=')
             this.$axios
                 .get(`/voting/v2/candidates-show?vote_id=${this.vote_id}` + labels)
@@ -217,6 +212,12 @@ export default {
                             this.finishWord += key
                         }
                         this.wordTree[key] = this.adviserList[key]
+                        this.wordTree[key].sort(function(a, b) {
+                            return b.ballot_num - a.ballot_num
+                        })
+                        this.wordTree[key].forEach((item, index) => {
+                            item.ballot_num = this.toThousands(item.ballot_num)
+                        })
                     }
                     this.isload_a = true
                     this.formatDataList()
@@ -228,11 +229,6 @@ export default {
 
         toWord(id) {
             document.getElementById(id).scrollIntoView()
-            this.wordListReady.forEach((item, index) => {
-                if (id == item) {
-                    this.index = index
-                }
-            })
         },
         toShare(label) {
             if (label == 'voterules') this.show_rules = false

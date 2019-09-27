@@ -18,7 +18,7 @@
                 </div>
             </div>
             <img src="~assets/img/vote/BSSRegister/bg-register.png" alt class="ic-green" />
-            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/bg-ask.png" alt class="ic-green-a" />
+            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/bg-ask.png" alt class="ic-green-a" @click="toComment('up')" />
             <img class="text text-one" src="~assets/img/vote/BSSRegister/text1.png" alt />
             <div class="vote-box">
                 <div v-show="coupleList.length>0">
@@ -30,7 +30,7 @@
                         <li v-for="(item,key) in coupleList" :key="key" data-id="item.id">
                             <div class="item-box">
                                 <div>
-                                    <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item)" />
+                                    <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item,'votepic_click')" />
                                     <p>{{item.ballot_num}}</p>
                                 </div>
                                 <span class="name">{{item.name.toUpperCase()}}</span>
@@ -49,7 +49,7 @@
                 <div>
                     <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt />
                     <img v-else src="~assets/img/vote/BSSRegister/bg-login.png" alt @click="toSignIn" />
-                    <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt />
+                    <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt @click="toShare('invite')" />
                     <div class="num">
                         <p>FANIKIWA KUALIKA RAFIKI {{share_num}}</p>
                     </div>
@@ -90,13 +90,13 @@
                     </div>
                 </div>
             </div>
-            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/ic-link-comment.png" alt class="link" @click="toComment" />
+            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/ic-link-comment.png" alt class="link" @click="toComment('mid')" />
             <img v-if="isCommentStart" class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
             <div v-if="isCommentStart" class="past-programme">
                 <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
                 <ul class="clearfix">
                     <li v-for="(item,i) in clipsListNew" :key="i">
-                        <div @click="toPlayer(item)">
+                        <div @click="toPlayer(item,'video_click')">
                             <img class="url" :src="cdnPic(item.cover)" />
                         </div>
                         <p class="title">{{(item.description)}}</p>
@@ -137,16 +137,16 @@ export default {
         return {
             // 页面
             show_rules: false,
-            // appType: this.$store.state.appType || 0,
-            // isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
-            appType: 1,
-            isLogin: true,
+            appType: this.$store.state.appType || 0,
+            isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
+            // appType: 1,
+            // isLogin: true,
             title: 'Bongo Star Search 2019',
             imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
             firstTime: true,
             msg: '',
-            shareTitle: 'Wewe ndiye nyota wa Bongo unayefuata',
-            shareText: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.',
+            shareTitle: 'Chaguo ni lako!',
+            shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
             user_id: this.$store.state.user.id,
             share_num: 0,
             enroll_id: 2,
@@ -261,9 +261,11 @@ export default {
 
     methods: {
         toHowToGetVote() {
+            this.mSendEvLog('goto_click', '', '')
             document.getElementById('text2').scrollIntoView()
         },
         toAll() {
+            this.mSendEvLog('full_click', '', '')
             this.$router.push(`/hybrid/vote/BSSVoteDetail`)
         },
         showRule() {
@@ -282,6 +284,7 @@ export default {
             this.$router.push(`/hybrid/vote/BSSRegister`)
         },
         toComment() {
+            this.mSendEvLog('audreg_click', '', '')
             this.$router.push(`/hybrid/vote/BSSComment`)
         },
         cdnPic(src) {
@@ -290,7 +293,7 @@ export default {
         // 埋点方法
         mSendEvLog(action, label, value) {
             this.sendEvLog({
-                category: 'vote_VoiceToFame_' + this.platform,
+                category: 'form_BSSVote1_' + this.platform,
                 action: action,
                 label: label,
                 value: value
@@ -375,13 +378,18 @@ export default {
                         vote_id: this.vote_id
                     }),
                     url: '/voting/v1/ticket/sign-in'
-                }).then(res => {
-                    if (res.data.code == 0 || res.data.code == 1) {
-                        this.voteLeft = res.data.data
-                    } else {
-                        this.voteLeft = 0 // 服务器端计算数据错误时
-                    }
                 })
+                    .then(res => {
+                        if (res.data.code == 0 || res.data.code == 1) {
+                            this.voteLeft = res.data.data
+                        } else {
+                            this.voteLeft = 0 // 服务器端计算数据错误时
+                        }
+                    })
+                    .catch((err) => {
+                        this.voteLeft = 0
+                        this.$alert(err)
+                    })
             }
         },
         toThousands(num) {
@@ -389,24 +397,30 @@ export default {
         },
         // 获取投票单元数据
         getAdvisorList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=${this.vote_id}&sort_type=BALLOT&size=9`).then(res => {
-                if (res.data.code === 0) {
-                    this.advisorList = res.data.data
-                    this.advisorList.sort(function(a, b) {
-                        return b.ballot_num - a.ballot_num
-                    })
-                    this.advisorList.forEach((item, index) => {
-                        item.ballot_num = this.toThousands(item.ballot_num)
-                    })
-                } else {
+            this.$axios
+                .get(`/voting/v1/candidates-show?vote_id=${this.vote_id}&sort_type=BALLOT&size=9`)
+                .then(res => {
+                    if (res.data.code === 0) {
+                        this.advisorList = res.data.data
+                        this.advisorList.sort(function(a, b) {
+                            return b.ballot_num - a.ballot_num
+                        })
+                        this.advisorList.forEach((item, index) => {
+                            item.ballot_num = this.toThousands(item.ballot_num)
+                        })
+                    } else {
+                        this.advisorList = []
+                    }
+                    this.loaded = true
+                })
+                .catch((err) => {
                     this.advisorList = []
-                }
-                this.loaded = true
-            })
+                    this.$alert(err)
+                })
         },
         // 播放视频方法
-        toPlayer(advisor) {
-            this.mSendEvLog('votepic_click', advisor.name, '')
+        toPlayer(advisor, label) {
+            this.mSendEvLog(label, advisor.name, '')
             if (this.appType == 0) {
                 this.callOrDownApp('pic')
                 return
@@ -417,7 +431,7 @@ export default {
         },
         // 投票方法
         handleViceVote(advisor) {
-            this.mSendEvLog('votebtn_click', advisor.name, '')
+            this.mSendEvLog('votebtn_click', advisor.name, this.isLogin ? '1' : '0')
             if (this.appType == 0) {
                 this.callOrDownApp('vote')
                 return
@@ -554,8 +568,9 @@ export default {
                             this.lotteryLeft = 0 // 服务器端计算数据错误时
                         }
                     })
-                    .catch(() => {
+                    .catch((err) => {
                         this.lotteryLeft = 0
+                        this.$alert(err)
                     })
             }
         },
@@ -571,8 +586,9 @@ export default {
                     }
                     this.loaded_l = true
                 })
-                .catch(() => {
+                .catch((err) => {
                     this.lotteryType = []
+                    this.$alert(err)
                 })
         },
         // 获取消息列表
@@ -618,8 +634,9 @@ export default {
                         this.items = [] // 服务器端计算数据错误时
                     }
                 })
-                .catch(() => {
+                .catch((err) => {
                     this.items = []
+                    this.$alert(err)
                 })
         },
         // 抽奖按钮为灰提示
@@ -826,23 +843,37 @@ export default {
                     user_id: this.user_id
                 }),
                 url: 'hybrid/vote/getTicketAward'
-            }).then(res => {
-                callback && callback(res)
             })
+                .then(res => {
+                    callback && callback(res)
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
         },
         // 获取往期视频
         getVideoMsg() {
             // 获取投票单元数据
-            this.$axios.get(`/voting/v1/program?vote_id=${this.vote_id}`).then(res => {
-                if (res.data.code === 0) {
-                    this.clipsList = res.data.data
-                    this.clipsList.forEach(item => {
-                        if (item.name.substr(0, 1) == 'c') {
-                            this.clipsListNew.push(item)
-                        }
-                    })
-                }
-            })
+            this.$axios
+                .get(`/voting/v1/program?vote_id=${this.vote_id}`)
+                .then(res => {
+                    if (res.data.code === 0) {
+                        this.clipsList = res.data.data
+                        this.clipsList.forEach(item => {
+                            if (item.name.substr(0, 1) == 'c') {
+                                this.clipsListNew.push(item)
+                            }
+                        })
+                        this.clipsListNew.forEach(item => {
+                            this.mSendEvLog('video_show', item.name, '')
+                        })
+                    } else {
+                        this.$alert('GET VIDEO MSG ERROR')
+                    }
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
         },
         // toast方法
         tipShow(text, duration = 2000) {
