@@ -10,10 +10,10 @@
                 <div style="width:5%;float:left;">{{item.id}}</div>
                 <div style="width:30%;float:left;">{{item.name}}</div>
                 <div style="width:5%;float:left;">{{item.countryCode}}</div>
-                <div style="width:10%;float:left;">{{item.roleName}}</div>
+                <div style="width:10%;float:left;">{{item.role}}</div>
                 <div style="width:10%;float:left;">{{item.userId}}</div>
                 <div style="width:10%;float:left;">{{item.minutes}}</div>
-                <div style="width:20%;float:left;">{{item.applicationName}}</div>
+                <div style="width:20%;float:left;">{{item.applicationId}}</div>
             </div>
         </div>
         <div v-show="jsonMap" style="clear:both; margin-top:10px;">{{jsonMap}}</div>
@@ -56,7 +56,7 @@ export default {
                 method: 'GET',
                 headers: {
                     Authorization:
-                        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaGFuZ3hpbmJvIiwidWlkIjoxNDYsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTU2OTIzNjE2OTgyOSwiZGVwdGlkIjpbXSwiZXhwIjoxNTY5MzIyNTY5LCJ0ZW5hbnQiOjF9.mEo7QDfyAth0HPEZ-o4sryzjf0vrouyCGojiSJx_LE8VoOxa_7B-NqutdGWeEd4onFxQFPSrBTuPIs2Ge1I9mg'
+                        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaGFuZ3hpbmJvIiwidWlkIjoxNDYsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTU2OTU3NTUzNDYwMiwiZGVwdGlkIjpbXSwiZXhwIjoxNTY5NjYxOTM0LCJ0ZW5hbnQiOjF9.tBniY-4g4bjBfMtWRScUe4RgO7SoogQmttu_wLl-aGqb5GgQbQjphml0q2xdDdtj9VaM7I7YXMOc89oFJcmD9w'
                 },
                 data: {
                     date: new Date().getTime()
@@ -76,7 +76,7 @@ export default {
                 method: 'POST',
                 headers: {
                     Authorization:
-                        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaGFuZ3hpbmJvIiwidWlkIjoxNDYsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTU2OTIzNjE2OTgyOSwiZGVwdGlkIjpbXSwiZXhwIjoxNTY5MzIyNTY5LCJ0ZW5hbnQiOjF9.mEo7QDfyAth0HPEZ-o4sryzjf0vrouyCGojiSJx_LE8VoOxa_7B-NqutdGWeEd4onFxQFPSrBTuPIs2Ge1I9mg'
+                        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaGFuZ3hpbmJvIiwidWlkIjoxNDYsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTU2OTU3NTUzNDYwMiwiZGVwdGlkIjpbXSwiZXhwIjoxNTY5NjYxOTM0LCJ0ZW5hbnQiOjF9.tBniY-4g4bjBfMtWRScUe4RgO7SoogQmttu_wLl-aGqb5GgQbQjphml0q2xdDdtj9VaM7I7YXMOc89oFJcmD9w'
                 },
                 data: {
                     date: new Date().getTime()
@@ -98,7 +98,7 @@ export default {
                 method: 'POST',
                 headers: {
                     Authorization:
-                        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaGFuZ3hpbmJvIiwidWlkIjoxNDYsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTU2OTIzNjE2OTgyOSwiZGVwdGlkIjpbXSwiZXhwIjoxNTY5MzIyNTY5LCJ0ZW5hbnQiOjF9.mEo7QDfyAth0HPEZ-o4sryzjf0vrouyCGojiSJx_LE8VoOxa_7B-NqutdGWeEd4onFxQFPSrBTuPIs2Ge1I9mg'
+                        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaGFuZ3hpbmJvIiwidWlkIjoxNDYsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTU2OTU3NTUzNDYwMiwiZGVwdGlkIjpbXSwiZXhwIjoxNTY5NjYxOTM0LCJ0ZW5hbnQiOjF9.tBniY-4g4bjBfMtWRScUe4RgO7SoogQmttu_wLl-aGqb5GgQbQjphml0q2xdDdtj9VaM7I7YXMOc89oFJcmD9w'
                 },
                 data: {
                     applicationId: 2,
