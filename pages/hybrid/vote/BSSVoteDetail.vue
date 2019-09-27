@@ -204,14 +204,18 @@ export default {
             const tmp = this.reqWordList.join('').split('')
             if (tmp.length <= 0) return
             const labels = '&labels=' + this.reqWordList.join('&labels=')
-            this.$axios.get(`/voting/v2/candidates-show?vote_id=${this.vote_id}` + labels).then(res => {
-                this.adviserList = {}
-                for (const key in res.data.data) {
-                    this.adviserList[key] = res.data.data[key]
-                    if (this.finishWord.indexOf(key) < 0) {
-                        this.finishWord += key
+            this.$axios
+                .get(`/voting/v2/candidates-show?vote_id=${this.vote_id}` + labels)
+                .then(res => {
+                    this.adviserList = {}
+                    for (const key in res.data.data) {
+                        this.adviserList[key] = res.data.data[key]
+                        if (this.finishWord.indexOf(key) < 0) {
+                            this.finishWord += key
+                        }
+                        this.wordTree[key] = this.adviserList[key]
                     }
-                    }
+                    this.isload_a = true
                 })
                 .catch(err => {
                     this.$alert(err)
@@ -219,7 +223,7 @@ export default {
         },
         toWord(id) {
             document.getElementById(id).scrollIntoView()
-            this.wordList.forEach((item, index) => {
+            this.wordListReady.forEach((item, index) => {
                 if (id == item) {
                     this.index = index
                 }
