@@ -232,7 +232,7 @@ export default {
             title: 'Bongo Star Search 2019',
             shareTitle: 'Wewe ndiye nyota wa Bongo unayefuata',
             shareText: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.',
-            imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
+            imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
             content: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.'
         }
     },
@@ -281,7 +281,7 @@ export default {
     },
     methods: {
         toVote() {
-            this.$router.push(`/hybrid/vote/BSSVote2`)
+            this.$router.push(`/hybrid/vote/BSSVote`)
         },
         showRule() {
             this.show_rules=true
@@ -552,6 +552,9 @@ export default {
                         if(item.name.substr(0,1) == 'a') {
                             this.clipsListNew.push(item)
                         }
+                    })
+                    this.clipsListNew.forEach(item => {
+                        this.mSendEvLog('video_show', item.name , '')
                     })
                 }
             })
