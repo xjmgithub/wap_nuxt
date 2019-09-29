@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <img src="~assets/img/vote/BSSRegister/bg-img.png" alt="bg-img" class="bg-img" />
+            <img src="~assets/img/vote/BSSRegister/banner-vote.png" alt="bg-img" class="bg-img" />
             <div class="tab-box">
                 <div class="tab">
                     <div class="rules" @click="showRule">
@@ -31,7 +31,7 @@
                             <div class="item-box">
                                 <div>
                                     <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item,'votepic_click')" />
-                                    <p>{{item.ballot_num}}</p>
+                                    <p>{{item.ballot_num | formatVotes}}</p>
                                 </div>
                                 <span class="name">{{item.name.toUpperCase()}}</span>
                             </div>
@@ -56,7 +56,7 @@
                 </div>
                 <img src="~assets/img/vote/BSSRegister/img-share.png" alt="img-sharefor" />
             </div>
-            <img v-if="appType>0&&!isLogin" class="text" src="~assets/img/vote/BSSRegister/text3-sign.png" alt />
+            <img v-if="appType>0&&!isLogin" class="text" src="~assets/img/vote/BSSRegister/text3-sign.png" alt @click="toSignIn"/>
             <img v-else class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
             <div class="lottery-box">
                 <div class="lottery">
@@ -133,6 +133,11 @@ export default {
     components: {
         mShare
     },
+    filters: {
+        formatVotes(val) {
+            return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+        }
+    },
     data() {
         return {
             // 页面
@@ -141,12 +146,8 @@ export default {
             isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             // appType: 1,
             // isLogin: true,
-            title: 'Bongo Star Search 2019',
-            imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
             firstTime: true,
             msg: '',
-            shareTitle: 'Chaguo ni lako!',
-            shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
             user_id: this.$store.state.user.id,
             share_num: 0,
             enroll_id: 2,
@@ -187,7 +188,13 @@ export default {
             items: [],
             star: '',
             loaded_m: false,
-            msgul: ''
+            msgul: '',
+
+            title: 'Bongo Star Search 2019',
+            imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
+            shareTitle: 'Chaguo ni lako!',
+            shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
+            content: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
         }
     },
     computed: {
@@ -302,6 +309,7 @@ export default {
         },
         // app登录方法
         toSignIn() {
+            event && event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true
             this.mSendEvLog('signin_click', '', '')
             if(this.appType <= 0 ) {
                 this.callOrDownApp()
@@ -394,9 +402,6 @@ export default {
                     })
             }
         },
-        toThousands(num) {
-            return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-        },
         // 获取投票单元数据
         getAdvisorList() {
             this.$axios
@@ -406,9 +411,6 @@ export default {
                         this.advisorList = res.data.data
                         this.advisorList.sort(function(a, b) {
                             return b.ballot_num - a.ballot_num
-                        })
-                        this.advisorList.forEach((item, index) => {
-                            item.ballot_num = this.toThousands(item.ballot_num)
                         })
                     } else {
                         this.advisorList = []
@@ -477,8 +479,7 @@ export default {
                             } else {
                                 this.mSendEvLog('votebtn_click', advisor.name, '0')
                             }
-                            advisor.ballot_num = this.toThousands(parseInt(advisor.ballot_num.replace(',', '')) + 1)
-                            // advisor.ballot_num++
+                            advisor.ballot_num++
                             this.voteLeft--
                             this.lotteryLeft++
                             if (this.voteLeft > 0) {
@@ -887,26 +888,6 @@ export default {
                     this.$alert(err)
                 })
             }
-            // this.$axios
-            //     .get(`/voting/v1/program?vote_id=${this.vote_id}`)
-            //     .then(res => {
-            //         if (res.data.code === 0) {
-            //             this.clipsList = res.data.data
-            //             this.clipsList.forEach(item => {
-            //                 if (item.name.substr(0, 1) == 'c') {
-            //                     this.clipsListNew.push(item)
-            //                 }
-            //             })
-            //             this.clipsListNew.forEach(item => {
-            //                 this.mSendEvLog('video_show', item.name, '')
-            //             })
-            //         } else {
-            //             this.$alert('GET VIDEO MSG ERROR')
-            //         }
-            //     })
-            //     .catch(err => {
-            //         this.$alert(err)
-            //     })
         },
         // toast方法
         tipShow(text, duration = 2000) {
@@ -923,8 +904,8 @@ export default {
         return {
             title: this.title,
             meta: [
-                { name: 'description', property: 'description', content: this.shareText },
-                { name: 'og:description', property: 'og:description', content: this.shareText },
+                { name: 'description', property: 'description', content: this.content },
+                { name: 'og:description', property: 'og:description', content: this.content },
                 {
                     name: 'og:image',
                     property: 'og:image',
