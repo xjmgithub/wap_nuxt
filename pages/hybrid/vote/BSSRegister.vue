@@ -343,7 +343,7 @@ export default {
         },
         // 播放视频方法
         toPlayer(advisor) {
-            this.mSendEvLog('video_click', advisor.name, '')
+            this.mSendEvLog('video_click', advisor.id, '')
             if (this.appType == 0) {
                 this.callOrDownApp()
                 return
@@ -554,7 +554,7 @@ export default {
                         }
                     })
                     this.clipsListNew.forEach(item => {
-                        this.mSendEvLog('video_show', item.name , '')
+                        this.mSendEvLog('video_show', item.id , '')
                     })
                 }
             })
