@@ -142,7 +142,7 @@ export default {
             // appType: 1,
             // isLogin: true,
             title: 'Bongo Star Search 2019',
-            imgUrl: 'http://cdn.startimestv.com/banner/bg-img.jpg',
+            imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
             firstTime: true,
             msg: '',
             shareTitle: 'Chaguo ni lako!',
@@ -243,14 +243,14 @@ export default {
         }
     },
     mounted() {
-        this.mSendEvLog('page_show', '', '')
+        this.mSendEvLog('page_show', 'homepage', '')
         this.msgul = this.$refs.msgul
         this.getLotteryMsg()
         this.getCommentInfo()
         this.getAdvisorList()
         this.getLotteryType()
         this.getMsgList()
-        this.getVideoMsg()
+        // this.getVideoMsg()
         setInterval(() => {
             this.getMsgList()
         }, 60000)
@@ -283,8 +283,8 @@ export default {
         toRegister() {
             this.$router.push(`/hybrid/vote/BSSRegister`)
         },
-        toComment() {
-            this.mSendEvLog('audreg_click', '', '')
+        toComment(label) {
+            this.mSendEvLog('audreg_click', label, '')
             this.$router.push(`/hybrid/vote/BSSComment`)
         },
         cdnPic(src) {
@@ -303,7 +303,9 @@ export default {
         // app登录方法
         toSignIn() {
             this.mSendEvLog('signin_click', '', '')
-            if (this.appType == 1) {
+            if(this.appType <= 0 ) {
+                this.callOrDownApp()
+            } else if (this.appType == 1) {
                 // 原生登录，跳回活动页面
                 toNativePage(
                     'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
@@ -431,19 +433,22 @@ export default {
         },
         // 投票方法
         handleViceVote(advisor) {
-            this.mSendEvLog('votebtn_click', advisor.name, this.isLogin ? '1' : '0')
             if (this.appType == 0) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.callOrDownApp('vote')
                 return
             }
             if (this.serverTime < this.startTime) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.$alert('Upigaji kura utaanza tarehe 8th Octoba, kwa hiyo kaa tayari!', () => {}, 'SAWA')
                 return
             } else if (this.serverTime > this.endTime) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.$alert('Samahani, kura zimekwisha.', () => {}, 'SAWA')
                 return
             }
             if (this.voteLeft <= 0) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.$confirm(
                     'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
                     () => {
@@ -467,6 +472,11 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
+                            if(this.isLogin) {
+                                this.mSendEvLog('votebtn_click', advisor.name, '1')
+                            } else {
+                                this.mSendEvLog('votebtn_click', advisor.name, '0')
+                            }
                             advisor.ballot_num = this.toThousands(parseInt(advisor.ballot_num.replace(',', '')) + 1)
                             // advisor.ballot_num++
                             this.voteLeft--
@@ -485,7 +495,7 @@ export default {
                                 }
                             } else {
                                 this.$confirm(
-                                    'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
+                                    'Upigaji umefanikiwa! Shirikisha marafiki kupata kura zaidi.',
                                     () => {
                                         this.toShare('0leftvote')
                                     },
@@ -514,6 +524,7 @@ export default {
                         if (this.serverTime > this.startTime_comment) {
                             this.isCommentStart = true
                         }
+                        this.getVideoMsg()
                     } else {
                         this.$alert('ERROR TO GET COMMENT TIME')
                     }
@@ -854,7 +865,8 @@ export default {
         // 获取往期视频
         getVideoMsg() {
             // 获取投票单元数据
-            this.$axios
+            if(this.isCommentStart) {
+                this.$axios
                 .get(`/voting/v1/program?vote_id=${this.vote_id}`)
                 .then(res => {
                     if (res.data.code === 0) {
@@ -874,6 +886,27 @@ export default {
                 .catch(err => {
                     this.$alert(err)
                 })
+            }
+            // this.$axios
+            //     .get(`/voting/v1/program?vote_id=${this.vote_id}`)
+            //     .then(res => {
+            //         if (res.data.code === 0) {
+            //             this.clipsList = res.data.data
+            //             this.clipsList.forEach(item => {
+            //                 if (item.name.substr(0, 1) == 'c') {
+            //                     this.clipsListNew.push(item)
+            //                 }
+            //             })
+            //             this.clipsListNew.forEach(item => {
+            //                 this.mSendEvLog('video_show', item.name, '')
+            //             })
+            //         } else {
+            //             this.$alert('GET VIDEO MSG ERROR')
+            //         }
+            //     })
+            //     .catch(err => {
+            //         this.$alert(err)
+            //     })
         },
         // toast方法
         tipShow(text, duration = 2000) {
@@ -905,7 +938,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/voiceToFame`.replace(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVote`.replace(
                                 /&/g,
                                 '**'
                             )

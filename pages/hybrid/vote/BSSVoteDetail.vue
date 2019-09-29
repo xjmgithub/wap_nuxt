@@ -18,12 +18,13 @@
                 </div>
             </div>
             <img src="~assets/img/vote/BSSRegister/bg-register.png" alt class="ic-green" />
+            <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/bg-ask.png" alt class="ic-green-a" @click="toComment('up')" />
             <img class="text text-one" src="~assets/img/vote/BSSRegister/text1.png" alt />
-            <div v-show="true" class="vote-box">
+            <div v-show="true" ref="voteBox" class="vote-box" >
                 <div class="vote-remaining">
                     <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:voteLeft}}</div>
                 </div>
-                <div class="index-box" :class="count>=30&&scrollTop>550?'':'none'">
+                <div class="index-box" :class="count>=30&&voteBoxTop<=scrollTop?'show':''">
                     <div v-for="(word,i) in wordListReady" :key="i">
                         <div :class="index==i?'active':''" @touchstart="toWord(word)">{{word}}</div>
                     </div>
@@ -36,7 +37,7 @@
                                 <div>
                                     <img v-if="n.icon" :src="n.icon" class="icon" />
                                     <img v-else src=" " class="icon" />
-                                    <p v-if="n.name">{{n.ballot_num}}</p>
+                                    <p v-if="n.name">{{n.ballot_num | formatVotes}}</p>
                                     <p v-else />
                                 </div>
                                 <span v-if="n.name" class="name">{{n.name}}</span>
@@ -72,15 +73,19 @@
 <script>
 import qs from 'qs'
 import { Base64 } from 'js-base64'
-import { cdnPicSrc } from '~/functions/utils'
+import { cdnPicSrc, getCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
-import { playVodinApp, shareInvite } from '~/functions/app'
+import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
         mShare
     },
-    filters: {},
+    filters: {
+        formatVotes(val) {
+            return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+        }
+    },
     data() {
         return {
             // 页面
@@ -89,9 +94,12 @@ export default {
             // appType: 1,
             // isLogin: true,
             show_rules: false,
+            isCommentStart: false,
+            startTime_comment: '',
+            endTime_comment: '',
+            enroll_id: 2,
             tip: '',
             tip_timer: null,
-            title: 'Bongo Star Search 2019 Vote Detail',
             wordListReady: [],
             wordTree: {},
             dataList: [],
@@ -106,20 +114,27 @@ export default {
             t2: 0,
             count: 0,
 
-            shareTitle: '',
-            imgUrl: '',
+            title: 'Bongo Star Search 2019',
+            shareTitle: 'Chaguo ni lako!',
+            shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
+            imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
 
             voteLeft: 0,
             startTime: '',
             endTime: '',
             finishWord: '',
             reqWordList: [],
-            firstTime: true
+            firstTime: true,
+            // voteBoxTop: 0
         }
     },
     computed: {
         scrollTop() {
             return this.t1
+        },
+        voteBoxTop() {
+            const voteBox = this.$refs.voteBox
+            return voteBox.getBoundingClientRect().top
         }
     },
     // 唯一标识处理
@@ -141,9 +156,10 @@ export default {
         }
     },
     mounted() {
+        this.mSendEvLog('page_show', 'fulllist', '')
         this.getVoteMsg()
-        this.mSendEvLog('page_show', '', '')
         this.getVoteinfo()
+        this.getCommentInfo()
         window.addEventListener('scroll', this.handleScroll)
     },
 
@@ -159,6 +175,10 @@ export default {
             // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
+        },
+        toComment(label) {
+            this.mSendEvLog('audreg_click', label, '')
+            this.$router.push(`/hybrid/vote/BSSComment`)
         },
         handleScroll() {
             clearTimeout(this.timer)
@@ -215,9 +235,6 @@ export default {
                         this.wordTree[key].sort(function(a, b) {
                             return b.ballot_num - a.ballot_num
                         })
-                        this.wordTree[key].forEach((item, index) => {
-                            item.ballot_num = this.toThousands(item.ballot_num)
-                        })
                     }
                     this.isload_a = true
                     this.formatDataList()
@@ -226,7 +243,6 @@ export default {
                     this.$alert(err)
                 })
         },
-
         toWord(id) {
             document.getElementById(id).scrollIntoView()
         },
@@ -235,9 +251,9 @@ export default {
             this.mSendEvLog('share_click', label, '')
             if (this.appType >= 1) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=VOICE&utm_campaign=${this.platform}`,
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=BSS&utm_campaign=${this.platform}`,
                     this.shareTitle,
-                    'Download StarTimes ON app. Vote and win FREE VIP!',
+                    this.shareText,
                     this.imgUrl
                 )
             } else {
@@ -246,6 +262,44 @@ export default {
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
+        },
+        // 唤醒转入活动页或下载App
+        callOrDownApp(label) {
+            // 唤醒App
+            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+                // 下载App
+                this.mSendEvLog('downloadpopup_show', label, '')
+                this.$confirm(
+                    'Pakua Startimes ON app na shiriki BSS2019',
+                    () => {
+                        this.mSendEvLog('downloadpopup_clickok', label, '')
+                        downApk.call(this)
+                        const voteDownTag = getCookie('vote_share_down')
+                        const user = getCookie('vote_share_user')
+                        if (voteDownTag && voteDownTag != -1) {
+                            this.$axios({
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/x-www-form-urlencoded',
+                                    token: this.$store.state.token,
+                                    'X-Secret': voteDownTag
+                                },
+                                data: qs.stringify({
+                                    vote_id: this.vote_id,
+                                    target: user,
+                                    action: 'SHARE_DOWNLOAD'
+                                }),
+                                url: '/voting/v1/ticket'
+                            })
+                        }
+                    },
+                    () => {
+                        this.mSendEvLog('downloadpopup_clicknot', label, '')
+                    },
+                    'PAKUA',
+                    'FUTA'
+                )
+            })
         },
         // 埋点方法
         mSendEvLog(action, label, value) {
@@ -318,24 +372,24 @@ export default {
                 })
             }
         },
-        toThousands(num) {
-            return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-        },
         // 投票方法
         handleViceVote(advisor) {
-            this.mSendEvLog('votebtn_click', advisor.name, '')
             if (this.appType == 0) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.callOrDownApp('vote')
                 return
             }
             if (this.serverTime < this.startTime) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.$alert('Upigaji kura utaanza tarehe 8th Octoba, kwa hiyo kaa tayari!', () => {}, 'SAWA')
                 return
             } else if (this.serverTime > this.endTime) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.$alert('Samahani, kura zimekwisha.', () => {}, 'SAWA')
                 return
             }
             if (this.voteLeft <= 0) {
+                this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.$confirm(
                     'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
                     () => {
@@ -359,10 +413,13 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            advisor.ballot_num = this.toThousands(parseInt(advisor.ballot_num.replace(',', '')) + 1)
-                            // advisor.ballot_num++
+                            if(this.isLogin) {
+                                this.mSendEvLog('votebtn_click', advisor.name, '1')
+                            } else {
+                                this.mSendEvLog('votebtn_click', advisor.name, '0')
+                            }
+                            advisor.ballot_num++
                             this.voteLeft--
-                            this.lotteryLeft++
                             if (this.voteLeft > 0) {
                                 if (this.firstTime) {
                                     this.$alert(
@@ -377,7 +434,7 @@ export default {
                                 }
                             } else {
                                 this.$confirm(
-                                    'Samahani, kura yako iliyobaki ni 0, shirikisha marafiki zako na upate kura zaidi.',
+                                    'Upigaji umefanikiwa! Shirikisha marafiki kupata kura zaidi.',
                                     () => {
                                         this.toShare('0leftvote')
                                     },
@@ -394,6 +451,25 @@ export default {
                         this.$alert(err)
                     })
             }
+        },
+        // 获取大众评审活动信息
+        getCommentInfo() {
+            this.$axios
+                .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
+                .then(res => {
+                    if (res.data.code === 200) {
+                        this.startTime_comment = new Date(res.data.data.start_time).getTime()
+                        this.endTime_comment = new Date(res.data.data.end_time).getTime()
+                        if (this.serverTime > this.startTime_comment) {
+                            this.isCommentStart = true
+                        }
+                    } else {
+                        this.$alert('ERROR TO GET COMMENT TIME')
+                    }
+                })
+                .catch(err => {
+                    this.$alert(err)
+                })
         },
         // 获取投票活动时间信息
         getVoteinfo() {
@@ -427,8 +503,8 @@ export default {
         return {
             title: this.title,
             meta: [
-                { name: 'description', property: 'description', content: 'Download StarTimes ON app. Vote and win FREE VIP!' },
-                { name: 'og:description', property: 'og:description', content: 'Download StarTimes ON app. Vote and win FREE VIP!' },
+                { name: 'description', property: 'description', content: this.shareText },
+                { name: 'og:description', property: 'og:description', content: this.shareText },
                 {
                     name: 'og:image',
                     property: 'og:image',
@@ -442,7 +518,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/voiceToFame`.replace(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVoteDetail`.replace(
                                 /&/g,
                                 '**'
                             )
@@ -472,10 +548,22 @@ export default {
             padding-top: 0.5rem;
             width: 95%;
             height: auto;
+            // &.ic-green {
+            //     width: 90%;
+            //     position: relative;
+            //     top: -0.8rem;
+            // }
             &.ic-green {
                 width: 90%;
+                padding-top: 0;
                 position: relative;
-                top: -0.8rem;
+                top: -0.3rem;
+            }
+            &.ic-green-a {
+                width: 90%;
+                position: relative;
+                padding-top: 0;
+                top: -0.5rem;
             }
         }
         .tab-box {
@@ -563,8 +651,9 @@ export default {
                 position: fixed;
                 right: 1.5%;
                 top: 1.7rem;
-                &.none {
-                    display: none;
+                display: none;
+                &.show {
+                    display: block;
                 }
                 div {
                     width: 1rem;
