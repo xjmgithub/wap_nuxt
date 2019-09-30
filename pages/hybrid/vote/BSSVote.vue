@@ -36,7 +36,7 @@
                                 <span class="name">{{item.name.toUpperCase()}}</span>
                             </div>
                             <div class="vote-btn">
-                                <div class="btn" @click="handleViceVote(item)">VOTE</div>
+                                <div class="btn" @click="handleViceVote(item)">KURA</div>
                             </div>
                         </li>
                     </ul>
@@ -56,7 +56,7 @@
                 </div>
                 <img src="~assets/img/vote/BSSRegister/img-share.png" alt="img-sharefor" />
             </div>
-            <img v-if="appType>0&&!isLogin" class="text" src="~assets/img/vote/BSSRegister/text3-sign.png" alt @click="toSignIn"/>
+            <img v-if="appType>0&&!isLogin" class="text" src="~assets/img/vote/BSSRegister/text3-sign.png" alt @click="toSignIn" />
             <img v-else class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
             <div class="lottery-box">
                 <div class="lottery">
@@ -194,7 +194,7 @@ export default {
             imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
             shareTitle: 'Chaguo ni lako!',
             shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
-            content: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
+            content: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.'
         }
     },
     computed: {
@@ -258,7 +258,8 @@ export default {
         this.getLotteryType()
         this.getMsgList()
         // this.getVideoMsg()
-        setInterval(() => {
+        const times = setInterval(() => {
+            if (this.serverTime > this.endTime) clearInterval(times)
             this.getMsgList()
         }, 60000)
         setInterval(this.scroll, 2000)
@@ -309,9 +310,9 @@ export default {
         },
         // app登录方法
         toSignIn() {
-            event && event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true
+            event && event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true)
             this.mSendEvLog('signin_click', '', '')
-            if(this.appType <= 0 ) {
+            if (this.appType <= 0) {
                 this.callOrDownApp()
             } else if (this.appType == 1) {
                 // 原生登录，跳回活动页面
@@ -396,7 +397,7 @@ export default {
                             this.voteLeft = 0 // 服务器端计算数据错误时
                         }
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.voteLeft = 0
                         this.$alert(err)
                     })
@@ -417,7 +418,7 @@ export default {
                     }
                     this.loaded = true
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.advisorList = []
                     this.$alert(err)
                 })
@@ -474,7 +475,7 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            if(this.isLogin) {
+                            if (this.isLogin) {
                                 this.mSendEvLog('votebtn_click', advisor.name, '1')
                             } else {
                                 this.mSendEvLog('votebtn_click', advisor.name, '0')
@@ -489,7 +490,7 @@ export default {
                                         () => {
                                             this.firstTime = false
                                         },
-                                        'GOT IT'
+                                        'SAWA'
                                     )
                                 } else {
                                     this.tipShow('Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.')
@@ -580,7 +581,7 @@ export default {
                             this.lotteryLeft = 0 // 服务器端计算数据错误时
                         }
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.lotteryLeft = 0
                         this.$alert(err)
                     })
@@ -598,10 +599,18 @@ export default {
                     }
                     this.loaded_l = true
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.lotteryType = []
                     this.$alert(err)
                 })
+        },
+        randomList(arr) {
+            for (let i = 0; i < arr.length; i++) {
+                const randomIndex = Math.round(Math.random() * (arr.length - 1 - i)) + i
+                ;
+                [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+            }
+            return arr
         },
         // 获取消息列表
         getMsgList() {
@@ -609,44 +618,51 @@ export default {
                 .get(`/voting/lottery/v1/admin/reward/users?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.items = res.data.data
-                        this.items.forEach((item, index, arrs) => {
-                            if (item.user_name) {
-                                if (
-                                    new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(item.user_name)
-                                ) {
-                                    // 邮箱用户
-                                    const arr = item.user_name.split('@')
-                                    if (arr[0].length > 3) {
-                                        item.user_name =
-                                            arr[0].substr(0, 2) +
-                                            arr[0].slice(2, -1).replace(/[^\s]/g, '*') +
-                                            arr[0].substring(arr[0].length - 1) +
-                                            '@' +
-                                            arr[1]
+                        if (this.serverTime <= this.startTime) {
+                            this.items = []
+                        } else {
+                            this.items = res.data.data
+                            this.randomList(this.items)
+                            this.items.forEach((item, index, arrs) => {
+                                if (item.user_name) {
+                                    if (
+                                        new RegExp(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/).test(
+                                            item.user_name
+                                        )
+                                    ) {
+                                        // 邮箱用户
+                                        const arr = item.user_name.split('@')
+                                        if (arr[0].length > 3) {
+                                            item.user_name =
+                                                arr[0].substr(0, 2) +
+                                                arr[0].slice(2, -1).replace(/[^\s]/g, '*') +
+                                                arr[0].substring(arr[0].length - 1) +
+                                                '@' +
+                                                arr[1]
+                                        }
+                                        if (arr[0].length == 3) {
+                                            item.user_name = arr[0].replace(/(\w{1})\w{1}(\w{1})/, '$1*$2') + '@' + arr[1]
+                                        }
+                                        if (arr[0].length == 2) {
+                                            item.user_name = arr[0].replace(/\w{1}(\w{1})/, '*$1') + '@' + arr[1]
+                                        }
+                                        if (arr[0].length == 1) {
+                                            item.user_name = arr[0].replace(/\w{1}/, '*') + '@' + arr[1]
+                                        }
+                                    } else if (new RegExp(/^\d{1,}$/).test(item.user_name)) {
+                                        // 手机用户
+                                        item.user_name = item.user_name.toString().replace(/(.*)\d{3}(\d{3})/, '$1***$2')
                                     }
-                                    if (arr[0].length == 3) {
-                                        item.user_name = arr[0].replace(/(\w{1})\w{1}(\w{1})/, '$1*$2') + '@' + arr[1]
-                                    }
-                                    if (arr[0].length == 2) {
-                                        item.user_name = arr[0].replace(/\w{1}(\w{1})/, '*$1') + '@' + arr[1]
-                                    }
-                                    if (arr[0].length == 1) {
-                                        item.user_name = arr[0].replace(/\w{1}/, '*') + '@' + arr[1]
-                                    }
-                                } else if (new RegExp(/^\d{1,}$/).test(item.user_name)) {
-                                    // 手机用户
-                                    item.user_name = item.user_name.toString().replace(/(.*)\d{3}(\d{3})/, '$1***$2')
                                 }
-                            }
-                            item.user_id = item.user_id.toString().replace(/(.*)\d{2}/, '$1**')
-                        })
-                        this.loaded_m = true
+                                item.user_id = item.user_id.toString().replace(/(.*)\d{2}/, '$1**')
+                            })
+                            this.loaded_m = true
+                        }
                     } else {
                         this.items = [] // 服务器端计算数据错误时
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.items = []
                     this.$alert(err)
                 })
@@ -796,7 +812,7 @@ export default {
                                         () => {
                                             this.lotteryLeft = 0
                                         },
-                                        'GOT IT'
+                                        'SAWA'
                                     )
                                 }, 3000)
                             }
@@ -866,27 +882,27 @@ export default {
         // 获取往期视频
         getVideoMsg() {
             // 获取投票单元数据
-            if(this.isCommentStart) {
+            if (this.isCommentStart) {
                 this.$axios
-                .get(`/voting/v1/program?vote_id=${this.vote_id}`)
-                .then(res => {
-                    if (res.data.code === 0) {
-                        this.clipsList = res.data.data
-                        this.clipsList.forEach(item => {
-                            if (item.name.substr(0, 1) == 'c') {
-                                this.clipsListNew.push(item)
-                            }
-                        })
-                        this.clipsListNew.forEach(item => {
-                            this.mSendEvLog('video_show', item.name, '')
-                        })
-                    } else {
-                        this.$alert('GET VIDEO MSG ERROR')
-                    }
-                })
-                .catch(err => {
-                    this.$alert(err)
-                })
+                    .get(`/voting/v1/program?vote_id=${this.vote_id}`)
+                    .then(res => {
+                        if (res.data.code === 0) {
+                            this.clipsList = res.data.data
+                            this.clipsList.forEach(item => {
+                                if (item.name.substr(0, 1) == 'c') {
+                                    this.clipsListNew.push(item)
+                                }
+                            })
+                            this.clipsListNew.forEach(item => {
+                                this.mSendEvLog('video_show', item.name, '')
+                            })
+                        } else {
+                            this.$alert('GET VIDEO MSG ERROR')
+                        }
+                    })
+                    .catch(err => {
+                        this.$alert(err)
+                    })
             }
         },
         // toast方法
@@ -919,10 +935,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVote`.replace(
-                                /&/g,
-                                '**'
-                            )
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVote`.replace(/&/g, '**')
                         )
                 },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
