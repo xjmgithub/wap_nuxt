@@ -251,7 +251,7 @@ export default {
             document.getElementById(id).scrollIntoView()
         },
         toShare(label) {
-            if (label == 'voterules') this.show_rules = false
+            if (label == 'voterules') this.closeRule()
             this.mSendEvLog('share_click', label, '')
             if (this.appType >= 1) {
                 shareInvite(
