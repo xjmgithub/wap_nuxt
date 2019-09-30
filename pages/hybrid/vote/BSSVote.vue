@@ -47,7 +47,7 @@
             <img id="text2" class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
             <div class="share-box" @click="toShare('midshare')">
                 <div>
-                    <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt />
+                    <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt @click="stopBubble" />
                     <img v-else src="~assets/img/vote/BSSRegister/bg-login.png" alt @click="toSignIn" />
                     <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt @click="toShare('invite')" />
                     <div class="num">
@@ -106,10 +106,10 @@
         <div v-show="show_rules" class="rules-box">
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
-                1. Kutoka  tarehe 8th Oct  hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
+                1. Kutoka tarehe 8th Oct hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
                 <br />2. Unaweza kumpigia kura mshiriki yeyote unayempenda!
                 <br />3. Washirikishe link rafiki zako na waombe wapakue app ya StarTimes ON ili kupata kura zaidi! Utapata kura 5 zaidi kwa kila mtumiaji mpya. Unavyozidi kuleta watumiaji wapya, ndivyo unavyopata kura zaidi!
-                <br />4. Kila wakati unapopiga kura, utapata nafasi moja ya kushinda, na utapata fursa ya kushinda  Abreader subwoofer, yenye thamani ya Shilingi 85,000 na Aborder bluetooth speaker, yenye thamani ya Shilingi 35,000, pamoja na Max VIP ya Mwezi ya StarTimes ON na Kuponi.
+                <br />4. Kila wakati unapopiga kura, utapata nafasi moja ya kushinda, na utapata fursa ya kushinda Abreader subwoofer, yenye thamani ya Shilingi 85,000 na Aborder bluetooth speaker, yenye thamani ya Shilingi 35,000, pamoja na Max VIP ya Mwezi ya StarTimes ON na Kuponi.
                 <br />5. Zawadi zitakuwa zinatolewa siku ya pili ya kazi katika Me-> Kuponi zangu.
                 <br />6. Wagombea 10 bora wenye kura nyingi zaidi wataweza kuingia kwenye usaili wa mwisho na kupata nafasi ya kushiriki 2019BSS.
             </div>
@@ -308,9 +308,12 @@ export default {
             })
             console.log(action, label, value)
         },
+        stopBubble() {
+            event && event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true)
+        },
         // app登录方法
         toSignIn() {
-            event && event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true)
+            this.stopBubble()
             this.mSendEvLog('signin_click', '', '')
             if (this.appType <= 0) {
                 this.callOrDownApp()
@@ -326,6 +329,7 @@ export default {
         },
         // 调出分享弹层(app/web)
         toShare(label) {
+            this.stopBubble()
             if (label == 'voterules') this.closeRule()
             this.mSendEvLog('share_click', label, '')
             if (this.appType >= 1) {
@@ -607,8 +611,7 @@ export default {
         randomList(arr) {
             for (let i = 0; i < arr.length; i++) {
                 const randomIndex = Math.round(Math.random() * (arr.length - 1 - i)) + i
-                ;
-                [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+                ;[arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
             }
             return arr
         },
