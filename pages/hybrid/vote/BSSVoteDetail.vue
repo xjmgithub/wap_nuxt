@@ -20,7 +20,7 @@
             <img src="~assets/img/vote/BSSRegister/bg-register.png" alt class="ic-green" />
             <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/bg-ask.png" alt class="ic-green-a" @click="toComment('up')" />
             <img class="text text-one" src="~assets/img/vote/BSSRegister/text1.png" alt />
-            <div v-show="true" ref="voteBox" class="vote-box" >
+            <div v-show="true" id="voteBox" ref="voteBox" class="vote-box">
                 <div class="vote-remaining">
                     <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:voteLeft}}</div>
                 </div>
@@ -29,13 +29,13 @@
                         <div :class="index==i?'active':''" @touchstart="toWord(word)">{{word}}</div>
                     </div>
                 </div>
-                <div v-for="(item,key) in dataList" v-show="dataList.length" :id="item.letter" :key="key" class="vote-word">
+                <div v-for="(item,key) in dataList" v-show="dataList.length" :id="item.letter" :ref="item.letter" :key="key" class="vote-word">
                     <div class="vote-title">{{item.letter}}</div>
                     <ul class="clearfix">
                         <li v-for="(n,i) in item.data" :key="i">
                             <div class="item-box">
                                 <div>
-                                    <img v-if="n.icon" :src="n.icon" class="icon" />
+                                    <img v-if="n.icon" :src="n.icon" class="icon" @click="toPlayer(n)"/>
                                     <img v-else src=" " class="icon" />
                                     <p v-if="n.name">{{n.ballot_num | formatVotes}}</p>
                                     <p v-else />
@@ -58,9 +58,9 @@
                 1. Kutoka tarehe 8th Oct hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
                 <br />2. Unaweza kumpigia kura mshiriki yeyote unayempenda!
                 <br />3. Washirikishe link rafiki zako na waombe wapakue app ya StarTimes ON ili kupata kura zaidi! Utapata kura 5 zaidi kwa kila mtumiaji mpya. Unavyozidi kuleta watumiaji wapya, ndivyo unavyopata kura zaidi!
-                <br />4. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi! Una nafasi ya kushinda kila mwezi Max VIP na kuponi kwenye App ya StarTimes ON.
+                <br />4. Kila wakati unapopiga kura, utapata nafasi moja ya kushinda, na utapata fursa ya kushinda Abreader subwoofer, yenye thamani ya Shilingi 85,000 na Aborder bluetooth speaker, yenye thamani ya Shilingi 35,000, pamoja na Max VIP ya Mwezi ya StarTimes ON na Kuponi.
                 <br />5. Zawadi zitakuwa zinatolewa siku ya pili ya kazi katika Me-> Kuponi zangu.
-                <br />6. Washiriki 10 wa mwanzo wenye kura nyingi zaidi wataingia kwenye orodha ya uchaguzi wa mwisho na kupata nafasi ya kuonekana rasmi kwenye onyesho la BSS2019.
+                <br />6. Wagombea 10 bora wenye kura nyingi zaidi wataweza kuingia kwenye usaili wa mwisho na kupata nafasi ya kushiriki 2019BSS.
             </div>
             <div class="share-btn" @click="toShare('voterules')">SHIRIKI</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
@@ -124,7 +124,7 @@ export default {
             endTime: '',
             finishWord: '',
             reqWordList: [],
-            firstTime: true,
+            firstTime: true
             // voteBoxTop: 0
         }
     },
@@ -133,7 +133,8 @@ export default {
             return this.t1
         },
         voteBoxTop() {
-            const voteBox = this.$refs.voteBox
+            // const voteBox = this.$refs.voteBox
+            const voteBox = document.getElementById('voteBox')
             return voteBox.getBoundingClientRect().top
         }
     },
@@ -162,7 +163,9 @@ export default {
         this.getCommentInfo()
         window.addEventListener('scroll', this.handleScroll)
     },
-
+    destroyed() {
+        window.removeEventListener('scroll', this.handleScroll)
+    },
     methods: {
         showRule() {
             this.show_rules = true
@@ -196,6 +199,7 @@ export default {
             this.$nextTick(() => {
                 this.wordListReady.forEach((item, index) => {
                     const el = document.getElementById(item)
+                    // const el = this.$refs.item
                     // this.reqWordList.push(item)
                     const clientH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
                     const elTop = el.getBoundingClientRect().top
@@ -304,7 +308,7 @@ export default {
         // 埋点方法
         mSendEvLog(action, label, value) {
             this.sendEvLog({
-                category: 'vote_VoiceToFame_' + this.platform,
+                category: 'form_BSSVote1_' + this.platform,
                 action: action,
                 label: label,
                 value: value
@@ -413,7 +417,7 @@ export default {
                 })
                     .then(res => {
                         if (res.data.code === 0) {
-                            if(this.isLogin) {
+                            if (this.isLogin) {
                                 this.mSendEvLog('votebtn_click', advisor.name, '1')
                             } else {
                                 this.mSendEvLog('votebtn_click', advisor.name, '0')
