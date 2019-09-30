@@ -79,6 +79,8 @@ export default {
         { path: '/hybrid/api/payment/callback', handler: '~/api/payment/callback' },
         { path: '/hybrid/vote/FilmFestival', handler: '~/api/film/index.js' },
         { path: '/hybrid/vote/voiceToFame', handler: '~/api/film/index.js' },
+        { path: '/hybrid/vote/BSSVote', handler: '~/api/film/index.js' },
+        { path: '/hybrid/vote/BSSVoteDetail', handler: '~/api/film/index.js' },
         { path: '/hybrid/vote/getTicketAward', handler: '~/api/film/getTicketAward.js' },
         { path: '/hybrid/api/episode/submit', handler: '~/api/episode/submit.js' },
         { path: '/hybrid/api/episode/result', handler: '~/api/episode/result.js' },

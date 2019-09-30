@@ -86,7 +86,6 @@
                     </div>
                     <div class="tip">
                         <p>TAFUTA ZAWADI KWENYE ME -> KUPONI YANGU</p>
-                        <!-- <p>Tafuta zawadi kwenye Me-> Kuponi yangu</p> -->
                     </div>
                 </div>
             </div>
@@ -107,12 +106,12 @@
         <div v-show="show_rules" class="rules-box">
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
-                1. Kutoka tarehe 8th Oct hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
+                1. Kutoka  tarehe 8th Oct  hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
                 <br />2. Unaweza kumpigia kura mshiriki yeyote unayempenda!
                 <br />3. Washirikishe link rafiki zako na waombe wapakue app ya StarTimes ON ili kupata kura zaidi! Utapata kura 5 zaidi kwa kila mtumiaji mpya. Unavyozidi kuleta watumiaji wapya, ndivyo unavyopata kura zaidi!
-                <br />4. Kila wakati unapopiga kura, utapata nafasi ya kushinda zawadi! Una nafasi ya kushinda kila mwezi Max VIP na kuponi kwenye App ya StarTimes ON.
+                <br />4. Kila wakati unapopiga kura, utapata nafasi moja ya kushinda, na utapata fursa ya kushinda  Abreader subwoofer, yenye thamani ya Shilingi 85,000 na Aborder bluetooth speaker, yenye thamani ya Shilingi 35,000, pamoja na Max VIP ya Mwezi ya StarTimes ON na Kuponi.
                 <br />5. Zawadi zitakuwa zinatolewa siku ya pili ya kazi katika Me-> Kuponi zangu.
-                <br />6. Washiriki 10 wa mwanzo wenye kura nyingi zaidi wataingia kwenye orodha ya uchaguzi wa mwisho na kupata nafasi ya kuonekana rasmi kwenye onyesho la BSS2019.
+                <br />6. Wagombea 10 bora wenye kura nyingi zaidi wataweza kuingia kwenye usaili wa mwisho na kupata nafasi ya kushiriki 2019BSS.
             </div>
             <div class="share-btn" @click="toShare('voterules')">SHIRIKI</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
@@ -234,7 +233,7 @@ export default {
         // console.log(store.state.deviceId)
         $axios.setHeader('token', store.state.token)
         try {
-            const { data } = await $axios.get(`/voting/v1/vote?vote_id=15`)
+            const { data } = await $axios.get(`/voting/v1/vote?vote_id=16`)
             // console.log(req.headers.vote_sign)
             return {
                 vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
@@ -257,6 +256,7 @@ export default {
         this.getAdvisorList()
         this.getLotteryType()
         this.getMsgList()
+        this.getShareNum()
         // this.getVideoMsg()
         const times = setInterval(() => {
             if (this.serverTime > this.endTime) clearInterval(times)
