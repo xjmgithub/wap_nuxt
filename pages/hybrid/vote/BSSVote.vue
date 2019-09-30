@@ -106,7 +106,7 @@
         <div v-show="show_rules" class="rules-box">
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
-                1. Kutoka tarehe 8th Oct hadi 27th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
+                1. Kutoka tarehe 8th Oct hadi 30th Oct, una kura 5 kila siku baada ya kuingia. Kura zitakuwa zinajumlishwa na kuwa halali hadi mwisho wa shughuli.
                 <br />2. Unaweza kumpigia kura mshiriki yeyote unayempenda!
                 <br />3. Washirikishe link rafiki zako na waombe wapakue app ya StarTimes ON ili kupata kura zaidi! Utapata kura 5 zaidi kwa kila mtumiaji mpya. Unavyozidi kuleta watumiaji wapya, ndivyo unavyopata kura zaidi!
                 <br />4. Kila wakati unapopiga kura, utapata nafasi moja ya kushinda, na utapata fursa ya kushinda Abreader subwoofer, yenye thamani ya Shilingi 85,000 na Aborder bluetooth speaker, yenye thamani ya Shilingi 35,000, pamoja na Max VIP ya Mwezi ya StarTimes ON na Kuponi.
@@ -278,13 +278,11 @@ export default {
         },
         showRule() {
             this.show_rules = true
-            // 页面静止
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
         },
         closeRule() {
             this.show_rules = false
-            // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
         },
@@ -1249,55 +1247,52 @@ export default {
                         position: relative;
                         height: 19.8rem;
                         li {
-                            width: 33%;
+                            width: 30%;
+                            height: 5.2rem;
                             display: block;
                             position: absolute;
                             overflow: hidden;
                             border-radius: 0.2rem;
-                            background-image: url('~assets/img/vote/BSSRegister/bg-lottery.png');
-                            background-size: 100% 5.5rem;
+                            background-color: #fff;
+                            border: 0.25rem solid transparent;
                             &:nth-child(1) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery2.png');
                                 border-top-left-radius: 1rem;
-                                left: 1.5%;
-                                top: 1.8rem;
+                                left: 3%;
+                                top: 1.7rem;
                             }
                             &:nth-child(2) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery2.png');
-                                left: 33.5%;
-                                top: 1.8rem;
+                                left: 35%;
+                                top: 1.7rem;
                             }
                             &:nth-child(3) {
                                 border-top-right-radius: 1rem;
-                                left: 65.5%;
-                                top: 1.8rem;
+                                left: 67%;
+                                top: 1.7rem;
                             }
                             &:nth-child(4) {
-                                left: 65.5%;
-                                top: 7.3rem;
+                                left: 67%;
+                                top: 7.2rem;
                             }
                             &:nth-child(5) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery3.png');
                                 border-bottom-right-radius: 1rem;
-                                left: 65.5%;
-                                top: 12.8rem;
+                                left: 67%;
+                                top: 12.7rem;
                             }
                             &:nth-child(6) {
-                                left: 33.5%;
-                                top: 12.8rem;
+                                left: 35%;
+                                top: 12.7rem;
                             }
                             &:nth-child(7) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery4.png');
                                 border-bottom-left-radius: 1rem;
-                                left: 1.5%;
-                                top: 12.8rem;
+                                left: 3%;
+                                top: 12.7rem;
                             }
                             &:nth-child(8) {
-                                left: 1.5%;
-                                top: 7.3rem;
+                                left: 3%;
+                                top: 7.2rem;
                             }
                             &.active {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-light.png');
+                                border: 0.25rem solid #8cd021;
                             }
                             > div {
                                 width: 100%;
@@ -1326,13 +1321,13 @@ export default {
                         }
                         .getLuck,
                         .getLuck-gray {
-                            width: 33%;
+                            width: 32%;
                             height: 5.5rem;
                             border-radius: 0.2rem;
                             text-align: center;
                             position: absolute;
-                            top: 7.3rem;
-                            left: 33.5%;
+                            top: 7.2rem;
+                            left: 34%;
                             background-size: 100% 5.5rem;
                             font-size: 1.3rem;
                             font-weight: bold;
