@@ -11,6 +11,56 @@ export default {
     starpay_payment_currency_error: 'Nao pode proceder com uma cuerencia errada , por favor tente outro canal ou contacte nos.',
     starpay_payment_amount_error: 'Saldo insuficiente, por favor verifique o seu saldo',
     starpay_payment_login_notice: 'Para pagar por eWallet, você precisa fazer login na conta StarTimes primeiro',
+    starpay_payment_paytoken_error: 'Consulta paga o simbolo necessária! Entre em contato conosco para obter ajuda',
+    starpay_payment_timeout_notice: 'Tempo limite da transação, ainda estamos processando seu pagamento e pode levar mais tempo. O resultado será atualizado imediatamente quando vier, obrigado por sua paciência.',
+    starpay_payment_pending_message: 'Processando o seu pagamento,porfavor aguarde por um momento',
+    starpay_payment_no_paychannel: 'Nenhum canal de pagamento disponível',
+    product_name: 'Nome do Produto',
+    eWallet: 'eWallet',
+    note: 'Observações',
+    query_paytoken_needed: 'Consulta paga o simbolo necessária! Entre em contato conosco para obter ajuda',
+    payToken_payChannel_mismatch: 'Pagar o simbolo e pagar o canal Incompatibilidade! Entre em contato conosco para obter ajuda',
+    pay_now: 'PAGUE',
+    confirm_payment: 'Confirme o pagamento',
+    add_card_topay: 'Adicione o cartao para pagar',
+    enter_complete_info: 'Digite as informações completas.',
+    enter_correct_info: 'Digite o XXX correto',
+    payment_successful: 'Pagamento com Sucesso',
+    pay_successful_desc: 'pagamento. Seu pedido foi pago com sucesso. Por favor, clique em "OK" se você não for redirecionado dentro de 10s.',
+    payment_failed: 'Pagamento falhado',
+    pay_failed_desc: 'Seu pedido não foi aceito. Atualize a página atual ou tente novamente o pagamento.',
+    pay_refresh: 'ATUALIZAR',
+    pay_ok: 'OK',
+    pay_help: 'HELP',
+    error_notice: 'O ID do pedido está vazio, solicitação inválida. Entre em contato conosco para obter ajuda',
+    payment_results: 'Resultados de Pagamento',
+    forgot_payment_password: 'Esqueça a senha de pagamento?',
+    payment_details: 'Detalhes de pagamento',
+    enter_pay_password: 'Digite a senha de pagamento',
+    confirm_phone_number: 'Confirme seu número de telefone',
+    enter_phone_number: 'Insera o seu Número de Telemóvel',
+    enter_code: 'Insera o código de verificação primeiro, por favor, tente outra vez.',
+    unknown_error: 'Desculpe! Erro desconhecido',
+    phone_already_set: 'Este número de telefone foi ocupado, por favor use outro número.',
+    change_phone_number: 'Altere número de telefone',
+    enter_SMS_code: 'Inserir o código de Autenticação',
+    set_payment_password: 'Defina senha de pagamento',
+    set_6bit_password: 'Crie uma senha de 6-dígitos',
+    confirm_password: 'Confirme a senha',
+    set_phone_succ: 'Definir número de telefone com sucesso!',
+    two_password_not_match: 'As senhas não correspondem.',
+    enter_pure_numbers: 'A senha deve conter números apenas',
+    reset_password: 'Trocar senha',
+    setting_password: 'Defina a senha',
+    enter_signin_pass: 'Digite a senha de login',
+    fotget_signin_pass: 'Esquecer a senha de login',
+    password_error: 'Palavra Passe incorreta',
+    cellphone_number: 'Número de telemóvel',
+    get_code: 'Obter o Código',
+    payment_method_not_supported: 'Este método de pagamento não é suportado, por favor tente outro metodo',
+    incorrect_pay_password: 'Senha de pagamento incorreto. Tente de novo.',
+    register_text: 'Criar nova conta StarTimes ON',
+    get_userinfo_error: 'Erro de obter informações do usuário',
 
     // vote film
     vote_about: 'Sobre o PAOFF',
@@ -205,7 +255,6 @@ export default {
     error_email_false: 'O endereço de email está incorreto. Por favor verifique e tente novamente.',
     error_registered: 'Você já é um  utilizador registado.',
     error_code: 'Não reconhecido. Por favor verifique e tente de novo.',
-    sign_in: 'Iniciar sessão',
 
     // setpass
     register_input_enter_password: 'Insira a Senha',
@@ -231,20 +280,43 @@ export default {
     Password: 'Senha',
     forget_password: 'Esqueceu a senha?',
     // 错误提示
-    signin_notexist: 'A conta não existe.',
-    register: 'Registrar',
     confirm_number: 'Por favor confirme que submeteu o número correcto.',
+    signin_notexist: 'A conta não existe.',
     mailbox_not_correct_format: 'O e-mail não está no formato correto!',
+    password_cannot_less_letters: 'A Palavra Passe não pode ter menos do que 6 letras!',
+    password_cannoe_greater: 'A Palavra Passe não pode ter Mais do que 18 letras!',
     password_is_incorrect: 'A Palavra Passe está incorrecta',
-    forget_password_account_security_questions_hint: 'Por favor, insera a sua conta.',
-    password_not_empty: 'Não deixe a senha em branco!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'O código de verificação já foi enviado, por favor, verifique a sua caixa de entrada ou  e-mails indesejados a tempop. Você pode receber um novo código de verificação após 60 segundos.',
-    get_verification_code: 'Clique para obter o código de verficação',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'Este número não se encontra registado.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'O código de verificação expirou. Tente reenviar o código.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Por favor, verifique o seu e-mail, clique o link de segurança e reponha a sua senha.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'Este endereço de e-mail não foi ainda registado.',
+    password_reset_failed: 'Falha no reset da Palavra Passe!',
 
     // title
-    reg_title: 'Registrar',
+    register: 'Registrar',
+    sign_in: 'Iniciar sessão',
     set_password: 'Defina a senha',
     reset_pass: 'Trocar senha',
+    login_title: 'Entrar',
+
+    // login
+    login_btn: 'SIGN IN',
+    no_have_account: 'Não tem uma conta?',
+    firstpage_tips: 'Ao se inscrever, você concorda com os nossos',
+    firstpage_tips2: "Termos de serviços",
+    firstpage_tips3: "e",
+    firstpage_tips4: "acordos de privacidade.",
 }

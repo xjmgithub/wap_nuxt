@@ -63,7 +63,7 @@ export const verifyWalletPass = function(accountNo, password, callback) {
             callback && callback(res.data)
         } else {
             this.$nuxt.$loading.finish()
-            this.$alert('Incorrect payment password.')
+            this.$alert(this.$store.state.lang.incorrect_pay_password)
         }
     })
 }
@@ -93,6 +93,9 @@ export const invoke = function(payToken, channel, callback, extend) {
     })
         .then(res => {
             if (res.data.resultCode === '0') {
+                if(res.data.extendInfo.instructions){
+                    sessionStorage.setItem('instructions',res.data.extendInfo.instructions)
+                }
                 callback && callback(res.data)
             } else {
                 this.$nuxt.$loading.finish()
@@ -120,10 +123,10 @@ export const commonPayAfter = function(data, payType, apiType) {
             window.location.href = '/hybrid/payment/payResult?seqNo=' + data.paySeqNo
             // this.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
-            this.$alert('This payment method is not supported, please try another one')
+            this.$alert(this.$store.state.lang.payment_method_not_supported)
         }
     } else {
-        this.$alert('This payment method is not supported, please try another one')
+        this.$alert(this.$store.state.lang.payment_method_not_supported)
     }
 }
 

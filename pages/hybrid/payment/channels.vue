@@ -3,38 +3,57 @@
         <div class="goods">
             <p v-show="totalAmount" class="pay-money">
                 <span>{{currencySymbol}}</span>
-                {{totalAmount | formatAmount}}
+                {{totalAmount }}
             </p>
-            <p class="pay-subject">Product Name: {{paySubject}}</p>
+            <p class="pay-subject">{{$store.state.lang.product_name}}: {{paySubject}}</p>
         </div>
-        <div class="contain">
+        <div v-if="payChannels&&payChannels.length>0" class="contain">
             <div class="pay-channels">
                 <div v-for="(item,i) in payChannels" :key="i">
                     <label class="radio">
                         <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
                         <img v-else src="~/assets/img/pay/pay_ment_default.png" />
-                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">eWallet: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
-                        <span v-else-if="item.payType==1">eWallet</span>
+                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">{{$store.state.lang.eWallet}}: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
+                        <span v-else-if="item.payType==1">{{$store.state.lang.eWallet}}</span>
                         <span v-else>{{item.name}}</span>
-                        <input :checked="lastpay==item.id || i===0?true:false" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
-                        <i />
+                        <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                        <i v-show="!item.payChannelCardAuthDtoList" />
                     </label>
+                    <div class="sub-channels">
+                        <div v-for="(card,si) in item.payChannelCardAuthDtoList" v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" :key="si">
+                            <label class="radio">
+                                <div :class="card.brand" class="img-box" />
+                                <span>{{card.cardType}}({{card.last4}})</span>
+                                <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(item,card)" />
+                                <i />
+                            </label>
+                        </div>
+                        <label v-show="item.payChannelCardAuthDtoList" class="radio">
+                            <img src="~/assets/img/dvb/ic_ewallet_add.png" />
+                            <span>{{$store.state.lang.add_card_topay}}</span>
+                            <input :checked="item.lastSuccessPay && item.payChannelCardAuthDtoList&&item.payChannelCardAuthDtoList.length<=0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                            <i />
+                        </label>
+                    </div>
                 </div>
             </div>
             <div v-show="payDesc" class="desc">
-                <p>Note:</p>
+                <p>{{$store.state.lang.note}}:</p>
                 <p v-html="payDesc" />
             </div>
         </div>
+        <div v-if="loaded&&payChannels.length<=0" class="contain nochannel">
+            {{$store.state.lang.starpay_payment_no_paychannel}}
+        </div>
         <div class="footer">
             <div class="error-msg" v-html="errorMsg" />
-            <mButton :disabled="Boolean(errorMsg)" text="PAY" @click="nextStep" />
+            <mButton :disabled="Boolean(errorMsg)" :text="$store.state.lang.pay_now" @click="nextStep" />
         </div>
     </div>
 </template>
 <script>
 import mButton from '~/components/button'
-import { formatAmount, cdnPicSrc, getCookie } from '~/functions/utils'
+import { formatAmount, cdnPicSrc } from '~/functions/utils'
 import { updateWalletAccount, updateWalletConf, invoke, commonPayAfter } from '~/functions/pay'
 import countrys from '~/functions/countrys.json'
 export default {
@@ -44,9 +63,6 @@ export default {
     },
     filters: {
         formatAmount(num) {
-            return formatAmount(num)
-        },
-        formatDefPay(num) {
             return formatAmount(num)
         }
     },
@@ -64,20 +80,19 @@ export default {
                 appInterfaceMode: null,
                 payType: -1,
                 formConfigExist: false,
-                currency: '',
+                currencySymbol: '',
                 payChannelName: ''
             },
             merchantAppId: '',
-            currency: '', // 商品货币code
             currencySymbol: '', // 商品货币符号
             totalAmount: '',
             paySubject: '',
             payChannels: [],
-            lastpay: '',
             eAmount: '', // 电子钱包余额
-            eCurrency: '', // 电子钱包货币code
             eCurrencySymbol: '', // 电子钱包货币符号
-            countrys: obj
+            countrys: obj,
+            authorizationCode: '',
+            loaded: false
         }
     },
     computed: {
@@ -92,17 +107,18 @@ export default {
         },
         errorMsg() {
             let tmp = ''
+            if (this.loaded && this.payChannels.length <= 0) tmp = this.$store.state.lang.starpay_payment_no_paychannel
             if (!this.isLogin && this.channel.payType === 1) return tmp
-            else if (this.currency != this.oCurrency) tmp = this.$store.state.lang.starpay_payment_currency_error
+            else if (this.currencySymbol != this.oCurrencySymbol) tmp = this.$store.state.lang.starpay_payment_currency_error
             else if (this.eAmount < this.totalAmount && this.channel.payType === 1) tmp = this.$store.state.lang.starpay_payment_amount_error
             return tmp
         },
-        oCurrency() {
-            // 渠道货币code 用于比较判断
+        oCurrencySymbol() {
+            // 渠道货币符号 用于比较判断
             if (this.channel.payType == 1) {
-                return this.eCurrency
+                return this.eCurrencySymbol
             } else {
-                return this.channel.currency
+                return this.channel.currencySymbol
             }
         }
     },
@@ -113,13 +129,13 @@ export default {
             if (res.status !== 200) {
                 store.commit(
                     'SET_TOKEN',
-                    'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjEsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjEsImNyZWF0ZWQiOjE1NDM5MTI4MzgzNjksImV4cCI6MTg1NDk1MjgzOCwiY2lkIjoyfQ.q_CUuuyIXu5UzCnzgD4lXF2L-wk8viu9abQFqeYn-2AFEAS8Kf5Won-GdHq9HJbv7T3PI7TD3JcIXl5BU533ew'
+                    'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjIsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjAsImNyZWF0ZWQiOjE1Njc2NzAyNTY0MTgsImdwcyI6MCwiZXhwIjoxODgzMDMwMjU2LCJjaWQiOjJ9.mgMzKuLEKt1ZtS1d4f2s9mX6mDj0vOsu2xwzf09vj250XLtPhrn7RtFwj9BLkdgwvvQDfLHcRMCxt5TgzbzsYQ'
                 )
             }
         } catch (e) {
             store.commit(
                 'SET_TOKEN',
-                'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjEsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjEsImNyZWF0ZWQiOjE1NDM5MTI4MzgzNjksImV4cCI6MTg1NDk1MjgzOCwiY2lkIjoyfQ.q_CUuuyIXu5UzCnzgD4lXF2L-wk8viu9abQFqeYn-2AFEAS8Kf5Won-GdHq9HJbv7T3PI7TD3JcIXl5BU533ew'
+                'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjIsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjAsImNyZWF0ZWQiOjE1Njc2NzAyNTY0MTgsImdwcyI6MCwiZXhwIjoxODgzMDMwMjU2LCJjaWQiOjJ9.mgMzKuLEKt1ZtS1d4f2s9mX6mDj0vOsu2xwzf09vj250XLtPhrn7RtFwj9BLkdgwvvQDfLHcRMCxt5TgzbzsYQ'
             )
         }
     },
@@ -129,7 +145,7 @@ export default {
             if (sessionToken) {
                 this.payToken = sessionToken
             } else {
-                this.$alert('Query payToken needed! please check request')
+                this.$alert(this.$store.state.lang.query_paytoken_needed)
                 return false
             }
         }
@@ -139,25 +155,34 @@ export default {
     },
     methods: {
         getPayMethods() {
-            this.lastpay = getCookie('lastpay') || ''
             this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
                 const data = res.data
+                this.loaded = true
                 if (data && data.payChannels && data.payChannels.length > 0) {
                     this.payChannels = this.bubbleSort(data.payChannels)
-                    this.currency = data.currency
-                    this.currencySymbol = this.countrys[data.country].currencySymbol
-                    this.totalAmount = data.totalAmount
+                    this.currencySymbol = data.currencySymbol
+                    this.totalAmount = data.totalAmountFormat
                     this.paySubject = data.paySubject
                     this.merchantAppId = data.merchantAppId
                     const payChannels = {}
+                    let lastpay = ''
+                    let authCode = ''
                     this.payChannels.forEach(item => {
                         payChannels[item.id] = item
+                        if (item.lastSuccessPay) {
+                            lastpay = item.id
+                            authCode =
+                                item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0
+                                    ? item.payChannelCardAuthDtoList[0].authorizationCode
+                                    : ''
+                        }
                     })
-                    this.lastpay && this.initChannel(payChannels[this.lastpay])
-                    !this.lastpay && this.initChannel(this.payChannels[0])
+                    lastpay && this.initChannel(payChannels[lastpay])
+                    !lastpay && this.initChannel(this.payChannels[0])
+                    this.authorizationCode = authCode
                     const msg = {
                         symbol: this.currencySymbol,
-                        amount: formatAmount(this.totalAmount)
+                        amount: this.totalAmount
                     }
                     sessionStorage.setItem('goodMsg', JSON.stringify(msg))
                     sessionStorage.setItem('merchantAppId', this.merchantAppId)
@@ -170,7 +195,7 @@ export default {
                         data_source: 2
                     })
                 } else {
-                    this.$alert('payToken and payChannel Mismatch! please check request')
+                    this.$alert(this.$store.state.lang.payToken_payChannel_mismatch)
                 }
             })
         },
@@ -190,7 +215,6 @@ export default {
         getMyEwallet() {
             updateWalletAccount.call(this, account => {
                 this.eAmount = account.amount
-                this.eCurrency = account.currency
                 this.eCurrencySymbol = account.currencySymbol
                 sessionStorage.setItem('wallet', JSON.stringify(account))
                 updateWalletConf.call(this, account.accountNo)
@@ -204,7 +228,7 @@ export default {
             this.channel.payChannel = item.id
             this.channel.formConfigExist = item.formConfigExist
             this.channel.appInterfaceMode = item.appInterfaceMode
-            this.channel.currency = item.currency
+            this.channel.currencySymbol = this.countrys[item.country].currencySymbol
             this.channel.payChannelName = item.payType == 1 ? 'eWallet' : item.name
             this.sendEvLog({
                 category: 'confirm_payment',
@@ -214,11 +238,19 @@ export default {
                 merchant_app_id: this.merchantAppId,
                 data_source: 2
             })
+            this.authorizationCode = ''
+            sessionStorage.removeItem('card')
+        },
+        initSubChannel(item, card) {
+            this.initChannel(item)
+            this.authorizationCode = card.authorizationCode
+            // TODO 绑卡信息埋点
         },
         nextStep() {
             sessionStorage.setItem('payChannel', this.channel.payChannel)
+            this.authorizationCode && sessionStorage.setItem('card', this.authorizationCode)
             let passIsSet
-            if (this.channel.payType === 1) {
+            if (this.channel.payType === 1 || this.authorizationCode) {
                 if (!this.isLogin) {
                     this.$confirm(this.$store.state.lang.starpay_payment_login_notice, () => {
                         window.location.href = `${location.origin}/hybrid/account/signIn?pre=${location.href}`
@@ -257,7 +289,7 @@ export default {
     },
     head() {
         return {
-            title: 'Confirm Payment'
+            title: this.$store.state.lang.confirm_payment
         }
     }
 }
@@ -299,18 +331,39 @@ export default {
         margin-bottom: 6.5rem;
         .pay-channels {
             width: 100%;
+            font-weight: bold;
             & > div {
                 border-bottom: 1px solid #eeeeee;
                 padding: 0.8rem 0;
             }
             .radio {
+                position: relative;
+                .img-box {
+                    display: inline-block;
+                    vertical-align: middle;
+                    height: 1.3rem;
+                    width: 1.3rem;
+                    background-size: 100% !important;
+                    background: url('~assets/img/dvb/ic_no_logo_card.png') no-repeat;
+                    &.balance {
+                        background: url('~assets/img/dvb/ic_ewallet_balance.png') no-repeat;
+                    }
+                    &.visa {
+                        background: url('~assets/img/dvb/ic_visa.png') no-repeat;
+                    }
+                    &.verve {
+                        background: url('~assets/img/dvb/ic_verve.png') no-repeat;
+                    }
+                    &.mastercard {
+                        background: url('~assets/img/dvb/ic_mastercard.png') no-repeat;
+                    }
+                }
                 img {
                     width: 1.5rem;
                 }
                 span {
                     margin-left: 0.5rem;
                     color: #333333;
-                    font-weight: bold;
                 }
                 position: relative;
                 cursor: pointer;
@@ -352,11 +405,23 @@ export default {
                     }
                 }
             }
+            .sub-channels {
+                padding-left: 2rem;
+                font-weight: normal;
+                img {
+                    width: 1.3rem;
+                }
+            }
         }
         .desc {
             width: 100%;
             line-height: 1.3rem;
             margin-top: 0.8rem;
+        }
+        &.nochannel {
+            padding-top: 2rem;
+            text-align: center;
+            color: #666666;
         }
     }
     .footer {

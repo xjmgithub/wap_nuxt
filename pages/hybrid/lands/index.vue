@@ -64,6 +64,11 @@ export default {
                     property: 'og:description',
                     content: 'StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment'
                 },
+                {
+                    name: 'og:image',
+                    property: 'og:image',
+                    content: 'http://m.startimestv.com/_nuxt/img/6672906.png'
+                },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: 'StarTimes APP' },
                 {

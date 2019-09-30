@@ -5,12 +5,12 @@
                 <img v-if="isCiphertext==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext=2" />
                 <img v-if="isCiphertext==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext=1" />
             </div>
-            <div v-show="focus_ps" class="passText">{{$store.state.lang.register_input_enter_password_tip}}</div>
+            <div class="tag" :class="{focus:focus_ps,error:error_ps}">{{$store.state.lang.register_input_enter_password_tip}}</div>
             <input
                 v-model="pass"
                 :class="{focus:focus_ps,error:error_ps}"
                 :type="pwdType"
-                :placeholder="enter_ps"
+                :placeholder="focus_ps?'':enter_ps"
                 @focus="focusPass"
                 @blur="checkPass"
             />
@@ -21,19 +21,19 @@
                 <img v-if="isCiphertext_confirm==1" class="open-close" src="~assets/img/ic_hide_def_g.png" alt @click="isCiphertext_confirm=2" />
                 <img v-if="isCiphertext_confirm==2" class="open-close" src="~assets/img/ic_show_def_g.png" alt @click="isCiphertext_confirm=1" />
             </div>
-            <div v-show="focus_reps" class="repassText">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
+            <div class="tag" :class="{focus:focus_reps,error:error_reps}">{{$store.state.lang.register_input_enter_password_again_tip}}</div>
             <input
                 v-model="repass"
                 :class="{focus:focus_reps,error:error_reps}"
                 :type="pwdType_confirm"
-                :placeholder="enter_reps"
+                :placeholder="focus_reps?'':enter_reps"
                 @focus="focusRepass"
                 @blur="checkRepass"
             />
             <div v-if="error_reps" class="error-tip">{{error_reps}}</div>
         </div>
         <div class="footer">
-            <mButton :disabled="!abled" :text="next" @click="nextStep" />
+            <mButton :disabled="!abled" :text="$store.state.lang.text_onair_next" @click="nextStep" />
         </div>
     </div>
 </template>
@@ -43,7 +43,7 @@ import { login } from '~/functions/utils'
 export default {
     layout: 'base',
     components: {
-        mButton,
+        mButton
     },
     data() {
         return {
@@ -65,7 +65,7 @@ export default {
             enter_reps: this.$store.state.lang.register_input_enter_password_again,
             next: this.$store.state.lang.text_onair_next,
             error_setpass: this.$store.state.lang.error_setpass,
-            error_setrepass: this.$store.state.lang.error_setrepass,
+            error_setrepass: this.$store.state.lang.error_setrepass
         }
     },
     computed: {
@@ -115,18 +115,18 @@ export default {
             this.focus_ps = false
             if (this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
             } else if (!/^[a-zA-Z0-9]{6,18}$/.test(this.pass) && this.pass) {
-                this.error_ps = this.error_setpass
+                this.error_ps = this.$store.state.lang.error_setpass
             } else if (this.repass) {
-                this.error_reps = this.error_setrepass
+                this.error_reps = this.$store.state.lang.error_setrepass
             }
         },
         checkRepass() {
             this.focus_reps = false
             if (this.repass == this.pass && /^[a-zA-Z0-9]{6,18}$/.test(this.pass)) {
             } else if (!/^[a-zA-Z0-9]{6,18}$/.test(this.pass) && this.pass) {
-                this.error_ps = this.error_setpass
+                this.error_ps = this.$store.state.lang.error_setpass
             } else if (this.repass) {
-                this.error_reps = this.error_setrepass
+                this.error_reps = this.$store.state.lang.error_setrepass
             }
         },
         nextStep() {
@@ -169,45 +169,51 @@ export default {
             })
             this.$axios.post('/ums/v3/register', options).then(res => {
                 if (res.data.code === 0) {
-                    let params = {}
-                    if (this.phone) {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register phone',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            phoneCc: this.phoneCc,
-                            phone: this.phone,
-                            pwd: this.pass,
-                            deviceId: this.$store.state.deviceId,
-                            type: 10
-                        }
-                    } else {
-                        this.sendEvLog({
-                            category: 'register',
-                            action: 'register_passwd_ok',
-                            label: 'register email',
-                            value: 0
-                        })
-                        params = {
-                            applicationId: 2,
-                            deviceId: this.$store.state.deviceId,
-                            type: 0,
-                            email: this.email,
-                            pwd: this.pass
-                        }
-                    }
-                    login.call(this, params, () => {
-                        const pre = sessionStorage.getItem('register_prefer') || ''
-                        if (pre) {
-                            window.location.href = pre
-                        } else {
-                            this.$router.replace('/browser')
-                        }
-                    })
+                    this.$alert(
+                        this.$store.state.lang.tips_register_successful,
+                        () => {
+                            let params = {}
+                            if (this.phone) {
+                                this.sendEvLog({
+                                    category: 'register',
+                                    action: 'register_passwd_ok',
+                                    label: 'register phone',
+                                    value: 0
+                                })
+                                params = {
+                                    applicationId: 2,
+                                    phoneCc: this.phoneCc,
+                                    phone: this.phone,
+                                    pwd: this.pass,
+                                    deviceId: this.$store.state.deviceId,
+                                    type: 10
+                                }
+                            } else {
+                                this.sendEvLog({
+                                    category: 'register',
+                                    action: 'register_passwd_ok',
+                                    label: 'register email',
+                                    value: 0
+                                })
+                                params = {
+                                    applicationId: 2,
+                                    deviceId: this.$store.state.deviceId,
+                                    type: 0,
+                                    email: this.email,
+                                    pwd: this.pass
+                                }
+                            }
+                            login.call(this, params, () => {
+                                const pre = sessionStorage.getItem('register_prefer') || ''
+                                if (pre) {
+                                    window.location.href = pre
+                                } else {
+                                    this.$router.replace('/browser')
+                                }
+                            })
+                        },
+                        this.$store.state.lang.login_title
+                    )
                 } else {
                     this.sendEvLog({
                         category: 'register',
@@ -252,7 +258,19 @@ export default {
             top: 0;
             left: 0;
             color: #0087eb;
-            padding-left: 0.4rem;
+        }
+        .tag {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.8rem;
+            color: transparent;
+            &.focus {
+                color: #0087eb;
+            }
+            &.error {
+                color: red;
+            }
         }
         input {
             padding: 1rem 0 0 0.4rem;

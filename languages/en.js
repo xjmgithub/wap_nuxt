@@ -11,6 +11,56 @@ export default {
     starpay_payment_currency_error: 'Cannot proceed with wrong currency, please try another channel or contact us',
     starpay_payment_amount_error: 'Insufficient funds, please check your balance',
     starpay_payment_login_notice: 'To pay by eWallet, you need to login StarTimes account first',
+    starpay_payment_paytoken_error: 'Query payToken needed! Please contact us for help',
+    starpay_payment_timeout_notice: 'Transaction timeout, we are still processing your payment and it may take longer time. The result will be refreshed immediately when it comes, thanks for your patience.',
+    starpay_payment_pending_message: 'Processing you payment, please wait for a moment',
+    starpay_payment_no_paychannel: 'No available payment channel',
+    product_name: 'Product Name',
+    eWallet: 'eWallet',
+    note: 'Note',
+    query_paytoken_needed: 'Query payToken needed! Please contact us for help',
+    payToken_payChannel_mismatch: 'PayToken and payChannel Mismatch! Please contact us for help',
+    pay_now: 'PAY',
+    confirm_payment: 'Confirm Payment',
+    add_card_topay: 'Add a Card to pay',
+    enter_complete_info: 'Please enter the complete information.',
+    enter_correct_info: 'Please enter the correct XXX',
+    payment_successful: 'Payment Successful',
+    pay_successful_desc: 'Thanks for your payment. Your order has been successfully paid. Please click "OK" if you are not redirected within 10s.',
+    payment_failed: 'Payment Failed',
+    pay_failed_desc: 'Your request was not accepted. Please refresh the current page or try again the payment.',
+    pay_refresh: 'REFRESH',
+    pay_ok: 'OK',
+    pay_help: 'HELP',
+    error_notice: 'Order id is empty, invalid request. Please contact us for help',
+    payment_results: 'Payment Results',
+    forgot_payment_password: 'Forgot payment password?',
+    payment_details: 'Payment Details',
+    enter_pay_password: 'Enter payment password',
+    confirm_phone_number: 'Confirm your phone number',
+    enter_phone_number: 'Enter your phone number',
+    enter_code: 'Enter your verification code first.',
+    unknown_error: 'Sorry! Unknown error.',
+    phone_already_set: 'This phone number has been occupied, please use another number.',
+    change_phone_number: 'Change Phone Number',
+    enter_SMS_code: 'Enter verification code ',
+    set_payment_password: 'Set payment password',
+    set_6bit_password: 'Set a 6-bit password',
+    confirm_password: 'Confirm password',
+    set_phone_succ: 'Set phone number successfully!',
+    two_password_not_match: 'Passwords do not match.',
+    enter_pure_numbers: 'Password should be numbers only',
+    reset_password: 'Reset Password',
+    setting_password: 'Set Password',
+    enter_signin_pass: 'Enter sign in password',
+    fotget_signin_pass: 'Forget sign in password',
+    password_error: 'Incorrect password',
+    cellphone_number: 'Phone number',
+    get_code: 'Get Code',
+    payment_method_not_supported: 'This payment method is not supported, please try another one',
+    incorrect_pay_password: 'Incorrect payment password. Try again.',
+    register_text: 'Don\'t have a StarTimes account? Register here',
+    get_userinfo_error: 'Get user info error',
 
     // vote film
     vote_about: 'About PAOFF',
@@ -205,7 +255,6 @@ export default {
     error_email_false: 'The email address is incorrect. Please check and try again.',
     error_registered: "You're a registered user.",
     error_code: 'This code you entered is incorrect. Please try again.',
-    sign_in: 'Sign In',
 
     // setpass
     register_input_enter_password: 'Enter Password',
@@ -231,21 +280,43 @@ export default {
     Password: 'Password',
     forget_password: 'Forgot Password?',
     // 错误提示
-    signin_notexist: 'The account doesn\'t exist.',
-    register: 'Register',
     confirm_number: 'Please confirm you have entered the right number.',
+    signin_notexist: 'The account doesn\'t exist.',
     mailbox_not_correct_format: 'The mailbox is not in the correct format!',
+    password_cannot_less_letters: 'The password can not be less than 6 characters!',
+    password_cannoe_greater: 'The password can not be more than 18 letters!',
     password_is_incorrect: 'The password is incorrect',
-    forget_password_account_security_questions_hint: 'Please enter your account.',
-    password_not_empty: 'Do not leave the password blank!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'The verification code has been sent,please check your inbox or junk email in time.You can have a new verification code sent to you after 60 seconds.',
-    get_verification_code: 'Click to get verification code',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'This number is not registered.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'Verification code expired. Resend the code.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Please check your email, click the security link and reset your password.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'This email address has not been registered yet.',
+    password_reset_failed: 'Password reset failed!',
 
     // title
-    reg_title: 'Register',
+    register: 'Register',
+    sign_in: 'Sign In',
     set_password: 'Set Password',
     reset_pass: 'Reset Password',
+    login_title: 'Login',
 
+    // login
+    login_btn: 'SIGN IN',
+    no_have_account: 'Don\'t have an account?',
+    firstpage_tips: 'By signing up, you are agreeing to our',
+    firstpage_tips2: "Terms of Service",
+    firstpage_tips3: "and",
+    firstpage_tips4: "Privacy Policy.",
 }

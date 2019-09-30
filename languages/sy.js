@@ -11,6 +11,56 @@ export default {
     starpay_payment_currency_error: 'Huwezi kuendelea, tafadhali jaribu chaneli nyingine au wasiliana nasi',
     starpay_payment_amount_error: 'Huna pesa ya kutosha, tafadhali angalia salio lako',
     starpay_payment_login_notice: 'Kulipa na eWallet, unahitaji kuingia akaunti ya StarTimes kwanza',
+    starpay_payment_paytoken_error: 'Tokeni ya malipo inahitajika! Tafadhali wasiliana nasi kwa msaada zaidi',
+    starpay_payment_timeout_notice: 'Muda wa malipo umepita, bado tunaendelea kushughulikia malipo yako na inaweza kuchukua muda. Majibu yatakuja, akhsante kwa kuvuta subira.',
+    starpay_payment_pending_message: 'Tunashughulikia maombi yako, tafadhali subiri kidogo',
+    starpay_payment_no_paychannel: 'Hakuna kituo cha malipo kinachopatikana',
+    product_name: 'Jina la bidhaa',
+    eWallet: 'eWallet',
+    note: 'Zingatia',
+    query_paytoken_needed: 'Tokeni ya malipo inahitajika! Tafadhali wasiliana nasi kwa msaada zaidi',
+    payToken_payChannel_mismatch: 'Tokeni ya malipo na chaneli haziendani',
+    pay_now: 'LIPA',
+    confirm_payment: 'Thibitisha Malipo',
+    add_card_topay: 'Ongeza kadi ya kulipia',
+    enter_complete_info: 'Tafadhali weka taarifa sahihi',
+    enter_correct_info: 'Tafadhali weka XXX sahihi',
+    payment_successful: 'Lipia Tayari',
+    pay_successful_desc: 'Akhsante kwa malipo. Ombi lako limefanikiwa. Tafadhali bonyeza ‘OK’ kama bado haijaelekezwa ndani ya sekunde 10',
+    payment_failed: 'Malipo hayajafanikiwa',
+    pay_failed_desc: 'Ombi lako limekataliwa. Tafadhali rudia kuingia kwenye ukurasa huu au jaribu kulipia tena.',
+    pay_refresh: 'Rudia',
+    pay_ok: 'SAWA',
+    pay_help: 'HELP',
+    error_notice: 'Kitambulisho cha Ombi ni kitupu, ombi batili. Tafadhali wasiliana nasi kwa msaada zaidi',
+    payment_results: 'Matokeo ya Malipo',
+    forgot_payment_password: 'Sahau nywila ya malipo?',
+    payment_details: 'Ukurasa wa Malipo',
+    enter_pay_password: 'Ingiza nywila ya malipo',
+    confirm_phone_number: 'Thibitisha nambari yako ya simu',
+    enter_phone_number: 'Weka namba ya simu yako',
+    enter_code: 'Ingiza kodi yako ya uthibitisho.',
+    unknown_error: 'Samahani!Tatizo la kiufundi(/tatizo lisilojulikana)',
+    phone_already_set: 'Nambari hii ya simu imechukua, tafadhali tumia nambari nyingine.',
+    change_phone_number: 'Badilisha nambari ya simu',
+    enter_SMS_code: 'Weka Neno siri ya uthibitisho',
+    set_payment_password: 'Weka nywila ya malipo',
+    set_6bit_password: 'Weka neno siri lenye herufi 6',
+    confirm_password: 'Thibitisha nywila',
+    set_phone_succ: 'Umefanikiwa kuingiza namba ya simu!',
+    two_password_not_match: 'Nywila yako haioani.',
+    enter_pure_numbers: 'Neno siri liwe nambari tu',
+    reset_password: 'Panga namba mpya ya siri',
+    setting_password: 'Seti nywila',
+    enter_signin_pass: 'Ingiza nywila',
+    fotget_signin_pass: 'Umesahau neno la siri?',
+    password_error: 'Neno la siri limekosewa',
+    cellphone_number: 'Namba ya simu',
+    get_code: 'Pata Kificho',
+    payment_method_not_supported: 'Njia hii ya malipo haikubaliki, tafadhali jaribu njia nyingine',
+    incorrect_pay_password: 'Neno siri la malipo halikosahihi. Jaribu tena',
+    register_text: 'Fungua Akaunti mpya StarTimes ON',
+    get_userinfo_error: 'Pata hitilafu ya habari ya mtumiaji',
 
     // vote film
     vote_about: 'Kuhusu PAOFF',
@@ -205,7 +255,6 @@ export default {
     error_email_false: 'Anuwani ya barua pepe si sahihi. Tafadhali kagua na ujaribu tena.',
     error_registered: 'Wewe ni mtumiaji uliyesajiliwa.',
     error_code: 'Haitambuliki.Tafadhali tazama na uingize tena.',
-    sign_in: 'Ingia',
 
     // setpass
     register_input_enter_password: 'Ingiza nywila',
@@ -231,20 +280,43 @@ export default {
     Password: 'Neno siri',
     forget_password: 'Umesahau namba ya siri?',
     // 错误提示
-    signin_notexist: 'Akaunti haipo.',
-    register: 'Jisajili',
     confirm_number: 'Tafadhali hakikisha umeingiza namba sahihi',
+    signin_notexist: 'Akaunti haipo.',
     mailbox_not_correct_format: 'Barua pepe haipo katika muundo sahihi',
+    password_cannot_less_letters: 'Neno la siri lisiwe  chini ya herufi 6!',
+    password_cannoe_greater: 'Neno la siri lisizidi herufi 18!',
     password_is_incorrect: 'Namba yako ya siri sio sahihi',
-    forget_password_account_security_questions_hint: 'Tafadhali ingiza akantu yako.',
-    password_not_empty: 'Usipaache tupu sehemu ya neno siri!',
 
-    // 重置密码
-    register_mail_text_60_seconds_needed: 'Namba ya uthibitisho imetumwa,tafadhali angali kikasha cha barua pepe yako au barua pepe zisizofaa kwa wakati.Unaweza kutumiwa namba nyingine ya uthibitisho baada ya sekunde 60.',
-    get_verification_code: 'onyeza upata namba ya uthibitisho',
+    // 重置手机密码
+    // 错误提示
+    // 未注册、号码错误、code错误
+    number_is_not_registered: 'Namba hii haijasajiliwa.',
+    // confirm_number: 'Please confirm you have entered the right number.',
+    // error_code: 'This code you entered is incorrect. Please try again.',
+
+    // 重置手机密码提交
+    // 错误提示
+    // code失效
+    verify_code_expired: 'Nambari ya kuthibitisha imesitishwa.Jaribu kutuma nambari tena.',
+    // 重置邮箱密码
+    forget_password_mail_security_link_email: 'Tafadhali angalia barua pepe,bonyeza kiungo cha usalama na rekebisha tena namba yako ya siri.',
+    // 错误提示
+    // 未注册、邮箱错误
+    email_address_has_not_been: 'Barua pepe hii bado haijasajiliwa.',
+    password_reset_failed: 'Utengenezaji upya wa namba ya siri  umeshindikana!',
 
     // title
-    reg_title: 'Jisajili',
+    register: 'Jisajili',
+    sign_in: 'Ingia',
     set_password: 'Seti nywila',
     reset_pass: 'Panga namba mpya ya siri',
+    login_title: 'Ingia',
+
+    // login
+    login_btn: 'JISAJILI',
+    no_have_account: 'Huna akaunti?',
+    firstpage_tips: 'Kwa kuingia, unakubaliana na',
+    firstpage_tips2: "Masharti ya Huduma",
+    firstpage_tips3: "yetu na",
+    firstpage_tips4: "Sera ya Faragha.",
 }

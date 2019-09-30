@@ -1,27 +1,21 @@
 <template>
     <div class="wrapper">
-        <img class="st_logo" src="~assets/img/logo01.png">
-        <img
-            class="third_login facebook"
-            src="~assets/img/users/btn_facebook_def.png"
-            @click="byfacebook"
-        >
-        <img
-            class="third_login twitter"
-            src="~assets/img/users/btn_twitter_def.png"
-            @click="bytwitter"
-        >
-        <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png">
+        <img class="st_logo" src="~assets/img/ic_upgrade_icon.png" />
+        <img class="third_login facebook" src="~assets/img/users/btn_facebook_def.png" @click="byfacebook" />
+        <img class="third_login twitter" src="~assets/img/users/btn_twitter_def.png" @click="bytwitter" />
+        <img id="google-btn" class="third_login google" src="~assets/img/users/btn_google_def.png" />
         <nuxt-link to="/hybrid/account/signIn" replace>
-            <div class="login_btn">
-                SIGN IN
-            </div>
+            <div class="login_btn">{{$store.state.lang.login_btn}}</div>
         </nuxt-link>
         <div class="regtext">
-            Don't have an account?
-            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">
-                Register
-            </nuxt-link>
+            {{$store.state.lang.no_have_account}}
+            <nuxt-link to="/hybrid/account/register" style="text-decoration:underline">{{$store.state.lang.register}}</nuxt-link>
+        </div>
+        <div class="service">
+            {{$store.state.lang.firstpage_tips}}
+            <a href="http://m.startimestv.com/copyright/copyright.html">{{$store.state.lang.firstpage_tips2}}</a>
+            {{$store.state.lang.firstpage_tips3}}
+            <a href="https://m.startimestv.com/privacyPolicy/privacyPolicy.html">{{$store.state.lang.firstpage_tips4}}</a>
         </div>
     </div>
 </template>
@@ -59,7 +53,6 @@ export default {
         initGoogleLogin(document.getElementById('google-btn'), function(userId, nickname) {
             _this.loginByThird(userId, nickname, 3)
         })
-
     },
     methods: {
         byfacebook() {
@@ -95,7 +88,7 @@ export default {
     },
     head() {
         return {
-            title: 'Login'
+            title: this.$store.state.lang.login_title
         }
     }
 }
@@ -104,7 +97,7 @@ export default {
 .wrapper {
     position: static;
     min-height: 100%;
-    padding-top: 25%;
+    padding-top: 10%;
     img {
         display: block;
         height: 2.3rem;
@@ -138,6 +131,23 @@ export default {
         font-size: 0.8rem;
         color: #424242;
         margin-top: 2.5rem;
+    }
+
+    .service {
+        position: absolute;
+        left: 0;
+        bottom: 2rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #424242;
+        margin: 0 10%;
+    }
+    .regtext,
+    .service {
+        a {
+            color: #0084e5;
+            text-decoration: underline;
+        }
     }
 }
 </style>

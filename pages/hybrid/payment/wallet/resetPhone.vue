@@ -2,13 +2,13 @@
     <div class="container">
         <verifyTel ref="phone" :disabled="!nocheck" :title="title" :prefix="prefix" @canNext="canStep1=true" />
         <div class="footer">
-            <mButton :disabled="!canStep1" text="NEXT" @click="goStep(2)" />
+            <mButton :disabled="!canStep1" :text="$store.state.lang.text_onair_next" @click="goStep(2)" />
         </div>
         <div v-show="step==2" class="step2">
-            <div class="label">Enter your msg code</div>
+            <div class="label">{{$store.state.lang.enter_code}}</div>
             <passInput ref="vscode" :length="4" :toggle-view="true" :default-view="0" @endinput="codeEnd" />
             <div class="footer">
-                <mButton :disabled="!canStep2" text="NEXT" @click="goStep(3)" />
+                <mButton :disabled="!canStep2" :text="$store.state.lang.text_onair_next" @click="goStep(3)" />
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@ export default {
     },
     computed: {
         title() {
-            return !this.nocheck ? 'Confirm your cellphone number' : 'Enter cellphone number'
+            return !this.nocheck ? this.$store.state.lang.confirm_phone_number : this.$store.state.lang.enter_phone_number
         }
     },
     mounted() {
@@ -50,7 +50,7 @@ export default {
                 this.prefix = walletAccount.phone.substr(0, 3)
                 this.$refs.phone.setTel(walletAccount.phone.substr(3))
             } else {
-                this.$alert('unknown error')
+                this.$alert(this.$store.state.lang.unknown_error)
             }
         } else {
             this.$axios.get('/vup/v1/ums/user/area').then(res => {
@@ -83,7 +83,7 @@ export default {
                         .then(res => {
                             const data = res.data
                             if (data && data.code === 0) {
-                                this.$alert('Set phone successfully.', () => {
+                                this.$alert(this.$store.state.lang.set_phone_succ, () => {
                                     window.location.href = '/hybrid/payment/wallet/setPassword?dissphone=1'
                                 })
                             } else {
@@ -105,7 +105,7 @@ export default {
             } else {
                 const tel = this.$refs.phone.tel
                 if (this.oldphone === this.prefix + tel) {
-                    this.$alert('phone is seted')
+                    this.$alert(this.$store.state.lang.phone_already_set)
                     return false
                 } else {
                     this.step = num
