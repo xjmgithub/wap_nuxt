@@ -44,8 +44,8 @@
                                 <span v-else class="name"></span>
                             </div>
                             <div class="vote-btn">
-                                <div v-if="n.name" class="btn" @click="handleViceVote(n)">VOTE</div>
-                                <div v-else class="btn">VOTE</div>
+                                <div v-if="n.name" class="btn" @click="handleViceVote(n)">KURA</div>
+                                <div v-else class="btn">KURA</div>
                             </div>
                         </li>
                     </ul>
@@ -427,7 +427,7 @@ export default {
                                         () => {
                                             this.firstTime = false
                                         },
-                                        'GOT IT'
+                                        'SAWA'
                                     )
                                 } else {
                                     this.tipShow('Upigaji umefanikiwa! Umepata nafasi ya kucheza bahati nasibu.')
