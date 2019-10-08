@@ -126,7 +126,7 @@ import qs from 'qs'
 import { Base64 } from 'js-base64'
 import { cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
-import { invokeByIframe, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
+import { envokeByIntent, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -345,7 +345,7 @@ export default {
         // 唤醒转入活动页或下载App
         callOrDownApp(label) {
             // 唤醒App
-            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            envokeByIntent.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.mSendEvLog('downloadpopup_show', label, '')
                 this.$confirm(
@@ -1263,14 +1263,14 @@ export default {
                             background-color: #fff;
                             border: 0.25rem solid transparent;
                             &:nth-child(1) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.png');
                                 background-size: 100% 100%;
                                 border-top-left-radius: 1rem;
                                 left: 3%;
                                 top: 1.7rem;
                             }
                             &:nth-child(2) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.png');
                                 background-size: 100% 100%;
                                 left: 35%;
                                 top: 1.7rem;

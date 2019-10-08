@@ -185,7 +185,7 @@
 import { Base64 } from 'js-base64'
 import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
-import { callApp, downApk, playVodinApp, shareInvite } from '~/functions/app'
+import { envokeByIntent, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -344,7 +344,7 @@ export default {
         },
         callOrDownApp() {
             // 唤醒App
-            callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            envokeByIntent.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.$confirm(
                     'Pakua Startimes ON app na shiriki BSS2019',
@@ -383,7 +383,7 @@ export default {
                             this.isEnd = true
                         }
                     } else {
-                        this.$alert('获取活动时间失败')
+                        this.$alert('ERROR TO GET RegisterInfo')
                     }
                 })
                 .catch(err => {
@@ -401,7 +401,7 @@ export default {
                             this.isVoteStart = true
                         }
                     } else {
-                        this.$alert('获取活动时间失败')
+                        this.$alert('ERROR TO GET VoteInfo')
                     }
                 })
                 .catch(err => {

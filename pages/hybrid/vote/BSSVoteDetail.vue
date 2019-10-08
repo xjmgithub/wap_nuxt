@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div v-for="(item,key) in dataList" v-show="dataList.length" :id="item.letter" :ref="item.letter" :key="key" class="vote-word">
-                    <div class="vote-title">{{item.letter}}</div>
+                    <div class="vote-title">- {{item.letter}} -</div>
                     <ul class="clearfix">
                         <li v-for="(n,i) in item.data" :key="i">
                             <div class="item-box">
@@ -75,7 +75,7 @@ import qs from 'qs'
 import { Base64 } from 'js-base64'
 import { cdnPicSrc, getCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
-import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
+import { envokeByIntent, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -115,9 +115,10 @@ export default {
             count: 0,
 
             title: 'Bongo Star Search 2019',
+            imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
             shareTitle: 'Chaguo ni lako!',
             shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
-            imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
+            content: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
 
             voteLeft: 0,
             startTime: '',
@@ -271,7 +272,7 @@ export default {
         // 唤醒转入活动页或下载App
         callOrDownApp(label) {
             // 唤醒App
-            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            envokeByIntent.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.mSendEvLog('downloadpopup_show', label, '')
                 this.$confirm(
@@ -514,8 +515,8 @@ export default {
         return {
             title: this.title,
             meta: [
-                { name: 'description', property: 'description', content: this.shareText },
-                { name: 'og:description', property: 'og:description', content: this.shareText },
+                { name: 'description', property: 'description', content: this.content },
+                { name: 'og:description', property: 'og:description', content: this.content },
                 {
                     name: 'og:image',
                     property: 'og:image',
@@ -529,10 +530,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVoteDetail`.replace(
-                                /&/g,
-                                '**'
-                            )
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVote`.replace(/&/g, '**')
                         )
                 },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
@@ -559,11 +557,6 @@ export default {
             padding-top: 0.5rem;
             width: 95%;
             height: auto;
-            // &.ic-green {
-            //     width: 90%;
-            //     position: relative;
-            //     top: -0.8rem;
-            // }
             &.ic-green {
                 width: 90%;
                 padding-top: 0;
@@ -689,8 +682,6 @@ export default {
                     text-align: center;
                     line-height: 3rem;
                     font-size: 1.6rem;
-                    background: url('~assets/img/vote/BSSRegister/bg-word.png') no-repeat center;
-                    background-size: 3.5rem 0.6rem;
                 }
                 ul {
                     width: 90%;
