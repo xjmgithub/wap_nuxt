@@ -383,7 +383,7 @@ export default {
                             this.isEnd = true
                         }
                     } else {
-                        this.$alert('获取活动时间失败')
+                        this.$alert('ERROR TO GET RegisterInfo')
                     }
                 })
                 .catch(err => {
@@ -401,7 +401,7 @@ export default {
                             this.isVoteStart = true
                         }
                     } else {
-                        this.$alert('获取活动时间失败')
+                        this.$alert('ERROR TO GET VoteInfo')
                     }
                 })
                 .catch(err => {
