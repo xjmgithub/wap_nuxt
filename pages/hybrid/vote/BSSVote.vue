@@ -382,33 +382,34 @@ export default {
         },
         // 获取剩余票数
         getVoteRemain() {
-            if (this.canVote) {
-                this.canVote = false
-                if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
-                    this.$axios({
-                        method: 'POST',
-                        headers: {
-                            'content-type': 'application/x-www-form-urlencoded'
-                        },
-                        data: qs.stringify({
-                            vote_id: this.vote_id
-                        }),
-                        url: '/voting/v1/ticket/sign-in'
+            if (!this.canVote) {
+                return
+            }
+            this.canVote = false
+            if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
+                this.$axios({
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        vote_id: this.vote_id
+                    }),
+                    url: '/voting/v1/ticket/sign-in'
+                })
+                    .then(res => {
+                        if (res.data.code == 0 || res.data.code == 1) {
+                            this.voteLeft = res.data.data
+                        } else {
+                            this.voteLeft = 0 // 服务器端计算数据错误时
+                        }
+                        this.canVote = true
                     })
-                        .then(res => {
-                            if (res.data.code == 0 || res.data.code == 1) {
-                                this.voteLeft = res.data.data
-                            } else {
-                                this.voteLeft = 0 // 服务器端计算数据错误时
-                            }
-                            this.canVote = true
-                        })
-                        .catch(err => {
-                            this.voteLeft = 0
-                            this.$alert(err)
-                            this.canVote = true
-                        })
-                }
+                    .catch(err => {
+                        this.voteLeft = 0
+                        this.$alert(err)
+                        this.canVote = true
+                    })
             }
         },
         // 获取投票单元数据
