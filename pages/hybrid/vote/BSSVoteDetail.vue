@@ -124,8 +124,9 @@ export default {
             endTime: '',
             finishWord: '',
             reqWordList: [],
-            firstTime: true
-            // voteBoxTop: 0
+            firstTime: true,
+            // voteBoxTop: 0,
+            canVote: true
         }
     },
     computed: {
@@ -378,6 +379,9 @@ export default {
         },
         // 投票方法
         handleViceVote(advisor) {
+            if (!this.canVote) {
+                return
+            }
             if (this.appType == 0) {
                 this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.callOrDownApp('vote')
@@ -404,6 +408,7 @@ export default {
                     'FUTA'
                 )
             } else {
+                this.canVote = false
                 this.$axios({
                     url: '/voting/v1/ballot',
                     method: 'POST',
@@ -447,12 +452,15 @@ export default {
                                     'FUTA'
                                 )
                             }
+                            this.canVote = true
                         } else {
                             this.$alert(res.data.message)
+                            this.canVote = true
                         }
                     })
                     .catch(err => {
                         this.$alert(err)
+                        this.canVote = true
                     })
             }
         },
@@ -477,7 +485,6 @@ export default {
         },
         // 获取投票活动时间信息
         getVoteinfo() {
-            // this.serverTime = Date.parse(this.serverTime)
             this.$axios
                 .get(`/voting/v1/vote?vote_id=${this.vote_id}`)
                 .then(res => {

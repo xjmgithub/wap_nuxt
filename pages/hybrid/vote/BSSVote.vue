@@ -382,10 +382,6 @@ export default {
         },
         // 获取剩余票数
         getVoteRemain() {
-            if (!this.canVote) {
-                return
-            }
-            this.canVote = false
             if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
                 this.$axios({
                     method: 'POST',
@@ -403,12 +399,10 @@ export default {
                         } else {
                             this.voteLeft = 0 // 服务器端计算数据错误时
                         }
-                        this.canVote = true
                     })
                     .catch(err => {
                         this.voteLeft = 0
                         this.$alert(err)
-                        this.canVote = true
                     })
             }
         },
@@ -445,6 +439,9 @@ export default {
         },
         // 投票方法
         handleViceVote(advisor) {
+            if (!this.canVote) {
+                return
+            }
             if (this.appType == 0) {
                 this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.callOrDownApp('vote')
@@ -471,6 +468,7 @@ export default {
                     'FUTA'
                 )
             } else {
+                this.canVote = false
                 this.$axios({
                     url: '/voting/v1/ballot',
                     method: 'POST',
@@ -515,12 +513,15 @@ export default {
                                     'FUTA'
                                 )
                             }
+                            this.canVote = true
                         } else {
                             this.$alert(res.data.message)
+                            this.canVote = true
                         }
                     })
                     .catch(err => {
                         this.$alert(err)
+                        this.canVote = true
                     })
             }
         },
@@ -999,7 +1000,6 @@ export default {
                 top: -1rem;
                 left: 0;
                 height: 4rem;
-                // line-height: 3.8rem;
                 .rules {
                     width: 7rem;
                     float: left;
@@ -1263,11 +1263,15 @@ export default {
                             background-color: #fff;
                             border: 0.25rem solid transparent;
                             &:nth-child(1) {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-size: 100% 100%;
                                 border-top-left-radius: 1rem;
                                 left: 3%;
                                 top: 1.7rem;
                             }
                             &:nth-child(2) {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-size: 100% 100%;
                                 left: 35%;
                                 top: 1.7rem;
                             }
