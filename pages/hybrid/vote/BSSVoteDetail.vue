@@ -115,9 +115,10 @@ export default {
             count: 0,
 
             title: 'Bongo Star Search 2019',
+            imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
             shareTitle: 'Chaguo ni lako!',
             shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
-            imgUrl: 'http://cdn.startimestv.com/banner/banner_BSSRegister.jpg',
+            content: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
 
             voteLeft: 0,
             startTime: '',
@@ -514,8 +515,8 @@ export default {
         return {
             title: this.title,
             meta: [
-                { name: 'description', property: 'description', content: this.shareText },
-                { name: 'og:description', property: 'og:description', content: this.shareText },
+                { name: 'description', property: 'description', content: this.content },
+                { name: 'og:description', property: 'og:description', content: this.content },
                 {
                     name: 'og:image',
                     property: 'og:image',
@@ -529,10 +530,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVoteDetail`.replace(
-                                /&/g,
-                                '**'
-                            )
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSVote`.replace(/&/g, '**')
                         )
                 },
                 { name: 'al:android:app_name', property: 'al:android:app_name', content: 'StarTimes' },
