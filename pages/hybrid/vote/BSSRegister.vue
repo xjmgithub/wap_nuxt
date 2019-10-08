@@ -135,16 +135,35 @@
         <div v-show="show_rules" class="rules-box">
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
-                1.yixie guize yixie guiz eyix ieg uiz eyix ie guiz eyix ieguiz
-                <br />2.eyixi egui zeyix ieguiz eyix iegui zeyixi eguize yixi eguize yixi eguizey ixieg uizeyi xiegu izeyix ieguizeyi xieg uize yixiegui
-                <br />3.zeyi xieg izeyixie guizeyi xiegu izeyix ieg uize yixiegu izeyixi egu ize yixieg uiz eyixi
-                <br />4.egui zeyix iegu izeyix iegui zeyix ieg
-                <br />5.uizeyi xieg uizeyix iegui zeyix iegui zeyixieg uiz eyix ieguizeyix iegu ize yi xie guiz eyix
-                <br />6.ie guize yixie guize yi xieg uize yixie gui zeyix iegu izeyixiegu izeyixi eg uize yi xiegu izeyixie guiz eyix ieguiz eyi xieguize
-                <br />7.y ixie guiz eyixiegu izeyi xiegui zeyi xiegu izeyixi eguizeyix ieguize yixiegu izeyix ieg
-                <br />5.uizeyi xieg uizeyix iegui zeyix iegui zeyixieg uiz eyix ieguizeyix iegu ize yi xie guiz eyix
-                <br />6.ie guize yixie guize yi xieg uize yixie gui zeyix iegu izeyixiegu izeyixi eg uize yi xiegu izeyixie guiz eyix ieguiz eyi xieguize
-                <br />7.y ixie guiz eyixiegu izeyi xiegui zeyi xiegu izeyixi eguizeyix ieguize yixiegu izeyix ieg
+                <p style="font-weight:bold;">Online Audition</p>
+                <p style="font-weight:bold;">1.Muda wa usaili wa mtandaoni: <span style="font-weight:normal;">08 Okt.2019 - 30 Okt,2019</span></p>
+                <p style="font-weight:bold;">2.Mahitaji </p>
+                <p>I.Jirekodi ukiimba wimbo mzima.</p>
+                <p>Ⅱ.Jirekodi mara moja, usihariri wala kurekebisha chochote.</p>
+                <p>Ⅲ.Wimbo unatakiwa ubebe tabia zote za sauti ambazo zinaonyesha hisia za mwimbaji.</p>
+                <p>Ⅳ.Mshiriki anatakiwa kujirekodi sura yake ikionekana. Uimbaji wa kughushi hauruhusiwi.</p>
+                <p style="font-weight:bold;">3.Njia ya kujiandikisha</p>
+                <p style="font-weight:bold;text-decoration:underline;">I.Kujisajili kwa njia ya mtandao- StarTimes ON APP.</p>
+                <p>Washiriki wajirekodi wakiimba wimbo mzima, kisha wapandishe video hiyo katika mtandao wa YouTube (Nakili link); Kisha pakua na ufungue STARTIMES ON APP, ingia sehemu ya usaili wa BSS; jaza taarifa zako muhimu, weka link yako ya Youtube ukiimba; wasilisha, subiri kazi yako hiakikiwe.</p>
+                <p style="font-weight:bold;text-decoration:underline;">II.Njia nyingine ya kujiandikisha-Instagram.</p>
+                <p>Jirekodi ukiimba kisha ipost katika mtandao wa Instagram, na weka hashtag #bssonlineaudition2019 na mwisho tag @startimestz.</p>
+                <p>*MUHIMU:Kazi zote za washiriki wa kimtandao zitahakikiwa kwa masaa 48 baada ya ku-upload, na matokeo yatawekwa kwenye chaguzi zitakazofuata.</p>
+                <p style="font-weight:bold;">4.Sheria za uteuzi wa mtandao</p>
+                <p>Baada ya machapisho, upigaji kura utafunguliwa rasmi kwenye StarTimes ON APP “Online Audition Election Voting Channel”. Mpaka mwisho, washindi 5 watafuzu kuingia kwenye hatua ya mtoano wa mashindano.</p>
+                <p style="font-weight:bold;">Usaili usio wa kimtandao</p>
+                <p style="font-weight:bold;">1.Muda na mahali</p>
+                <p>*Tarehe za usaili wa BSS*</p>
+                <p>• *Arusha:* 28 & 29 September - The Fuzz - Pointzone Resort (Mianzini)</p>
+                <p>• *Mwanza:* 4 & 5 October - Rock City Mall</p>
+                <p>• *Mbeya:* 10 & 11 October - Mbeya City Pub & Lounge</p>
+                <p>• *Dodoma:* 17 & 18 October - Royal Village Hotel</p>
+                <p>• *Dar es Salaam:* 25, 26 & 27 October Jumba la Makumbusho ya Taifa Mjini (National Museum)</p>
+                <p style="font-weight:bold;">2.Njia ya usaili</p>
+                <p>Washiriki watakao shiriki kwenye usaili usio wa kimtandao wanashauriwa kwenda kwenye maeneo yaliyotajwa hapo juu kutokana na muda wa usaili.</p>
+                <p style="font-weight:bold;">3.Sheria za uteuzi</p>
+                <p>Kuna nafasi 5 za usaili usio wa kimtandao katika kila usaili (isipokuwa Dar es salaam),majaji 4 waliobobea watasaili washiriki kwa NDIO au HAPANA. Washiriki watakaopita kwenye usaili siku hiyo watashiriki tena kwenye usaili wa pili kwa siku inayofuata kwaajili ya kuchagua watakao songa mbele kwenye mashindano.</p>
+                <p style="font-weight:bold;">4.Mengineyo</p>
+                <p>Kwa sababu ya uwepo wa watu wengi wanaotokea wakati wa usaili, uandaaji wa kipindipia hufanyika siku hiyo ya usaili. Unashauriwa kuwahi mapema eneo la usa ili na ufuate maelekezo.</p>
             </div>
             <div class="share-btn" @click="toShare('rule')">SHIRIKI</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
