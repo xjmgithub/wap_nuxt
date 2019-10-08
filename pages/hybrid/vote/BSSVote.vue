@@ -23,7 +23,7 @@
             <div class="vote-box">
                 <div v-show="coupleList.length>0">
                     <div class="vote-remaining">
-                        <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:voteLeft}}</div>
+                        <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:(voteLeft>0?voteLeft:0)}}</div>
                         <div class="ask" @click="toHowToGetVote">JINSI YA KUPIGA KURA ZAIDI?</div>
                     </div>
                     <ul class="clearfix">
@@ -60,7 +60,7 @@
             <img v-else class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
             <div class="lottery-box">
                 <div class="lottery">
-                    <div class="count">NAFASI ZILIZOBAKI:{{appType>0&&isLogin?lotteryLeft:0}}</div>
+                    <div class="count">NAFASI ZILIZOBAKI:{{appType>0&&isLogin?(lotteryLeft>0?lotteryLeft:0):0}}</div>
                     <div class="lottery-type">
                         <ul class="clearfix">
                             <li v-for="(item,key) in lotteryList" :key="key" class="lottry-type" :class="index==key?'active':''">
@@ -166,6 +166,7 @@ export default {
             // currentTime: '',
             tip: '',
             tip_timer: null,
+            canVote: true,
 
             // 抽奖
             index: -1, // 当前转动到哪个位置，起点位置
@@ -381,28 +382,33 @@ export default {
         },
         // 获取剩余票数
         getVoteRemain() {
-            if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
-                this.$axios({
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded'
-                    },
-                    data: qs.stringify({
-                        vote_id: this.vote_id
-                    }),
-                    url: '/voting/v1/ticket/sign-in'
-                })
-                    .then(res => {
-                        if (res.data.code == 0 || res.data.code == 1) {
-                            this.voteLeft = res.data.data
-                        } else {
-                            this.voteLeft = 0 // 服务器端计算数据错误时
-                        }
+            if (this.canVote) {
+                this.canVote = false
+                if (this.serverTime >= this.startTime && this.serverTime < this.endTime) {
+                    this.$axios({
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/x-www-form-urlencoded'
+                        },
+                        data: qs.stringify({
+                            vote_id: this.vote_id
+                        }),
+                        url: '/voting/v1/ticket/sign-in'
                     })
-                    .catch(err => {
-                        this.voteLeft = 0
-                        this.$alert(err)
-                    })
+                        .then(res => {
+                            if (res.data.code == 0 || res.data.code == 1) {
+                                this.voteLeft = res.data.data
+                            } else {
+                                this.voteLeft = 0 // 服务器端计算数据错误时
+                            }
+                            this.canVote = true
+                        })
+                        .catch(err => {
+                            this.voteLeft = 0
+                            this.$alert(err)
+                            this.canVote = true
+                        })
+                }
             }
         },
         // 获取投票单元数据
@@ -895,7 +901,7 @@ export default {
                                 }
                             })
                             this.clipsListNew.forEach(item => {
-                                this.mSendEvLog('video_show', item.name, '')
+                                this.mSendEvLog('video_show', item.id, '')
                             })
                         } else {
                             this.$alert('GET VIDEO MSG ERROR')
