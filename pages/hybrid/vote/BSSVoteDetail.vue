@@ -22,7 +22,7 @@
             <img class="text text-one" src="~assets/img/vote/BSSRegister/text1.png" alt />
             <div v-show="true" id="voteBox" ref="voteBox" class="vote-box">
                 <div class="vote-remaining">
-                    <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:voteLeft}}</div>
+                    <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:(voteLeft>0?voteLeft:0)}}</div>
                 </div>
                 <div class="index-box" :class="count>=30&&voteBoxTop<=scrollTop?'show':''">
                     <div v-for="(word,i) in wordListReady" :key="i">
