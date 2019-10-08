@@ -1263,14 +1263,14 @@ export default {
                             background-color: #fff;
                             border: 0.25rem solid transparent;
                             &:nth-child(1) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.png');
                                 background-size: 100% 100%;
                                 border-top-left-radius: 1rem;
                                 left: 3%;
                                 top: 1.7rem;
                             }
                             &:nth-child(2) {
-                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.png');
                                 background-size: 100% 100%;
                                 left: 35%;
                                 top: 1.7rem;

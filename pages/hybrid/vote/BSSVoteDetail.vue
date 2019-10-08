@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div v-for="(item,key) in dataList" v-show="dataList.length" :id="item.letter" :ref="item.letter" :key="key" class="vote-word">
-                    <div class="vote-title">{{item.letter}}</div>
+                    <div class="vote-title">- {{item.letter}} -</div>
                     <ul class="clearfix">
                         <li v-for="(n,i) in item.data" :key="i">
                             <div class="item-box">
@@ -557,11 +557,6 @@ export default {
             padding-top: 0.5rem;
             width: 95%;
             height: auto;
-            // &.ic-green {
-            //     width: 90%;
-            //     position: relative;
-            //     top: -0.8rem;
-            // }
             &.ic-green {
                 width: 90%;
                 padding-top: 0;
@@ -687,8 +682,6 @@ export default {
                     text-align: center;
                     line-height: 3rem;
                     font-size: 1.6rem;
-                    background: url('~assets/img/vote/BSSRegister/bg-word.png') no-repeat center;
-                    background-size: 3.5rem 0.6rem;
                 }
                 ul {
                     width: 90%;
