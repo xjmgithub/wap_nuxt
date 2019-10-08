@@ -23,7 +23,7 @@
             <div class="vote-box">
                 <div v-show="coupleList.length>0">
                     <div class="vote-remaining">
-                        <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:voteLeft}}</div>
+                        <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:(voteLeft>0?voteLeft:0)}}</div>
                         <div class="ask" @click="toHowToGetVote">JINSI YA KUPIGA KURA ZAIDI?</div>
                     </div>
                     <ul class="clearfix">
@@ -60,7 +60,7 @@
             <img v-else class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
             <div class="lottery-box">
                 <div class="lottery">
-                    <div class="count">NAFASI ZILIZOBAKI:{{appType>0&&isLogin?lotteryLeft:0}}</div>
+                    <div class="count">NAFASI ZILIZOBAKI:{{appType>0&&isLogin?(lotteryLeft>0?lotteryLeft:0):0}}</div>
                     <div class="lottery-type">
                         <ul class="clearfix">
                             <li v-for="(item,key) in lotteryList" :key="key" class="lottry-type" :class="index==key?'active':''">
@@ -166,6 +166,7 @@ export default {
             // currentTime: '',
             tip: '',
             tip_timer: null,
+            canVote: true,
 
             // 抽奖
             index: -1, // 当前转动到哪个位置，起点位置
@@ -438,6 +439,9 @@ export default {
         },
         // 投票方法
         handleViceVote(advisor) {
+            if (!this.canVote) {
+                return
+            }
             if (this.appType == 0) {
                 this.mSendEvLog('votebtn_click', advisor.name, '-1')
                 this.callOrDownApp('vote')
@@ -464,6 +468,7 @@ export default {
                     'FUTA'
                 )
             } else {
+                this.canVote = false
                 this.$axios({
                     url: '/voting/v1/ballot',
                     method: 'POST',
@@ -508,12 +513,15 @@ export default {
                                     'FUTA'
                                 )
                             }
+                            this.canVote = true
                         } else {
                             this.$alert(res.data.message)
+                            this.canVote = true
                         }
                     })
                     .catch(err => {
                         this.$alert(err)
+                        this.canVote = true
                     })
             }
         },
@@ -895,7 +903,7 @@ export default {
                                 }
                             })
                             this.clipsListNew.forEach(item => {
-                                this.mSendEvLog('video_show', item.name, '')
+                                this.mSendEvLog('video_show', item.id, '')
                             })
                         } else {
                             this.$alert('GET VIDEO MSG ERROR')
@@ -992,7 +1000,6 @@ export default {
                 top: -1rem;
                 left: 0;
                 height: 4rem;
-                // line-height: 3.8rem;
                 .rules {
                     width: 7rem;
                     float: left;
@@ -1256,11 +1263,15 @@ export default {
                             background-color: #fff;
                             border: 0.25rem solid transparent;
                             &:nth-child(1) {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-size: 100% 100%;
                                 border-top-left-radius: 1rem;
                                 left: 3%;
                                 top: 1.7rem;
                             }
                             &:nth-child(2) {
+                                background-image: url('~assets/img/vote/BSSRegister/bg-lottery-light.jpeg');
+                                background-size: 100% 100%;
                                 left: 35%;
                                 top: 1.7rem;
                             }
