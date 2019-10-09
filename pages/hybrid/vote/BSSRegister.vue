@@ -108,7 +108,7 @@
                 </div>
                 <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
             </div>
-            <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt class="to-vote" @click="toVote" />
+            <!-- <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt class="to-vote" @click="toVote" /> -->
             <div class="ad"></div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
