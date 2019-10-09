@@ -185,7 +185,7 @@
 import { Base64 } from 'js-base64'
 import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
-import { envokeByIntent, downApk, playVodinApp, shareInvite } from '~/functions/app'
+import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -344,7 +344,7 @@ export default {
         },
         callOrDownApp() {
             // 唤醒App
-            envokeByIntent.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.$confirm(
                     'Pakua Startimes ON app na shiriki BSS2019',
@@ -377,8 +377,8 @@ export default {
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime = new Date(res.data.data.start_time).getTime()
-                        this.endTime = new Date(res.data.data.end_time).getTime()
+                        this.startTime = new Date(res.data.data.start_time + '+0000').getTime()
+                        this.endTime = new Date(res.data.data.end_time + '+0000').getTime()
                         if (this.serverTime >= this.endTime) {
                             this.isEnd = true
                         }
@@ -396,7 +396,7 @@ export default {
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        const voteStartTime = new Date(res.data.data.start_time).getTime()
+                        const voteStartTime = new Date(res.data.data.start_time + '+0000').getTime()
                         if (this.serverTime >= voteStartTime) {
                             this.isVoteStart = true
                         }
