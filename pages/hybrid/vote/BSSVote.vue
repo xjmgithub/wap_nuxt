@@ -571,6 +571,7 @@ export default {
                         this.endTime = new Date(res.data.data.end_time).getTime()
                         this.getVoteRemain()
                         this.getLeftLottery()
+                        this.getMsgList()
                     } else {
                         this.$alert('ERROR TO GET LOTTERY TIME')
                     }
