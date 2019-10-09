@@ -8,7 +8,7 @@
             Please enter your voucher code to redeem the voucher into your StarTimes account.
         </p>
         <div class="input">
-            <input type="text" v-model="code">
+            <input v-model="code" type="text">
         </div>
         <div class="btn">
             REDEEM VOUCHER

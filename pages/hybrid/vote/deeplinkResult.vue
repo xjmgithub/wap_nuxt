@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div class="success" v-show="result==1">
+        <div v-show="result==1" class="success">
             <p class="redeem">
                 Redeem Successful!
             </p>
@@ -12,7 +12,7 @@
                 DOWNLOAD NOW
             </div>
         </div>
-        <div class="fail" v-show="result==2">
+        <div v-show="result==2" class="fail">
             <p class="redeem">
                 Redeem Failed!
             </p>
