@@ -531,8 +531,8 @@ export default {
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime_comment = new Date(res.data.data.start_time + '+0000').getTime()
-                        this.endTime_comment = new Date(res.data.data.end_time + '+0000').getTime()
+                        this.startTime_comment = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime_comment = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime > this.startTime_comment) {
                             this.isCommentStart = true
                         }
@@ -567,8 +567,8 @@ export default {
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime = new Date(res.data.data.start_time + '+0000').getTime()
-                        this.endTime = new Date(res.data.data.end_time + '+0000').getTime()
+                        this.startTime = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         this.getVoteRemain()
                         this.getLeftLottery()
                         this.getMsgList()

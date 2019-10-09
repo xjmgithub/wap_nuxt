@@ -471,8 +471,8 @@ export default {
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime_comment = new Date(res.data.data.start_time).getTime()
-                        this.endTime_comment = new Date(res.data.data.end_time).getTime()
+                        this.startTime_comment = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime_comment = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime > this.startTime_comment) {
                             this.isCommentStart = true
                         }
@@ -490,8 +490,8 @@ export default {
                 .get(`/voting/v1/vote?vote_id=${this.vote_id}`)
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.startTime = new Date(res.data.data.start_time).getTime()
-                        this.endTime = new Date(res.data.data.end_time).getTime()
+                        this.startTime = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         this.getVoteRemain()
                     } else {
                         this.$alert('ERROR TO GET VOTE TIME')
