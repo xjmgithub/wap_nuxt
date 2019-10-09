@@ -290,12 +290,10 @@ export default {
             serverTime: new Date().getTime()
         }
     },
-    created() {
-        this.getRegisterInfo()
-        this.getVoteInfo()
-    },
     mounted() {
         this.mSendEvLog('page_show', '', '')
+        this.getRegisterInfo()
+        this.getVoteInfo()
         this.getYear()
         this.getVideoMsg()
         if (
