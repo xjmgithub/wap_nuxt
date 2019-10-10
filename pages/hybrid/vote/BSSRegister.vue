@@ -186,7 +186,6 @@
 </template>
 <script>
 import { Base64 } from 'js-base64'
-import BScroll from 'better-scroll'
 import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
 import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
@@ -299,40 +298,13 @@ export default {
         this.getVoteInfo()
         this.getYear()
         this.getVideoMsg()
-        this.newBscroll()
     },
     methods: {
-        newBscroll() {
-            if (
-                navigator.userAgent.indexOf('Android 7') > 0 ||
-                navigator.userAgent.indexOf('Android 8') > 0 ||
-                navigator.userAgent.indexOf('Android 9') > 0
-            ) {
-                document.querySelector('.wrapper').style.height = '100vh'
-                this.$nextTick(() => {
-                    this.bscroll = new BScroll('.wrapper', {
-                        startY: 0,
-                        bounce: {
-                            top: false,
-                            bottom: false,
-                            left: false,
-                            right: false
-                        },
-                        click: true,
-                        tap: true,
-                        observeDOM: false
-                    })
-                })
-            }
-        },
         toVote() {
             this.$router.push(`/hybrid/vote/BSSVote`)
+            // window.location.href = '/hybrid/vote/BSSVote'
         },
         showRule() {
-            this.bscroll &&
-                this.$nextTick(() => {
-                    this.bscroll.destroy()
-                })
             this.show_rules = true
             // 页面静止
             document.body.style.overflow = 'hidden'
@@ -343,7 +315,6 @@ export default {
             // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
-            this.newBscroll()
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
@@ -412,10 +383,6 @@ export default {
                         this.endTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime >= this.endTime) {
                             this.isEnd = true
-                            this.bscroll &&
-                                this.$nextTick(() => {
-                                    this.bscroll.refresh()
-                                })
                         }
                     } else {
                         this.$alert('ERROR TO GET RegisterInfo')
@@ -434,10 +401,6 @@ export default {
                         const voteStartTime = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime >= voteStartTime) {
                             this.isVoteStart = true
-                            this.bscroll &&
-                                this.$nextTick(() => {
-                                    this.bscroll.refresh()
-                                })
                         }
                     } else {
                         this.$alert('ERROR TO GET VoteInfo')
@@ -617,10 +580,6 @@ export default {
                     this.clipsListNew.forEach(item => {
                         this.mSendEvLog('video_show', item.id, '')
                     })
-                    this.bscroll &&
-                        this.$nextTick(() => {
-                            this.bscroll.refresh()
-                        })
                 }
             })
         }
