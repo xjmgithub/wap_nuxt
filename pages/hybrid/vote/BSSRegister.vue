@@ -108,7 +108,7 @@
                 </div>
                 <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
             </div>
-            <!-- <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt class="to-vote" @click="toVote" /> -->
+            <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt class="to-vote" @click="toVote" />
             <div class="ad"></div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
@@ -299,34 +299,40 @@ export default {
         this.getVoteInfo()
         this.getYear()
         this.getVideoMsg()
-        if (
-            navigator.userAgent.indexOf('Android 7') > 0 ||
-            navigator.userAgent.indexOf('Android 8') > 0 ||
-            navigator.userAgent.indexOf('Android 9') > 0
-        ) {
-            document.querySelector('.wrapper').style.height = '100vh'
-            this.$nextTick(() => {
-                this.bscroll = new BScroll('.wrapper', {
-                    startY: 0,
-                    bounce: {
-                        top: false,
-                        bottom: false,
-                        left: false,
-                        right: false
-                    },
-                    click: true,
-                    tap: true,
-                    observeDOM: false
-                })
-            })
-        }
+        this.newBscroll()
     },
     methods: {
+        newBscroll() {
+            if (
+                navigator.userAgent.indexOf('Android 7') > 0 ||
+                navigator.userAgent.indexOf('Android 8') > 0 ||
+                navigator.userAgent.indexOf('Android 9') > 0
+            ) {
+                document.querySelector('.wrapper').style.height = '100vh'
+                this.$nextTick(() => {
+                    this.bscroll = new BScroll('.wrapper', {
+                        startY: 0,
+                        bounce: {
+                            top: false,
+                            bottom: false,
+                            left: false,
+                            right: false
+                        },
+                        click: true,
+                        tap: true,
+                        observeDOM: false
+                    })
+                })
+            }
+        },
         toVote() {
-            // this.$router.push(`/hybrid/vote/BSSVote`)
-            window.location.href= '/hybrid/vote/BSSVote'
+            this.$router.push(`/hybrid/vote/BSSVote`)
         },
         showRule() {
+            this.bscroll &&
+                this.$nextTick(() => {
+                    this.bscroll.disable()
+                })
             this.show_rules = true
             // 页面静止
             document.body.style.overflow = 'hidden'
@@ -337,6 +343,7 @@ export default {
             // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
+            this.newBscroll()
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
