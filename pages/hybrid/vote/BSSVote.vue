@@ -267,30 +267,33 @@ export default {
         setInterval(this.scroll, 2000)
         this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin) // 分享源用户记录
         !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
-        if (
-            navigator.userAgent.indexOf('Android 7') > 0 ||
-            navigator.userAgent.indexOf('Android 8') > 0 ||
-            navigator.userAgent.indexOf('Android 9') > 0
-        ) {
-            document.querySelector('.wrapper').style.height = '100vh'
-            this.$nextTick(() => {
-                this.bscroll = new BScroll('.wrapper', {
-                    startY: 0,
-                    bounce: {
-                        top: false,
-                        bottom: false,
-                        left: false,
-                        right: false
-                    },
-                    click: true,
-                    tap: true,
-                    observeDOM: false
-                })
-            })
-        }
+        this.newBscroll()
     },
 
     methods: {
+        newBscroll() {
+            if (
+                navigator.userAgent.indexOf('Android 7') > 0 ||
+                navigator.userAgent.indexOf('Android 8') > 0 ||
+                navigator.userAgent.indexOf('Android 9') > 0
+            ) {
+                document.querySelector('.wrapper').style.height = '100vh'
+                this.$nextTick(() => {
+                    this.bscroll = new BScroll('.wrapper', {
+                        startY: 0,
+                        bounce: {
+                            top: false,
+                            bottom: false,
+                            left: false,
+                            right: false
+                        },
+                        click: true,
+                        tap: true,
+                        observeDOM: false
+                    })
+                })
+            }
+        },
         toHowToGetVote() {
             this.mSendEvLog('goto_click', '', '')
             document.getElementById('text2').scrollIntoView()
@@ -301,22 +304,19 @@ export default {
             // window.location.href = '/hybrid/vote/BSSVoteDetail'
         },
         showRule() {
+            this.bscroll &&
+                this.$nextTick(() => {
+                    this.bscroll.disable()
+                })
             this.show_rules = true
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
-            this.bscroll &&
-                this.$nextTick(() => {
-                    this.bscroll.refresh()
-                })
         },
         closeRule() {
             this.show_rules = false
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
-            this.bscroll &&
-                this.$nextTick(() => {
-                    this.bscroll.refresh()
-                })
+            this.newBscroll()
         },
         toRegister() {
             this.$router.push(`/hybrid/vote/BSSRegister`)
