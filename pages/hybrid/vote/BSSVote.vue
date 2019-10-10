@@ -306,7 +306,7 @@ export default {
         showRule() {
             this.bscroll &&
                 this.$nextTick(() => {
-                    this.bscroll.disable()
+                    this.bscroll.destroy()
                 })
             this.show_rules = true
             document.body.style.overflow = 'hidden'
