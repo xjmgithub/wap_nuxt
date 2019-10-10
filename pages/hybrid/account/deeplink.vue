@@ -8,12 +8,12 @@
             Please enter your voucher code to redeem the voucher into your StarTimes account.
         </p>
         <div class="input">
-            <input v-model="code" type="text">
+            <input v-model="code" type="text" readonly>
         </div>
-        <div class="btn">
+        <div class="btn" @click="redeemVoucher">
             REDEEM VOUCHER
         </div>
-        <div class="sign-out">
+        <div class="sign-out" @click="signOut">
             Sign Out
         </div>
     </div>
@@ -23,16 +23,33 @@ export default {
     layout: 'base',
     data() {
         return {
-            pre: this.$route.query.pre,
-            code: 'V123456789012345'
+            vcode: decodeURIComponent(this.$route.query.vcode),
+            code: ''
         }
     },
     mounted() {
-        if (this.pre) {
-            sessionStorage.setItem('login_prefer', this.pre)
-        }
+        this.code = this.vcode.substring(0, this.vcode.indexOf('@'))
     },
-    methods: {}
+    methods: {
+        redeemVoucher() {
+            const index = this.vcode.indexOf('@')
+            const ciphertext = encodeURIComponent(this.vcode.substring(index + 1)).replace(/%20/g, "%2B")
+            this.$axios.post(`/promotion-coupon/v1/short-link/addPromotion?code=${this.code}&ciphertext=${ciphertext}`).then(res => {
+                if (res.data.code === 0) {
+                    this.$router.push('/hybrid/account/deeplinkResult')
+                } else {
+                    this.$router.push('/hybrid/account/deeplinkResult?result=' + res.data.code)
+                }
+            })
+        },
+        signOut() {
+            document.cookie.split(';').forEach(function(c) {
+                document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
+            })
+            localStorage.clear()
+            window.location.href = '/hybrid/account/signIn?pre='+decodeURIComponent(sessionStorage.getItem('login_prefer'))
+        }
+    }
 }
 </script>
 <style lang="less" scoped>
