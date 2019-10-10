@@ -55,7 +55,6 @@ export default {
             this.$nuxt.$loading.start()
             callApp.call(this, '', () => {
                 callMarket.call(this, () => {
-                    downApk.call(this)
                     this.$nuxt.$loading.finish()
                 })
             })

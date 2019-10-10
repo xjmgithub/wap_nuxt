@@ -108,7 +108,7 @@
                 </div>
                 <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
             </div>
-            <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt="" class="to-vote" @click="toVote">
+            <!-- <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt class="to-vote" @click="toVote" /> -->
             <div class="ad"></div>
             <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
@@ -136,8 +136,11 @@
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
                 <p style="font-weight:bold;">Online Audition</p>
-                <p style="font-weight:bold;">1.Muda wa usaili wa mtandaoni: <span style="font-weight:normal;">08 Okt.2019 - 30 Okt,2019</span></p>
-                <p style="font-weight:bold;">2.Mahitaji </p>
+                <p style="font-weight:bold;">
+                    1.Muda wa usaili wa mtandaoni:
+                    <span style="font-weight:normal;">08 Okt.2019 - 30 Okt,2019</span>
+                </p>
+                <p style="font-weight:bold;">2.Mahitaji</p>
                 <p>I.Jirekodi ukiimba wimbo mzima.</p>
                 <p>Ⅱ.Jirekodi mara moja, usihariri wala kurekebisha chochote.</p>
                 <p>Ⅲ.Wimbo unatakiwa ubebe tabia zote za sauti ambazo zinaonyesha hisia za mwimbaji.</p>
@@ -183,9 +186,10 @@
 </template>
 <script>
 import { Base64 } from 'js-base64'
+import BScroll from 'better-scroll'
 import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
-import { envokeByIntent, downApk, playVodinApp, shareInvite } from '~/functions/app'
+import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -289,27 +293,47 @@ export default {
             serverTime: new Date().getTime()
         }
     },
-    created() {
-        this.getRegisterInfo()
-        this.getVoteInfo()
-    },
     mounted() {
         this.mSendEvLog('page_show', '', '')
+        this.getRegisterInfo()
+        this.getVoteInfo()
         this.getYear()
         this.getVideoMsg()
+        if (
+            navigator.userAgent.indexOf('Android 7') > 0 ||
+            navigator.userAgent.indexOf('Android 8') > 0 ||
+            navigator.userAgent.indexOf('Android 9') > 0
+        ) {
+            document.querySelector('.wrapper').style.height = '100vh'
+            this.$nextTick(() => {
+                this.bscroll = new BScroll('.wrapper', {
+                    startY: 0,
+                    bounce: {
+                        top: false,
+                        bottom: false,
+                        left: false,
+                        right: false
+                    },
+                    click: true,
+                    tap: true,
+                    observeDOM: false
+                })
+            })
+        }
     },
     methods: {
         toVote() {
-            this.$router.push(`/hybrid/vote/BSSVote`)
+            // this.$router.push(`/hybrid/vote/BSSVote`)
+            window.location.href= '/hybrid/vote/BSSVote'
         },
         showRule() {
-            this.show_rules=true
+            this.show_rules = true
             // 页面静止
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
         },
         closeRule() {
-            this.show_rules=false
+            this.show_rules = false
             // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
@@ -344,7 +368,7 @@ export default {
         },
         callOrDownApp() {
             // 唤醒App
-            envokeByIntent.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.$confirm(
                     'Pakua Startimes ON app na shiriki BSS2019',
@@ -377,10 +401,14 @@ export default {
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime = new Date(res.data.data.start_time).getTime()
-                        this.endTime = new Date(res.data.data.end_time).getTime()
+                        this.startTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime >= this.endTime) {
                             this.isEnd = true
+                            this.bscroll &&
+                                this.$nextTick(() => {
+                                    this.bscroll.refresh()
+                                })
                         }
                     } else {
                         this.$alert('ERROR TO GET RegisterInfo')
@@ -396,9 +424,13 @@ export default {
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        const voteStartTime = new Date(res.data.data.start_time).getTime()
+                        const voteStartTime = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime >= voteStartTime) {
                             this.isVoteStart = true
+                            this.bscroll &&
+                                this.$nextTick(() => {
+                                    this.bscroll.refresh()
+                                })
                         }
                     } else {
                         this.$alert('ERROR TO GET VoteInfo')
@@ -436,8 +468,8 @@ export default {
             }
         },
         showUploadWay() {
-            this.mSendEvLog('guide_click','','')
-            if(this.appType == '0') {
+            this.mSendEvLog('guide_click', '', '')
+            if (this.appType == '0') {
                 window.scrollTo({
                     top: '800',
                     behavior: 'smooth'
@@ -496,7 +528,10 @@ export default {
                 this.city_error = true
             }
             // link
-            if (!this.link.replace(/\s/g, '') || (this.link.toLowerCase().indexOf('instagram.com') == -1 && this.link.toLowerCase().indexOf('youtu.be') == -1)) {   
+            if (
+                !this.link.replace(/\s/g, '') ||
+                (this.link.toLowerCase().indexOf('instagram.com') == -1 && this.link.toLowerCase().indexOf('youtu.be') == -1)
+            ) {
                 this.canSubmit = false
                 this.link_error = true
             }
@@ -505,8 +540,8 @@ export default {
         // 提交表单
         submit() {
             this.checkForm()
-            if(!this.canSubmit) {
-                this.mSendEvLog('submit_click','','2')
+            if (!this.canSubmit) {
+                this.mSendEvLog('submit_click', '', '2')
             }
             if (this.canSubmit && this.repeatSub) {
                 this.repeatSub = false
@@ -524,25 +559,25 @@ export default {
                     .post('voting/enroll/v1/register', options)
                     .then(res => {
                         if (res.data.code == 200) {
-                            this.mSendEvLog('submit_click','','1')
+                            this.mSendEvLog('submit_click', '', '1')
                             this.show_success = true
                         } else {
                             // 服务器返回不为200时
-                            this.mSendEvLog('submit_click','','3')
+                            this.mSendEvLog('submit_click', '', '3')
                             this.$alert(res.data.data)
                             this.repeatSub = true
                         }
                     })
                     .catch(err => {
                         // 异常情况
-                        this.mSendEvLog('submit_click','','0')
+                        this.mSendEvLog('submit_click', '', '0')
                         this.$alert(err)
                         this.repeatSub = true
                     })
             }
         },
         closeSuccessPage(lable) {
-            if (lable=='submit') {
+            if (lable == 'submit') {
                 this.toShare(lable)
             }
             this.name = ''
@@ -568,16 +603,20 @@ export default {
                 if (res.data.code === 0) {
                     this.clipsList = res.data.data
                     this.clipsList.forEach(item => {
-                        if(item.name.substr(0,1) == 'a') {
+                        if (item.name.substr(0, 1) == 'a') {
                             this.clipsListNew.push(item)
                         }
                     })
                     this.clipsListNew.forEach(item => {
-                        this.mSendEvLog('video_show', item.id , '')
+                        this.mSendEvLog('video_show', item.id, '')
                     })
+                    this.bscroll &&
+                        this.$nextTick(() => {
+                            this.bscroll.refresh()
+                        })
                 }
             })
-        },
+        }
     },
 
     head() {
