@@ -123,6 +123,7 @@
 </template>
 <script>
 import qs from 'qs'
+import BScroll from 'better-scroll'
 import { Base64 } from 'js-base64'
 import { cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
@@ -266,6 +267,27 @@ export default {
         setInterval(this.scroll, 2000)
         this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin) // 分享源用户记录
         !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
+        if (
+            navigator.userAgent.indexOf('Android 7') > 0 ||
+            navigator.userAgent.indexOf('Android 8') > 0 ||
+            navigator.userAgent.indexOf('Android 9') > 0
+        ) {
+            document.querySelector('.wrapper').style.height = '100vh'
+            this.$nextTick(() => {
+                this.bscroll = new BScroll('.wrapper', {
+                    startY: 0,
+                    bounce: {
+                        top: false,
+                        bottom: false,
+                        left: false,
+                        right: false
+                    },
+                    click: true,
+                    tap: true,
+                    observeDOM: false
+                })
+            })
+        }
     },
 
     methods: {
@@ -276,23 +298,34 @@ export default {
         toAll() {
             this.mSendEvLog('full_click', '', '')
             this.$router.push(`/hybrid/vote/BSSVoteDetail`)
+            // window.location.href = '/hybrid/vote/BSSVoteDetail'
         },
         showRule() {
             this.show_rules = true
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
+            this.bscroll &&
+                this.$nextTick(() => {
+                    this.bscroll.refresh()
+                })
         },
         closeRule() {
             this.show_rules = false
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
+            this.bscroll &&
+                this.$nextTick(() => {
+                    this.bscroll.refresh()
+                })
         },
         toRegister() {
             this.$router.push(`/hybrid/vote/BSSRegister`)
+            // window.location.href = '/hybrid/vote/BSSRegister'
         },
         toComment(label) {
             this.mSendEvLog('audreg_click', label, '')
             this.$router.push(`/hybrid/vote/BSSComment`)
+            // window.location.href = '/hybrid/vote/BSSComment'
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
@@ -416,6 +449,10 @@ export default {
                         this.advisorList.sort(function(a, b) {
                             return b.ballot_num - a.ballot_num
                         })
+                        this.bscroll &&
+                            this.$nextTick(() => {
+                                this.bscroll.refresh()
+                            })
                     } else {
                         this.advisorList = []
                     }
@@ -535,6 +572,10 @@ export default {
                         this.endTime_comment = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime > this.startTime_comment) {
                             this.isCommentStart = true
+                            this.bscroll &&
+                                this.$nextTick(() => {
+                                    this.bscroll.refresh()
+                                })
                         }
                         this.getVideoMsg()
                     } else {
@@ -667,6 +708,10 @@ export default {
                                 item.user_id = item.user_id.toString().replace(/(.*)\d{2}/, '$1**')
                             })
                             this.loaded_m = true
+                            this.bscroll &&
+                                this.$nextTick(() => {
+                                    this.bscroll.refresh()
+                                })
                         }
                     } else {
                         this.items = [] // 服务器端计算数据错误时
@@ -906,6 +951,10 @@ export default {
                             this.clipsListNew.forEach(item => {
                                 this.mSendEvLog('video_show', item.id, '')
                             })
+                            this.bscroll &&
+                                this.$nextTick(() => {
+                                    this.bscroll.refresh()
+                                })
                         } else {
                             this.$alert('GET VIDEO MSG ERROR')
                         }
