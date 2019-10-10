@@ -113,38 +113,14 @@
         <div v-show="show_rules" class="rules-box">
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
-                <p style="font-weight:bold;">Online Audition</p>
-                <p style="font-weight:bold;">
-                    1.Muda wa usaili wa mtandaoni:
-                    <span style="font-weight:normal;">08 Okt.2019 - 30 Okt,2019</span>
-                </p>
-                <p style="font-weight:bold;">2.Mahitaji</p>
-                <p>I.Jirekodi ukiimba wimbo mzima.</p>
-                <p>Ⅱ.Jirekodi mara moja, usihariri wala kurekebisha chochote.</p>
-                <p>Ⅲ.Wimbo unatakiwa ubebe tabia zote za sauti ambazo zinaonyesha hisia za mwimbaji.</p>
-                <p>Ⅳ.Mshiriki anatakiwa kujirekodi sura yake ikionekana. Uimbaji wa kughushi hauruhusiwi.</p>
-                <p style="font-weight:bold;">3.Njia ya kujiandikisha</p>
-                <p style="font-weight:bold;text-decoration:underline;">I.Kujisajili kwa njia ya mtandao- StarTimes ON APP.</p>
-                <p>Washiriki wajirekodi wakiimba wimbo mzima, kisha wapandishe video hiyo katika mtandao wa YouTube (Nakili link); Kisha pakua na ufungue STARTIMES ON APP, ingia sehemu ya usaili wa BSS; jaza taarifa zako muhimu, weka link yako ya Youtube ukiimba; wasilisha, subiri kazi yako hiakikiwe.</p>
-                <p style="font-weight:bold;text-decoration:underline;">II.Njia nyingine ya kujiandikisha-Instagram.</p>
-                <p>Jirekodi ukiimba kisha ipost katika mtandao wa Instagram, na weka hashtag #bssonlineaudition2019 na mwisho tag @startimestz.</p>
-                <p>*MUHIMU:Kazi zote za washiriki wa kimtandao zitahakikiwa kwa masaa 48 baada ya ku-upload, na matokeo yatawekwa kwenye chaguzi zitakazofuata.</p>
-                <p style="font-weight:bold;">4.Sheria za uteuzi wa mtandao</p>
-                <p>Baada ya machapisho, upigaji kura utafunguliwa rasmi kwenye StarTimes ON APP “Online Audition Election Voting Channel”. Mpaka mwisho, washindi 5 watafuzu kuingia kwenye hatua ya mtoano wa mashindano.</p>
-                <p style="font-weight:bold;">Usaili usio wa kimtandao</p>
-                <p style="font-weight:bold;">1.Muda na mahali</p>
-                <p>*Tarehe za usaili wa BSS*</p>
-                <p>• *Arusha:* 28 & 29 September - The Fuzz - Pointzone Resort (Mianzini)</p>
-                <p>• *Mwanza:* 4 & 5 October - Rock City Mall</p>
-                <p>• *Mbeya:* 10 & 11 October - Mbeya City Pub & Lounge</p>
-                <p>• *Dodoma:* 17 & 18 October - Royal Village Hotel</p>
-                <p>• *Dar es Salaam:* 25, 26 & 27 October Jumba la Makumbusho ya Taifa Mjini (National Museum)</p>
-                <p style="font-weight:bold;">2.Njia ya usaili</p>
-                <p>Washiriki watakao shiriki kwenye usaili usio wa kimtandao wanashauriwa kwenda kwenye maeneo yaliyotajwa hapo juu kutokana na muda wa usaili.</p>
-                <p style="font-weight:bold;">3.Sheria za uteuzi</p>
-                <p>Kuna nafasi 5 za usaili usio wa kimtandao katika kila usaili (isipokuwa Dar es salaam),majaji 4 waliobobea watasaili washiriki kwa NDIO au HAPANA. Washiriki watakaopita kwenye usaili siku hiyo watashiriki tena kwenye usaili wa pili kwa siku inayofuata kwaajili ya kuchagua watakao songa mbele kwenye mashindano.</p>
-                <p style="font-weight:bold;">4.Mengineyo</p>
-                <p>Kwa sababu ya uwepo wa watu wengi wanaotokea wakati wa usaili, uandaaji wa kipindipia hufanyika siku hiyo ya usaili. Unashauriwa kuwahi mapema eneo la usa ili na ufuate maelekezo.</p>
+                <p>Je unatamani kuja Studio na kuwa mmoja kati ya majaji wa hadhara? Unataka kuamua mshiriki gani aondoke au abaki?</p>
+                <p>Bonyeza usajili wa majaji wa hadhara ili uweze kushiriki.</p>
+                <p>1. Usajili wa majaji wa hadhara utaanza tarehe 13 Oktoba 2019 mpaka December 8,2019</p>
+                <p>2. Taratibu za kushiriki majaji wa hadhara:</p>
+                <p>Jaza na ingiza taarifa zako muhimu. Tutachagua washiriki 30 waliobahatika kujiunga na mpango huu kuanzia mchuano wa makundi mpaka fainali.</p>
+                <p>*kama utabahatika kushiriki,muwakilishi wa huduma kwa wateja atawasiliana nawe kuchukua taarifa za mwisho za usajili.</p>
+                <p>Utakua na haki ya kuamua nani atakua Star anayefuata wa Bongo Star Search.</p>
+                <p>Ungana nasi kwa nafasi 30 tu kwa kila mchuano wa makundi.</p>
             </div>
             <div class="share-btn" @click="toShare('rule')">SHIRIKI</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
