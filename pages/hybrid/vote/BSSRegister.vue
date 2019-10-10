@@ -323,7 +323,8 @@ export default {
     },
     methods: {
         toVote() {
-            this.$router.push(`/hybrid/vote/BSSVote`)
+            // this.$router.push(`/hybrid/vote/BSSVote`)
+            window.location.href= '/hybrid/vote/BSSVote'
         },
         showRule() {
             this.show_rules = true
