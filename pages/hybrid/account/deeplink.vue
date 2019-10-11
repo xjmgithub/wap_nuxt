@@ -37,8 +37,10 @@ export default {
             this.$axios.post(`/promotion-coupon/v1/short-link/addPromotion?code=${this.code}&ciphertext=${ciphertext}`).then(res => {
                 if (res.data.code === 0) {
                     this.$router.push('/hybrid/account/deeplinkResult')
-                } else {
+                } else if (res.data.code > 0 && res.data.code <= 4) {
                     this.$router.push('/hybrid/account/deeplinkResult?result=' + res.data.code)
+                } else {
+                    this.$alert(res.data.message)
                 }
             })
         },
@@ -58,7 +60,7 @@ export default {
     text-align: center;
     .st_logo {
         width: 55%;
-        margin-bottom:0.5rem;
+        margin-bottom: 0.5rem;
     }
     .redeem {
         color: #333333;
