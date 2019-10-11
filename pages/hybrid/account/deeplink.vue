@@ -33,7 +33,7 @@ export default {
     methods: {
         redeemVoucher() {
             const index = this.vcode.indexOf('@')
-            const ciphertext = encodeURIComponent(this.vcode.substring(index + 1)).replace(/%20/g, "%2B")
+            const ciphertext = encodeURIComponent(this.vcode.substring(index + 1)).replace(/%20/g, '%2B')
             this.$axios.post(`/promotion-coupon/v1/short-link/addPromotion?code=${this.code}&ciphertext=${ciphertext}`).then(res => {
                 if (res.data.code === 0) {
                     this.$router.push('/hybrid/account/deeplinkResult')
@@ -47,7 +47,7 @@ export default {
                 document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
             })
             localStorage.clear()
-            window.location.href = '/hybrid/account/signIn?pre='+decodeURIComponent(sessionStorage.getItem('login_prefer'))
+            window.location.href = '/hybrid/account/signIn?pre=' + decodeURIComponent(sessionStorage.getItem('login_prefer'))
         }
     }
 }
@@ -57,7 +57,8 @@ export default {
     padding: 3.5rem 1rem 1rem;
     text-align: center;
     .st_logo {
-        width: 65%;
+        width: 55%;
+        margin-bottom:0.5rem;
     }
     .redeem {
         color: #333333;
@@ -74,7 +75,7 @@ export default {
     }
     .input {
         width: 85%;
-        margin: 2rem auto;
+        margin: 2.4rem auto;
         border: 1px solid #999999;
         border-radius: 2px;
         input {
@@ -84,9 +85,10 @@ export default {
             font-weight: bold;
             text-align: center;
             background: #eeeeee;
-            padding: 0.5rem 0;
             outline: none;
             border: none;
+            height: 2.5rem;
+            line-height: 2.5rem;
         }
     }
     .btn {
@@ -96,7 +98,8 @@ export default {
         color: #ffffff;
         font-weight: bold;
         background: #0087eb;
-        padding: 0.7rem 0;
+        height: 2.5rem;
+        line-height: 2.5rem;
     }
     .sign-out {
         position: fixed;

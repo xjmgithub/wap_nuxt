@@ -7,7 +7,7 @@
             <p class="desc">
                 You have successfully redeemed your voucher, you can now check your voucher in StarTimes ON app and start watching great contents!
             </p>
-            <img class="st_logo" src="~assets/img/faq/ic_happy_sl_green.png" />
+            <img class="st_logo" src="~assets/img/users/ic_success_def.png" />
             <div class="btn" @click="download">
                 DOWNLOAD NOW
             </div>
@@ -19,7 +19,7 @@
             <p class="desc">
                 {{failMessage}}
             </p>
-            <img class="st_logo" src="~assets/img/faq/ic_disappoint_sl_red.png" />
+            <img class="st_logo" src="~assets/img/users/ic_failed_def.png" />
             <div class="btn" @click="retry">
                 RETRY
             </div>
@@ -76,7 +76,7 @@ export default {
                 document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
             })
             localStorage.clear()
-            window.location.href = '/hybrid/account/signIn?pre='+decodeURIComponent(sessionStorage.getItem('login_prefer'))
+            window.location.href = '/hybrid/account/signIn?pre=' + decodeURIComponent(sessionStorage.getItem('login_prefer'))
         }
     }
 }
@@ -87,18 +87,18 @@ export default {
     text-align: center;
     .redeem {
         color: #333333;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         font-weight: bold;
         width: 100%;
     }
     .desc {
         color: #666666;
-        font-size: 0.9rem;
         width: 85%;
-        margin: 2rem auto;
+        margin: 1.5rem auto 2rem;
+        font-size: 0.9rem;
     }
     .st_logo {
-        width: 6rem;
+        width: 5rem;
     }
     .btn {
         width: 85%;
@@ -107,7 +107,8 @@ export default {
         color: #ffffff;
         font-weight: bold;
         background: #0087eb;
-        padding: 0.7rem 0;
+        height: 2.5rem;
+        line-height: 2.5rem;
     }
     .sign-out {
         position: fixed;
