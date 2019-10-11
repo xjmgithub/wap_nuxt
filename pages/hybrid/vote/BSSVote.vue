@@ -193,8 +193,8 @@ export default {
             title: 'Bongo Star Search 2019',
             imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
             shareTitle: 'Chaguo ni lako!',
-            shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
-            content: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.'
+            shareText: 'Chagua mshiriki unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
+            content: 'Chagua mshiriki unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.'
         }
     },
     computed: {
