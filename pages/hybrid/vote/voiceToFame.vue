@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="container">
-            <img src="~assets/img/vote/voiceToFame/bg-img.jpg" alt="bg-img" />
+            <img src="~assets/img/vote/voiceToFame/bg-img-new.jpg" alt="bg-img" />
             <div class="vote-box">
                 <div class="tab">
                     <div class="rules" @click="show_rules=true">
@@ -151,7 +151,7 @@
                 <div class="btn close" @click="close" v-html="no"></div>
             </div>
         </div>
-        <div v-show="tip" class="vote-toast">{{tip}}</div>
+        <div v-show="tip" class="vote-toast" v-html="tip"></div>
     </div>
 </template>
 <script>
@@ -212,7 +212,8 @@ export default {
             // 消息轮播
             animate: false,
             items: [],
-            star: ''
+            star: '',
+            msgul: '',
         }
     },
     computed: {
@@ -255,6 +256,7 @@ export default {
     },
     mounted() {
         this.mSendEvLog('page_show', '', '')
+        this.msgul = this.$refs.msgul
         this.getLotteryMsg()
         this.getAdvisorList()
         this.getLotteryType()
@@ -448,7 +450,7 @@ export default {
                             if (this.voteLeft > 0) {
                                 if (this.firstTime) {
                                     this.show(
-                                        `<p style="font-size:0.9rem">Congrats! You‘ve successfully voted! You‘ve got 1 chance to win VIP! Swipe down and try your luck!</p>`,
+                                        `<p style="font-size:0.9rem">Successfully voted! Swipe down to get your <span style="color: yellow">VIP!</span></p>`,
                                         () => {
                                             this.firstTime = false
                                         },
@@ -457,7 +459,7 @@ export default {
                                         ''
                                     )
                                 } else {
-                                    this.tipShow("Successfully voted! And you've got 1 chance to win VIP!")
+                                    this.tipShow(`Successfully voted! Swipe down to get your <span style="color: yellow">VIP!</span>`)
                                 }
                             } else {
                                 this.show(
@@ -798,13 +800,12 @@ export default {
         },
         // 消息轮播
         scroll() {
-            const msg = this.$refs.msgul
-            msg.style.marginTop = '-30px'
+            this.msgul.style.marginTop = '-30px'
             this.animate = !this.animate
             setTimeout(() => {
                 this.items.push(this.items[0])
                 this.items.shift()
-                msg.style.marginTop = '0'
+                this.msgul.style.marginTop = '0'
                 this.animate = !this.animate // 避免回滚
             }, 500)
         },
@@ -923,7 +924,7 @@ export default {
                 width: 100%;
                 position: absolute;
                 color: #fff;
-                top: -3.6rem;
+                top: -1.5rem;
                 left: 0;
                 height: 3rem;
                 line-height: 3rem;
