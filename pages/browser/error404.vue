@@ -1,10 +1,12 @@
 <template>
     <div class="error">
-        <img src="~assets/img/web/error404.png" alt> 404 error
+        <img src="~assets/img/web/error404.png" alt>
+        <router-link to="/browser">Return to Home</router-link>
     </div>
 </template>
 <script>
 export default {
+    layout:'base',
     mounted() {
         this.$nextTick(() => this.$nuxt.$loading.finish())
     }
