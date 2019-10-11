@@ -115,10 +115,12 @@
             <div class="rule-text">
                 <p>Je unatamani kuja Studio na kuwa mmoja kati ya majaji wa hadhara? Unataka kuamua mshiriki gani aondoke au abaki?</p>
                 <p>Bonyeza usajili wa majaji wa hadhara ili uweze kushiriki.</p>
+                <br>
                 <p>1. Usajili wa majaji wa hadhara utaanza tarehe 13 Oktoba 2019 mpaka December 8,2019</p>
                 <p>2. Taratibu za kushiriki majaji wa hadhara:</p>
                 <p>Jaza na ingiza taarifa zako muhimu. Tutachagua washiriki 30 waliobahatika kujiunga na mpango huu kuanzia mchuano wa makundi mpaka fainali.</p>
                 <p>*kama utabahatika kushiriki,muwakilishi wa huduma kwa wateja atawasiliana nawe kuchukua taarifa za mwisho za usajili.</p>
+                <br>
                 <p>Utakua na haki ya kuamua nani atakua Star anayefuata wa Bongo Star Search.</p>
                 <p>Ungana nasi kwa nafasi 30 tu kwa kila mchuano wa makundi.</p>
             </div>
@@ -140,7 +142,6 @@
 </template>
 <script>
 import { Base64 } from 'js-base64'
-import BScroll from 'better-scroll'
 import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
 import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
@@ -245,37 +246,9 @@ export default {
         this.getRegisterInfo()
         this.getYear()
         this.getVideoMsg()
-        this.newBscroll()
     },
     methods: {
-        newBscroll() {
-            if (
-                navigator.userAgent.indexOf('Android 7') > 0 ||
-                navigator.userAgent.indexOf('Android 8') > 0 ||
-                navigator.userAgent.indexOf('Android 9') > 0
-            ) {
-                document.querySelector('.wrapper').style.height = '100vh'
-                this.$nextTick(() => {
-                    this.bscroll = new BScroll('.wrapper', {
-                        startY: 0,
-                        bounce: {
-                            top: false,
-                            bottom: false,
-                            left: false,
-                            right: false
-                        },
-                        click: true,
-                        tap: true,
-                        observeDOM: false
-                    })
-                })
-            }
-        },
         showRule() {
-            this.bscroll &&
-                this.$nextTick(() => {
-                    this.bscroll.destroy()
-                })
             this.show_rules = true
             // 页面静止
             document.body.style.overflow = 'hidden'
@@ -286,7 +259,6 @@ export default {
             // 页面静止
             document.body.style.overflow = 'auto'
             document.body.style.position = 'static'
-            this.newBscroll()
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
@@ -355,10 +327,6 @@ export default {
                         this.endTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime >= this.endTime) {
                             this.isEnd = true
-                            this.bscroll &&
-                                this.$nextTick(() => {
-                                    this.bscroll.refresh()
-                                })
                         }
                     } else {
                         this.$alert('ERROR TO GET RegisterInfo')
@@ -516,10 +484,6 @@ export default {
                     this.clipsListNew.forEach(item => {
                         this.mSendEvLog('video_show', item.id, '')
                     })
-                    this.bscroll &&
-                        this.$nextTick(() => {
-                            this.bscroll.refresh()
-                        })
                 }
             })
         }
