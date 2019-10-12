@@ -14,6 +14,8 @@ export default {
     mounted() {
         this.$nextTick(() => {
             this.$nuxt.$loading.finish()
+            const width = document.body.clientWidth
+            document.querySelector('iframe').height = width * 0.57
         })
     },
     head() {
@@ -24,9 +26,10 @@ export default {
 }
 </script>
 <style>
+.page-main {
+    padding: 1.4rem 0;
+}
 iframe {
     width: 100%;
-    height: 15rem;
-    margin-top: 4rem;
 }
 </style>
