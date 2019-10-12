@@ -50,6 +50,8 @@ export default {
                 tmp = 'Coupon conversion failure'
             } else if (this.result == 4) {
                 tmp = 'The activation code has been redeemed'
+            } else if (this.result == 5) {
+                tmp = 'The activation code does not exist'
             }
             return tmp
         }
