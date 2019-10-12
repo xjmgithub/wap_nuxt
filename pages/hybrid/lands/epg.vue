@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { callApp, callMarket } from '~/functions/app'
+import { downApk, callApp, callMarket } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -55,6 +55,7 @@ export default {
             this.$nuxt.$loading.start()
             callApp.call(this, '', () => {
                 callMarket.call(this, () => {
+                    downApk.call(this)
                     this.$nuxt.$loading.finish()
                 })
             })
