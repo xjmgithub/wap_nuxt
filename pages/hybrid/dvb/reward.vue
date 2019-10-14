@@ -1,75 +1,20 @@
 <template>
     <div class="wrapper">
-        <div class="top">
-            <p>You’ll get the reward once you link the decoder with App account. If you haven't linked, please LINK first.</p>
+        <div>
+            <img src="~assets/img/dvb/one.png" class="one" @click="goToLink" />
+            <img src="~assets/img/dvb/two.png" class="two" @click="getReward" />
+            <nuxt-link to="/hybrid/dvb/bind.vue">
+                <img src="~assets/img/dvb/three.png" class="three">
+            </nuxt-link>
+            <img src="~assets/img/dvb/word.png" class="word">
         </div>
-        <div class="policy">
-            <p class="title">
-                Reward Policy
-            </p>
-            <table>
-                <tr>
-                    <th width="30%" class="status">
-                        Decoder Status
-                    </th>
-                    <th width="40%">
-                        Bouquet Subscribed
-                    </th>
-                    <th width="30%">
-                        Reward After 'LINK'
-                    </th>
-                </tr>
-                <tr>
-                    <td>Dormant</td> 
-                    <td>Any Bouquet</td>
-                    <td>
-                        <span>7 days</span> Classic/Super bouquet free experience
-                    </td>
-                </tr>
-                <tr>
-                    <td rowspan="2">
-                        Active
-                    </td>
-                    <td>
-                        <p>NOVA/Basic on DTT</p>NOVA/Smart on DTH
-                    </td>
-                    <td>
-                        <span>8 days</span> free subscription for current bouquet
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Classic on DTT</p>Super / French / Chinese on DTH
-                    </td>
-                    <td>
-                        <span>10 days</span> free subscription for current bouquet
-                    </td>
-                </tr>
-                <tr class="remarks">
-                    <td>Remarks</td>
-                    <td colspan="2">
-                        Each user(device/decoder) only has one chance to enjoy this reward.
-                    </td>
-                </tr>
-                <tr class="last">
-                    <td colspan="3">
-                        Terms And Conditions Apply
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <mButton :text="'GO TO LINK'" class="btn" @click="goToLink" />
-        <mButton :text="'GET REWARD'" class="btn" @click="getReward" />
     </div>
 </template>
 <script>
-import mButton from '~/components/button'
 import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
-    components: {
-        mButton
-    },
+
     data() {
         return {
             getRewarding: false
@@ -110,95 +55,28 @@ export default {
     },
     head() {
         return {
-            title: 'Reward'
+            title: "*Decoder Users' Gift"
         }
     }
 }
 </script>
 <style lang="less" scoped>
 .wrapper {
-    // background: url('~assets/img/dvb/bg_color.png') no-repeat;
-    // background-size: 100%;
-    // position: static;
-    background: linear-gradient( #0007ac 20%,#0007ac 0,#ffffff 100%);
-    .top {
-        background: url('~assets/img/dvb/head.png') no-repeat;
-        height: 7rem;
-        padding-top: 1.7rem;
-        background-size: 100%;
-        p {
-            width: 90%;
-            margin: 0 auto;
-            color: #ffffff;
-            font-weight: bold;
-        }
+    background: url('~assets/img/dvb/bg_huoji.png') no-repeat;
+    background-size: 100%;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    &>div{
+        position: fixed;
+        bottom:1rem;
+        width: 100%;
+        padding:1rem;
     }
-    .policy {
-        width: 90%;
-        margin: 0 auto;
-        .title {
-            color: #05528b;
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-align: center;
-            background-color: #d5e4ff;
-            height: 2.5rem;
-            line-height: 2.5rem;
-            width: 100%;
-            border-top-right-radius: 5px;
-            border-top-left-radius: 5px;
-        }
-        table {
-            background-color: #ffffff;
-            font-size: 0.8rem;
-            width: 100%;
-            display: block;
-            border-bottom-right-radius: 5px;
-            border-bottom-left-radius: 5px;
-            tr {
-                border-bottom: 2px solid rgba(0, 135, 235, 0.1);
-                &.last {
-                    border-bottom: none;
-                    td {
-                        padding-bottom: 1.5rem;
-                        font-weight: normal;
-                    }
-                }
-                &.remarks {
-                    td {
-                        color: #05528b;
-                        font-weight: bold;
-                    }
-                }
-                th {
-                    padding: 0.4rem;
-                    color: #05528b;
-                    &.status {
-                        width: 20%;
-                    }
-                    & + th {
-                        width: 40%;
-                        border-left: 2px solid rgba(0, 135, 235, 0.1);
-                    }
-                }
-                td {
-                    padding: 0.4rem;
-                    color: #333333;
-                    span {
-                        font-size: 0.9rem;
-                        color: #05528b;
-                        font-weight: bold;
-                    }
-                    & + td {
-                        border-left: 2px solid rgba(0, 135, 235, 0.1);
-                    }
-                }
-            }
-        }
-    }
-    .btn {
-        width: 75%;
-        margin: 1.5rem auto;
+    img {
+        display: block;
+        width: 100%;
+        margin: .8rem auto;
     }
 }
 </style>
