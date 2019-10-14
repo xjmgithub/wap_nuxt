@@ -37,7 +37,7 @@ export default {
             this.$axios.post(`/promotion-coupon/v1/short-link/addPromotion?code=${this.code}&ciphertext=${ciphertext}`).then(res => {
                 if (res.data.code === 0) {
                     this.$router.push('/hybrid/account/deeplinkResult')
-                } else if (res.data.code > 0 && res.data.code <= 4) {
+                } else if (res.data.code > 0 && res.data.code <= 5) {
                     this.$router.push('/hybrid/account/deeplinkResult?result=' + res.data.code)
                 } else {
                     this.$alert(res.data.message)
