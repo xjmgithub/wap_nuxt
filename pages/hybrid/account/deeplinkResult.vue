@@ -2,30 +2,30 @@
     <div class="wrapper">
         <div v-show="result==0" class="success">
             <p class="redeem">
-                Redeem Successful!
+                {{$store.state.lang.redeem_success_title}}
             </p>
             <p class="desc">
-                You have successfully redeemed your voucher, you can now check your voucher in StarTimes ON app and start watching great contents!
+                {{$store.state.lang.redeem_success_content}}
             </p>
             <img class="st_logo" src="~assets/img/users/ic_success_def.png" />
             <div class="btn" @click="download">
-                DOWNLOAD NOW
+                {{$store.state.lang.deeplink_download_now}}
             </div>
         </div>
         <div v-show="result>0&&result<=4" class="fail">
             <p class="redeem">
-                Redeem Failed!
+                {{$store.state.lang.redeem_fail_title}}
             </p>
             <p class="desc">
                 {{failMessage}}
             </p>
             <img class="st_logo" src="~assets/img/users/ic_failed_def.png" />
             <div class="btn" @click="retry">
-                RETRY
+                {{$store.state.lang.retry_button}}
             </div>
         </div>
         <div class="sign-out" @click="signOut">
-            Sign Out
+            {{$store.state.lang.sign_out}}
         </div>
     </div>
 </template>
@@ -43,15 +43,15 @@ export default {
             let tmp = ''
             if (this.result === 0) return tmp
             if (this.result == 1) {
-                tmp = 'The code is different from ciphertext'
+                tmp = this.$store.state.lang.redeem_fail_encrp
             } else if (this.result == 2) {
-                tmp = 'You have redeemed this batch of coupon, please use another account to redeem'
+                tmp = this.$store.state.lang.redeem_fail_redeemed
             } else if (this.result == 3) {
-                tmp = 'Coupon conversion failure'
+                tmp = this.$store.state.lang.redeem_fail_failed
             } else if (this.result == 4) {
-                tmp = 'The activation code has been redeemed'
+                tmp = this.$store.state.lang.redeem_fail_used
             } else if (this.result == 5) {
-                tmp = 'The activation code does not exist'
+                tmp = this.$store.state.lang.redeem_fail_invalidcode
             }
             return tmp
         }
@@ -60,13 +60,13 @@ export default {
         download() {
             invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 this.$confirm(
-                    'Download StarTimes ON app',
+                    this.$store.state.lang.vote_downloadtips,
                     () => {
                         downApk.call(this)
                     },
                     () => {},
-                    'Download',
-                    'Cancel'
+                    this.$store.state.lang.deeplink_download_now,
+                    this.$store.state.lang.vote_cancel
                 )
             })
         },

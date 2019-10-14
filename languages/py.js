@@ -6,6 +6,21 @@ export default {
     download_apk: 'Baixar',
 
     post_share_title: 'A StarTimes ON abre um  novo mundo!',
+    // deeplink
+    sign_out: 'SAIA',
+    redeem_button: 'RESGATAR',
+    redeem_title: 'Resgate seu voucher StarTimes VIP',
+    redeem_description: 'Digite o código do seu voucher para resgatá-lo na sua conta StarTimes e clique em \'RESGATAR\' para continuar.',
+    deeplink_download_now: 'FAÇA DOWNLOAD AGORA',
+    redeem_success_title: 'Resgatar com sucesso',
+    redeem_success_content: 'Você resgatou com sucesso seu voucher VIP, agora pode verificá-lo no aplicativo StarTimes ON e começar a usá-lo para assistir a conteúdos excelentes!',
+    redeem_fail_title: 'Falha ao resgatar',
+    retry_button: 'Tente novamente',
+    redeem_fail_redeemed: 'Você já resgatou o voucher nesta conta do StarTimes no evento atual. É possível escolher outra conta do StarTimes para resgatar ou aguardar eventos posteriores.',
+    redeem_fail_failed: 'Falha ao resgatar o voucher. Verifique seu link ou entre em contato.',
+    redeem_fail_encrp: 'Incompatibilidade de cifra de código, verifique seu link ou entre em contato conosco.',
+    redeem_fail_used: 'Este código de cupom foi usado, tente outro.',
+    redeem_fail_invalidcode: 'Este código de comprovante não existe.',
 
     // star pay
     starpay_payment_currency_error: 'Nao pode proceder com uma cuerencia errada , por favor tente outro canal ou contacte nos.',

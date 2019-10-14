@@ -6,6 +6,21 @@ export default {
     download_apk: 'Téléchargez',
 
     post_share_title: 'StarTimes ON vous ouvre un nouveau monde !',
+    // deeplink
+    sign_out: 'DÉCONNEXION',
+    redeem_button: 'RACHETER',
+    redeem_title: 'Utilisez votre voucher StarTimes VIP',
+    redeem_description: 'Veuillez entrer votre code pour utiliser le voucher sur votre compte StarTimes, puis cliquez sur "ÉCHANGER" pour continuer.',
+    deeplink_download_now: 'TÉLÉCHARGER MAINTENANT',
+    redeem_success_title: 'Échanger avec succès',
+    redeem_success_content: 'Vous avez échangé votre voucher VIP avec succès, vous pouvez maintenant consulter votre voucher dans l\'application StarTimes ON et commencer à l\'utiliser pour regarder d\'excellents contenus!',
+    redeem_fail_title: 'Échec de l\'échange',
+    retry_button: 'Réessayer',
+    redeem_fail_redeemed: 'Vous avez déjà échangé le voucher sur ce compte StarTimes pour l\'événement en cours, vous pouvez choisir un autre compte StarTimes pour l\'échanger ou attendre des événements ultérieurs.',
+    redeem_fail_failed: 'Échec du remboursement du bon, vérifiez votre lien ou contactez-nous.',
+    redeem_fail_encrp: 'Code de chiffrement incorrect, veuillez vérifier votre lien ou contactez-nous.',
+    redeem_fail_used: 'Ce code de bon a été utilisé, veuillez en essayer un autre.',
+    redeem_fail_invalidcode: 'Ce code de bon n\'existe pas.',
 
     // star pay
     starpay_payment_currency_error: 'Impossible de procéder à la transaction, opération erronée, veuillez essayer avec un autre moyen de paiement ou contactez-nous.',
