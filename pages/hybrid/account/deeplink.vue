@@ -2,19 +2,19 @@
     <div class="wrapper">
         <img class="st_logo" src="~assets/img/ic_upgrade_icon.png" />
         <p class="redeem">
-            Redeem your StarTimes voucher
+            {{$store.state.lang.redeem_title}}
         </p>
         <p class="desc">
-            Please enter your voucher code to redeem the voucher into your StarTimes account.
+            {{$store.state.lang.redeem_description}}
         </p>
         <div class="input">
             <input v-model="code" type="text" readonly>
         </div>
         <div class="btn" @click="redeemVoucher">
-            REDEEM VOUCHER
+            {{$store.state.lang.redeem_button}}
         </div>
         <div class="sign-out" @click="signOut">
-            Sign Out
+            {{$store.state.lang.sign_out}}
         </div>
     </div>
 </template>
