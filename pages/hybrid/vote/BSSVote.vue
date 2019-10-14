@@ -282,6 +282,8 @@ export default {
             this.show_rules = true
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
+            document.body.style.left = '0'
+            document.body.style.right = '0'
         },
         closeRule() {
             this.show_rules = false
