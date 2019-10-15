@@ -60,11 +60,11 @@
         <div class="footer">
             <mButton :disabled="!canNext" :text="signin" @click="login" />
         </div>
-        <div class="forgot-pwd">
+        <div class="forgot-pwd" @click="forgotPwd">
             <nuxt-link v-show="type==0" to="/hybrid/account/resetTelPass">{{$store.state.lang.forget_password}}</nuxt-link>
             <nuxt-link v-show="type==1" to="/hybrid/account/resetEmailPass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
-        <div class="regtext">
+        <div class="regtext"  @click="regtext">
             <nuxt-link to="/hybrid/account/register">{{$store.state.lang.register_text}}</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
@@ -163,6 +163,12 @@ export default {
             sessionStorage.setItem('login_prefer', this.pre)
             sessionStorage.setItem('register_prefer', this.pre)
         }
+        this.sendEvLog({
+            category: 'login_page',
+            action: 'page_show',
+            label: 1,
+            value: 1
+        })
     },
     methods: {
         telFocus() {
@@ -248,6 +254,12 @@ export default {
             this.countryDialogStatus = false
         },
         login() {
+            this.sendEvLog({
+                category: 'login_page',
+                action: 'signin_click',
+                label: 1,
+                value: 1
+            })
             if (this.password.length < 6) {
                 this.error_pass = this.$store.state.lang.password_cannot_less_letters
             } else if (this.password.length > 18) {
@@ -286,7 +298,6 @@ export default {
                             })
                             .then(res => {
                                 res.status !== 200 && this.$alert(res.data.message)
-
                                 const user = res.data
                                 this.$store.commit('SET_TOKEN', token)
                                 this.$store.commit('SET_USER', user)
@@ -306,6 +317,22 @@ export default {
                     }
                 })
             }
+        },
+        forgotPwd() {
+            this.sendEvLog({
+                category: 'login_page',
+                action: 'forget_pass_click',
+                label: 1,
+                value: 1
+            })
+        },
+        regtext() {
+            this.sendEvLog({
+                category: 'login_page',
+                action: 'register_click',
+                label: 1,
+                value: 1
+            })
         }
     },
     head() {

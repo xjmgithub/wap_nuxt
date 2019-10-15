@@ -56,12 +56,26 @@ export default {
             return tmp
         }
     },
+    mounted() {
+        this.sendEvLog({
+            category: 'deeplink_result',
+            action: 'page_show',
+            label: this.result > 0 ? 'fail' : 'success',
+            value: 1
+        })
+    },
     methods: {
         download() {
             invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 this.$confirm(
                     this.$store.state.lang.vote_downloadtips,
                     () => {
+                        this.sendEvLog({
+                            category: 'deeplink_result',
+                            action: 'download_click',
+                            label: 'success',
+                            value: 1
+                        })
                         downApk.call(this)
                     },
                     () => {},
@@ -71,6 +85,12 @@ export default {
             })
         },
         retry() {
+            this.sendEvLog({
+                category: 'deeplink_result',
+                action: 'retry_click',
+                label: 'fail',
+                value: 1
+            })
             this.$router.go(-1)
         },
         signOut() {

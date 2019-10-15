@@ -29,9 +29,21 @@ export default {
     },
     mounted() {
         this.code = this.vcode.substring(0, this.vcode.indexOf('@'))
+        this.sendEvLog({
+            category: 'deeplink_page',
+            action: 'page_show',
+            label: 1,
+            value: 1
+        })
     },
     methods: {
         redeemVoucher() {
+            this.sendEvLog({
+                category: 'deeplink_page',
+                action: 'redeem_click',
+                label: 1,
+                value: 1
+            })
             const index = this.vcode.indexOf('@')
             const ciphertext = encodeURIComponent(this.vcode.substring(index + 1)).replace(/%20/g, '%2B')
             this.$axios.post(`/promotion-coupon/v1/short-link/addPromotion?code=${this.code}&ciphertext=${ciphertext}`).then(res => {
