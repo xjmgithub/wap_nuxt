@@ -46,9 +46,6 @@ export default {
             label: window.location.pathname,
             value: 1
         })
-        callApp.call(this, '', () => {
-            callMarket.call(this) // 默认唤醒不起来app
-        })
     },
     methods: {
         down() {
