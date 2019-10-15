@@ -9,7 +9,7 @@
                     <img src="~assets/img/dvb/three.png">
                 </nuxt-link>
             </div>
-            <img src="~assets/img/dvb/word.png">
+            <img src="~assets/img/dvb/word.png" class="word">
         </div>
     </div>
 </template>
@@ -99,9 +99,13 @@ export default {
     & > div {
         width: 100%;
         padding: 0 1rem;
+        margin-top: -1.3rem;
         img {
             display: block;
             width: 100%;
+        }
+        .word {
+            margin-top: 1.5rem;
         }
     }
 }
