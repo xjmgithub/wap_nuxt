@@ -1,75 +1,23 @@
 <template>
     <div class="wrapper">
-        <div class="top">
-            <p>You’ll get the reward once you link the decoder with App account. If you haven't linked, please LINK first.</p>
+        <img src="~assets/img/dvb/bg_top.png" />
+        <div>
+            <img src="~assets/img/dvb/one.png" @click="goToLink" />
+            <img src="~assets/img/dvb/two.png" @click="getReward" />
+            <div @click="toPup">
+                <nuxt-link to="/hybrid/dvb/bind">
+                    <img src="~assets/img/dvb/three.png">
+                </nuxt-link>
+            </div>
+            <img src="~assets/img/dvb/word.png">
         </div>
-        <div class="policy">
-            <p class="title">
-                Reward Policy
-            </p>
-            <table>
-                <tr>
-                    <th width="30%" class="status">
-                        Decoder Status
-                    </th>
-                    <th width="40%">
-                        Bouquet Subscribed
-                    </th>
-                    <th width="30%">
-                        Reward After 'LINK'
-                    </th>
-                </tr>
-                <tr>
-                    <td>Dormant</td> 
-                    <td>Any Bouquet</td>
-                    <td>
-                        <span>7 days</span> Classic/Super bouquet free experience
-                    </td>
-                </tr>
-                <tr>
-                    <td rowspan="2">
-                        Active
-                    </td>
-                    <td>
-                        <p>NOVA/Basic on DTT</p>NOVA/Smart on DTH
-                    </td>
-                    <td>
-                        <span>8 days</span> free subscription for current bouquet
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Classic on DTT</p>Super / French / Chinese on DTH
-                    </td>
-                    <td>
-                        <span>10 days</span> free subscription for current bouquet
-                    </td>
-                </tr>
-                <tr class="remarks">
-                    <td>Remarks</td>
-                    <td colspan="2">
-                        Each user(device/decoder) only has one chance to enjoy this reward.
-                    </td>
-                </tr>
-                <tr class="last">
-                    <td colspan="3">
-                        Terms And Conditions Apply
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <mButton :text="'GO TO LINK'" class="btn" @click="goToLink" />
-        <mButton :text="'GET REWARD'" class="btn" @click="getReward" />
     </div>
 </template>
 <script>
-import mButton from '~/components/button'
 import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
-    components: {
-        mButton
-    },
+
     data() {
         return {
             getRewarding: false
@@ -77,10 +25,30 @@ export default {
     },
     methods: {
         goToLink() {
+            this.sendEvLog({
+                category: "Decoder Users' Gift",
+                action: 'NG-LINK',
+                label: 1,
+                value: 1
+            })
             toNativePage('com.star.mobile.video.dvbservice.DvbServiceActivity')
+        },
+        toPup() {
+            this.sendEvLog({
+                category: "Decoder Users' Gift",
+                action: 'NG-TOPUP',
+                label: 1,
+                value: 1
+            })
         },
         getReward() {
             if (this.getRewarding) return false
+            this.sendEvLog({
+                category: "Decoder Users' Gift",
+                action: 'NG-GET_REWARD',
+                label: 1,
+                value: 1
+            })
             this.getRewarding = true
             this.$axios
                 .post('/self/v1/gift-award/after-link')
@@ -88,15 +56,17 @@ export default {
                     this.getRewarding = false
                     const data = res.data
                     if (data.code === 200) {
-                        this.$alert('Congratulations! Redeem succesfully.')
+                        this.$alert("Congratulations! Redeem successful. ₦300 bonus has been recharge to the decoder account you've linked with.")
                     } else if (data.code === '402') {
-                        this.$alert('You need link first.')
+                        this.$alert('Oops, redeem failed. You can get ₦300 bonus only by linking decoder first.')
                     } else if (data.code === '201') {
-                        this.$alert('Your account has redeemed once.')
+                        this.$alert('Your StarTimes ON account has redeemed before. Every account can only get ₦300 bonus for once.')
                     } else if (data.code === '202') {
-                        this.$alert('Your smartcard has redeemed once.')
+                        this.$alert('Your decoder account has redeemed before. Every decoder can only get ₦300 bonus for once.')
                     } else if (data.code === '203') {
-                        this.$alert('Your phone has redeemed once.')
+                        this.$alert('Your phone has redeemed before. Every device can only get ₦300 bonus for once.')
+                    } else if (data.code === '205') {
+                        this.$alert('Oops, redeem failed. The bonus is only available in Nigeria.')
                     } else if (data.code === '403') {
                         this.$alert('Smartcard exception, please contact call center.')
                     } else {
@@ -110,95 +80,29 @@ export default {
     },
     head() {
         return {
-            title: 'Reward'
+            title: "*Decoder Users' Gift"
         }
     }
 }
 </script>
 <style lang="less" scoped>
 .wrapper {
-    // background: url('~assets/img/dvb/bg_color.png') no-repeat;
-    // background-size: 100%;
-    // position: static;
-    background: linear-gradient( #0007ac 20%,#0007ac 0,#ffffff 100%);
-    .top {
-        background: url('~assets/img/dvb/head.png') no-repeat;
-        height: 7rem;
-        padding-top: 1.7rem;
-        background-size: 100%;
-        p {
-            width: 90%;
-            margin: 0 auto;
-            color: #ffffff;
-            font-weight: bold;
-        }
+    background: url('~assets/img/dvb/bg_all.png') no-repeat;
+    background-size: 100%;
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 2rem;
+    & > img {
+        display: block;
+        width: 100%;
     }
-    .policy {
-        width: 90%;
-        margin: 0 auto;
-        .title {
-            color: #05528b;
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-align: center;
-            background-color: #d5e4ff;
-            height: 2.5rem;
-            line-height: 2.5rem;
-            width: 100%;
-            border-top-right-radius: 5px;
-            border-top-left-radius: 5px;
-        }
-        table {
-            background-color: #ffffff;
-            font-size: 0.8rem;
-            width: 100%;
+    & > div {
+        width: 100%;
+        padding: 0 1rem;
+        img {
             display: block;
-            border-bottom-right-radius: 5px;
-            border-bottom-left-radius: 5px;
-            tr {
-                border-bottom: 2px solid rgba(0, 135, 235, 0.1);
-                &.last {
-                    border-bottom: none;
-                    td {
-                        padding-bottom: 1.5rem;
-                        font-weight: normal;
-                    }
-                }
-                &.remarks {
-                    td {
-                        color: #05528b;
-                        font-weight: bold;
-                    }
-                }
-                th {
-                    padding: 0.4rem;
-                    color: #05528b;
-                    &.status {
-                        width: 20%;
-                    }
-                    & + th {
-                        width: 40%;
-                        border-left: 2px solid rgba(0, 135, 235, 0.1);
-                    }
-                }
-                td {
-                    padding: 0.4rem;
-                    color: #333333;
-                    span {
-                        font-size: 0.9rem;
-                        color: #05528b;
-                        font-weight: bold;
-                    }
-                    & + td {
-                        border-left: 2px solid rgba(0, 135, 235, 0.1);
-                    }
-                }
-            }
+            width: 100%;
         }
-    }
-    .btn {
-        width: 75%;
-        margin: 1.5rem auto;
     }
 }
 </style>
