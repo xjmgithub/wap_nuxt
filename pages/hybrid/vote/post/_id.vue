@@ -80,7 +80,6 @@ export default {
             const res = await $axios.get(`/feed/v1/posts/${route.params.id}/details`)
 
             const data = res.data
-            console.log(route.params.id)
             const posters = data.posters
             let imgType = posters.length > 1 ? 2 : 1
             posters.forEach(item => {

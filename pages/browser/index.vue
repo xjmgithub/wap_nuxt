@@ -165,7 +165,7 @@ export default {
             }
 
             this.$axios
-                .get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=100&dateFrom=${start}&dateTo=${end}`, {
+                .get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=50&dateFrom=${start}&dateTo=${end}`, {
                     headers: {
                         lnCode: lang
                     }
@@ -182,11 +182,15 @@ export default {
                                         item.content_code.indexOf('1091') == 0 ||
                                         item.content_code.indexOf('1092') == 0
                                     ) {
-                                        this.programs.push({
-                                            name: ele.name,
-                                            type: item.content_code,
-                                            list: JSON.parse(item.data_json)
-                                        })
+                                        console.log(item.data_json)
+                                        if(item.data_json){
+                                            this.programs.push({
+                                                name: ele.name,
+                                                type: item.content_code,
+                                                list: JSON.parse(item.data_json)
+                                            })
+                                        }
+                                        
                                     }
                                 })
                             }
