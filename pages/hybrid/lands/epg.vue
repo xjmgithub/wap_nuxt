@@ -33,7 +33,7 @@ export default {
     mounted() {
         this.$router.replace({
             query: Object.assign({}, this.$route.query, {
-                utms: 'startimes_app',
+                utms: '456',
                 utmm: 'share',
                 utmc: 'epg'
             })
@@ -50,11 +50,9 @@ export default {
     methods: {
         down() {
             this.$nuxt.$loading.start()
-            callApp.call(this, '', () => {
-                callMarket.call(this, () => {
-                    downApk.call(this)
-                    this.$nuxt.$loading.finish()
-                })
+            callMarket.call(this, () => {
+                downApk.call(this)
+                this.$nuxt.$loading.finish()
             })
         }
     },
