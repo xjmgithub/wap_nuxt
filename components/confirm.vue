@@ -92,11 +92,14 @@ export default {
         min-height: 4.5rem;
     }
     .dialog-footer .btn {
-        width: auto;
-        float: right;
+        // width: auto;
+        // float: right;
+        // margin-left: 1.5rem;
+        width: 49%;
         color: #0087eb;
         font-weight: bold;
-        margin-left: 1.5rem;
+        text-align: center;
+        display: inline-block;
     }
 }
 </style>
