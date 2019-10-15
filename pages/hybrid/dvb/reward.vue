@@ -57,17 +57,17 @@ export default {
                     const data = res.data
                     if (data.code === 200) {
                         this.$alert("Congratulations! Redeem successful. ₦300 bonus has been recharge to the decoder account you've linked with.")
-                    } else if (data.code === '402') {
+                    } else if (data.code == '402') {
                         this.$alert('Oops, redeem failed. You can get ₦300 bonus only by linking decoder first.')
-                    } else if (data.code === '201') {
+                    } else if (data.code == '201') {
                         this.$alert('Your StarTimes ON account has redeemed before. Every account can only get ₦300 bonus for once.')
-                    } else if (data.code === '202') {
+                    } else if (data.code == '202') {
                         this.$alert('Your decoder account has redeemed before. Every decoder can only get ₦300 bonus for once.')
-                    } else if (data.code === '203') {
+                    } else if (data.code == '203') {
                         this.$alert('Your phone has redeemed before. Every device can only get ₦300 bonus for once.')
-                    } else if (data.code === '205') {
+                    } else if (data.code == '205') {
                         this.$alert('Oops, redeem failed. The bonus is only available in Nigeria.')
-                    } else if (data.code === '403') {
+                    } else if (data.code == '403') {
                         this.$alert('Smartcard exception, please contact call center.')
                     } else {
                         this.$alert('Network erro, please try again. Or contact call center.')
