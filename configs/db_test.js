@@ -1,5 +1,5 @@
 export default {
-    host:'10.0.230.10',
+    host:'mysql-test1.bj.startimes.com.cn',
     user:'root',
     password:'star123'
 }

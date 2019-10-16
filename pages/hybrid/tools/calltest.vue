@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { envokeByIntent, invokeByIframe } from '~/functions/app'
+import { invokeByIframe } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
@@ -19,7 +19,10 @@ export default {
     },
     methods: {
         intent() {
-            envokeByIntent.call(this,'com.star.mobile.video.player.PlayerVodActivity?vodId=234')
+            const scheme = 'starvideo'
+            const host = 'platformapi'
+            const path = 'webtoapp'
+            window.location.href = `intent://${host}/${path}#Intent;scheme=${scheme};package=com.star.mobile.video;end`
         },
         scheme() {
             invokeByIframe.call(this)
