@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { downApk, callApp, callMarket } from '~/functions/app'
+import { downApk, callMarket } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
