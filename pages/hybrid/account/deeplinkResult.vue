@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         download() {
-            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            invokeByIframe.call(this, '', () => {
                 this.$confirm(
                     this.$store.state.lang.vote_downloadtips,
                     () => {
