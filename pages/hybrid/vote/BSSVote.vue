@@ -17,11 +17,15 @@
                     </div>
                 </div>
             </div>
-            <img src="~assets/img/vote/BSSRegister/bg-register.png" alt class="ic-green" />
+            <img v-if="!isResult10Start&&!isResult5Start" src="~assets/img/vote/BSSRegister/bg-register.png" alt class="ic-green" />
+            <img v-if="isResult10Start&&!isResult5Start" src="~assets/img/vote/BSSRegister/result10-slogen.png" alt class="ic-green" />
+            <img v-if="isResult5Start" src="~assets/img/vote/BSSRegister/result5-slogen.png" alt class="ic-green" />
             <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/bg-ask.png" alt class="ic-green-a" @click="toComment('up')" />
-            <img class="text text-one" src="~assets/img/vote/BSSRegister/text1.png" alt />
+            <img v-if="!isResult10Start&&!isResult5Start" class="text text-one" src="~assets/img/vote/BSSRegister/text1.png" alt />
+            <img v-if="isResult10Start&&!isResult5Start" class="text text-one" src="~assets/img/vote/BSSRegister/10text6.png" alt />
+            <img v-if="isResult5Start" class="text text-one" src="~assets/img/vote/BSSRegister/5text6.png" alt />
             <div class="vote-box">
-                <div v-show="coupleList.length>0">
+                <div v-if="coupleList.length>0&&!isResult10Start&&!isResult5Start">
                     <div class="vote-remaining">
                         <div class="remain">KURA ZILIZOBAKI:{{appType==0?0:(voteLeft>0?voteLeft:0)}}</div>
                         <div class="ask" @click="toHowToGetVote">JINSI YA KUPIGA KURA ZAIDI?</div>
@@ -42,10 +46,41 @@
                     </ul>
                     <div class="more" @click="toAll">ANGALIA WASHIRIKI WOTE</div>
                 </div>
+                <div v-if="coupleList10.length>0&&isResult10Start&&!isResult5Start">
+                    <ul class="result clearfix">
+                        <li v-for="(item,key) in coupleList10" :key="key" data-id="item.id">
+                            <div class="item-box">
+                                <div>
+                                    <img :src="cdnPic(item.icon)" class="icon" @click="toPlayer(item,'votepic_click')" />
+                                    <p>{{item.ballot_num | formatVotes}}</p>
+                                </div>
+                                <span class="name">{{item.name.toUpperCase()}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div v-if="coupleList5.length>0&&isResult5Start">
+                    <ul class="result clearfix">
+                        <li v-for="(item,key) in coupleList5" :key="key" data-id="item.id">
+                            <div class="item-box">
+                                <div>
+                                    <img :src="cdnPic(item.cover)" class="icon" @click="toPlayer(item,'votepic_click')" />
+                                </div>
+                                <span class="name">{{item.description.toUpperCase()}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <img src="~assets/img/vote/BSSRegister/ic-link-register.png" alt class="link" @click="toRegister" />
-            <img id="text2" class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
-            <div class="share-box" @click="toShare('midshare')">
+            <img
+                v-if="!isResult10Start&&!isResult5Start"
+                src="~assets/img/vote/BSSRegister/ic-link-register.png"
+                alt
+                class="link"
+                @click="toRegister"
+            />
+            <img v-if="!isResult10Start&&!isResult5Start" id="text2" class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
+            <div v-if="!isResult10Start&&!isResult5Start" class="share-box" @click="toShare('midshare')">
                 <div>
                     <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt @click="stopBubble" />
                     <img v-else src="~assets/img/vote/BSSRegister/bg-login.png" alt @click="toSignIn" />
@@ -56,9 +91,15 @@
                 </div>
                 <img src="~assets/img/vote/BSSRegister/img-share.png" alt="img-sharefor" />
             </div>
-            <img v-if="appType>0&&!isLogin" class="text" src="~assets/img/vote/BSSRegister/text3-sign.png" alt @click="toSignIn" />
-            <img v-else class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
-            <div class="lottery-box">
+            <img
+                v-if="appType>0&&!isLogin&&!isResult10Start&&!isResult5Start"
+                class="text"
+                src="~assets/img/vote/BSSRegister/text3-sign.png"
+                alt
+                @click="toSignIn"
+            />
+            <img v-if="!isResult10Start&&!isResult5Start&&!(appType>0&&!isLogin)" class="text" src="~assets/img/vote/BSSRegister/text3.png" alt />
+            <div v-if="!isResult10Start&&!isResult5Start" class="lottery-box">
                 <div class="lottery">
                     <div class="count">NAFASI ZILIZOBAKI:{{appType>0&&isLogin?(lotteryLeft>0?lotteryLeft:0):0}}</div>
                     <div class="lottery-type">
@@ -90,7 +131,7 @@
                 </div>
             </div>
             <img v-if="isCommentStart" src="~assets/img/vote/BSSRegister/ic-link-comment.png" alt class="link" @click="toComment('mid')" />
-            <img v-if="isCommentStart" class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
+            <img v-if="isCommentStart" class="text" src="~assets/img/vote/BSSRegister/text7.png" alt />
             <div v-if="isCommentStart" class="past-programme">
                 <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
                 <ul class="clearfix">
@@ -155,15 +196,22 @@ export default {
             endTime_comment: '',
             clipsList: [],
             clipsListNew: [],
+            clipsListNew5: [],
+            result10StartTime: '2019-10-01T00:00:00',
+            result5StartTime: '2019-10-08T00:00:00',
+            isResult10Start: false,
+            isResult5Start: false,
 
             // 投票
             voteLeft: 0,
             loaded: false,
             advisorList: [],
+            loaded10: false,
+            loaded5: false,
+            advisorList10: [],
             vote_id: 16,
             startTime: '',
             endTime: '',
-            // currentTime: '',
             tip: '',
             tip_timer: null,
             canVote: true,
@@ -201,6 +249,20 @@ export default {
         coupleList() {
             if (this.loaded) {
                 return this.advisorList
+            } else {
+                return []
+            }
+        },
+        coupleList10() {
+            if (this.loaded10) {
+                return this.advisorList10
+            } else {
+                return []
+            }
+        },
+        coupleList5() {
+            if (this.loaded5) {
+                return this.clipsListNew5
             } else {
                 return []
             }
@@ -250,10 +312,45 @@ export default {
         }
     },
     mounted() {
+        this.getCommentInfo()
+        const startTime10 = new Date(this.result10StartTime.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+        const startTime5 = new Date(this.result5StartTime.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+        console.log(this.serverTime, startTime10, startTime5)
+        if (this.serverTime >= startTime5) {
+            this.isResult5Start = true
+        }
+        if (this.serverTime >= startTime10) {
+            this.isResult10Start = true
+        }
+        if (this.isResult5Start) {
+            this.mSendEvLog('page_show', 'result2', '')
+            return
+        } else if (this.isResult10Start) {
+            this.mSendEvLog('page_show', 'result1', '')
+            this.$axios
+                .get(`/voting/v1/candidates-show?vote_id=${this.vote_id}&sort_type=BALLOT&size=10`)
+                .then(res => {
+                    if (res.data.code === 0) {
+                        this.advisorList10 = res.data.data
+                        this.advisorList10.sort(function(a, b) {
+                            return b.ballot_num - a.ballot_num
+                        })
+                    } else {
+                        this.advisorList10 = []
+                        this.$alert('Please Waiting 10 Result!')
+                    }
+                    this.loaded10 = true
+                })
+                .catch(err => {
+                    this.advisorList10 = []
+                    this.$alert(err + 'Please Waiting 10 Result!')
+                })
+            return
+        }
         this.mSendEvLog('page_show', 'homepage', '')
         this.msgul = this.$refs.msgul
         this.getLotteryMsg()
-        this.getCommentInfo()
+        // this.getCommentInfo()
         this.getAdvisorList()
         this.getLotteryType()
         this.getMsgList()
@@ -907,6 +1004,9 @@ export default {
                                 if (item.name.substr(0, 1) == 'c') {
                                     this.clipsListNew.push(item)
                                 }
+                                if (item.name.substr(0, 1) == 'd') {
+                                    this.clipsListNew5.push(item)
+                                }
                             })
                             this.clipsListNew.forEach(item => {
                                 this.mSendEvLog('video_show', item.id, '')
@@ -914,6 +1014,7 @@ export default {
                         } else {
                             this.$alert('GET VIDEO MSG ERROR')
                         }
+                        this.loaded5 = true
                     })
                     .catch(err => {
                         this.$alert(err)
@@ -970,6 +1071,7 @@ export default {
     font-size: 0.9rem;
     letter-spacing: -0.03rem;
     position: static;
+    min-height: 50rem;
     .container {
         > img {
             display: block;
@@ -1169,6 +1271,13 @@ export default {
                             }
                         }
                     }
+                }
+            }
+            ul.result {
+                padding: 1.3rem 0.5% 0 1.3%;
+                li {
+                    width: 45%;
+                    margin: 0 2.4% 0;
                 }
             }
             .more {
