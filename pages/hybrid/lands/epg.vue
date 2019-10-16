@@ -33,7 +33,7 @@ export default {
     mounted() {
         this.$router.replace({
             query: Object.assign({}, this.$route.query, {
-                utms: 'startimes_app',
+                utms: '456',
                 utmm: 'share',
                 utmc: 'epg'
             })
@@ -46,18 +46,13 @@ export default {
             label: window.location.pathname,
             value: 1
         })
-        callApp.call(this, '', () => {
-            callMarket.call(this) // 默认唤醒不起来app
-        })
     },
     methods: {
         down() {
             this.$nuxt.$loading.start()
-            callApp.call(this, '', () => {
-                callMarket.call(this, () => {
-                    downApk.call(this)
-                    this.$nuxt.$loading.finish()
-                })
+            callMarket.call(this, () => {
+                downApk.call(this)
+                this.$nuxt.$loading.finish()
             })
         }
     },
