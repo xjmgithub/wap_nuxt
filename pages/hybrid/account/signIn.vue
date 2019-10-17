@@ -64,7 +64,7 @@
             <nuxt-link v-show="type==0" to="/hybrid/account/resetTelPass">{{$store.state.lang.forget_password}}</nuxt-link>
             <nuxt-link v-show="type==1" to="/hybrid/account/resetEmailPass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
-        <div class="regtext">
+        <div class="regtext" @click="regtext">
             <nuxt-link to="/hybrid/account/register">{{$store.state.lang.register_text}}</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
