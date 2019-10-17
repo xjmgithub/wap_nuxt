@@ -1,105 +1,80 @@
 <template>
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
-        <div v-show="appType||mounted">
-            <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner" />
-            <div class="topContain" :class="{'mtop':!appType}">
-                <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
-                <div class="sticky">
-                    <div class="rules">
-                        <span @click="aboutCard = true">{{$store.state.lang.vote_about}}</span>
-                        <span @click="rulesCard = true">{{$store.state.lang.vote_voterules}}</span>
-                    </div>
-                    <nav id="nav">
-                        <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="tabIndex=index">
-                            <span>{{item.name}}</span>
-                            <p />
-                        </a>
-                    </nav>
-                    <div v-if="appType" class="leftvote">
-                        <span>{{$store.state.lang.vote_leftvote}}:{{leftVote}}</span>
-                    </div>
-                </div>
-            </div>
-            <template v-for="(item,index) in tabList">
-                <sFilm v-if="item.type=='film'" v-show="tabIndex==index" :key="index" :data-list="filmList" @onVote="handleVote" @toPlay="toVideo" />
-                <sFilm
-                    v-if="item.type=='short_film'"
-                    v-show="tabIndex==index"
-                    :key="index"
-                    :data-list="sFilmList"
-                    @onVote="handleVote"
-                    @toPlay="toVideo"
-                />
-                <mFilm v-if="item.type=='mv'" v-show="tabIndex==index" :key="index" :data-list="mvList" @onVote="handleVote" @toPlay="toVideo" />
-            </template>
-            <div
-                v-show="appType!=2"
-                ref="box"
-                class="share"
-                :style="{'left':left, 'top':top}"
-                @click="toShare()"
-                @touchstart="canMove=true"
-                @touchmove.prevent="move"
-                @touchend="canMove = false"
-            >{{$store.state.lang.vote_share}}</div>
-            <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
-                <template v-slot:content>
-                    <div v-html="$store.state.lang.vote_about_word" />
-                </template>
-                <template v-if="appType==0" v-slot:buttons>
-                    <div class="download-btn" @click="loadConfirm('','about')">
-                        <p>{{$store.state.lang.vote_downloadbtn}}</p>
-                        {{$store.state.lang.vote_downloadbtn_tips}}
-                    </div>
-                </template>
-            </mCard>
-            <mCard v-show="rulesCard" :title="$store.state.lang.vote_voterules" class="card" @closeCard="rulesCard=false">
-                <template v-slot:content>
-                    <div v-html="$store.state.lang.vote_rule_word" />
-                </template>
-                <template v-slot:buttons>
-                    <div v-if="appType==1" class="share-btn" @click="toShare('voterules')">{{$store.state.lang.vote_sharebtn}}</div>
-                    <div v-if="appType==0" class="download-btn" @click="loadConfirm('','rules')">
-                        <p>{{$store.state.lang.vote_downloadbtn}}</p>
-                        {{$store.state.lang.vote_downloadbtn_tips}}
-                    </div>
-                </template>
-            </mCard>
-            <mCard v-show="shareCard" :title="$store.state.lang.vote_earnvote_tt" class="card" @closeCard="shareCard=false">
-                <template v-slot:content>
-                    <div v-html="$store.state.lang.vote_rule_word" />
-                </template>
-                <template v-slot:buttons>
-                    <div class="share-way">
-                        <span @click="shareWithFacebook">
-                            <img src="~assets/img/vote/ic_facebook_def.png" />
-                        </span>
-                        <span @click="copyLink">
-                            <img src="~assets/img/vote/ic_copylink_def copy.png" />
-                        </span>
-                        <span @click="shareWithTwitter">
-                            <img src="~assets/img/vote/ic_ti_def.png" />
-                        </span>
-                    </div>
-                    <div v-if="appType==0" class="download-btn" @click="loadConfirm('','share')">
-                        <p>{{$store.state.lang.vote_downloadbtn}}</p>
-                        {{$store.state.lang.vote_downloadbtn_tips}}
-                    </div>
-                </template>
-            </mCard>
-            <div v-show="showMore&&filmList.length>0" class="more" :style="{'bottom':0}" @click="loadMore">
-                <span>{{$store.state.lang.vote_view_more}}</span>
+        <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner" />
+        <div class="topContain" :class="{'mtop':!appType}">
+            <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
+            <img src="~assets/img/vote/kenya.png" style="width:100%">
+            <span class="about" @click="aboutCard = true">about</span>
+            <div class="sticky">
+                <nav id="nav">
+                    <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="getData(index)">
+                        <span>{{item}}</span>
+                        <p />
+                    </a>
+                </nav>
             </div>
         </div>
+        <div v-for="(item,index) in showDataList" :key="index" class="film-data">
+            <!-- <p>
+                <img src="~assets/img/vote/ic_Title.png"> Best Lead Actor
+                <span>Vote:1</span>
+            </p> -->
+            <p>
+                <img src="~assets/img/vote/ic_Title.png">{{item.group_name}}
+                <span>Vote:{{item.ticket_num}}}</span>
+            </p>
+            <ul class="clearfix">
+                <li v-for="(sub,si) in item.candidates" :key="si">
+                    <img :src="sub.icon">
+                    <p>{{sub.name}}</p>
+                    <p>{{sub.brief}}</p>
+                    <span>{{sub.ballot_num | formatVotes}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="share-box" v-show="appType!=2" ref="box" :style="{'left':left, 'top':top}" @click="toShare()" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
+            <div class="share">{{$store.state.lang.vote_share}}</div>
+        </div>
+        <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
+            <template v-slot:content>
+                <div v-html="$store.state.lang.vote_about_word" />
+            </template>
+            <template v-if="appType==0" v-slot:buttons>
+                <div class="download-btn" @click="loadConfirm('','about')">
+                    <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                    {{$store.state.lang.vote_downloadbtn_tips}}
+                </div>
+            </template>
+        </mCard>
+        <mCard v-show="shareCard" :title="$store.state.lang.vote_earnvote_tt" class="card" @closeCard="shareCard=false">
+            <template v-slot:content>
+                <div v-html="$store.state.lang.vote_rule_word" />
+            </template>
+            <template v-slot:buttons>
+                <div class="share-way">
+                    <span @click="shareWithFacebook">
+                        <img src="~assets/img/vote/ic_facebook_def.png" />
+                    </span>
+                    <span @click="copyLink">
+                        <img src="~assets/img/vote/ic_copylink_def copy.png" />
+                    </span>
+                    <span @click="shareWithTwitter">
+                        <img src="~assets/img/vote/ic_ti_def.png" />
+                    </span>
+                </div>
+                <div v-if="appType==0" class="download-btn" @click="loadConfirm('','share')">
+                    <p>{{$store.state.lang.vote_downloadbtn}}</p>
+                    {{$store.state.lang.vote_downloadbtn_tips}}
+                </div>
+            </template>
+        </mCard>
     </div>
 </template>
 <script>
 import mVoteSwiper from '~/components/vote/vote_swiper'
-import mFilm from '~/components/vote/film'
-import sFilm from '~/components/vote/short_film'
 import mCard from '~/components/vote/card'
-import { setCookie, getCookie, shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
+import { shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 import { callApp, callMarket, shareInvite, downApk } from '~/functions/app'
 import download from '~/components/vote/download'
 import { Base64 } from 'js-base64'
@@ -107,42 +82,97 @@ import qs from 'qs'
 export default {
     layout: 'base',
     components: {
-        mFilm,
-        sFilm,
         mVoteSwiper,
         mCard,
         download
     },
+    filters: {
+        formatVotes(val) {
+            return val.toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+        }
+    },
     data() {
         return {
             appType: this.$store.state.appType || 0,
-            tabList: [
-                {
-                    name: this.$store.state.lang.vote_tab_film,
-                    type: 'film'
-                },
-                {
-                    name: this.$store.state.lang.vote_tab_shortfilm,
-                    type: 'short_film'
-                },
-                {
-                    name: this.$store.state.lang.vote_tab_mv,
-                    type: 'mv'
-                }
-            ],
+            tabList: ['film', 'Televison', 'Special Awards'],
             tabIndex: 0,
             canMove: false,
             left: '',
             top: '',
             aboutCard: false,
-            rulesCard: false,
             shareCard: false,
-            filmList: [],
-            sFilmList: [],
-            mvList: [],
-            mounted: false,
             leftVote: 0,
-            ipMax: false
+            ipMax: false,
+            showDataList: [
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '1',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
+                {
+                    group_name: 'Best Supporting Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                }
+            ]
         }
     },
     computed: {
@@ -164,42 +194,6 @@ export default {
                 label: (nv == 0 && 'film') || (nv == 1 && 'short film') || (nv == 2 && 'MV'),
                 value: 1
             })
-        },
-        aboutCard(nv, ov) {
-            document.body.style.overflow = nv ? 'hidden' : 'auto'
-            if (nv) {
-                const t = document.body.scrollTop
-                document.body.style.position = 'fixed'
-                document.body.style.top = -t + 'px'
-            } else {
-                const t1 = document.body.style.top
-                document.body.style.position = 'static'
-                window.scrollTo(0, -parseInt(t1))
-            }
-        },
-        rulesCard(nv, ov) {
-            document.body.style.overflow = nv ? 'hidden' : 'auto'
-            if (nv) {
-                const t = document.body.scrollTop
-                document.body.style.position = 'fixed'
-                document.body.style.top = -t + 'px'
-            } else {
-                const t1 = document.body.style.top
-                document.body.style.position = 'static'
-                window.scrollTo(0, -parseInt(t1))
-            }
-        },
-        shareCard(nv, ov) {
-            document.body.style.overflow = nv ? 'hidden' : 'auto'
-            if (nv) {
-                const t = document.body.scrollTop
-                document.body.style.position = 'fixed'
-                document.body.style.top = -t + 'px'
-            } else {
-                const t1 = document.body.style.top
-                document.body.style.position = 'static'
-                window.scrollTo(0, -parseInt(t1))
-            }
         }
     },
     async asyncData({ app: { $axios }, store, req }) {
@@ -224,71 +218,23 @@ export default {
         }
     },
     mounted() {
-        this.sendEvLog({
-            category: `vote_${this.voteTitle}_${this.platform}`,
-            action: 'homepage_show',
-            label: '',
-            value: 1
-        })
-
-        if (this.appType > 0) {
-            this.$axios({
-                url: '/voting/v1/ticket/sign-in',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: qs.stringify({
-                    vote_id: 8
-                })
-            })
-                .then(res => {
-                    this.leftVote = res.data.data || 0
-                    this.ipMax = res.data.code == -5 && this.leftVote == 0
-                    if (this.ipMax) {
-                        this.$alert('The votes have been issued today, come back tomorrow.')
-                    }
-                })
-                .catch(e => {
-                    console.log(e)
-                })
-        }
-
-        this.getAllList() // 获取投票单元
-
-        this.mounted = true
-        this.$route.query.pin && setCookie('vote_share_user', this.$route.query.pin) // 分享源用户记录
-        !getCookie('vote_share_down') && setCookie('vote_share_down', this.vote_sign) // 是否点击过下载
-
-        this.$nextTick(() => {
-            if (this.banners.length <= 0) {
-                document.querySelector('.sticky').classList.add(this.appType ? 'fixed1' : 'fixed2') // 没有banner顶部自动吸顶
-                if (this.appType) {
-                    document.querySelector('.topContain').setAttribute('style', 'padding-bottom:7.2rem')
-                } else {
-                    document.querySelector('.topContain').setAttribute('style', 'padding-bottom:6rem')
-                }
-            }
-        })
-
-        document.addEventListener('scroll', () => {
-            this.showMore = false
-            const bannerContain = document.querySelector('.wh_content')
-            if (bannerContain) {
-                const stickyTop = bannerContain.getBoundingClientRect().bottom
-                const h = document.querySelector('.rules').offsetHeight
-                const dh = (!this.appType && document.querySelector('.filmload').offsetHeight) || 0
-                const className = dh == 0 ? 'fixed1' : 'fixed2'
-                if (stickyTop - dh - h <= 0) {
-                    document.querySelector('.sticky').classList.add(className)
-                } else {
-                    document.querySelector('.sticky').classList.remove(className)
-                }
-            }
-        })
+        this.getAllList(18) // 获取投票单元
     },
     methods: {
-      
+        getData(index) {
+            this.tabIndex = index
+            switch (index) {
+                case 0:
+                    this.getAllList(18)
+                    break
+                case 1:
+                    this.getAllList(19)
+                    break
+                case 2:
+                    this.getAllList(20)
+                    break
+            }
+        },
         handleVote(film) {
             if (film.state === -1) {
                 this.$toast(this.$store.state.lang.vote_notstart_btn)
@@ -298,13 +244,6 @@ export default {
                 this.loadConfirm(1, 'vote')
                 return
             }
-
-            this.sendEvLog({
-                category: `vote_${this.voteTitle}_${this.platform}`,
-                action: 'votebtn_click',
-                label: film.name,
-                value: 1
-            })
 
             if (this.leftVote <= 0) {
                 if (this.appType == 1) {
@@ -358,12 +297,6 @@ export default {
         },
         toVideo(item) {
             const vod = item.link_vod_code
-            this.sendEvLog({
-                category: `vote_${this.voteTitle}_${this.platform}`,
-                action: 'votepic_click',
-                label: item.name,
-                value: 1
-            })
 
             if (vod && this.appType > 0) {
                 if (this.appType == 1) {
@@ -376,60 +309,22 @@ export default {
             }
         },
         loadConfirm(vote, pos) {
-            this.sendEvLog({
-                category: `vote_${this.voteTitle}_${this.platform}`,
-                action: 'callApp',
-                label: pos,
-                value: 1
-            })
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
-                this.rulesCard = false
                 this.aboutCard = false
                 this.shareCard = false
                 if (vote) {
-                    this.sendEvLog({
-                        category: `vote_${this.voteTitle}_${this.platform}`,
-                        action: 'downloadpopup_show',
-                        label: pos || '',
-                        value: 1
-                    })
                     this.$confirm(
                         this.$store.state.lang.vote_webshare_words,
                         () => {
-                            this.sendEvLog({
-                                category: `vote_${this.voteTitle}_${this.platform}`,
-                                action: 'downloadpopup_clickok',
-                                label: pos,
-                                value: 1
-                            })
-                            this.sendEvLog({
-                                category: `vote_${this.voteTitle}_${this.platform}`,
-                                action: 'toMarket',
-                                label: pos,
-                                value: 1
-                            })
                             callMarket.call(this, () => {
                                 downApk.call(this)
                             })
                         },
-                        () => {
-                            this.sendEvLog({
-                                category: `vote_${this.voteTitle}_${this.platform}`,
-                                action: 'downloadpopup_clicknot',
-                                label: pos,
-                                value: 1
-                            })
-                        },
+                        () => {},
                         this.$store.state.lang.download_apk,
                         this.$store.state.lang.vote_cancel
                     )
                 } else {
-                    this.sendEvLog({
-                        category: `vote_${this.voteTitle}_${this.platform}`,
-                        action: 'toMarket',
-                        label: pos,
-                        value: 1
-                    })
                     callMarket.call(this, () => {
                         downApk.call(this)
                     })
@@ -437,51 +332,21 @@ export default {
             })
         },
         downloadBanner() {
-            this.sendEvLog({
-                category: `vote_${this.voteTitle}_${this.platform}`,
-                action: 'callApp',
-                label: 'download_tips',
-                value: 1
-            })
             this.$nuxt.$loading.start()
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
-                this.rulesCard = false
                 this.aboutCard = false
-                this.sendEvLog({
-                    category: `vote_${this.voteTitle}_${this.platform}`,
-                    action: 'toMarket',
-                    label: 'download_tips',
-                    value: 1
-                })
                 callMarket.call(this, () => {
                     downApk.call(this)
                 })
             })
         },
-        loadMore() {
-            window.scrollBy(0, document.body.clientHeight) // 向下滚动一屏
-        },
 
         // 获取投票单元数据
-        getAllList() {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=8`).then(res => {
+        getAllList(id) {
+            this.$axios.get(`/voting/v1/candidates-show?vote_id=${id}`).then(res => {
                 if (res.data.data.length > 0) {
-                    this.filmList = []
-                    this.sFilmList = []
-                    this.mvList = []
-                    const data = res.data.data
-                    data.forEach(ele => {
-                        if (ele.type === 'FILM') {
-                            this.filmList.push(ele)
-                        } else if (ele.type === 'SHORT_FILM') {
-                            this.sFilmList.push(ele)
-                        } else if (ele.type === 'MV') {
-                            this.mvList.push(ele)
-                        }
-                    })
-                    this.sort(this.filmList)
-                    this.sort(this.sFilmList)
-                    this.sort(this.mvList)
+                    this.showDataList = res.data.data
+                    this.sort(this.showDataList)
                 }
             })
         },
@@ -495,15 +360,7 @@ export default {
             })
         },
         toShare(pos) {
-            this.sendEvLog({
-                category: `vote_${this.voteTitle}_${this.platform}`,
-                action: 'share_click',
-                label: pos || '',
-                value: 1
-            })
-
             if (this.appType === 1) {
-                this.rulesCard = false
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
                     this.voteTitle,
@@ -511,7 +368,6 @@ export default {
                     this.banners.length > 0 ? this.banners[0].materials : ''
                 )
             } else if (this.appType === 0) {
-                this.rulesCard = false
                 this.shareCard = true
             }
         },
@@ -596,12 +452,12 @@ html {
     body {
         margin: 0;
         padding: 0;
-        background-color: #4e4e4e;
+        background-color: #000000;
         .page-wrapper {
             height: 100%;
             min-height: 100vh;
             margin: 0 auto;
-            background-color: #4e4e4e;
+            background-color: #000000;
         }
     }
     .filmload {
@@ -612,33 +468,27 @@ html {
     .topContain {
         padding-bottom: 4.8rem; /* 2.4 + 2.4 */
         position: relative;
-        .sticky {
+        .about {
+            color: #988c67;
+            border: 1px solid rgba(152, 140, 103, 1);
+            border-radius: 9px;
+            font-size: 0.9rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            padding: 0 0.5rem;
             position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 7.2rem; /* 2.4 + 2.4 + 2.4 */
-            z-index: 1;
-
-            .rules {
-                height: 2.4rem;
-                line-height: 2.4rem;
-                background: linear-gradient(360deg, rgba(0, 0, 0), rgba(0, 0, 0, 0.1));
-                font-size: 0.9rem;
-                color: #ffffff;
-                width: 100%;
-                span {
-                    display: inline-block;
-                    text-align: center;
-                    width: 33.33%;
-                    text-decoration: underline;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-            }
+            right: 0.8rem;
+            top: 0.8rem;
+        }
+        .sticky {
+            // position: absolute;
+            // bottom: 0;
+            // width: 100%;
+            // height: 7.2rem; /* 2.4 + 2.4 + 2.4 */
+            // z-index: 1;
             #nav {
                 height: 2.4rem;
-                background: linear-gradient(to bottom, #9d802a, #c9ab6f);
+                background: #000000;
                 padding: 0.4rem 0;
                 -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
                 a {
@@ -646,12 +496,17 @@ html {
                     height: 1.6rem;
                     line-height: 1.6rem;
                     width: 33.33%;
-                    color: #ffe189;
+                    color: #99844e;
                     display: block;
                     float: left;
                     font-weight: 600;
                     text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
                     font-size: 0.92rem;
+                    p {
+                        width: 100%;
+                        height: 0.2rem;
+                        background: rgba(153, 132, 78, 0.1);
+                    }
                     &:link,
                     &:active,
                     &:visited,
@@ -659,31 +514,23 @@ html {
                         background: none;
                         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
                     }
-                    &:nth-child(2) {
-                        border-right: 1px solid rgba(255, 255, 210, 0.5);
-                        border-left: 1px solid rgba(255, 255, 210, 0.5);
-                    }
                     &.on {
-                        color: #ffffff;
+                        color: #ffdc82;
                         p {
-                            width: 1.5rem;
-                            height: 0.2rem;
-                            background: #ffffff;
-                            border-radius: 3px;
-                            margin: 0 auto;
+                            background: linear-gradient(90deg, rgba(152, 140, 103, 0) 0%, rgba(255, 220, 130, 1) 50%, rgba(152, 140, 103, 0) 100%);
                         }
                     }
                 }
             }
-            .leftvote {
-                padding-right: 0.8rem;
-                height: 2.4rem;
-                line-height: 2.4rem;
-                background: linear-gradient(to bottom, #000000, #4e4e4e);
-                font-size: 0.95rem;
-                color: #ffffff;
-                text-align: right;
-            }
+            // .leftvote {
+            //     padding-right: 0.8rem;
+            //     height: 2.4rem;
+            //     line-height: 2.4rem;
+            //     background: linear-gradient(to bottom, #000000, #4e4e4e);
+            //     font-size: 0.95rem;
+            //     color: #ffffff;
+            //     text-align: right;
+            // }
 
             &.fixed1 {
                 position: fixed;
@@ -700,33 +547,67 @@ html {
                 }
             }
         }
-
         &.mtop {
             margin-top: 4rem;
             padding-bottom: 3.6em; /* 2.4 + 1.2 */
-            .sticky {
-                height: 6rem; /* 2.4 + 2.4 + 1.2 */
+            // .sticky {
+            //     height: 6rem; /* 2.4 + 2.4 + 1.2 */
+            // }
+        }
+    }
+    .film-data {
+        padding-left: 1rem;
+        & > p {
+            color: #99844e;
+            font-weight: bold;
+        }
+        li {
+            width: 40%;
+            float: left;
+            img {
+                width: 100%;
+            }
+            p {
+                color: #aaaaaa;
+                font-size: 0.9rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            span {
+                color: #000000;
+                background: #99844e;
+                height: 1.2rem;
+                line-height: 1.2rem;
+                padding: 0 0.5rem;
+                font-size: 1.2rem;
             }
         }
     }
-    .share {
+    .share-box {
         width: 5rem;
         height: 5rem;
-        text-align: center;
-        color: #666666;
-        font-size: 0.65rem;
-        font-weight: bold;
         position: fixed;
         bottom: 3rem;
         right: 1.5rem;
+        box-sizing: border-box;
+        padding: 0.25rem;
         border-radius: 100%;
-        line-height: 5rem;
-        background: url('~assets/img/vote/share.png') no-repeat center;
-        background-size: cover;
-        color: white;
-        box-shadow: 0.6rem 0.6rem 0.6rem #222323;
-        z-index: 10;
+        background: linear-gradient(42deg, rgba(201, 162, 43, 1), rgba(185, 147, 30, 1), rgba(255, 249, 230, 1));
+        .share {
+            width: 100%;
+            height: 100%;
+            line-height: 4.5rem;
+            text-align: center;
+            color: #000000;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 100%;
+            z-index: 10;
+            background: #fac868;
+        }
     }
+
     .card {
         .share-btn {
             width: 70%;
@@ -764,6 +645,16 @@ html {
                 }
             }
         }
+    }
+    .clearfix:after {
+        display: block;
+        visibility: hidden;
+        clear: both;
+        height: 0;
+        content: '';
+    }
+    .clearfix {
+        zoom: 1;
     }
 }
 </style>
