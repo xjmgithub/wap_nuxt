@@ -23,12 +23,11 @@ export default {
     layout: 'base',
     data() {
         return {
-            vcode: decodeURIComponent(this.$route.query.vcode),
             code: ''
         }
     },
     mounted() {
-        this.code = this.vcode.substring(0, this.vcode.indexOf('@'))
+        this.code = decodeURIComponent(this.$route.query.vcode)
         this.sendEvLog({
             category: 'deeplink_page',
             action: 'page_show',
@@ -44,8 +43,8 @@ export default {
                 label: 1,
                 value: 1
             })
-            const index = this.vcode.indexOf('@')
-            const ciphertext = encodeURIComponent(this.vcode.substring(index + 1)).replace(/%20/g, '%2B')
+            const tmp = decodeURIComponent(this.$route.query.signature)
+            const ciphertext = encodeURIComponent(tmp).replace(/%20/g, '%2B')
             this.$axios
                 .post(`/promotion-coupon/v1/short-link/addPromotion?code=${this.code}&ciphertext=${ciphertext}`)
                 .then(res => {

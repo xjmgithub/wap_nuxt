@@ -64,7 +64,7 @@
             <nuxt-link v-show="type==0" to="/hybrid/account/resetTelPass">{{$store.state.lang.forget_password}}</nuxt-link>
             <nuxt-link v-show="type==1" to="/hybrid/account/resetEmailPass">{{$store.state.lang.forget_password}}</nuxt-link>
         </div>
-        <div class="regtext"  @click="regtext">
+        <div class="regtext" @click="regtext">
             <nuxt-link to="/hybrid/account/register">{{$store.state.lang.register_text}}</nuxt-link>
         </div>
         <div v-show="countryDialogStatus" class="country-choose-dialog">
@@ -84,6 +84,7 @@ import shadowLayer from '~/components/shadow-layer'
 import { setCookie } from '~/functions/utils'
 import countrArr from '~/functions/countrys.json'
 import mButton from '~/components/button'
+import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     components: {
@@ -159,7 +160,11 @@ export default {
         }
     },
     mounted() {
-        if (this.pre) {
+        const tmp = this.pre
+        if (this.pre && btoa(atob(tmp)) == tmp) {
+            sessionStorage.setItem('login_prefer', Base64.decode(this.pre))
+            sessionStorage.setItem('register_prefer', Base64.decode(this.pre))
+        } else if (this.pre) {
             sessionStorage.setItem('login_prefer', this.pre)
             sessionStorage.setItem('register_prefer', this.pre)
         }
