@@ -160,10 +160,11 @@ export default {
         }
     },
     mounted() {
-        const tt = Base64.encode(this.$route.query.pre)
-        console.log(tt)
-        console.log(Base64.decode(tt))
-        if (this.pre) {
+        const tmp = this.pre
+        if (this.pre && btoa(atob(tmp)) == tmp) {
+            sessionStorage.setItem('login_prefer', Base64.decode(this.pre))
+            sessionStorage.setItem('register_prefer', Base64.decode(this.pre))
+        } else if (this.pre) {
             sessionStorage.setItem('login_prefer', this.pre)
             sessionStorage.setItem('register_prefer', this.pre)
         }
