@@ -16,26 +16,29 @@
                 </nav>
             </div>
         </div>
-        <div v-for="(item,index) in showDataList" :key="index" class="film-data">
-            <p class="group">
-                <img src="~assets/img/vote/ic_Title.png">{{item.group_name}}
-                <span>Vote:{{item.ticket_num}}</span>
-            </p>
-            <ul>
-                <li v-for="(sub,si) in item.candidates" :key="si">
-                    <div @click="toVideo(sub)">
-                        <div class="pic">
-                            <img :src="sub.icon">
-                            <span>{{sub.ballot_num | formatVotes}}</span>
+        <div class="container">
+            <div v-for="(item,index) in showDataList" :key="index" class="film-data">
+                <p class="group">
+                    <img src="~assets/img/vote/ic_Title.png">{{item.group_name}}
+                    <span>Vote:{{item.ticket_num}}</span>
+                </p>
+                <ul>
+                    <li v-for="(sub,si) in item.candidates" :key="si">
+                        <div @click="toVideo(sub)">
+                            <div class="pic">
+                                <img :src="sub.icon">
+                                <span>{{sub.ballot_num | formatVotes}}</span>
+                            </div>
+                            <p>{{sub.name}}</p>
+                            <p>{{sub.brief}}</p>
                         </div>
-                        <p>{{sub.name}}</p>
-                        <p>{{sub.brief}}</p>
-                    </div>
-                    <img v-show="sub.user_ballot_num<=0" src="~assets/img/vote/Button-vote.png" @click.prevent="handleViceVote(item)">
-                    <img v-show="sub.user_ballot_num>0" src="~assets/img/vote/Button-voted.png" @click.prevent="handleViceVote(item)">
-                </li>
-            </ul>
+                        <img v-show="sub.user_ballot_num<=0" src="~assets/img/vote/Button-vote.png" @click.prevent="handleViceVote(item)">
+                        <img v-show="sub.user_ballot_num>0" src="~assets/img/vote/Button-voted.png" @click.prevent="handleViceVote(item)">
+                    </li>
+                </ul>
+            </div>
         </div>
+
         <div v-show="appType!=2" ref="box" class="share-box" :style="{'left':left, 'top':top}" @click="toShare()" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
             <div class="share">{{$store.state.lang.vote_share}}</div>
         </div>
@@ -72,10 +75,13 @@
                 </div>
             </template>
         </mCard>
+        <div v-show="voteSuccess" class="card-layer" />
         <div v-show="voteSuccess" class="vote-success">
             <img src="~assets/img/vote/ic_finish.png">
-            <div class="line" />
-            <div class="close-btn" @click="voteSuccess=false">CLOSE</div>
+            <p>Vote Successful!</p>
+            <div class="close-btn" @click="voteSuccess=false">
+                <img src="~assets/img/vote/close_line.png"> CLOSE
+            </div>
         </div>
     </div>
 </template>
@@ -111,6 +117,293 @@ export default {
             leftVote: 0,
             ipMax: false,
             showDataList: [
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
+                {
+                    group_name: 'Best Lead Actor',
+                    ticket_num: '0',
+                    candidates: [
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '1',
+                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'The Missing God',
+                            brief: 'Ubaka Joseph Ugochukwu',
+                            ballot_num: '132412',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
+                        }
+                    ]
+                },
                 {
                     group_name: 'Best Lead Actor',
                     ticket_num: '0',
@@ -502,7 +795,6 @@ html {
             border-radius: 9px;
             font-size: 0.9rem;
             height: 1.2rem;
-            line-height: 1.2rem;
             padding: 0 0.5rem;
             position: absolute;
             right: 0.8rem;
@@ -548,65 +840,71 @@ html {
             margin-top: 1.5rem;
         }
     }
-    .film-data {
-        padding: 1rem 0 0 1rem;
-        .group {
-            color: #99844e;
-            font-weight: bold;
-            margin-bottom: 0.8rem;
-            padding-right: 0.8rem;
-            img {
-                width: 1.1rem;
-                height: 1.1rem;
-                margin-right: 0.3rem;
-                vertical-align: text-bottom;
+    .container {
+        background: url('~assets/img/vote/kenya_bg.png');
+        background-size: 100%;
+        padding-bottom:2rem;
+        .film-data {
+            padding: 1rem 0 0 1rem;
+            .group {
+                color: #99844e;
+                font-weight: bold;
+                margin-bottom: 0.8rem;
+                padding-right: 0.8rem;
+                img {
+                    width: 1.1rem;
+                    height: 1.1rem;
+                    margin-right: 0.3rem;
+                    vertical-align: text-bottom;
+                }
+                span {
+                    float: right;
+                    color: #ffffff;
+                }
             }
-            span {
-                float: right;
-                color: #ffffff;
-            }
-        }
-        ul {
-            overflow-x: auto;
-            white-space: nowrap;
-            width: 100%;
-            &::-webkit-scrollbar {
-                display: none;
-            }
-            li {
-                width: 9rem;
-                display: inline-block;
-                margin-right: 0.7rem;
-                div.pic {
-                    position: relative;
-                    width: 100%;
-                    &:before {
-                        content: '';
-                        display: inline-block;
-                        padding-bottom: 56%;
-                        width: 0.1px;
-                        vertical-align: middle;
-                    }
-                    img {
+            ul {
+                overflow-x: auto;
+                white-space: nowrap;
+                width: 100%;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                li {
+                    width: 9rem;
+                    display: inline-block;
+                    margin-right: 0.7rem;
+                    div.pic {
+                        position: relative;
                         width: 100%;
-                        position: absolute;
-                        height: 100%;
+                        &:before {
+                            content: '';
+                            display: inline-block;
+                            padding-bottom: 56%;
+                            width: 0.1px;
+                            vertical-align: middle;
+                        }
+                        img {
+                            width: 100%;
+                            position: absolute;
+                            height: 100%;
+                        }
                     }
-                }
-                p {
-                    color: #aaaaaa;
-                    font-size: 0.85rem;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    margin: 0.2rem 0;
-                }
-                & > img {
-                    width: 4rem;
+                    p {
+                        color: #aaaaaa;
+                        font-size: 0.85rem;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        margin: 0.2rem 0;
+                    }
+                    & > img {
+                        width: 4rem;
+                    }
                 }
             }
         }
     }
+
     .share-box {
         width: 5rem;
         height: 5rem;
@@ -668,6 +966,16 @@ html {
             }
         }
     }
+    .card-layer {
+        width: 100%;
+        height: 100%;
+        min-height: 100vh;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 998;
+        background: rgba(0, 0, 0, 0.3);
+    }
     .vote-success {
         width: 17rem;
         height: 13rem;
@@ -679,25 +987,34 @@ html {
         margin-left: -8.5rem;
         margin-top: -6.5rem;
         z-index: 999;
-        background: #ffffff;
         border-radius: 4px;
-        img {
+        background: #ffffff url('~assets/img/vote/close_bg.png') no-repeat;
+        background-size: 100%;
+        p {
+            color: #333333;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            height: 1rem;
+        }
+        & > img {
             display: block;
-            margin: 0 auto;
+            margin: 2rem auto 1rem;
             width: 5rem;
         }
-        .line {
-            background: linear-gradient(90deg, rgba(152, 140, 103, 0) 0%, rgba(255, 220, 130, 1) 50%, rgba(152, 140, 103, 0) 100%);
-            width: 100%;
-            height: 2px;
-        }
         .close-btn {
+            img {
+                width: 100%;
+                height: 2px;
+                display: block;
+            }
             width: 100%;
-            height: 2rem;
+            height: 2.5rem;
             text-align: center;
-            line-height: 1.8rem;
+            line-height: 2.3rem;
             color: #99844e;
             background: #d8d8d8;
+            font-weight: bold;
         }
     }
 }
