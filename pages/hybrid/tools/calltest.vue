@@ -1,12 +1,11 @@
 <template>
     <div class="calltest">
-        <div class="blue" @click="intent">intent唤醒</div>
-        <div class="green" @click="scheme">普通scheme唤醒</div>
+        <div class="blue" @click="callUp">intent唤醒</div>
         <div class="ua">{{ua}}</div>
     </div>
 </template>
 <script>
-import { envokeByIntent, invokeByIframe } from '~/functions/app'
+import { callApp, callMarket, downApk } from '~/functions/app.js'
 export default {
     layout: 'base',
     data() {
@@ -18,11 +17,12 @@ export default {
         this.ua = window.navigator.userAgent
     },
     methods: {
-        intent() {
-            envokeByIntent.call(this,'com.star.mobile.video.player.PlayerVodActivity?vodId=234')
-        },
-        scheme() {
-            invokeByIframe.call(this)
+        callUp() {
+            callApp.call(this, '', () => {
+                callMarket.call(this, () => {
+                    downApk.call(this)
+                })
+            })
         }
     }
 }

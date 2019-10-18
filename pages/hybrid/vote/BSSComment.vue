@@ -1,7 +1,7 @@
 <template>
     <div ref="page" class="wrapper">
         <div class="container">
-            <img src="~assets/img/vote/BSSRegister/bg-img.png" alt="bg-img" />
+            <img src="~assets/img/vote/BSSRegister/bg-comment-img.png" alt="bg-img" />
             <div class="tab-box">
                 <div class="tab">
                     <div class="rules" @click="showRule">
@@ -17,14 +17,14 @@
                     </div>
                 </div>
             </div>
-            <img class="text text-one" src="~assets/img/vote/BSSRegister/text-one.png" alt />
+            <img src="~assets/img/vote/BSSRegister/bg-comment-rule.png" alt class="ic-green" />
+            <img class="text text-one" src="~assets/img/vote/BSSRegister/text4.png" alt />
             <div v-if="isEnd" class="register-end">
                 <img src="~assets/img/vote/BSSRegister/ic-end.png" alt />
                 <p>SAMAHANI, USAJILI UMEKWISHA</p>
             </div>
             <div v-else class="register-normal">
                 <img src="~assets/img/vote/BSSRegister/bg-form-top.png" alt class="form-img" />
-                <img src="~assets/img/vote/BSSRegister/rule-img.png" alt class="form-img rule-img" />
                 <div v-if="!isEnd" class="registration">
                     <div>
                         <span>
@@ -90,32 +90,14 @@
                             <option v-for="(item,index) in professionList" :key="index" :value="item">{{item}}</option>
                         </select>
                     </div>
-                    <div>
-                        <span>
-                            LINK YA VIDEO
-                            <sup class="required">*</sup>
-                        </span>
-                        <input
-                            v-model="link"
-                            type="text"
-                            placeholder="Links za video za Instagram au Youtube"
-                            :class="{'error-line':link_error}"
-                            @input="link_error=false"
-                        />
-                    </div>
-                    <div class="link" @click="showUploadWay">JINSI YA KUPATA LINK YA VIDEO?</div>
                     <div class="submit-btn" :class="{'disabled':!isFinish}" @click="submit()">WASILISHA</div>
                 </div>
                 <img src="~assets/img/vote/BSSRegister/bg-form-bottom.png" alt class="form-img" />
             </div>
-            <img v-show="isVoteStart" src="~assets/img/vote/BSSRegister/ic-to-vote.png" alt class="to-vote" @click="toVote" />
-            <div class="ad"></div>
-            <img class="text" src="~assets/img/vote/BSSRegister/text-two.png" alt />
             <div class="share-box">
-                <img src="~assets/img/vote/BSSRegister/share-rule-img.png" alt />
                 <img src="~assets/img/vote/BSSRegister/img-share.png" alt @click="toShare('midshare')" />
             </div>
-            <img class="text" src="~assets/img/vote/BSSRegister/text-three.png" alt />
+            <img class="text" src="~assets/img/vote/BSSRegister/text5.png" alt />
             <div class="past-programme">
                 <img src="~assets/img/vote/BSSRegister/bg-orange.png" alt />
                 <ul class="clearfix">
@@ -128,45 +110,19 @@
                 </ul>
             </div>
         </div>
-        <div v-show="show_howToUpload" class="uploadWay">
-            <img src="~assets/img/vote/BSSRegister/alert-img.png" alt />
-            <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="show_howToUpload=false" />
-        </div>
         <div v-show="show_rules" class="rules-box">
             <img src="~assets/img/vote/BSSRegister/bg-rule.png" alt />
             <div class="rule-text">
-                <p style="font-weight:bold;">Online Audition</p>
-                <p style="font-weight:bold;">
-                    1.Muda wa usaili wa mtandaoni:
-                    <span style="font-weight:normal;">08 Okt.2019 - 30 Okt,2019</span>
-                </p>
-                <p style="font-weight:bold;">2.Mahitaji</p>
-                <p>I.Jirekodi ukiimba wimbo mzima.</p>
-                <p>Ⅱ.Jirekodi mara moja, usihariri wala kurekebisha chochote.</p>
-                <p>Ⅲ.Wimbo unatakiwa ubebe tabia zote za sauti ambazo zinaonyesha hisia za mwimbaji.</p>
-                <p>Ⅳ.Mshiriki anatakiwa kujirekodi sura yake ikionekana. Uimbaji wa kughushi hauruhusiwi.</p>
-                <p style="font-weight:bold;">3.Njia ya kujiandikisha</p>
-                <p style="font-weight:bold;text-decoration:underline;">I.Kujisajili kwa njia ya mtandao- StarTimes ON APP.</p>
-                <p>Washiriki wajirekodi wakiimba wimbo mzima, kisha wapandishe video hiyo katika mtandao wa YouTube (Nakili link); Kisha pakua na ufungue STARTIMES ON APP, ingia sehemu ya usaili wa BSS; jaza taarifa zako muhimu, weka link yako ya Youtube ukiimba; wasilisha, subiri kazi yako hiakikiwe.</p>
-                <p style="font-weight:bold;text-decoration:underline;">II.Njia nyingine ya kujiandikisha-Instagram.</p>
-                <p>Jirekodi ukiimba kisha ipost katika mtandao wa Instagram, na weka hashtag #bssonlineaudition2019 na mwisho tag @startimestz.</p>
-                <p>*MUHIMU:Kazi zote za washiriki wa kimtandao zitahakikiwa kwa masaa 48 baada ya ku-upload, na matokeo yatawekwa kwenye chaguzi zitakazofuata.</p>
-                <p style="font-weight:bold;">4.Sheria za uteuzi wa mtandao</p>
-                <p>Baada ya machapisho, upigaji kura utafunguliwa rasmi kwenye StarTimes ON APP “Online Audition Election Voting Channel”. Mpaka mwisho, washindi 5 watafuzu kuingia kwenye hatua ya mtoano wa mashindano.</p>
-                <p style="font-weight:bold;">Usaili usio wa kimtandao</p>
-                <p style="font-weight:bold;">1.Muda na mahali</p>
-                <p>*Tarehe za usaili wa BSS*</p>
-                <p>• *Arusha:* 28 & 29 September - The Fuzz - Pointzone Resort (Mianzini)</p>
-                <p>• *Mwanza:* 4 & 5 October - Rock City Mall</p>
-                <p>• *Mbeya:* 10 & 11 October - Mbeya City Pub & Lounge</p>
-                <p>• *Dodoma:* 17 & 18 October - Royal Village Hotel</p>
-                <p>• *Dar es Salaam:* 25, 26 & 27 October Jumba la Makumbusho ya Taifa Mjini (National Museum)</p>
-                <p style="font-weight:bold;">2.Njia ya usaili</p>
-                <p>Washiriki watakao shiriki kwenye usaili usio wa kimtandao wanashauriwa kwenda kwenye maeneo yaliyotajwa hapo juu kutokana na muda wa usaili.</p>
-                <p style="font-weight:bold;">3.Sheria za uteuzi</p>
-                <p>Kuna nafasi 5 za usaili usio wa kimtandao katika kila usaili (isipokuwa Dar es salaam),majaji 4 waliobobea watasaili washiriki kwa NDIO au HAPANA. Washiriki watakaopita kwenye usaili siku hiyo watashiriki tena kwenye usaili wa pili kwa siku inayofuata kwaajili ya kuchagua watakao songa mbele kwenye mashindano.</p>
-                <p style="font-weight:bold;">4.Mengineyo</p>
-                <p>Kwa sababu ya uwepo wa watu wengi wanaotokea wakati wa usaili, uandaaji wa kipindipia hufanyika siku hiyo ya usaili. Unashauriwa kuwahi mapema eneo la usa ili na ufuate maelekezo.</p>
+                <p>Je unatamani kuja Studio na kuwa mmoja kati ya majaji wa hadhara? Unataka kuamua mshiriki gani aondoke au abaki?</p>
+                <p>Bonyeza usajili wa majaji wa hadhara ili uweze kushiriki.</p>
+                <br>
+                <p>1. Usajili wa majaji wa hadhara utaanza tarehe 13 Oktoba 2019 mpaka December 8,2019</p>
+                <p>2. Taratibu za kushiriki majaji wa hadhara:</p>
+                <p>Jaza na ingiza taarifa zako muhimu. Tutachagua washiriki 30 waliobahatika kujiunga na mpango huu kuanzia mchuano wa makundi mpaka fainali.</p>
+                <p>*kama utabahatika kushiriki,muwakilishi wa huduma kwa wateja atawasiliana nawe kuchukua taarifa za mwisho za usajili.</p>
+                <br>
+                <p>Utakua na haki ya kuamua nani atakua Star anayefuata wa Bongo Star Search.</p>
+                <p>Ungana nasi kwa nafasi 30 tu kwa kila mchuano wa makundi.</p>
             </div>
             <div class="share-btn" @click="toShare('rule')">SHIRIKI</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeRule" />
@@ -175,12 +131,12 @@
             <img src="~assets/img/vote/BSSRegister/ic-success.png" alt />
             <div class="success-text">
                 <p>USAJILI UMEFANIKIWA!</p>
-                <p>Tutaikagua kazi yako kama imeidhinishwa, kazi yako itaonyeshwa kwenye Startimes ON APP ndani ya masaa 48. Usisahau kujipigia kampeni mwenyewe!</p>
+                <p>Asante kwa kushiriki, tutawachagua washindi wenye bahati kwa ajili ya kurekodi studio. Kama ukiwa ni mmoja wa washindi utajulishwa kwa njia ya simu siku maalumu kipindi kitakaporekodiwa.</p>
             </div>
             <div class="share-btn" @click="closeSuccessPage('submit')">SHIRIKI SASA</div>
             <img src="~assets/img/vote/BSSRegister/ic-close.png" alt @click="closeSuccessPage('close')" />
         </div>
-        <div v-show="show_howToUpload||show_rules||show_success" class="shadow-box" @click="closeRule"></div>
+        <div v-show="show_rules||show_success" class="shadow-box" @click="closeRule"></div>
         <mShare />
     </div>
 </template>
@@ -227,7 +183,6 @@ export default {
                 'Utafiti wa kisayansi',
                 'Kazi ya muda / Mafunzo ya kazi / Nyingine'
             ],
-            link: '',
             repeatSub: true,
 
             name_error: false,
@@ -236,26 +191,22 @@ export default {
             number_error: false,
             profession_error: false,
             city_error: false,
-            link_error: false,
             canSubmit: false,
 
-            enroll_id: 1,
+            enroll_id: 2,
             vote_id: 16,
-            lottery_id: 2,
             clipsList: [],
             clipsListNew: [],
             loaded: false,
-            show_howToUpload: false,
             show_rules: false,
             show_success: false,
             isEnd: false,
-            isVoteStart: false,
 
-            title: 'Bongo Star Search 2019',
-            shareTitle: 'Wewe ndiye nyota wa Bongo unayefuata',
-            shareText: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.',
+            title: 'Bongo Star Search 2019 Public Judge',
+            shareTitle: 'Uso kwa uso na Bongo Star!',
+            shareText: 'Jisajili kuwa mtoaji wa alama ya ndiyo au hapana,  na utapata nafasi ya kushiriki kwenye shoo!',
             imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
-            content: 'Rekodi video yako ukiimba,jisajili SASA!Nafasi hii ni yako.'
+            content: 'Jisajili kuwa mtoaji wa alama ya ndiyo au hapana,  na utapata nafasi ya kushiriki kwenye shoo!'
         }
     },
     computed: {
@@ -273,8 +224,6 @@ export default {
             if (!this.profession.replace(/\s/g, '')) return false
             // city
             if (!this.city.replace(/\s/g, '')) return false
-            // link
-            if (!this.link.replace(/\s/g, '')) return false
             return true
         },
         platform() {
@@ -295,15 +244,10 @@ export default {
     mounted() {
         this.mSendEvLog('page_show', '', '')
         this.getRegisterInfo()
-        this.getVoteInfo()
         this.getYear()
         this.getVideoMsg()
     },
     methods: {
-        toVote() {
-            this.$router.push(`/hybrid/vote/BSSVote`)
-            // window.location.href = '/hybrid/vote/BSSVote'
-        },
         showRule() {
             this.show_rules = true
             // 页面静止
@@ -322,11 +266,12 @@ export default {
         // 埋点方法
         mSendEvLog(action, label, value) {
             this.sendEvLog({
-                category: 'form_BSSReg_' + this.platform,
+                category: 'form_BSSAudReg_' + this.platform,
                 action: action,
                 label: label,
                 value: value
             })
+            console.log(action, label, value)
         },
         // 调出分享弹层(app/web)
         toShare(label) {
@@ -391,24 +336,6 @@ export default {
                     this.$alert(err)
                 })
         },
-        // 获取抽奖活动信息
-        getVoteInfo() {
-            this.$axios
-                .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
-                .then(res => {
-                    if (res.data.code === 200) {
-                        const voteStartTime = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
-                        if (this.serverTime >= voteStartTime) {
-                            this.isVoteStart = true
-                        }
-                    } else {
-                        this.$alert('ERROR TO GET VoteInfo')
-                    }
-                })
-                .catch(err => {
-                    this.$alert(err)
-                })
-        },
         // 获取生日年份
         getYear() {
             for (let i = 0; i < 100; i++) {
@@ -428,7 +355,6 @@ export default {
         // 获取生日日期
         getDay() {
             this.birth_error = false
-            // this.day = []
             this.dayList = []
             this.month = parseInt(this.month, 10)
             const day = new Date(this.year, this.month, 0).getDate()
@@ -436,22 +362,11 @@ export default {
                 this.dayList.push(i)
             }
         },
-        showUploadWay() {
-            this.mSendEvLog('guide_click', '', '')
-            if (this.appType == '0') {
-                window.scrollTo({
-                    top: '800',
-                    behavior: 'smooth'
-                })
-            }
-            this.show_howToUpload = true
-        },
         // 校验是否符合要求
         checkForm() {
             this.canSubmit = true
             if (!this.isFinish) {
                 this.canSubmit = false
-                // return
             }
             // name
             if (!this.name.replace(/\s/g, '') || this.name.length > 100) {
@@ -496,14 +411,6 @@ export default {
                 this.canSubmit = false
                 this.city_error = true
             }
-            // link
-            if (
-                !this.link.replace(/\s/g, '') ||
-                (this.link.toLowerCase().indexOf('instagram.com') == -1 && this.link.toLowerCase().indexOf('youtu.be') == -1)
-            ) {
-                this.canSubmit = false
-                this.link_error = true
-            }
         },
 
         // 提交表单
@@ -515,14 +422,13 @@ export default {
             if (this.canSubmit && this.repeatSub) {
                 this.repeatSub = false
                 const options = {
-                    fk_enroll: 1,
+                    fk_enroll: this.enroll_id,
                     name: this.name,
                     sex: this.gender == 'male' ? 1 : 2,
                     birthday: this.birthday,
                     phone: this.number,
                     address: this.city,
-                    profession: this.profession,
-                    other_description: this.link
+                    profession: this.profession
                 }
                 this.$axios
                     .post('voting/enroll/v1/register', options)
@@ -561,7 +467,6 @@ export default {
             this.number = ''
             this.profession = ''
             this.city = ''
-            this.link = ''
             this.getYear()
             this.show_success = false
             this.repeatSub = true
@@ -572,7 +477,7 @@ export default {
                 if (res.data.code === 0) {
                     this.clipsList = res.data.data
                     this.clipsList.forEach(item => {
-                        if (item.name.substr(0, 1) == 'a') {
+                        if (item.name.substr(0, 1) == 'b') {
                             this.clipsListNew.push(item)
                         }
                     })
@@ -603,7 +508,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSRegister`.replace(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/BSSComment`.replace(
                                 /&/g,
                                 '**'
                             )
@@ -620,7 +525,7 @@ export default {
 <style lang="less" scoped>
 @import '~assets/less/vote/normal.less';
 .wrapper {
-    background-image: url('~assets/img/vote/BSSRegister/bg-img-re.jpg');
+    background-image: url('~assets/img/vote/BSSRegister/bg-yellow.jpg');
     background-size: contain;
     background-repeat: repeat-y;
     font-size: 0.9rem;
@@ -633,15 +538,18 @@ export default {
             padding-top: 0.5rem;
             width: 95%;
             height: auto;
-            &.to-vote {
+            &.ic-green {
                 width: 90%;
-                margin-bottom: 1rem;
+                padding-top: 0;
+                position: relative;
+                top: -0.3rem;
             }
         }
         .tab-box {
             width: 100%;
             height: 2.2rem;
             position: relative;
+            z-index: 1;
             .tab {
                 width: 100%;
                 position: absolute;
@@ -653,7 +561,7 @@ export default {
                 .rules {
                     width: 7rem;
                     float: left;
-                    background: url('~assets/img/vote/BSSRegister/btn-left.png') no-repeat;
+                    background: url('~assets/img/vote/BSSRegister/bg-ruleb.png') no-repeat;
                     background-size: 7rem 4rem;
                     text-align: left;
                     padding-left: 0.5rem;
@@ -676,7 +584,7 @@ export default {
                 .share {
                     width: 7rem;
                     float: right;
-                    background: url('~assets/img/vote/BSSRegister/btn-right.png') no-repeat;
+                    background: url('~assets/img/vote/BSSRegister/bg-shareb.png') no-repeat;
                     background-size: 7rem 4rem;
                     text-align: right;
                     padding-right: 0.5rem;
@@ -714,18 +622,13 @@ export default {
                         position: relative;
                         top: -2px;
                     }
-                    // padding-top: 0;
                     width: 90%;
-                }
-                &.rule-img {
-                    padding: 1.5rem 5% 0;
-                    background-color: #fff;
                 }
             }
             .registration {
                 width: 90%;
                 margin: 0 auto;
-                padding: 1rem 5% 2rem;
+                padding: 0.5rem 5% 2rem;
                 color: #36ad5e;
                 background-color: #fff;
                 .error {
@@ -762,9 +665,6 @@ export default {
                         color: #666;
                         outline: none;
                         border-radius: 0.2rem;
-                        // &.error-line {
-                        //     border: 1px solid #ff336e;
-                        // }
                         &.error-line {
                             border: 1px solid #ff336e;
                             background-image: url('~assets/img/vote/BSSRegister/ic-error.png');
@@ -809,22 +709,15 @@ export default {
                         }
                     }
                 }
-                .link {
-                    float: right;
-                    color: #ff892a;
-                    font-size: 0.8rem;
-                    margin-top: 0.6rem;
-                }
                 .submit-btn {
                     width: 14rem;
                     border-radius: 0.2rem;
-                    // background: #d1d1d1;
                     color: #ffffff;
                     text-align: center;
                     margin: 0 auto;
                     height: 2.2rem;
                     line-height: 2.2rem;
-                    margin-top: 3rem;
+                    margin-top: 2.5rem;
                     font-size: 1rem;
                     background: url('~assets/img/vote/BSSRegister/bg-btn.png') no-repeat;
                     background-size: contain;
@@ -851,11 +744,10 @@ export default {
             }
         }
         .share-box {
-            margin-top: 1rem;
             > img {
                 display: block;
                 width: 90%;
-                margin: 1rem auto;
+                margin: 0 auto 0.5rem;
             }
         }
         .past-programme {
@@ -911,25 +803,6 @@ export default {
             }
         }
     }
-    .uploadWay {
-        width: 80%;
-        position: absolute;
-        overflow: hidden;
-        left: 10%;
-        top: 820px;
-        z-index: 999;
-        img {
-            &:first-child {
-                width: 100%;
-                display: block;
-            }
-            &:last-child {
-                width: 10%;
-                display: block;
-                margin: 2.5rem auto;
-            }
-        }
-    }
     .rules-box {
         width: 17rem;
         height: 26rem;
@@ -961,6 +834,11 @@ export default {
             padding: 0.5rem;
             overflow-x: hidden;
             overflow-y: scroll;
+            // div {
+            //     &::-webkit-scrollbar {
+            //         display: none;
+            //     }
+            // }
             &::-webkit-scrollbar {
                 display: none;
             }

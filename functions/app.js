@@ -2,51 +2,61 @@
 // 仅在客户端执行
 
 import { Base64 } from 'js-base64'
-import qs from 'qs'
 import axios from 'axios'
-import { getBrowser, getCookie } from '~/functions/utils'
+import { getBrowser } from '~/functions/utils'
 
 const browser = getBrowser()
-const scheme = browser.isIos ? 'startimes' : 'starvideo'
-const host = 'platformapi'
-const path = 'webtoapp'
 const appleStore = 'https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8'
 
-export const envokeByIntent = function(page, failback) {
+export const base64Page = function(page) {
     let target = ''
     if (page) {
         target = '?target=' + Base64.encode(page.replace(/&/g, '**'))
     }
-    // window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
-    window.location.href = `intent://${host}/${path}${target}#Intent;scheme=starvideo;package=com.star.mobile.video;end`
+    return target
+}
+
+export const createIntent = function(page, host, path, scheme) {
+    const target = base64Page(page)
+    host = host || 'platformapi'
+    path = path || 'webtoapp'
+    scheme = scheme || (browser.isIos ? 'startimes' : 'starvideo')
+    return `intent://${host}/${path}${target}#Intent;scheme=${scheme};end`
+}
+
+export const createScheme = function(page, host, path, scheme) {
+    const target = base64Page(page)
+    host = host || 'platformapi'
+    path = path || 'webtoapp'
+    scheme = scheme || (browser.isIos ? 'startimes' : 'starvideo')
+    return `${scheme}://${host}/${path}${target}`
+}
+
+export const pageDlay = function(callback, second) {
+    second = second || 3500
     const s = setTimeout(() => {
-        if (!document.hidden) failback && failback()
         clearTimeout(s)
-    }, 2000)
+        // TODO 做个心跳检查 https://www.zhihu.com/question/31604369
+        if (!document.hidden) callback && callback()
+    }, second)
     document.addEventListener('visibilitychange', () => {
         clearTimeout(s)
         this.$nuxt.$loading.finish()
     })
 }
 
-export const invokeByIframe = function(page, failback) {
+export const invokeByHref = function(target, failback) {
+    window.location.href = target
+    pageDlay.call(this, failback)
+}
+
+export const invokeByIframe = function(target, failback) {
     const iframe = document.createElement('iframe')
     iframe.frameborder = '0'
     iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
     document.body.appendChild(iframe)
-
-    const target = page ? '?target=' + Base64.encode(page.replace(/&/g, '**')) : ''
-
-    iframe.src = `${scheme}://${host}/${path}${target}`
-
-    const s = setTimeout(() => {
-        if (!document.hidden) failback && failback()
-        clearTimeout(s)
-    }, 2000)
-    document.addEventListener('visibilitychange', () => {
-        clearTimeout(s)
-        this.$nuxt.$loading.finish()
-    })
+    iframe.src = target
+    pageDlay.call(this, failback)
 }
 
 export const callApp = function(page, failback) {
@@ -56,12 +66,19 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
-    envokeByIntent.call(this, page, failback)
-    // if (browser.isOriginalChrome) {
-    //     envokeByIntent.call(this, page, failback)
-    // } else {
-    //     invokeByIframe.call(this, page, failback)
-    // }
+    if (browser.browserVer > 40) {
+        if (browser.ua.indexOf('UCBrowser') > 0) {
+            if (browser.androidVer >= 4.4) {
+                invokeByHref.call(this, createScheme(page), failback)
+            } else {
+                invokeByHref.call(this, createIntent(page), failback)
+            }
+        } else {
+            invokeByHref.call(this, createScheme(page), failback)
+        }
+    } else {
+        invokeByIframe.call(this, createScheme(page), failback)
+    }
 }
 
 export const downApk = function(callback) {
@@ -103,50 +120,17 @@ export const callMarket = function(failback) {
         source = source + encodeURIComponent('utm_source=officeWap')
     }
 
-    const voteDownTag = getCookie('vote_share_down')
-    const user = getCookie('vote_share_user')
-    if (voteDownTag && voteDownTag != -1) {
-        this.$axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded',
-                token: this.$store.state.token,
-                'X-Secret': voteDownTag
-            },
-            data: qs.stringify({
-                vote_id: 8,
-                target: user,
-                action: 'SHARE_DOWNLOAD'
-            }),
-            url: '/voting/v1/ticket'
-        })
-    }
-
     this.sendEvLog({
         category: 'callup_app',
         action: 'to_googleplay',
         label: this.$route.path,
         value: 1
     })
-
+    
     if (browser.isIos) {
         window.location.href = appleStore
     } else {
-        const iframe = document.createElement('iframe')
-        iframe.frameborder = '0'
-        iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
-        document.body.appendChild(iframe)
-
-        iframe.src = `market://details?id=com.star.mobile.video${source}`
-
-        const s = setTimeout(() => {
-            if (!document.hidden) failback && failback()
-            clearTimeout(s)
-        }, 2000)
-        document.addEventListener('visibilitychange', () => {
-            clearTimeout(s)
-            this.$nuxt.$loading.finish()
-        })
+        invokeByHref.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     }
 }
 

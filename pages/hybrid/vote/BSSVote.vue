@@ -126,7 +126,7 @@ import qs from 'qs'
 import { Base64 } from 'js-base64'
 import { cdnPicSrc, getCookie, setCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
-import { invokeByIframe, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
+import { callApp, downApk, playVodinApp, toNativePage, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -193,8 +193,8 @@ export default {
             title: 'Bongo Star Search 2019',
             imgUrl: 'http://cdn.startimestv.com/banner/BSSbanner-share.jpeg',
             shareTitle: 'Chaguo ni lako!',
-            shareText: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
-            content: 'Chagua mgombea unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.'
+            shareText: 'Chagua mshiriki unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.',
+            content: 'Chagua mshiriki unayempenda na umsaidie kushiriki kwenye hatua ya utafutaji wa washiriki wa Bongo Star Search 2019.'
         }
     },
     computed: {
@@ -276,11 +276,14 @@ export default {
         toAll() {
             this.mSendEvLog('full_click', '', '')
             this.$router.push(`/hybrid/vote/BSSVoteDetail`)
+            // window.location.href = '/hybrid/vote/BSSVoteDetail'
         },
         showRule() {
             this.show_rules = true
             document.body.style.overflow = 'hidden'
             document.body.style.position = 'fixed'
+            document.body.style.left = '0'
+            document.body.style.right = '0'
         },
         closeRule() {
             this.show_rules = false
@@ -289,10 +292,12 @@ export default {
         },
         toRegister() {
             this.$router.push(`/hybrid/vote/BSSRegister`)
+            // window.location.href = '/hybrid/vote/BSSRegister'
         },
         toComment(label) {
             this.mSendEvLog('audreg_click', label, '')
             this.$router.push(`/hybrid/vote/BSSComment`)
+            // window.location.href = '/hybrid/vote/BSSComment'
         },
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
@@ -345,7 +350,7 @@ export default {
         // 唤醒转入活动页或下载App
         callOrDownApp(label) {
             // 唤醒App
-            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.mSendEvLog('downloadpopup_show', label, '')
                 this.$confirm(
@@ -531,8 +536,8 @@ export default {
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime_comment = new Date(res.data.data.start_time + '+0000').getTime()
-                        this.endTime_comment = new Date(res.data.data.end_time + '+0000').getTime()
+                        this.startTime_comment = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime_comment = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime > this.startTime_comment) {
                             this.isCommentStart = true
                         }
@@ -567,8 +572,8 @@ export default {
                 .get(`/voting/lottery/v1/info?lottery_id=${this.lottery_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime = new Date(res.data.data.start_time + '+0000').getTime()
-                        this.endTime = new Date(res.data.data.end_time + '+0000').getTime()
+                        this.startTime = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         this.getVoteRemain()
                         this.getLeftLottery()
                         this.getMsgList()

@@ -75,7 +75,7 @@ import qs from 'qs'
 import { Base64 } from 'js-base64'
 import { cdnPicSrc, getCookie } from '~/functions/utils'
 import mShare from '~/components/web/share.vue'
-import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
+import { callApp, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -138,6 +138,15 @@ export default {
             // const voteBox = this.$refs.voteBox
             const voteBox = document.getElementById('voteBox')
             return voteBox.getBoundingClientRect().top
+        },
+        platform() {
+            if (this.appType == 1) {
+                return 'Android'
+            } else if (this.appType == 2) {
+                return 'iOS'
+            } else {
+                return 'web'
+            }
         }
     },
     // 唯一标识处理
@@ -272,7 +281,7 @@ export default {
         // 唤醒转入活动页或下载App
         callOrDownApp(label) {
             // 唤醒App
-            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.mSendEvLog('downloadpopup_show', label, '')
                 this.$confirm(
@@ -315,7 +324,7 @@ export default {
                 label: label,
                 value: value
             })
-            console.log(action, label, value)
+            console.log(this.platform, action, label, value)
         },
         // 获取存在的单词和选手数量列表
         getVoteMsg() {
@@ -471,8 +480,8 @@ export default {
                 .get(`/voting/enroll/v1/info?enroll_id=${this.enroll_id}`)
                 .then(res => {
                     if (res.data.code === 200) {
-                        this.startTime_comment = new Date(res.data.data.start_time).getTime()
-                        this.endTime_comment = new Date(res.data.data.end_time).getTime()
+                        this.startTime_comment = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime_comment = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         if (this.serverTime > this.startTime_comment) {
                             this.isCommentStart = true
                         }
@@ -490,8 +499,8 @@ export default {
                 .get(`/voting/v1/vote?vote_id=${this.vote_id}`)
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.startTime = new Date(res.data.data.start_time).getTime()
-                        this.endTime = new Date(res.data.data.end_time).getTime()
+                        this.startTime = new Date(res.data.data.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
+                        this.endTime = new Date(res.data.data.end_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime()
                         this.getVoteRemain()
                     } else {
                         this.$alert('ERROR TO GET VOTE TIME')

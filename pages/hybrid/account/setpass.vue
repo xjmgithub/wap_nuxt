@@ -131,6 +131,10 @@ export default {
         },
         nextStep() {
             this.abled = false
+            const pre = sessionStorage.getItem('register_prefer') || ''
+            if (pre) {
+                window.location.href = pre
+            }
             const options = {
                 verifyCode: this.verifyCode,
                 pwd: this.pass,
@@ -204,12 +208,7 @@ export default {
                                 }
                             }
                             login.call(this, params, () => {
-                                const pre = sessionStorage.getItem('register_prefer') || ''
-                                if (pre) {
-                                    window.location.href = pre
-                                } else {
-                                    this.$router.replace('/browser')
-                                }
+                                this.$router.replace('/browser')
                             })
                         },
                         this.$store.state.lang.login_title
