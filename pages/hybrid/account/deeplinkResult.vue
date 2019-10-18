@@ -30,7 +30,7 @@
     </div>
 </template>
 <script>
-import { invokeByIframe, downApk } from '~/functions/app'
+import { callApp, downApk } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         download() {
-            invokeByIframe.call(this, '', () => {
+            callApp.call(this, '', () => {
                 this.$confirm(
                     this.$store.state.lang.vote_downloadtips,
                     () => {
