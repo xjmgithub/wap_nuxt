@@ -43,11 +43,13 @@ export default {
                 label: 1,
                 value: 1
             })
+            this.$nuxt.$loading.start()
             const tmp = decodeURIComponent(this.$route.query.signature)
             const ciphertext = encodeURIComponent(tmp).replace(/%20/g, '%2B')
             this.$axios
                 .post(`/promotion-coupon/v1/short-link/addPromotion?code=${this.code}&ciphertext=${ciphertext}`)
                 .then(res => {
+                    this.$nuxt.$loading.finish()
                     if (res.data.code === 0) {
                         this.$router.push('/hybrid/account/deeplinkResult')
                     } else if (res.data.code > 0 && res.data.code <= 5) {
