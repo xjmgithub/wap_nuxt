@@ -10,7 +10,7 @@
                     <div>
                         <div class="user_info">
                             <img v-if="user" :src="cdnPicSrc(user.head)" />
-                            <nuxt-link v-else to="/hybrid/account/login">
+                            <nuxt-link v-else to="/hybrid/account/signIn">
                                 <img src="https://cdn.startimestv.com/head/h_d.png" style="margin-bottom:0.8rem" />
                             </nuxt-link>
                             <div v-if="user">{{user.nickName}}</div>

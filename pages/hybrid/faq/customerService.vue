@@ -483,7 +483,7 @@ export default {
                 } else if (this.$store.state.appType === 2) {
                     toNativePage('startimes://login')
                 } else {
-                    this.$router.push('/hybrid/account/login')
+                    this.$router.push('/hybrid/account/signIn')
                 }
                 return false
             }
