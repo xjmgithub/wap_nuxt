@@ -327,7 +327,6 @@ export default {
                 label: label,
                 value: value
             })
-            console.log(action, label, value)
         },
         // 调出分享弹层(app/web)
         toShare(label) {

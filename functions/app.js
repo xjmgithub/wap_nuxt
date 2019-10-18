@@ -45,17 +45,17 @@ export const pageDlay = function(callback, second) {
     })
 }
 
-export const invokeByHref = function(intent, failback) {
-    window.location.href = intent
+export const invokeByHref = function(target, failback) {
+    window.location.href = target
     pageDlay.call(this, failback)
 }
 
-export const invokeByIframe = function(page, failback) {
+export const invokeByIframe = function(target, failback) {
     const iframe = document.createElement('iframe')
     iframe.frameborder = '0'
     iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
     document.body.appendChild(iframe)
-    iframe.src = createScheme(page)
+    iframe.src = target
     pageDlay.call(this, failback)
 }
 
@@ -77,7 +77,7 @@ export const callApp = function(page, failback) {
             invokeByHref.call(this, createScheme(page), failback)
         }
     } else {
-        invokeByIframe.call(this, createIntent(page), failback)
+        invokeByIframe.call(this, createScheme(page), failback)
     }
 }
 
