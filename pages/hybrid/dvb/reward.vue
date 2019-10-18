@@ -52,7 +52,9 @@ export default {
                         this.$alert("Congratulations! Redeem successful. ₦300 bonus has been recharge to the decoder account you've linked with.")
                     } else if (data.code == '402') {
                         this.mSendEvLog('NG-GET_REWARD', 402)
-                        this.$alert('Oops, redeem failed. You can get ₦300 bonus only by linking decoder first.')
+                        this.$alert('Oops, redeem failed. You can get ₦300 bonus only by linking decoder first.', () => {
+                            this.goToLink()
+                        })
                     } else if (data.code == '201') {
                         this.mSendEvLog('NG-GET_REWARD', 201)
                         this.$alert('Your StarTimes ON account has redeemed before. Every account can only get ₦300 bonus for once.')
