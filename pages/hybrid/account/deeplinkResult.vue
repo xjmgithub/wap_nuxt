@@ -94,11 +94,12 @@ export default {
             this.$router.go(-1)
         },
         signOut() {
+            const path = window.location.pathname + window.location.search
             document.cookie.split(';').forEach(function(c) {
                 document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
             })
             localStorage.clear()
-            window.location.href = '/hybrid/account/signIn?pre=' + decodeURIComponent(sessionStorage.getItem('login_prefer'))
+            window.location.href = '/hybrid/account/signIn?pre=' + encodeURIComponent(path)
         }
     }
 }
