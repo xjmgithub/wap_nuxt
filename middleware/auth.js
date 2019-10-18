@@ -44,7 +44,7 @@ export default ({ app, store, route, redirect, $axios }) => {
             if (store.state.appType > 0) {
                 store.commit('SET_NEED_LOGIN', true)
             } else {
-                redirect('/hybrid/account/login?pre=' + encodeURIComponent(route.fullPath))
+                redirect('/hybrid/account/signIn?pre=' + encodeURIComponent(route.fullPath))
             }
         }
     }
