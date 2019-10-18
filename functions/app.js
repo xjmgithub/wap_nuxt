@@ -33,7 +33,7 @@ export const createScheme = function(page, host, path, scheme) {
 }
 
 export const pageDlay = function(callback, second) {
-    second = second || 1500
+    second = second || 3500
     const s = setTimeout(() => {
         clearTimeout(s)
         // TODO 做个心跳检查 https://www.zhihu.com/question/31604369
