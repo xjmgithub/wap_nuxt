@@ -1,11 +1,12 @@
 <template>
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
-        <download v-if="!appType" class="clearfix filmload" @onload="downloadBanner" />
+        <div v-if="!appType" class="download" @onload="downloadBanner">Download StarTimes ON</div>
         <div class="topContain" :class="{'mtop':!appType}">
             <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
             <img src="~assets/img/vote/kenya.png" style="width:100%">
-            <span class="about" @click="aboutCard = true">about</span>
+            <!-- <span class="about" @click="aboutCard = true">about</span> -->
+            <span class="about" @click="voteSuccess = true">about</span>
             <div class="sticky">
                 <nav id="nav">
                     <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="getData(index)">
@@ -16,24 +17,26 @@
             </div>
         </div>
         <div v-for="(item,index) in showDataList" :key="index" class="film-data">
-            <!-- <p>
-                <img src="~assets/img/vote/ic_Title.png"> Best Lead Actor
-                <span>Vote:1</span>
-            </p> -->
-            <p>
+            <p class="group">
                 <img src="~assets/img/vote/ic_Title.png">{{item.group_name}}
-                <span>Vote:{{item.ticket_num}}}</span>
+                <span>Vote:{{item.ticket_num}}</span>
             </p>
-            <ul class="clearfix">
+            <ul>
                 <li v-for="(sub,si) in item.candidates" :key="si">
-                    <img :src="sub.icon">
-                    <p>{{sub.name}}</p>
-                    <p>{{sub.brief}}</p>
-                    <span>{{sub.ballot_num | formatVotes}}</span>
+                    <div @click="toVideo(sub)">
+                        <div class="pic">
+                            <img :src="sub.icon">
+                            <span>{{sub.ballot_num | formatVotes}}</span>
+                        </div>
+                        <p>{{sub.name}}</p>
+                        <p>{{sub.brief}}</p>
+                    </div>
+                    <img v-show="sub.user_ballot_num<=0" src="~assets/img/vote/Button-vote.png" @click.prevent="handleViceVote(item)">
+                    <img v-show="sub.user_ballot_num>0" src="~assets/img/vote/Button-voted.png" @click.prevent="handleViceVote(item)">
                 </li>
             </ul>
         </div>
-        <div class="share-box" v-show="appType!=2" ref="box" :style="{'left':left, 'top':top}" @click="toShare()" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
+        <div v-show="appType!=2" ref="box" class="share-box" :style="{'left':left, 'top':top}" @click="toShare()" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
             <div class="share">{{$store.state.lang.vote_share}}</div>
         </div>
         <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
@@ -69,6 +72,11 @@
                 </div>
             </template>
         </mCard>
+        <div v-show="voteSuccess" class="vote-success">
+            <img src="~assets/img/vote/ic_finish.png">
+            <div class="line" />
+            <div class="close-btn" @click="voteSuccess=false">CLOSE</div>
+        </div>
     </div>
 </template>
 <script>
@@ -76,15 +84,13 @@ import mVoteSwiper from '~/components/vote/vote_swiper'
 import mCard from '~/components/vote/card'
 import { shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 import { callApp, callMarket, shareInvite, downApk } from '~/functions/app'
-import download from '~/components/vote/download'
 import { Base64 } from 'js-base64'
 import qs from 'qs'
 export default {
     layout: 'base',
     components: {
         mVoteSwiper,
-        mCard,
-        download
+        mCard
     },
     filters: {
         formatVotes(val) {
@@ -101,12 +107,13 @@ export default {
             top: '',
             aboutCard: false,
             shareCard: false,
+            voteSuccess: false,
             leftVote: 0,
             ipMax: false,
             showDataList: [
                 {
                     group_name: 'Best Lead Actor',
-                    ticket_num: '1',
+                    ticket_num: '0',
                     candidates: [
                         {
                             name: 'The Missing God',
@@ -126,15 +133,22 @@ export default {
                             name: 'The Missing God',
                             brief: 'Ubaka Joseph Ugochukwu',
                             ballot_num: '132412',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
                         },
                         {
                             name: 'Blood Dinner',
                             brief: 'Emmanuel Akaemeh',
                             ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
+                        },
+                        {
+                            name: 'Blood Dinner',
+                            brief: 'Emmanuel Akaemeh',
+                            ballot_num: '74665',
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
                         }
                     ]
                 },
@@ -147,28 +161,28 @@ export default {
                             brief: 'Ubaka Joseph Ugochukwu',
                             ballot_num: '132412',
                             user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                            icon: 'http://cdn.startimestv.com/banner/Mide%20Martins.png'
                         },
                         {
                             name: 'Blood Dinner',
                             brief: 'Emmanuel Akaemeh',
                             ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Charles%20Okocha.png'
                         },
                         {
                             name: 'The Missing God',
                             brief: 'Ubaka Joseph Ugochukwu',
                             ballot_num: '132412',
                             user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
+                            icon: 'http://cdn.startimestv.com/banner/Nkechi%20Blessing%20Sunday.png'
                         },
                         {
                             name: 'Blood Dinner',
                             brief: 'Emmanuel Akaemeh',
                             ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
+                            user_ballot_num: '0',
+                            icon: 'http://cdn.startimestv.com/banner/Yakubu%20Mohammed.png'
                         }
                     ]
                 }
@@ -296,17 +310,24 @@ export default {
             }
         },
         toVideo(item) {
-            const vod = item.link_vod_code
-
-            if (vod && this.appType > 0) {
-                if (this.appType == 1) {
-                    window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
-                } else if (this.appType == 2) {
-                    window.location.href = 'startimes://player?vodId=' + vod
-                }
-            } else if (this.appType <= 0) {
-                this.loadConfirm(1, 'pic') // TODO 差一个pos
-            }
+            this.$confirm(
+                'Open StarTimes ON App watch now,and explore more interesting.',
+                () => {
+                    const vod = item.link_vod_code
+                    if (vod && this.appType > 0) {
+                        if (this.appType == 1) {
+                            window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+                        } else if (this.appType == 2) {
+                            window.location.href = 'startimes://player?vodId=' + vod
+                        }
+                    } else if (this.appType <= 0) {
+                        this.loadConfirm(1, 'pic') // TODO 差一个pos
+                    }
+                },
+                () => {},
+                'OK',
+                'NOT NOW'
+            )
         },
         loadConfirm(vote, pos) {
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
@@ -460,13 +481,20 @@ html {
             background-color: #000000;
         }
     }
-    .filmload {
+    .download {
+        position: fixed;
         top: 0;
-        z-index: 11;
+        z-index: 99;
+        width: 100%;
+        text-align: center;
+        background: #eeeeee;
+        color: #333333;
+        font-size: 0.9rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+        font-weight: bold;
     }
-
     .topContain {
-        padding-bottom: 4.8rem; /* 2.4 + 2.4 */
         position: relative;
         .about {
             color: #988c67;
@@ -480,107 +508,102 @@ html {
             right: 0.8rem;
             top: 0.8rem;
         }
-        .sticky {
-            // position: absolute;
-            // bottom: 0;
-            // width: 100%;
-            // height: 7.2rem; /* 2.4 + 2.4 + 2.4 */
-            // z-index: 1;
-            #nav {
-                height: 2.4rem;
-                background: #000000;
-                padding: 0.4rem 0;
-                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-                a {
-                    text-align: center;
-                    height: 1.6rem;
-                    line-height: 1.6rem;
-                    width: 33.33%;
-                    color: #99844e;
-                    display: block;
-                    float: left;
-                    font-weight: 600;
-                    text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
-                    font-size: 0.92rem;
+        #nav {
+            height: 2.4rem;
+            background: #000000;
+            padding: 0.4rem 0;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            a {
+                text-align: center;
+                height: 1.6rem;
+                line-height: 1.6rem;
+                width: 33.33%;
+                color: #99844e;
+                display: block;
+                float: left;
+                font-weight: 600;
+                text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
+                font-size: 0.92rem;
+                p {
+                    width: 100%;
+                    height: 0.2rem;
+                    background: rgba(153, 132, 78, 0.1);
+                }
+                &:link,
+                &:active,
+                &:visited,
+                &:hover {
+                    background: none;
+                    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+                }
+                &.on {
+                    color: #ffdc82;
                     p {
-                        width: 100%;
-                        height: 0.2rem;
-                        background: rgba(153, 132, 78, 0.1);
+                        background: linear-gradient(90deg, rgba(152, 140, 103, 0) 0%, rgba(255, 220, 130, 1) 50%, rgba(152, 140, 103, 0) 100%);
                     }
-                    &:link,
-                    &:active,
-                    &:visited,
-                    &:hover {
-                        background: none;
-                        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-                    }
-                    &.on {
-                        color: #ffdc82;
-                        p {
-                            background: linear-gradient(90deg, rgba(152, 140, 103, 0) 0%, rgba(255, 220, 130, 1) 50%, rgba(152, 140, 103, 0) 100%);
-                        }
-                    }
-                }
-            }
-            // .leftvote {
-            //     padding-right: 0.8rem;
-            //     height: 2.4rem;
-            //     line-height: 2.4rem;
-            //     background: linear-gradient(to bottom, #000000, #4e4e4e);
-            //     font-size: 0.95rem;
-            //     color: #ffffff;
-            //     text-align: right;
-            // }
-
-            &.fixed1 {
-                position: fixed;
-                top: 0;
-                .rules {
-                    background: black;
-                }
-            }
-            &.fixed2 {
-                position: fixed;
-                top: 4rem;
-                .rules {
-                    background: black;
                 }
             }
         }
         &.mtop {
-            margin-top: 4rem;
-            padding-bottom: 3.6em; /* 2.4 + 1.2 */
-            // .sticky {
-            //     height: 6rem; /* 2.4 + 2.4 + 1.2 */
-            // }
+            margin-top: 1.5rem;
         }
     }
     .film-data {
-        padding-left: 1rem;
-        & > p {
+        padding: 1rem 0 0 1rem;
+        .group {
             color: #99844e;
             font-weight: bold;
-        }
-        li {
-            width: 40%;
-            float: left;
+            margin-bottom: 0.8rem;
+            padding-right: 0.8rem;
             img {
-                width: 100%;
-            }
-            p {
-                color: #aaaaaa;
-                font-size: 0.9rem;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+                width: 1.1rem;
+                height: 1.1rem;
+                margin-right: 0.3rem;
+                vertical-align: text-bottom;
             }
             span {
-                color: #000000;
-                background: #99844e;
-                height: 1.2rem;
-                line-height: 1.2rem;
-                padding: 0 0.5rem;
-                font-size: 1.2rem;
+                float: right;
+                color: #ffffff;
+            }
+        }
+        ul {
+            overflow-x: auto;
+            white-space: nowrap;
+            width: 100%;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            li {
+                width: 9rem;
+                display: inline-block;
+                margin-right: 0.7rem;
+                div.pic {
+                    position: relative;
+                    width: 100%;
+                    &:before {
+                        content: '';
+                        display: inline-block;
+                        padding-bottom: 56%;
+                        width: 0.1px;
+                        vertical-align: middle;
+                    }
+                    img {
+                        width: 100%;
+                        position: absolute;
+                        height: 100%;
+                    }
+                }
+                p {
+                    color: #aaaaaa;
+                    font-size: 0.85rem;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    margin: 0.2rem 0;
+                }
+                & > img {
+                    width: 4rem;
+                }
             }
         }
     }
@@ -607,7 +630,6 @@ html {
             background: #fac868;
         }
     }
-
     .card {
         .share-btn {
             width: 70%;
@@ -646,15 +668,37 @@ html {
             }
         }
     }
-    .clearfix:after {
-        display: block;
-        visibility: hidden;
-        clear: both;
-        height: 0;
-        content: '';
-    }
-    .clearfix {
-        zoom: 1;
+    .vote-success {
+        width: 17rem;
+        height: 13rem;
+        line-height: 1.2rem;
+        position: fixed;
+        overflow: hidden;
+        top: 50%;
+        left: 50%;
+        margin-left: -8.5rem;
+        margin-top: -6.5rem;
+        z-index: 999;
+        background: #ffffff;
+        border-radius: 4px;
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 5rem;
+        }
+        .line {
+            background: linear-gradient(90deg, rgba(152, 140, 103, 0) 0%, rgba(255, 220, 130, 1) 50%, rgba(152, 140, 103, 0) 100%);
+            width: 100%;
+            height: 2px;
+        }
+        .close-btn {
+            width: 100%;
+            height: 2rem;
+            text-align: center;
+            line-height: 1.8rem;
+            color: #99844e;
+            background: #d8d8d8;
+        }
     }
 }
 </style>
