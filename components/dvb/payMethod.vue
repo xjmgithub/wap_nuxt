@@ -3,37 +3,37 @@
         <div class="channel">
             <div v-if="ewalletRender.name">
                 <div class="channel-name">{{ewalletRender.name}}</div>
-                <mLine style="clear:both"/>
+                <mLine style="clear:both" />
                 <div v-for="(card,iv) in ewalletRender.radioList" :key="iv" class="radio-box">
                     <label v-if="card.authorizationCode" class="radio">
-                        <div :class="card.brand" class="img-box"/>
+                        <div :class="card.brand" class="img-box" />
                         <span>{{card.cardType}}({{card.last4}})</span>
                         <input :checked="card.authorizationCode==selected.authorizationCode" type="radio" name="pay-options" @click="choose(card)">
                         <i/>
                     </label>
                     <label v-else class="radio">
-                        <div class="balance img-box"/>
-                        <span>Balance: {{currency}}{{formatAmount(balance)}}</span>
+                        <div class="balance img-box" />
+                        <span>Balance: {{mCurrency}}{{formatAmount(balance)}}</span>
                         <input :checked="card.fkPayChannelId==selected.fkPayChannelId" type="radio" name="pay-options" @click="choose(card)">
                         <i/>
                         <div v-if="balance<paymentAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
                     </label>
                 </div>
                 <div v-if="ewalletRender.addCardPay" class="addCard" @click="payHandle(ewalletRender.addCardPay,'',1)">
-                    <div class="img-box"/>
+                    <div class="img-box" />
                     <span v-if="ewalletRender.radioList.length>1">Pay with Another Card</span>
                     <span v-else>Add a Bank Card</span>
-                    <div class="arrows"/>
+                    <div class="arrows" />
                 </div>
             </div>
             <div v-for="(item,index) in outChannels" :key="index" @click="payHandle(item)">
                 <div class="channel-name">{{item.name}}</div>
-                <div class="arrows"/>
+                <div class="arrows" />
             </div>
         </div>
         <div v-show="selected&&selected.description" class="note">
             <p>Note:</p>
-            <p v-html="selected&&selected.description"/>
+            <p v-html="selected&&selected.description" />
         </div>
         <div v-if="ewalletRender.name" class="btn-box">
             <span class="total">{{$store.state.lang.payment_details_total}}:</span>
@@ -57,6 +57,7 @@ export default {
             paymentAmount: 0,
             wallet: {},
             currency: this.$store.state.country.currencySymbol,
+            mCurrency: '',
             isLogin: user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS',
             osv5: false,
             channels: []
@@ -67,13 +68,16 @@ export default {
             return (this.wallet && this.wallet.amount) || 0
         },
         canPay() {
+            if (this.currency != this.mCurrency) {
+                return false
+            }
             if (this.selected.fkPayChannelId) {
                 if (this.selected.fkPayChannelId > 9001 && this.selected.fkPayChannelId < 9035 && this.balance < this.paymentAmount) {
                     return false
                 } else {
                     return true
                 }
-            }else{
+            } else {
                 return false
             }
         },
@@ -150,6 +154,7 @@ export default {
 
         this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
             this.wallet = res.data
+            this.mCurrency = res.data.currencySymbol
             sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
         })
     },
