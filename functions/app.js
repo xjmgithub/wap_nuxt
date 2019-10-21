@@ -33,16 +33,26 @@ export const createScheme = function(page, host, path, scheme) {
 }
 
 export const pageDlay = function(callback, second) {
-    second = second || 3500
-    const s = setTimeout(() => {
-        clearTimeout(s)
-        // TODO 做个心跳检查 https://www.zhihu.com/question/31604369
-        if (!document.hidden) callback && callback()
-    }, second)
-    document.addEventListener('visibilitychange', () => {
-        clearTimeout(s)
-        this.$nuxt.$loading.finish()
-    })
+    const timeout = second || 2500
+    const interval = 200
+    const deviation = 20
+
+    const timerStart = new Date().getTime()
+    let lastFired = new Date().getTime()
+    const timer = setInterval(() => {
+        const now = new Date().getTime()
+        if (now - lastFired < deviation + interval) {
+            // 浏览器健康状态
+            if (now - timerStart > timeout) {
+                if (!document.hidden) callback && callback()
+                clearInterval(timer)
+            }
+        } else {
+            // 不健康,代表浏览器进入后台，则不做操作
+            clearInterval(timer)
+        }
+        lastFired = now
+    }, 200)
 }
 
 export const invokeByHref = function(target, failback) {
@@ -126,11 +136,13 @@ export const callMarket = function(failback) {
         label: this.$route.path,
         value: 1
     })
-    
+
     if (browser.isIos) {
         window.location.href = appleStore
-    } else {
+    } else if (browser.browserVer > 40) {
         invokeByHref.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
+    } else {
+        invokeByIframe.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     }
 }
 
