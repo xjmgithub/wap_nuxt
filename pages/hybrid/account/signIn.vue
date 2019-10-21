@@ -191,7 +191,11 @@ export default {
             } else if (this.phoneNum != 0) {
                 this.$axios({
                     url: `/ums/v1/user/check/username?phoneCc=${this.country.phonePrefix}&phone=${this.phoneNum}&type=10`,
-                    method: 'get'
+                    method: 'get',
+                    headers: {
+                        token:
+                            'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjIsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjAsImRldiI6IjI5NTdhN2Y1LTk0YzYtNGUwMS04MmFjLWNmZjU1ZTgxZjIyOV9hcHAiLCJjcmVhdGVkIjoxNTY5NTc1NjI0OTIwLCJncHMiOjAsImV4cCI6MTg4NDkzNTYyNCwiY2lkIjoyfQ.-b_E0Kz42VuKaYUHMLUJ08bLXsk09ss9LLmg10pCRF0tG-VodPuhbaJpiwzdLrJCfqtR0vuKt83LF7buovmoOQ'
+                    }
                 })
                     .then(res => {
                         if (res.data.code === 1) {
@@ -217,7 +221,11 @@ export default {
             } else if (this.email != 0) {
                 this.$axios({
                     url: `/ums/v1/user/check/username?email=${this.email}&type=0`,
-                    method: 'get'
+                    method: 'get',
+                    headers: {
+                        token:
+                            'eyJhbGciOiJIUzUxMiJ9.eyJhcHAiOjIsInVpZCI6OTk5OSwiY2NvZGUiOiJORyIsInJvbGUiOjAsImRldiI6IjI5NTdhN2Y1LTk0YzYtNGUwMS04MmFjLWNmZjU1ZTgxZjIyOV9hcHAiLCJjcmVhdGVkIjoxNTY5NTc1NjI0OTIwLCJncHMiOjAsImV4cCI6MTg4NDkzNTYyNCwiY2lkIjoyfQ.-b_E0Kz42VuKaYUHMLUJ08bLXsk09ss9LLmg10pCRF0tG-VodPuhbaJpiwzdLrJCfqtR0vuKt83LF7buovmoOQ'
+                    }
                 })
                     .then(res => {
                         if (res.data.code === 1) {
