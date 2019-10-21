@@ -84,7 +84,6 @@ import shadowLayer from '~/components/shadow-layer'
 import { setCookie } from '~/functions/utils'
 import countrArr from '~/functions/countrys.json'
 import mButton from '~/components/button'
-import { Base64 } from 'js-base64'
 export default {
     layout: 'base',
     components: {

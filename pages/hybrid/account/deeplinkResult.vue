@@ -30,7 +30,7 @@
     </div>
 </template>
 <script>
-import { invokeByIframe, downApk } from '~/functions/app'
+import { callApp, downApk } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         download() {
-            invokeByIframe.call(this, '', () => {
+            callApp.call(this, '', () => {
                 this.$confirm(
                     this.$store.state.lang.vote_downloadtips,
                     () => {
@@ -94,11 +94,12 @@ export default {
             this.$router.go(-1)
         },
         signOut() {
+            const path = window.location.pathname + window.location.search
             document.cookie.split(';').forEach(function(c) {
                 document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
             })
             localStorage.clear()
-            window.location.href = '/hybrid/account/signIn?pre=' + decodeURIComponent(sessionStorage.getItem('login_prefer'))
+            window.location.href = '/hybrid/account/signIn?pre=' + encodeURIComponent(path)
         }
     }
 }
