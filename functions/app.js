@@ -139,10 +139,8 @@ export const callMarket = function(failback) {
 
     if (browser.isIos) {
         window.location.href = appleStore
-    } else if (browser.browserVer > 40) {
-        invokeByHref.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     } else {
-        invokeByIframe.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
+        invokeByHref.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     }
 }
 
