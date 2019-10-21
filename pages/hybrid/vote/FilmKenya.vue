@@ -1,7 +1,7 @@
 <template>
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
-        <div v-if="!appType" class="download" @onload="loadConfirm">Download StarTimes ON</div>
+        <div v-if="!appType" class="download" @click="loadConfirm">Download StarTimes ON</div>
         <div class="topContain" :class="{'mtop':!appType}">
             <img src="~assets/img/vote/kenya.png" style="width:100%">
             <span class="about" @click="aboutCard = true">about</span>
@@ -25,7 +25,10 @@
                         <div @click="toVideo(sub)">
                             <div class="pic">
                                 <img :src="sub.icon">
-                                <span>{{sub.ballot_num | formatVotes}}</span>
+                                <span>
+                                    <img src="~assets/img/vote/ic_viewers_def_w.png">
+                                    {{sub.ballot_num | formatVotes}}
+                                </span>
                             </div>
                             <p>{{sub.name}}</p>
                             <p>{{sub.brief}}</p>
@@ -213,6 +216,8 @@ export default {
             })
         },
         loadConfirm() {
+            this.shareCard = false
+            this.aboutCard = false
             this.$confirm(
                 'Open StarTimes ON App watch now,and explore more interesting.',
                 () => {
@@ -231,11 +236,10 @@ export default {
                 .get(`/voting/v3/candidates-show?vote_id=${this.voteId}`)
                 .then(res => {
                     this.$nuxt.$loading.finish()
-                    if (res.data.data.length > 0) {
+                    if (res.data.code == 0) {
                         this.showDataList = res.data.data
                         this.sort(this.showDataList)
                     } else {
-                        this.showDataList = []
                         this.$alert(this.$store.state.lang.error_network)
                     }
                 })
@@ -463,10 +467,24 @@ html {
                             width: 0.1px;
                             vertical-align: middle;
                         }
-                        img {
+                        &>img {
                             width: 100%;
                             position: absolute;
                             height: 100%;
+                        }
+                        span{
+                            position: absolute;
+                            left:0;
+                            bottom:0;
+                            color:#ffffff;
+                            font-size: 0.8rem;
+                            padding-right:0.3rem;
+                            background:rgba(0,0,0,0.6);
+                            img{
+                                width:1.2rem;
+                                height:1.2rem;
+                                vertical-align: bottom;
+                            }
                         }
                     }
                     p {
