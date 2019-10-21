@@ -26,8 +26,7 @@
                             <div class="pic">
                                 <img :src="sub.icon">
                                 <span>
-                                    <img src="~assets/img/vote/ic_viewers_def_w.png">
-                                    {{sub.ballot_num | formatVotes}}
+                                    <img src="~assets/img/vote/ic_viewers_def_w.png"> {{sub.ballot_num | formatVotes}}
                                 </span>
                             </div>
                             <p>{{sub.name}}</p>
@@ -104,7 +103,7 @@ export default {
     data() {
         return {
             appType: this.$store.state.appType || 0,
-            tabList: ['film', 'Televison', 'Special Awards'],
+            tabList: ['Film', 'Televison', 'Special Awards'],
             tabIndex: 0,
             canMove: false,
             left: '',
@@ -238,7 +237,7 @@ export default {
                     this.$nuxt.$loading.finish()
                     if (res.data.code == 0) {
                         this.showDataList = res.data.data
-                        this.sort(this.showDataList)
+                        this.sort()
                     } else {
                         this.$alert(this.$store.state.lang.error_network)
                     }
@@ -248,13 +247,15 @@ export default {
                     this.$alert(this.$store.state.lang.error_network)
                 })
         },
-        sort(list) {
-            list.sort(function(a, b) {
-                if (b.ballot_num - a.ballot_num == 0) {
-                    return a.index - b.index
-                } else {
-                    return b.ballot_num - a.ballot_num
-                }
+        sort() {
+            this.showDataList.forEach(item => {
+                item.candidates.sort(function(a, b) {
+                    if (b.ballot_num - a.ballot_num == 0) {
+                        return a.index - b.index
+                    } else {
+                        return b.ballot_num - a.ballot_num
+                    }
+                })
             })
         },
         toShare(pos) {
@@ -467,22 +468,22 @@ html {
                             width: 0.1px;
                             vertical-align: middle;
                         }
-                        &>img {
+                        & > img {
                             width: 100%;
                             position: absolute;
                             height: 100%;
                         }
-                        span{
+                        span {
                             position: absolute;
-                            left:0;
-                            bottom:0;
-                            color:#ffffff;
+                            left: 0;
+                            bottom: 0;
+                            color: #ffffff;
                             font-size: 0.8rem;
-                            padding-right:0.3rem;
-                            background:rgba(0,0,0,0.6);
-                            img{
-                                width:1.2rem;
-                                height:1.2rem;
+                            padding-right: 0.3rem;
+                            background: rgba(0, 0, 0, 0.6);
+                            img {
+                                width: 1.2rem;
+                                height: 1.2rem;
                                 vertical-align: bottom;
                             }
                         }
