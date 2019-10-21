@@ -66,13 +66,19 @@ export default {
     },
     methods: {
         download() {
+            this.sendEvLog({
+                category: 'deeplink_result',
+                action: 'download_click',
+                label: 'success',
+                value: 1
+            })
             callApp.call(this, '', () => {
                 this.$confirm(
                     this.$store.state.lang.vote_downloadtips,
                     () => {
                         this.sendEvLog({
                             category: 'deeplink_result',
-                            action: 'download_click',
+                            action: 'download_popup',
                             label: 'success',
                             value: 1
                         })
