@@ -33,7 +33,7 @@ export const createScheme = function(page, host, path, scheme) {
 }
 
 export const pageDlay = function(callback, second) {
-    const timeout = second || 2500
+    const timeout = second || 3000 // 手机卡顿的情况会比较慢
     const interval = 200
     const deviation = 20
 
