@@ -1,15 +1,13 @@
 <template>
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
-        <div v-if="!appType" class="download" @onload="downloadBanner">Download StarTimes ON</div>
+        <div v-if="!appType" class="download" @onload="loadConfirm">Download StarTimes ON</div>
         <div class="topContain" :class="{'mtop':!appType}">
-            <mVoteSwiper v-if="banners.length" :banners="banners" :name="voteTitle" />
             <img src="~assets/img/vote/kenya.png" style="width:100%">
-            <!-- <span class="about" @click="aboutCard = true">about</span> -->
-            <span class="about" @click="voteSuccess = true">about</span>
+            <span class="about" @click="aboutCard = true">about</span>
             <div class="sticky">
                 <nav id="nav">
-                    <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="getData(index)">
+                    <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="tabIndex=index">
                         <span>{{item}}</span>
                         <p />
                     </a>
@@ -32,13 +30,12 @@
                             <p>{{sub.name}}</p>
                             <p>{{sub.brief}}</p>
                         </div>
-                        <img v-show="sub.user_ballot_num<=0" src="~assets/img/vote/Button-vote.png" @click.prevent="handleViceVote(item)">
-                        <img v-show="sub.user_ballot_num>0" src="~assets/img/vote/Button-voted.png" @click.prevent="handleViceVote(item)">
+                        <img v-show="sub.user_ballot_num<=0" src="~assets/img/vote/Button-vote.png" @click.prevent="handleVote(item.ticket_num,sub)">
+                        <img v-show="sub.user_ballot_num>0" src="~assets/img/vote/Button-voted.png" @click.prevent="handleVote(item.ticket_num,sub)">
                     </li>
                 </ul>
             </div>
         </div>
-
         <div v-show="appType!=2" ref="box" class="share-box" :style="{'left':left, 'top':top}" @click="toShare()" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
             <div class="share">{{$store.state.lang.vote_share}}</div>
         </div>
@@ -47,7 +44,7 @@
                 <div v-html="$store.state.lang.vote_about_word" />
             </template>
             <template v-if="appType==0" v-slot:buttons>
-                <div class="download-btn" @click="loadConfirm('','about')">
+                <div class="download-btn" @click="loadConfirm">
                     <p>{{$store.state.lang.vote_downloadbtn}}</p>
                     {{$store.state.lang.vote_downloadbtn_tips}}
                 </div>
@@ -69,7 +66,7 @@
                         <img src="~assets/img/vote/ic_ti_def.png" />
                     </span>
                 </div>
-                <div v-if="appType==0" class="download-btn" @click="loadConfirm('','share')">
+                <div v-if="appType==0" class="download-btn" @click="loadConfirm">
                     <p>{{$store.state.lang.vote_downloadbtn}}</p>
                     {{$store.state.lang.vote_downloadbtn_tips}}
                 </div>
@@ -86,7 +83,6 @@
     </div>
 </template>
 <script>
-import mVoteSwiper from '~/components/vote/vote_swiper'
 import mCard from '~/components/vote/card'
 import { shareByFacebook, shareByTwitter, copyClipboard } from '~/functions/utils'
 import { callApp, callMarket, shareInvite, downApk } from '~/functions/app'
@@ -95,7 +91,6 @@ import qs from 'qs'
 export default {
     layout: 'base',
     components: {
-        mVoteSwiper,
         mCard
     },
     filters: {
@@ -114,372 +109,8 @@ export default {
             aboutCard: false,
             shareCard: false,
             voteSuccess: false,
-            leftVote: 0,
-            ipMax: false,
-            showDataList: [
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Lead Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/The-Missing-God%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Blood-Dinner%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Aftermath%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/So-In-Love%28PAOFF-M%29_2.jpg'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/UNwheel%28PAOFF-M%29_2.jpg'
-                        }
-                    ]
-                },
-                {
-                    group_name: 'Best Supporting Actor',
-                    ticket_num: '0',
-                    candidates: [
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '1',
-                            icon: 'http://cdn.startimestv.com/banner/Mide%20Martins.png'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Charles%20Okocha.png'
-                        },
-                        {
-                            name: 'The Missing God',
-                            brief: 'Ubaka Joseph Ugochukwu',
-                            ballot_num: '132412',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Nkechi%20Blessing%20Sunday.png'
-                        },
-                        {
-                            name: 'Blood Dinner',
-                            brief: 'Emmanuel Akaemeh',
-                            ballot_num: '74665',
-                            user_ballot_num: '0',
-                            icon: 'http://cdn.startimestv.com/banner/Yakubu%20Mohammed.png'
-                        }
-                    ]
-                }
-            ]
+            showDataList: [],
+            voteTitle: 'Kenya Film'
         }
     },
     computed: {
@@ -491,6 +122,9 @@ export default {
             } else {
                 return 'web'
             }
+        },
+        voteId() {
+            return this.tabIndex == 0 ? 18 : this.tabIndex == 1 ? 19 : this.tabIndex == 2 ? 20 : 18
         }
     },
     watch: {
@@ -498,74 +132,32 @@ export default {
             this.sendEvLog({
                 category: `vote_${this.voteTitle}_${this.platform}`,
                 action: 'tab_click',
-                label: (nv == 0 && 'film') || (nv == 1 && 'short film') || (nv == 2 && 'MV'),
+                label: (nv == 0 && 'film') || (nv == 1 && 'Televison') || (nv == 2 && 'Special Awards'),
                 value: 1
             })
-        }
-    },
-    async asyncData({ app: { $axios }, store, req }) {
-        let banners = []
-        $axios.setHeader('token', store.state.token)
-        try {
-            const { data } = await $axios.get(`/voting/v1/vote?vote_id=8`)
-            if (data.data.banner) {
-                banners = await $axios.get(`/adm/v1/units/${data.data.banner}/materials`)
-            }
-            return {
-                banners: banners.data.data || [],
-                vote_sign: (req && req.headers.vote_sign) || '', // 通过serverMiddleWare拿到的唯一标识
-                voteTitle: data.data.name
-            }
-        } catch (e) {
-            return {
-                banners: [],
-                vote_sign: (req && req.headers.vote_sign) || '',
-                voteTitle: 'Pan Africa Online Film Festival'
-            }
+            this.getAllList()
         }
     },
     mounted() {
-        this.getAllList(18) // 获取投票单元
+        this.$nextTick(() => this.getAllList())
     },
     methods: {
-        getData(index) {
-            this.tabIndex = index
-            switch (index) {
-                case 0:
-                    this.getAllList(18)
-                    break
-                case 1:
-                    this.getAllList(19)
-                    break
-                case 2:
-                    this.getAllList(20)
-                    break
-            }
-        },
-        handleVote(film) {
-            if (film.state === -1) {
-                this.$toast(this.$store.state.lang.vote_notstart_btn)
-                return
-            }
-            if (this.appType <= 0) {
-                this.loadConfirm(1, 'vote')
-                return
-            }
+        handleVote(ticket, film) {
+            // if (this.appType <= 0) {
+            //     this.$confirm(
+            //         '	Open StarTimes ON App vote for your favorite content.',
+            //         () => {
+            //             this.callDownload()
+            //         },
+            //         () => {},
+            //         'OK',
+            //         'NOT NOW'
+            //     )
+            //     return
+            // }
 
-            if (this.leftVote <= 0) {
-                if (this.appType == 1) {
-                    this.$confirm(
-                        this.$store.state.lang.vote_fail + this.$store.state.lang.vote_success_0,
-                        () => {
-                            this.toShare('votefail')
-                        },
-                        () => {},
-                        this.$store.state.lang.vote_share,
-                        this.$store.state.lang.vote_cancel
-                    )
-                } else if (this.appType == 2) {
-                    this.$alert(this.$store.state.lang.vote_fail, () => {}, this.$store.state.lang.vote_ok)
-                }
+            if (ticket <= 0) {
+                this.$alert('You have already voted for this award. Please vote for other awards')
             } else {
                 this.$axios({
                     url: '/voting/v1/ballot',
@@ -575,27 +167,12 @@ export default {
                     },
                     data: qs.stringify({
                         candidate_id: film.id,
-                        vote_id: 8
+                        vote_id: this.voteId
                     })
                 }).then(res => {
                     if (res.data.code === 0) {
+                        this.voteSuccess = true
                         this.getAllList()
-                        this.leftVote--
-                        if (this.leftVote < 1 && this.appType == 1) {
-                            this.$confirm(
-                                this.$store.state.lang.vote_success + this.$store.state.lang.vote_success_0,
-                                () => {
-                                    this.toShare('0leftvote')
-                                },
-                                () => {},
-                                this.$store.state.lang.vote_share,
-                                this.$store.state.lang.vote_cancel
-                            )
-                        } else if (this.leftVote < 1 && this.appType == 2) {
-                            this.$alert(this.$store.state.lang.vote_success, () => {}, this.$store.state.lang.vote_ok)
-                        } else {
-                            this.$toast(this.$store.state.lang.vote_success + this.$store.state.lang.vote_leftvote + ':' + this.leftVote)
-                        }
                     } else {
                         this.$toast(res.data.message)
                     }
@@ -607,14 +184,12 @@ export default {
                 'Open StarTimes ON App watch now,and explore more interesting.',
                 () => {
                     const vod = item.link_vod_code
-                    if (vod && this.appType > 0) {
-                        if (this.appType == 1) {
-                            window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
-                        } else if (this.appType == 2) {
-                            window.location.href = 'startimes://player?vodId=' + vod
-                        }
+                    if (vod && this.appType == 1) {
+                        window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+                    } else if (vod && this.appType == 2) {
+                        window.location.href = 'startimes://player?vodId=' + vod
                     } else if (this.appType <= 0) {
-                        this.loadConfirm(1, 'pic') // TODO 差一个pos
+                        this.callDownload()
                     }
                 },
                 () => {},
@@ -622,47 +197,52 @@ export default {
                 'NOT NOW'
             )
         },
-        loadConfirm(vote, pos) {
+        callDownload() {
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
-                this.aboutCard = false
-                this.shareCard = false
-                if (vote) {
+                callMarket.call(this, () => {
                     this.$confirm(
-                        this.$store.state.lang.vote_webshare_words,
+                        'Start downloading apk now?(12M)',
                         () => {
-                            callMarket.call(this, () => {
-                                downApk.call(this)
-                            })
+                            downApk.call(this)
                         },
                         () => {},
-                        this.$store.state.lang.download_apk,
-                        this.$store.state.lang.vote_cancel
+                        'OK',
+                        'NOT NOW'
                     )
-                } else {
-                    callMarket.call(this, () => {
-                        downApk.call(this)
-                    })
-                }
-            })
-        },
-        downloadBanner() {
-            this.$nuxt.$loading.start()
-            callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
-                this.aboutCard = false
-                callMarket.call(this, () => {
-                    downApk.call(this)
                 })
             })
         },
+        loadConfirm() {
+            this.$confirm(
+                'Open StarTimes ON App watch now,and explore more interesting.',
+                () => {
+                    this.callDownload()
+                },
+                () => {},
+                'OK',
+                'NOT NOW'
+            )
+        },
 
         // 获取投票单元数据
-        getAllList(id) {
-            this.$axios.get(`/voting/v1/candidates-show?vote_id=${id}`).then(res => {
-                if (res.data.data.length > 0) {
-                    this.showDataList = res.data.data
-                    this.sort(this.showDataList)
-                }
-            })
+        getAllList() {
+            this.$nuxt.$loading.start()
+            this.$axios
+                .get(`/voting/v3/candidates-show?vote_id=${this.voteId}`)
+                .then(res => {
+                    this.$nuxt.$loading.finish()
+                    if (res.data.data.length > 0) {
+                        this.showDataList = res.data.data
+                        this.sort(this.showDataList)
+                    } else {
+                        this.showDataList = []
+                        this.$alert(this.$store.state.lang.error_network)
+                    }
+                })
+                .catch(() => {
+                    this.$nuxt.$loading.finish()
+                    this.$alert(this.$store.state.lang.error_network)
+                })
         },
         sort(list) {
             list.sort(function(a, b) {
@@ -679,7 +259,7 @@ export default {
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
                     this.voteTitle,
                     this.$store.state.lang.vote_webshare_words,
-                    this.banners.length > 0 ? this.banners[0].materials : ''
+                    'http://cdn.startimestv.com/banner/kenya.png'
                 )
             } else if (this.appType === 0) {
                 this.shareCard = true
@@ -735,7 +315,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.banners.length > 0 && this.banners[0].materials.replace('http:', 'https:')
+                    content: 'http://cdn.startimestv.com/banner/kenya.png'
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.voteTitle },
@@ -843,7 +423,7 @@ html {
     .container {
         background: url('~assets/img/vote/kenya_bg.png');
         background-size: 100%;
-        padding-bottom:2rem;
+        padding-bottom: 2rem;
         .film-data {
             padding: 1rem 0 0 1rem;
             .group {
