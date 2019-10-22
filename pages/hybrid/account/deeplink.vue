@@ -7,9 +7,7 @@
         <p class="desc">
             {{$store.state.lang.redeem_description}}
         </p>
-        <div class="input">
-            <input v-model="code" type="text" readonly>
-        </div>
+        <div class="input" v-html="code"> </div>
         <div class="btn" @click="redeemVoucher">
             {{$store.state.lang.redeem_button}}
         </div>
@@ -28,6 +26,7 @@ export default {
     },
     mounted() {
         this.code = decodeURIComponent(this.$route.query.vcode)
+        alert(window.location.search)
         this.sendEvLog({
             category: 'deeplink_page',
             action: 'page_show',
@@ -63,7 +62,7 @@ export default {
                 })
         },
         signOut() {
-            const path =  window.location.pathname + window.location.search
+            const path = window.location.pathname + window.location.search
             document.cookie.split(';').forEach(function(c) {
                 document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
             })
@@ -99,18 +98,13 @@ export default {
         margin: 2.4rem auto;
         border: 1px solid #999999;
         border-radius: 2px;
-        input {
-            width: 100%;
-            color: #666666;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
-            background: #eeeeee;
-            outline: none;
-            border: none;
-            height: 2.5rem;
-            line-height: 2.5rem;
-        }
+        color: #666666;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+        background: #eeeeee;
+        height: 2.5rem;
+        line-height: 2.5rem;
     }
     .btn {
         width: 85%;
