@@ -1,7 +1,7 @@
 <template>
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
-        <div v-if="!appType" class="download" @click="loadConfirm">Download StarTimes ON</div>
+        <div v-if="!appType" class="download" @click="loadConfirm('download_tips')">Download StarTimes ON</div>
         <div class="topContain" :class="{'mtop':!appType}">
             <img src="~assets/img/vote/kenya.png" style="width:100%">
             <span class="about" @click="aboutCard = true">about</span>
@@ -26,8 +26,7 @@
                             <div class="pic">
                                 <img :src="sub.icon">
                                 <span>
-                                    <img src="~assets/img/vote/ic_viewers_def_w.png">
-                                    {{sub.ballot_num | formatVotes}}
+                                    <img src="~assets/img/vote/ic_viewers_def_w.png"> {{sub.ballot_num | formatVotes}}
                                 </span>
                             </div>
                             <p>{{sub.name}}</p>
@@ -47,7 +46,7 @@
                 <div v-html="$store.state.lang.vote_about_word" />
             </template>
             <template v-if="appType==0" v-slot:buttons>
-                <div class="download-btn" @click="loadConfirm">
+                <div class="download-btn" @click="loadConfirm('about')">
                     <p>{{$store.state.lang.vote_downloadbtn}}</p>
                     {{$store.state.lang.vote_downloadbtn_tips}}
                 </div>
@@ -69,7 +68,7 @@
                         <img src="~assets/img/vote/ic_ti_def.png" />
                     </span>
                 </div>
-                <div v-if="appType==0" class="download-btn" @click="loadConfirm">
+                <div v-if="appType==0" class="download-btn" @click="loadConfirm('share')">
                     <p>{{$store.state.lang.vote_downloadbtn}}</p>
                     {{$store.state.lang.vote_downloadbtn_tips}}
                 </div>
@@ -104,7 +103,7 @@ export default {
     data() {
         return {
             appType: this.$store.state.appType || 0,
-            tabList: ['film', 'Televison', 'Special Awards'],
+            tabList: ['Film', 'Televison', 'Special Awards'],
             tabIndex: 0,
             canMove: false,
             left: '',
@@ -113,7 +112,7 @@ export default {
             shareCard: false,
             voteSuccess: false,
             showDataList: [],
-            voteTitle: 'Kenya Film'
+            voteTitle: 'KALASHA-PAOFF Film Festival'
         }
     },
     computed: {
@@ -132,33 +131,38 @@ export default {
     },
     watch: {
         tabIndex(nv, ov) {
-            this.sendEvLog({
-                category: `vote_${this.voteTitle}_${this.platform}`,
-                action: 'tab_click',
-                label: (nv == 0 && 'film') || (nv == 1 && 'Televison') || (nv == 2 && 'Special Awards'),
-                value: 1
-            })
+            const label = (nv == 0 && 'Film') || (nv == 1 && 'Televison') || (nv == 2 && 'Special Awards')
+            this.mSendEvLog('tab_click', label)
             this.getAllList()
         }
     },
     mounted() {
+        this.mSendEvLog('homepage_show', 1)
         this.$nextTick(() => this.getAllList())
     },
     methods: {
+        mSendEvLog(action, label=1, value = 1) {
+            this.sendEvLog({
+                category: `vote_KenyaPAOFFVote_${this.platform}`,
+                action: action,
+                label: label,
+                value: value
+            })
+        },
         handleVote(ticket, film) {
-            // if (this.appType <= 0) {
-            //     this.$confirm(
-            //         '	Open StarTimes ON App vote for your favorite content.',
-            //         () => {
-            //             this.callDownload()
-            //         },
-            //         () => {},
-            //         'OK',
-            //         'NOT NOW'
-            //     )
-            //     return
-            // }
-
+            this.mSendEvLog('votebtn_click',film.name)
+            if (this.appType <= 0) {
+                this.$confirm(
+                    '	Open StarTimes ON App vote for your favorite content.',
+                    () => {
+                        this.callDownload('vote_btn')
+                    },
+                    () => {},
+                    'OK',
+                    'NOT NOW'
+                )
+                return
+            }
             if (ticket <= 0) {
                 this.$alert('You have already voted for this award. Please vote for other awards')
             } else {
@@ -183,52 +187,49 @@ export default {
             }
         },
         toVideo(item) {
-            this.$confirm(
-                'Open StarTimes ON App watch now,and explore more interesting.',
-                () => {
-                    const vod = item.link_vod_code
-                    if (vod && this.appType == 1) {
-                        window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
-                    } else if (vod && this.appType == 2) {
-                        window.location.href = 'startimes://player?vodId=' + vod
-                    } else if (this.appType <= 0) {
-                        this.callDownload()
-                    }
-                },
-                () => {},
-                'OK',
-                'NOT NOW'
-            )
+            this.mSendEvLog('votepic_click',item.name)
+            const vod = item.link_vod_code
+            if (vod && this.appType == 1) {
+                window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
+            } else if (vod && this.appType == 2) {
+                window.location.href = 'startimes://player?vodId=' + vod
+            } else if (this.appType <= 0) {
+                this.loadConfirm('vote_pic')
+            }
         },
-        callDownload() {
+        callDownload(pos) {
+            this.mSendEvLog('callApp',pos)
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 callMarket.call(this, () => {
+                    this.mSendEvLog('downloadpopup_show', pos)
                     this.$confirm(
                         'Start downloading apk now?(12M)',
                         () => {
+                            this.mSendEvLog('downloadpopup_clickok', pos)
                             downApk.call(this)
                         },
-                        () => {},
+                        () => {
+                            this.mSendEvLog('downloadpopup_clicknot', pos)
+                        },
                         'OK',
                         'NOT NOW'
                     )
                 })
             })
         },
-        loadConfirm() {
+        loadConfirm(pos) {
             this.shareCard = false
             this.aboutCard = false
             this.$confirm(
                 'Open StarTimes ON App watch now,and explore more interesting.',
                 () => {
-                    this.callDownload()
+                    this.callDownload(pos)
                 },
                 () => {},
                 'OK',
                 'NOT NOW'
             )
         },
-
         // 获取投票单元数据
         getAllList() {
             this.$nuxt.$loading.start()
@@ -238,7 +239,7 @@ export default {
                     this.$nuxt.$loading.finish()
                     if (res.data.code == 0) {
                         this.showDataList = res.data.data
-                        this.sort(this.showDataList)
+                        this.sort()
                     } else {
                         this.$alert(this.$store.state.lang.error_network)
                     }
@@ -248,37 +249,43 @@ export default {
                     this.$alert(this.$store.state.lang.error_network)
                 })
         },
-        sort(list) {
-            list.sort(function(a, b) {
-                if (b.ballot_num - a.ballot_num == 0) {
-                    return a.index - b.index
-                } else {
-                    return b.ballot_num - a.ballot_num
-                }
+        sort() {
+            this.showDataList.forEach(item => {
+                item.candidates.sort(function(a, b) {
+                    if (b.ballot_num - a.ballot_num == 0) {
+                        return a.index - b.index
+                    } else {
+                        return b.ballot_num - a.ballot_num
+                    }
+                })
             })
         },
-        toShare(pos) {
+        toShare() {
             if (this.appType === 1) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=PAOFF&utm_campaign=${this.platform}`,
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=KenyaPAOFFVote&utm_campaign=${this.platform}`,
                     this.voteTitle,
                     this.$store.state.lang.vote_webshare_words,
                     'http://cdn.startimestv.com/banner/kenya.png'
                 )
             } else if (this.appType === 0) {
                 this.shareCard = true
+                this.mSendEvLog('share_click')
             }
         },
         shareWithFacebook() {
             this.shareCard = false
+            this.mSendEvLog('sharebtn_click','Facebook')
             shareByFacebook.call(this, window.location.origin + window.location.pathname)
         },
         copyLink() {
             this.shareCard = false
+            this.mSendEvLog('sharebtn_click','copyLink')
             copyClipboard.call(this, window.location.origin + window.location.pathname)
         },
         shareWithTwitter() {
             this.shareCard = false
+            this.mSendEvLog('sharebtn_click','Twitter')
             shareByTwitter.call(this, this.$store.state.lang.vote_appshare_words, window.location.origin + window.location.pathname)
         },
         move(event) {
@@ -329,7 +336,7 @@ export default {
                     content:
                         'starvideo://platformapi/webtoapp?channel=facebook&target=' +
                         Base64.encode(
-                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/FilmFestival`.replace(
+                            `com.star.mobile.video.activity.BrowserActivity?loadUrl=http://m.startimestv.com/hybrid/vote/FilmKenya`.replace(
                                 /&/g,
                                 '**'
                             )
@@ -429,7 +436,7 @@ html {
         background-size: 100%;
         padding-bottom: 2rem;
         .film-data {
-            padding: 1rem 0 0 1rem;
+            padding: 1.5rem 0 0 1rem;
             .group {
                 color: #99844e;
                 font-weight: bold;
@@ -467,22 +474,23 @@ html {
                             width: 0.1px;
                             vertical-align: middle;
                         }
-                        &>img {
+                        & > img {
                             width: 100%;
                             position: absolute;
                             height: 100%;
                         }
-                        span{
+                        span {
                             position: absolute;
-                            left:0;
-                            bottom:0;
-                            color:#ffffff;
+                            left: 0;
+                            bottom: 0;
+                            color: #ffffff;
                             font-size: 0.8rem;
-                            padding-right:0.3rem;
-                            background:rgba(0,0,0,0.6);
-                            img{
-                                width:1.2rem;
-                                height:1.2rem;
+                            padding-right: 0.3rem;
+                            background: rgba(0, 0, 0, 0.6);
+                            border-radius: 2px;
+                            img {
+                                width: 1.2rem;
+                                height: 1.2rem;
                                 vertical-align: bottom;
                             }
                         }
