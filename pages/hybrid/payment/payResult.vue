@@ -1,5 +1,6 @@
 <template>
     <div :class="{'grey-back':result==2||result==0}" class="container">
+        <div><a href="javascript:window.location.reload()">asdfasf</a></div>
         <template v-if="result<=0">
             <div class="top">
                 <img class="wait" src="~assets/img/pay/img_load_def_b.png" alt />
