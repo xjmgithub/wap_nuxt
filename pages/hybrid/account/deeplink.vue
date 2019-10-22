@@ -26,7 +26,6 @@ export default {
     },
     mounted() {
         this.code = decodeURIComponent(this.$route.query.vcode)
-        alert(window.location.search)
         this.sendEvLog({
             category: 'deeplink_page',
             action: 'page_show',
