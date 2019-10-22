@@ -160,6 +160,7 @@ export default {
     },
     mounted() {
         alert(this.pre)
+        alert(window.location.pathname + window.location.search)
        if (this.pre) {
             sessionStorage.setItem('login_prefer', this.pre)
             sessionStorage.setItem('register_prefer', this.pre)
