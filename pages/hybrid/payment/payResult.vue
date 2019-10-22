@@ -73,7 +73,8 @@ export default {
                     money: data.amount,
                     currency: data.currencySymbol,
                     seqNo: data.seqNo,
-                    merchantAppId: data.merchantAppId
+                    merchantAppId: data.merchantAppId,
+                    merchantPayRedirectUrl: data.merchantPayRedirectUrl
                 }
             } catch (e) {
                 return {
@@ -81,7 +82,8 @@ export default {
                     money: 0,
                     currency: '',
                     seqNo: route.query.reference,
-                    merchantAppId: ''
+                    merchantAppId: '',
+                    merchantPayRedirectUrl: ''
                 }
             }
         } else {
@@ -90,12 +92,13 @@ export default {
                 money: 0,
                 currency: '',
                 seqNo: route.query.seqNo,
-                merchantAppId: ''
+                merchantAppId: '',
+                merchantPayRedirectUrl: ''
             }
         }
     },
     mounted() {
-        window.payment && window.payment.setCloseVisibility(true)
+        window.payment && window.payment.setCloseVisibility && window.payment.setCloseVisibility(true)
         if (this.result > 0) {
             window.payment && window.payment.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
             window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')
@@ -166,23 +169,25 @@ export default {
             } else if (this.isApp === 2) {
                 window.location.href = 'startimes://ottOrders?isBackToSource=true'
             } else {
-                // toNativePage('com.star.mobile.video.me.orders.MyOrdersActivity')
-                // TODO this.$router.push('/browser')
-                // TODO 根据ua判断是否是我们的sdk
                 if (this.timer2) clearTimeout(this.timer2)
                 if (this.timer) clearInterval(this.timer)
-                window.payment && window.payment.finishActivity(this.result == 1 ? 'SUCCESS' : 'FAIL')
+                if (window.payment) {
+                    window.payment.finishActivity(this.result == 1 ? 'SUCCESS' : 'FAIL')
+                } else if (this.merchantPayRedirectUrl) {
+                    window.location.href = this.merchantPayRedirectUrl
+                }
             }
         },
         getPayStatus() {
             this.$axios.get(`/payment/v2/order-pay-bills/${this.seqNo}`).then(res => {
                 if (this.result > 0) return false
                 const data = res.data
+                this.merchantAppId = data.merchantAppId
+                this.merchantPayRedirectUrl = data.merchantPayRedirectUrl
                 if (data && data.state === 3) {
                     this.result = 1
                     this.money = data.amount
                     this.currency = data.currencySymbol
-                    this.merchantAppId = data.merchantAppId
                     window.payment && window.payment.payResult('SUCCESS')
                     window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('SUCCESS')
                     window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(true)
@@ -194,7 +199,6 @@ export default {
                 } else if (data && data.state === 4) {
                     this.result = 2
                     this.fail_message = data.summary ? data.summary : this.fail_message
-                    this.merchantAppId = data.merchantAppId
                     window.payment && window.payment.payResult('FAIL')
                     window.getChannelId && window.getChannelId.payResult && window.getChannelId.payResult('FAIL')
                     window.getChannelId && window.getChannelId.returnRechargeResult && window.getChannelId.returnRechargeResult(false)
