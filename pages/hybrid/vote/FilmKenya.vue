@@ -436,7 +436,7 @@ html {
         background-size: 100%;
         padding-bottom: 2rem;
         .film-data {
-            padding: 1rem 0 0 1rem;
+            padding: 1.5rem 0 0 1rem;
             .group {
                 color: #99844e;
                 font-weight: bold;
@@ -487,6 +487,7 @@ html {
                             font-size: 0.8rem;
                             padding-right: 0.3rem;
                             background: rgba(0, 0, 0, 0.6);
+                            border-radius: 2px;
                             img {
                                 width: 1.2rem;
                                 height: 1.2rem;
