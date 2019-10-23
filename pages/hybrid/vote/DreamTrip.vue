@@ -52,7 +52,7 @@
                 <img class="cloud2" src="~assets/img/vote/DreamTrip/img_clound2.png" alt />
                 <img class="cloud3" src="~assets/img/vote/DreamTrip/img_clound3.png" alt />
             </div>
-            <div class="comment">
+            <div id="comment" class="comment">
                 <div class="comment-box">
                     <ul v-show="commentListReady.length>0">
                         <li v-for="(item,key) in commentListReady" :id="key" :key="key" class="barrage">
@@ -62,7 +62,7 @@
                     </ul>
                 </div>
                 <div class="send-box">
-                    <input v-model="commentText" type="text" placeholder="What do you think?" maxlength="100" />
+                    <input v-model="commentText" type="text" placeholder="What do you think?" maxlength="100" @focus="inputFocus" />
                     <div class="btn" @click="sendComment">{{disabled?`${during}s`:`SEND`}}</div>
                 </div>
             </div>
@@ -71,7 +71,9 @@
                 <div class="bottom-item">
                     <img src="~assets/img/vote/DreamTrip/img_share.png" alt @click="toShare" />
                     <div class="video" @click="toPlayer(videoCode,'',videoId)">
-                        <img :src="cdnPic(videoSrc)" alt />
+                        <div class="div">
+                            <img :src="cdnPic(videoSrc)" alt />
+                        </div>
                         <img src="~assets/img/vote/DreamTrip/btn-play.png" alt class="play" />
                         <div class="title">{{videoTitle}}</div>
                     </div>
@@ -204,7 +206,7 @@ export default {
             lineSpace: 40,
             pageWidth: 0, // 页面可视区域宽度
             count: 0, // 当前完全滚入屏幕的弹幕下标
-            speed: 500, // 弹幕速度，越大越慢
+            speed: 200, // 弹幕速度，越大越慢
             space: -60, // 两行弹幕的间隔
             time: null, // 弹幕滚动定时器
             commentText: '', // 发送的内容
@@ -285,6 +287,9 @@ export default {
         this.getSource()
     },
     methods: {
+        inputFocus() {
+            document.getElementById('comment').scrollIntoView()
+        },
         getIndexToIns(arr, num) {
             const index = arr.sort((a, b) => a - b).findIndex(currentPage => num <= currentPage)
             return index === -1 ? arr.length : index
@@ -732,11 +737,15 @@ export default {
                 commentItem.style.width = commentWidth + 15 + 'px'
                 commentItem.style.top = '0px'
             }
-            this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, this.getDom(this.count).offsetWidth / this.speed) // 除数越大越慢
+            this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3) // 除数越大越慢
         },
         animate(dom, num, speed) {
             let flag = true
+            // this.t0 = new Date().getTime()
             const time = setInterval(() => {
+                // const t1 = new Date().getTime()
+                // this.sp = t1 - this.t0
+                // this.t0 = t1
                 if (num > this.space && flag) {
                     flag = false
                     // console.log(this.count + ' has finished ')
@@ -746,7 +755,11 @@ export default {
                         this.count = 0
                     }
                     this.getDom(this.count).style.top = (this.count % 4) * this.lineSpace + 'px'
-                    this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, this.getDom(this.count).offsetWidth / this.speed)
+                    this.animate(
+                        this.getDom(this.count),
+                        -this.getDom(this.count).offsetWidth,
+                        this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3
+                    )
                 }
                 if (num <= this.pageWidth + 20) {
                     dom.style.right = num + 'px'
@@ -754,7 +767,7 @@ export default {
                 } else {
                     clearInterval(time)
                 }
-            }, 4)
+            }, 5)
         },
         handlePick(local, advisorList) {
             if (!this.canVote) {
@@ -999,7 +1012,7 @@ export default {
     }
     100% {
         opacity: 0;
-        transform: scale(2);
+        transform: scale(4);
     }
 }
 .wrapper {
@@ -1024,8 +1037,8 @@ export default {
             .share-btn {
                 position: absolute;
                 right: 0;
-                top: -2.3rem;
-                height: 1.5rem;
+                top: -3.5rem;
+                height: 2rem;
             }
             ul {
                 width: 100%;
@@ -1226,14 +1239,16 @@ export default {
                         height: 1rem;
                         color: #fff;
                         font-weight: bold;
-                        text-align: center;
+                        position: relative;
+                        z-index: 3;
                     }
                     .left {
-                        margin-left: 2%;
+                        text-align: left;
                         color: #ffe2aa;
                     }
                     .right {
-                        margin-left: 36%;
+                        margin-left: 40%;
+                        text-align: right;
                         color: #0964a0;
                     }
                     span {
@@ -1244,11 +1259,11 @@ export default {
                         top: 1.1rem;
                         background-size: 0.6rem 0.35rem;
                         &.icon-y {
-                            left: 18%;
+                            left: 7%;
                             background-image: url('~assets/img/vote/DreamTrip/ic-yellow.png');
                         }
                         &.icon-b {
-                            right: 18%;
+                            right: 7%;
                             background-image: url('~assets/img/vote/DreamTrip/ic-blue.png');
                         }
                         &.add-one {
@@ -1256,7 +1271,7 @@ export default {
                             width: 1rem;
                             height: 1rem;
                             position: absolute;
-                            top: -1rem;
+                            top: -1.3rem;
                             font-weight: bold;
                             &.l {
                                 left: 10%;
@@ -1268,7 +1283,7 @@ export default {
                             }
                             &.r {
                                 right: 10%;
-                                color: #75e9ff;
+                                color: #ff6b31;
                                 opacity: 0;
                                 &.r_show {
                                     animation: add_one 2s;
@@ -1313,7 +1328,6 @@ export default {
                         line-height: 30px;
                         position: absolute;
                         right: -2000px;
-                        z-index: 2;
                         img {
                             display: inline-block;
                             width: 28px;
@@ -1386,21 +1400,36 @@ export default {
                     margin: 2rem auto 0;
                     width: 80%;
                     position: relative;
-                    > img {
-                        border: 3px solid #075e99;
-                        border-radius: 0.2rem;
+                    .div {
+                        position: relative;
                         width: 100%;
-                        &.play {
-                            display: block;
-                            border: 0;
-                            width: 2rem;
-                            height: 2rem;
+                        background-color: #2b495e;
+                        border-radius: 0.2rem;
+                        img {
+                            border: 3px solid #075e99;
+                            border-radius: 0.2rem;
+                            width: 100%;
+                            height: 100%;
                             position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            margin-left: -1.1rem;
-                            margin-top: -2.3rem;
+                            top: 0;
                         }
+                        &:before {
+                            content: '';
+                            display: inline-block;
+                            padding-bottom: 57%;
+                            width: 0.1px;
+                            vertical-align: middle;
+                        }
+                    }
+                    > img.play {
+                        display: block;
+                        width: 2rem;
+                        height: 2rem;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        margin-left: -1.1rem;
+                        margin-top: -2.3rem;
                     }
                     .title {
                         height: 2.4rem;
