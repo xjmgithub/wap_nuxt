@@ -3,7 +3,7 @@
         <div class="container">
             <img src="~assets/img/vote/DreamTrip/bg_banner.png" alt="bg-img" class="bg-img" />
             <div class="tab">
-                <img src="~assets/img/vote/DreamTrip/btn_share.png" alt="" class="share-btn" @click="toShare">
+                <img src="~assets/img/vote/DreamTrip/btn_share.png" alt class="share-btn" @click="toShare" />
                 <ul v-show="pageListReady.length>0">
                     <li v-for="(item,i) in pageListReady" :key="i" class="lis" :class="i==index?'active':''">
                         <p class="ep">{{item.group_name}}</p>
@@ -34,11 +34,11 @@
                             <img v-if="pageListReady[0]" :src="cdnPic(pageListReady[0].candidates[1].icon)" alt />
                         </div>
                     </div>
-                    <div v-show="!picked" class="pick">
+                    <div v-show="!picked||appType==0" class="pick">
                         <div v-if="pageListReady[0]" class="btn" @click="handlePick('left',pageListReady[0].candidates)">PICK</div>
                         <div v-if="pageListReady[currentPage]" class="btn" @click="handlePick('right',pageListReady[0].candidates)">PICK</div>
                     </div>
-                    <div v-show="picked" class="progress" :class="pick_click">
+                    <div v-show="picked&&appType>0" class="progress" :class="pick_click">
                         <div class="bar l"></div>
                         <div class="bar r"></div>
                         <div class="left">{{leftNum}}%</div>
@@ -678,13 +678,19 @@ export default {
             this.allNum = this.pageList[0].candidates[0].ballot_num + this.pageList[0].candidates[1].ballot_num
             this.leftNumVal = this.pageList[0].candidates[0].ballot_num
             this.rightNumVal = this.pageList[0].candidates[1].ballot_num
+            this.leftNum = parseInt((this.leftNumVal / this.allNum) * 100)
+            this.rightNum = 100 - this.leftNum
+            const domLeft = document.getElementsByClassName('bar')[0]
+            const domRight = document.getElementsByClassName('bar')[1]
+            domLeft.style.width = 0.9 * this.leftNum + '%'
+            domRight.style.width = 0.9 * this.rightNum + '%'
             // 时间列表 计算当前所在期数
             this.pageList.forEach((item, index) => {
                 this.timeList.push(new Date(item.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime())
             })
             this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
             // console.log(this.currentPage)
-            this.pageList[0].ticket_num ? (this.picked = false) : (this.picked = true)
+            this.pageList[0].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
 
             // tab
             const tabBox = document.querySelector('.tab ul')
@@ -885,6 +891,7 @@ export default {
             p.style.display = 'inline-block'
             p.style.color = '#fff'
             p.style.marginLeft = 3 + 'px'
+            p.style.whiteSpace = 'nowrap'
             img.style.display = 'inline-block'
             img.style.width = '28px'
             img.style.height = '28px'
@@ -903,7 +910,7 @@ export default {
             item.style.lineHeight = 30 + 'px'
             item.style.position = 'absolute'
             item.style.right = -2000 + 'px'
-            item.style.width = itemWidth + 15 + 'px'
+            item.style.width = itemWidth + 25 + 'px'
             let lineNum
             if (this.count >= 2) {
                 lineNum = this.count - 2
@@ -1319,6 +1326,7 @@ export default {
                         }
                         p {
                             display: inline-block;
+                            white-space: nowrap;
                             color: #fff;
                         }
                     }
