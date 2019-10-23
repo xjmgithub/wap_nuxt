@@ -4,7 +4,7 @@
         <div v-if="!appType" class="download" @click="loadConfirm('download_tips')">Download StarTimes ON</div>
         <div class="topContain" :class="{'mtop':!appType}">
             <img src="~assets/img/vote/kenya.png" style="width:100%">
-            <span class="about" @click="aboutCard = true">about</span>
+            <span class="about" @click="aboutCard = true">About</span>
             <div class="sticky">
                 <nav id="nav">
                     <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="tabIndex=index">
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div v-show="appType!=2" ref="box" class="share-box" :style="{'left':left, 'top':top}" @click="toShare()" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
-            <div class="share">{{$store.state.lang.vote_share}}</div>
+            <img src="~assets/img//vote/ic_Share.png">
         </div>
         <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
             <template v-slot:content>
@@ -261,6 +261,7 @@ export default {
             })
         },
         toShare() {
+            this.mSendEvLog('share_click')
             if (this.appType === 1) {
                 shareInvite(
                     `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=KenyaPAOFFVote&utm_campaign=${this.platform}`,
@@ -270,7 +271,6 @@ export default {
                 )
             } else if (this.appType === 0) {
                 this.shareCard = true
-                this.mSendEvLog('share_click')
             }
         },
         shareWithFacebook() {
@@ -422,7 +422,7 @@ html {
                 &.on {
                     color: #ffdc82;
                     p {
-                        background: linear-gradient(90deg, rgba(152, 140, 103, 0) 0%, rgba(255, 220, 130, 1) 50%, rgba(152, 140, 103, 0) 100%);
+                        background: linear-gradient(90deg, rgba(153,132,78, 0.1) 0%, rgba(255, 220, 130, 1) 50%, rgba(153,132,78, 0.1) 100%);
                     }
                 }
             }
@@ -450,7 +450,8 @@ html {
                 }
                 span {
                     float: right;
-                    color: #ffffff;
+                    color: rgba(255,255,255,0.8);
+                    font-weight: normal;
                 }
             }
             ul {
@@ -478,12 +479,13 @@ html {
                             width: 100%;
                             position: absolute;
                             height: 100%;
+                            border-radius: 2px;
                         }
                         span {
                             position: absolute;
                             left: 0;
                             bottom: 0;
-                            color: #ffffff;
+                            color: rgba(255,255,255,0.8);
                             font-size: 0.8rem;
                             padding-right: 0.3rem;
                             background: rgba(0, 0, 0, 0.6);
@@ -512,26 +514,14 @@ html {
     }
 
     .share-box {
-        width: 5rem;
-        height: 5rem;
+        width: 4rem;
+        height: 4rem;
         position: fixed;
         bottom: 3rem;
         right: 1.5rem;
-        box-sizing: border-box;
-        padding: 0.25rem;
-        border-radius: 100%;
-        background: linear-gradient(42deg, rgba(201, 162, 43, 1), rgba(185, 147, 30, 1), rgba(255, 249, 230, 1));
-        .share {
+        img {
             width: 100%;
             height: 100%;
-            line-height: 4.5rem;
-            text-align: center;
-            color: #000000;
-            font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 100%;
-            z-index: 10;
-            background: #fac868;
         }
     }
     .card {
