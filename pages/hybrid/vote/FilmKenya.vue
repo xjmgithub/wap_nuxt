@@ -462,7 +462,7 @@ html {
                     display: none;
                 }
                 li {
-                    width: 9rem;
+                    width: 40%;
                     display: inline-block;
                     margin-right: 0.7rem;
                     div.pic {
