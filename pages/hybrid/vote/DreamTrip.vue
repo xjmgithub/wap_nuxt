@@ -342,20 +342,19 @@ export default {
             this.allNum = this.pageList[this.index].candidates[0].ballot_num + this.pageList[this.index].candidates[1].ballot_num
             this.leftNumVal = this.pageList[this.index].candidates[0].ballot_num
             this.rightNumVal = this.pageList[this.index].candidates[1].ballot_num
-            if (this.allNum > 0) {
-                this.leftNum = parseInt((this.leftNumVal / this.allNum) * 100)
-                this.rightNum = 100 - this.leftNum
-                const domLeft = document.getElementsByClassName('bar')[0]
-                const domRight = document.getElementsByClassName('bar')[1]
-                domLeft.style.width = 0.9 * this.leftNum + '%'
-                domRight.style.width = 0.9 * this.rightNum + '%'
+            this.leftNum = parseInt((this.leftNumVal / this.allNum) * 100)
+            this.rightNum = 100 - this.leftNum
+            const domLeft = document.getElementsByClassName('bar')[0]
+            const domRight = document.getElementsByClassName('bar')[1]
+            domLeft.style.width = 0.9 * this.leftNum + '%'
+            domRight.style.width = 0.9 * this.rightNum + '%'
+            if (this.leftNum == 100) {
+                domLeft.style.borderRadius = '0.4rem'
+            } else if (this.rightNum == 100) {
+                domRight.style.borderRadius = '0.4rem'
             } else {
-                this.leftNum = 0
-                this.rightNum = 0
-                const domLeft = document.getElementsByClassName('bar')[0]
-                const domRight = document.getElementsByClassName('bar')[1]
-                domLeft.style.width = '50%'
-                domRight.style.width = '50%'
+                domLeft.style.borderRadius = '0.4rem 0 0 0.4rem'
+                domRight.style.borderRadius = '0 0.4rem 0.4rem 0'
             }
         },
         tabClick(i) {
@@ -459,7 +458,6 @@ export default {
                         })
                         this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
                         this.index = this.currentPage - 1
-                        
                     } else {
                         this.pageList = []
                     }
@@ -827,6 +825,14 @@ export default {
                                     domRight.style.width = 0.9 * (100 - w) + '%'
                                     w = w + 1
                                     // console.log(w)
+                                    if (this.leftNum == 100) {
+                                        domLeft.style.borderRadius = '0.4rem'
+                                    } else if (this.rightNum == 100) {
+                                        domRight.style.borderRadius = '0.4rem'
+                                    } else {
+                                        domLeft.style.borderRadius = '0.4rem 0 0 0.4rem'
+                                        domRight.style.borderRadius = '0 0.4rem 0.4rem 0'
+                                    }
                                 }
                             }, (100 - this.leftNum) / 5)
                         } else {
@@ -842,6 +848,14 @@ export default {
                                     domRight.style.width = 0.9 * w + '%'
                                     w = w + 1
                                     // console.log(w)
+                                    if (this.leftNum == 100) {
+                                        domLeft.style.borderRadius = '0.4rem'
+                                    } else if (this.rightNum == 100) {
+                                        domRight.style.borderRadius = '0.4rem'
+                                    } else {
+                                        domLeft.style.borderRadius = '0.4rem 0 0 0.4rem'
+                                        domRight.style.borderRadius = '0 0.4rem 0.4rem 0'
+                                    }
                                 }
                             }, (100 - this.rightNum) / 5)
                         }
