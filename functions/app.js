@@ -36,7 +36,7 @@ export const pageDlay = function(callback, second) {
     const timeout = second || 3000 // 手机卡顿的情况会比较慢
     const interval = 200
     const deviation = 20
-
+    
     const timerStart = new Date().getTime()
     let lastFired = new Date().getTime()
     const timer = setInterval(() => {
@@ -53,6 +53,11 @@ export const pageDlay = function(callback, second) {
         }
         lastFired = now
     }, 200)
+    // 如果chrome唤醒app时间较短则不会触发视图窗口可视状态的变化
+    // 进入我们apphome页就算唤起成功，只有跳过了广告页面才会改变进程的前后状态
+    document.onvisibilitychange = function() {
+        clearInterval(timer)
+    }
 }
 
 export const invokeByHref = function(target, failback) {
@@ -76,6 +81,7 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
+    
     if (browser.browserVer > 40) {
         if (browser.ua.indexOf('UCBrowser') > 0) {
             if (browser.androidVer >= 4.4) {
@@ -139,7 +145,7 @@ export const callMarket = function(failback) {
 
     if (browser.isIos) {
         window.location.href = appleStore
-    } else if (browser.ua.indexOf('MuMu') >= 0) { // android 6+
+    } else if (browser.ua.indexOf('MuMu') >= 0|| browser.ua.indexOf('I9502')>0) { // android 6+
         invokeByIframe.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     } else {
         invokeByHref.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
