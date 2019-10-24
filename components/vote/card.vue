@@ -63,8 +63,8 @@ export default {
         min-height: 12rem;
         overflow-y: scroll;
         div {
-            font-size: 0.9rem;
-            line-height: 1.2rem;
+            font-size: 0.95rem;
+            line-height: 1.15rem;
             margin: 0.5rem 0;
         }
         img {
