@@ -36,43 +36,43 @@ export const pageDlay = function(callback, second) {
     const timeout = second || 3000 // 手机卡顿的情况会比较慢
     const timerStart = new Date().getTime()
     let lastFired = new Date().getTime()
-
-    const lalal = () => {
-        const now = new Date().getTime()
-        if (now - lastFired < 100) {
-            // 健康状态
-            if (now - timerStart > timeout) {
-                if (!document.hidden) callback && callback()
-            } else {
-                lastFired = now
-                window.requestAnimationFrame(lalal)
+    if (browser.browserVer > 40) {
+        const lalal = () => {
+            const now = new Date().getTime()
+            if (now - lastFired < 100) {
+                // 健康状态
+                if (now - timerStart > timeout) {
+                    if (!document.hidden) callback && callback()
+                } else {
+                    lastFired = now
+                    window.requestAnimationFrame(lalal)
+                }
             }
         }
+        window.requestAnimationFrame(lalal)
+    } else {
+        const interval = 200
+        const deviation = 20
+        const timer = setInterval(() => {
+            const now = new Date().getTime()
+            if (now - lastFired < deviation + interval) {
+                // 浏览器健康状态
+                if (now - timerStart > timeout) {
+                    if (!document.hidden) callback && callback()
+                    clearInterval(timer)
+                }
+            } else {
+                // 不健康,代表浏览器进入后台，则不做操作
+                clearInterval(timer)
+            }
+            lastFired = now
+        }, 200)
+        // 如果chrome唤醒app时间较短则不会触发视图窗口可视状态的变化
+        // 进入我们apphome页就算唤起成功，只有跳过了广告页面才会改变进程的前后状态
+        document.onvisibilitychange = function() {
+            clearInterval(timer)
+        }
     }
-    window.requestAnimationFrame(lalal)
-    
-    // const interval = 200
-    // const deviation = 20
-    // const timer = setInterval(() => {
-    //     const now = new Date().getTime()
-    //     if (now - lastFired < deviation + interval) {
-    //         // 浏览器健康状态
-    //         if (now - timerStart > timeout) {
-    //             if (!document.hidden) callback && callback()
-    //             clearInterval(timer)
-    //         }
-    //     } else {
-    //         // 不健康,代表浏览器进入后台，则不做操作
-    //         clearInterval(timer)
-    //     }
-    //     lastFired = now
-    // }, 200)
-    // // 如果chrome唤醒app时间较短则不会触发视图窗口可视状态的变化
-    // // 进入我们apphome页就算唤起成功，只有跳过了广告页面才会改变进程的前后状态
-    // document.onvisibilitychange = function() {
-    //     clearInterval(timer)
-    // }
-
 }
 
 export const invokeByHref = function(target, failback) {
