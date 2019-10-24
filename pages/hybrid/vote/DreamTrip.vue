@@ -284,33 +284,60 @@ export default {
         this.mSendEvLog('page_show', '', '')
         this.pageWidth = document.body.clientWidth
         this.getPagelist()
-        this.getSource()
     },
     methods: {
-        tabClick(i) {
+        initTab(i) {
             const tabBox = document.querySelector('.tab ul')
             const item = document.getElementsByClassName('lis')[i]
+            const offsetLeft = item.offsetLeft
+            const scrollX = tabBox.scrollLeft
+            const clientX = tabBox.clientWidth
+            const childClientX = item.clientWidth
+            const speed = offsetLeft - scrollX + childClientX / 2 - clientX / 2
+            const s = speed / 30
+            const totalX = speed + scrollX
+            this.timer = setInterval(() => {
+                tabBox.scrollLeft += s
+                if (
+                    tabBox.scrollLeft <= 0 ||
+                    tabBox.scrollLeft >= tabBox.scrollWidth - clientX ||
+                    (speed > 0 && tabBox.scrollLeft > totalX) ||
+                    (speed < 0 && tabBox.scrollLeft < totalX)
+                ) {
+                    clearInterval(this.timer)
+                }
+            }, 5)
+            // console.log(this.sourceList)
+            this.sourceList.forEach(item => {
+                if (item.name == 'a' + (this.index + 1)) {
+                    // 正片
+                    this.filmCode = item.link_vod_code
+                } else if (item.name == 'b' + (this.index + 1)) {
+                    // highLight
+                    this.highLightCode = item.link_vod_code
+                } else if (item.name == 'c' + (this.index + 1)) {
+                    // 话题
+                    this.topic = item.cover
+                } else if (item.name == 'd' + (this.index + 1)) {
+                    // 相关视频
+                    this.videoSrc = item.cover
+                    this.videoCode = item.link_vod_code
+                    this.videoTitle = item.description
+                    this.videoId = item.id
+                    this.mSendEvLog('video_show', item.id, 1)
+                } else if (item.name == 'e' + (this.index + 1)) {
+                    // 分享文案
+                    this.imgUrl = item.cover
+                    this.shareText = item.description
+                    this.content = this.shareText
+                }
+            })
+        },
+        tabClick(i) {
             if (i < this.currentPage) {
                 this.mSendEvLog('tab_click', '', 1)
                 this.index = i
-                const offsetLeft = item.offsetLeft
-                const scrollX = tabBox.scrollLeft
-                const clientX = tabBox.clientWidth
-                const childClientX = item.clientWidth
-                const speed = offsetLeft - scrollX + childClientX / 2 - clientX / 2
-                const s = speed / 30
-                const totalX = speed + scrollX
-                this.timer = setInterval(() => {
-                    tabBox.scrollLeft += s
-                    if (
-                        tabBox.scrollLeft <= 0 ||
-                        tabBox.scrollLeft >= tabBox.scrollWidth - clientX ||
-                        (speed > 0 && tabBox.scrollLeft > totalX) ||
-                        (speed < 0 && tabBox.scrollLeft < totalX)
-                    ) {
-                        clearInterval(this.timer)
-                    }
-                }, 5)
+                this.initTab(this.index)
             } else {
                 this.tipShow('Stay tuned!')
             }
@@ -385,30 +412,8 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.sourceList = res.data.data
-                        this.sourceList.forEach(item => {
-                            if (item.name == 'a1') {
-                                // 正片
-                                this.filmCode = item.link_vod_code
-                            } else if (item.name == 'b1') {
-                                // highLight
-                                this.highLightCode = item.link_vod_code
-                            } else if (item.name == 'c1') {
-                                // 话题
-                                this.topic = item.cover
-                            } else if (item.name == 'd1') {
-                                // 相关视频
-                                this.videoSrc = item.cover
-                                this.videoCode = item.link_vod_code
-                                this.videoTitle = item.description
-                                this.videoId = item.id
-                                this.mSendEvLog('video_show', item.id, 1)
-                            } else if (item.name == 'e1') {
-                                // 分享文案
-                                this.imgUrl = item.cover
-                                this.shareText = item.description
-                                this.content = this.shareText
-                            }
-                        })
+                        // console.log(this.currentPage)
+                        this.initTab(this.index)
                     } else {
                         this.$alert('Get source list error!')
                     }
@@ -442,7 +447,7 @@ export default {
             this.commentList = [
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/53270_adf0ecfc-d6e1-46c1-9a72-389cfbf0a857.png',
-                    comment: 'I\'m coming!',
+                    comment: "I'm coming!",
                     index: 1
                 },
                 {
@@ -492,7 +497,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/9366d275-a8ca-4dbb-a803-11ae1ea036a9.png',
-                    comment: "Once I travelled with my friend, she took selfies all the way...",
+                    comment: 'Once I travelled with my friend, she took selfies all the way...',
                     index: 11
                 },
                 {
@@ -512,7 +517,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/527192_44e27dd1-553c-4532-b019-74ac2ad98460.png',
-                    comment: "Tired",
+                    comment: 'Tired',
                     index: 15
                 },
                 {
@@ -537,7 +542,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/458061_56a33dc5-7bd7-4933-bfe0-36be4fef1e0b.png',
-                    comment: 'I can\'t bear old-fashioned people',
+                    comment: "I can't bear old-fashioned people",
                     index: 20
                 },
                 {
@@ -547,17 +552,17 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/464726_073aa80e-395c-4b11-aa9f-2d7aad72ae3e.png',
-                    comment: 'I\'m Roger\'s big fan!',
+                    comment: "I'm Roger's big fan!",
                     index: 22
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/465929_6265bcbb-bdca-4a80-a993-9a157cab1e7d.png',
-                    comment: "motion sickness ",
+                    comment: 'motion sickness ',
                     index: 23
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/466167_34d77c68-ac3b-4f5c-9df0-2fc1af5e272a.png',
-                    comment: "overnice",
+                    comment: 'overnice',
                     index: 24
                 },
                 {
@@ -597,12 +602,12 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/474141_7d806bec-2ad2-4651-bbc3-6e225a65583f.png',
-                    comment: "Ah!Roger!!",
+                    comment: 'Ah!Roger!!',
                     index: 32
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/477066_6ecdac50-ddf9-478c-b0e3-a72d3898f2a4.png',
-                    comment: 'Haha, let\'s chat!',
+                    comment: "Haha, let's chat!",
                     index: 33
                 },
                 {
@@ -612,7 +617,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/481803_b2cc82e0-1c85-4e88-89d2-8029cae7ccc3.png',
-                    comment: "I hate Both!",
+                    comment: 'I hate Both!',
                     index: 35
                 },
                 {
@@ -622,7 +627,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/467960_b6a1edb3-5d51-49f0-a654-976ec5618e3e.png',
-                    comment: "Chipukeezy!!!",
+                    comment: 'Chipukeezy!!!',
                     index: 37
                 },
                 {
@@ -632,7 +637,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/485973_775054e4-9588-4b96-8012-98b47db0eba2.png',
-                    comment: "lol",
+                    comment: 'lol',
                     index: 39
                 },
                 {
@@ -657,7 +662,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/282681_d98028f5-f992-4e98-b9e5-b23c14cf1f22.png',
-                    comment: 'I won\'t travel with girls',
+                    comment: "I won't travel with girls",
                     index: 44
                 },
                 {
@@ -672,12 +677,12 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/48dd862e-7234-4907-9b66-e615cab55cc1.png',
-                    comment: 'Can\'t wait to watch episode 2!',
+                    comment: "Can't wait to watch episode 2!",
                     index: 47
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/499861_e3f55a90-07fa-4ac7-b32f-56db4aed8786.png',
-                    comment: 'I\'ve never travelled. ',
+                    comment: "I've never travelled. ",
                     index: 48
                 },
                 {
@@ -687,7 +692,7 @@ export default {
                 },
                 {
                     user_icon: 'http://cdn.startimestv.com/head/upload/521940_9fa6a2d8-26c3-4a44-8b8e-9ad3213b30ec.png',
-                    comment: 'Tanzania, it\'s my hometown!',
+                    comment: "Tanzania, it's my hometown!",
                     index: 50
                 },
                 {
@@ -722,9 +727,12 @@ export default {
                 this.timeList.push(new Date(item.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime())
             })
             this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
-            // console.log(this.currentPage)
+            this.index = this.currentPage - 1
             // 投票状态
+            // this.initTab(this.index)
             this.pageList[0].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
+            this.getSource()
+            // this.initTab(this.index)
         },
         initComment() {
             for (let i = 0; i < this.commentList.length; i++) {
