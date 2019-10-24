@@ -194,7 +194,7 @@ export default {
                 l_show: false
             },
             timeList: [],
-            currentPage: 0, // 当前所在期数
+            currentPage: 1, // 当前所在期数
             pageList: [],
             leftNum: 0,
             rightNum: 0,
@@ -336,7 +336,6 @@ export default {
 
             // pageList数据
             // 投票状态
-            console.log(this.index)
             this.pageList[this.index].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
             // 参与人数 百分比
             this.allNum = this.pageList[this.index].candidates[0].ballot_num + this.pageList[this.index].candidates[1].ballot_num
@@ -371,7 +370,7 @@ export default {
         },
         getIndexToIns(arr, num) {
             const index = arr.sort((a, b) => a - b).findIndex(currentPage => num <= currentPage)
-            return index === -1 ? arr.length : index
+            return index <= 0 ? 1 : index
         },
         getDom(id) {
             return document.getElementById(id)
@@ -436,14 +435,13 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.sourceList = res.data.data
-                        // console.log(this.currentPage)
                         this.initPage(this.index)
                     } else {
                         this.$alert('Get source list error!')
                     }
                 })
                 .catch(err => {
-                    this.$alert('Get source list error! ' + err)
+                    this.$alert('Get source list error!! ' + err)
                 })
         },
         // 获取期数，播出时间，票数，状态，投票单元
@@ -457,9 +455,11 @@ export default {
                             this.timeList.push(new Date(item.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime())
                         })
                         this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
+                        // console.log('currentPage: '+this.currentPage)
                         this.index = this.currentPage - 1
                     } else {
                         this.pageList = []
+                        this.$alert('Get page list error!')
                     }
                     this.loaded_page = true
                     this.getSource()
@@ -467,7 +467,7 @@ export default {
                 })
                 .catch(err => {
                     this.pageList = []
-                    this.$alert(err)
+                    this.$alert('Get page list error!! ' + err)
                 })
         },
         getCommentList() {
@@ -824,7 +824,6 @@ export default {
                                     domLeft.style.width = 0.9 * w + '%'
                                     domRight.style.width = 0.9 * (100 - w) + '%'
                                     w = w + 1
-                                    // console.log(w)
                                     if (this.leftNum == 100) {
                                         domLeft.style.borderRadius = '0.4rem'
                                     } else if (this.rightNum == 100) {
@@ -847,7 +846,6 @@ export default {
                                     domLeft.style.width = 0.9 * (100 - w) + '%'
                                     domRight.style.width = 0.9 * w + '%'
                                     w = w + 1
-                                    // console.log(w)
                                     if (this.leftNum == 100) {
                                         domLeft.style.borderRadius = '0.4rem'
                                     } else if (this.rightNum == 100) {
@@ -869,12 +867,12 @@ export default {
                         }
                         this.canVote = true
                     } else {
-                        this.$alert(res.data.message)
+                        this.$alert('Pick err! ' + res.data.message)
                         this.canVote = true
                     }
                 })
                 .catch(err => {
-                    this.$alert(err)
+                    this.$alert('Pick err!!' + err)
                     this.canVote = true
                 })
         },
