@@ -21,7 +21,7 @@
                 <div class="pick-box">
                     <div class="left">
                         <div>
-                            <img v-if="pageListReady[0]" :src="cdnPic(pageListReady[0].candidates[0].icon)" alt />
+                            <img v-if="pageListReady[index]" :src="cdnPic(pageListReady[index].candidates[0].icon)" alt />
                         </div>
                     </div>
                     <div class="middle">
@@ -31,12 +31,12 @@
                     </div>
                     <div class="right">
                         <div>
-                            <img v-if="pageListReady[0]" :src="cdnPic(pageListReady[0].candidates[1].icon)" alt />
+                            <img v-if="pageListReady[index]" :src="cdnPic(pageListReady[index].candidates[1].icon)" alt />
                         </div>
                     </div>
                     <div v-show="!picked||appType==0" class="pick">
-                        <div v-if="pageListReady[0]" class="btn" @click="handlePick('left',pageListReady[0].candidates)">PICK</div>
-                        <div v-if="pageListReady[currentPage]" class="btn" @click="handlePick('right',pageListReady[0].candidates)">PICK</div>
+                        <div v-if="pageListReady[index]" class="btn" @click="handlePick('left',pageListReady[index].candidates)">PICK</div>
+                        <div v-if="pageListReady[index]" class="btn" @click="handlePick('right',pageListReady[index].candidates)">PICK</div>
                     </div>
                     <div v-show="picked&&appType>0" class="progress" :class="pick_click">
                         <div class="bar l"></div>
@@ -286,7 +286,8 @@ export default {
         this.getPagelist()
     },
     methods: {
-        initTab(i) {
+        initPage(i) {
+            // tab
             const tabBox = document.querySelector('.tab ul')
             const item = document.getElementsByClassName('lis')[i]
             const offsetLeft = item.offsetLeft
@@ -307,7 +308,7 @@ export default {
                     clearInterval(this.timer)
                 }
             }, 5)
-            // console.log(this.sourceList)
+            // source资源
             this.sourceList.forEach(item => {
                 if (item.name == 'a' + (this.index + 1)) {
                     // 正片
@@ -332,12 +333,36 @@ export default {
                     this.content = this.shareText
                 }
             })
+
+            // pageList数据
+            // 投票状态
+            console.log(this.index)
+            this.pageList[this.index].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
+            // 参与人数 百分比
+            this.allNum = this.pageList[this.index].candidates[0].ballot_num + this.pageList[this.index].candidates[1].ballot_num
+            this.leftNumVal = this.pageList[this.index].candidates[0].ballot_num
+            this.rightNumVal = this.pageList[this.index].candidates[1].ballot_num
+            if (this.allNum > 0) {
+                this.leftNum = parseInt((this.leftNumVal / this.allNum) * 100)
+                this.rightNum = 100 - this.leftNum
+                const domLeft = document.getElementsByClassName('bar')[0]
+                const domRight = document.getElementsByClassName('bar')[1]
+                domLeft.style.width = 0.9 * this.leftNum + '%'
+                domRight.style.width = 0.9 * this.rightNum + '%'
+            } else {
+                this.leftNum = 0
+                this.rightNum = 0
+                const domLeft = document.getElementsByClassName('bar')[0]
+                const domRight = document.getElementsByClassName('bar')[1]
+                domLeft.style.width = '50%'
+                domRight.style.width = '50%'
+            }
         },
         tabClick(i) {
             if (i < this.currentPage) {
                 this.mSendEvLog('tab_click', '', 1)
                 this.index = i
-                this.initTab(this.index)
+                this.initPage(this.index)
             } else {
                 this.tipShow('Stay tuned!')
             }
@@ -413,7 +438,7 @@ export default {
                     if (res.data.code === 0) {
                         this.sourceList = res.data.data
                         // console.log(this.currentPage)
-                        this.initTab(this.index)
+                        this.initPage(this.index)
                     } else {
                         this.$alert('Get source list error!')
                     }
@@ -429,14 +454,18 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.pageList = res.data.data
+                        this.pageList.forEach((item, index) => {
+                            this.timeList.push(new Date(item.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime())
+                        })
+                        this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
+                        this.index = this.currentPage - 1
+                        
                     } else {
                         this.pageList = []
                     }
                     this.loaded_page = true
-                    this.$nextTick(() => {
-                        this.initPage()
-                        this.getCommentList()
-                    })
+                    this.getSource()
+                    this.getCommentList()
                 })
                 .catch(err => {
                     this.pageList = []
@@ -710,29 +739,6 @@ export default {
             this.$nextTick(() => {
                 this.initComment()
             })
-        },
-        initPage() {
-            // 参与人数 百分比
-            this.allNum = this.pageList[0].candidates[0].ballot_num + this.pageList[0].candidates[1].ballot_num
-            this.leftNumVal = this.pageList[0].candidates[0].ballot_num
-            this.rightNumVal = this.pageList[0].candidates[1].ballot_num
-            this.leftNum = parseInt((this.leftNumVal / this.allNum) * 100)
-            this.rightNum = 100 - this.leftNum
-            const domLeft = document.getElementsByClassName('bar')[0]
-            const domRight = document.getElementsByClassName('bar')[1]
-            domLeft.style.width = 0.9 * this.leftNum + '%'
-            domRight.style.width = 0.9 * this.rightNum + '%'
-            // 时间列表 计算当前所在期数
-            this.pageList.forEach((item, index) => {
-                this.timeList.push(new Date(item.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime())
-            })
-            this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
-            this.index = this.currentPage - 1
-            // 投票状态
-            // this.initTab(this.index)
-            this.pageList[0].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
-            this.getSource()
-            // this.initTab(this.index)
         },
         initComment() {
             for (let i = 0; i < this.commentList.length; i++) {
