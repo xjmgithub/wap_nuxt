@@ -97,8 +97,8 @@ export default {
     },
     data() {
         return {
-            // appType: this.$store.state.appType || 0,
-            appType: 1,
+            appType: this.$store.state.appType || 0,
+            // appType: 1,
             isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             timer: null, // tab滚动定位定时器
             during: 5, // 发送弹幕后倒计时
