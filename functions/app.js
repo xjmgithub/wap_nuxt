@@ -33,7 +33,7 @@ export const createScheme = function(page, host, path, scheme) {
 }
 
 export const pageDlay = function(callback, second) {
-    const timeout = second || 3000 // 手机卡顿的情况会比较慢
+    const timeout = second || 5000 // 手机卡顿的情况会比较慢
     const timerStart = new Date().getTime()
     let lastFired = new Date().getTime()
     if (browser.browserVer > 40) {
