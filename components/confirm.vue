@@ -34,6 +34,7 @@ export default {
     methods: {
         close() {
             this.style = 'none'
+            document.body.style.overflow = 'scroll'
             this.$store.commit('HIDE_SHADOW_LAYER')
             if (this.cancel) {
                 this.cancel()
@@ -47,6 +48,7 @@ export default {
             }
         },
         show(msg, callback, cancel, yes, no) {
+            document.body.style.overflow = 'hidden'
             const _this = this
             if (yes) this.yes = yes
             if (no) this.no = no

@@ -134,6 +134,14 @@ export default {
             const label = (nv == 0 && 'Film') || (nv == 1 && 'Televison') || (nv == 2 && 'Special Awards')
             this.mSendEvLog('tab_click', label)
             this.getAllList()
+        },
+        aboutCard(nv, ov) {
+            if (nv) document.body.style.overflow = 'hidden'
+            else document.body.style.overflow = 'scroll'
+        },
+        shareCard(nv, ov) {
+            if (nv) document.body.style.overflow = 'hidden'
+            else document.body.style.overflow = 'scroll'
         }
     },
     mounted() {
@@ -141,7 +149,7 @@ export default {
         this.$nextTick(() => this.getAllList())
     },
     methods: {
-        mSendEvLog(action, label=1, value = 1) {
+        mSendEvLog(action, label = 1, value = 1) {
             this.sendEvLog({
                 category: `vote_KenyaPAOFFVote_${this.platform}`,
                 action: action,
@@ -150,7 +158,7 @@ export default {
             })
         },
         handleVote(ticket, film) {
-            this.mSendEvLog('votebtn_click',film.name)
+            this.mSendEvLog('votebtn_click', film.name)
             if (this.appType <= 0) {
                 this.$confirm(
                     '	Open StarTimes ON App vote for your favorite content.',
@@ -187,7 +195,7 @@ export default {
             }
         },
         toVideo(item) {
-            this.mSendEvLog('votepic_click',item.name)
+            this.mSendEvLog('votepic_click', item.name)
             const vod = item.link_vod_code
             if (vod && this.appType == 1) {
                 window.getChannelId && window.getChannelId.toAppPage(3, 'com.star.mobile.video.player.PlayerVodActivity?vodId=' + vod, '')
@@ -198,7 +206,7 @@ export default {
             }
         },
         callDownload(pos) {
-            this.mSendEvLog('callApp',pos)
+            this.mSendEvLog('callApp', pos)
             callApp.call(this, `com.star.mobile.video.activity.BrowserActivity?loadUrl=${window.location.origin + window.location.pathname}`, () => {
                 callMarket.call(this, () => {
                     this.mSendEvLog('downloadpopup_show', pos)
@@ -264,7 +272,9 @@ export default {
             this.mSendEvLog('share_click')
             if (this.appType === 1) {
                 shareInvite(
-                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=KenyaPAOFFVote&utm_campaign=${this.platform}`,
+                    `${window.location.href}?pin=${this.$store.state.user.id}&utm_source=VOTE&utm_medium=KenyaPAOFFVote&utm_campaign=${
+                        this.platform
+                    }`,
                     this.voteTitle,
                     this.$store.state.lang.vote_webshare_words,
                     'http://cdn.startimestv.com/banner/kenya.png'
@@ -275,17 +285,17 @@ export default {
         },
         shareWithFacebook() {
             this.shareCard = false
-            this.mSendEvLog('sharebtn_click','Facebook')
+            this.mSendEvLog('sharebtn_click', 'Facebook')
             shareByFacebook.call(this, window.location.origin + window.location.pathname)
         },
         copyLink() {
             this.shareCard = false
-            this.mSendEvLog('sharebtn_click','copyLink')
+            this.mSendEvLog('sharebtn_click', 'copyLink')
             copyClipboard.call(this, window.location.origin + window.location.pathname)
         },
         shareWithTwitter() {
             this.shareCard = false
-            this.mSendEvLog('sharebtn_click','Twitter')
+            this.mSendEvLog('sharebtn_click', 'Twitter')
             shareByTwitter.call(this, this.$store.state.lang.vote_appshare_words, window.location.origin + window.location.pathname)
         },
         move(event) {
@@ -422,7 +432,7 @@ html {
                 &.on {
                     color: #ffdc82;
                     p {
-                        background: linear-gradient(90deg, rgba(153,132,78, 0.1) 0%, rgba(255, 220, 130, 1) 50%, rgba(153,132,78, 0.1) 100%);
+                        background: linear-gradient(90deg, rgba(153, 132, 78, 0.1) 0%, rgba(255, 220, 130, 1) 50%, rgba(153, 132, 78, 0.1) 100%);
                     }
                 }
             }
@@ -450,7 +460,7 @@ html {
                 }
                 span {
                     float: right;
-                    color: rgba(255,255,255,0.8);
+                    color: rgba(255, 255, 255, 0.8);
                     font-weight: normal;
                 }
             }
@@ -485,7 +495,7 @@ html {
                             position: absolute;
                             left: 0;
                             bottom: 0;
-                            color: rgba(255,255,255,0.8);
+                            color: rgba(255, 255, 255, 0.8);
                             font-size: 0.8rem;
                             padding-right: 0.3rem;
                             background: rgba(0, 0, 0, 0.6);
