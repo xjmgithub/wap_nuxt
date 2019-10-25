@@ -136,12 +136,22 @@ export default {
             this.getAllList()
         },
         aboutCard(nv, ov) {
-            if (nv) document.body.style.overflow = 'hidden'
-            else document.body.style.overflow = 'scroll'
+            if (nv) {
+                document.body.style.overflow = 'hidden'
+                document.body.style.position = 'fixed'
+            } else {
+                document.body.style.overflow = 'auto'
+                document.body.style.position = 'static'
+            }
         },
         shareCard(nv, ov) {
-            if (nv) document.body.style.overflow = 'hidden'
-            else document.body.style.overflow = 'scroll'
+            if (nv) {
+                document.body.style.overflow = 'hidden'
+                document.body.style.position = 'fixed'
+            } else {
+                document.body.style.overflow = 'auto'
+                document.body.style.position = 'static'
+            }
         }
     },
     mounted() {

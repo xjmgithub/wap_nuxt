@@ -34,7 +34,6 @@ export default {
     methods: {
         close() {
             this.style = 'none'
-            document.body.style.overflow = 'scroll'
             this.$store.commit('HIDE_SHADOW_LAYER')
             if (this.cancel) {
                 this.cancel()
@@ -48,7 +47,6 @@ export default {
             }
         },
         show(msg, callback, cancel, yes, no) {
-            document.body.style.overflow = 'hidden'
             const _this = this
             if (yes) this.yes = yes
             if (no) this.no = no
@@ -57,8 +55,8 @@ export default {
             this.$store.commit('SHOW_SHADOW_LAYER')
             this.$nextTick(() => {
                 const dialog = _this.$el
-                const dh = dialog.offsetHeight;
-                    const dw = dialog.offsetWidth
+                const dh = dialog.offsetHeight
+                const dw = dialog.offsetWidth
                 _this.offsetLeft = -dw / 2 + 'px'
                 _this.offsetTop = -dh / 2 + 'px'
             })

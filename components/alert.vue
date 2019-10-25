@@ -29,12 +29,10 @@ export default {
     methods: {
         sure() {
             this.style = 'none'
-            document.body.style.overflow = 'scroll'
             this.$store.commit('HIDE_SHADOW_LAYER')
             if (this.callback) this.callback()
         },
         show(msg, callback, text) {
-            document.body.style.overflow = 'hidden'
             const _this = this
             this.msg = msg
             this.text = text || 'OK'
