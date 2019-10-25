@@ -42,6 +42,7 @@ export const pageDlay = function(callback, second) {
             if (now - lastFired < 100) {
                 // 健康状态
                 if (now - timerStart > timeout) {
+                    alert(now - timerStart)
                     if (!document.hidden) callback && callback()
                 } else {
                     lastFired = now
