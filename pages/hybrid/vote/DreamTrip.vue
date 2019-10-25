@@ -291,9 +291,8 @@ export default {
             const textdom = document.getElementsByTagName('textarea')[0]
             textdom.addEventListener('keydown', e => {
                 if (e.keyCode == 13) {
-                    this.sendComment()
-                    this.commentText = ''
                     e.preventDefault()
+                    this.sendComment()
                     return false
                 }
             })
