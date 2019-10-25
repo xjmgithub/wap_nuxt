@@ -293,6 +293,7 @@ export default {
                 if (e.keyCode == 13) {
                     this.sendComment()
                     e.preventDefault()
+                    return false
                 }
             })
         },
