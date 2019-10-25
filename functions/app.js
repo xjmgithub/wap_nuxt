@@ -33,7 +33,7 @@ export const createScheme = function(page, host, path, scheme) {
 }
 
 export const pageDlay = function(callback, second) {
-    const timeout = second || 5000 // 手机卡顿的情况会比较慢
+    const timeout = second || 6000 // 手机卡顿的情况会比较慢
     const timerStart = new Date().getTime()
     let lastFired = new Date().getTime()
     if (browser.browserVer > 40) {
@@ -42,7 +42,6 @@ export const pageDlay = function(callback, second) {
             if (now - lastFired < 100) {
                 // 健康状态
                 if (now - timerStart > timeout) {
-                    alert(now - timerStart)
                     if (!document.hidden) callback && callback()
                 } else {
                     lastFired = now
