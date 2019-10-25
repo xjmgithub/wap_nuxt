@@ -62,7 +62,7 @@
                     </ul>
                 </div>
                 <div class="send-box">
-                    <textarea v-model="commentText" type="text" placeholder="What do you think?" maxlength="100" @focus="inputFocus" />
+                    <textarea v-model="commentText" type="text" placeholder="Share your feelings..." maxlength="100" @focus="inputFocus" />
                     <div class="btn" @click="sendComment">{{disabled?`${during}s`:`SEND`}}</div>
                 </div>
             </div>
@@ -918,7 +918,7 @@ export default {
                     })
                 if (flag || /f u c k|fudge packer|God damn|knob end|knob end/g.test(this.commentText.toLowerCase())) {
                     this.commentText = ''
-                    this.$alert('Your comment contains inappropriate contents. Please remove the words that may cause offence', () => {}, 'GOT IT')
+                    this.$alert('Your comment contains inappropriate contents. Please remove the words that may cause offence.', () => {}, 'GOT IT')
                     this.disabled = false
                     return
                 }
@@ -934,7 +934,7 @@ export default {
             p.innerText = this.commentText
             p.style.display = 'inline-block'
             p.style.color = '#fff'
-            p.style.marginLeft = 3 + 'px'
+            p.style.marginLeft = 10 + 'px'
             p.style.whiteSpace = 'nowrap'
             img.style.display = 'inline-block'
             img.style.width = '28px'
@@ -954,7 +954,7 @@ export default {
             item.style.lineHeight = 30 + 'px'
             item.style.position = 'absolute'
             item.style.right = -2000 + 'px'
-            item.style.width = itemWidth + 20 + 'px'
+            item.style.width = itemWidth + 25 + 'px'
             let lineNum
             if (this.count >= 2) {
                 lineNum = this.count - 2
@@ -1161,6 +1161,7 @@ export default {
                         width: 100%;
                         background-color: #2b495e;
                         border-radius: 0.5rem;
+                        overflow: hidden;
                         img {
                             width: 100%;
                             height: 100%;
@@ -1373,6 +1374,7 @@ export default {
                             display: inline-block;
                             white-space: nowrap;
                             color: #fff;
+                            margin-left: 6px;
                         }
                     }
                 }
