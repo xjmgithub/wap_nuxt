@@ -292,6 +292,7 @@ export default {
             textdom.addEventListener('keydown', e => {
                 if (e.keyCode == 13) {
                     this.sendComment()
+                    this.commentText = ''
                     e.preventDefault()
                     return false
                 }
@@ -1160,12 +1161,12 @@ export default {
                         position: relative;
                         width: 100%;
                         background-color: #2b495e;
+                        border-radius: 0.5rem;
                         img {
                             width: 100%;
                             height: 100%;
                             position: absolute;
                             top: 0;
-                            border: 0.2rem solid #51b7ff;
                         }
                         &:before {
                             content: '';
