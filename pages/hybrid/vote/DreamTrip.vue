@@ -97,8 +97,8 @@ export default {
     },
     data() {
         return {
-            appType: this.$store.state.appType || 0,
-            // appType: 1,
+            // appType: this.$store.state.appType || 0,
+            appType: 1,
             isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             timer: null, // tab滚动定位定时器
             during: 5, // 发送弹幕后倒计时
@@ -284,8 +284,18 @@ export default {
         this.mSendEvLog('page_show', '', '')
         this.pageWidth = document.body.clientWidth
         this.getPagelist()
+        this.nowarp()
     },
     methods: {
+        nowarp() {
+            const textdom = document.getElementsByTagName('textarea')[0]
+            textdom.addEventListener('keydown', e => {
+                if (e.keyCode == 13) {
+                    this.sendComment()
+                    e.preventDefault()
+                }
+            })
+        },
         initPage(i) {
             // tab
             const tabBox = document.querySelector('.tab ul')
@@ -943,7 +953,7 @@ export default {
             item.style.lineHeight = 30 + 'px'
             item.style.position = 'absolute'
             item.style.right = -2000 + 'px'
-            item.style.width = itemWidth + 25 + 'px'
+            item.style.width = itemWidth + 20 + 'px'
             let lineNum
             if (this.count >= 2) {
                 lineNum = this.count - 2
@@ -955,7 +965,7 @@ export default {
             const time = setInterval(() => {
                 if (num <= this.pageWidth + 20) {
                     item.style.right = num + 'px'
-                    num += itemWidth / this.speed
+                    num += itemWidth / (this.speed * 4) + 0.3
                 } else {
                     clearInterval(time)
                 }
@@ -1381,6 +1391,10 @@ export default {
                     width: 70%;
                     height: 1.8rem;
                     line-height: 1.8rem;
+                    -webkit-border-radius: 0.9rem;
+                    -moz-border-radius: 0.9rem;
+                    -ms-border-radius: 0.9rem;
+                    -o-border-radius: 0.9rem;
                     border-radius: 0.9rem;
                     padding: 0 0.5rem;
                     margin: 0;
