@@ -62,7 +62,7 @@
                     </ul>
                 </div>
                 <div class="send-box">
-                    <input v-model="commentText" type="text" placeholder="What do you think?" maxlength="100" @focus="inputFocus" />
+                    <textarea v-model="commentText" type="text" placeholder="What do you think?" maxlength="100" @focus="inputFocus" />
                     <div class="btn" @click="sendComment">{{disabled?`${during}s`:`SEND`}}</div>
                 </div>
             </div>
@@ -1374,18 +1374,23 @@ export default {
                 background-size: 100% 2.5rem;
                 border-radius: 1.25rem;
                 position: relative;
-                input {
+                textarea {
                     border: none;
                     outline: none;
                     display: block;
                     width: 70%;
                     height: 1.8rem;
+                    line-height: 1.8rem;
                     border-radius: 0.9rem;
-                    padding-left: 0.4rem;
+                    padding: 0 0.5rem;
+                    margin: 0;
                     color: #666;
                     position: absolute;
                     left: 2%;
-                    bottom: 0.35rem;
+                    top: 0.35rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    overflow-x: auto;
                 }
                 .btn {
                     display: block;
