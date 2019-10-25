@@ -802,6 +802,8 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', 1)
+                        this.pageList[this.index].candidates[num].ballot_num++
+                        this.pageList[this.index].ticket_num = 0
                         // 动画
                         this.allNum++
                         local == 'left' ? this.leftNumVal++ : this.rightNumVal++
