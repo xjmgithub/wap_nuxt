@@ -292,7 +292,7 @@ export default {
             textdom.addEventListener('keydown', e => {
                 if (e.keyCode == 13) {
                     e.preventDefault()
-                    this.sendComment()
+                    // this.sendComment()
                     return false
                 }
             })
