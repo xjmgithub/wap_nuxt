@@ -1144,7 +1144,7 @@ export default {
             position: relative;
             .title {
                 width: 90%;
-                margin: 1rem 5% 0.5rem;
+                margin: 1rem 5% 1rem;
             }
             .pick-box {
                 font-size: 0;
@@ -1160,7 +1160,7 @@ export default {
                         position: relative;
                         width: 100%;
                         background-color: #2b495e;
-                        border-radius: 0.5rem;
+                        border-radius: 0.25rem;
                         overflow: hidden;
                         img {
                             width: 100%;
@@ -1186,10 +1186,11 @@ export default {
                     position: relative;
                     z-index: 3;
                     img {
-                        width: 95%;
-                        margin-left: 2.5%;
+                        width: 85%;
+                        margin-left: 8.5%;
                         &:first-child {
                             padding-top: 0.5rem;
+                            margin-left: 5.5%;
                         }
                     }
                     p {
@@ -1408,6 +1409,7 @@ export default {
                     white-space: nowrap;
                     overflow: hidden;
                     overflow-x: auto;
+                    resize: none;
                 }
                 .btn {
                     display: block;
@@ -1417,6 +1419,7 @@ export default {
                     line-height: 2.5rem;
                     color: #fff;
                     font-size: 1rem;
+                    font-weight: bold;
                     text-align: center;
                 }
             }
@@ -1446,10 +1449,9 @@ export default {
                         position: relative;
                         width: 100%;
                         background-color: #2b495e;
-                        border-radius: 0.2rem;
+                        border-radius: 0.3rem;
+                        overflow: hidden;
                         img {
-                            border: 3px solid #075e99;
-                            border-radius: 0.2rem;
                             width: 100%;
                             height: 100%;
                             position: absolute;
