@@ -212,7 +212,7 @@ export default {
             commentText: '', // 发送的内容
             loaded_page: false,
             loaded_comment: false,
-            number: 16, // 每次请求的弹幕数量
+            number: 20, // 每次请求的弹幕数量
             last_id: 0, // 上一次请求的最后一条弹幕id
             timeNum: 0, // 记录已在当前页面上成功调用获取弹幕接口的次数
             canClickTab: true,
@@ -340,7 +340,7 @@ export default {
                     this.videoCode = item.link_vod_code
                     this.videoTitle = item.description
                     this.videoId = item.id
-                    this.mSendEvLog('video_show', item.id, 1)
+                    this.mSendEvLog('video_show', item.id, this.index+1)
                 } else if (item.name == 'e' + (this.index + 1)) {
                     // 分享文案
                     this.imgUrl = item.cover
@@ -375,9 +375,9 @@ export default {
             if (this.canClickTab) {
                 this.canClickTab = false
                 if (i < this.currentPage) {
-                    this.mSendEvLog('tab_click', '', 1)
                     if (this.index != i) {
                         this.index = i
+                        this.mSendEvLog('tab_click', '', this.index+1)
                         this.timeNum = 0
                         this.last_id = 0
                         this.count = 0
@@ -444,7 +444,7 @@ export default {
             })
         },
         toPlayer(code, label1, label2) {
-            label1 ? this.mSendEvLog('button_click', label1, 1) : this.mSendEvLog('video_click', label2, 1)
+            label1 ? this.mSendEvLog('button_click', label1, this.index+1) : this.mSendEvLog('video_click', label2, this.index+1)
             if (this.appType == 0) {
                 this.callOrDownApp()
                 return
@@ -501,9 +501,22 @@ export default {
                         this.pageList = []
                         this.$alert('Get page list error! ' + res.data.message)
                     }
-                    this.loaded_page = true
-                    this.getSource()
-                    this.getCommentList()
+                    let flag = true
+                    for (let i = 0; i < this.pageList.length; i++) {
+                        if (i <= this.index) {
+                            if (!this.pageList[i].candidates.length) {
+                                flag = false
+                                break
+                            }
+                        }
+                    }
+                    if (flag) {
+                        this.loaded_page = true
+                        this.getSource()
+                        this.getCommentList()
+                    } else {
+                        this.$alert('Get candidates list error!')
+                    }
                 })
                 .catch(err => {
                     this.pageList = []
@@ -617,7 +630,7 @@ export default {
             })
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', 1)
+                        this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', this.index+1)
                         this.pageList[this.index].candidates[num].ballot_num++
                         this.pageList[this.index].ticket_num = 0
                         // 动画
@@ -741,7 +754,7 @@ export default {
             })
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.mSendEvLog('send_click', this.commentText, 1)
+                        this.mSendEvLog('send_click', this.commentText, this.index+1)
                         const during = this.during
                         const item = document.createElement('span')
                         const img = document.createElement('img')
