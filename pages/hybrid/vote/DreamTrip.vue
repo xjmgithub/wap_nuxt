@@ -484,263 +484,263 @@ export default {
         getCommentList() {
             this.commentList = [
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/53270_adf0ecfc-d6e1-46c1-9a72-389cfbf0a857.png',
-                    comment: "I'm coming!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Im Simidi Brian from  South EASTERN  Kenya  University,, I hate over spending rather than oveplannin",
                     index: 1
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/71986_198e59a9-798c-468e-85d1-a1b3579ca44b.png',
-                    comment: 'Good topic! ',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Kareem abdalah',
                     index: 2
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/209914_5dd6bd59-d6c0-435f-86d8-5609cbb53036.png',
-                    comment: 'I have no money to over spend',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Rogers is right',
                     index: 3
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/282681_d98028f5-f992-4e98-b9e5-b23c14cf1f22.png',
-                    comment: 'My bf snores loudly!!! Frustrating!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Roger ur de best',
                     index: 4
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/9b97f6ea-82c8-448a-a3d9-0481c9d6b1de.png',
-                    comment: 'Finding a like-minded friend to travel together is too difficult',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Feel lazy',
                     index: 5
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/325175_86155557-637c-46d4-b42c-faa00e337463.png',
-                    comment: 'hahahhaha',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over planning',
                     index: 6
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/331990_bf80ffad-c297-4772-839e-98ac541a72d1.png',
-                    comment: 'Coming',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Good plan start with basic need',
                     index: 7
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/363179_6fc66c2b-eedd-475f-819e-0c51aad63d35.png',
-                    comment: 'My friend eat too much. ',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Ramsey platform on all social network',
                     index: 8
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/527595_67d6c87a-4aaa-4c95-869a-c23008794322.png',
-                    comment: 'If someone is insufferable, why travel with him/her?',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'No maney',
                     index: 9
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/7a409fd4-3772-43a9-b37e-3b79a8b6a692.png',
-                    comment: 'Lol snore',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Chipukizi fun',
                     index: 10
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/9366d275-a8ca-4dbb-a803-11ae1ea036a9.png',
-                    comment: 'Once I travelled with my friend, she took selfies all the way...',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Roger stop over planning coz u may mess up',
                     index: 11
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/528768_590fb865-865c-4b38-9f64-a2e1af37f0e1.png',
-                    comment: 'hahh',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'My friends can be like campus figures so annoying',
                     index: 12
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/448233_09e30309-25ab-4259-b025-dd8ad0cc6b53.png',
-                    comment: 'I hate planning...',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Spending alot of time with people who don't add value to your life..hahaha...",
                     index: 13
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/448364_487cb204-9de9-4d98-b388-5a1ee493203f.png',
-                    comment: 'My friend borrowed money from me, and never payed it back',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Money is everthing',
                     index: 14
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/527192_44e27dd1-553c-4532-b019-74ac2ad98460.png',
-                    comment: 'Tired',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'I hate over spending...',
                     index: 15
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/493723_8e049223-ef81-4354-b67f-b42295535522.png',
-                    comment: 'Never go out with a penny pinching person!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Yaa. Is good',
                     index: 16
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/456623_93ab7c23-c038-4e63-b01f-3ac1fc0d5c7c.png',
-                    comment: 'what!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Ambitious planning is not good also',
                     index: 17
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/523066_6c370679-fb08-43a6-ab4b-a1ff116b51a3.png',
-                    comment: 'Some say that the best way to test friendship is to have a trip together.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Spending much',
                     index: 18
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/457981_65e64b8d-c7c0-4dc9-9a64-3b8805884ab0.png',
-                    comment: 'so interesting here!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Nice one group',
                     index: 19
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/458061_56a33dc5-7bd7-4933-bfe0-36be4fef1e0b.png',
-                    comment: "I can't bear old-fashioned people",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "U can't spend wat u don't have",
                     index: 20
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/458610_9e9891d7-eae9-488d-a960-c2016fe8eb72.png',
-                    comment: 'just try it',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Away',
                     index: 21
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/464726_073aa80e-395c-4b11-aa9f-2d7aad72ae3e.png',
-                    comment: "I'm Roger's big fan!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Mambo",
                     index: 22
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/465929_6265bcbb-bdca-4a80-a993-9a157cab1e7d.png',
-                    comment: 'motion sickness ',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Good night and my life',
                     index: 23
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/466167_34d77c68-ac3b-4f5c-9df0-2fc1af5e272a.png',
-                    comment: 'overnice',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Good',
                     index: 24
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/526176_7a37f9cf-9886-447a-9ba1-3ea6b6aff161.png',
-                    comment: '??',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Its true Africans over spent their money',
                     index: 25
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/527409_ac436c74-14c2-49ba-930a-eb071cc76205.png',
-                    comment: 'My wallet forbids me to go out with lavish spending people.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Wawawaw',
                     index: 26
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/467431_cb5dcc9d-3f5b-41f2-ba1a-d2ba871a498b.png',
-                    comment: 'I can comment now?',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Hahaha am following',
                     index: 27
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/467960_b6a1edb3-5d51-49f0-a654-976ec5618e3e.png',
-                    comment: 'Love your app!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'It fun I wish I could join them',
                     index: 28
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/522592_871c71fe-6b2c-4bab-9bea-976eb0873789.png',
-                    comment: 'Eat too much, hahahaha',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Is better to plan I supporting ugandan',
                     index: 29
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/472119_4794c5be-aa2d-4e36-be4e-a86ca06cab2b.png',
-                    comment: 'My hometown is so beautiful.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Absolutely funny',
                     index: 30
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/524390_e0347734-86ff-453a-8d37-feb0c9d3596b.png',
-                    comment: 'lol',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'hi',
                     index: 31
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/474141_7d806bec-2ad2-4651-bbc3-6e225a65583f.png',
-                    comment: 'Ah!Roger!!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'jiaj',
                     index: 32
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/477066_6ecdac50-ddf9-478c-b0e3-a72d3898f2a4.png',
-                    comment: "Haha, let's chat!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Some people in travelling talk too much with phones ",
                     index: 33
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/523953_0816bd14-5738-4a17-8306-2d2ee1c78d32.png',
-                    comment: 'Never go out with a bad-tempered person',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'At the round table of christ Jesus there us peace and love to feel ',
                     index: 34
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/481803_b2cc82e0-1c85-4e88-89d2-8029cae7ccc3.png',
-                    comment: 'I hate Both!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'If u happen to av much money you tent to be controlled by it, so watch out',
                     index: 35
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/527192_44e27dd1-553c-4532-b019-74ac2ad98460.png',
-                    comment: 'how to',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'KabugoSamuel ',
                     index: 36
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/467960_b6a1edb3-5d51-49f0-a654-976ec5618e3e.png',
-                    comment: 'Chipukeezy!!!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'There is no cooparation among the traveller , when you get a problem no one is going to help you',
                     index: 37
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/485587_1a9968e6-7cb5-4a72-bd22-4fc92f63d431.png',
-                    comment: 'Who can fund me a trip',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over planning',
                     index: 38
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/485973_775054e4-9588-4b96-8012-98b47db0eba2.png',
-                    comment: 'lol',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over planning',
                     index: 39
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/522206_655cfea6-34df-4d41-84b2-8ac0dd211aa9.png',
-                    comment: 'My bf snores loudly!!! Frustrating!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Sanyuka TV',
                     index: 40
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/489795_9e2f806d-ac26-430e-862f-7fa459e86942.png',
-                    comment: 'hahahahaha',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over loading while u have paid your fully tp',
                     index: 41
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/490954_a112acc1-5b58-4825-bad7-b1c426e29dbe.png',
-                    comment: 'Talking all the way.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: '750994447',
                     index: 42
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/491759_ed663056-ed20-457f-ab7b-fe6c096d722e.png',
-                    comment: "Chipukeezy, you're the best!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "750994448",
                     index: 43
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/282681_d98028f5-f992-4e98-b9e5-b23c14cf1f22.png',
-                    comment: "I won't travel with girls",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "wow",
                     index: 44
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/493723_8e049223-ef81-4354-b67f-b42295535522.png',
-                    comment: "It's a nightmare when you get injured while travelling",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Haha but that 's the way to go",
                     index: 45
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/495888_a096feb4-f638-4074-9d63-e31ff3f3b2c9.png',
-                    comment: 'this is fun',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Haaa',
                     index: 46
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/48dd862e-7234-4907-9b66-e615cab55cc1.png',
-                    comment: "Can't wait to watch episode 2!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Get richer and richer",
                     index: 47
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/499861_e3f55a90-07fa-4ac7-b32f-56db4aed8786.png',
-                    comment: "I've never travelled. ",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Hahaaha ",
                     index: 48
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/500151_5fcf20a2-6abf-4468-b06c-7d7db120e5e1.png',
-                    comment: 'Lol',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Working good to me',
                     index: 49
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/521940_9fa6a2d8-26c3-4a44-8b8e-9ad3213b30ec.png',
-                    comment: "Tanzania, it's my hometown!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Am coming",
                     index: 50
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/529293_c52c0fa5-5335-4f3d-b92e-047ac95d0d3d.png',
-                    comment: 'I often quarrel with my bf while travelling...I think tolerance is important.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'born to win',
                     index: 51
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/529707_49c902b3-9a7a-4d5b-8832-fcbb5f34a804.png',
-                    comment: 'i like africa',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'At least spending in small amount but not not much',
                     index: 52
                 }
             ]
