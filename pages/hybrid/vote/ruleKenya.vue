@@ -9,6 +9,7 @@
             <p>From 1st Nov, you can vote for you favourite couples every day on StarTimes ON, the vote will end one week after the last episode aired, the couples who win the top three votes will get a big prize. </p>
             <p>We will also randomly pick three lucky participants, each of them will win a Bedmate furniture. </p>
             <p>Don't be hesitate, come and vote. Bedmate furniture is waiting for you!</p>
+            <img src="~assets/img/vote/sofa.png">
         </div>
     </div>
 </template>
@@ -36,10 +37,13 @@ export default {
         padding: 0 5%;
         font-size: 0.95rem;
         & > p {
-            margin: 0.8rem 0;
+            margin-top: 0.8rem;
         }
         h3 {
             margin-top: 0;
+        }
+        img{
+            width:100%;
         }
     }
 }
