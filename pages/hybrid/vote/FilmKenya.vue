@@ -1,10 +1,10 @@
 <template>
     <div class="page-wrapper">
         <!-- 客户端或者浏览器端判断完开屏 -->
-        <div v-if="!appType" class="download" @click="loadConfirm('download_tips')">Download StarTimes ON</div>
+        <div v-if="!appType" class="download" @click="loadConfirm('download_tips')">{{$store.state.lang.vote_downloadtips}}</div>
         <div class="topContain" :class="{'mtop':!appType}">
             <img src="~assets/img/vote/kenya.png" style="width:100%">
-            <span class="about" @click="aboutCard = true">About</span>
+            <span class="about" @click="aboutCard = true">{{$store.state.lang.about_btn}}</span>
             <div class="sticky">
                 <nav id="nav">
                     <a v-for="(item,index) in tabList" :key="index" :class="{on:tabIndex===index}" @click="tabIndex=index">
@@ -18,7 +18,7 @@
             <div v-for="(item,index) in showDataList" :key="index" class="film-data">
                 <p class="group">
                     <img src="~assets/img/vote/ic_Title.png">{{item.group_name}}
-                    <span>Vote:{{item.ticket_num}}</span>
+                    <span>{{$store.state.lang.remain}}{{item.ticket_num}}</span>
                 </p>
                 <ul>
                     <li v-for="(sub,si) in item.candidates" :key="si">
@@ -41,9 +41,9 @@
         <div v-show="appType!=2" ref="box" class="share-box" :style="{'left':left, 'top':top}" @click="toShare()" @touchstart="canMove=true" @touchmove.prevent="move" @touchend="canMove = false">
             <img src="~assets/img//vote/ic_Share.png">
         </div>
-        <mCard v-show="aboutCard" :title="$store.state.lang.vote_about" class="card" @closeCard="aboutCard=false">
+        <mCard v-show="aboutCard" :title="$store.state.lang.about_btn" class="card" @closeCard="aboutCard=false">
             <template v-slot:content>
-                <div v-html="$store.state.lang.vote_about_word" />
+                <div v-html="$store.state.lang.about" />
             </template>
             <template v-if="appType==0" v-slot:buttons>
                 <div class="download-btn" @click="loadConfirm('about')">
@@ -52,7 +52,7 @@
                 </div>
             </template>
         </mCard>
-        <mCard v-show="shareCard" :title="$store.state.lang.vote_earnvote_tt" class="card" @closeCard="shareCard=false">
+        <mCard v-show="shareCard" :title="$store.state.lang.share_btn" class="card" @closeCard="shareCard=false">
             <template v-slot:content>
                 <div v-html="$store.state.lang.vote_rule_word" />
             </template>
@@ -77,9 +77,9 @@
         <div v-show="voteSuccess" class="card-layer" />
         <div v-show="voteSuccess" class="vote-success">
             <img src="~assets/img/vote/ic_finish.png">
-            <p>Vote Successful!</p>
+            <p>{{$store.state.lang.vote_succ1}}</p>
             <div class="close-btn" @click="voteSuccess=false">
-                <img src="~assets/img/vote/close_line.png"> CLOSE
+                <img src="~assets/img/vote/close_line.png">{{$store.state.lang.close}}
             </div>
         </div>
     </div>
@@ -103,7 +103,7 @@ export default {
     data() {
         return {
             appType: this.$store.state.appType || 0,
-            tabList: ['Film', 'Televison', 'Special Awards'],
+            tabList: [this.$store.state.lang.tab_film, this.$store.state.lang.tab_tv, this.$store.state.lang.tab_sa],
             tabIndex: 0,
             canMove: false,
             left: '',
@@ -171,18 +171,18 @@ export default {
             this.mSendEvLog('votebtn_click', film.name)
             if (this.appType <= 0) {
                 this.$confirm(
-                    '	Open StarTimes ON App vote for your favorite content.',
+                    this.$store.state.lang.vote_h5_1,
                     () => {
                         this.callDownload('vote_btn')
                     },
                     () => {},
-                    'OK',
-                    'NOT NOW'
+                    this.$store.state.lang.ok_btn,
+                    this.$store.state.lang.notnow_btn
                 )
                 return
             }
             if (ticket <= 0) {
-                this.$alert('You have already voted for this award. Please vote for other awards')
+                this.$alert(this.$store.state.lang.already_voted)
             } else {
                 this.$axios({
                     url: '/voting/v1/ballot',
@@ -221,7 +221,7 @@ export default {
                 callMarket.call(this, () => {
                     this.mSendEvLog('downloadpopup_show', pos)
                     this.$confirm(
-                        'Start downloading apk now?(12M)',
+                        this.$store.state.lang.vote_h5_download,
                         () => {
                             this.mSendEvLog('downloadpopup_clickok', pos)
                             downApk.call(this)
@@ -229,8 +229,8 @@ export default {
                         () => {
                             this.mSendEvLog('downloadpopup_clicknot', pos)
                         },
-                        'OK',
-                        'NOT NOW'
+                        this.$store.state.lang.ok_btn,
+                        this.$store.state.lang.notnow_btn
                     )
                 })
             })
@@ -239,13 +239,13 @@ export default {
             this.shareCard = false
             this.aboutCard = false
             this.$confirm(
-                'Open StarTimes ON App watch now,and explore more interesting.',
+                this.$store.state.lang.vote_h5_2,
                 () => {
                     this.callDownload(pos)
                 },
                 () => {},
-                'OK',
-                'NOT NOW'
+                this.$store.state.lang.ok_btn,
+                this.$store.state.lang.notnow_btn
             )
         },
         // 获取投票单元数据
@@ -286,7 +286,7 @@ export default {
                         this.platform
                     }`,
                     this.voteTitle,
-                    this.$store.state.lang.vote_webshare_words,
+                    this.$store.state.lang.share_content,
                     'http://cdn.startimestv.com/banner/kenya.png'
                 )
             } else if (this.appType === 0) {
@@ -306,7 +306,7 @@ export default {
         shareWithTwitter() {
             this.shareCard = false
             this.mSendEvLog('sharebtn_click', 'Twitter')
-            shareByTwitter.call(this, this.$store.state.lang.vote_appshare_words, window.location.origin + window.location.pathname)
+            shareByTwitter.call(this, this.$store.state.lang.share_content, window.location.origin + window.location.pathname)
         },
         move(event) {
             if (this.canMove) {
@@ -341,8 +341,8 @@ export default {
         return {
             title: this.voteTitle,
             meta: [
-                { name: 'description', property: 'description', content: this.$store.state.lang.vote_appshare_words },
-                { name: 'og:description', property: 'og:description', content: this.$store.state.lang.vote_appshare_words },
+                { name: 'description', property: 'description', content: this.$store.state.lang.share_content },
+                { name: 'og:description', property: 'og:description', content: this.$store.state.lang.share_content },
                 {
                     name: 'og:image',
                     property: 'og:image',
