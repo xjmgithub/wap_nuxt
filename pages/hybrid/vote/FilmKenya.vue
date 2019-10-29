@@ -53,9 +53,6 @@
             </template>
         </mCard>
         <mCard v-show="shareCard" :title="$store.state.lang.share_btn" class="card" @closeCard="shareCard=false">
-            <template v-slot:content>
-                <div v-html="$store.state.lang.vote_rule_word" />
-            </template>
             <template v-slot:buttons>
                 <div class="share-way">
                     <span @click="shareWithFacebook">
@@ -79,7 +76,7 @@
             <img src="~assets/img/vote/ic_finish.png">
             <p>{{$store.state.lang.vote_succ1}}</p>
             <div class="close-btn" @click="voteSuccess=false">
-                <img src="~assets/img/vote/close_line.png">{{$store.state.lang.close}}
+                <img src="~assets/img/vote/close_line.png">{{$store.state.lang.ok_btn}}
             </div>
         </div>
     </div>

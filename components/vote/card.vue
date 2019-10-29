@@ -60,7 +60,7 @@ export default {
     .content {
         margin-bottom: 0.4rem;
         max-height: 18rem;
-        min-height: 12rem;
+        // min-height: 12rem;
         overflow-y: scroll;
         div {
             font-size: 0.95rem;
