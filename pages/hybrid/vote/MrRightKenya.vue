@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="Mr-Right">
             <div class="title">
-                <img src="~assets/img/vote/Banner2.jpg" />
+                <img src="~assets/img/vote/Banner3.jpg" />
                 <div class="video">
                     <img src="~assets/img/vote/full_eps.png" @click="toPlayer(videoList[0].link_vod_code,'programbtn_click','1',0)" />
                     <img src="~assets/img/vote/trailer.png" @click="toPlayer(videoList[1].link_vod_code,'trailbtn_click','1',0)" />
@@ -11,8 +11,8 @@
             </div>
             <div class="rule">
                 <span v-if="isApp==1" class="share" @click="toShare">{{$store.state.lang.mrright_tell_my_friends}}</span>
-                <nuxt-link :to="{path:'/hybrid/vote/rule'}">
-                    <img src="~assets/img/vote/VIVO.png" @click="mSendEvLog('banner_click',1,10)" />
+                <nuxt-link :to="{path:'/hybrid/vote/ruleKenya'}">
+                    <img src="~assets/img/vote/sofa.png" @click="mSendEvLog('banner_click',1,10)" />
                     <span>HOW TO WIN</span>
                 </nuxt-link>
             </div>
@@ -107,7 +107,7 @@ export default {
         return {
             isLogin: this.$store.state.user.type || false,
             isApp: this.$store.state.appType,
-            vote_id: 14,
+            vote_id: 21,
             videoList: [],
             advisorList: [],
             rankList: [],
@@ -451,7 +451,7 @@ body {
             font-weight: bold;
             text-decoration: underline;
             position: absolute;
-            bottom: 0;
+            bottom: 1.5rem;
             right: 15%;
             &.share {
                 right: 4%;
