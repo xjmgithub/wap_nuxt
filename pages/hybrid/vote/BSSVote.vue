@@ -198,7 +198,7 @@ export default {
             clipsListNew: [],
             clipsListNew5: [],
             result10StartTime: '2019-10-01T00:00:00',
-            result5StartTime: '2019-10-08T00:00:00',
+            result5StartTime: '2019-11-08T00:00:00',
             isResult10Start: false,
             isResult5Start: false,
 
