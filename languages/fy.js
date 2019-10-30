@@ -22,7 +22,7 @@ export default {
     share_title:'KALASHA-PAOFF Film Festival',
     share_content:'J\'ai déjà voté, clique pour ME REJOINDRE !',
     close:'CLOSE',
-    already_voted:'You have already voted for this award. Please vote for other awards',
+    already_voted:'You have voted for this awards',
 
 
     post_share_title: 'StarTimes ON vous ouvre un nouveau monde !',
