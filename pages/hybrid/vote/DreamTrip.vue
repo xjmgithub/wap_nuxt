@@ -5,7 +5,13 @@
             <div class="tab">
                 <img src="~assets/img/vote/DreamTrip/btn_share.png" alt class="share-btn" @click="toShare" />
                 <ul v-show="pageListReady.length>0">
-                    <li v-for="(item,i) in pageListReady" :key="i" class="lis" :class="i==index?'active':''" @click="tabClick(i)">
+                    <li
+                        v-for="(item,i) in pageListReady"
+                        :key="i"
+                        class="lis"
+                        :class="i==index?'active':(i<currentPage?'pre':'')"
+                        @click="tabClick(i)"
+                    >
                         <p class="ep">{{item.group_name}}</p>
                         <p class="time">{{item.start_time.substr(0, 10)}}</p>
                     </li>
@@ -97,8 +103,8 @@ export default {
     },
     data() {
         return {
-            appType: this.$store.state.appType || 0,
-            // appType: 1,
+            // appType: this.$store.state.appType || 0,
+            appType: 1,
             isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             timer: null, // tab滚动定位定时器
             during: 5, // 发送弹幕后倒计时
@@ -340,7 +346,7 @@ export default {
                     this.videoCode = item.link_vod_code
                     this.videoTitle = item.description
                     this.videoId = item.id
-                    this.mSendEvLog('video_show', item.id, this.index+1)
+                    this.mSendEvLog('video_show', item.id, this.index + 1)
                 } else if (item.name == 'e' + (this.index + 1)) {
                     // 分享文案
                     this.imgUrl = item.cover
@@ -377,7 +383,7 @@ export default {
                 if (i < this.currentPage) {
                     if (this.index != i) {
                         this.index = i
-                        this.mSendEvLog('tab_click', '', this.index+1)
+                        this.mSendEvLog('tab_click', '', this.index + 1)
                         this.timeNum = 0
                         this.last_id = 0
                         this.count = 0
@@ -444,7 +450,7 @@ export default {
             })
         },
         toPlayer(code, label1, label2) {
-            label1 ? this.mSendEvLog('button_click', label1, this.index+1) : this.mSendEvLog('video_click', label2, this.index+1)
+            label1 ? this.mSendEvLog('button_click', label1, this.index + 1) : this.mSendEvLog('video_click', label2, this.index + 1)
             if (this.appType == 0) {
                 this.callOrDownApp()
                 return
@@ -630,7 +636,7 @@ export default {
             })
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', this.index+1)
+                        this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', this.index + 1)
                         this.pageList[this.index].candidates[num].ballot_num++
                         this.pageList[this.index].ticket_num = 0
                         // 动画
@@ -640,6 +646,19 @@ export default {
                         this.rightNum = 100 - this.leftNum
                         const domLeft = document.getElementsByClassName('bar')[0]
                         const domRight = document.getElementsByClassName('bar')[1]
+                        const addOnes = document.getElementsByClassName('add-one')
+                        // console.log(addOnes)
+                        if (local == 'left') {
+                            addOnes[0].style.visibility = 'visible'
+                            setTimeout(() => {
+                                addOnes[0].style.visibility = 'hidden'
+                            }, 2000)
+                        } else {
+                            addOnes[1].style.visibility = 'visible'
+                            setTimeout(() => {
+                                addOnes[1].style.visibility = 'hidden'
+                            }, 2000)
+                        }
                         // domLeft.style.width = 0.9 * this.leftNum + '%'
                         // domRight.style.width = 0.9 * this.rightNum + '%'
                         let w = 0
@@ -754,7 +773,7 @@ export default {
             })
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.mSendEvLog('send_click', this.commentText, this.index+1)
+                        this.mSendEvLog('send_click', this.commentText, this.index + 1)
                         const during = this.during
                         const item = document.createElement('span')
                         const img = document.createElement('img')
@@ -941,6 +960,12 @@ export default {
                             position: absolute;
                             left: 1.5rem;
                             bottom: 0.3rem;
+                        }
+                    }
+                    &.pre {
+                        .ep,
+                        .time {
+                            color: #fff;
                         }
                     }
                 }
@@ -1134,6 +1159,7 @@ export default {
                             position: absolute;
                             top: -1.3rem;
                             font-weight: bold;
+                            // visibility: hidden;
                             &.l {
                                 left: 10%;
                                 color: #ff6b31;
