@@ -22,7 +22,7 @@ export default {
     share_title:'KALASHA-PAOFF Film Festival',
     share_content:'Nimepiga kura tayari, bonyeza ili UJIUNGE NAMI!',
     close:'CLOSE',
-    already_voted:'You have voted for this awards',
+    already_voted:'Umepiga kura kwa tuzo hii.',
 
     post_share_title: 'StarTimes ON inafungua dunia mpya!',
     // deeplink

@@ -424,6 +424,9 @@ html {
                 font-weight: 600;
                 text-shadow: 1px 2px 0px rgba(0, 0, 0, 0.5);
                 font-size: 0.92rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
                 p {
                     width: 100%;
                     height: 0.2rem;
