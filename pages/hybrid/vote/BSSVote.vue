@@ -80,16 +80,16 @@
                 @click="toRegister"
             />
             <img v-if="!isResult10Start&&!isResult5Start" id="text2" class="text" src="~assets/img/vote/BSSRegister/text2.png" alt />
-            <div v-if="!isResult10Start&&!isResult5Start" class="share-box" @click="toShare('midshare')">
-                <div>
-                    <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt @click="stopBubble" />
+            <div class="share-box" >
+                <div v-if="!isResult10Start&&!isResult5Start">
+                    <img v-if="appType>0&&isLogin" src="~assets/img/vote/BSSRegister/bg-login-no.png" alt />
                     <img v-else src="~assets/img/vote/BSSRegister/bg-login.png" alt @click="toSignIn" />
                     <img src="~assets/img/vote/BSSRegister/bg-share-btn.png" alt @click="toShare('invite')" />
                     <div class="num">
                         <p>FANIKIWA KUALIKA RAFIKI {{share_num}}</p>
                     </div>
                 </div>
-                <img src="~assets/img/vote/BSSRegister/img-share.png" alt="img-sharefor" />
+                <img src="~assets/img/vote/BSSRegister/img-share.png" alt="img-sharefor" @click="toShare('midshare')"/>
             </div>
             <img
                 v-if="appType>0&&!isLogin&&!isResult10Start&&!isResult5Start"
@@ -197,7 +197,7 @@ export default {
             clipsList: [],
             clipsListNew: [],
             clipsListNew5: [],
-            result10StartTime: '2019-10-01T00:00:00',
+            result10StartTime: '2019-11-01T00:00:00',
             result5StartTime: '2019-11-08T00:00:00',
             isResult10Start: false,
             isResult5Start: false,
@@ -353,7 +353,7 @@ export default {
         // this.getCommentInfo()
         this.getAdvisorList()
         this.getLotteryType()
-        this.getMsgList()
+        // this.getMsgList()
         this.getShareNum()
         // this.getVideoMsg()
         const times = setInterval(() => {
@@ -409,12 +409,8 @@ export default {
             })
             console.log(action, label, value)
         },
-        stopBubble() {
-            event && event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true)
-        },
         // app登录方法
         toSignIn() {
-            this.stopBubble()
             this.mSendEvLog('signin_click', '', '')
             if (this.appType <= 0) {
                 this.callOrDownApp()
@@ -430,7 +426,6 @@ export default {
         },
         // 调出分享弹层(app/web)
         toShare(label) {
-            this.stopBubble()
             if (label == 'voterules') this.closeRule()
             this.mSendEvLog('share_click', label, '')
             if (this.appType >= 1) {
