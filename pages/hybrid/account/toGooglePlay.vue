@@ -7,7 +7,7 @@
     </div>
 </template>
 <script>
-import { downApk } from '~/functions/app'
+import { downApk, callMarket } from '~/functions/app'
 export default {
     layout: 'base',
     data() {
@@ -17,66 +17,23 @@ export default {
     },
     mounted() {
         this.invide_code = sessionStorage.getItem('invite_code')
-        this.sendEvLog({
-            category: 'tell_friends',
-            action: 'register_success_show',
-            label: this.invide_code,
-            value: 1
-        })
+        this.mSendEvLog('register_success_show', this.invide_code, 1)
     },
     methods: {
-        callMarket() {
+        mSendEvLog(action, label, value) {
             this.sendEvLog({
                 category: 'tell_friends',
-                action: 'callMarket',
-                label: this.invide_code,
-                value: 1
+                action: action,
+                label: label,
+                value: value
             })
-            if (navigator.userAgent.indexOf('SAMSUNG') >= 0) {
-                this.invokeByIframe()
-            } else {
-                this.invokeByIntent()
-            }
+            console.log(action, label, value)
         },
-        invokeByIframe() {
-            const reffer = sessionStorage.getItem('utm_str')
-            const iframe = document.createElement('iframe')
-            iframe.frameborder = '0'
-            iframe.style.cssText = 'display:none;border:0;width:0;height:0;'
-            document.body.appendChild(iframe)
-
-            iframe.src = `market://details?id=com.star.mobile.video&referrer=` + encodeURIComponent(reffer)
-            const s = setTimeout(() => {
-                if (!document.hidden) downApk.call(this)
-                this.sendEvLog({
-                    category: 'tell_friends',
-                    action: 'downApk',
-                    label: this.invide_code,
-                    value: 1
-                })
-                clearTimeout(s)
-            }, 2000)
-            document.addEventListener('visibilitychange', () => {
-                clearTimeout(s)
-                this.$nuxt.$loading.finish()
-            })
-        },
-        invokeByIntent(failback) {
-            const reffer = sessionStorage.getItem('utm_str')
-            window.location = 'intent://details?id=com.star.mobile.video&referrer=' + encodeURIComponent(reffer) + '#Intent;scheme=market;end'
-            const s = setTimeout(() => {
-                if (!document.hidden) downApk.call(this)
-                this.sendEvLog({
-                    category: 'tell_friends',
-                    action: 'downApk',
-                    label: this.invide_code,
-                    value: 1
-                })
-                clearTimeout(s)
-            }, 2000)
-            document.addEventListener('visibilitychange', () => {
-                clearTimeout(s)
-                this.$nuxt.$loading.finish()
+        callMarket() {
+            this.mSendEvLog('callMarket', this.invide_code, 1)
+            callMarket.call(this, () => {
+                this.mSendEvLog('downApk', this.invide_code, 1)
+                downApk.call(this)
             })
         }
     },

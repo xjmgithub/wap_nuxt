@@ -188,7 +188,7 @@
 import { Base64 } from 'js-base64'
 import mShare from '~/components/web/share.vue'
 import { cdnPicSrc } from '~/functions/utils'
-import { invokeByIframe, downApk, playVodinApp, shareInvite } from '~/functions/app'
+import { callApp, downApk, playVodinApp, shareInvite } from '~/functions/app'
 export default {
     layout: 'base',
     components: {
@@ -327,7 +327,6 @@ export default {
                 label: label,
                 value: value
             })
-            console.log(action, label, value)
         },
         // 调出分享弹层(app/web)
         toShare(label) {
@@ -346,7 +345,7 @@ export default {
         },
         callOrDownApp() {
             // 唤醒App
-            invokeByIframe.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
+            callApp.call(this, 'com.star.mobile.video.activity.BrowserActivity?loadUrl=' + window.location.href, () => {
                 // 下载App
                 this.$confirm(
                     'Pakua Startimes ON app na shiriki BSS2019',

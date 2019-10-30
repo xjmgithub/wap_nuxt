@@ -6,7 +6,21 @@ export default {
     download_apk: 'Kupakua',
 
     post_share_title: 'StarTimes ON inafungua dunia mpya!',
-
+    // deeplink
+    sign_out: 'KUTOKA',
+    redeem_button: 'REDEEM',
+    redeem_title: 'Komboa vocha yako ya StarTimes VIP',
+    redeem_description: 'Tafadhali ingiza msimbo wako wa vocha ili kukomboa vocha kwenye akaunti yako ya StarTimes, kisha bonyeza \'REDEEM\' kuendelea.',
+    deeplink_download_now: 'PAKUA SASA',
+    redeem_success_title: 'Kuokoa Kufanikiwa',
+    redeem_success_content: 'Umefanikiwa kukomboa vocha yako ya VIP, sasa unaweza kukagua vocha yako katika programu ya StarTimes ON na uanze kuitumia kutazama yaliyomo bora!',
+    redeem_fail_title: 'Kuokoa Imeshindwa',
+    retry_button: 'Jaribu tena',
+    redeem_fail_redeemed: 'Tayari umekomboa vocha katika akaunti hii ya StarTimes katika hafla ya sasa, unaweza kuchagua akaunti nyingine ya StarTimes ili ukomboe au usubiri hafla za baadaye.',
+    redeem_fail_failed: 'Kukomboa vocha kumeshindwa, tafadhali angalia kiungo chako au wasiliana nasi.',
+    redeem_fail_encrp: 'Code cipher mismatch, tafadhali angalia kiungo chako au wasiliana nasi',
+    redeem_fail_used: 'Nambari ya vocha imekuwa ikitumika, tafadhali jaribu nyingine.',
+    redeem_fail_invalidcode: 'Nambari ya vocha haipo.',
     // star pay
     starpay_payment_currency_error: 'Huwezi kuendelea, tafadhali jaribu chaneli nyingine au wasiliana nasi',
     starpay_payment_amount_error: 'Huna pesa ya kutosha, tafadhali angalia salio lako',

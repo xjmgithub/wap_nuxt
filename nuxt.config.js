@@ -69,6 +69,7 @@ export default {
         '/feed/': env.proxyHost,
         '/sports/': env.proxyHost,
         '/lottery/': env.proxyHost,
+        '/promotion-coupon/': env.proxyHost,
         '/processtoken/':'http://op-test1.startimes.me/'
     },
     router: {

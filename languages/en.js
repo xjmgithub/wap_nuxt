@@ -6,6 +6,21 @@ export default {
     download_apk: 'Download Now',
 
     post_share_title: 'StarTimes ON opens up a new world!',
+    // deeplink
+    sign_out: 'SIGN OUT',
+    redeem_button: 'REDEEM',
+    redeem_title: 'Redeem your StarTimes VIP voucher',
+    redeem_description: 'Please enter your voucher code to redeem the voucher into your StarTimes account, then click \'REDEEM\' to continue.',
+    deeplink_download_now: 'DOWNLOAD NOW',
+    redeem_success_title: 'Redeem Successful',
+    redeem_success_content: 'You have successfully redeemed your VIP voucher, you can now check your voucher in StarTimes ON app and start using it to watch excellent contents!',
+    redeem_fail_title: 'Redeem Failed',
+    retry_button: 'RETRY',
+    redeem_fail_redeemed: 'You have already redeemed voucher into this StarTimes account in current event, you can choose another StarTimes account to redeem or wait for later events.',
+    redeem_fail_failed: 'Redeem voucher failed, please check your link or contact us.',
+    redeem_fail_encrp: 'Code cipher mismatch, please check your link or contact us.',
+    redeem_fail_used: 'This voucher code has been used, please try another one.',
+    redeem_fail_invalidcode: 'This voucher code does not exist.',
 
     // star pay
     starpay_payment_currency_error: 'Cannot proceed with wrong currency, please try another channel or contact us',
