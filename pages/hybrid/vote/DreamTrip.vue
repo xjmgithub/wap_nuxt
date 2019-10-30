@@ -17,11 +17,6 @@
                     </li>
                 </ul>
             </div>
-            <div class="video-btn">
-                <img class="film" src="~assets/img/vote/DreamTrip/btn_full.png" alt @click="toPlayer(filmCode,'show')" />
-                <img class="cloud" src="~assets/img/vote/DreamTrip/img_clound1.png" alt />
-                <img class="high-light" src="~assets/img/vote/DreamTrip/btn_highlight.png" alt @click="toPlayer(highLightCode,'highlight')" />
-            </div>
             <div class="topic">
                 <img class="title" :src="cdnPic(topic)" alt />
                 <div class="pick-box">
@@ -72,16 +67,30 @@
                     <div class="btn" @click="sendComment">{{disabled?`${during}s`:`SEND`}}</div>
                 </div>
             </div>
+            <img src="~assets/img/vote/DreamTrip/img_share.png" class="img-share" alt @click="toShare" />
             <div class="bg-bottom">
                 <img class="bg-img" src="~assets/img/vote/DreamTrip/bg_down.png" alt />
                 <div class="bottom-item">
-                    <img src="~assets/img/vote/DreamTrip/img_share.png" alt @click="toShare" />
-                    <div class="video" @click="toPlayer(videoCode,'',videoId)">
+                    <div class="video" @click="toPlayer(videoCode,'topic')">
                         <div class="div">
                             <img :src="cdnPic(videoSrc)" alt />
                         </div>
                         <img src="~assets/img/vote/DreamTrip/btn-play.png" alt class="play" />
                         <div class="title">{{videoTitle}}</div>
+                    </div>
+                    <div class="video" @click="toPlayer(filmCode,'fulleps')">
+                        <div class="div">
+                            <img :src="cdnPic(filmSrc)" alt />
+                        </div>
+                        <img src="~assets/img/vote/DreamTrip/btn-play.png" alt class="play" />
+                        <div class="title">{{filmTitle}}</div>
+                    </div>
+                    <div class="video" @click="toPlayer(highLightCode,'highlight')">
+                        <div class="div">
+                            <img :src="cdnPic(highLightSrc)" alt />
+                        </div>
+                        <img src="~assets/img/vote/DreamTrip/btn-play.png" alt class="play" />
+                        <div class="title">{{highLightTitle}}</div>
                     </div>
                 </div>
             </div>
@@ -103,8 +112,8 @@ export default {
     },
     data() {
         return {
-            // appType: this.$store.state.appType || 0,
-            appType: 1,
+            appType: this.$store.state.appType || 0,
+            // appType: 1,
             isLogin: this.$store.state.user.roleName && this.$store.state.user.roleName.toUpperCase() !== 'ANONYMOUS',
             timer: null, // tab滚动定位定时器
             during: 5, // 发送弹幕后倒计时
@@ -213,6 +222,8 @@ export default {
             pageWidth: 0, // 页面可视区域宽度
             count: 0, // 当前完全滚入屏幕的弹幕下标
             speed: 200, // 弹幕速度，越大越慢
+            minSp: 0.6,
+            maxSp: 1,
             space: -20, // 两行弹幕的间隔
             time: null, // 弹幕滚动定时器
             commentText: '', // 发送的内容
@@ -223,13 +234,16 @@ export default {
             timeNum: 0, // 记录已在当前页面上成功调用获取弹幕接口的次数
             canClickTab: true,
             vote_id: 17,
+            filmSrc: '',
             filmCode: '',
+            filmTitle: '',
+            highLightSrc: '',
             highLightCode: '',
+            highLightTitle: '',
             topic: '',
             videoSrc: '',
             videoCode: '',
             videoTitle: '',
-            videoId: '',
             tip: '',
 
             title: 'Dream Destination',
@@ -333,10 +347,16 @@ export default {
             this.sourceList.forEach(item => {
                 if (item.name == 'a' + (this.index + 1)) {
                     // 正片
+                    this.filmSrc = item.cover
                     this.filmCode = item.link_vod_code
+                    this.filmTitle = item.description
+                    this.mSendEvLog('video_show', 'fulleps', this.index + 1)
                 } else if (item.name == 'b' + (this.index + 1)) {
                     // highLight
+                    this.highLightSrc = item.cover
                     this.highLightCode = item.link_vod_code
+                    this.highLightTitle = item.description
+                    this.mSendEvLog('video_show', 'highlight', this.index + 1)
                 } else if (item.name == 'c' + (this.index + 1)) {
                     // 话题
                     this.topic = item.cover
@@ -345,8 +365,7 @@ export default {
                     this.videoSrc = item.cover
                     this.videoCode = item.link_vod_code
                     this.videoTitle = item.description
-                    this.videoId = item.id
-                    this.mSendEvLog('video_show', item.id, this.index + 1)
+                    this.mSendEvLog('video_show', 'topic', this.index + 1)
                 } else if (item.name == 'e' + (this.index + 1)) {
                     // 分享文案
                     this.imgUrl = item.cover
@@ -449,8 +468,8 @@ export default {
                 )
             })
         },
-        toPlayer(code, label1, label2) {
-            label1 ? this.mSendEvLog('button_click', label1, this.index + 1) : this.mSendEvLog('video_click', label2, this.index + 1)
+        toPlayer(code, label) {
+            this.mSendEvLog('video_click', label, this.index + 1)
             if (this.appType == 0) {
                 this.callOrDownApp()
                 return
@@ -574,7 +593,11 @@ export default {
                 const commentWidth = p.offsetWidth + 35
                 commentItem.style.width = commentWidth + 15 + 'px'
             }
-            this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3)
+            // let s = this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3
+            let s = this.getDom(this.count).offsetWidth / this.speed
+            if (s < this.minSp) s = this.minSp
+            else if (s > this.maxSp) s = this.maxSp
+            this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, s)
         },
         animate(dom, num, speed) {
             let flag = true
@@ -594,11 +617,11 @@ export default {
                         this.getCommentList()
                         return true
                     }
-                    this.animate(
-                        this.getDom(this.count),
-                        -this.getDom(this.count).offsetWidth,
-                        this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3
-                    )
+                    // let s = this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3
+                    let s = this.getDom(this.count).offsetWidth / this.speed
+                    if (s < this.minSp) s = this.minSp
+                    else if (s > this.maxSp) s = this.maxSp
+                    this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, s)
                 }
                 if (num <= this.pageWidth + 20) {
                     dom.style.right = num + 'px'
@@ -647,13 +670,14 @@ export default {
                         const domLeft = document.getElementsByClassName('bar')[0]
                         const domRight = document.getElementsByClassName('bar')[1]
                         const addOnes = document.getElementsByClassName('add-one')
-                        // console.log(addOnes)
                         if (local == 'left') {
                             addOnes[0].style.visibility = 'visible'
+                            addOnes[1].style.visibility = 'hidden'
                             setTimeout(() => {
                                 addOnes[0].style.visibility = 'hidden'
                             }, 2000)
                         } else {
+                            addOnes[0].style.visibility = 'hidden'
                             addOnes[1].style.visibility = 'visible'
                             setTimeout(() => {
                                 addOnes[1].style.visibility = 'hidden'
@@ -803,11 +827,16 @@ export default {
                         item.style.position = 'absolute'
                         item.style.right = -2000 + 'px'
                         item.style.width = itemWidth + 25 + 'px'
+                        const lineNum = this.count >= 2 ? this.count - 2 : this.count + this.commentList.length - 2
+                        item.style.top = (lineNum % 4) * this.lineSpace + 13.5 + 'px'
+                        let sp = itemWidth / this.speed
+                        if (sp < this.minSp) sp = this.minSp
+                        else if (sp > this.maxSp) sp = this.maxSp
                         let num = -itemWidth
                         const time = setInterval(() => {
                             if (num <= this.pageWidth + 20) {
                                 item.style.right = num + 'px'
-                                num += itemWidth / (this.speed * 4) + 0.3
+                                num += sp
                             } else {
                                 clearInterval(time)
                             }
@@ -889,8 +918,8 @@ export default {
         transform: scale(0);
     }
     100% {
-        opacity: 0;
-        transform: scale(4);
+        opacity: 0.2;
+        transform: scale(5);
     }
 }
 .wrapper {
@@ -908,6 +937,10 @@ export default {
             &.bg-img {
                 padding-top: 0;
                 width: 100%;
+            }
+            &.img-share {
+                width: 90%;
+                padding: 1rem 0 0.5rem;
             }
         }
         .tab {
@@ -968,27 +1001,6 @@ export default {
                             color: #fff;
                         }
                     }
-                }
-            }
-        }
-        .video-btn {
-            margin-top: 1rem;
-            position: relative;
-            width: 100%;
-            height: 1.7rem;
-            img {
-                position: absolute;
-                bottom: 0;
-                height: 1.7rem;
-                &.film {
-                    left: 0;
-                }
-                &.cloud {
-                    height: 1.2rem;
-                    left: 8rem;
-                }
-                &.high-light {
-                    right: 0;
                 }
             }
         }
@@ -1159,7 +1171,7 @@ export default {
                             position: absolute;
                             top: -1.3rem;
                             font-weight: bold;
-                            // visibility: hidden;
+                            visibility: visible;
                             &.l {
                                 left: 10%;
                                 color: #ff6b31;
@@ -1292,23 +1304,20 @@ export default {
         }
         .bg-bottom {
             width: 100%;
-            margin: 1.5rem auto 0;
+            margin: 1rem auto 0;
             position: relative;
             .bg-img {
                 width: 100%;
                 position: absolute;
+                bottom: -11rem;
                 z-index: 0;
             }
             .bottom-item {
                 position: relative;
                 z-index: 1;
                 width: 100%;
-                > img {
-                    width: 90%;
-                    margin-left: 5%;
-                }
                 .video {
-                    margin: 2rem auto 0;
+                    margin: 1rem auto 0;
                     width: 80%;
                     position: relative;
                     .div {
@@ -1327,7 +1336,7 @@ export default {
                             content: '';
                             display: inline-block;
                             padding-bottom: 57%;
-                            width: 0.1px;
+                            width: 0;
                             vertical-align: middle;
                         }
                     }
