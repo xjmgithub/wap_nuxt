@@ -349,7 +349,7 @@ export default {
 
             // pageList数据
             // 投票状态
-            if(this.pageList[this.index].ticket_num > 0) {
+            if (this.pageList[this.index].ticket_num > 0) {
                 this.picked = false
                 this.show_in = true
             } else {
@@ -573,7 +573,14 @@ export default {
                 const commentItem = document.getElementById(i)
                 const img = commentItem.getElementsByTagName('img')[0]
                 const p = commentItem.getElementsByTagName('p')[0]
-                img.src = this.commentList[i].avatar || 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                if (this.commentList[i].avatar) {
+                    img.src =
+                        this.commentList[i].avatar == 'http://cdn.startimestv.com/head/h_d.png'
+                            ? 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                            : this.commentList[i].avatar
+                } else {
+                    img.src = 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                }
                 p.innerText = this.commentList[i].content
                 const commentWidth = p.offsetWidth + 35
                 commentItem.style.width = commentWidth + 15 + 'px'
@@ -788,7 +795,14 @@ export default {
                         const item = document.createElement('span')
                         const img = document.createElement('img')
                         const p = document.createElement('p')
-                        img.src = this.$store.state.user.head || 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                        if (this.$store.state.user.head) {
+                            img.src =
+                                this.$store.state.user.head == 'http://cdn.startimestv.com/head/h_d.png'
+                                    ? 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                                    : this.$store.state.user.head
+                        } else {
+                            img.src = 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                        }
                         p.innerText = this.commentText
                         p.style.display = 'inline-block'
                         p.style.color = '#fff'
