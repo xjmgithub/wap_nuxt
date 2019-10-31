@@ -167,7 +167,7 @@ export default {
                     window.getChannelId && window.getChannelId.finish()
                 }
             } else if (this.isApp === 2) {
-                window.location.href = 'startimes://ottOrders?isBackToSource=true'
+                window.location.href = 'startimes://myOrders?isBackToSource=false'
             } else {
                 if (this.timer2) clearTimeout(this.timer2)
                 if (this.timer) clearInterval(this.timer)
