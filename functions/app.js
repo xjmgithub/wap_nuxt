@@ -33,26 +33,46 @@ export const createScheme = function(page, host, path, scheme) {
 }
 
 export const pageDlay = function(callback, second) {
-    const timeout = second || 3000 // 手机卡顿的情况会比较慢
-    const interval = 200
-    const deviation = 20
-
+    const timeout = second || 5000 // 手机卡顿的情况会比较慢
     const timerStart = new Date().getTime()
     let lastFired = new Date().getTime()
-    const timer = setInterval(() => {
-        const now = new Date().getTime()
-        if (now - lastFired < deviation + interval) {
-            // 浏览器健康状态
-            if (now - timerStart > timeout) {
-                if (!document.hidden) callback && callback()
+    if (browser.browserVer > 40) {
+        const lalal = () => {
+            const now = new Date().getTime()
+            if (now - lastFired < 100) {
+                // 健康状态
+                if (now - timerStart > timeout) {
+                    if (!document.hidden) callback && callback()
+                } else {
+                    lastFired = now
+                    window.requestAnimationFrame(lalal)
+                }
+            }
+        }
+        window.requestAnimationFrame(lalal)
+    } else {
+        const interval = 200
+        const deviation = 20
+        const timer = setInterval(() => {
+            const now = new Date().getTime()
+            if (now - lastFired < deviation + interval) {
+                // 浏览器健康状态
+                if (now - timerStart > timeout) {
+                    if (!document.hidden) callback && callback()
+                    clearInterval(timer)
+                }
+            } else {
+                // 不健康,代表浏览器进入后台，则不做操作
                 clearInterval(timer)
             }
-        } else {
-            // 不健康,代表浏览器进入后台，则不做操作
+            lastFired = now
+        }, 200)
+        // 如果chrome唤醒app时间较短则不会触发视图窗口可视状态的变化
+        // 进入我们apphome页就算唤起成功，只有跳过了广告页面才会改变进程的前后状态
+        document.onvisibilitychange = function() {
             clearInterval(timer)
         }
-        lastFired = now
-    }, 200)
+    }
 }
 
 export const invokeByHref = function(target, failback) {
@@ -76,6 +96,7 @@ export const callApp = function(page, failback) {
         label: this.$route.path,
         value: 1
     })
+
     if (browser.browserVer > 40) {
         if (browser.ua.indexOf('UCBrowser') > 0) {
             if (browser.androidVer >= 4.4) {
@@ -139,6 +160,9 @@ export const callMarket = function(failback) {
 
     if (browser.isIos) {
         window.location.href = appleStore
+    } else if (browser.ua.indexOf('MuMu') >= 0 || browser.ua.indexOf('I9502') > 0) {
+        // android 6+
+        invokeByIframe.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     } else {
         invokeByHref.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     }

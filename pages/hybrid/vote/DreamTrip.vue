@@ -5,7 +5,7 @@
             <div class="tab">
                 <img src="~assets/img/vote/DreamTrip/btn_share.png" alt class="share-btn" @click="toShare" />
                 <ul v-show="pageListReady.length>0">
-                    <li v-for="(item,i) in pageListReady" :key="i" class="lis" :class="i==index?'active':''">
+                    <li v-for="(item,i) in pageListReady" :key="i" class="lis" :class="i==index?'active':''" @click="tabClick(i)">
                         <p class="ep">{{item.group_name}}</p>
                         <p class="time">{{item.start_time.substr(0, 10)}}</p>
                     </li>
@@ -21,7 +21,7 @@
                 <div class="pick-box">
                     <div class="left">
                         <div>
-                            <img v-if="pageListReady[0]" :src="cdnPic(pageListReady[0].candidates[0].icon)" alt />
+                            <img v-if="pageListReady[index]" :src="cdnPic(pageListReady[index].candidates[0].icon)" alt />
                         </div>
                     </div>
                     <div class="middle">
@@ -31,12 +31,12 @@
                     </div>
                     <div class="right">
                         <div>
-                            <img v-if="pageListReady[0]" :src="cdnPic(pageListReady[0].candidates[1].icon)" alt />
+                            <img v-if="pageListReady[index]" :src="cdnPic(pageListReady[index].candidates[1].icon)" alt />
                         </div>
                     </div>
                     <div v-show="!picked||appType==0" class="pick">
-                        <div v-if="pageListReady[0]" class="btn" @click="handlePick('left',pageListReady[0].candidates)">PICK</div>
-                        <div v-if="pageListReady[currentPage]" class="btn" @click="handlePick('right',pageListReady[0].candidates)">PICK</div>
+                        <div v-if="pageListReady[index]" class="btn" @click="handlePick('left',pageListReady[index].candidates)">PICK</div>
+                        <div v-if="pageListReady[index]" class="btn" @click="handlePick('right',pageListReady[index].candidates)">PICK</div>
                     </div>
                     <div v-show="picked&&appType>0" class="progress" :class="pick_click">
                         <div class="bar l"></div>
@@ -62,7 +62,7 @@
                     </ul>
                 </div>
                 <div class="send-box">
-                    <input v-model="commentText" type="text" placeholder="What do you think?" maxlength="100" @focus="inputFocus" />
+                    <textarea v-model="commentText" type="text" placeholder="Share your feelings..." maxlength="100" @focus="inputFocus" />
                     <div class="btn" @click="sendComment">{{disabled?`${during}s`:`SEND`}}</div>
                 </div>
             </div>
@@ -194,7 +194,7 @@ export default {
                 l_show: false
             },
             timeList: [],
-            currentPage: 0, // 当前所在期数
+            currentPage: 1, // 当前所在期数
             pageList: [],
             leftNum: 0,
             rightNum: 0,
@@ -284,15 +284,104 @@ export default {
         this.mSendEvLog('page_show', '', '')
         this.pageWidth = document.body.clientWidth
         this.getPagelist()
-        this.getSource()
+        this.nowarp()
     },
     methods: {
+        nowarp() {
+            const textdom = document.getElementsByTagName('textarea')[0]
+            textdom.addEventListener('keydown', e => {
+                if (e.keyCode == 13) {
+                    e.preventDefault()
+                    // this.sendComment()
+                    return false
+                }
+            })
+        },
+        initPage(i) {
+            // tab
+            const tabBox = document.querySelector('.tab ul')
+            const item = document.getElementsByClassName('lis')[i]
+            const offsetLeft = item.offsetLeft
+            const scrollX = tabBox.scrollLeft
+            const clientX = tabBox.clientWidth
+            const childClientX = item.clientWidth
+            const speed = offsetLeft - scrollX + childClientX / 2 - clientX / 2
+            const s = speed / 30
+            const totalX = speed + scrollX
+            this.timer = setInterval(() => {
+                tabBox.scrollLeft += s
+                if (
+                    tabBox.scrollLeft <= 0 ||
+                    tabBox.scrollLeft >= tabBox.scrollWidth - clientX ||
+                    (speed > 0 && tabBox.scrollLeft > totalX) ||
+                    (speed < 0 && tabBox.scrollLeft < totalX)
+                ) {
+                    clearInterval(this.timer)
+                }
+            }, 5)
+            // source资源
+            this.sourceList.forEach(item => {
+                if (item.name == 'a' + (this.index + 1)) {
+                    // 正片
+                    this.filmCode = item.link_vod_code
+                } else if (item.name == 'b' + (this.index + 1)) {
+                    // highLight
+                    this.highLightCode = item.link_vod_code
+                } else if (item.name == 'c' + (this.index + 1)) {
+                    // 话题
+                    this.topic = item.cover
+                } else if (item.name == 'd' + (this.index + 1)) {
+                    // 相关视频
+                    this.videoSrc = item.cover
+                    this.videoCode = item.link_vod_code
+                    this.videoTitle = item.description
+                    this.videoId = item.id
+                    this.mSendEvLog('video_show', item.id, 1)
+                } else if (item.name == 'e' + (this.index + 1)) {
+                    // 分享文案
+                    this.imgUrl = item.cover
+                    this.shareText = item.description
+                    this.content = this.shareText
+                }
+            })
+
+            // pageList数据
+            // 投票状态
+            this.pageList[this.index].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
+            // 参与人数 百分比
+            this.allNum = this.pageList[this.index].candidates[0].ballot_num + this.pageList[this.index].candidates[1].ballot_num
+            this.leftNumVal = this.pageList[this.index].candidates[0].ballot_num
+            this.rightNumVal = this.pageList[this.index].candidates[1].ballot_num
+            this.leftNum = parseInt((this.leftNumVal / this.allNum) * 100)
+            this.rightNum = 100 - this.leftNum
+            const domLeft = document.getElementsByClassName('bar')[0]
+            const domRight = document.getElementsByClassName('bar')[1]
+            domLeft.style.width = 0.9 * this.leftNum + '%'
+            domRight.style.width = 0.9 * this.rightNum + '%'
+            if (this.leftNum == 100) {
+                domLeft.style.borderRadius = '0.4rem'
+            } else if (this.rightNum == 100) {
+                domRight.style.borderRadius = '0.4rem'
+            } else {
+                domLeft.style.borderRadius = '0.4rem 0 0 0.4rem'
+                domRight.style.borderRadius = '0 0.4rem 0.4rem 0'
+            }
+        },
+        tabClick(i) {
+            if (i < this.currentPage) {
+                this.mSendEvLog('tab_click', '', 1)
+                this.index = i
+                this.initPage(this.index)
+            } else {
+                this.tipShow('Stay tuned!')
+            }
+        },
         inputFocus() {
             document.getElementById('comment').scrollIntoView()
         },
         getIndexToIns(arr, num) {
             const index = arr.sort((a, b) => a - b).findIndex(currentPage => num <= currentPage)
-            return index === -1 ? arr.length : index
+            return index <= 0 ? 1 : index
         },
         getDom(id) {
             return document.getElementById(id)
@@ -357,36 +446,13 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.sourceList = res.data.data
-                        this.sourceList.forEach(item => {
-                            if (item.name == 'a1') {
-                                // 正片
-                                this.filmCode = item.link_vod_code
-                            } else if (item.name == 'b1') {
-                                // highLight
-                                this.highLightCode = item.link_vod_code
-                            } else if (item.name == 'c1') {
-                                // 话题
-                                this.topic = item.cover
-                            } else if (item.name == 'd1') {
-                                // 相关视频
-                                this.videoSrc = item.cover
-                                this.videoCode = item.link_vod_code
-                                this.videoTitle = item.description
-                                this.videoId = item.id
-                                this.mSendEvLog('video_show', item.id, 1)
-                            } else if (item.name == 'e1') {
-                                // 分享文案
-                                this.imgUrl = item.cover
-                                this.shareText = item.description
-                                this.content = this.shareText
-                            }
-                        })
+                        this.initPage(this.index)
                     } else {
                         this.$alert('Get source list error!')
                     }
                 })
                 .catch(err => {
-                    this.$alert('Get source list error! ' + err)
+                    this.$alert('Get source list error!! ' + err)
                 })
         },
         // 获取期数，播出时间，票数，状态，投票单元
@@ -396,338 +462,291 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.pageList = res.data.data
+                        this.pageList.forEach((item, index) => {
+                            this.timeList.push(new Date(item.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime())
+                        })
+                        this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
+                        // console.log('currentPage: '+this.currentPage)
+                        this.index = this.currentPage - 1
                     } else {
                         this.pageList = []
+                        this.$alert('Get page list error!')
                     }
                     this.loaded_page = true
-                    this.$nextTick(() => {
-                        this.initPage()
-                        this.getCommentList()
-                    })
+                    this.getSource()
+                    this.getCommentList()
                 })
                 .catch(err => {
                     this.pageList = []
-                    this.$alert(err)
+                    this.$alert('Get page list error!! ' + err)
                 })
         },
         getCommentList() {
             this.commentList = [
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/53270_adf0ecfc-d6e1-46c1-9a72-389cfbf0a857.png',
-                    comment: 'It depends on what kind of trip it is.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Im Simidi Brian from  South EASTERN  Kenya  University,, I hate over spending rather than oveplannin",
                     index: 1
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/71986_198e59a9-798c-468e-85d1-a1b3579ca44b.png',
-                    comment: 'Nice show! ',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Kareem abdalah',
                     index: 2
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/209914_5dd6bd59-d6c0-435f-86d8-5609cbb53036.png',
-                    comment: 'Comfort, otherwise it will be torture',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Rogers is right',
                     index: 3
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/282681_d98028f5-f992-4e98-b9e5-b23c14cf1f22.png',
-                    comment: 'Depends on my mood...',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Roger ur de best',
                     index: 4
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/9b97f6ea-82c8-448a-a3d9-0481c9d6b1de.png',
-                    comment: 'Striking a balance will be important.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Feel lazy',
                     index: 5
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/325175_86155557-637c-46d4-b42c-faa00e337463.png',
-                    comment: 'go roger',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over planning',
                     index: 6
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/331990_bf80ffad-c297-4772-839e-98ac541a72d1.png',
-                    comment: 'The person who travels with me matters!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Good plan start with basic need',
                     index: 7
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/363179_6fc66c2b-eedd-475f-819e-0c51aad63d35.png',
-                    comment: 'BBBBBudget!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Ramsey platform on all social network',
                     index: 8
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/527595_67d6c87a-4aaa-4c95-869a-c23008794322.png',
-                    comment: 'You guys forget the weather!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'No maney',
                     index: 9
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/7a409fd4-3772-43a9-b37e-3b79a8b6a692.png',
-                    comment: 'It depends on how much money I have...',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Chipukizi fun',
                     index: 10
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/9366d275-a8ca-4dbb-a803-11ae1ea036a9.png',
-                    comment: "since I'm not a millionaire, budget it is.",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Roger stop over planning coz u may mess up',
                     index: 11
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/528768_590fb865-865c-4b38-9f64-a2e1af37f0e1.png',
-                    comment: 'comfort',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'My friends can be like campus figures so annoying',
                     index: 12
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/448233_09e30309-25ab-4259-b025-dd8ad0cc6b53.png',
-                    comment: 'What the point of a trip',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Spending alot of time with people who don't add value to your life..hahaha...",
                     index: 13
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/448364_487cb204-9de9-4d98-b388-5a1ee493203f.png',
-                    comment: 'Definitely comfort!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Money is everthing',
                     index: 14
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/527192_44e27dd1-553c-4532-b019-74ac2ad98460.png',
-                    comment: "I'm Roger's big fan!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'I hate over spending...',
                     index: 15
                 },
                 {
-                    user_icon: 'http://pbs.twimg.com/profile_images/378800000213076743/93e8eefdd954d06c6c119003fb7dee4f_normal.jpeg',
-                    comment: 'With low budget, you can also have a great trip.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Yaa. Is good',
                     index: 16
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/456623_93ab7c23-c038-4e63-b01f-3ac1fc0d5c7c.png',
-                    comment: 'Maximum comfort with minium budget!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Ambitious planning is not good also',
                     index: 17
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/523066_6c370679-fb08-43a6-ab4b-a1ff116b51a3.png',
-                    comment: '??',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Spending much',
                     index: 18
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/457981_65e64b8d-c7c0-4dc9-9a64-3b8805884ab0.png',
-                    comment: 'My wallet says budget.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Nice one group',
                     index: 19
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/458061_56a33dc5-7bd7-4933-bfe0-36be4fef1e0b.png',
-                    comment: 'My hometown is so beautiful.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "U can't spend wat u don't have",
                     index: 20
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/458610_9e9891d7-eae9-488d-a960-c2016fe8eb72.png',
-                    comment: 'Hard to choose...',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Away',
                     index: 21
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/464726_073aa80e-395c-4b11-aa9f-2d7aad72ae3e.png',
-                    comment: 'Ah!Roger!!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Mambo",
                     index: 22
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/465929_6265bcbb-bdca-4a80-a993-9a157cab1e7d.png',
-                    comment: "If I don't have enough money, I will not go trip. So comfort is more important for me.",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Good night and my life',
                     index: 23
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/466167_34d77c68-ac3b-4f5c-9df0-2fc1af5e272a.png',
-                    comment: "Haha, let's chat!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Good',
                     index: 24
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/526176_7a37f9cf-9886-447a-9ba1-3ea6b6aff161.png',
-                    comment: 'Anything budget. In my experience, you will end up paying the difference in cash, time, or comfort.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Its true Africans over spent their money',
                     index: 25
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/527409_ac436c74-14c2-49ba-930a-eb071cc76205.png',
-                    comment: 'Both!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Wawawaw',
                     index: 26
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/467431_cb5dcc9d-3f5b-41f2-ba1a-d2ba871a498b.png',
-                    comment: 'Comfort on a budget works for me. ',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Hahaha am following',
                     index: 27
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/467960_b6a1edb3-5d51-49f0-a654-976ec5618e3e.png',
-                    comment: 'how to',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'It fun I wish I could join them',
                     index: 28
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/522592_871c71fe-6b2c-4bab-9bea-976eb0873789.png',
-                    comment: 'Chipukeezy!!!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Is better to plan I supporting ugandan',
                     index: 29
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/472119_4794c5be-aa2d-4e36-be4e-a86ca06cab2b.png',
-                    comment: 'Who can fund me a trip',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Absolutely funny',
                     index: 30
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/524390_e0347734-86ff-453a-8d37-feb0c9d3596b.png',
-                    comment: 'both...',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'hi',
                     index: 31
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/474141_7d806bec-2ad2-4651-bbc3-6e225a65583f.png',
-                    comment: "I try not to go overboard but I'm definitely not a budget traveller.",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'jiaj',
                     index: 32
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/477066_6ecdac50-ddf9-478c-b0e3-a72d3898f2a4.png',
-                    comment: 'hahahahaha',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Some people in travelling talk too much with phones ",
                     index: 33
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/523953_0816bd14-5738-4a17-8306-2d2ee1c78d32.png',
-                    comment: 'Comfort all the way.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'At the round table of christ Jesus there us peace and love to feel ',
                     index: 34
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/481803_b2cc82e0-1c85-4e88-89d2-8029cae7ccc3.png',
-                    comment: "Chipukeezy, you're the best!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'If u happen to av much money you tent to be controlled by it, so watch out',
                     index: 35
                 },
                 {
-                    user_icon: 'http://pbs.twimg.com/profile_images/3694217857/44b56a25a6b31f80ef7dfc31525671b5_normal.jpeg',
-                    comment: 'I love traveling in style...but at budget prices!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'KabugoSamuel ',
                     index: 36
                 },
                 {
-                    user_icon: 'http://pbs.twimg.com/profile_images/591992384461889538/-8_hljnB_normal.jpg',
-                    comment: "I'll be generous if my gf travels with me.",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'There is no cooparation among the traveller , when you get a problem no one is going to help you',
                     index: 37
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/485587_1a9968e6-7cb5-4a72-bd22-4fc92f63d431.png',
-                    comment: 'this is fun',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over planning',
                     index: 38
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/485973_775054e4-9588-4b96-8012-98b47db0eba2.png',
-                    comment: "Can't wait to watch episode 2!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over planning',
                     index: 39
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/522206_655cfea6-34df-4d41-84b2-8ac0dd211aa9.png',
-                    comment: 'A mix of both... depending on the location or duration of trip.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Sanyuka TV',
                     index: 40
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/489795_9e2f806d-ac26-430e-862f-7fa459e86942.png',
-                    comment: 'comfort',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Over loading while u have paid your fully tp',
                     index: 41
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/490954_a112acc1-5b58-4825-bad7-b1c426e29dbe.png',
-                    comment: 'Lol',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: '750994447',
                     index: 42
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/491759_ed663056-ed20-457f-ab7b-fe6c096d722e.png',
-                    comment: "If you need to save money, you'd better stay at home. I will absolutely choose comfort.",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "750994448",
                     index: 43
                 },
                 {
-                    user_icon: 'http://pbs.twimg.com/profile_images/666545684569595904/x3cBRaf6_normal.jpg',
-                    comment: 'Food of course!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "wow",
                     index: 44
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/493723_8e049223-ef81-4354-b67f-b42295535522.png',
-                    comment: "Tanzania, it's my hometown!",
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Haha but that 's the way to go",
                     index: 45
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/495888_a096feb4-f638-4074-9d63-e31ff3f3b2c9.png',
-                    comment: 'I often quarrel with my bf on this event...I think comfort is more important.',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Haaa',
                     index: 46
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/48dd862e-7234-4907-9b66-e615cab55cc1.png',
-                    comment: 'both...',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Get richer and richer",
                     index: 47
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/499861_e3f55a90-07fa-4ac7-b32f-56db4aed8786.png',
-                    comment: 'I am about Fun and cheap! ',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Hahaaha ",
                     index: 48
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/500151_5fcf20a2-6abf-4468-b06c-7d7db120e5e1.png',
-                    comment: 'I travel light and on a budget, but splurge on food!',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'Working good to me',
                     index: 49
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/521940_9fa6a2d8-26c3-4a44-8b8e-9ad3213b30ec.png',
-                    comment: 'fun of course',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: "Am coming",
                     index: 50
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/529293_c52c0fa5-5335-4f3d-b92e-047ac95d0d3d.png',
-                    comment: 'the person i travel with',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'born to win',
                     index: 51
                 },
                 {
-                    user_icon: 'http://cdn.startimestv.com/head/upload/529707_49c902b3-9a7a-4d5b-8832-fcbb5f34a804.png',
-                    comment: 'i like africa',
+                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
+                    comment: 'At least spending in small amount but not not much',
                     index: 52
                 }
             ]
             this.loaded_comment = true
             this.$nextTick(() => {
                 this.initComment()
-            })
-        },
-        initPage() {
-            // 其他数据
-            this.allNum = this.pageList[0].candidates[0].ballot_num + this.pageList[0].candidates[1].ballot_num
-            this.leftNumVal = this.pageList[0].candidates[0].ballot_num
-            this.rightNumVal = this.pageList[0].candidates[1].ballot_num
-            this.leftNum = parseInt((this.leftNumVal / this.allNum) * 100)
-            this.rightNum = 100 - this.leftNum
-            const domLeft = document.getElementsByClassName('bar')[0]
-            const domRight = document.getElementsByClassName('bar')[1]
-            domLeft.style.width = 0.9 * this.leftNum + '%'
-            domRight.style.width = 0.9 * this.rightNum + '%'
-            // 时间列表 计算当前所在期数
-            this.pageList.forEach((item, index) => {
-                this.timeList.push(new Date(item.start_time.replace(/-/g, '/').replace('T', ' ') + '+0000').getTime())
-            })
-            this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
-            // console.log(this.currentPage)
-            this.pageList[0].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
-
-            // tab
-            const tabBox = document.querySelector('.tab ul')
-            const liItems = Array.prototype.slice.call(tabBox.getElementsByTagName('li'))
-            // console.log(this.currentPage)
-            liItems.forEach((item, i) => {
-                item.onclick = () => {
-                    if (i < this.currentPage) {
-                        this.mSendEvLog('tab_click', '', 1)
-                        this.index = i
-                        const offsetLeft = item.offsetLeft
-                        const scrollX = tabBox.scrollLeft
-                        const clientX = tabBox.clientWidth
-                        const childClientX = item.clientWidth
-                        const speed = offsetLeft - scrollX + childClientX / 2 - clientX / 2
-                        const s = speed / 30
-                        const totalX = speed + scrollX
-                        this.timer = setInterval(() => {
-                            tabBox.scrollLeft += s
-                            if (
-                                tabBox.scrollLeft <= 0 ||
-                                tabBox.scrollLeft >= tabBox.scrollWidth - clientX ||
-                                (speed > 0 && tabBox.scrollLeft > totalX) ||
-                                (speed < 0 && tabBox.scrollLeft < totalX)
-                            ) {
-                                clearInterval(this.timer)
-                            }
-                        }, 5)
-                    } else {
-                        this.tipShow('Stay tuned!')
-                    }
-                }
             })
         },
         initComment() {
@@ -741,11 +760,7 @@ export default {
         },
         animate(dom, num, speed) {
             let flag = true
-            // this.t0 = new Date().getTime()
             const time = setInterval(() => {
-                // const t1 = new Date().getTime()
-                // this.sp = t1 - this.t0
-                // this.t0 = t1
                 if (num > this.space && flag) {
                     flag = false
                     // console.log(this.count + ' has finished ')
@@ -798,6 +813,8 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', 1)
+                        this.pageList[this.index].candidates[num].ballot_num++
+                        this.pageList[this.index].ticket_num = 0
                         // 动画
                         this.allNum++
                         local == 'left' ? this.leftNumVal++ : this.rightNumVal++
@@ -820,7 +837,14 @@ export default {
                                     domLeft.style.width = 0.9 * w + '%'
                                     domRight.style.width = 0.9 * (100 - w) + '%'
                                     w = w + 1
-                                    // console.log(w)
+                                    if (this.leftNum == 100) {
+                                        domLeft.style.borderRadius = '0.4rem'
+                                    } else if (this.rightNum == 100) {
+                                        domRight.style.borderRadius = '0.4rem'
+                                    } else {
+                                        domLeft.style.borderRadius = '0.4rem 0 0 0.4rem'
+                                        domRight.style.borderRadius = '0 0.4rem 0.4rem 0'
+                                    }
                                 }
                             }, (100 - this.leftNum) / 5)
                         } else {
@@ -835,7 +859,14 @@ export default {
                                     domLeft.style.width = 0.9 * (100 - w) + '%'
                                     domRight.style.width = 0.9 * w + '%'
                                     w = w + 1
-                                    // console.log(w)
+                                    if (this.leftNum == 100) {
+                                        domLeft.style.borderRadius = '0.4rem'
+                                    } else if (this.rightNum == 100) {
+                                        domRight.style.borderRadius = '0.4rem'
+                                    } else {
+                                        domLeft.style.borderRadius = '0.4rem 0 0 0.4rem'
+                                        domRight.style.borderRadius = '0 0.4rem 0.4rem 0'
+                                    }
                                 }
                             }, (100 - this.rightNum) / 5)
                         }
@@ -849,12 +880,12 @@ export default {
                         }
                         this.canVote = true
                     } else {
-                        this.$alert(res.data.message)
+                        this.$alert('Pick err! ' + res.data.message)
                         this.canVote = true
                     }
                 })
                 .catch(err => {
-                    this.$alert(err)
+                    this.$alert('Pick err!!' + err)
                     this.canVote = true
                 })
         },
@@ -887,7 +918,7 @@ export default {
                     })
                 if (flag || /f u c k|fudge packer|God damn|knob end|knob end/g.test(this.commentText.toLowerCase())) {
                     this.commentText = ''
-                    this.$alert('Your comment contains inappropriate contents. Please remove the words that may cause offence', () => {}, 'GOT IT')
+                    this.$alert('Your comment contains inappropriate contents. Please remove the words that may cause offence.', () => {}, 'GOT IT')
                     this.disabled = false
                     return
                 }
@@ -903,7 +934,7 @@ export default {
             p.innerText = this.commentText
             p.style.display = 'inline-block'
             p.style.color = '#fff'
-            p.style.marginLeft = 3 + 'px'
+            p.style.marginLeft = 10 + 'px'
             p.style.whiteSpace = 'nowrap'
             img.style.display = 'inline-block'
             img.style.width = '28px'
@@ -935,7 +966,7 @@ export default {
             const time = setInterval(() => {
                 if (num <= this.pageWidth + 20) {
                     item.style.right = num + 'px'
-                    num += itemWidth / this.speed
+                    num += itemWidth / (this.speed * 4) + 0.3
                 } else {
                     clearInterval(time)
                 }
@@ -1113,7 +1144,7 @@ export default {
             position: relative;
             .title {
                 width: 90%;
-                margin: 1rem 5% 0.5rem;
+                margin: 1rem 5% 1rem;
             }
             .pick-box {
                 font-size: 0;
@@ -1129,12 +1160,13 @@ export default {
                         position: relative;
                         width: 100%;
                         background-color: #2b495e;
+                        border-radius: 0.25rem;
+                        overflow: hidden;
                         img {
                             width: 100%;
                             height: 100%;
                             position: absolute;
                             top: 0;
-                            border: 0.2rem solid #51b7ff;
                         }
                         &:before {
                             content: '';
@@ -1154,10 +1186,11 @@ export default {
                     position: relative;
                     z-index: 3;
                     img {
-                        width: 95%;
-                        margin-left: 2.5%;
+                        width: 85%;
+                        margin-left: 8.5%;
                         &:first-child {
                             padding-top: 0.5rem;
+                            margin-left: 5.5%;
                         }
                     }
                     p {
@@ -1342,6 +1375,7 @@ export default {
                             display: inline-block;
                             white-space: nowrap;
                             color: #fff;
+                            margin-left: 6px;
                         }
                     }
                 }
@@ -1354,18 +1388,28 @@ export default {
                 background-size: 100% 2.5rem;
                 border-radius: 1.25rem;
                 position: relative;
-                input {
+                textarea {
                     border: none;
                     outline: none;
                     display: block;
                     width: 70%;
                     height: 1.8rem;
+                    line-height: 1.8rem;
+                    -webkit-border-radius: 0.9rem;
+                    -moz-border-radius: 0.9rem;
+                    -ms-border-radius: 0.9rem;
+                    -o-border-radius: 0.9rem;
                     border-radius: 0.9rem;
-                    padding-left: 0.4rem;
+                    padding: 0 0.5rem;
+                    margin: 0;
                     color: #666;
                     position: absolute;
                     left: 2%;
-                    bottom: 0.35rem;
+                    top: 0.35rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    overflow-x: auto;
+                    resize: none;
                 }
                 .btn {
                     display: block;
@@ -1375,6 +1419,7 @@ export default {
                     line-height: 2.5rem;
                     color: #fff;
                     font-size: 1rem;
+                    font-weight: bold;
                     text-align: center;
                 }
             }
@@ -1404,10 +1449,9 @@ export default {
                         position: relative;
                         width: 100%;
                         background-color: #2b495e;
-                        border-radius: 0.2rem;
+                        border-radius: 0.3rem;
+                        overflow: hidden;
                         img {
-                            border: 3px solid #075e99;
-                            border-radius: 0.2rem;
                             width: 100%;
                             height: 100%;
                             position: absolute;
