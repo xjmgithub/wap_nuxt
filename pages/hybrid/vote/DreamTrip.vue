@@ -39,15 +39,15 @@
                         <div v-if="pageListReady[index]" class="btn" @click="handlePick('left',pageListReady[index].candidates)">PICK</div>
                         <div v-if="pageListReady[index]" class="btn" @click="handlePick('right',pageListReady[index].candidates)">PICK</div>
                     </div>
-                    <div v-show="picked&&appType>0" class="progress" :class="pick_click">
+                    <div v-show="picked&&appType>0" class="progress" :class="{'show-in':show_in}">
                         <div class="bar l"></div>
                         <div class="bar r"></div>
                         <div class="left">{{leftNum}}%</div>
                         <div class="right">{{rightNum}}%</div>
                         <span class="icon-y"></span>
                         <span class="icon-b"></span>
-                        <span class="add-one l" :class="l_click">+1</span>
-                        <span class="add-one r" :class="r_click">+1</span>
+                        <span class="add-one l" :class="{'l-show':l_show}">+1</span>
+                        <span class="add-one r" :class="{'r-show':r_show}">+1</span>
                     </div>
                 </div>
                 <img class="cloud2" src="~assets/img/vote/DreamTrip/img_clound2.png" alt />
@@ -199,15 +199,9 @@ export default {
                 'whore',
                 'wtf'
             ],
-            pick_click: {
-                show_in: false
-            },
-            r_click: {
-                r_show: false
-            },
-            l_click: {
-                l_show: false
-            },
+            show_in: false,
+            l_show: false,
+            r_show: false,
             timeList: [],
             currentPage: 1, // 当前所在期数
             pageList: [],
@@ -275,27 +269,6 @@ export default {
                 return 'iOS'
             } else {
                 return 'web'
-            }
-        }
-    },
-    watch: {
-        picked() {
-            if (this.show_l) {
-                this.l_click = {
-                    l_show: true,
-                    r_show: false
-                }
-                this.pick_click = {
-                    show_in: true
-                }
-            } else if (this.show_r) {
-                this.r_click = {
-                    l_show: false,
-                    r_show: true
-                }
-                this.pick_click = {
-                    show_in: true
-                }
             }
         }
     },
@@ -376,7 +349,13 @@ export default {
 
             // pageList数据
             // 投票状态
-            this.pageList[this.index].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
+            if(this.pageList[this.index].ticket_num > 0) {
+                this.picked = false
+                this.show_in = true
+            } else {
+                this.picked = true
+                this.show_in = false
+            }
             // 参与人数 百分比
             this.allNum = this.pageList[this.index].candidates[0].ballot_num + this.pageList[this.index].candidates[1].ballot_num
             this.leftNumVal = this.pageList[this.index].candidates[0].ballot_num
@@ -403,6 +382,12 @@ export default {
                     if (this.index != i) {
                         this.index = i
                         this.mSendEvLog('tab_click', '', this.index + 1)
+                        this.show_in = false
+                        this.l_show = false
+                        this.r_show = false
+                        const addOnes = document.getElementsByClassName('add-one')
+                        addOnes[0].style.visibility = 'hidden'
+                        addOnes[1].style.visibility = 'hidden'
                         this.timeNum = 0
                         this.last_id = 0
                         this.count = 0
@@ -672,17 +657,18 @@ export default {
                         const addOnes = document.getElementsByClassName('add-one')
                         if (local == 'left') {
                             addOnes[0].style.visibility = 'visible'
-                            addOnes[1].style.visibility = 'hidden'
+                            this.l_show = true
                             setTimeout(() => {
                                 addOnes[0].style.visibility = 'hidden'
                             }, 2000)
                         } else {
-                            addOnes[0].style.visibility = 'hidden'
                             addOnes[1].style.visibility = 'visible'
+                            this.r_show = true
                             setTimeout(() => {
                                 addOnes[1].style.visibility = 'hidden'
                             }, 2000)
                         }
+
                         // domLeft.style.width = 0.9 * this.leftNum + '%'
                         // domRight.style.width = 0.9 * this.rightNum + '%'
                         let w = 0
@@ -732,7 +718,7 @@ export default {
                             }, (100 - this.rightNum) / 5)
                         }
                         this.picked = true
-                        this.pick_click = true
+                        this.show_in = true
                         if (local == 'left') {
                             this.show_l = true
                         } else if (local == 'right') {
@@ -1108,7 +1094,7 @@ export default {
                     margin-top: 1rem;
                     position: relative;
                     padding-bottom: 0.4rem;
-                    &.show_in {
+                    &.show-in {
                         animation: go_in 0.5s;
                     }
                     .bar {
@@ -1171,12 +1157,12 @@ export default {
                             position: absolute;
                             top: -1.3rem;
                             font-weight: bold;
-                            visibility: visible;
+                            visibility: hidden;
                             &.l {
                                 left: 10%;
                                 color: #ff6b31;
                                 opacity: 0;
-                                &.l_show {
+                                &.l-show {
                                     animation: add_one 2s;
                                 }
                             }
@@ -1184,7 +1170,7 @@ export default {
                                 right: 10%;
                                 color: #ff6b31;
                                 opacity: 0;
-                                &.r_show {
+                                &.r-show {
                                     animation: add_one 2s;
                                 }
                             }
