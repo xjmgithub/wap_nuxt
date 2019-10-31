@@ -148,7 +148,12 @@ export const callMarket = function(failback) {
         if (query.utmc) str += `&utm_campaign=${query.utmc}`
         source = source + encodeURIComponent(str)
     } else {
-        source = source + encodeURIComponent('utm_source=officeWap')
+        const utmCache = sessionStorage.getItem('utm_str')
+        if (utmCache) {
+            source = source + encodeURIComponent(utmCache)
+        } else {
+            source = source + encodeURIComponent('utm_source=officeWap')
+        }
     }
 
     this.sendEvLog({
