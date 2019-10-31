@@ -5,6 +5,26 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Download Now',
 
+    // kenya film
+    tab_film: 'Film',
+    tab_tv: 'Televison',
+    tab_sa: 'Special Awards',
+    remain: 'Remain:',
+    vote_h5_1: 'Open StarTimes ON App vote for your favorite content.',
+    vote_h5_2: 'Open StarTimes ON App watch now, and explore more interesting. ',
+    notnow_btn: 'NOT NOW',
+    about_btn: 'ABOUT',
+    about: '<P>KALASHA-PAOFF International Online Film and TV Awards is co-hosted by Kenya Film Commission and StarTimes, which invites all online users to vote for your favourites via StarTimes ON, the only online voting application for the awards. </P><P>Let\'s support the stars and entries you like, empower the African culture you recognize in this incredible event.</P>',
+    vote_succ1: 'You\'ve voted!',
+    vote_h5_download: 'Download apk now?（12M）',
+    ok_btn: 'OK',
+    share_btn: 'SHARE',
+    share_title:'KALASHA-PAOFF Film Festival',
+    share_content:'I\'ve already voted, click to JOIN ME!',
+    close:'CLOSE',
+    already_voted:'You have voted for this awards',
+
+
     post_share_title: 'StarTimes ON opens up a new world!',
     // deeplink
     sign_out: 'SIGN OUT',

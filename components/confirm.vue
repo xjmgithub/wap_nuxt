@@ -55,8 +55,8 @@ export default {
             this.$store.commit('SHOW_SHADOW_LAYER')
             this.$nextTick(() => {
                 const dialog = _this.$el
-                const dh = dialog.offsetHeight;
-                    const dw = dialog.offsetWidth
+                const dh = dialog.offsetHeight
+                const dw = dialog.offsetWidth
                 _this.offsetLeft = -dw / 2 + 'px'
                 _this.offsetTop = -dh / 2 + 'px'
             })

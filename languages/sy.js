@@ -5,6 +5,25 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Kupakua',
 
+    // kenya film
+    tab_film: 'Filamu',
+    tab_tv: 'Televisheni',
+    tab_sa: 'Tuzo maalum',
+    remain: 'Imebakia:',
+    vote_h5_1: 'Fungua sasa StarTimes ON app ili kuwapigia kura uwapendao.',
+    vote_h5_2: 'Angalia video kwenye StarTimes ON app sasa, ikufungulie ulimwengu mpya.',
+    notnow_btn: 'SIO SASA',
+    about_btn: 'Kuhusu',
+    about: '<p>KALASHA-PAOFF Filamu ya kimataifa ya mtandaoni na Tuzo ya TV inaendeshwa na-Kenya Film Commission na StarTimes, ambapo inawaalika watumiaji wote wa mtandaoni kuwapigia kura wanaowapenda kwenye StarTimes ON, ni tuzo za maombi ya mtandaoni pekee. </p><p>Tuwaunge mkono nyota na chipukizi unaowapenda,kuuwezesha utamaduni wa Kiafrika unaoutambua katika tukio hili la ajabu. </p>',
+    vote_succ1: 'Umepiga kura!',
+    vote_h5_download: 'Pakua apk sasa? (12 M)',
+    ok_btn: 'SAWA',
+    share_btn: 'SHIRIKISHA',
+    share_title:'KALASHA-PAOFF Film Festival',
+    share_content:'Nimepiga kura tayari, bonyeza ili UJIUNGE NAMI!',
+    close:'CLOSE',
+    already_voted:'Umepiga kura kwa tuzo hii.',
+
     post_share_title: 'StarTimes ON inafungua dunia mpya!',
     // deeplink
     sign_out: 'KUTOKA',

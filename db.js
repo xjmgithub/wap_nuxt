@@ -1,5 +1,5 @@
 export default {
-    host:'micro-service.cluster-c6wznx6t9xhg.eu-west-1.rds.amazonaws.com',
-    user:'tvottapp',
-    password:'TvoTTapp!@#'
+    host:'mysql-test1.bj.startimes.com.cn',
+    user:'root',
+    password:'star123'
 }

@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { downApk, callApp, callMarket } from '~/functions/app'
+import { downApk, callMarket } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -31,13 +31,13 @@ export default {
         }
     },
     mounted() {
-        this.$router.replace({
-            query: Object.assign({}, this.$route.query, {
-                utms: 'startimes_app',
-                utmm: 'share',
-                utmc: 'epg'
-            })
-        })
+        // this.$router.replace({
+        //     query: Object.assign({}, this.$route.query, {
+        //         utms: '456',
+        //         utmm: 'share',
+        //         utmc: 'epg'
+        //     })
+        // })
         const browser = getBrowser()
         this.appType = browser.isIos ? 2 : 1
         this.sendEvLog({
@@ -50,11 +50,9 @@ export default {
     methods: {
         down() {
             this.$nuxt.$loading.start()
-            callApp.call(this, '', () => {
-                callMarket.call(this, () => {
-                    downApk.call(this)
-                    this.$nuxt.$loading.finish()
-                })
+            callMarket.call(this, () => {
+                downApk.call(this)
+                this.$nuxt.$loading.finish()
             })
         }
     },

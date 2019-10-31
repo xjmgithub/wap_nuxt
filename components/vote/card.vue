@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div class="card-layer" @click="closeCard"/>
+        <div class="card-layer" @click="closeCard" />
         <div class="slide-bar-card">
             <img src="~assets/img/vote/ic_close.png" class="close" @click="closeCard">
             <h4 v-if="title">{{title}}</h4>
             <div class="content">
-                <slot name="content"/>
+                <slot name="content" />
             </div>
             <div class="buttons">
-                <slot name="buttons"/>
+                <slot name="buttons" />
             </div>
         </div>
     </div>
@@ -60,11 +60,11 @@ export default {
     .content {
         margin-bottom: 0.4rem;
         max-height: 18rem;
-        min-height: 12rem;
-        overflow: auto;
+        // min-height: 12rem;
+        overflow-y: scroll;
         div {
-            font-size: 0.9rem;
-            line-height: 1.2rem;
+            font-size: 0.95rem;
+            line-height: 1.15rem;
             margin: 0.5rem 0;
         }
         img {
