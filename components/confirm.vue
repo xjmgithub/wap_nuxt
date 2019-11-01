@@ -93,13 +93,13 @@ export default {
     }
     .dialog-footer .btn {
         // width: auto;
-        // float: right;
         // margin-left: 1.5rem;
+        // display: inline-block;
+        float: right;
         width: 49%;
         color: #0087eb;
         font-weight: bold;
         text-align: center;
-        display: inline-block;
     }
 }
 </style>
