@@ -5,16 +5,17 @@
             <div class="tab">
                 <img src="~assets/img/vote/DreamTrip/btn_share.png" alt class="share-btn" @click="toShare" />
                 <ul v-show="pageListReady.length>0">
-                    <li v-for="(item,i) in pageListReady" :key="i" class="lis" :class="i==index?'active':''" @click="tabClick(i)">
+                    <li
+                        v-for="(item,i) in pageListReady"
+                        :key="i"
+                        class="lis"
+                        :class="i==index?'active':(i<currentPage?'pre':'')"
+                        @click="tabClick(i)"
+                    >
                         <p class="ep">{{item.group_name}}</p>
                         <p class="time">{{item.start_time.substr(0, 10)}}</p>
                     </li>
                 </ul>
-            </div>
-            <div class="video-btn">
-                <img class="film" src="~assets/img/vote/DreamTrip/btn_full.png" alt @click="toPlayer(filmCode,'show')" />
-                <img class="cloud" src="~assets/img/vote/DreamTrip/img_clound1.png" alt />
-                <img class="high-light" src="~assets/img/vote/DreamTrip/btn_highlight.png" alt @click="toPlayer(highLightCode,'highlight')" />
             </div>
             <div class="topic">
                 <img class="title" :src="cdnPic(topic)" alt />
@@ -38,15 +39,15 @@
                         <div v-if="pageListReady[index]" class="btn" @click="handlePick('left',pageListReady[index].candidates)">PICK</div>
                         <div v-if="pageListReady[index]" class="btn" @click="handlePick('right',pageListReady[index].candidates)">PICK</div>
                     </div>
-                    <div v-show="picked&&appType>0" class="progress" :class="pick_click">
+                    <div v-show="picked&&appType>0" class="progress" :class="{'show-in':show_in}">
                         <div class="bar l"></div>
                         <div class="bar r"></div>
                         <div class="left">{{leftNum}}%</div>
                         <div class="right">{{rightNum}}%</div>
                         <span class="icon-y"></span>
                         <span class="icon-b"></span>
-                        <span class="add-one l" :class="l_click">+1</span>
-                        <span class="add-one r" :class="r_click">+1</span>
+                        <span class="add-one l" :class="{'l-show':l_show}">+1</span>
+                        <span class="add-one r" :class="{'r-show':r_show}">+1</span>
                     </div>
                 </div>
                 <img class="cloud2" src="~assets/img/vote/DreamTrip/img_clound2.png" alt />
@@ -54,10 +55,10 @@
             </div>
             <div id="comment" class="comment">
                 <div class="comment-box">
-                    <ul v-show="commentListReady.length>0">
+                    <ul v-show="commentListReady.length>0" id="ulList">
                         <li v-for="(item,key) in commentListReady" :id="key" :key="key" class="barrage">
-                            <img :src="cdnPic(item.user_icon)" alt />
-                            <p>{{item.comment}}</p>
+                            <img :src="cdnPic(item.avatar)" alt />
+                            <p>{{item.content}}</p>
                         </li>
                     </ul>
                 </div>
@@ -66,16 +67,30 @@
                     <div class="btn" @click="sendComment">{{disabled?`${during}s`:`SEND`}}</div>
                 </div>
             </div>
+            <img src="~assets/img/vote/DreamTrip/img_share.png" class="img-share" alt @click="toShare" />
             <div class="bg-bottom">
                 <img class="bg-img" src="~assets/img/vote/DreamTrip/bg_down.png" alt />
                 <div class="bottom-item">
-                    <img src="~assets/img/vote/DreamTrip/img_share.png" alt @click="toShare" />
-                    <div class="video" @click="toPlayer(videoCode,'',videoId)">
+                    <div class="video" @click="toPlayer(videoCode,'topic')">
                         <div class="div">
                             <img :src="cdnPic(videoSrc)" alt />
                         </div>
                         <img src="~assets/img/vote/DreamTrip/btn-play.png" alt class="play" />
                         <div class="title">{{videoTitle}}</div>
+                    </div>
+                    <div class="video" @click="toPlayer(filmCode,'fulleps')">
+                        <div class="div">
+                            <img :src="cdnPic(filmSrc)" alt />
+                        </div>
+                        <img src="~assets/img/vote/DreamTrip/btn-play.png" alt class="play" />
+                        <div class="title">{{filmTitle}}</div>
+                    </div>
+                    <div class="video" @click="toPlayer(highLightCode,'highlight')">
+                        <div class="div">
+                            <img :src="cdnPic(highLightSrc)" alt />
+                        </div>
+                        <img src="~assets/img/vote/DreamTrip/btn-play.png" alt class="play" />
+                        <div class="title">{{highLightTitle}}</div>
                     </div>
                 </div>
             </div>
@@ -184,15 +199,9 @@ export default {
                 'whore',
                 'wtf'
             ],
-            pick_click: {
-                show_in: false
-            },
-            r_click: {
-                r_show: false
-            },
-            l_click: {
-                l_show: false
-            },
+            show_in: false,
+            l_show: false,
+            r_show: false,
             timeList: [],
             currentPage: 1, // 当前所在期数
             pageList: [],
@@ -207,19 +216,30 @@ export default {
             pageWidth: 0, // 页面可视区域宽度
             count: 0, // 当前完全滚入屏幕的弹幕下标
             speed: 200, // 弹幕速度，越大越慢
-            space: -60, // 两行弹幕的间隔
+            minSp: 0.6, // 弹幕的最小速度
+            maxSp: 1, // 弹幕的最大速度
+            minSpace: 80, // 两行弹幕的最小间隔
+            maxSpace: 240, // 两行弹幕的最大间隔
             time: null, // 弹幕滚动定时器
             commentText: '', // 发送的内容
             loaded_page: false,
             loaded_comment: false,
+            number: 20, // 每次请求的弹幕数量
+            last_id: 0, // 上一次请求的最后一条弹幕id
+            timeNum: 0, // 记录已在当前页面上成功调用获取弹幕接口的次数
+            canClickTab1: true,
+            canClickTab2: true,
             vote_id: 17,
+            filmSrc: '',
             filmCode: '',
+            filmTitle: '',
+            highLightSrc: '',
             highLightCode: '',
+            highLightTitle: '',
             topic: '',
             videoSrc: '',
             videoCode: '',
             videoTitle: '',
-            videoId: '',
             tip: '',
 
             title: 'Dream Destination',
@@ -230,6 +250,9 @@ export default {
         }
     },
     computed: {
+        canClickTab() {
+            return this.canClickTab1 && this.canClickTab2
+        },
         commentListReady() {
             if (this.loaded_comment) {
                 return this.commentList
@@ -254,27 +277,6 @@ export default {
             }
         }
     },
-    watch: {
-        picked() {
-            if (this.show_l) {
-                this.l_click = {
-                    l_show: true,
-                    r_show: false
-                }
-                this.pick_click = {
-                    show_in: true
-                }
-            } else if (this.show_r) {
-                this.r_click = {
-                    l_show: false,
-                    r_show: true
-                }
-                this.pick_click = {
-                    show_in: true
-                }
-            }
-        }
-    },
     asyncData({ app: { $axios }, store }) {
         return {
             serverTime: new Date().getTime()
@@ -287,17 +289,7 @@ export default {
         this.nowarp()
     },
     methods: {
-        nowarp() {
-            const textdom = document.getElementsByTagName('textarea')[0]
-            textdom.addEventListener('keydown', e => {
-                if (e.keyCode == 13) {
-                    e.preventDefault()
-                    // this.sendComment()
-                    return false
-                }
-            })
-        },
-        initPage(i) {
+        initTab(i) {
             // tab
             const tabBox = document.querySelector('.tab ul')
             const item = document.getElementsByClassName('lis')[i]
@@ -317,16 +309,36 @@ export default {
                     (speed < 0 && tabBox.scrollLeft < totalX)
                 ) {
                     clearInterval(this.timer)
+                    this.canClickTab2 = true
                 }
             }, 5)
+        },
+        nowarp() {
+            const textdom = document.getElementsByTagName('textarea')[0]
+            textdom.addEventListener('keydown', e => {
+                if (e.keyCode == 13) {
+                    e.preventDefault()
+                    // this.sendComment()
+                    return false
+                }
+            })
+        },
+        initPage(i) {
+            this.initTab(i)
             // source资源
             this.sourceList.forEach(item => {
                 if (item.name == 'a' + (this.index + 1)) {
                     // 正片
+                    this.filmSrc = item.cover
                     this.filmCode = item.link_vod_code
+                    this.filmTitle = item.description
+                    this.mSendEvLog('video_show', 'fulleps', this.index + 1)
                 } else if (item.name == 'b' + (this.index + 1)) {
                     // highLight
+                    this.highLightSrc = item.cover
                     this.highLightCode = item.link_vod_code
+                    this.highLightTitle = item.description
+                    this.mSendEvLog('video_show', 'highlight', this.index + 1)
                 } else if (item.name == 'c' + (this.index + 1)) {
                     // 话题
                     this.topic = item.cover
@@ -335,8 +347,7 @@ export default {
                     this.videoSrc = item.cover
                     this.videoCode = item.link_vod_code
                     this.videoTitle = item.description
-                    this.videoId = item.id
-                    this.mSendEvLog('video_show', item.id, 1)
+                    this.mSendEvLog('video_show', 'topic', this.index + 1)
                 } else if (item.name == 'e' + (this.index + 1)) {
                     // 分享文案
                     this.imgUrl = item.cover
@@ -347,7 +358,13 @@ export default {
 
             // pageList数据
             // 投票状态
-            this.pageList[this.index].ticket_num > 0 ? (this.picked = false) : (this.picked = true)
+            if (this.pageList[this.index].ticket_num > 0) {
+                this.picked = false
+                this.show_in = true
+            } else {
+                this.picked = true
+                this.show_in = false
+            }
             // 参与人数 百分比
             this.allNum = this.pageList[this.index].candidates[0].ballot_num + this.pageList[this.index].candidates[1].ballot_num
             this.leftNumVal = this.pageList[this.index].candidates[0].ballot_num
@@ -368,12 +385,45 @@ export default {
             }
         },
         tabClick(i) {
-            if (i < this.currentPage) {
-                this.mSendEvLog('tab_click', '', 1)
-                this.index = i
-                this.initPage(this.index)
-            } else {
-                this.tipShow('Stay tuned!')
+            if (this.canClickTab) {
+                this.canClickTab1 = false
+                this.canClickTab2 = false
+                if (i < this.currentPage) {
+                    if (this.index != i) {
+                        this.loaded_comment = false
+                        this.index = i
+                        this.mSendEvLog('tab_click', '', this.index + 1)
+                        this.show_in = false
+                        this.l_show = false
+                        this.r_show = false
+                        const addOnes = document.getElementsByClassName('add-one')
+                        addOnes[0].style.visibility = 'hidden'
+                        addOnes[1].style.visibility = 'hidden'
+                        this.timeNum = 0
+                        this.last_id = 0
+                        this.count = 0
+                        for (let j = 0; j < this.number * 2; j++) {
+                            this.getDom(j).style.right = 2000 + 'px'
+                        }
+                        const comment = document.getElementById('comment')
+                        let spans = document.getElementsByClassName('new-barrage')
+                        spans = Array.prototype.slice.call(spans)
+                        for (let j = 0; j < spans.length; j++) {
+                            comment.removeChild(spans[j])
+                        }
+                        this.initPage(this.index)
+                        setTimeout(() => {
+                            this.getCommentList()
+                        }, 1000)
+                    } else {
+                        this.canClickTab1 = true
+                        this.canClickTab2 = true
+                    }
+                } else {
+                    this.tipShow('Stay tuned!')
+                    this.canClickTab1 = true
+                    this.canClickTab2 = true
+                }
             }
         },
         inputFocus() {
@@ -416,8 +466,8 @@ export default {
                 )
             })
         },
-        toPlayer(code, label1, label2) {
-            label1 ? this.mSendEvLog('button_click', label1, 1) : this.mSendEvLog('video_click', label2, 1)
+        toPlayer(code, label) {
+            this.mSendEvLog('video_click', label, this.index + 1)
             if (this.appType == 0) {
                 this.callOrDownApp()
                 return
@@ -448,10 +498,12 @@ export default {
                         this.sourceList = res.data.data
                         this.initPage(this.index)
                     } else {
-                        this.$alert('Get source list error!')
+                        this.sourceList = []
+                        this.$alert('Get source list error! ' + res.data.message)
                     }
                 })
                 .catch(err => {
+                    this.sourceList = []
                     this.$alert('Get source list error!! ' + err)
                 })
         },
@@ -467,14 +519,31 @@ export default {
                         })
                         this.currentPage = this.getIndexToIns(this.timeList, this.serverTime)
                         // console.log('currentPage: '+this.currentPage)
-                        this.index = this.currentPage - 1
+                        if (this.index != this.currentPage - 1) {
+                            this.index = this.currentPage - 1
+                        }
                     } else {
                         this.pageList = []
-                        this.$alert('Get page list error!')
+                        this.$alert('Get page list error! ' + res.data.message)
                     }
-                    this.loaded_page = true
-                    this.getSource()
-                    this.getCommentList()
+                    let flag = true
+                    for (let i = 0; i < this.pageList.length; i++) {
+                        if (i <= this.index) {
+                            if (!this.pageList[i].candidates.length) {
+                                flag = false
+                                break
+                            }
+                        }
+                    }
+                    if (flag) {
+                        this.loaded_page = true
+                        this.getSource()
+                        this.loaded_comment = false
+                        this.getCommentList()
+                    } else {
+                        this.pageList = []
+                        this.$alert('Get candidates list error!')
+                    }
                 })
                 .catch(err => {
                     this.pageList = []
@@ -482,299 +551,91 @@ export default {
                 })
         },
         getCommentList() {
-            this.commentList = [
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Im Simidi Brian from  South EASTERN  Kenya  University,, I hate over spending rather than oveplannin",
-                    index: 1
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Kareem abdalah',
-                    index: 2
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Rogers is right',
-                    index: 3
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Roger ur de best',
-                    index: 4
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Feel lazy',
-                    index: 5
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Over planning',
-                    index: 6
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Good plan start with basic need',
-                    index: 7
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Ramsey platform on all social network',
-                    index: 8
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'No maney',
-                    index: 9
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Chipukizi fun',
-                    index: 10
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Roger stop over planning coz u may mess up',
-                    index: 11
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'My friends can be like campus figures so annoying',
-                    index: 12
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Spending alot of time with people who don't add value to your life..hahaha...",
-                    index: 13
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Money is everthing',
-                    index: 14
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'I hate over spending...',
-                    index: 15
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Yaa. Is good',
-                    index: 16
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Ambitious planning is not good also',
-                    index: 17
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Spending much',
-                    index: 18
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Nice one group',
-                    index: 19
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "U can't spend wat u don't have",
-                    index: 20
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Away',
-                    index: 21
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Mambo",
-                    index: 22
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Good night and my life',
-                    index: 23
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Good',
-                    index: 24
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Its true Africans over spent their money',
-                    index: 25
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Wawawaw',
-                    index: 26
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Hahaha am following',
-                    index: 27
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'It fun I wish I could join them',
-                    index: 28
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Is better to plan I supporting ugandan',
-                    index: 29
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Absolutely funny',
-                    index: 30
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'hi',
-                    index: 31
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'jiaj',
-                    index: 32
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Some people in travelling talk too much with phones ",
-                    index: 33
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'At the round table of christ Jesus there us peace and love to feel ',
-                    index: 34
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'If u happen to av much money you tent to be controlled by it, so watch out',
-                    index: 35
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'KabugoSamuel ',
-                    index: 36
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'There is no cooparation among the traveller , when you get a problem no one is going to help you',
-                    index: 37
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Over planning',
-                    index: 38
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Over planning',
-                    index: 39
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Sanyuka TV',
-                    index: 40
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Over loading while u have paid your fully tp',
-                    index: 41
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: '750994447',
-                    index: 42
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "750994448",
-                    index: 43
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "wow",
-                    index: 44
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Haha but that 's the way to go",
-                    index: 45
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Haaa',
-                    index: 46
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Get richer and richer",
-                    index: 47
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Hahaaha ",
-                    index: 48
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'Working good to me',
-                    index: 49
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: "Am coming",
-                    index: 50
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'born to win',
-                    index: 51
-                },
-                {
-                    user_icon: 'http://cdn.startimestv.com/banner/DD_user_icon.png',
-                    comment: 'At least spending in small amount but not not much',
-                    index: 52
-                }
-            ]
-            this.loaded_comment = true
-            this.$nextTick(() => {
-                this.initComment()
-            })
+            this.$axios
+                .get(`/voting/v1/comments?comment_activity_id=${this.index + 1}&last_id=${this.last_id}&num_per_page=${this.number}`)
+                .then(res => {
+                    if (res.data.code === 0) {
+                        this.timeNum++
+                        this.last_id = res.data.data[res.data.data.length - 1].id
+                        if (this.timeNum == 1) {
+                            res.data.data.forEach((item, index) => {
+                                this.commentList[index] = item
+                                this.commentList[index + this.number] = item
+                            })
+                        } else if (this.timeNum % 2 == 0) {
+                            res.data.data.forEach((item, index) => {
+                                this.commentList[index + this.number] = item
+                            })
+                        } else {
+                            res.data.data.forEach((item, index) => {
+                                this.commentList[index] = item
+                            })
+                        }
+                        this.loaded_comment = true
+                        this.canClickTab1 = true
+                        this.$nextTick(() => {
+                            for (let j = 0; j < this.number * 2; j++) {
+                                this.getDom(j).style.right = -2000 + 'px'
+                            }
+                            this.initComment()
+                        })
+                    } else {
+                        this.commentList = []
+                        this.$alert('Get comment list error! ' + res.data.message)
+                    }
+                })
+                .catch(err => {
+                    this.commentList = []
+                    this.$alert('Get comment list error!! ' + err)
+                })
         },
         initComment() {
             for (let i = 0; i < this.commentList.length; i++) {
                 const commentItem = document.getElementById(i)
-                const commentWidth = commentItem.offsetWidth
+                const img = commentItem.getElementsByTagName('img')[0]
+                const p = commentItem.getElementsByTagName('p')[0]
+                if (this.commentList[i].avatar) {
+                    img.src =
+                        this.commentList[i].avatar == 'http://cdn.startimestv.com/head/h_d.png'
+                            ? 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                            : this.commentList[i].avatar
+                } else {
+                    img.src = 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                }
+                p.innerText = decodeURI(this.commentList[i].content)
+                const commentWidth = p.offsetWidth + 35
                 commentItem.style.width = commentWidth + 15 + 'px'
-                commentItem.style.top = '0px'
             }
-            this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3) // 除数越大越慢
+            // let s = this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3
+            let s = this.getDom(this.count).offsetWidth / this.speed
+            if (s < this.minSp) s = this.minSp
+            else if (s > this.maxSp) s = this.maxSp
+            this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, s)
         },
         animate(dom, num, speed) {
             let flag = true
             const time = setInterval(() => {
-                if (num > this.space && flag) {
+                if (parseInt(dom.style.right) >= 2000) {
+                    clearInterval(time)
+                    return true
+                }
+                // if (num > this.space && flag) {
+                if ((dom.offsetWidth + num > this.maxSpace || num > this.minSpace) && flag) {
                     flag = false
                     // console.log(this.count + ' has finished ')
                     this.count++
-                    if (this.count > this.commentList.length - 1) {
-                        console.log('finished all')
-                        this.count = 0
+                    if (this.timeNum % 2 != 0 ? this.count >= this.number : this.count >= this.number * 2) {
+                        if (this.timeNum != 0 && this.timeNum % 2 == 0) {
+                            this.count = 0
+                        }
+                        this.getCommentList()
+                        return true
                     }
-                    this.getDom(this.count).style.top = (this.count % 4) * this.lineSpace + 'px'
-                    this.animate(
-                        this.getDom(this.count),
-                        -this.getDom(this.count).offsetWidth,
-                        this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3
-                    )
+                    // let s = this.getDom(this.count).offsetWidth / (this.speed * 3) + 0.3
+                    let s = this.getDom(this.count).offsetWidth / this.speed
+                    if (s < this.minSp) s = this.minSp
+                    else if (s > this.maxSp) s = this.maxSp
+                    this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, s)
                 }
                 if (num <= this.pageWidth + 20) {
                     dom.style.right = num + 'px'
@@ -812,7 +673,7 @@ export default {
             })
                 .then(res => {
                     if (res.data.code === 0) {
-                        this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', 1)
+                        this.mSendEvLog('pick_click', local == 'left' ? 'A' : 'B', this.index + 1)
                         this.pageList[this.index].candidates[num].ballot_num++
                         this.pageList[this.index].ticket_num = 0
                         // 动画
@@ -822,6 +683,21 @@ export default {
                         this.rightNum = 100 - this.leftNum
                         const domLeft = document.getElementsByClassName('bar')[0]
                         const domRight = document.getElementsByClassName('bar')[1]
+                        const addOnes = document.getElementsByClassName('add-one')
+                        if (local == 'left') {
+                            addOnes[0].style.visibility = 'visible'
+                            this.l_show = true
+                            setTimeout(() => {
+                                addOnes[0].style.visibility = 'hidden'
+                            }, 2000)
+                        } else {
+                            addOnes[1].style.visibility = 'visible'
+                            this.r_show = true
+                            setTimeout(() => {
+                                addOnes[1].style.visibility = 'hidden'
+                            }, 2000)
+                        }
+
                         // domLeft.style.width = 0.9 * this.leftNum + '%'
                         // domRight.style.width = 0.9 * this.rightNum + '%'
                         let w = 0
@@ -870,9 +746,8 @@ export default {
                                 }
                             }, (100 - this.rightNum) / 5)
                         }
-
                         this.picked = true
-                        this.pick_click = true
+                        this.show_in = true
                         if (local == 'left') {
                             this.show_l = true
                         } else if (local == 'right') {
@@ -880,12 +755,12 @@ export default {
                         }
                         this.canVote = true
                     } else {
-                        this.$alert('Pick err! ' + res.data.message)
+                        this.$alert('Pick error! ' + res.data.message)
                         this.canVote = true
                     }
                 })
                 .catch(err => {
-                    this.$alert('Pick err!!' + err)
+                    this.$alert('Pick error!! ' + err)
                     this.canVote = true
                 })
         },
@@ -924,64 +799,92 @@ export default {
                 }
             }
             // 调用发送评论接口
-            // then 成功回调里
-            this.mSendEvLog('send_click', this.commentText, 1)
-            const during = this.during
-            const item = document.createElement('span')
-            const img = document.createElement('img')
-            const p = document.createElement('p')
-            img.src = this.$store.state.user.head || 'http://cdn.startimestv.com/banner/DD_user_icon.png'
-            p.innerText = this.commentText
-            p.style.display = 'inline-block'
-            p.style.color = '#fff'
-            p.style.marginLeft = 10 + 'px'
-            p.style.whiteSpace = 'nowrap'
-            img.style.display = 'inline-block'
-            img.style.width = '28px'
-            img.style.height = '28px'
-            img.style.backgroundColor = '#bfbfbf'
-            img.style.borderRadius = '14px'
-            img.style.position = 'relative'
-            img.style.top = '-1px'
-            img.style.left = '1.8px'
-            item.appendChild(img)
-            item.appendChild(p)
-            document.getElementsByClassName('comment')[0].appendChild(item)
-            const itemWidth = p.offsetWidth + 28
-            item.style.backgroundColor = '#09659d'
-            item.style.borderRadius = 15 + 'px'
-            item.style.height = 30 + 'px'
-            item.style.lineHeight = 30 + 'px'
-            item.style.position = 'absolute'
-            item.style.right = -2000 + 'px'
-            item.style.width = itemWidth + 25 + 'px'
-            let lineNum
-            if (this.count >= 2) {
-                lineNum = this.count - 2
-            } else {
-                lineNum = this.count + this.commentList.length - 2
-            }
-            item.style.top = (lineNum % 4) * this.lineSpace + 13.5 + 'px'
-            let num = -itemWidth
-            const time = setInterval(() => {
-                if (num <= this.pageWidth + 20) {
-                    item.style.right = num + 'px'
-                    num += itemWidth / (this.speed * 4) + 0.3
-                } else {
-                    clearInterval(time)
-                }
-            }, 4)
-            // console.log('call' + lineNum)
-            const duringTime = setInterval(() => {
-                this.during--
-                if (this.during == 0) {
-                    clearInterval(duringTime)
-                    this.during = during
+            this.$axios({
+                url: '/voting/v1/comment',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    comment_activity_id: this.index + 1,
+                    content: encodeURI(this.commentText)
+                })
+            })
+                .then(res => {
+                    if (res.data.code === 0) {
+                        this.mSendEvLog('send_click', this.commentText, this.index + 1)
+                        const during = this.during
+                        const item = document.createElement('span')
+                        const img = document.createElement('img')
+                        const p = document.createElement('p')
+                        if (this.$store.state.user.head) {
+                            img.src =
+                                this.$store.state.user.head == 'http://cdn.startimestv.com/head/h_d.png'
+                                    ? 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                                    : this.$store.state.user.head
+                        } else {
+                            img.src = 'http://cdn.startimestv.com/banner/DD_user_icon.png'
+                        }
+                        p.innerText = this.commentText
+                        p.style.display = 'inline-block'
+                        p.style.color = '#fff'
+                        p.style.marginLeft = 10 + 'px'
+                        p.style.whiteSpace = 'nowrap'
+                        img.style.display = 'inline-block'
+                        img.style.width = '28px'
+                        img.style.height = '28px'
+                        img.style.backgroundColor = '#bfbfbf'
+                        img.style.borderRadius = '14px'
+                        img.style.position = 'relative'
+                        img.style.top = '-1px'
+                        img.style.left = '1.8px'
+                        item.appendChild(img)
+                        item.appendChild(p)
+                        document.getElementsByClassName('comment')[0].appendChild(item)
+                        const itemWidth = p.offsetWidth + 28
+                        item.style.backgroundColor = '#09659d'
+                        item.style.borderRadius = 15 + 'px'
+                        item.style.height = 30 + 'px'
+                        item.style.lineHeight = 30 + 'px'
+                        item.style.position = 'absolute'
+                        item.style.right = -2000 + 'px'
+                        item.style.width = itemWidth + 25 + 'px'
+                        item.setAttribute('class', 'new-barrage')
+                        const lineNum = this.count >= 2 ? this.count - 2 : this.count + this.commentList.length - 2
+                        item.style.top = (lineNum % 4) * this.lineSpace + 13.5 + 'px'
+                        let sp = itemWidth / this.speed
+                        if (sp < this.minSp) sp = this.minSp
+                        else if (sp > this.maxSp) sp = this.maxSp
+                        let num = -itemWidth
+                        const time = setInterval(() => {
+                            if (num <= this.pageWidth + 20) {
+                                item.style.right = num + 'px'
+                                num += sp
+                            } else {
+                                clearInterval(time)
+                            }
+                        }, 5)
+                        // console.log('call' + lineNum)
+                        const duringTime = setInterval(() => {
+                            this.during--
+                            if (this.during == 0) {
+                                clearInterval(duringTime)
+                                this.during = during
+                                this.disabled = false
+                            }
+                        }, 1000)
+                        this.commentText = ''
+                    } else {
+                        this.$alert('Send comment error! ' + res.data.message)
+                        this.disabled = false
+                        this.commentText = ''
+                    }
+                })
+                .catch(err => {
+                    this.$alert('Send comment error!! ' + err)
                     this.disabled = false
-                }
-            }, 1000)
-            this.commentText = ''
-            // 失败 TODO弹窗
+                    this.commentText = ''
+                })
         },
         // toast方法
         tipShow(text, duration = 2000) {
@@ -1042,8 +945,8 @@ export default {
         transform: scale(0);
     }
     100% {
-        opacity: 0;
-        transform: scale(4);
+        opacity: 0.2;
+        transform: scale(5);
     }
 }
 .wrapper {
@@ -1062,9 +965,24 @@ export default {
                 padding-top: 0;
                 width: 100%;
             }
+            &.img-share {
+                width: 90%;
+                padding: 0;
+            }
         }
         .tab {
             position: relative;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none; /*webkit浏览器*/
+            -ms-user-select: none; /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            user-select: none;
             .share-btn {
                 position: absolute;
                 right: 0;
@@ -1115,27 +1033,12 @@ export default {
                             bottom: 0.3rem;
                         }
                     }
-                }
-            }
-        }
-        .video-btn {
-            margin-top: 1rem;
-            position: relative;
-            width: 100%;
-            height: 1.7rem;
-            img {
-                position: absolute;
-                bottom: 0;
-                height: 1.7rem;
-                &.film {
-                    left: 0;
-                }
-                &.cloud {
-                    height: 1.2rem;
-                    left: 8rem;
-                }
-                &.high-light {
-                    right: 0;
+                    &.pre {
+                        .ep,
+                        .time {
+                            color: #fff;
+                        }
+                    }
                 }
             }
         }
@@ -1218,6 +1121,17 @@ export default {
                     display: inline-block;
                     padding-bottom: 1rem;
                     z-index: 3;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    -khtml-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                    -moz-user-select: none; /*火狐*/
+                    -webkit-user-select: none; /*webkit浏览器*/
+                    -ms-user-select: none; /*IE10*/
+                    -khtml-user-select: none; /*早期浏览器*/
+                    user-select: none;
                     div {
                         display: inline-block;
                         font-size: 0.9rem;
@@ -1243,7 +1157,7 @@ export default {
                     margin-top: 1rem;
                     position: relative;
                     padding-bottom: 0.4rem;
-                    &.show_in {
+                    &.show-in {
                         animation: go_in 0.5s;
                     }
                     .bar {
@@ -1306,11 +1220,12 @@ export default {
                             position: absolute;
                             top: -1.3rem;
                             font-weight: bold;
+                            visibility: hidden;
                             &.l {
                                 left: 10%;
                                 color: #ff6b31;
                                 opacity: 0;
-                                &.l_show {
+                                &.l-show {
                                     animation: add_one 2s;
                                 }
                             }
@@ -1318,7 +1233,7 @@ export default {
                                 right: 10%;
                                 color: #ff6b31;
                                 opacity: 0;
-                                &.r_show {
+                                &.r-show {
                                     animation: add_one 2s;
                                 }
                             }
@@ -1345,6 +1260,7 @@ export default {
         .comment {
             position: relative;
             overflow: hidden;
+            margin-bottom: 2rem;
             .comment-box {
                 width: 90%;
                 height: 200px;
@@ -1361,6 +1277,18 @@ export default {
                         line-height: 30px;
                         position: absolute;
                         right: -2000px;
+                        &:nth-child(4n) {
+                            top: 120px;
+                        }
+                        &:nth-child(4n-1) {
+                            top: 80px;
+                        }
+                        &:nth-child(4n-2) {
+                            top: 40px;
+                        }
+                        &:nth-child(4n-3) {
+                            top: 0px;
+                        }
                         img {
                             display: inline-block;
                             width: 28px;
@@ -1426,23 +1354,31 @@ export default {
         }
         .bg-bottom {
             width: 100%;
-            margin: 1.5rem auto 0;
+            margin: 2.5rem auto 0;
             position: relative;
             .bg-img {
                 width: 100%;
                 position: absolute;
+                bottom: -11rem;
                 z-index: 0;
             }
             .bottom-item {
                 position: relative;
                 z-index: 1;
                 width: 100%;
-                > img {
-                    width: 90%;
-                    margin-left: 5%;
-                }
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -moz-user-select: none; /*火狐*/
+                -webkit-user-select: none; /*webkit浏览器*/
+                -ms-user-select: none; /*IE10*/
+                -khtml-user-select: none; /*早期浏览器*/
+                user-select: none;
                 .video {
-                    margin: 2rem auto 0;
+                    margin: 1rem auto 0;
                     width: 80%;
                     position: relative;
                     .div {
@@ -1461,7 +1397,7 @@ export default {
                             content: '';
                             display: inline-block;
                             padding-bottom: 57%;
-                            width: 0.1px;
+                            width: 0;
                             vertical-align: middle;
                         }
                     }
