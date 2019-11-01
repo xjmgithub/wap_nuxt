@@ -406,7 +406,8 @@ html {
             padding: 0 0.5rem;
             position: absolute;
             right: 0.8rem;
-            top: 0.8rem;
+            // top: 0.8rem;
+            bottom:3rem;
         }
         #nav {
             height: 2.4rem;
