@@ -227,7 +227,8 @@ export default {
             number: 20, // 每次请求的弹幕数量
             last_id: 0, // 上一次请求的最后一条弹幕id
             timeNum: 0, // 记录已在当前页面上成功调用获取弹幕接口的次数
-            canClickTab: true,
+            canClickTab1: true,
+            canClickTab2: true,
             vote_id: 17,
             filmSrc: '',
             filmCode: '',
@@ -249,6 +250,9 @@ export default {
         }
     },
     computed: {
+        canClickTab() {
+            return this.canClickTab1 && this.canClickTab2
+        },
         commentListReady() {
             if (this.loaded_comment) {
                 return this.commentList
@@ -285,17 +289,7 @@ export default {
         this.nowarp()
     },
     methods: {
-        nowarp() {
-            const textdom = document.getElementsByTagName('textarea')[0]
-            textdom.addEventListener('keydown', e => {
-                if (e.keyCode == 13) {
-                    e.preventDefault()
-                    // this.sendComment()
-                    return false
-                }
-            })
-        },
-        initPage(i) {
+        initTab(i) {
             // tab
             const tabBox = document.querySelector('.tab ul')
             const item = document.getElementsByClassName('lis')[i]
@@ -315,8 +309,22 @@ export default {
                     (speed < 0 && tabBox.scrollLeft < totalX)
                 ) {
                     clearInterval(this.timer)
+                    this.canClickTab2 = true
                 }
             }, 5)
+        },
+        nowarp() {
+            const textdom = document.getElementsByTagName('textarea')[0]
+            textdom.addEventListener('keydown', e => {
+                if (e.keyCode == 13) {
+                    e.preventDefault()
+                    // this.sendComment()
+                    return false
+                }
+            })
+        },
+        initPage(i) {
+            this.initTab(i)
             // source资源
             this.sourceList.forEach(item => {
                 if (item.name == 'a' + (this.index + 1)) {
@@ -378,7 +386,8 @@ export default {
         },
         tabClick(i) {
             if (this.canClickTab) {
-                this.canClickTab = false
+                this.canClickTab1 = false
+                this.canClickTab2 = false
                 if (i < this.currentPage) {
                     if (this.index != i) {
                         this.loaded_comment = false
@@ -402,14 +411,18 @@ export default {
                         for (let j = 0; j < spans.length; j++) {
                             comment.removeChild(spans[j])
                         }
-                        this.getCommentList()
                         this.initPage(this.index)
+                        setTimeout(() => {
+                            this.getCommentList()
+                        }, 1000)
                     } else {
-                        this.canClickTab = true
+                        this.canClickTab1 = true
+                        this.canClickTab2 = true
                     }
                 } else {
                     this.tipShow('Stay tuned!')
-                    this.canClickTab = true
+                    this.canClickTab1 = true
+                    this.canClickTab2 = true
                 }
             }
         },
@@ -559,7 +572,7 @@ export default {
                             })
                         }
                         this.loaded_comment = true
-                        this.canClickTab = true
+                        this.canClickTab1 = true
                         this.$nextTick(() => {
                             for (let j = 0; j < this.number * 2; j++) {
                                 this.getDom(j).style.right = -2000 + 'px'
