@@ -394,6 +394,13 @@ export default {
                         for (let j = 0; j < this.number * 2; j++) {
                             this.getDom(j).style.right = 2000 + 'px'
                         }
+                        const comment = document.getElementById('comment')
+                        let spans = document.getElementsByClassName('new-barrage')
+                        spans = Array.prototype.slice.call(spans)
+                        console.log(spans)
+                        for (let j = 0; j < spans.length; j++) {
+                            comment.removeChild(spans[j])
+                        }
                         if (this.loaded_comment) {
                             setTimeout(() => {
                                 for (let j = 0; j < this.number * 2; j++) {
@@ -598,7 +605,9 @@ export default {
                     clearInterval(time)
                     return true
                 }
-                if (num > this.space && flag) {
+                // console.log(dom.offsetWidth,num)
+                // if (num > this.space && flag) {
+                if ((dom.offsetWidth+num > 240 || num > 80) && flag) {
                     flag = false
                     // console.log(this.count + ' has finished ')
                     this.count++
@@ -613,6 +622,8 @@ export default {
                     let s = this.getDom(this.count).offsetWidth / this.speed
                     if (s < this.minSp) s = this.minSp
                     else if (s > this.maxSp) s = this.maxSp
+                    // console.log(dom.offsetWidth,num)
+                    // console.log(dom.offsetWidth+num)
                     this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, s)
                 }
                 if (num <= this.pageWidth + 20) {
@@ -827,6 +838,7 @@ export default {
                         item.style.position = 'absolute'
                         item.style.right = -2000 + 'px'
                         item.style.width = itemWidth + 25 + 'px'
+                        item.setAttribute('class','new-barrage')
                         const lineNum = this.count >= 2 ? this.count - 2 : this.count + this.commentList.length - 2
                         item.style.top = (lineNum % 4) * this.lineSpace + 13.5 + 'px'
                         let sp = itemWidth / this.speed
@@ -940,7 +952,7 @@ export default {
             }
             &.img-share {
                 width: 90%;
-                padding: 1rem 0 0.5rem;
+                padding: 0;
             }
         }
         .tab {
@@ -1211,6 +1223,7 @@ export default {
         .comment {
             position: relative;
             overflow: hidden;
+            margin-bottom: 2rem;
             .comment-box {
                 width: 90%;
                 height: 200px;
@@ -1304,7 +1317,7 @@ export default {
         }
         .bg-bottom {
             width: 100%;
-            margin: 1rem auto 0;
+            margin: 2.5rem auto 0;
             position: relative;
             .bg-img {
                 width: 100%;
