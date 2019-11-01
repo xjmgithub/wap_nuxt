@@ -216,9 +216,10 @@ export default {
             pageWidth: 0, // 页面可视区域宽度
             count: 0, // 当前完全滚入屏幕的弹幕下标
             speed: 200, // 弹幕速度，越大越慢
-            minSp: 0.6,
-            maxSp: 1,
-            space: -20, // 两行弹幕的间隔
+            minSp: 0.6, // 弹幕的最小速度
+            maxSp: 1, // 弹幕的最大速度
+            minSpace: 80, // 两行弹幕的最小间隔
+            maxSpace: 240, // 两行弹幕的最大间隔
             time: null, // 弹幕滚动定时器
             commentText: '', // 发送的内容
             loaded_page: false,
@@ -397,7 +398,6 @@ export default {
                         const comment = document.getElementById('comment')
                         let spans = document.getElementsByClassName('new-barrage')
                         spans = Array.prototype.slice.call(spans)
-                        console.log(spans)
                         for (let j = 0; j < spans.length; j++) {
                             comment.removeChild(spans[j])
                         }
@@ -492,10 +492,12 @@ export default {
                         this.sourceList = res.data.data
                         this.initPage(this.index)
                     } else {
+                        this.sourceList = []
                         this.$alert('Get source list error! ' + res.data.message)
                     }
                 })
                 .catch(err => {
+                    this.sourceList = []
                     this.$alert('Get source list error!! ' + err)
                 })
         },
@@ -532,6 +534,7 @@ export default {
                         this.getSource()
                         this.getCommentList()
                     } else {
+                        this.pageList = []
                         this.$alert('Get candidates list error!')
                     }
                 })
@@ -561,14 +564,14 @@ export default {
                                 this.commentList[index] = item
                             })
                         }
+                        this.loaded_comment = true
+                        this.$nextTick(() => {
+                            this.initComment()
+                        })
                     } else {
                         this.commentList = []
                         this.$alert('Get comment list error! ' + res.data.message)
                     }
-                    this.loaded_comment = true
-                    this.$nextTick(() => {
-                        this.initComment()
-                    })
                 })
                 .catch(err => {
                     this.commentList = []
@@ -588,7 +591,7 @@ export default {
                 } else {
                     img.src = 'http://cdn.startimestv.com/banner/DD_user_icon.png'
                 }
-                p.innerText = this.commentList[i].content
+                p.innerText = decodeURI(this.commentList[i].content)
                 const commentWidth = p.offsetWidth + 35
                 commentItem.style.width = commentWidth + 15 + 'px'
             }
@@ -605,9 +608,8 @@ export default {
                     clearInterval(time)
                     return true
                 }
-                // console.log(dom.offsetWidth,num)
                 // if (num > this.space && flag) {
-                if ((dom.offsetWidth+num > 240 || num > 80) && flag) {
+                if ((dom.offsetWidth + num > this.maxSpace || num > this.minSpace) && flag) {
                     flag = false
                     // console.log(this.count + ' has finished ')
                     this.count++
@@ -622,8 +624,6 @@ export default {
                     let s = this.getDom(this.count).offsetWidth / this.speed
                     if (s < this.minSp) s = this.minSp
                     else if (s > this.maxSp) s = this.maxSp
-                    // console.log(dom.offsetWidth,num)
-                    // console.log(dom.offsetWidth+num)
                     this.animate(this.getDom(this.count), -this.getDom(this.count).offsetWidth, s)
                 }
                 if (num <= this.pageWidth + 20) {
@@ -796,7 +796,7 @@ export default {
                 },
                 data: qs.stringify({
                     comment_activity_id: this.index + 1,
-                    content: this.commentText
+                    content: encodeURI(this.commentText)
                 })
             })
                 .then(res => {
@@ -838,7 +838,7 @@ export default {
                         item.style.position = 'absolute'
                         item.style.right = -2000 + 'px'
                         item.style.width = itemWidth + 25 + 'px'
-                        item.setAttribute('class','new-barrage')
+                        item.setAttribute('class', 'new-barrage')
                         const lineNum = this.count >= 2 ? this.count - 2 : this.count + this.commentList.length - 2
                         item.style.top = (lineNum % 4) * this.lineSpace + 13.5 + 'px'
                         let sp = itemWidth / this.speed
@@ -852,7 +852,7 @@ export default {
                             } else {
                                 clearInterval(time)
                             }
-                        }, 4)
+                        }, 5)
                         // console.log('call' + lineNum)
                         const duringTime = setInterval(() => {
                             this.during--
@@ -865,10 +865,14 @@ export default {
                         this.commentText = ''
                     } else {
                         this.$alert('Send comment error! ' + res.data.message)
+                        this.disabled = false
+                        this.commentText = ''
                     }
                 })
                 .catch(err => {
                     this.$alert('Send comment error!! ' + err)
+                    this.disabled = false
+                    this.commentText = ''
                 })
         },
         // toast方法
