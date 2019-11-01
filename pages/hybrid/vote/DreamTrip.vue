@@ -381,6 +381,7 @@ export default {
                 this.canClickTab = false
                 if (i < this.currentPage) {
                     if (this.index != i) {
+                        this.loaded_comment = false
                         this.index = i
                         this.mSendEvLog('tab_click', '', this.index + 1)
                         this.show_in = false
@@ -401,15 +402,7 @@ export default {
                         for (let j = 0; j < spans.length; j++) {
                             comment.removeChild(spans[j])
                         }
-                        if (this.loaded_comment) {
-                            setTimeout(() => {
-                                for (let j = 0; j < this.number * 2; j++) {
-                                    this.getDom(j).style.right = -2000 + 'px'
-                                }
-                                this.getCommentList()
-                                this.canClickTab = true
-                            }, 1000)
-                        }
+                        this.getCommentList()
                         this.initPage(this.index)
                     } else {
                         this.canClickTab = true
@@ -532,6 +525,7 @@ export default {
                     if (flag) {
                         this.loaded_page = true
                         this.getSource()
+                        this.loaded_comment = false
                         this.getCommentList()
                     } else {
                         this.pageList = []
@@ -565,7 +559,11 @@ export default {
                             })
                         }
                         this.loaded_comment = true
+                        this.canClickTab = true
                         this.$nextTick(() => {
+                            for (let j = 0; j < this.number * 2; j++) {
+                                this.getDom(j).style.right = -2000 + 'px'
+                            }
                             this.initComment()
                         })
                     } else {
@@ -961,6 +959,17 @@ export default {
         }
         .tab {
             position: relative;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none; /*webkit浏览器*/
+            -ms-user-select: none; /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            user-select: none;
             .share-btn {
                 position: absolute;
                 right: 0;
@@ -1099,6 +1108,17 @@ export default {
                     display: inline-block;
                     padding-bottom: 1rem;
                     z-index: 3;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    -khtml-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                    -moz-user-select: none; /*火狐*/
+                    -webkit-user-select: none; /*webkit浏览器*/
+                    -ms-user-select: none; /*IE10*/
+                    -khtml-user-select: none; /*早期浏览器*/
+                    user-select: none;
                     div {
                         display: inline-block;
                         font-size: 0.9rem;
@@ -1333,6 +1353,17 @@ export default {
                 position: relative;
                 z-index: 1;
                 width: 100%;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -moz-user-select: none; /*火狐*/
+                -webkit-user-select: none; /*webkit浏览器*/
+                -ms-user-select: none; /*IE10*/
+                -khtml-user-select: none; /*早期浏览器*/
+                user-select: none;
                 .video {
                     margin: 1rem auto 0;
                     width: 80%;
