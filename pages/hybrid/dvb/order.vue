@@ -14,10 +14,12 @@
                         <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
                         <img v-else-if="!item.logoUrl&&item.payType==1" src="http://cdn.startimestv.com/banner/ic_ewallet_def_g%20copy.png" />
                         <img v-else src="~/assets/img/pay/pay_ment_default.png" />
-                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">{{item.name}}: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
+                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">{{$store.state.lang.eWallet}}: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
+                        <span v-else-if="item.payType==1">{{$store.state.lang.eWallet}}</span>
                         <span v-else>{{item.name}}</span>
                         <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <i v-show="!item.payChannelCardAuthDtoList" />
+                        <div v-show="item.payType==1&&eAmount<totalAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
                     </label>
                     <div class="sub-channels">
                         <div v-for="(card,si) in item.payChannelCardAuthDtoList" v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" :key="si">
@@ -54,7 +56,7 @@
 </template>
 <script>
 import { formatAmount, cdnPicSrc } from '~/functions/utils'
-import { updateWalletAccount, updateWalletConf, createDVBOrder, checkPass, invoke, commonPayAfter } from '~/functions/pay'
+import { updateWalletAccount, updateWalletConf, createDVBOrder, checkPass, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
 import mButton from '~/components/button'
 import countrys from '~/functions/countrys.json'
 
@@ -96,7 +98,7 @@ export default {
             loaded: false,
             countrys: obj,
             isYueMo: false,
-            wallet:{}
+            wallet: {}
         }
     },
     computed: {
@@ -174,6 +176,13 @@ export default {
         cdnPic(src) {
             return cdnPicSrc.call(this, src)
         },
+        chargeWallet() {
+            chargeWallet.call(this, () => {
+                this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
+                    this.wallet = res.data
+                })
+            })
+        },
         pay() {
             const channel = this.channel
             const order = JSON.parse(sessionStorage.getItem('order-info'))
@@ -199,14 +208,12 @@ export default {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
                         if (setted) {
-                            console.log(1)
                             this.$router.push(
                                 `/hybrid/payment/wallet/paybyPass?payToken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
                                     channel.appInterfaceMode
                                 }&card=${this.authorizationCode || ''}`
                             )
                         } else {
-                            console.log(2)
                             this.$alert('For your security,please set up your password for eWallet and register your phone number.', () => {
                                 this.$router.push(
                                     `/hybrid/payment/wallet/setPassword?payToken=${data.paymentToken}&channel=${channel.fkPayChannelId}&apiType=${
@@ -217,7 +224,6 @@ export default {
                         }
                     })
                 } else if (channel.formConfigExist) {
-                    console.log(3)
                     this.$nuxt.$loading.finish()
                     this.$store.commit('HIDE_SHADOW_LAYER')
                     this.$router.push(
@@ -226,7 +232,6 @@ export default {
                         }`
                     )
                 } else {
-                    console.log(4)
                     invoke.call(this, data.paymentToken, channel.fkPayChannelId, data => {
                         this.$nuxt.$loading.finish()
                         this.$store.commit('HIDE_SHADOW_LAYER')
@@ -382,11 +387,26 @@ export default {
                     &:checked {
                         & + i {
                             border: 2px solid #008be9;
+                            & + .recharge {
+                                display: block;
+                            }
                             &:after {
                                 opacity: 1;
                             }
                         }
                     }
+                    & + i.recharge {
+                        display: none;
+                    }
+                }
+                .recharge {
+                    color: #008be9;
+                    font-weight: bold;
+                    font-size: 0.9rem;
+                    position: absolute;
+                    top: 0.1rem;
+                    right: 2rem;
+                    text-decoration: underline;
                 }
                 i {
                     width: 1.3rem;
