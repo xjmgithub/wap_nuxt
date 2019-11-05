@@ -192,7 +192,7 @@ export default {
                 cardNo: card,
                 countryCode: this.countryCode,
                 // currencyCode: currencyCode, // ORANGE
-                currencyCode: this.countryCode,
+                currencyCode: this.currencyCode,
                 currency: this.currency,
                 rechargeExplanation: this.rechargeDes,
                 promotionAmount: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.firstRechargeGiveMoney) || 0,

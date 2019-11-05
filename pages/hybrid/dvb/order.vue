@@ -202,7 +202,7 @@ export default {
                 CardState: order.smartcard_status,
                 PauseDate: order.stop_days
             })
-
+            
             createDVBOrder.call(this, order, data => {
                 if (channel.payType === 1 || this.authorizationCode) {
                     checkPass.call(this, this.wallet.accountNo, setted => {
