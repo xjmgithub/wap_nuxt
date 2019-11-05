@@ -15,10 +15,9 @@ export default {
         }
     },
     mounted() {
-        const jsGetHeadInfo = window.getChannelId && window.getChannelId.jsGetHeadInfo
-        if (jsGetHeadInfo) {
-            this.headerInfo = jsGetHeadInfo()
-            console.log(this.headerInfo)
+        if (window.getChannelId && window.getChannelId.jsGetHeadInfo) {
+            this.headerInfo = window.getChannelId.jsGetHeadInfo()
+            alert('调用了')
         }
     }
 }
