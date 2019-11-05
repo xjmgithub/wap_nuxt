@@ -26,11 +26,7 @@
             </div>
             <p>
                 {{LANG.if_you_are_not_a_startimes_tv_user}}
-                <a
-                    href="javascript:void(0)"
-                    style="color:#0087EB;text-decoration:underline"
-                    @click="toLoadurl"
-                >{{LANG.click_here}}</a>
+                <a href="javascript:void(0)" style="color:#0087EB;text-decoration:underline" @click="toLoadurl">{{LANG.click_here}}</a>
                 {{LANG.if_you_are_not_a_startimes_tv_user2}}
             </p>
         </div>
@@ -184,17 +180,19 @@ export default {
 
             if (!this.canBuy) return false
 
-            let currencyCode = this.currencyCode
-            if (location.host.indexOf('qa.upms') >= 0 || location.host.indexOf('dev.upms') >= 0) {
-                if (this.countryCode.toLowerCase() === 'mg') {
-                    currencyCode = 'OUV'
-                }
-            }
+            // let currencyCode = this.currencyCode
+            // ORANGE SUPPORT OUV NOT MGA
+            // if (location.host.indexOf('qa.upms') >= 0 || location.host.indexOf('dev.upms') >= 0) {
+            //     if (this.countryCode.toLowerCase() === 'mg') {
+            //         currencyCode = 'OUV'
+            //     }
+            // }
 
             const params = {
                 cardNo: card,
                 countryCode: this.countryCode,
-                currencyCode: currencyCode,
+                // currencyCode: currencyCode, // ORANGE
+                currencyCode: this.countryCode,
                 currency: this.currency,
                 rechargeExplanation: this.rechargeDes,
                 promotionAmount: (rechargeItem.preferentialPlanVo && rechargeItem.preferentialPlanVo.firstRechargeGiveMoney) || 0,
