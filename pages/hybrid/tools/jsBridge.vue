@@ -1,12 +1,12 @@
 <template>
-    <div>{{headerInfo | jsontoString}}</div>
+    <div>{{headerInfo}}</div>
 </template>
 <script>
 export default {
     layout: 'base',
     filters: {
-        jsontoString(val) {
-            return JSON.stringify(val)
+        strtoJson(val) {
+            return JSON.parse(val)
         }
     },
     data() {
@@ -17,7 +17,7 @@ export default {
     mounted() {
         if (window.getChannelId && window.getChannelId.jsGetHeadInfo) {
             this.headerInfo = window.getChannelId.jsGetHeadInfo()
-            alert( '调用内容toString : ' + window.getChannelId.jsGetHeadInfo())
+            
         }
     }
 }
