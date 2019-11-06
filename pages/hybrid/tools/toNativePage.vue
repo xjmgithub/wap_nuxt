@@ -13,43 +13,35 @@
             H5专题页
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.player.PlayerLiveActivity?channelID=444')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/live-play.jpg" />
             直播页
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.player.PlayerVodActivity?vodId=119770')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/live-play.jpg" />
             点播页
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.home.HomeActivity?fragmentTag=LIVE_CHANNEL')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/live-tv.jpg" />
             Live TV页
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.home.HomeActivity?fragmentTag=Me')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/me.jpg" />
             Me 页面
         </div>
-        <div class="item" @click="toNativePage('com.star.mobile.video.appversion.CurrentVersionAppDetailActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
-            升级页面
-        </div>
-        <div class="item" @click="toNativePage('com.star.mobile.video.soccer.SoccerMatchActivity?leagueId=xxx')">
-            <img src="~assets/img/tools/webview.jpg" />
-            赛事专题页
-        </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.me.mycoins.MyCoinsActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/coins.jpg" />
             My Coins页
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.me.tellfriend.TellFriendActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/tellfriend.jpg" />
             Tell Friends页面(旧)
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.smartcard.recharge.RechargeActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/recharge.jpg" />
             充值选择页
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.smartcard.changebouquet.ChangeBouquetActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/link.jpg" />
             换包页(Bouquet)
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.me.orders.DecoderSubscriptionOrdersActivity')">
@@ -57,19 +49,19 @@
             DVB订单页(Decoder Subscription Orders）
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.me.orders.RechargeOrderActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/rechargelist.jpg" />
             充值订单列表页(Decoder Subscription Orders）
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.me.orders.ChangeBouquetOrderActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/bouquet.jpg" />
             换包订单列表页(Decoder Subscription Orders）
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.me.statement.StatementActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/walletlog.jpg" />
             钱包交易记录页（Account Statement）
         </div>
         <div class="item" @click="toNativePage('com.star.mobile.video.me.product.MembershipListActivity')">
-            <img src="~assets/img/tools/webview.jpg" />
+            <img src="~assets/img/tools/vip.jpg" />
             会员商品详情
         </div>
     </div>
