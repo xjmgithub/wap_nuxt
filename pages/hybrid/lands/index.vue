@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div id="land-height" class="wrapper">
         <div class="page-top clear">
             <img class="landing-page-bg-center" src="~assets/img/landpage/landing-page-0903.jpg" alt="StarTimes APP" />
         </div>
@@ -32,6 +32,7 @@ export default {
     },
     mounted() {
         const browser = getBrowser()
+        document.getElementById('land-height').style.height = window.innerHeight + 'px' 
         this.appType = browser.isIos ? 2 : 1
         this.sendEvLog({
             category: 'callup_app',
@@ -84,7 +85,7 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     min-height: 100%;
-    height: 100vh;
+    height:100vh;
     background: linear-gradient(to right, #698aad, #2d4f7c);
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
