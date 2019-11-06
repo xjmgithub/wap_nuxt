@@ -251,7 +251,7 @@ export default {
             updateWalletAccount.call(this, account => {
                 this.wallet = account
                 this.eAmount = account.amount
-                this.eCurrencySymbol = account.currencySymbol
+                this.eCurrencySymbol = this.countrys[account.country].currencySymbol
                 sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
                 updateWalletConf.call(this, account.accountNo)
             })
