@@ -5,6 +5,10 @@
                 <span>{{currencySymbol}}</span>
                 {{totalAmount | formatAmount }}
             </p>
+            <p v-show="rechargeAmount&&rechargeAmount>totalAmount" class="recharge-money">
+                <span>{{currencySymbol}}</span>
+                {{rechargeAmount | formatAmount }}
+            </p>
             <p class="pay-subject">{{paySubject}}</p>
         </div>
         <div v-if="payChannels&&payChannels.length>0" class="contain">
@@ -78,7 +82,8 @@ export default {
         })
         return {
             currencySymbol: '',
-            totalAmount: '',
+            totalAmount: '', // 折后价
+            rechargeAmount: '', // 原价
             paySubject: '',
             payChannels: [],
             channel: {
@@ -147,6 +152,7 @@ export default {
             service_type: 'Recharge'
         })
         this.totalAmount = param.paymentAmount
+        this.rechargeAmount = param.rechargeAmount
         this.currencySymbol = param.currency
         this.paySubject = `Decoder top-up(Card No.${param.cardNo}) ${param.rechargeExplanation.replace('x', '*')}`
         this.yueMo()
@@ -202,7 +208,7 @@ export default {
                 CardState: order.smartcard_status,
                 PauseDate: order.stop_days
             })
-            
+
             createDVBOrder.call(this, order, data => {
                 if (channel.payType === 1 || this.authorizationCode) {
                     checkPass.call(this, this.wallet.accountNo, setted => {
@@ -325,17 +331,22 @@ export default {
         word-break: break-all;
         .pay-money {
             font-weight: bold;
-            font-size: 2.25rem;
+            font-size: 2rem;
             color: #212121;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.4rem;
             span {
                 font-size: 1.25rem;
             }
+        }
+        .recharge-money {
+            color: #666666;
+            text-decoration: line-through;
         }
         .pay-subject {
             color: #666666;
             font-size: 1.1rem;
             word-break: break-word;
+            margin: 0.8rem 0;
         }
     }
     .contain {
