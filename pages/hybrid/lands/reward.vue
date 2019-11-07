@@ -32,7 +32,7 @@ export default {
     },
     head() {
         return {
-            title: 'StarTimes APP',
+            title: 'StarTimes ON APP',
             meta: [
                 { name: 'description', property: 'description', content: 'StarTimes | Movies | Sport | Series | Music | TV Guide | Entertainment' },
                 {
@@ -67,7 +67,7 @@ export default {
     }
     .btn {
         position: fixed;
-        top: 55%;
+        top: 62%;
         right: 0;
         width: 35%;
     }
