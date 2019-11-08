@@ -90,12 +90,18 @@ export const invokeByIframe = function(target, failback) {
 }
 
 export const callApp = function(page, failback) {
-    this.sendEvLog({
-        category: 'callup_app',
-        action: 'callup',
-        label: this.$route.path,
-        value: 1
-    })
+    const utmParam = getUtmParam.call(this)
+    this.sendEvLog(
+        Object.assign(
+            {
+                category: 'callup_app',
+                action: 'callup',
+                label: this.$route.path,
+                value: 1
+            },
+            utmParam.map
+        )
+    )
 
     if (browser.browserVer > 40) {
         if (browser.ua.indexOf('UCBrowser') > 0) {
@@ -113,12 +119,18 @@ export const callApp = function(page, failback) {
 }
 
 export const downApk = function(callback) {
-    this.sendEvLog({
-        category: 'callup_app',
-        action: 'down_apk',
-        label: this.$route.path,
-        value: 1
-    })
+    const utmParam = getUtmParam.call(this)
+    this.sendEvLog(
+        Object.assign(
+            {
+                category: 'callup_app',
+                action: 'down_apk',
+                label: this.$route.path,
+                value: 1
+            },
+            utmParam.map
+        )
+    )
     if (browser.isIos) {
         window.location.href = appleStore
     } else {
@@ -131,37 +143,20 @@ export const downApk = function(callback) {
 }
 
 export const callMarket = function(failback) {
-    const query = this.$route.query
-    const referrer = query.referrer
-    let source = '&referrer='
+    const utmParam = getUtmParam.call(this)
+    const source = utmParam.str
 
-    if (query.referrer) {
-        source = source + encodeURIComponent(referrer)
-    } else if (query.utm_source) {
-        let str = `utm_source=${query.utm_source}`
-        if (query.utm_medium) str += `&utm_medium=${query.utm_medium}`
-        if (query.utm_campaign) str += `&utm_campaign=${query.utm_campaign}`
-        source = source + encodeURIComponent(str)
-    } else if (query.utms) {
-        let str = `utm_source=${query.utms}`
-        if (query.utmm) str += `&utm_medium=${query.utmm}`
-        if (query.utmc) str += `&utm_campaign=${query.utmc}`
-        source = source + encodeURIComponent(str)
-    } else {
-        const utmCache = sessionStorage.getItem('utm_str')
-        if (utmCache) {
-            source = source + encodeURIComponent(utmCache)
-        } else {
-            source = source + encodeURIComponent('utm_source=officeWap')
-        }
-    }
-
-    this.sendEvLog({
-        category: 'callup_app',
-        action: 'to_googleplay',
-        label: this.$route.path,
-        value: 1
-    })
+    this.sendEvLog(
+        Object.assign(
+            {
+                category: 'callup_app',
+                action: 'to_googleplay',
+                label: this.$route.path,
+                value: 1
+            },
+            utmParam.map
+        )
+    )
 
     if (browser.isIos) {
         window.location.href = appleStore
@@ -217,4 +212,67 @@ export const callupFlow = function(page) {
             downApk.call(this)
         })
     })
+}
+
+export const getUtmParam = function() {
+    const query = this.$route.query
+    const referrer = query.referrer
+    let source = '&referrer='
+    let utmSource = ''
+    let utmCampaign = ''
+    let utmMedium = ''
+
+    if (query.referrer) {
+        source = source + referrer
+        utmSource = getQueryVariable(decodeURIComponent(referrer), 'utm_source') || ''
+        utmMedium = getQueryVariable(decodeURIComponent(referrer), 'utm_medium') || ''
+        utmCampaign = getQueryVariable(decodeURIComponent(referrer), 'utm_campaign') || ''
+    } else if (query.utm_source) {
+        let str = `utm_source=${query.utm_source}`
+        if (query.utm_medium) str += `&utm_medium=${query.utm_medium}`
+        if (query.utm_campaign) str += `&utm_campaign=${query.utm_campaign}`
+        source = source + encodeURIComponent(str)
+        utmSource = query.utm_source || ''
+        utmMedium = query.utm_medium || ''
+        utmCampaign = query.utm_campaign || ''
+    } else if (query.utms) {
+        let str = `utm_source=${query.utms}`
+        if (query.utmm) str += `&utm_medium=${query.utmm}`
+        if (query.utmc) str += `&utm_campaign=${query.utmc}`
+        source = source + encodeURIComponent(str)
+        utmSource = query.utms || ''
+        utmMedium = query.utmm || ''
+        utmCampaign = query.utmc || ''
+    } else {
+        const utmCache = sessionStorage.getItem('utm_str')
+        if (utmCache) {
+            source = source + utmCache
+            utmSource = getQueryVariable(decodeURIComponent(utmCache), 'utm_source') || ''
+            utmMedium = getQueryVariable(decodeURIComponent(utmCache), 'utm_medium') || ''
+            utmCampaign = getQueryVariable(decodeURIComponent(utmCache), 'utm_campaign') || ''
+        } else {
+            source = source + encodeURIComponent('utm_source=officeWap')
+            utmSource = 'officeWap'
+            utmMedium = 'officeWap'
+            utmCampaign = 'officeWap'
+        }
+    }
+    return {
+        str: source,
+        map: {
+            utm_source: utmSource,
+            utm_medium: utmMedium,
+            utm_campaign: utmCampaign
+        }
+    }
+}
+
+export const getQueryVariable = function(query, key) {
+    const vars = query.split('&')
+    for (let i = 0; i < vars.length; i++) {
+        const pair = vars[i].split('=')
+        if (decodeURIComponent(pair[0]) == key) {
+            return decodeURIComponent(pair[1])
+        }
+    }
 }
