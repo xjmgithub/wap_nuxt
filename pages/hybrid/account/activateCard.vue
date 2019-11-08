@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div v-show="type==2" class="decoder">
-                    <img src="~assets/img/dvb/ic_email.png" />
+                    <img src="~assets/img/dvb/ic_email.png" @click="showHow=true" />
                     <div>
                         <input v-model="decoderNum" placeholder="Enter your Smart Card number" />
                     </div>
@@ -42,7 +42,6 @@
                 <div class="coupon">
                     <h4>{{couponData.bonus_title}}</h4>
                     <p>{{couponData.use_condition}}</p>
-                    <span>USE NOW</span>
                 </div>
                 <div class="btn" @click="useNow">
                     <img src="~assets/img/dvb/Button-OK.png">
@@ -70,14 +69,24 @@
                 <span>OK</span>
             </div>
         </div>
+        <div v-show="showHow" class="decoder-card">
+            <img src="~assets/img/dvb/icon_smart_card.png">
+            <img src="~assets/img/naire/ic_popup_close.png" @click="showHow=false">
+        </div>
+        <shadowLayer v-show="showAlert || showHow" />
     </div>
 </template>
 <script>
 import countrys from '~/functions/countrys.json'
 import { callApp, callMarket, downApk } from '~/functions/app'
+import { setCookie, getCookie } from '~/functions/utils'
+import shadowLayer from '~/components/shadow-layer'
 
 export default {
     layout: 'base',
+    components: {
+        shadowLayer
+    },
     data() {
         const countryCode = this.$route.query.code || 'KE'
         const obj = {}
@@ -91,6 +100,7 @@ export default {
             phoneNum: '',
             decoderNum: '',
             showAlert: false,
+            showHow: false,
             getGiftSuccess: false,
             couponData: {},
             alertMessage: ''
@@ -100,9 +110,36 @@ export default {
         type(nv, ov) {
             if (nv == 1) this.oderNum = ''
             else this.phoneNum = ''
+        },
+        showAlert(nv, ov) {
+            this.fixedBody(nv)
+        },
+        showHow(nv, ov) {
+            this.fixedBody(nv)
+        }
+    },
+    mounted() {
+        const giftInfo = JSON.parse(getCookie('get-gift'))
+        if (giftInfo.id) {
+            this.getGiftSuccess = true
+            this.showAlert = true
+            this.couponData = giftInfo
+            this.alertMessage = "You've got the gift, please use it as quickly as you can."
         }
     },
     methods: {
+        fixedBody(nv) {
+            console.log(nv)
+            if (nv) {
+                document.body.style.overflow = 'hidden'
+                document.body.style.position = 'fixed'
+                document.body.style.left = 0
+                document.body.style.right = 0
+            } else {
+                document.body.style.overflow = 'auto'
+                document.body.style.position = 'static'
+            }
+        },
         useNow() {
             callApp.call(this, '', () => {
                 callMarket.call(this, () => {
@@ -142,6 +179,7 @@ export default {
                             this.showAlert = true
                             this.couponData = res.data.data
                             this.alertMessage = res.data.data.bonus_title
+                            setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 60 * 60)
                         }
                     } else {
                         this.$alert(res.data.message)
@@ -289,7 +327,6 @@ export default {
                 background: url('~assets/img/dvb/coupon.png') no-repeat;
                 background-size: 100% 100%;
                 padding: 1rem 1.5rem 0.8rem;
-                position: relative;
                 h4 {
                     font-size: 1.25rem;
                     color: #333333;
@@ -303,15 +340,15 @@ export default {
                     width: 80%;
                     padding-bottom: 0.2rem;
                 }
-                span {
-                    color: #ffffff;
-                    font-weight: bold;
-                    position: absolute;
-                    right: 3%;
-                    top: 38%;
-                    transform: rotate(90deg);
-                    font-size: 0.85rem;
-                }
+                // span {
+                //     color: #ffffff;
+                //     font-weight: bold;
+                //     position: absolute;
+                //     right: 3%;
+                //     top: 38%;
+                //     transform: rotate(90deg);
+                //     font-size: 0.85rem;
+                // }
             }
         }
     }
@@ -349,22 +386,52 @@ export default {
         margin-left: -7.5rem;
         margin-top: -9rem;
         z-index: 999;
-        background: url('~assets/img/dvb/active_bg.png') no-repeat;
+        background: url('~assets/img/dvb/alert_bg.png') no-repeat;
         background-size: 100% 100%;
-        padding: 0 0.8rem;
+        padding: 0 1rem;
         text-align: center;
         border-radius: 5px;
         h4 {
             color: #000000;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            height: 3rem;
-            line-height: 3rem;
+            margin: 1.7rem 0 4rem;
         }
         p {
             color: #ffffff;
             font-size: 0.95rem;
-            margin: 2rem 0;
+            line-height: 1.3rem;
+            min-height: 5rem;
+            max-height: 7rem;
+            overflow: scroll;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+        .btn {
+            height: 2.2rem;
+            line-height: 2.2rem;
+            width: 90%;
+        }
+    }
+    .decoder-card {
+        width: 15rem;
+        height: 18rem;
+        line-height: 1.2rem;
+        position: fixed;
+        overflow: hidden;
+        top: 50%;
+        left: 50%;
+        margin-left: -7.5rem;
+        margin-top: -9rem;
+        z-index: 999;
+        text-align: center;
+        img {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        img + img {
+            width: 2rem;
         }
     }
 }
