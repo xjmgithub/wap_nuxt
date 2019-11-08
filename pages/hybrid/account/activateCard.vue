@@ -2,33 +2,51 @@
     <div class="container">
         <!-- TODO 轮播图 -->
         <div class="banner">
-            <img src="~assets/img/dvb/active_banner.jpg">
+            <img src="~assets/img/dvb/active_banner.jpg" @click="useNow">
         </div>
         <div class="exclusive">
             <div class="shadow">
                 <img src="~assets/img/dvb/gift.png">
-                <div class="border">
+                <div v-show="!getGiftSuccess" class="border">
                     <div class="nav">
-                        <span :class="{'on':type==1}" @click="type=1"><img src="~assets/img/dvb/ic_telephone_def.png"> Mobile Phone</span>
-                        <span :class="{'on':type==2}" @click="type=2"><img src="~assets/img/dvb/ic_DecoderService_def_g.png">Decoder Number</span>
+                        <p :class="{'on':type==1}" @click="type=1">
+                            <span> <img src="~assets/img/dvb/ic_telephone_def.png"> Mobile Phone </span>
+                        </p>
+                        <p :class="{'on':type==2}" @click="type=2">
+                            <span> <img src="~assets/img/dvb/ic_DecoderService_def_g.png">Decoder Number</span>
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="get-gift">
+            <div v-show="!getGiftSuccess" class="get-gift">
                 <div v-show="type==1" class="phone">
-                    <img class="country_icon" :src="cdnPicSrc(country.nationalFlag)" @click="countryDialogStatus=true" />
+                    <img :src="cdnPicSrc(country.nationalFlag)" />
                     <div>
                         <span>+{{country.phonePrefix}} | </span>
                         <input v-model="phoneNum" placeholder="Enter your phone number" />
                     </div>
                 </div>
                 <div v-show="type==2" class="decoder">
-                    <input v-model="decoderNum" placeholder="Enter your decoder number" />
+                    <img src="~assets/img/dvb/ic_email.png" />
+                    <div>
+                        <input v-model="decoderNum" placeholder="Enter your Smart Card number" />
+                    </div>
                 </div>
                 <div class="btn" :class="{'disabled':!decoderNum && !phoneNum}" @click="getGift">
                     <img v-if="decoderNum||phoneNum" src="~assets/img/dvb/Button-OK.png">
                     <img v-else src="~assets/img/dvb/Button-getgift2.png">
                     <span>GET GIFT</span>
+                </div>
+            </div>
+            <div v-show="getGiftSuccess" class="received">
+                <div class="coupon">
+                    <h4>{{couponData.bonus_title}}</h4>
+                    <p>{{couponData.use_condition}}</p>
+                    <span>USE NOW</span>
+                </div>
+                <div class="btn" @click="useNow">
+                    <img src="~assets/img/dvb/Button-OK.png">
+                    <span>USE NOW</span>
                 </div>
             </div>
             <div class="rules">
@@ -44,37 +62,38 @@
                 </div>
             </div>
         </div>
-        <shadowLayer v-show="countryDialogStatus" @click="countryDialogStatus=false" />
-        <div v-show="countryDialogStatus" class="country-choose-dialog">
-            <div class="dialog-title">{{$store.state.lang.all}}</div>
-            <ul>
-                <li v-for="(item,index) in countryList" :key="index" @click="chooseCountry(item)">
-                    <img :src="cdnPicSrc(item.nationalFlag)" />
-                    <span>{{item.name}}</span>
-                </li>
-            </ul>
+        <div v-show="showAlert" class="alert">
+            <h4>Gift Received!</h4>
+            <p>{{alertMessage}}</p>
+            <div class="btn" @click="showAlert=false">
+                <img src="~assets/img/dvb/Button-OK.png">
+                <span>OK</span>
+            </div>
         </div>
     </div>
 </template>
 <script>
-import shadowLayer from '~/components/shadow-layer'
-import country from '~/functions/countrys.json'
+import countrys from '~/functions/countrys.json'
+import { callApp, callMarket, downApk } from '~/functions/app'
 
 export default {
     layout: 'base',
-    components: {
-        shadowLayer
-    },
     data() {
+        const countryCode = this.$route.query.code || 'KE'
+        const obj = {}
+        countrys.forEach(item => {
+            obj[item.country] = item
+        })
         return {
             type: 1,
-            countryDialogStatus: false,
-            countryList: country,
-            country: this.$store.state.country,
-            countryId: this.$store.state.country.id,
+            country: obj[countryCode.toLocaleUpperCase()],
             langType: this.$store.state.langType,
             phoneNum: '',
-            decoderNum: ''
+            decoderNum: '',
+            showAlert: false,
+            getGiftSuccess: false,
+            couponData: {},
+            alertMessage: ''
         }
     },
     watch: {
@@ -84,22 +103,46 @@ export default {
         }
     },
     methods: {
-        chooseCountry(item) {
-            this.country = item
-            this.countryDialogStatus = false
+        useNow() {
+            callApp.call(this, '', () => {
+                callMarket.call(this, () => {
+                    this.$confirm(
+                        'Download apk now?（12M）',
+                        () => {
+                            downApk.call(this)
+                        },
+                        () => {},
+                        'OK',
+                        'NOT NOW'
+                    )
+                })
+            })
         },
         getGift() {
-            console.log(this.$store.state)
             this.$nuxt.$loading.start()
             this.$axios
                 .get(
-                    `/self/v1/bonuses/punish-stops?area_id=${this.countryId}&lnCode=${this.langType}&smartcard=${this.decoderNum}&phone=${
+                    `/self/v1/bonuses/punish-stops?area_id=${this.country.id}&lnCode=${this.langType}&smartcard=${this.decoderNum}&phone=${
                         this.phoneNum
                     }`
                 )
                 .then(res => {
                     this.$nuxt.$loading.finish()
+                    // @0：智能卡不存在@1：智能卡罚停@2：智能卡非罚停@3：该国家没有开通DVB充值@4：BOSS接口不可用@5智能卡罚停，但不满足领取条件
+                    const state = res.data.state
                     if (res.data.code == 200) {
+                        if (state == 0) {
+                            this.alertMessage = 'The 85% off on sale for the VIP for you.'
+                            this.showAlert = true
+                        } else if (state == 2) {
+                            this.showAlert = true
+                            this.alertMessage = '5% discount has been put into your account. Please enjoy yourself.'
+                        } else if (state == 1 && res.data.data.id) {
+                            this.getGiftSuccess = true
+                            this.showAlert = true
+                            this.couponData = res.data.data
+                            this.alertMessage = res.data.data.bonus_title
+                        }
                     } else {
                         this.$alert(res.data.message)
                     }
@@ -120,14 +163,13 @@ export default {
     }
     .exclusive {
         width: 100%;
-        padding: 2.5rem 2.5%;
+        padding: 2rem 2.5%;
         background: url('~assets/img/dvb/active_bg.png') no-repeat;
         background-position-y: -2.5rem;
         background-size: 100%;
         .shadow {
             padding: 0 0.6rem 0.7rem;
             background: url('~assets/img/dvb/tab_bg.png') no-repeat 100%;
-            margin-bottom: 0.8rem;
             background-size: 100% 100%;
             & > img {
                 width: 105%;
@@ -140,31 +182,41 @@ export default {
                 border-radius: 16px;
                 .nav {
                     height: 4.5rem;
-                    line-height: 4.5rem;
                     background: linear-gradient(to bottom, #33005b 0%, #36014b 100%);
                     border-radius: 13px;
                     font-size: 0.75rem;
                     color: #ffffff;
-                    span {
+                    text-align: center;
+                    p {
                         display: inline-block;
-                        width: 49%;
+                        width: 48%;
                         text-align: center;
-                        img {
-                            width: 1.5rem;
-                            height: 1.5rem;
-                        }
+                        margin-top: 0.4rem;
+                        line-height: 4rem;
+                        height: 4.5rem;
                         &.on {
                             font-weight: bold;
+                            background: url('~assets/img/dvb/ic_Tab.png') no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        span {
+                            img {
+                                width: 1.5rem;
+                                height: 1.5rem;
+                            }
                         }
                     }
                 }
             }
         }
         .get-gift {
-            padding: 1.5rem 0.8rem 1rem;
-            background: linear-gradient(to top, rgba(133, 0, 169, 0.16) 0%, rgba(31, 1, 87, 0.55) 100%);
+            padding: 1.5rem 0;
+            background: url('~assets/img/dvb/input_bg.png') no-repeat;
+            background-size: 100% 100%;
             border-radius: 16px;
-            .phone {
+            margin-top: 0.8rem;
+            .phone,
+            .decoder {
                 text-align: center;
                 font-size: 0.95rem;
                 img {
@@ -174,12 +226,13 @@ export default {
                     margin-top: -0.2rem;
                 }
                 div {
-                    padding: 2px;
                     display: inline-block;
                     border-radius: 6px;
                     color: #8d2fff;
                     border: 2px solid #ffb800;
-                    padding: 0.4rem 0.5rem;
+                    padding: 0.4rem 0 0.4rem 0.4rem;
+                    width: 85%;
+                    text-align: left;
                     input {
                         outline: none;
                         border: none;
@@ -192,35 +245,8 @@ export default {
                     }
                 }
             }
-            .decoder {
-                padding: 0.8rem;
-                input {
-                    width: 100%;
-                    outline: none;
-                }
-            }
-            .btn {
-                width: 70%;
-                margin: 0.8rem auto;
-                height: 2.5rem;
-                line-height: 2.5rem;
-                text-align: center;
-                font-weight: bold;
-                letter-spacing: 1px;
-                position: relative;
-                color: #ffffff;
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
-                span {
-                    position: absolute;
-                    left: 0;
-                    width: 100%;
-                }
-                &.disabled {
-                    color: #aaaaaa;
-                }
+            .decoder div input {
+                width: 100%;
             }
         }
         .rules {
@@ -230,7 +256,7 @@ export default {
             }
             .contain {
                 width: 94%;
-                margin: -1.2rem auto 0;
+                margin: -1rem auto 0;
                 background: #ffffff;
                 color: #ff6600;
                 font-size: 0.95rem;
@@ -258,47 +284,87 @@ export default {
                 }
             }
         }
-    }
-
-    .country-choose-dialog {
-        width: 18rem;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 1000;
-        height: 25rem;
-        margin-top: -12.5rem;
-        margin-left: -9rem;
-        background: white;
-        padding: 1rem;
-        .dialog-title {
-            height: 2rem;
-        }
-        ul {
-            height: 21rem;
-            overflow: auto;
-            li {
-                width: 8rem;
-                float: left;
-                height: 2.5rem;
-                line-height: 2.5rem;
-                img {
-                    width: 1.3rem;
-                    height: 1.3rem;
-                    margin-top: 0.6rem;
-                    margin-right: 0.3rem;
-                    float: left;
+        .received {
+            .coupon {
+                background: url('~assets/img/dvb/coupon.png') no-repeat;
+                background-size: 100% 100%;
+                padding: 1rem 1.5rem 0.8rem;
+                position: relative;
+                h4 {
+                    font-size: 1.25rem;
+                    color: #333333;
+                    line-height: 1.25rem;
+                    margin: 0 0 1rem;
+                    width: 80%;
+                }
+                p {
+                    color: #d10066;
+                    font-size: 0.95rem;
+                    width: 80%;
+                    padding-bottom: 0.2rem;
                 }
                 span {
-                    width: 6.4rem;
-                    overflow: hidden;
-                    height: 2.5rem;
-                    float: left;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    font-size: 0.8rem;
+                    color: #ffffff;
+                    font-weight: bold;
+                    position: absolute;
+                    right: 3%;
+                    top: 38%;
+                    transform: rotate(90deg);
+                    font-size: 0.85rem;
                 }
             }
+        }
+    }
+    .btn {
+        width: 70%;
+        margin: 0.8rem auto;
+        height: 2.5rem;
+        line-height: 2.5rem;
+        text-align: center;
+        font-weight: bold;
+        letter-spacing: 1px;
+        position: relative;
+        color: #ffffff;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+        span {
+            position: absolute;
+            left: 0;
+            width: 100%;
+        }
+        &.disabled {
+            color: #aaaaaa;
+        }
+    }
+    .alert {
+        width: 15rem;
+        height: 18rem;
+        line-height: 1.2rem;
+        position: fixed;
+        overflow: hidden;
+        top: 50%;
+        left: 50%;
+        margin-left: -7.5rem;
+        margin-top: -9rem;
+        z-index: 999;
+        background: url('~assets/img/dvb/active_bg.png') no-repeat;
+        background-size: 100% 100%;
+        padding: 0 0.8rem;
+        text-align: center;
+        border-radius: 5px;
+        h4 {
+            color: #000000;
+            font-size: 1.2rem;
+            font-weight: bold;
+            height: 3rem;
+            line-height: 3rem;
+        }
+        p {
+            color: #ffffff;
+            font-size: 0.95rem;
+            margin: 2rem 0;
         }
     }
 }
