@@ -5,19 +5,25 @@
     </div>
 </template>
 <script>
-import { downApk, callApp, callMarket } from '~/functions/app'
+import { downApk, callApp, callMarket, getUtmParam } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
     mounted() {
         const browser = getBrowser()
         this.appType = browser.isIos ? 2 : 1
-        this.sendEvLog({
-            category: 'callup_app',
-            action: 'landing_show',
-            label: window.location.pathname,
-            value: 1
-        })
+        const utmParm = getUtmParam.call(this)
+        this.sendEvLog(
+            Object.assign(
+                {
+                    category: 'callup_app',
+                    action: 'landing_show',
+                    label: window.location.pathname,
+                    value: 1
+                },
+                utmParm.map
+            )
+        )
     },
     methods: {
         down() {

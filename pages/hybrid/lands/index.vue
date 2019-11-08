@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { downApk, callApp, callMarket } from '~/functions/app'
+import { downApk, callApp, callMarket, getUtmParam } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -32,14 +32,20 @@ export default {
     },
     mounted() {
         const browser = getBrowser()
-        document.getElementById('land-height').style.height = window.innerHeight + 'px' 
+        document.getElementById('land-height').style.height = window.innerHeight + 'px'
         this.appType = browser.isIos ? 2 : 1
-        this.sendEvLog({
-            category: 'callup_app',
-            action: 'landing_show',
-            label: window.location.pathname,
-            value: 1
-        })
+        const utmParm = getUtmParam.call(this)
+        this.sendEvLog(
+            Object.assign(
+                {
+                    category: 'callup_app',
+                    action: 'landing_show',
+                    label: window.location.pathname,
+                    value: 1
+                },
+                utmParm.map
+            )
+        )
     },
     methods: {
         down() {
@@ -85,7 +91,7 @@ export default {
 <style lang="less" scoped>
 .wrapper {
     min-height: 100%;
-    height:100vh;
+    height: 100vh;
     background: linear-gradient(to right, #698aad, #2d4f7c);
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
