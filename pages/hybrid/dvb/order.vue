@@ -59,7 +59,7 @@
     </div>
 </template>
 <script>
-import { formatAmount, cdnPicSrc } from '~/functions/utils'
+import { cdnPicSrc } from '~/functions/utils'
 import { updateWalletAccount, updateWalletConf, createDVBOrder, checkPass, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
 import mButton from '~/components/button'
 import countrys from '~/functions/countrys.json'
@@ -71,7 +71,13 @@ export default {
     },
     filters: {
         formatAmount(num) {
-            return formatAmount(num)
+            const arr = num.toString().split('.')
+            if (arr[1] && arr[1] != '00') {
+                const tmp = Number(0 + '.' + arr[1]).toFixed(2)
+                return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,') + '.' + tmp.toString().split('.')[1]
+            } else {
+                return arr[0].toString().replace(/\d+?(?=(?:\d{3})+$)/gim, '$&,')
+            }
         }
     },
     data() {
@@ -187,6 +193,7 @@ export default {
                 this.$axios.get(`/mobilewallet/v1/accounts/me`).then(res => {
                     this.wallet = res.data
                     sessionStorage.setItem('wallet', JSON.stringify(this.wallet))
+                    this.getMyEwallet()
                 })
             })
         },
