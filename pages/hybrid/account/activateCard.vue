@@ -62,12 +62,15 @@
             </div>
         </div>
         <div v-show="showAlert" class="alert">
-            <h4>Gift Received!</h4>
-            <p>{{alertMessage}}</p>
-            <div class="btn" @click="showAlert=false">
-                <img src="~assets/img/dvb/Button-OK.png">
-                <span>OK</span>
+            <div>
+                <h4>Gift Received!</h4>
+                <p>{{alertMessage}}</p>
+                <div class="btn" @click="useNow()">
+                    <img src="~assets/img/dvb/Button-OK.png">
+                    <span>OK</span>
+                </div>
             </div>
+            <img src="~assets/img/dvb/ic_close__w.png" @click="showAlert=false">
         </div>
         <div v-show="showHow" class="decoder-card">
             <img src="~assets/img/dvb/icon_smart_card.png">
@@ -120,11 +123,11 @@ export default {
     },
     mounted() {
         const giftInfo = JSON.parse(getCookie('get-gift'))
-        if (giftInfo.id) {
+        if (giftInfo && giftInfo.id) {
             this.getGiftSuccess = true
             this.showAlert = true
             this.couponData = giftInfo
-            this.alertMessage = "You've got the gift, please use it as quickly as you can."
+            this.$toast("You've got the gift, please use it as quickly as you can.")
         }
     },
     methods: {
@@ -155,7 +158,29 @@ export default {
                 })
             })
         },
+        showGift(message, title, condition = 'Unlimited Time') {
+            this.showAlert = true
+            this.getGiftSuccess = true
+            this.alertMessage = message
+            this.couponData.bonus_title = title
+            this.couponData.use_condition = condition
+        },
         getGift() {
+            // TODO 输入手机号或智能卡号不满足
+            const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g
+            const reg1 = /^(01|02)\d{9}$/g
+            if (!reg.test(this.phoneNum) && !reg1.test(this.decoderNum)) {
+                this.$confirm(
+                    "Your number was not correct. I heard that there's an 85% off on sale for the VIP prepared in StarTimes ON for you.Get bonus now!",
+                    () => {
+                        this.useNow()
+                    },
+                    () => {},
+                    'OK',
+                    'CANCEL'
+                )
+                return false
+            }
             this.$nuxt.$loading.start()
             this.$axios
                 .get(
@@ -169,17 +194,35 @@ export default {
                     const state = res.data.state
                     if (res.data.code == 200) {
                         if (state == 0) {
-                            this.alertMessage = 'The 85% off on sale for the VIP for you.'
-                            this.showAlert = true
-                        } else if (state == 2) {
-                            this.showAlert = true
-                            this.alertMessage = '5% discount has been put into your account. Please enjoy yourself.'
+                            this.showGift(
+                                '85% off on sale for the VIP has been put into your StarTimes ON account. Get your bonus now!',
+                                '85% Off On Sale'
+                            )
                         } else if (state == 1 && res.data.data.id) {
-                            this.getGiftSuccess = true
-                            this.showAlert = true
-                            this.couponData = res.data.data
-                            this.alertMessage = res.data.data.bonus_title
+                            const data = res.data.data
+                            this.showGift(data.bonus_title, data.bonus_title, data.use_condition)
                             setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 60 * 60)
+                        } else if (state == 1) {
+                            this.showGift('5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
+                        } else if (state == 2) {
+                            this.showGift(
+                                '5% discount has been put into your decoder account. Please enjoy free watch on the App now!',
+                                '5% Discount For Decoder',
+                                'Free Watch Unlimited Time'
+                            )
+                        } else if (state == 3) {
+                            this.showGift(
+                                'Free watch by linking your decoder account with StarTimes ON account.Please enjoy yourself.',
+                                'Free Watch By Linking Decoder'
+                            )
+                        } else if (state == 4) {
+                            this.$confirm(
+                                "Network error. I heard that there's an 85% off on sale for the VIP prepared in StarTimes ON  for you.Get bonus now!",
+                                () => {},
+                                () => {},
+                                'OK',
+                                'CANCEL'
+                            )
                         }
                     } else {
                         this.$alert(res.data.message)
@@ -340,15 +383,6 @@ export default {
                     width: 80%;
                     padding-bottom: 0.2rem;
                 }
-                // span {
-                //     color: #ffffff;
-                //     font-weight: bold;
-                //     position: absolute;
-                //     right: 3%;
-                //     top: 38%;
-                //     transform: rotate(90deg);
-                //     font-size: 0.85rem;
-                // }
             }
         }
     }
@@ -377,25 +411,29 @@ export default {
     }
     .alert {
         width: 15rem;
-        height: 18rem;
+        height: 20rem;
         line-height: 1.2rem;
         position: fixed;
         overflow: hidden;
         top: 50%;
         left: 50%;
         margin-left: -7.5rem;
-        margin-top: -9rem;
+        margin-top: -10rem;
         z-index: 999;
-        background: url('~assets/img/dvb/alert_bg.png') no-repeat;
-        background-size: 100% 100%;
-        padding: 0 1rem;
         text-align: center;
         border-radius: 5px;
+        & > div {
+            background: url('~assets/img/dvb/alert_bg.png') no-repeat;
+            background-size: 100% 100%;
+            padding: 0 1rem;
+            height: 16rem;
+        }
         h4 {
             color: #000000;
             font-size: 1.1rem;
             font-weight: bold;
-            margin: 1.7rem 0 4rem;
+            padding: 1.5rem 0 3.5rem;
+            margin: 0;
         }
         p {
             color: #ffffff;
@@ -412,6 +450,10 @@ export default {
             height: 2.2rem;
             line-height: 2.2rem;
             width: 90%;
+        }
+        & > img {
+            width: 1.7rem;
+            margin-top: 1.5rem;
         }
     }
     .decoder-card {
