@@ -23,7 +23,7 @@
                         <span v-else>{{item.name}}</span>
                         <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                         <i v-show="!item.payChannelCardAuthDtoList" />
-                        <div v-show="item.payType==1&&eAmount&&eAmount<totalAmount" class="recharge" @click="chargeWallet">RECHARGE</div>
+                        <div v-show="item.payType==1&&eAmount&&eAmount<totalAmount&&currencySymbol==eCurrencySymbol" class="recharge" @click="chargeWallet">RECHARGE</div>
                     </label>
                     <div class="sub-channels">
                         <div v-for="(card,si) in item.payChannelCardAuthDtoList" v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" :key="si">
