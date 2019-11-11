@@ -200,7 +200,7 @@ export default {
                             )
                         } else if (state == 1 && res.data.data.id) {
                             const data = res.data.data
-                            this.showGift(data.bonus_title, data.bonus_title, data.use_condition)
+                            this.showGift(data.popup, data.bonus_title, data.use_condition)
                             setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 60 * 60)
                         } else if (state == 1) {
                             this.showGift('5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
