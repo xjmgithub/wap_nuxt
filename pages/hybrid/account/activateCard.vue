@@ -2,7 +2,7 @@
     <div class="container">
         <!-- TODO 轮播图 -->
         <div class="banner">
-            <img src="~assets/img/dvb/active_banner.jpg" @click="useNow">
+            <mVoteSwiper v-if="banners.length" :banners="banners" name="facebookLand" @bannerClick="useNow" />
         </div>
         <div class="exclusive">
             <div class="shadow">
@@ -23,13 +23,13 @@
                     <img :src="cdnPicSrc(country.nationalFlag)" />
                     <div>
                         <span>+{{country.phonePrefix}} | </span>
-                        <input v-model="phoneNum" placeholder="Enter your phone number" />
+                        <input v-model="phoneNum" placeholder="Enter your phone number" @blur="checkoutFormat('phone')" />
                     </div>
                 </div>
                 <div v-show="type==2" class="decoder">
-                    <img src="~assets/img/dvb/ic_email.png" @click="showHow=true" />
+                    <img src="~assets/img/dvb/ic_email.png" @click="showHelp" />
                     <div>
-                        <input v-model="decoderNum" placeholder="Enter your Smart Card number" />
+                        <input v-model="decoderNum" placeholder="Enter your Smart Card number" @blur="checkoutFormat('card')" />
                     </div>
                 </div>
                 <div class="btn" :class="{'disabled':!decoderNum && !phoneNum}" @click="getGift">
@@ -84,11 +84,13 @@ import countrys from '~/functions/countrys.json'
 import { callApp, callMarket, downApk } from '~/functions/app'
 import { setCookie, getCookie } from '~/functions/utils'
 import shadowLayer from '~/components/shadow-layer'
+import mVoteSwiper from '~/components/vote/vote_swiper'
 
 export default {
     layout: 'base',
     components: {
-        shadowLayer
+        shadowLayer,
+        mVoteSwiper
     },
     data() {
         const countryCode = this.$route.query.code || 'KE'
@@ -106,7 +108,19 @@ export default {
             showHow: false,
             getGiftSuccess: false,
             couponData: {},
-            alertMessage: ''
+            alertMessage: '',
+            banners: [
+                {
+                    materials: '/res_nuxt/img/mrshare.jpg',
+                    link: '',
+                    name: ''
+                },
+                {
+                    materials: '/res_nuxt/img/soccercup.png',
+                    link: '',
+                    name: ''
+                }
+            ]
         }
     },
     watch: {
@@ -131,6 +145,28 @@ export default {
         }
     },
     methods: {
+        showHelp() {
+            this.showHow = true
+            this.mSendEvLog('dvb_help_click')
+        },
+        checkoutFormat(type) {
+            const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g
+            const reg1 = /^(01|02)\d{9}$/g
+            if (type == 'phone' && this.phoneNum.length > 0) {
+                this.mSendEvLog('dvb_phone_input', this.phoneNum, reg.test(this.phoneNum) ? 1 : 0)
+            } else if (type == 'card' && this.decoderNum.length > 0) {
+                this.mSendEvLog('dvb_card_inpput', this.decoderNum, reg1.test(this.decoderNum) ? 1 : 0)
+            }
+        },
+        // 埋点方法
+        mSendEvLog(action, label = 1, value = 1) {
+            this.sendEvLog({
+                category: 'promo_dvb_user',
+                action: action,
+                label: label,
+                value: value
+            })
+        },
         fixedBody(nv) {
             console.log(nv)
             if (nv) {
@@ -158,7 +194,8 @@ export default {
                 })
             })
         },
-        showGift(message, title, condition = 'Unlimited Time') {
+        showGift(value, message, title, condition = 'Unlimited Time') {
+            this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', value)
             this.showAlert = true
             this.getGiftSuccess = true
             this.alertMessage = message
@@ -195,27 +232,31 @@ export default {
                     if (res.data.code == 200) {
                         if (state == 0) {
                             this.showGift(
+                                404,
                                 '85% off on sale for the VIP has been put into your StarTimes ON account. Get your bonus now!',
                                 '85% Off On Sale'
                             )
                         } else if (state == 1 && res.data.data.id) {
                             const data = res.data.data
-                            this.showGift(data.popup, data.bonus_title, data.use_condition)
+                            this.showGift(1, data.popup, data.bonus_title, data.use_condition)
                             setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 60 * 60)
                         } else if (state == 1) {
-                            this.showGift('5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
+                            this.showGift(2, '5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
                         } else if (state == 2) {
                             this.showGift(
+                                3,
                                 '5% discount has been put into your decoder account. Please enjoy free watch on the App now!',
                                 '5% Discount For Decoder',
                                 'Free Watch Unlimited Time'
                             )
                         } else if (state == 3) {
                             this.showGift(
+                                4,
                                 'Free watch by linking your decoder account with StarTimes ON account.Please enjoy yourself.',
                                 'Free Watch By Linking Decoder'
                             )
                         } else if (state == 4) {
+                            this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', state)
                             this.$confirm(
                                 "Network error. I heard that there's an 85% off on sale for the VIP prepared in StarTimes ON  for you.Get bonus now!",
                                 () => {},
@@ -291,7 +332,7 @@ export default {
             }
         }
         .get-gift {
-            padding: 1.5rem 0;
+            padding: 1.5rem 0 1rem;
             background: url('~assets/img/dvb/input_bg.png') no-repeat;
             background-size: 100% 100%;
             border-radius: 16px;
@@ -337,7 +378,7 @@ export default {
             }
             .contain {
                 width: 94%;
-                margin: -1rem auto 0;
+                margin: -1.3rem auto 0;
                 background: #ffffff;
                 color: #ff6600;
                 font-size: 0.95rem;
@@ -388,9 +429,9 @@ export default {
     }
     .btn {
         width: 70%;
-        margin: 0.8rem auto;
-        height: 2.5rem;
-        line-height: 2.5rem;
+        margin: 1rem auto;
+        height: 2.7rem;
+        line-height: 2.7rem;
         text-align: center;
         font-weight: bold;
         letter-spacing: 1px;
@@ -403,6 +444,7 @@ export default {
         span {
             position: absolute;
             left: 0;
+            top: 0;
             width: 100%;
         }
         &.disabled {
