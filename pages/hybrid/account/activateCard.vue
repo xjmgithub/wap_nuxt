@@ -236,13 +236,15 @@ export default {
                                 '85% Off On Sale'
                             )
                             setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
-                        } else if (state == 1 && res.data.data.id) {
-                            const data = res.data.data
-                            this.showGift(1, data.popup, data.bonus_title, data.use_condition)
-                            setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 60 * 60)
                         } else if (state == 1) {
-                            this.showGift(2, '5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
-                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
+                            if (res.data.data.id) {
+                                const data = res.data.data
+                                this.showGift(1, data.popup, data.bonus_title, data.use_condition)
+                                setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 60 * 60)
+                            } else {
+                                this.showGift(2, '5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
+                                setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
+                            }
                         } else if (state == 2) {
                             this.showGift(
                                 3,
@@ -259,7 +261,7 @@ export default {
                             )
                             setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
                         } else if (state == 4) {
-                            this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', state)
+                            this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', 5)
                             this.$confirm(
                                 "Network error. I heard that there's an 85% off on sale for the VIP prepared in StarTimes ON  for you.Get bonus now!",
                                 () => {},
