@@ -290,7 +290,7 @@ export default {
 
             this.isLoading = true
             this.$axios
-                .get(`/self/v1/user/smartcardinfo/sync4h5?smartcard=${card}&is_bind_card=${!!this.isLogin}&v=2`)
+                .get(`/self/v1/user/smartcardinfo/sync4h5?smartcard=${card}&is_bind_card=${!!this.isLogin}`)
                 .then(res => {
                     const data = res.data
                     this.isLoading = false
