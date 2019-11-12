@@ -139,7 +139,6 @@ export default {
         const giftInfo = JSON.parse(getCookie('get-gift'))
         if (giftInfo && giftInfo.id) {
             this.getGiftSuccess = true
-            this.showAlert = true
             this.couponData = giftInfo
             this.$toast("You've got the gift, please use it as quickly as you can.")
         }
