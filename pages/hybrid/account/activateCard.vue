@@ -137,10 +137,11 @@ export default {
     },
     mounted() {
         const giftInfo = JSON.parse(getCookie('get-gift'))
-        if (giftInfo && giftInfo.id) {
+        console.log(giftInfo)
+        if (giftInfo && giftInfo.bonus_title) {
             this.getGiftSuccess = true
             this.couponData = giftInfo
-            this.$toast("You've got the gift, please use it as quickly as you can.")
+            this.$toast("You've got the gift, please use it as quickly as you can.", 3000)
         }
     },
     methods: {
@@ -149,8 +150,8 @@ export default {
             this.mSendEvLog('dvb_help_click')
         },
         checkoutFormat(type) {
-            // const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g
-            const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g
+            // const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
+            const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g // MG
             const reg1 = /^(01|02)\d{9}$/g
             if (type == 'phone' && this.phoneNum.length > 0) {
                 this.mSendEvLog('dvb_phone_input', this.phoneNum, reg.test(this.phoneNum) ? 1 : 0)
@@ -168,7 +169,6 @@ export default {
             })
         },
         fixedBody(nv) {
-            console.log(nv)
             if (nv) {
                 document.body.style.overflow = 'hidden'
                 document.body.style.position = 'fixed'
@@ -203,8 +203,9 @@ export default {
             this.couponData.use_condition = condition
         },
         getGift() {
-            // TODO 输入手机号或智能卡号不满足
-            const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g
+            // 输入手机号或智能卡号不满足
+            // const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
+            const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g // MG
             const reg1 = /^(01|02)\d{9}$/g
             if (!reg.test(this.phoneNum) && !reg1.test(this.decoderNum)) {
                 this.$confirm(
@@ -228,23 +229,24 @@ export default {
                 .then(res => {
                     this.$nuxt.$loading.finish()
                     // @0：智能卡不存在@1：智能卡罚停@2：智能卡非罚停@3：该国家没有开通DVB充值@4：BOSS接口不可用@5智能卡罚停，但不满足领取条件
-                    const state = res.data.state
                     if (res.data.code == 200) {
+                        const state = res.data.state
                         if (state == 0) {
                             this.showGift(
                                 404,
                                 '85% off on sale for the VIP has been put into your StarTimes ON account. Get your bonus now!',
                                 '85% Off On Sale'
                             )
-                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 2 * 60)
+                            // setCookie 1000 * 60 * 60 * 12
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 10 * 60)
                         } else if (state == 1) {
-                            if (res.data.data.id) {
+                            if (res.data.data) {
                                 const data = res.data.data
                                 this.showGift(1, data.popup, data.bonus_title, data.use_condition)
-                                setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 2 * 60)
+                                setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 10 * 60)
                             } else {
                                 this.showGift(2, '5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
-                                setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 2 * 60)
+                                setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 10 * 60)
                             }
                         } else if (state == 2) {
                             this.showGift(
@@ -253,14 +255,14 @@ export default {
                                 '5% Discount For Decoder',
                                 'Free Watch Unlimited Time'
                             )
-                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 2 * 60)
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 10 * 60)
                         } else if (state == 3) {
                             this.showGift(
                                 4,
                                 'Free watch by linking your decoder account with StarTimes ON account.Please enjoy yourself.',
                                 'Free Watch By Linking Decoder'
                             )
-                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 2 * 60)
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 10 * 60)
                         } else if (state == 4) {
                             this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', 5)
                             this.$confirm(
