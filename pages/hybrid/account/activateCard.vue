@@ -235,12 +235,14 @@ export default {
                                 '85% off on sale for the VIP has been put into your StarTimes ON account. Get your bonus now!',
                                 '85% Off On Sale'
                             )
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
                         } else if (state == 1 && res.data.data.id) {
                             const data = res.data.data
                             this.showGift(1, data.popup, data.bonus_title, data.use_condition)
                             setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 60 * 60)
                         } else if (state == 1) {
                             this.showGift(2, '5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
                         } else if (state == 2) {
                             this.showGift(
                                 3,
@@ -248,12 +250,14 @@ export default {
                                 '5% Discount For Decoder',
                                 'Free Watch Unlimited Time'
                             )
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
                         } else if (state == 3) {
                             this.showGift(
                                 4,
                                 'Free watch by linking your decoder account with StarTimes ON account.Please enjoy yourself.',
                                 'Free Watch By Linking Decoder'
                             )
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60)
                         } else if (state == 4) {
                             this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', state)
                             this.$confirm(
