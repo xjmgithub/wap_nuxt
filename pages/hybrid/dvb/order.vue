@@ -360,6 +360,9 @@ export default {
         overflow-y: scroll;
         margin-top: 7.5rem;
         margin-bottom: 6.5rem;
+        &::-webkit-scrollbar {
+            display: none;
+        }
         .pay-channels {
             width: 100%;
             font-weight: bold;
