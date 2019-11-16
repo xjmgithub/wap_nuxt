@@ -1,7 +1,7 @@
 import qs from 'qs'
 import axios from 'axios'
 import env from '../../env.js'
-import {getRandomInt} from '../../functions/utils'
+import { getRandomInt } from '../../functions/utils'
 export default function(req, res, next) {
     let data = ''
     req.on('data', function(d) {
@@ -9,11 +9,18 @@ export default function(req, res, next) {
     })
     req.on('end', function() {
         const formType = req.headers['content-type'] && req.headers['content-type'].indexOf('json') >= 0
-        const getBodyData = getPostData(data, formType)
+        const getBodyData = getPostData(data, formType) || {}
         const voteId = getBodyData.vote_id || 12
         const userId = getBodyData.user_id
-        const ticketsNum = getRandomInt(1,6)
-        console.log(ticketsNum)
+        const ticketsNum = getRandomInt(1, 6)
+        if (!getBodyData.vote_id) {
+            JSON.stringify({
+                code: '200',
+                message: 'method not support'
+            })
+            return
+        }
+       
         axios
             .get(`${env.apiURL}voting/v1/token`, {
                 headers: {
@@ -70,6 +77,6 @@ function getPostData(data, isjson) {
     if (isjson) {
         return JSON.parse(data)
     } else {
-        return qs.parse(data)
+        return null
     }
 }
