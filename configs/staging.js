@@ -10,6 +10,7 @@ export default {
     proxyHost: 'http://staging.upms.startimestv.com/',
     apiURL: 'http://staging.upms.startimestv.com/',
     mechantRequestUrl: 'http://payment.startimestv.com/staging/',
-    vodtab:'a868db298ef84dcbb22d919d02f473cb'
+    vodtab: 'a868db298ef84dcbb22d919d02f473cb',
+    redisHost: 'staging2-operation.vskyda.ng.0001.euw1.cache.amazonaws.com',
+    redisPort: '6379'
 }
-

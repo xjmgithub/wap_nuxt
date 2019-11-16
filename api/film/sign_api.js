@@ -4,12 +4,16 @@ import redis from 'redis'
 import env from '../../env.js'
 
 const client = redis.createClient({
-    host: 'test1-mysql-redis',
-    port: '6379'
+    host: env.redisHost,
+    port: env.redisPort
 })
 
 export default function(req, res, next) {
-    const keyStr = req.connection.remoteAddress + req.headers['x-forwarded-for'] + req.headers['user-agent'] + (req.headers['accept-language'] || '')
+    const keyStr =
+        req.connection.remoteAddress +
+        req.headers['x-forwarded-for'].split(',')[0] +
+        req.headers['user-agent'] +
+        (req.headers['accept-language'] || '')
 
     const newDevice = crypto
         .createHash('md5')
