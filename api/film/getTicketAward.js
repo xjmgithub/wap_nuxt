@@ -14,10 +14,12 @@ export default function(req, res, next) {
         const userId = getBodyData.user_id
         const ticketsNum = getRandomInt(1, 6)
         if (!getBodyData.vote_id) {
-            JSON.stringify({
-                code: '200',
-                message: 'method not support'
-            })
+            res.end(
+                JSON.stringify({
+                    code: '405',
+                    message: 'method not support'
+                })
+            )
             return
         }
        
