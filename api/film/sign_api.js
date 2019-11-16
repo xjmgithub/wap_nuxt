@@ -9,7 +9,7 @@ const client = redis.createClient({
 })
 
 export default function(req, res, next) {
-    const keyStr = req.connection.remoteAddress + req.headers['user-agent'] + (req.headers['accept-language'] || '')
+    const keyStr = req.connection.remoteAddress + req.headers['x-forwarded-for'] + req.headers['user-agent'] + (req.headers['accept-language'] || '')
 
     const newDevice = crypto
         .createHash('md5')
