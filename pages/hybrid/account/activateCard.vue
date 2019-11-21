@@ -93,11 +93,14 @@ export default {
         mVoteSwiper
     },
     data() {
-        const countryCode = this.$route.query.code || 'KE'
+        let countryCode = this.$route.query.code || 'KE'
         const obj = {}
         countrys.forEach(item => {
             obj[item.country] = item
         })
+        if(!obj[countryCode.toLocaleUpperCase()]){
+            countryCode = 'KE'
+        }
         return {
             type: 1,
             country: obj[countryCode.toLocaleUpperCase()],
