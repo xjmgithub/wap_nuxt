@@ -305,7 +305,7 @@ export default {
                     this.cardHaveCharged = data.have_rechareged
                     this.recharge_items = data.recharge_items || []
 
-                    if (data.punish_stop_bonus && data.punish_stop_bonus.state == 1) {
+                    if (data.punish_stop_bonus && data.punish_stop_bonus.data && data.punish_stop_bonus.data.id) {
                         this.$alert(data.punish_stop_bonus.data.popup)
                     }
                     if (data.recharge_items && data.recharge_items.length > 0) {
