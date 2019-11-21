@@ -203,6 +203,9 @@ export default {
             this.couponData.use_condition = condition
         },
         getGift() {
+            if (!this.decoderNum && !this.phoneNum) {
+                return false
+            }
             // 输入手机号或智能卡号不满足
             // const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
             const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g // MG
