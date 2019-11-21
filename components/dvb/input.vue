@@ -93,7 +93,8 @@ export default {
                 this.showList = false
             }
 
-            if (val.length >= 11) this.inputOver()
+            if (val.length >= 11) this.$refs.input.blur() 
+                // this.inputOver()
         }
     },
     mounted() {
