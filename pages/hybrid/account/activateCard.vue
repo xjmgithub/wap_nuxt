@@ -93,12 +93,17 @@ export default {
         mVoteSwiper
     },
     data() {
-        let countryCode = this.$route.query.code || 'KE'
+        let countryCode = ''
+        if (this.$route.query.code && this.$route.query.code.length > 0) {
+            countryCode = this.$route.query.code[0]
+        } else {
+            countryCode = this.$route.query.code || 'KE'
+        }
         const obj = {}
         countrys.forEach(item => {
             obj[item.country] = item
         })
-        if(!obj[countryCode.toLocaleUpperCase()]){
+        if (!obj[countryCode.toLocaleUpperCase()]) {
             countryCode = 'KE'
         }
         return {
@@ -140,7 +145,6 @@ export default {
     },
     mounted() {
         const giftInfo = JSON.parse(getCookie('get-gift'))
-        console.log(giftInfo)
         if (giftInfo && giftInfo.bonus_title) {
             this.getGiftSuccess = true
             this.couponData = giftInfo
