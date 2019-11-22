@@ -94,7 +94,7 @@ export default {
     },
     data() {
         let countryCode = ''
-        if (this.$route.query.code && this.$route.query.code.length > 0) {
+        if (this.$route.query.code instanceof Array && this.$route.query.code.length > 0) {
             countryCode = this.$route.query.code[0]
         } else {
             countryCode = this.$route.query.code || 'KE'
@@ -133,8 +133,10 @@ export default {
     },
     watch: {
         type(nv, ov) {
-            if (nv == 1) this.oderNum = ''
-            else this.phoneNum = ''
+            if (nv) {
+                this.decoderNum = ''
+                this.phoneNum = ''
+            }
         },
         showAlert(nv, ov) {
             this.fixedBody(nv)
