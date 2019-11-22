@@ -234,7 +234,8 @@ export default {
                 .get(
                     `/self/v1/bonuses/punish-stops?area_id=${this.country.id}&lnCode=${this.langType}&smartcard=${this.decoderNum}&phone=${
                         this.phoneNum
-                    }`
+                    }`,
+                    { timeout: 10000 }
                 )
                 .then(res => {
                     this.$nuxt.$loading.finish()
@@ -287,7 +288,17 @@ export default {
                         this.$alert(res.data.message)
                     }
                 })
-                .catch(() => {})
+                .catch(() => {
+                    this.$nuxt.$loading.finish()
+                    this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', 5)
+                    this.$confirm(
+                        "Network error. I heard that there's an 85% off on sale for the VIP prepared in StarTimes ON  for you.Get bonus now!",
+                        () => {},
+                        () => {},
+                        'OK',
+                        'CANCEL'
+                    )
+                })
         }
     }
 }
