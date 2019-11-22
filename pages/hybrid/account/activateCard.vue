@@ -367,9 +367,6 @@ export default {
             .decoder {
                 text-align: center;
                 font-size: 0.95rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 img {
                     width: 1.5rem;
                     height: 1.5rem;
