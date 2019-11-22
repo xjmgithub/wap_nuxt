@@ -271,20 +271,11 @@ export default {
                             setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 3 * 60)
                         } else if (state == 3) {
                             this.showGift(
-                                4,
+                                5,
                                 'Free watch by linking your decoder account with StarTimes ON account.Please enjoy yourself.',
                                 'Free Watch By Linking Decoder'
                             )
                             setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 3 * 60)
-                        } else if (state == 4) {
-                            this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', 5)
-                            this.$confirm(
-                                "Network error. I heard that there's an 85% off on sale for the VIP prepared in StarTimes ON  for you.Get bonus now!",
-                                () => {},
-                                () => {},
-                                'OK',
-                                'CANCEL'
-                            )
                         }
                     } else {
                         this.$alert(res.data.message)
@@ -292,7 +283,7 @@ export default {
                 })
                 .catch(() => {
                     this.$nuxt.$loading.finish()
-                    this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', 5)
+                    this.mSendEvLog('dvb_get_gift_click', this.type == 1 ? 'Phone' : 'DVB_Card', 4)
                     this.$confirm(
                         "Network error. I heard that there's an 85% off on sale for the VIP prepared in StarTimes ON  for you.Get bonus now!",
                         () => {},
