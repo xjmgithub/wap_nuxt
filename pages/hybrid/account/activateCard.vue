@@ -20,16 +20,16 @@
             </div>
             <div v-show="!getGiftSuccess" class="get-gift">
                 <div v-show="type==1" class="phone">
-                    <img :src="cdnPicSrc(country.nationalFlag)" />
+                    <img :src="country.nationalFlag" />
                     <div>
-                        <span>+{{country.phonePrefix}} | </span>
-                        <input v-model="phoneNum" placeholder="Enter your phone number" @blur="checkoutFormat('phone')" />
+                        <span>+{{country.phonePrefix}}&nbsp;|&nbsp;</span>
+                        <input ref="phone" v-model="phoneNum" placeholder="Enter your phone number" @click="inputClick('phone')" @blur="checkoutFormat('phone')" />
                     </div>
                 </div>
                 <div v-show="type==2" class="decoder">
                     <img src="~assets/img/dvb/ic_email.png" @click="showHelp" />
                     <div>
-                        <input v-model="decoderNum" placeholder="Enter your Smart Card number" @blur="checkoutFormat('card')" />
+                        <input ref="card" v-model="decoderNum" placeholder="Enter your Smart Card number" @click="inputClick('card')" @blur="checkoutFormat('card')" />
                     </div>
                 </div>
                 <div class="btn" :class="{'disabled':!decoderNum && !phoneNum}" @click="getGift">
@@ -157,6 +157,9 @@ export default {
         showHelp() {
             this.showHow = true
             this.mSendEvLog('dvb_help_click')
+        },
+        inputClick(type) {
+            this.$refs[type].scrollIntoView()
         },
         checkoutFormat(type) {
             // const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
@@ -299,6 +302,7 @@ export default {
 <style lang="less" scoped>
 .container {
     overflow-y: scroll;
+    -webkit-tap-highlight-color: transparent;
     .banner {
         img {
             width: 100%;
@@ -363,6 +367,9 @@ export default {
             .decoder {
                 text-align: center;
                 font-size: 0.95rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 img {
                     width: 1.5rem;
                     height: 1.5rem;
@@ -391,6 +398,21 @@ export default {
             }
             .decoder div input {
                 width: 100%;
+            }
+            .phone {
+                & > div {
+                    position: relative;
+                    span {
+                        position: absolute;
+                        top: 0.4rem;
+                        left: 0.2rem;
+                        width: 2.8rem;
+                    }
+                }
+                input {
+                    width: 100%;
+                    padding-left: 2.8rem;
+                }
             }
         }
         .rules {
