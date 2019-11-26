@@ -1,7 +1,7 @@
 <template>
     <Swiper v-if="banners.length > 0" :auto-play="true" @changeIndex="changeIndex">
         <Slide v-for="(item,index) in banners" :key="index" @click="clickBanner(item)">
-            <img :src="cdnPicSrc(item.materials)" />
+            <img :src="cdnPicSrc(item.materials)" @click="handleClick"/>
         </Slide>
     </Swiper>
 </template>
@@ -41,6 +41,9 @@ export default {
         this.changeIndex(1)
     },
     methods: {
+        handleClick(){
+            this.$emit('bannerClick')
+        },
         clickBanner(banner) {
             const href = banner.link
             const bannerName = banner.name
@@ -50,7 +53,7 @@ export default {
                 label: bannerName,
                 value: 1
             })
-            toNativePage(href)
+            href && toNativePage(href)
         },
         changeIndex(index) {
             if (index <= this.banners.length && index > 0) {

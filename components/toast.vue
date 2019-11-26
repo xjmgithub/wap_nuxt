@@ -1,5 +1,7 @@
 <template>
-    <div v-show="tip" class="toast" :style="{'margin-left':offsetLeft,'margin-top':offsetTop}">{{tip}}</div>
+    <div v-show="tip" class="toast" :style="{'margin-top':offsetTop}">
+        <span>{{tip}}</span>
+    </div>
 </template>
 <script>
 export default {
@@ -7,7 +9,6 @@ export default {
         return {
             tip: '',
             timer: null,
-            offsetLeft: 0,
             offsetTop: 0
         }
     },
@@ -19,8 +20,6 @@ export default {
             this.$nextTick(() => {
                 const dialog = _this.$el
                 const dh = dialog.offsetHeight
-                const dw = dialog.offsetWidth
-                _this.offsetLeft = -dw / 2 + 'px'
                 _this.offsetTop = -dh / 2 + 'px'
                 this.timer = setTimeout(() => {
                     _this.tip = ''
@@ -30,16 +29,22 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
 .toast {
     position: fixed;
-    left: 50%;
+    left: 0;
     top: 50%;
-    background: rgba(0, 0, 0, 0.65);
-    padding: 0.6rem 1.5rem;
-    border-radius: 3px;
-    max-width: 15rem;
+    width: 100%;
     color: #fff;
     z-index: 9999;
+    text-align: center;
+    span {
+        display: inline-block;
+        padding: 0.6rem 1.5rem;
+        background: rgba(0, 0, 0, 0.65);
+        border-radius: 3px;
+        max-width: 65%;
+
+    }
 }
 </style>

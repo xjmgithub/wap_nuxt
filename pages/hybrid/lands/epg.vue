@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { downApk, callMarket } from '~/functions/app'
+import { downApk, callMarket, getUtmParam } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -31,21 +31,20 @@ export default {
         }
     },
     mounted() {
-        // this.$router.replace({
-        //     query: Object.assign({}, this.$route.query, {
-        //         utms: '456',
-        //         utmm: 'share',
-        //         utmc: 'epg'
-        //     })
-        // })
         const browser = getBrowser()
         this.appType = browser.isIos ? 2 : 1
-        this.sendEvLog({
-            category: 'callup_app',
-            action: 'landing_show',
-            label: window.location.pathname,
-            value: 1
-        })
+        const utmParm = getUtmParam.call(this)
+        this.sendEvLog(
+            Object.assign(
+                {
+                    category: 'callup_app',
+                    action: 'landing_show',
+                    label: window.location.pathname,
+                    value: 1
+                },
+                utmParm.map
+            )
+        )
     },
     methods: {
         down() {

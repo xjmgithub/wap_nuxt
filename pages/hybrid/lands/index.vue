@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div id="land-height" class="wrapper">
         <div class="page-top clear">
             <img class="landing-page-bg-center" src="~assets/img/landpage/landing-page-0903.jpg" alt="StarTimes APP" />
         </div>
@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { downApk, callApp, callMarket } from '~/functions/app'
+import { downApk, callApp, callMarket, getUtmParam } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -32,13 +32,20 @@ export default {
     },
     mounted() {
         const browser = getBrowser()
+        document.getElementById('land-height').style.height = window.innerHeight + 'px'
         this.appType = browser.isIos ? 2 : 1
-        this.sendEvLog({
-            category: 'callup_app',
-            action: 'landing_show',
-            label: window.location.pathname,
-            value: 1
-        })
+        const utmParm = getUtmParam.call(this)
+        this.sendEvLog(
+            Object.assign(
+                {
+                    category: 'callup_app',
+                    action: 'landing_show',
+                    label: window.location.pathname,
+                    value: 1
+                },
+                utmParm.map
+            )
+        )
     },
     methods: {
         down() {
