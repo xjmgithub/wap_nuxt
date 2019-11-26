@@ -44,7 +44,7 @@
                 <p>
                     <img class="heart" src="~assets/img/vote/heartpoint.png" />
                     <span class="title">{{$store.state.lang.mrright_history_rank}}</span>
-                    <span class="voteleft">{{$store.state.lang.mrright_all_candidates}}</span>
+                    <span class="voteleft">All candidates encore on 24 Jan!</span>
                 </p>
                 <ul>
                     <li v-for="(item,index) in showList" :key="index" @click="toPlayer(item.link_vod_code,'couplevideo_click',item.name,1)">

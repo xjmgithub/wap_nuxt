@@ -10,5 +10,7 @@ export default {
     proxyHost: 'https://upms.startimestv.com/',
     apiURL: 'http://upms.startimestv.com/',
     mechantRequestUrl: 'http://payment.startimestv.com/',
-    vodtab: 'd6d9c3e21dfd4631ab14d95eb0871ca3'
+    vodtab: 'd6d9c3e21dfd4631ab14d95eb0871ca3',
+    redisHost:'tenbrecachegroup.vskyda.ng.0001.euw1.cache.amazonaws.com',
+    redisPort:'6379'
 }
