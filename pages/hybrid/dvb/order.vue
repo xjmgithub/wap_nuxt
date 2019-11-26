@@ -26,7 +26,7 @@
                         <div v-show="item.payType==1&&eAmount&&eAmount<totalAmount&&currencySymbol==eCurrencySymbol" class="recharge" @click="chargeWallet">RECHARGE</div>
                     </label>
                     <div class="sub-channels">
-                        <div v-for="(card,si) in item.payChannelCardAuthDtoList" v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0" :key="si">
+                        <div v-for="(card,si) in item.payChannelCardAuthDtoList" v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0 && isLogin" :key="si">
                             <label class="radio">
                                 <div :class="card.brand" class="img-box" />
                                 <span>{{card.cardType}}({{card.last4}})</span>
