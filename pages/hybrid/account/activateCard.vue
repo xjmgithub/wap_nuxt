@@ -2,7 +2,8 @@
     <div class="container">
         <!-- TODO 轮播图 -->
         <div class="banner">
-            <mVoteSwiper v-if="banners.length" :banners="banners" name="facebookLand" @bannerClick="useNow" />
+            <img src="~assets/img/dvb/banner-1.png" @click="useNow">
+            <div class="shade"></div>
         </div>
         <div class="exclusive">
             <div class="shadow">
@@ -84,13 +85,11 @@ import countrys from '~/functions/countrys.json'
 import { callApp, callMarket, downApk } from '~/functions/app'
 import { setCookie, getCookie } from '~/functions/utils'
 import shadowLayer from '~/components/shadow-layer'
-import mVoteSwiper from '~/components/vote/vote_swiper'
 
 export default {
     layout: 'base',
     components: {
-        shadowLayer,
-        mVoteSwiper
+        shadowLayer
     },
     data() {
         let countryCode = ''
@@ -116,19 +115,7 @@ export default {
             showHow: false,
             getGiftSuccess: false,
             couponData: {},
-            alertMessage: '',
-            banners: [
-                {
-                    materials: '/res_nuxt/img/mrshare.jpg',
-                    link: '',
-                    name: ''
-                },
-                {
-                    materials: '/res_nuxt/img/soccercup.png',
-                    link: '',
-                    name: ''
-                }
-            ]
+            alertMessage: ''
         }
     },
     watch: {
@@ -304,16 +291,24 @@ export default {
     overflow-y: scroll;
     -webkit-tap-highlight-color: transparent;
     .banner {
+        position: relative;
         img {
             width: 100%;
             display: block;
         }
+        .shade {
+            position: absolute;
+            width: 100%;
+            height: 2rem;
+            left: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 1) 100%);
+        }
     }
     .exclusive {
         width: 100%;
-        padding: 2rem 2.5%;
+        padding: 3.3rem 2.5%;
         background: url('~assets/img/dvb/active_bg.png') no-repeat;
-        background-position-y: -2.5rem;
         background-size: 100%;
         .shadow {
             padding: 0 0.6rem 0.7rem;
