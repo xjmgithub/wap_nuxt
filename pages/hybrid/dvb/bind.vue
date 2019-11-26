@@ -26,11 +26,7 @@
             </div>
             <p>
                 {{LANG.if_you_are_not_a_startimes_tv_user}}
-                <a
-                    href="javascript:void(0)"
-                    style="color:#0087EB;text-decoration:underline"
-                    @click="toLoadurl"
-                >{{LANG.click_here}}</a>
+                <a href="javascript:void(0)" style="color:#0087EB;text-decoration:underline" @click="toLoadurl">{{LANG.click_here}}</a>
                 {{LANG.if_you_are_not_a_startimes_tv_user2}}
             </p>
         </div>
@@ -290,8 +286,7 @@ export default {
 
             this.isLoading = true
             this.$axios
-                // .get(`/self/v1/user/smartcardinfos/bonuses/${card}?is_bind_card=${!!this.isLogin}`)
-                .get(`/self/v1/user/smartcardinfo/sync4h5?smartcard=${card}&is_bind_card=${!!this.isLogin}`)
+                .get(`/self/v1/user/smartcardinfos/bonuses/${card}?is_bind_card=${!!this.isLogin}`)
                 .then(res => {
                     const data = res.data
                     this.isLoading = false
@@ -310,6 +305,9 @@ export default {
                     this.cardHaveCharged = data.have_rechareged
                     this.recharge_items = data.recharge_items || []
 
+                    if (data.punish_stop_bonus && data.punish_stop_bonus.data && data.punish_stop_bonus.data.id) {
+                        this.$alert(data.punish_stop_bonus.data.popup)
+                    }
                     if (data.recharge_items && data.recharge_items.length > 0) {
                         this.logloadItem(card, 1)
                         this.canBuy = true
