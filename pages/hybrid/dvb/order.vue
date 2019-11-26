@@ -30,7 +30,7 @@
                             <label class="radio">
                                 <div :class="card.brand" class="img-box" />
                                 <span>{{card.cardType}}({{card.last4}})</span>
-                                <input :checked="item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(item,card)" />
+                                <input :checked="isLogin && item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(item,card)" />
                                 <i />
                             </label>
                         </div>
