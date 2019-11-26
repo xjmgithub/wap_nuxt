@@ -149,8 +149,8 @@ export default {
             this.$refs[type].scrollIntoView()
         },
         checkoutFormat(type) {
-            // const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
-            const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g // MG
+            const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
+            // const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g // MG
             const reg1 = /^(01|02)\d{9}$/g
             if (type == 'phone' && this.phoneNum.length > 0) {
                 this.mSendEvLog('dvb_phone_input', this.phoneNum, reg.test(this.phoneNum) ? 1 : 0)
@@ -206,8 +206,8 @@ export default {
                 return false
             }
             // 输入手机号或智能卡号不满足
-            // const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
-            const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g // MG
+            const reg = /(^0\d{8}$)|(^[1-9]\d{7}$)/g  // kenya
+            // const reg = /(^0\d{9}$)|(^[1-9]\d{8}$)/g // MG
             const reg1 = /^(01|02)\d{9}$/g
             if (!reg.test(this.phoneNum) && !reg1.test(this.decoderNum)) {
                 this.$confirm(
@@ -240,16 +240,15 @@ export default {
                                 '85% off on sale for the VIP has been put into your StarTimes ON account. Get your bonus now!',
                                 '85% Off On Sale'
                             )
-                            // setCookie 1000 * 60 * 60 * 12
-                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 3 * 60)
+                            setCookie('get-gift', JSON.stringify(this.couponData),  1000 * 60 * 60 * 12)
                         } else if (state == 1) {
                             if (res.data.data) {
                                 const data = res.data.data
                                 this.showGift(1, data.popup, data.bonus_title, data.use_condition)
-                                setCookie('get-gift', JSON.stringify(res.data.data), 1000 * 3 * 60)
+                                setCookie('get-gift', JSON.stringify(res.data.data),  1000 * 60 * 60 * 12)
                             } else {
                                 this.showGift(2, '5% discount has been put into your decoder account. Get your bonus now!', '5% Discount For Decoder')
-                                setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 3 * 60)
+                                setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60 * 12)
                             }
                         } else if (state == 2) {
                             this.showGift(
@@ -258,14 +257,14 @@ export default {
                                 '5% Discount For Decoder',
                                 'Free Watch Unlimited Time'
                             )
-                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 3 * 60)
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60 * 12)
                         } else if (state == 3) {
                             this.showGift(
                                 5,
                                 'Free watch by linking your decoder account with StarTimes ON account.Please enjoy yourself.',
                                 'Free Watch By Linking Decoder'
                             )
-                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 3 * 60)
+                            setCookie('get-gift', JSON.stringify(this.couponData), 1000 * 60 * 60 * 12)
                         }
                     } else {
                         this.$alert(res.data.message)
