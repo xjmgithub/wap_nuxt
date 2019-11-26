@@ -4,7 +4,7 @@
             <img class="landing-page-bg-center" src="~assets/img/landpage/sister3.jpg" alt="StarTimes APP" />
             <div @click="toBind()">
                 <nuxt-link to="/hybrid/dvb/bind">
-                    <img src="~assets/img/landpage/sister1.png">
+                    <img src="~assets/img/landpage/sister1.png" />
                 </nuxt-link>
             </div>
         </div>
@@ -22,13 +22,13 @@
                 </div>
             </div>
             <div class="channel">
-                <img src="~assets/img/landpage/sister2.png">
+                <img src="~assets/img/landpage/sister2.png" />
             </div>
         </div>
     </div>
 </template>
 <script>
-import { downApk, callApp, callMarket } from '~/functions/app'
+import { downApk, callApp, callMarket, getUtmParam } from '~/functions/app'
 import { getBrowser } from '~/functions/utils'
 export default {
     layout: 'base',
@@ -48,12 +48,18 @@ export default {
         })
         const browser = getBrowser()
         this.appType = browser.isIos ? 2 : 1
-        this.sendEvLog({
-            category: 'callup_app',
-            action: 'landing_show',
-            label: window.location.pathname,
-            value: 1
-        })
+        const utmParm = getUtmParam.call(this)
+        this.sendEvLog(
+            Object.assign(
+                {
+                    category: 'callup_app',
+                    action: 'landing_show',
+                    label: window.location.pathname,
+                    value: 1
+                },
+                utmParm.map
+            )
+        )
         callApp.call(this, '', () => {
             callMarket.call(this) // 默认唤醒不起来app
         })

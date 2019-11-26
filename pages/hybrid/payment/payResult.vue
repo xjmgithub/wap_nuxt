@@ -98,6 +98,23 @@ export default {
         }
     },
     mounted() {
+        const token = window.getChannelId&& window.getChannelId.getToken()
+        if (token) {
+            this.isApp = 1
+        } else {
+            const ua = navigator.userAgent
+            if (ua.indexOf('iPhone') >= 0) {
+                const uaArr = ua.split(' ')
+                if (uaArr[uaArr.length - 1].indexOf('Mobile/') >= 0) {
+                    this.isApp = 2
+                } else {
+                    this.isApp = 0
+                }
+            } else {
+                this.isApp = 0
+            }
+        }
+
         window.payment && window.payment.setCloseVisibility && window.payment.setCloseVisibility(true)
         if (this.result > 0) {
             window.payment && window.payment.payResult(this.result == 1 ? 'SUCCESS' : 'FAIL')

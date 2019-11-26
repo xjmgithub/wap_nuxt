@@ -70,7 +70,7 @@ export default {
         '/sports/': env.proxyHost,
         '/lottery/': env.proxyHost,
         '/promotion-coupon/': env.proxyHost,
-        '/processtoken/':'http://op-test1.startimes.me/'
+        '/processtoken/': 'http://op-test1.startimes.me/'
     },
     router: {
         middleware: 'auth' // middleware before all pages render
@@ -83,6 +83,7 @@ export default {
         { path: '/hybrid/vote/voiceToFame', handler: '~/api/film/index.js' },
         { path: '/hybrid/vote/BSSVote', handler: '~/api/film/index.js' },
         { path: '/hybrid/vote/BSSVoteDetail', handler: '~/api/film/index.js' },
+        { path: '/hybrid/vote/BSSVote2', handler: '~/api/film/index.js' },
         { path: '/hybrid/vote/getTicketAward', handler: '~/api/film/getTicketAward.js' },
         { path: '/hybrid/api/episode/submit', handler: '~/api/episode/submit.js' },
         { path: '/hybrid/api/episode/result', handler: '~/api/episode/result.js' },
@@ -96,7 +97,8 @@ export default {
         { path: '/hybrid/api/games/startGame', handler: '~/api/games/startGame.js' },
         { path: '/hybrid/api/games/taskOver', handler: '~/api/games/taskOver.js' },
         { path: '/hybrid/api/payment/createPayment', handler: '~/api/payment/createPayment.js' },
-        { path: '/hybrid/api/app/getFaq', handler: '~/api/app/getFaq.js' }
+        { path: '/hybrid/api/app/getFaq', handler: '~/api/app/getFaq.js' },
+        { path: '/hybrid/api/sign', handler: '~/api/film/sign_api.js' }
     ],
     hooks: {
         listen(server) {
