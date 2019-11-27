@@ -303,16 +303,17 @@ export const animateCSS = function(element, animationName, callback) {
 
 // TODO LASY
 export const cdnPicSrc = function(src) {
-    if (src) {
-        const app = (this.$store && this.$store.state.appType) || 0
-        if (app <= 0) {
-            return src.replace('http:', 'https:')
-        } else {
-            return src.replace('https:', 'http:')
-        }
-    } else {
-        return ''
-    }
+    return src // cdn 不用https
+    // if (src) {
+    //     const app = (this.$store && this.$store.state.appType) || 0
+    //     if (app <= 0) {
+    //         return src.replace('http:', 'https:')
+    //     } else {
+    //         return src.replace('https:', 'http:')
+    //     }
+    // } else {
+    //     return ''
+    // }
 }
 
 export const cacheDateUpdate = function(callback) {
