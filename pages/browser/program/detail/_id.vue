@@ -171,7 +171,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.cusShareImg || (this.pData.poster && this.pData.poster.replace('http:', 'https:'))
+                    content: this.cusShareImg || (this.pData.poster && this.pData.poster)
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.pData.name },

@@ -185,7 +185,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.cusShareImg || (this.seoData.poster && this.seoData.poster.replace('http:', 'https:'))
+                    content: this.cusShareImg || (this.seoData.poster && this.seoData.poster)
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.seoData.name },

@@ -605,7 +605,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.banners.length > 0 && this.banners[0].materials.replace('http:', 'https:')
+                    content: this.banners.length > 0 && this.banners[0].materials
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
                 { name: 'og:title', property: 'og:title', content: this.voteTitle },

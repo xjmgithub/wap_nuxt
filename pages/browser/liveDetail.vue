@@ -311,7 +311,7 @@ export default {
                 {
                     name: 'og:image',
                     property: 'og:image',
-                    content: this.cusShareImg || (this.channel.logo && this.channel.logo.resources[0].url.replace('http:', 'https:'))
+                    content: this.cusShareImg || (this.channel.logo && this.channel.logo.resources[0].url)
                 },
                 { name: 'twitter:card', property: 'twitter:card', content: 'summary' },
                 { name: 'og:title', property: 'og:title', content: this.channel.name },
