@@ -65,7 +65,8 @@ export default {
             isApp: this.$store.state.appType,
             payAmount: 0,
             rechargeDes: '',
-            rechargeAmount: 0
+            rechargeAmount: 0,
+            existAlert: false
         }
     },
     computed: {
@@ -78,9 +79,12 @@ export default {
             if (val) {
                 this.$nextTick(() => this.$nuxt.$loading.start())
                 this.$store.commit('SHOW_SHADOW_LAYER')
-            } else {
+            } else if (!val && !this.existAlert) {
                 this.$nextTick(() => this.$nuxt.$loading.finish())
                 this.$store.commit('HIDE_SHADOW_LAYER')
+            } else if (!val && this.existAlert) {
+                this.$nextTick(() => this.$nuxt.$loading.finish())
+                this.$store.commit('SHOW_SHADOW_LAYER')
             }
         }
     },
@@ -308,7 +312,10 @@ export default {
                     this.recharge_items = data.recharge_items || []
 
                     if (data.punish_stop_bonus && data.punish_stop_bonus.data && data.punish_stop_bonus.data.id) {
-                        this.$alert(data.punish_stop_bonus.data.popup)
+                        this.existAlert = true
+                        this.$alert(data.punish_stop_bonus.data.popup, () => {
+                            this.existAlert = false
+                        })
                     }
                     if (data.recharge_items && data.recharge_items.length > 0) {
                         this.logloadItem(card, 1)
@@ -317,7 +324,10 @@ export default {
                         this.logloadItem(card, 0)
                         this.canBuy = false
                         this.$nextTick(function() {
-                            this.$alert("This bouquet can't be recharged for now, please contact the local center")
+                            this.existAlert = true
+                            this.$alert("This bouquet can't be recharged for now, please contact the local center", () => {
+                                this.existAlert = false
+                            })
                         })
                     }
                 })
@@ -327,7 +337,9 @@ export default {
                     this.canBuy = false
                     this.$nextTick(() => {
                         if (err.status === 401) {
+                            this.existAlert = true
                             this.$alert(this.$store.state.lang.account_signed_elsewhere, () => {
+                                this.existAlert = false
                                 if (this.isApp === 1) {
                                     toNativePage(
                                         'com.star.mobile.video.account.LoginActivity?returnClass=com.star.mobile.video.activity.BrowserActivity?loadUrl=' +
@@ -337,7 +349,10 @@ export default {
                             })
                             return false
                         } else {
-                            this.$alert(this.$store.state.lang.error_network)
+                            this.existAlert = true
+                            this.$alert(this.$store.state.lang.error_network, () => {
+                                this.existAlert = false
+                            })
                         }
                     })
                 })
