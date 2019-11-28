@@ -14,10 +14,16 @@ export default {
             headerInfo: {}
         }
     },
+    asyncData({ req }) {
+        return {
+            headers: req.headers
+        }
+    },
     mounted() {
         if (window.getChannelId && window.getChannelId.jsGetHeadInfo) {
             this.headerInfo = window.getChannelId.jsGetHeadInfo()
-            
+        } else {
+            this.headerInfo = this.headers
         }
     }
 }
