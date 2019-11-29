@@ -12,6 +12,7 @@
         <confirm ref="confirm" />
         <toast ref="toast" />
         <shadowLayer v-show="layer" />
+        <toastLoading ref="toastLoading" />
     </div>
 </template>
 <script>
@@ -19,6 +20,7 @@ import Vue from 'vue'
 import alert from '~/components/alert'
 import confirm from '~/components/confirm'
 import toast from '~/components/toast'
+import toastLoading from '~/components/dvb/loading'
 import shadowLayer from '~/components/shadow-layer'
 import { cdnPicSrc } from '~/functions/utils'
 import { toNativePage } from '~/functions/app'
@@ -27,7 +29,8 @@ export default {
         alert,
         confirm,
         shadowLayer,
-        toast
+        toast,
+        toastLoading
     },
     data() {
         return {
@@ -48,10 +51,12 @@ export default {
             this.$refs.confirm.show(msg, callback, cancel, yes, no)
             this.$store.commit('SHOW_SHADOW_LAYER')
         }
+        Vue.prototype.$toastLoading = (flag) => {
+            this.$refs.toastLoading.toggle(flag)
+        }
         Vue.prototype.$toast = (msg, duration) => {
             this.$refs.toast.show(msg, duration)
         }
-
         Vue.prototype.cdnPicSrc = value => {
             return cdnPicSrc.call(this, value)
         }

@@ -4,6 +4,9 @@ export default {
     leave_msg_btn: 'Leave a Message',
     live_chat_btn: 'Live Chat',
     download_apk: 'Téléchargez',
+    // 异步支付
+    invoke_loading_notice: 'Processing payment, please do not leave..',
+    invoke_timeout_notice: 'The payment result is still on the way... Please check your order status and retry later.',
 
     // kenya film
     tab_film: 'Film',

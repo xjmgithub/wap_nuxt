@@ -60,7 +60,16 @@
 </template>
 <script>
 import { cdnPicSrc } from '~/functions/utils'
-import { updateWalletAccount, updateWalletConf, createDVBOrder, checkPass, invoke, commonPayAfter, chargeWallet } from '~/functions/pay'
+import {
+    updateWalletAccount,
+    updateWalletConf,
+    createDVBOrder,
+    checkPass,
+    invoke,
+    getInvokeResult,
+    commonPayAfter,
+    chargeWallet
+} from '~/functions/pay'
 import mButton from '~/components/button'
 import countrys from '~/functions/countrys.json'
 
@@ -109,7 +118,9 @@ export default {
             loaded: false,
             countrys: obj,
             isYueMo: false,
-            wallet: {}
+            wallet: {},
+            time: 0,
+            timer: null
         }
     },
     computed: {
@@ -197,6 +208,33 @@ export default {
                 })
             })
         },
+        // state=1 至多循环20次
+        getInvoke(seqNo) {
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                if (this.time >= 20) {
+                    clearTimeout(this.timer)
+                    this.$toastLoading()
+                    this.$alert(this.$store.state.lang.invoke_timeout_notice)
+                    this.time = 0
+                    return false
+                }
+                this.paymentInitResult(seqNo)
+                this.time++
+            }, 3000)
+        },
+        // 异步获取invoke状态
+        paymentInitResult(seqNo) {
+            getInvokeResult.call(this, seqNo, result => {
+                if (result.state == 1) {
+                    this.getInvoke(seqNo)
+                } else {
+                    this.$toastLoading()
+                    result.paySeqNo = result.seqNo
+                    commonPayAfter.call(this, result, this.channel.payType, this.channel.appInterfaceMode)
+                }
+            })
+        },
         pay() {
             const channel = this.channel
             const order = JSON.parse(sessionStorage.getItem('order-info'))
@@ -246,11 +284,20 @@ export default {
                         }`
                     )
                 } else {
-                    invoke.call(this, data.paymentToken, channel.fkPayChannelId, data => {
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
-                        commonPayAfter.call(this, data, channel.payType, channel.appInterfaceMode)
-                    })
+                    this.$toastLoading(1)
+                    this.$nuxt.$loading.finish()
+                    invoke.call(
+                        this,
+                        data.paymentToken,
+                        channel.fkPayChannelId,
+                        data => {
+                            this.$toastLoading()
+                            commonPayAfter.call(this, data, channel.payType, channel.appInterfaceMode)
+                        },
+                        seqNo => {
+                            this.paymentInitResult(seqNo)
+                        }
+                    )
                 }
             })
         },

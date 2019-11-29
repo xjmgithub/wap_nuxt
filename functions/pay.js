@@ -78,13 +78,13 @@ export const verifyWalletPass = function (accountNo, password, callback) {
     channel 渠道号
     extend 扩展字段，动态表单
 */
-export const invoke = function (payToken, channel, callback, extend) {
+export const invoke = function (payToken, channel, callback, failback, extend) {
     if (!payToken || !channel) return false
 
     const dstr = parseUA(this.$store.state.appType, this.$store.state.appVersionCode)
 
     this.$axios({
-            url: `/payment/api/v2/invoke-payment`,
+            url: `/payment/api/v4/invoke-payment`,
             method: 'post',
             data: {
                 payToken: payToken,
@@ -96,22 +96,45 @@ export const invoke = function (payToken, channel, callback, extend) {
             }
         })
         .then(res => {
+            this.$nuxt.$loading.finish()
             if (res.data.resultCode === '0') {
                 if (res.data.extendInfo.instructions) {
                     sessionStorage.setItem('instructions', res.data.extendInfo.instructions)
                 }
                 callback && callback(res.data)
+            } else if (res.data.resultCode === '1') {
+                failback && failback(res.data.paySeqNo)
             } else {
-                this.$nuxt.$loading.finish()
+                this.$toastLoading()
                 this.$alert(res.data.resultMessage)
             }
         })
         .catch(() => {
             this.$nuxt.$loading.finish()
+            this.$toastLoading()
             this.$alert(this.$store.state.lang.error_network)
         })
 }
 
+export const getInvokeResult = function (seqNo, callback) {
+    if (!seqNo) return false
+    this.$axios({
+            url: `/payment/api/v4/get-payment-init-result?seqNo=${seqNo}`,
+            method: 'get',
+            timeout: 30000 
+        })
+        .then(res => {
+            if (res.data.state >= 1 && res.data.state <= 4) {
+                callback && callback(res.data)
+            } else {
+                this.$alert(res.data.summary)
+            }
+        })
+        .catch(() => {
+            this.$toastLoading()
+            this.$alert(this.$store.state.lang.error_network)
+        })
+}
 /* 
     data invoke 返回值
     payType 支付方式
@@ -121,11 +144,10 @@ export const commonPayAfter = function (data, payType, apiType) {
     if (payType == 3) {
         if (apiType == 2) {
             // redirect
-            window.location.href = data.tppRedirectUrl // 最终也会回调到payResult
+            window.location.href = data.redirectUrl // 最终也会回调到payResult
         } else if (apiType == 3) {
             // wait
             window.location.href = '/hybrid/payment/payResult?seqNo=' + data.paySeqNo
-            // this.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
             this.$alert(this.$store.state.lang.payment_method_not_supported)
         }

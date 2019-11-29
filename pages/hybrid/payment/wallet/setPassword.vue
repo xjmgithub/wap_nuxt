@@ -36,7 +36,7 @@
 import verifyTel from '~/components/form/wallet_tel_verify'
 import passInput from '~/components/password'
 import mButton from '~/components/button'
-import { invoke, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
+import { invoke, getInvokeResult, commonPayAfter, payWithBalance, verifyWalletPass } from '~/functions/pay'
 export default {
     layout: 'base',
     components: {
@@ -58,7 +58,9 @@ export default {
             payToken: this.$route.query.payToken || '',
             card: this.$route.query.card, // paystack card
             passIsSet: this.$route.query.passIsSet || '',
-            merchantAppId: ''
+            merchantAppId: '',
+            time: 0,
+            timer: null
         }
     },
     watch: {
@@ -198,11 +200,37 @@ export default {
                 this.step = num
             }
         },
+        // state=1 至多循环20次
+        getInvoke(seqNo) {
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                if (this.time >= 20) {
+                    clearTimeout(this.timer)
+                    this.$toastLoading()
+                    this.$alert(this.$store.state.lang.invoke_timeout_notice)
+                    this.time = 0
+                    return false
+                }
+                this.paymentInitResult(seqNo)
+                this.time++
+            }, 3000)
+        },
+        // 异步获取invoke状态
+        paymentInitResult(seqNo) {
+            getInvokeResult.call(this, seqNo, result => {
+                if (result.state == 1) {
+                    this.getInvoke(seqNo)
+                } else {
+                    this.$toastLoading()
+                    result.paySeqNo = result.seqNo
+                    commonPayAfter.call(this, result, 3, 3)
+                }
+            })
+        },
         pay() {
             const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
             const newpass = this.$refs.newpass.password
-            this.$nuxt.$loading.start()
-            this.$store.commit('SHOW_SHADOW_LAYER')
+            this.$toastLoading(1)
             verifyWalletPass.call(this, ewallet.accountNo, newpass, result => {
                 if (this.card) {
                     invoke.call(
@@ -210,9 +238,11 @@ export default {
                         this.payToken,
                         this.channel,
                         data => {
-                            this.$nuxt.$loading.finish()
-                            this.$store.commit('HIDE_SHADOW_LAYER')
-                            commonPayAfter.call(this, data, 3, 2)
+                            this.$toastLoading()
+                            commonPayAfter.call(this, data, 3, 3)
+                        },
+                        seqNo => {
+                            this.paymentInitResult(seqNo)
                         },
                         {
                             payPwdVerifyToken: result.data,
@@ -221,12 +251,19 @@ export default {
                     )
                 } else {
                     invoke.call(this, this.payToken, this.channel, data => {
-                        payWithBalance.call(this, this.accountNo, data, this.$refs.newpass.password, res => {
-                            this.$nuxt.$loading.finish()
-                            this.$store.commit('HIDE_SHADOW_LAYER')
-                            // this.$router.push(`/hybrid/payment/payResult?seqNo=${data.paySeqNo}`)
-                            window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
-                        })
+                        payWithBalance.call(
+                            this,
+                            this.accountNo,
+                            data,
+                            this.$refs.newpass.password,
+                            res => {
+                                this.$toastLoading()
+                                window.location.href = `/hybrid/payment/payResult?seqNo=${data.paySeqNo}`
+                            },
+                            seqNo => {
+                                this.paymentInitResult(seqNo)
+                            }
+                        )
                     })
                 }
             })

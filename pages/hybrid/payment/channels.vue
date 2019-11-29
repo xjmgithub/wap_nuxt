@@ -54,7 +54,7 @@
 <script>
 import mButton from '~/components/button'
 import { formatAmount, cdnPicSrc } from '~/functions/utils'
-import { updateWalletAccount, updateWalletConf, invoke, commonPayAfter } from '~/functions/pay'
+import { updateWalletAccount, updateWalletConf, invoke, getInvokeResult, commonPayAfter } from '~/functions/pay'
 import countrys from '~/functions/countrys.json'
 export default {
     layout: 'base',
@@ -92,7 +92,9 @@ export default {
             eCurrencySymbol: '', // 电子钱包货币符号
             countrys: obj,
             authorizationCode: '',
-            loaded: false
+            loaded: false,
+            timer: null,
+            time: 0
         }
     },
     computed: {
@@ -246,6 +248,33 @@ export default {
             this.authorizationCode = card.authorizationCode
             // TODO 绑卡信息埋点
         },
+        // state=1 至多循环20次
+        getInvoke(seqNo) {
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                if (this.time >= 20) {
+                    clearTimeout(this.timer)
+                    this.$toastLoading()
+                    this.$alert(this.$store.state.lang.invoke_timeout_notice)
+                    this.time = 0
+                    return false
+                }
+                this.paymentInitResult(seqNo)
+                this.time++
+            }, 3000)
+        },
+        // 异步获取invoke状态
+        paymentInitResult(seqNo) {
+            getInvokeResult.call(this, seqNo, result => {
+                if (result.state == 1) {
+                    this.getInvoke(seqNo)
+                } else {
+                    this.$toastLoading()
+                    result.paySeqNo = result.seqNo
+                    commonPayAfter.call(this, result, this.channel.payType, this.channel.appInterfaceMode)
+                }
+            })
+        },
         nextStep() {
             sessionStorage.setItem('payChannel', this.channel.payChannel)
             this.authorizationCode && sessionStorage.setItem('card', this.authorizationCode)
@@ -266,11 +295,20 @@ export default {
             } else if (this.channel.formConfigExist) {
                 this.$router.push(`/hybrid/payment/form?appInterfaceMode=${this.channel.appInterfaceMode}&appId=${this.merchantAppId}`)
             } else {
-                invoke.call(this, this.payToken, this.channel.payChannel, data => {
-                    this.$nuxt.$loading.finish()
-                    this.$store.commit('HIDE_SHADOW_LAYER')
-                    commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
-                })
+                this.$toastLoading(1)
+                invoke.call(
+                    this,
+                    this.payToken,
+                    this.channel.payChannel,
+                    data => {
+                        this.$toastLoading()
+                        data.redirectUrl = data.tppRedirectUrl
+                        commonPayAfter.call(this, data, this.channel.payType, this.channel.appInterfaceMode)
+                    },
+                    seqNo => {
+                        this.paymentInitResult(seqNo)
+                    }
+                )
             }
             this.sendEvLog({
                 category: 'confirm_payment',
