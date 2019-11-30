@@ -144,7 +144,8 @@ export default {
                 } else {
                     this.$toastLoading()
                     result.paySeqNo = result.seqNo
-                    commonPayAfter.call(this, result, 3, this.apiInterface)
+                    const apiType = result.state == 4 ? 3 : this.apiInterface
+                    commonPayAfter.call(this, result, 3, apiType)
                 }
             })
         },
