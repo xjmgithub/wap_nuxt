@@ -10,20 +10,20 @@ export const createDVBOrder = function(order, callback) {
     const user = this.$store.state.user
     const isLogin = user.roleName && user.roleName.toUpperCase() !== 'ANONYMOUS'
     this.$axios({
-        url: `/wxorder/v1/geneOrder4OnlinePay`,
-        method: 'post',
-        headers: {
-            'content-type': 'application/x-www-form-urlencoded',
-            token: this.$store.state.token
-        },
-        data: qs.stringify(
-            Object.assign({}, order, {
-                orderSource: 2,
-                fcmToken: fcmToken || '',
-                promotion: !isLogin ? 'a' : 'l'
-            })
-        )
-    })
+            url: `/wxorder/v1/geneOrder4OnlinePay`,
+            method: 'post',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded',
+                token: this.$store.state.token
+            },
+            data: qs.stringify(
+                Object.assign({}, order, {
+                    orderSource: 2,
+                    fcmToken: fcmToken || '',
+                    promotion: !isLogin ? 'a' : 'l'
+                })
+            )
+        })
         .then(res => {
             callback && callback(res.data)
         })
@@ -80,17 +80,17 @@ export const invoke = function(payToken, channel, callback, failback, extend) {
     const dstr = parseUA(this.$store.state.appType, this.$store.state.appVersionCode)
 
     this.$axios({
-        url: `/payment/api/v4/invoke-payment`,
-        method: 'post',
-        data: {
-            payToken: payToken,
-            payChannelId: channel,
-            tradeType: 'JSAPI',
-            signType: 'MD5',
-            deviceInfo: dstr,
-            extendInfo: extend || {}
-        }
-    })
+            url: `/payment/api/v4/invoke-payment`,
+            method: 'post',
+            data: {
+                payToken: payToken,
+                payChannelId: channel,
+                tradeType: 'JSAPI',
+                signType: 'MD5',
+                deviceInfo: dstr,
+                extendInfo: extend || {}
+            }
+        })
         .then(res => {
             this.$nuxt.$loading.finish()
             if (res.data.resultCode === '0') {
@@ -103,6 +103,12 @@ export const invoke = function(payToken, channel, callback, failback, extend) {
             } else {
                 this.$toastLoading()
                 this.$alert(res.data.resultMessage)
+                this.sendEvLog({
+                    category: 'invoke_error_notice',
+                    action: 'popup_show',
+                    label: res.data.resultMessage,
+                    value: '',
+                })
             }
         })
         .catch(() => {
@@ -115,10 +121,10 @@ export const invoke = function(payToken, channel, callback, failback, extend) {
 export const getInvokeResult = function(seqNo, callback) {
     if (!seqNo) return false
     this.$axios({
-        url: `/payment/api/v4/get-payment-init-result?seqNo=${seqNo}`,
-        method: 'get',
-        timeout: 6000
-    })
+            url: `/payment/api/v4/get-payment-init-result?seqNo=${seqNo}`,
+            method: 'get',
+            timeout: 6000
+        })
         .then(res => {
             if (res.data.state >= 1 && res.data.state <= 4) {
                 callback && callback(res.data)

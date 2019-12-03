@@ -216,6 +216,12 @@ export default {
                     clearTimeout(this.timer)
                     this.$toastLoading()
                     this.$alert(this.$store.state.lang.invoke_timeout_notice)
+                    this.sendEvLog({
+                        category: 'invoke_error_notice',
+                        action: 'popup_show',
+                        label: 'invoke_timeout_notice',
+                        value: ''
+                    })
                     this.time = 0
                     return false
                 }
