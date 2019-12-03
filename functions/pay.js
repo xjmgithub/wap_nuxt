@@ -117,7 +117,7 @@ export const getInvokeResult = function(seqNo, callback) {
     this.$axios({
         url: `/payment/api/v4/get-payment-init-result?seqNo=${seqNo}`,
         method: 'get',
-        timeout: 8000
+        timeout: 6000
     })
         .then(res => {
             if (res.data.state >= 1 && res.data.state <= 4) {
@@ -126,8 +126,14 @@ export const getInvokeResult = function(seqNo, callback) {
                 this.$alert(res.data.summary)
             }
         })
-        .catch(() => {
+        .catch(err => {
             // TODO 埋点, seqNo, error msg
+            this.sendEvLog({
+                category: 'get-payment-init-result',
+                action: 'invoke',
+                label: seqNo,
+                value: err,
+            })
             const result = { state: 1 }
             callback && callback(result)
         })
