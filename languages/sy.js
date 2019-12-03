@@ -5,8 +5,8 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Kupakua',
     // 异步支付
-    invoke_loading_notice: 'Processing payment, please do not leave..',
-    invoke_timeout_notice: 'The payment result is still on the way... Please check your order status and retry later.',
+    invoke_loading_notice: 'Kuongeza malipo, tafadhali usiondoke..',
+    invoke_timeout_notice: 'Matokeo ya malipo bado yako njiani ... Tafadhali angalia hali yako ya kuagiza na ujaribu tena baadaye.',
     
     // kenya film
     tab_film: 'Filamu',

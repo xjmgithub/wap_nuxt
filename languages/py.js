@@ -5,8 +5,8 @@ export default {
     live_chat_btn: 'Live Chat',
     download_apk: 'Baixar',
     // 异步支付
-    invoke_loading_notice: 'Processing payment, please do not leave..',
-    invoke_timeout_notice: 'The payment result is still on the way... Please check your order status and retry later.',
+    invoke_loading_notice: 'Processando o pagamento, por favor não sai ..',
+    invoke_timeout_notice: 'O resultado do pagamento ainda está em processo ... Verifique o estado do seu pedido e tente novamente mais tarde.',
     
     // kenya film
     tab_film: 'Filme',
