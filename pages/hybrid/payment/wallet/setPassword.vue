@@ -108,6 +108,10 @@ export default {
             }
         }
     },
+    beforeRouteLeave(to, from, next) {
+        this.$toastLoading()
+        next()
+    },
     mounted() {
         this.step = this.$route.query.dissphone ? 3 : 1
         const sessionPayToken = sessionStorage.getItem('payToken')
@@ -223,6 +227,10 @@ export default {
         },
         // 异步获取invoke状态
         paymentInitResult(seqNo) {
+            if (location.pathname.indexOf('hybrid/payment/wallet/setPassword') < 0) {
+                clearTimeout(this.timer)
+                return false
+            }
             getInvokeResult.call(this, seqNo, result => {
                 if (result.state == 1) {
                     this.getInvoke(seqNo)

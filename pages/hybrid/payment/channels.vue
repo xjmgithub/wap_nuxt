@@ -155,6 +155,10 @@ export default {
         this.getPayMethods()
         if (this.isLogin) this.getMyEwallet()
     },
+    beforeRouteLeave(to, from, next) {
+        this.$toastLoading()
+        next()
+    },
     methods: {
         getPayMethods() {
             this.$axios.get(`/payment/api/v2/get-pre-payment?payToken=${this.payToken}`).then(res => {
@@ -271,6 +275,10 @@ export default {
         },
         // 异步获取invoke状态
         paymentInitResult(seqNo) {
+            if (location.pathname.indexOf('hybrid/payment/channels') < 0) {
+                clearTimeout(this.timer)
+                return false
+            }
             getInvokeResult.call(this, seqNo, result => {
                 if (result.state == 1) {
                     this.getInvoke(seqNo)

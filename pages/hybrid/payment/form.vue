@@ -67,6 +67,10 @@ export default {
             return result
         }
     },
+    beforeRouteLeave(to, from, next) {
+        this.$toastLoading()
+        next()
+    },
     mounted() {
         const sessionPayToken = sessionStorage.getItem('payToken')
         const sessionChannel = sessionStorage.getItem('payChannel')
@@ -144,6 +148,10 @@ export default {
         },
         // 异步获取invoke状态
         paymentInitResult(seqNo) {
+            if (location.pathname.indexOf('hybrid/payment/form') < 0) {
+                clearTimeout(this.timer)
+                return false
+            }
             getInvokeResult.call(this, seqNo, result => {
                 if (result.state == 1) {
                     this.getInvoke(seqNo)

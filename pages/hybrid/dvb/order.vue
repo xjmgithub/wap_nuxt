@@ -155,6 +155,10 @@ export default {
             serverTime: new Date()
         }
     },
+    beforeRouteLeave(to, from, next) {
+        this.$toastLoading()
+        next()
+    },
     mounted() {
         const param = JSON.parse(sessionStorage.getItem('order-info'))
         this.sendEvLog({
@@ -231,6 +235,10 @@ export default {
         },
         // 异步获取invoke状态
         paymentInitResult(seqNo) {
+            if (location.pathname.indexOf('hybrid/dvb/order') < 0) {
+                clearTimeout(this.timer)
+                return false
+            }
             getInvokeResult.call(this, seqNo, result => {
                 if (result.state == 1) {
                     this.getInvoke(seqNo)
