@@ -157,7 +157,7 @@ export const callMarket = function(failback) {
             utmParam.map
         )
     )
-
+        console.log(source)
     if (browser.isIos) {
         window.location.href = appleStore
     } else if (browser.ua.indexOf('MuMu') >= 0 || browser.ua.indexOf('I9502') > 0) {
@@ -223,7 +223,7 @@ export const getUtmParam = function() {
     let utmMedium = ''
 
     if (query.referrer) {
-        source = source + referrer
+        source = source + encodeURIComponent(referrer)
         utmSource = getQueryVariable(decodeURIComponent(referrer), 'utm_source') || ''
         utmMedium = getQueryVariable(decodeURIComponent(referrer), 'utm_medium') || ''
         utmCampaign = getQueryVariable(decodeURIComponent(referrer), 'utm_campaign') || ''
