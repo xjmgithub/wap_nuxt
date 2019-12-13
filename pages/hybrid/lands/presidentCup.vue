@@ -76,11 +76,10 @@ export default {
     div{
         width:100%;
         position: fixed;
-        top: 80%;
+        top: 83%;
         text-align:center;
     }
     .btn {
-        right: 0;
         width: 60%;
     }
 }
