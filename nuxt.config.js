@@ -98,7 +98,7 @@ export default {
         { path: '/hybrid/api/games/taskOver', handler: '~/api/games/taskOver.js' },
         { path: '/hybrid/api/payment/createPayment', handler: '~/api/payment/createPayment.js' },
         { path: '/hybrid/api/app/getFaq', handler: '~/api/app/getFaq.js' },
-        { path: '/hybrid/api/sign', handler: '~/api/film/sign_api.js' }
+        // { path: '/hybrid/api/sign', handler: '~/api/film/sign_api.js' }
     ],
     hooks: {
         listen(server) {
