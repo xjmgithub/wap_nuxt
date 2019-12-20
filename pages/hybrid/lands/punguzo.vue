@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" @click="down()">
         <div>
             <img src="~assets/img/landpage/punguzo-doen.png" class="btn" alt="StarTimes APP" @click="down()" />
         </div>
