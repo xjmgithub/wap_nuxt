@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="selfService">
-            <mTitle :show-title="$store.state.lang.officialwebsitemobile_selfservice_section"/>
+            <mTitle :show-title="$store.state.lang.officialwebsitemobile_selfservice_section" />
             <div class="recharge">
                 <nuxt-link to="/hybrid/dvb/bind">
                     <span>$</span>
@@ -10,37 +10,37 @@
             </div>
         </div>
         <div class="programs">
-            <vod-list v-for="(item,index) in programs" :key="index" :item="item"/>
+            <vod-list v-for="(item,index) in programs" :key="index" :item="item" />
         </div>
         <div class="bouquets">
-            <mTitle :show-title="$store.state.lang.officialwebsitemobile_bouquet_section"/>
+            <mTitle :show-title="$store.state.lang.officialwebsitemobile_bouquet_section" />
             <span v-show="dishList.length>0">Dish</span>
             <ul class="dish clearfix">
                 <li v-for="(item,index) in dishList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
                     <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
             <span v-show="antennaList.length>0">Antenna</span>
             <ul class="antenna clearfix">
                 <li v-for="(item,index) in antennaList" :key="index" @click="goToBouquetDetail(item)">
-                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name"/>
+                    <bg-img-data :img-path="item.poster&&item.poster.resources[0].url" :package-name="item.name" />
                     <p class="money">{{currency}} {{item.price}}</p>
                 </li>
             </ul>
         </div>
         <div class="startimes">
-            <mTitle :icon="true" :show-title="$store.state.lang.officialwebsitemobile_startimeson_section"/>
-            <img src="~assets/img/web/wap_pic.jpg" class="bigPic">
+            <mTitle :icon="true" :show-title="$store.state.lang.officialwebsitemobile_startimeson_section" />
+            <img src="~assets/img/web/wap_pic.jpg" class="bigPic" />
             <div class="download clearfix">
                 <a href="javascript:void(0)" @click="downloadApk">
-                    <img src="~assets/img/web/pic_downloadapk.png">
+                    <img src="~assets/img/web/pic_downloadapk.png" />
                 </a>
                 <a href="market://details?id=com.star.mobile.video" target="_blank">
-                    <img src="~assets/img/web/pic_googleplay.png">
+                    <img src="~assets/img/web/pic_googleplay.png" />
                 </a>
                 <a href="https://itunes.apple.com/us/app/startimes/id1168518958?l=zh&ls=1&mt=8">
-                    <img src="~assets/img/web/pic_appstore.png">
+                    <img src="~assets/img/web/pic_appstore.png" />
                 </a>
             </div>
         </div>
@@ -99,7 +99,7 @@ export default {
         currency() {
             return this.$store.state.country.currencySymbol
         },
-        langType(){
+        langType() {
             return this.$store.state.langType
         }
     },
@@ -136,18 +136,17 @@ export default {
             this.$router.push(`/browser/bouquetDetail?id=${bouId}&price=${price}&logo=${logo}&name=${name}&plat=${plat}`)
         },
         downloadApk() {
-            if(this.$store.state.country.country=='NG'){
+            if (this.$store.state.country.country == 'NG') {
                 this.sendEvLog({
                     category: 'new_cdn_apk',
                     action: 'download_click',
                     label: 'office',
-                    value: 10,
+                    value: 10
                 })
                 this.$axios.get('/hybrid/api/app/getApk').then(data => {
-                    window.location.href = data.data.data.replace('cdn.startimestv.com','cloudflare-cdn.startimestv.com/appinfo')
+                    window.location.href = data.data.data.replace('cdn.startimestv.com', 'cloudflare-cdn.startimestv.com/appinfo')
                 })
-                
-            }else{
+            } else {
                 downApk.call(this)
             }
         },
@@ -165,7 +164,7 @@ export default {
             }
 
             this.$axios
-                .get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=100&dateFrom=${start}&dateTo=${end}`, {
+                .get(`/vup/v2/tabs/${env.vodtab}/sections?pageNumber=1&perSize=20&dateFrom=${start}&dateTo=${end}`, {
                     headers: {
                         lnCode: lang
                     }
@@ -182,11 +181,13 @@ export default {
                                         item.content_code.indexOf('1091') == 0 ||
                                         item.content_code.indexOf('1092') == 0
                                     ) {
-                                        this.programs.push({
-                                            name: ele.name,
-                                            type: item.content_code,
-                                            list: JSON.parse(item.data_json)
-                                        })
+                                        if (item.data_json) {
+                                            this.programs.push({
+                                                name: ele.name,
+                                                type: item.content_code,
+                                                list: JSON.parse(item.data_json)
+                                            })
+                                        }
                                     }
                                 })
                             }
