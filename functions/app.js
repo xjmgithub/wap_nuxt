@@ -17,7 +17,7 @@ export const base64Page = function(page) {
 }
 
 export const createIntent = function(page, host, path, scheme) {
-    const target = base64Page(page)
+    const target = page ? base64Page(page) : ''
     host = host || 'platformapi'
     path = path || 'webtoapp'
     scheme = scheme || (browser.isIos ? 'startimes' : 'starvideo')
@@ -25,7 +25,7 @@ export const createIntent = function(page, host, path, scheme) {
 }
 
 export const createScheme = function(page, host, path, scheme) {
-    const target = base64Page(page)
+    const target = page ? base64Page(page) : ''
     host = host || 'platformapi'
     path = path || 'webtoapp'
     scheme = scheme || (browser.isIos ? 'startimes' : 'starvideo')
@@ -37,7 +37,7 @@ export const pageDlay = function(callback, second) {
     const timerStart = new Date().getTime()
     let lastFired = new Date().getTime()
     if (browser.browserVer > 40) {
-        const lalal = () => {
+        const exam = () => {
             const now = new Date().getTime()
             if (now - lastFired < 100) {
                 // 健康状态
@@ -45,11 +45,11 @@ export const pageDlay = function(callback, second) {
                     if (!document.hidden) callback && callback()
                 } else {
                     lastFired = now
-                    window.requestAnimationFrame(lalal)
+                    window.requestAnimationFrame(exam)
                 }
             }
         }
-        window.requestAnimationFrame(lalal)
+        window.requestAnimationFrame(exam)
     } else {
         const interval = 200
         const deviation = 20
@@ -103,6 +103,11 @@ export const callApp = function(page, failback) {
         )
     )
 
+    if (browser.isIos) {
+        invokeByHref.call(this, createScheme(page), failback)
+        return false
+    }
+
     if (browser.browserVer > 40) {
         if (browser.ua.indexOf('UCBrowser') > 0) {
             if (browser.androidVer >= 4.4) {
@@ -134,9 +139,10 @@ export const downApk = function(callback) {
     if (browser.isIos) {
         window.location.href = appleStore
     } else {
-        axios.get('/hybrid/api/app/getApk').then(data => {
-            window.location.href = data.data.data
-        })
+        window.location.href = 'http://cdn.startimestv.com/dl/ol/StarTimesON-production-officialWap-5.19-develop-27362.apk'
+        // axios.get('/hybrid/api/app/getApk').then(data => {
+        //     window.location.href = data.data.data
+        // })
     }
     this.$nuxt.$loading.finish()
     callback && callback()
@@ -157,10 +163,14 @@ export const callMarket = function(failback) {
             utmParam.map
         )
     )
-        console.log(source)
     if (browser.isIos) {
         window.location.href = appleStore
-    } else if (browser.ua.indexOf('MuMu') >= 0 || browser.ua.indexOf('I9502') > 0) {
+    } else if (
+        browser.ua.indexOf('MuMu') >= 0 ||
+        browser.ua.indexOf('I9502') > 0 ||
+        browser.ua.indexOf('I9268') > 0 ||
+        browser.ua.indexOf('Firefox') > 0
+    ) {
         // android 6+
         invokeByIframe.call(this, `market://details?id=com.star.mobile.video${source}`, failback)
     } else {
