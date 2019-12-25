@@ -19,7 +19,7 @@
 <script>
 import mButton from '~/components/button'
 import Password from '~/components/password'
-import { invoke, commonPayAfter, verifyWalletPass, payWithBalance } from '~/functions/pay'
+import { invoke, getInvokeResult, commonPayAfter, verifyWalletPass, payWithBalance } from '~/functions/pay'
 import { toNativePage } from '~/functions/app'
 export default {
     layout: 'base',
@@ -36,7 +36,9 @@ export default {
             merchantAppId: this.$route.query.merchantAppId || '',
             apiType: this.$route.query.apiType,
             card: this.$route.query.card || '',
-            goodMsg: {}
+            goodMsg: {},
+            time: 0,
+            timer: null
         }
     },
     watch: {
@@ -47,6 +49,10 @@ export default {
                 this.canPay = false
             }
         }
+    },
+    beforeRouteLeave(to, from, next) {
+        this.$toastLoading()
+        next()
     },
     mounted() {
         const sessionPayToken = sessionStorage.getItem('payToken')
@@ -78,20 +84,58 @@ export default {
                 this.$router.push(`/hybrid/payment/wallet/validSignPass`)
             }
         },
+        // state=1 至多循环20次
+        getInvoke(seqNo) {
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                if (this.time >= 20) {
+                    clearTimeout(this.timer)
+                    this.$toastLoading()
+                    this.$alert(this.$store.state.lang.invoke_timeout_notice)
+                    this.sendEvLog({
+                        category: 'invoke_error_notice',
+                        action: 'popup_show',
+                        label: 'invoke_timeout_notice',
+                        value: ''
+                    })
+                    this.time = 0
+                    return false
+                }
+                this.paymentInitResult(seqNo)
+                this.time++
+            }, 3000)
+        },
+        // 异步获取invoke状态
+        paymentInitResult(seqNo) {
+            if (location.pathname.indexOf('hybrid/payment/wallet/paybyPass') < 0) {
+                clearTimeout(this.timer)
+                return false
+            }
+            getInvokeResult.call(this, seqNo, result => {
+                if (result.state == 1) {
+                    this.getInvoke(seqNo)
+                } else {
+                    this.$toastLoading()
+                    result.paySeqNo = result.seqNo
+                    commonPayAfter.call(this, result, 3, 3)
+                }
+            })
+        },
         nextStep() {
             const ewallet = JSON.parse(sessionStorage.getItem('wallet'))
-            this.$nuxt.$loading.start()
-            this.$store.commit('SHOW_SHADOW_LAYER')
             verifyWalletPass.call(this, ewallet.accountNo, this.password, result => {
+                this.$toastLoading(1)
                 if (this.card) {
                     invoke.call(
                         this,
                         this.payToken,
                         this.channel,
                         data => {
-                            this.$nuxt.$loading.finish()
-                            this.$store.commit('HIDE_SHADOW_LAYER')
-                            commonPayAfter.call(this, data, 3, 2)
+                            this.$toastLoading()
+                            commonPayAfter.call(this, data, 3, 3)
+                        },
+                        seqNo => {
+                            this.paymentInitResult(seqNo)
                         },
                         {
                             payPwdVerifyToken: result.data,
@@ -99,13 +143,20 @@ export default {
                         }
                     )
                 } else {
-                    invoke.call(this, this.payToken, this.channel, data => {
-                        payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
-                            this.$nuxt.$loading.finish()
-                            this.$store.commit('HIDE_SHADOW_LAYER')
-                            commonPayAfter.call(this, data, 3, 3)
-                        })
-                    })
+                    invoke.call(
+                        this,
+                        this.payToken,
+                        this.channel,
+                        data => {
+                            payWithBalance.call(this, ewallet.accountNo, data, this.password, res => {
+                                this.$toastLoading()
+                                commonPayAfter.call(this, data, 3, 3)
+                            })
+                        },
+                        seqNo => {
+                            this.paymentInitResult(seqNo)
+                        }
+                    )
                 }
             })
             this.sendEvLog({

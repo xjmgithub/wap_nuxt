@@ -4,7 +4,10 @@ export default {
     leave_msg_btn: 'Leave a Message',
     live_chat_btn: 'Live Chat',
     download_apk: 'Kupakua',
-
+    // 异步支付
+    invoke_loading_notice: 'Kuongeza malipo, tafadhali usiondoke..',
+    invoke_timeout_notice: 'Matokeo ya malipo bado yako njiani ... Tafadhali angalia hali yako ya kuagiza na ujaribu tena baadaye.',
+    
     // kenya film
     tab_film: 'Filamu',
     tab_tv: 'Televisheni',

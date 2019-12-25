@@ -1,13 +1,9 @@
 import qs from 'qs'
-import {
-    parseUA
-} from '~/functions/utils.js'
-import {
-    toNativePage
-} from '~/functions/app'
+import { parseUA } from '~/functions/utils.js'
+import { toNativePage } from '~/functions/app'
 
 // 生成订单
-export const createDVBOrder = function (order, callback) {
+export const createDVBOrder = function(order, callback) {
     if (!order) return false
 
     const fcmToken = (window.getChannelId && window.getChannelId.getFCMToken && window.getChannelId.getFCMToken()) || ''
@@ -37,7 +33,7 @@ export const createDVBOrder = function (order, callback) {
         })
 }
 
-export const checkPass = function (walletNo, callback) {
+export const checkPass = function(walletNo, callback) {
     if (!walletNo) return false
     this.$axios
         .get(`/mobilewallet/v1/accounts/${walletNo}/prop-details`)
@@ -61,7 +57,7 @@ export const checkPass = function (walletNo, callback) {
         })
 }
 
-export const verifyWalletPass = function (accountNo, password, callback) {
+export const verifyWalletPass = function(accountNo, password, callback) {
     this.$axios.get(`/mobilewallet/v1/accounts/${accountNo}/pay-password?password=${password}`).then(res => {
         if (res.data.code === 0) {
             callback && callback(res.data)
@@ -78,13 +74,13 @@ export const verifyWalletPass = function (accountNo, password, callback) {
     channel 渠道号
     extend 扩展字段，动态表单
 */
-export const invoke = function (payToken, channel, callback, extend) {
+export const invoke = function(payToken, channel, callback, failback, extend) {
     if (!payToken || !channel) return false
 
     const dstr = parseUA(this.$store.state.appType, this.$store.state.appVersionCode)
 
     this.$axios({
-            url: `/payment/api/v2/invoke-payment`,
+            url: `/payment/api/v4/invoke-payment`,
             method: 'post',
             data: {
                 payToken: payToken,
@@ -96,36 +92,71 @@ export const invoke = function (payToken, channel, callback, extend) {
             }
         })
         .then(res => {
+            this.$nuxt.$loading.finish()
             if (res.data.resultCode === '0') {
                 if (res.data.extendInfo.instructions) {
                     sessionStorage.setItem('instructions', res.data.extendInfo.instructions)
                 }
                 callback && callback(res.data)
+            } else if (res.data.resultCode === '1') {
+                failback && failback(res.data.paySeqNo)
             } else {
-                this.$nuxt.$loading.finish()
+                this.$toastLoading()
                 this.$alert(res.data.resultMessage)
+                this.sendEvLog({
+                    category: 'invoke_error_notice',
+                    action: 'popup_show',
+                    label: res.data.resultMessage,
+                    value: '',
+                })
             }
         })
         .catch(() => {
             this.$nuxt.$loading.finish()
+            this.$toastLoading()
             this.$alert(this.$store.state.lang.error_network)
         })
 }
 
+export const getInvokeResult = function(seqNo, callback) {
+    if (!seqNo) return false
+    this.$axios({
+            url: `/payment/api/v4/get-payment-init-result?seqNo=${seqNo}`,
+            method: 'get',
+            timeout: 6000
+        })
+        .then(res => {
+            if (res.data.state >= 1 && res.data.state <= 4) {
+                callback && callback(res.data)
+            } else {
+                this.$alert(res.data.summary)
+            }
+        })
+        .catch(err => {
+            // TODO 埋点, seqNo, error msg
+            this.sendEvLog({
+                category: 'get-payment-init-result',
+                action: 'invoke',
+                label: seqNo,
+                value: err,
+            })
+            const result = { state: 1 }
+            callback && callback(result)
+        })
+}
 /* 
     data invoke 返回值
     payType 支付方式
     apiType 对接方式
 */
-export const commonPayAfter = function (data, payType, apiType) {
+export const commonPayAfter = function(data, payType, apiType) {
     if (payType == 3) {
         if (apiType == 2) {
             // redirect
-            window.location.href = data.tppRedirectUrl // 最终也会回调到payResult
+            window.location.href = data.redirectUrl // 最终也会回调到payResult
         } else if (apiType == 3) {
             // wait
             window.location.href = '/hybrid/payment/payResult?seqNo=' + data.paySeqNo
-            // this.$router.replace('/hybrid/payment/payResult?seqNo=' + data.paySeqNo)
         } else {
             this.$alert(this.$store.state.lang.payment_method_not_supported)
         }
@@ -134,7 +165,7 @@ export const commonPayAfter = function (data, payType, apiType) {
     }
 }
 
-export const chargeWallet = function (back) {
+export const chargeWallet = function(back) {
     this.$alert(this.$store.state.lang.refresh_wallet, () => {
         back && back()
     })
@@ -146,7 +177,7 @@ export const chargeWallet = function (back) {
     }
 }
 
-export const payWithBalance = function (walletAccountNo, data, password, callback) {
+export const payWithBalance = function(walletAccountNo, data, password, callback) {
     this.$axios
         .post('/mobilewallet/v1/balance-payments', {
             amount: data.totalAmount,
@@ -175,7 +206,7 @@ export const payWithBalance = function (walletAccountNo, data, password, callbac
         })
 }
 
-export const updateWalletAccount = function (callback) {
+export const updateWalletAccount = function(callback) {
     this.$axios &&
         this.$axios.get('/mobilewallet/v1/accounts/me').then(res => {
             if (res.data) {
@@ -185,7 +216,7 @@ export const updateWalletAccount = function (callback) {
         })
 }
 
-export const updateWalletConf = function (account, callback) {
+export const updateWalletConf = function(account, callback) {
     this.$axios &&
         this.$axios.get(`/mobilewallet/v1/accounts/${account}/prop-details`).then(res => {
             localStorage.setItem('wallet_config', JSON.stringify(res.data))

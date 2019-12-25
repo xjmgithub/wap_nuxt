@@ -41,7 +41,7 @@
 </template>
 <script>
 import mButton from '~/components/button'
-import { invoke, commonPayAfter } from '~/functions/pay'
+import { invoke, commonPayAfter, getInvokeResult } from '~/functions/pay'
 export default {
     layout: 'base',
     components: {
@@ -53,7 +53,9 @@ export default {
             channel: this.$route.query.payChannelId || '',
             apiInterface: this.$route.query.appInterfaceMode || 3,
             merchantAppId: this.$route.query.appId,
-            configs: []
+            configs: [],
+            time: 0,
+            timer: null
         }
     },
     computed: {
@@ -64,6 +66,10 @@ export default {
             })
             return result
         }
+    },
+    beforeRouteLeave(to, from, next) {
+        this.$toastLoading()
+        next()
     },
     mounted() {
         const sessionPayToken = sessionStorage.getItem('payToken')
@@ -119,6 +125,44 @@ export default {
         })
     },
     methods: {
+        // state=1 至多循环20次
+        getInvoke(seqNo) {
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                if (this.time >= 20) {
+                    clearTimeout(this.timer)
+                    this.$toastLoading()
+                    this.$alert(this.$store.state.lang.invoke_timeout_notice)
+                    this.sendEvLog({
+                        category: 'invoke_error_notice',
+                        action: 'popup_show',
+                        label: 'invoke_timeout_notice',
+                        value: ''
+                    })
+                    this.time = 0
+                    return false
+                }
+                this.paymentInitResult(seqNo)
+                this.time++
+            }, 3000)
+        },
+        // 异步获取invoke状态
+        paymentInitResult(seqNo) {
+            if (location.pathname.indexOf('hybrid/payment/form') < 0) {
+                clearTimeout(this.timer)
+                return false
+            }
+            getInvokeResult.call(this, seqNo, result => {
+                if (result.state == 1) {
+                    this.getInvoke(seqNo)
+                } else {
+                    this.$toastLoading()
+                    result.paySeqNo = result.seqNo
+                    const apiType = result.state == 4 ? 3 : this.apiInterface
+                    commonPayAfter.call(this, result, 3, apiType)
+                }
+            })
+        },
         next() {
             let canSubmit = true
             const optarr = {}
@@ -154,16 +198,17 @@ export default {
                 optarr[item.code] = item.value
             })
             if (canSubmit) {
-                this.$nuxt.$loading.start()
-                this.$store.commit('SHOW_SHADOW_LAYER')
+                this.$toastLoading(1)
                 invoke.call(
                     this,
                     this.payToken,
                     this.channel,
                     data => {
-                        this.$nuxt.$loading.finish()
-                        this.$store.commit('HIDE_SHADOW_LAYER')
+                        this.$toastLoading()
                         commonPayAfter.call(this, data, 3, this.apiInterface)
+                    },
+                    seqNo => {
+                        this.paymentInitResult(seqNo)
                     },
                     optarr
                 )

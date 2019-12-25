@@ -19,7 +19,7 @@
         <template v-if="result=='2'">
             <img class="fail_img" src="~assets/img/pay/img_failed_def_b.png" alt />
             <p class="fail">{{$store.state.lang.payment_failed}}</p>
-            <p class="msg">{{$store.state.lang.pay_failed_desc}}</p>
+            <p class="msg">{{fail_message}}</p>
         </template>
         <div class="footer">
             <mButton v-show="result>0" :text="$store.state.lang.pay_refresh" @click="refresh" />
