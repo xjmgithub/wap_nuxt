@@ -22,7 +22,7 @@
                             <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">{{$store.state.lang.eWallet}}: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
                             <span v-else-if="item.payType==1">{{$store.state.lang.eWallet}}</span>
                             <span v-else>{{item.name}}</span>
-                            <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                            <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| appType==1&&i===0 || appType!=1&&i===1" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                             <i v-show="!item.payChannelCardAuthDtoList" />
                             <div v-show="item.payType==1&&eAmount&&eAmount<totalAmount&&currencySymbol==eCurrencySymbol" class="recharge" @click="chargeWallet">RECHARGE</div>
                         </label>
