@@ -13,7 +13,7 @@
         </div>
         <div v-if="payChannels&&payChannels.length>0" class="contain">
             <div class="pay-channels">
-                <div v-for="(item,i) in payChannels" :key="i">
+                <div v-for="(item,i) in payChannels" v-show="appType==1||item.payType!=1" :key="i" >
                     <label class="radio">
                         <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
                         <img v-else-if="!item.logoUrl&&item.payType==1" src="http://cdn.startimestv.com/banner/ic_ewallet_def_g%20copy.png" />
@@ -96,6 +96,7 @@ export default {
             obj[item.country] = item
         })
         return {
+            appType: this.$store.state.appType || 0,
             currencySymbol: '',
             totalAmount: '', // 折后价
             rechargeAmount: '', // 原价
