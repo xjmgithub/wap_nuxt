@@ -13,33 +13,37 @@
         </div>
         <div v-if="payChannels&&payChannels.length>0" class="contain">
             <div class="pay-channels">
-                <div v-for="(item,i) in payChannels" v-show="appType==1||item.payType!=1" :key="i" >
-                    <label class="radio">
-                        <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
-                        <img v-else-if="!item.logoUrl&&item.payType==1" src="http://cdn.startimestv.com/banner/ic_ewallet_def_g%20copy.png" />
-                        <img v-else src="~/assets/img/pay/pay_ment_default.png" />
-                        <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">{{$store.state.lang.eWallet}}: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
-                        <span v-else-if="item.payType==1">{{$store.state.lang.eWallet}}</span>
-                        <span v-else>{{item.name}}</span>
-                        <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
-                        <i v-show="!item.payChannelCardAuthDtoList" />
-                        <div v-show="item.payType==1&&eAmount&&eAmount<totalAmount&&currencySymbol==eCurrencySymbol" class="recharge" @click="chargeWallet">RECHARGE</div>
-                    </label>
-                    <div class="sub-channels">
-                        <div v-for="(card,si) in item.payChannelCardAuthDtoList" v-show="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0 && isLogin" :key="si">
-                            <label class="radio">
-                                <div :class="card.brand" class="img-box" />
-                                <span>{{card.cardType}}({{card.last4}})</span>
-                                <input :checked="isLogin && item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(item,card)" />
+                <div v-for="(item,i) in payChannels" v-show="appType==1||item.payType!=1" :key="i">
+                    <div v-if="appType==1||item.payType!=1">
+                        <label class="radio">
+                            <img v-if="item.logoUrl" :src="cdnPic(item.logoUrl)" onerror="this.src='http://cdn.startimestv.com/banner/pay_ment_default.png'" />
+                            <img v-else-if="!item.logoUrl&&item.payType==1" src="http://cdn.startimestv.com/banner/ic_ewallet_def_g%20copy.png" />
+                            <img v-else src="~/assets/img/pay/pay_ment_default.png" />
+                            <span v-if="item.payType==1&&eCurrencySymbol&&eAmount>=0">{{$store.state.lang.eWallet}}: {{eCurrencySymbol}}{{eAmount| formatAmount}}</span>
+                            <span v-else-if="item.payType==1">{{$store.state.lang.eWallet}}</span>
+                            <span v-else>{{item.name}}</span>
+                            <input v-if="!item.payChannelCardAuthDtoList" :checked="item.lastSuccessPay|| i===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
+                            <i v-show="!item.payChannelCardAuthDtoList" />
+                            <div v-show="item.payType==1&&eAmount&&eAmount<totalAmount&&currencySymbol==eCurrencySymbol" class="recharge" @click="chargeWallet">RECHARGE</div>
+                        </label>
+                        <div class="sub-channels">
+                            <div v-for="(card,si) in item.payChannelCardAuthDtoList" :key="si">
+                                <div v-if="item.payChannelCardAuthDtoList && item.payChannelCardAuthDtoList.length > 0 && isLogin">
+                                    <label class="radio">
+                                        <div :class="card.brand" class="img-box" />
+                                        <span>{{card.cardType}}({{card.last4}})</span>
+                                        <input :checked="isLogin && item.lastSuccessPay &&si===0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initSubChannel(item,card)" />
+                                        <i />
+                                    </label>
+                                </div>
+                            </div>
+                            <label v-show="item.payChannelCardAuthDtoList" class="radio">
+                                <img src="~/assets/img/dvb/ic_ewallet_add.png" />
+                                <span>{{$store.state.lang.add_card_topay}}</span>
+                                <input :checked="item.lastSuccessPay && item.payChannelCardAuthDtoList&&item.payChannelCardAuthDtoList.length<=0||(item.lastSuccessPay && !isLogin)" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
                                 <i />
                             </label>
                         </div>
-                        <label v-show="item.payChannelCardAuthDtoList" class="radio">
-                            <img src="~/assets/img/dvb/ic_ewallet_add.png" />
-                            <span>{{$store.state.lang.add_card_topay}}</span>
-                            <input :checked="item.lastSuccessPay && item.payChannelCardAuthDtoList&&item.payChannelCardAuthDtoList.length<=0" :value="item.payType" :data-id="item.id" type="radio" name="pay-options" @click="initChannel(item)" />
-                            <i />
-                        </label>
                     </div>
                 </div>
             </div>
@@ -563,4 +567,3 @@ export default {
     }
 }
 </style>
-
