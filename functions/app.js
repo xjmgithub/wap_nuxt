@@ -139,7 +139,7 @@ export const downApk = function(callback) {
     if (browser.isIos) {
         window.location.href = appleStore
     } else {
-        window.location.href = 'http://private-app.startimes.me/uploads/pkg/file/790/StarTimesON-test-officialWap-5.21.3.1-develop-5.21.3.1-27676.apk'
+        window.location.href = 'http://cdn.startimestv.com/dl/ol/StarTimesON-production-officialWap-5.21.3.1-develop-5.21.3.1-inappupgrade-27700.apk'
         // axios.get('/hybrid/api/app/getApk').then(data => {
         //     window.location.href = data.data.data
         // })
