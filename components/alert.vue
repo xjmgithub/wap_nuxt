@@ -29,6 +29,7 @@ export default {
     methods: {
         sure() {
             this.style = 'none'
+            
             this.$store.commit('HIDE_SHADOW_LAYER')
             if (this.callback) this.callback()
         },

@@ -5,7 +5,7 @@ export default function(req, res, next) {
         .get('http://upms.startimestv.com/cms/public/app')
         .then(data => {
             const url = data.data.apkUrl
-            const direct = url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : url
+            const direct = url.indexOf('google') > 0 ? url.replace('google', 'officialWap') : url  
             res.end(
                 JSON.stringify({
                     code: 200,
